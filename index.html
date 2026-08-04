@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f1eee4">
+  <meta name="description" content="Unsettled Atlas: synthetic places for testing how space becomes normal.">
+  <title>Unsettled Atlas</title>
+  <style>
+    :root{
+      --ground:#f1eee4;
+      --ink:#121514;
+      --muted:#5f6763;
+      --line:#121514;
+      --paper:#faf8f1;
+      --signal:#a8462a;
+      --max:1120px;
+    }
+    *{box-sizing:border-box}
+    html{background:var(--ground);color:var(--ink);font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%}
+    body{min-width:320px;min-height:100dvh;margin:0;background:var(--ground)}
+    a{color:inherit}
+    a:focus-visible{outline:4px solid var(--signal);outline-offset:4px}
+    .shell{
+      width:min(100%,var(--max));min-height:100dvh;margin:0 auto;
+      padding:max(24px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right))
+              max(24px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));
+      display:grid;grid-template-rows:auto 1fr auto;gap:28px
+    }
+    header{
+      display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:start;
+      padding-bottom:22px;border-bottom:2px solid var(--line)
+    }
+    .kicker,.count,.file,footer{
+      font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase
+    }
+    .kicker{margin:0 0 10px;color:var(--signal)}
+    h1{
+      max-width:12ch;margin:0;font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(48px,10vw,112px);font-weight:400;line-height:.82;letter-spacing:-.065em
+    }
+    .premise{
+      max-width:32ch;margin:14px 0 0;color:var(--muted);
+      font-size:clamp(15px,2vw,19px);line-height:1.35
+    }
+    .count{margin:4px 0 0;white-space:nowrap}
+    main{
+      align-self:center;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+      border-top:2px solid var(--line);border-left:2px solid var(--line)
+    }
+    .place{
+      min-height:210px;padding:22px;display:grid;grid-template-rows:auto 1fr auto;gap:18px;
+      background:var(--paper);border-right:2px solid var(--line);border-bottom:2px solid var(--line);
+      text-decoration:none;transition:background-color 140ms ease,color 140ms ease
+    }
+    .place:hover,.place:focus-visible{background:var(--ink);color:var(--paper)}
+    .number{font-family:Georgia,"Times New Roman",serif;font-size:18px;font-style:italic}
+    .place h2{
+      max-width:16ch;margin:0;align-self:end;font-family:Georgia,"Times New Roman",serif;
+      font-size:clamp(27px,4vw,46px);font-weight:400;line-height:.94;letter-spacing:-.035em
+    }
+    .place p{max-width:40ch;margin:9px 0 0;color:var(--muted);font-size:13px;line-height:1.45}
+    .place:hover p,.place:focus-visible p{color:#cdd2cf}
+    .file{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;opacity:.72}
+    footer{
+      display:flex;justify-content:space-between;gap:18px;align-items:end;
+      padding-top:4px;line-height:1.5
+    }
+    footer p{max-width:58ch;margin:0;color:var(--muted)}
+    footer a{flex:0 0 auto;text-decoration-thickness:2px;text-underline-offset:4px}
+    @media(max-width:720px){
+      .shell{gap:22px;padding-inline:max(14px,env(safe-area-inset-left))}
+      header{grid-template-columns:1fr;gap:12px}
+      .count{margin:0}
+      main{grid-template-columns:1fr}
+      .place{min-height:174px;padding:18px}
+      footer{align-items:start;flex-direction:column}
+    }
+    @media(prefers-reduced-motion:reduce){.place{transition:none}}
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div>
+        <p class="kicker">Synthetic-place index</p>
+        <h1>Unsettled Atlas</h1>
+        <p class="premise">Places that make spatial arrangements enterable, testable, and available for reconstruction.</p>
+      </div>
+      <p class="count">Four current places</p>
+    </header>
+
+    <main aria-label="Synthetic places">
+      <a class="place" href="field-of-unsettled-coordinates-mobile-time-map.html">
+        <span class="number">01</span>
+        <div>
+          <h2>The Field of Unsettled Coordinates</h2>
+          <p>Enter a reconfigurable settlement where maps, institutions, access, and repeated movement harden into normality.</p>
+        </div>
+        <span class="file">field-of-unsettled-coordinates-mobile-time-map.html</span>
+      </a>
+
+      <a class="place" href="oblique_commons_timespace.html">
+        <span class="number">02</span>
+        <div>
+          <h2>The Oblique Commons</h2>
+          <p>Find bearings through reciprocal contact across conductive ground, negotiated thresholds, folds, and unstable reference points.</p>
+        </div>
+        <span class="file">oblique_commons_timespace.html</span>
+      </a>
+
+      <a class="place" href="calibration_commons_OFFLINE_WORLD_v2.html">
+        <span class="number">03</span>
+        <div>
+          <h2>The Calibration Commons</h2>
+          <p>Walk the normal city, reveal its classifications, place testimony, and open routes through inherited systems.</p>
+        </div>
+        <span class="file">calibration_commons_OFFLINE_WORLD_v2.html</span>
+      </a>
+
+      <a class="place" href="spatial-field-school-void-empty.html">
+        <span class="number">04</span>
+        <div>
+          <h2>Spatial Scholarship Field School</h2>
+          <p>Read the current field through a minimal surface built around place-based inquiry, activity, and return.</p>
+        </div>
+        <span class="file">spatial-field-school-void-empty.html</span>
+      </a>
+    </main>
+
+    <footer>
+      <p>Created independently by Watson Hartsoe in connection with Spatial Scholarship Field School 2026: “Spatial Technologies in the Normal City.”</p>
+      <a href="https://github.com/hartswf0/unsettled-atlas">Repository</a>
+    </footer>
+  </div>
+</body>
+</html>

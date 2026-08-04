@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<meta name="theme-color" content="#080c0e" />
+<title>The Oblique Commons — WorldText Simulation</title>
+<style>
+  :root{
+    --ink:#f1f4ef;
+    --muted:#a6b0aa;
+    --panel:rgba(7,11,12,.88);
+    --line:rgba(241,244,239,.24);
+    --accent:#d7b56d;
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-bottom:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#080c0e;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  body{touch-action:none;overscroll-behavior:none}
+  canvas{display:block;width:100%;height:100%}
+  button{font:inherit;color:inherit}
+  button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+  .hidden{display:none!important}
+  #fallback{position:fixed;inset:0;display:none;place-items:center;padding:28px;text-align:center;background:#080c0e;z-index:100}
+  #hud{position:fixed;inset:0;pointer-events:none;z-index:10}
+  .glass{background:var(--panel);border:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+
+  /* One bearing surface. No charts, meters, rings, or dashboard tiles. */
+  #bearingCard{
+    position:absolute;left:12px;right:12px;top:calc(10px + var(--safe-top));
+    max-width:760px;margin:auto;padding:10px 12px 11px;border-radius:12px;
+  }
+  .bearingTop{display:flex;align-items:center;gap:9px;min-width:0}
+  #phaseName{flex:0 0 auto;padding:5px 7px;border:1px solid currentColor;font-size:10px;font-weight:850;letter-spacing:.14em;line-height:1;text-transform:uppercase}
+  #phaseClock{min-width:0;font-size:11px;font-weight:750;letter-spacing:.045em;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #engineState{margin-left:auto;flex:0 0 auto;font-size:9px;color:var(--muted);font-weight:750;letter-spacing:.08em;font-variant-numeric:tabular-nums}
+  #nowLine{display:grid;grid-template-columns:42px minmax(0,1fr);gap:8px;align-items:baseline;padding:9px 0 8px;border-bottom:1px solid var(--line)}
+  #nowLine span{font-size:9px;color:var(--muted);font-weight:850;letter-spacing:.16em}
+  #nowAction{font-size:16px;line-height:1.08;font-weight:820;letter-spacing:-.02em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .coordinateLine{display:grid;grid-template-columns:42px minmax(0,1fr);gap:8px;align-items:baseline;padding-top:7px}
+  .coordinateLine>span{font-size:9px;color:var(--muted);font-weight:850;letter-spacing:.16em}
+  .coordinateValue{min-width:0;font-size:11px;line-height:1.2;font-weight:720;letter-spacing:.055em;font-variant-numeric:tabular-nums;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #nextLine{display:grid;grid-template-columns:42px minmax(0,1fr);gap:8px;align-items:baseline;padding-top:7px;color:var(--accent)}
+  #nextLine>span{font-size:9px;font-weight:850;letter-spacing:.16em}
+  #nextTarget{font-size:12px;line-height:1.2;font-weight:820;letter-spacing:.035em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  #ticker{position:absolute;left:50%;bottom:calc(150px + var(--safe-bottom));transform:translateX(-50%) translateY(6px);width:min(560px,calc(100vw - 24px));padding:9px 12px;border-radius:10px;font-size:11px;line-height:1.25;text-align:center;opacity:0;transition:opacity .18s,transform .18s}
+  #ticker.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  #context{position:absolute;left:50%;bottom:calc(116px + var(--safe-bottom));transform:translateX(-50%);padding:7px 11px;border-radius:8px;font-size:10px;font-weight:850;letter-spacing:.08em;opacity:0;transition:opacity .15s;text-transform:uppercase;white-space:nowrap}
+  #context.show{opacity:1}
+  #crosshair{position:absolute;left:50%;top:50%;width:10px;height:10px;transform:translate(-50%,-50%);opacity:.55}
+  #crosshair:before,#crosshair:after{content:"";position:absolute;background:rgba(255,255,255,.65)}
+  #crosshair:before{left:4px;top:0;width:2px;height:10px}
+  #crosshair:after{left:0;top:4px;width:10px;height:2px}
+  #helpButton{position:absolute;right:12px;top:calc(160px + var(--safe-top));width:38px;height:38px;border-radius:50%;pointer-events:auto;border:1px solid var(--line);background:var(--panel);font-weight:850;cursor:pointer}
+
+  #mobileControls{display:none;position:absolute;inset:0;pointer-events:none}
+  #joystick{position:absolute;left:18px;bottom:calc(18px + var(--safe-bottom));width:104px;height:104px;border:1px solid var(--line);border-radius:50%;background:rgba(8,12,14,.25);pointer-events:auto}
+  #stick{position:absolute;left:32px;top:32px;width:40px;height:40px;border-radius:50%;border:1px solid rgba(255,255,255,.28);background:rgba(237,242,238,.14);transform:translate(0,0)}
+  .action{position:absolute;border:1px solid var(--line);background:rgba(8,12,14,.70);border-radius:50%;pointer-events:auto;display:grid;place-items:center;font-weight:850;letter-spacing:.07em;font-size:10px;user-select:none;-webkit-user-select:none}
+  #interactBtn{right:18px;bottom:calc(18px + var(--safe-bottom));width:68px;height:68px}
+  #attuneBtn{right:94px;bottom:calc(77px + var(--safe-bottom));width:56px;height:56px}
+  #sprintBtn{right:96px;bottom:calc(14px + var(--safe-bottom));width:48px;height:48px}
+
+  #startScreen,#helpPanel,#completePanel{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:18px;background:rgba(4,7,8,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  .modal{width:min(620px,100%);border:1px solid var(--line);background:#0b1113;border-radius:18px;padding:20px}
+  .kicker{font-size:10px;letter-spacing:.18em;color:var(--accent);text-transform:uppercase}
+  .modal h1{font-size:clamp(30px,7vw,52px);line-height:.92;margin:10px 0 12px;letter-spacing:-.045em}
+  .modal p{font-size:13px;line-height:1.5;color:#bbc5c0;max-width:58ch}
+  .bearingGuide{margin:16px 0;border-block:1px solid var(--line)}
+  .guideRow{display:grid;grid-template-columns:58px minmax(0,1fr);gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .guideRow:last-child{border-bottom:0}
+  .guideRow b{font-size:9px;letter-spacing:.14em;color:var(--muted)}
+  .guideRow span{font-size:12px;line-height:1.35;font-weight:680}
+  .primary{width:100%;border:0;background:var(--ink);color:#0a0f10;border-radius:11px;padding:13px 16px;font-weight:850;cursor:pointer}
+  .secondary{width:100%;margin-top:8px;border:1px solid var(--line);background:transparent;border-radius:11px;padding:11px 16px;font-weight:750;cursor:pointer}
+  #helpPanel .modal{max-width:560px}
+  .controlsList{display:grid;grid-template-columns:1fr 1fr;gap:0 16px;margin:14px 0;border-block:1px solid var(--line)}
+  .controlRow{padding:8px 0;border-bottom:1px solid var(--line);font-size:11px;display:flex;justify-content:space-between;gap:10px;color:var(--muted)}
+  .controlRow strong{color:var(--ink)}
+  #objectiveList{margin-top:14px;display:grid;gap:7px}
+  .objective{display:grid;grid-template-columns:17px 1fr;gap:8px;align-items:start;font-size:11px;color:var(--muted)}
+  .dot{width:12px;height:12px;border:1px solid var(--line);border-radius:50%;margin-top:1px}
+  .objective.done{color:var(--ink)}
+  .objective.done .dot{background:var(--accent);border-color:var(--accent)}
+  #diagnostics{margin-top:12px;padding-top:10px;border-top:1px solid var(--line);font-size:10px;color:var(--muted);font-variant-numeric:tabular-nums}
+  #completePanel{background:rgba(4,7,8,.66)}
+  #completePanel h2{font-size:40px;margin:8px 0 10px;letter-spacing:-.04em}
+
+  @media(max-width:760px){
+    #bearingCard{left:8px;right:8px;top:calc(7px + var(--safe-top));padding:9px 10px 10px;border-radius:10px}
+    #nowAction{font-size:15px}
+    .coordinateValue{font-size:10px}
+    #nextTarget{font-size:11px}
+    #helpButton{top:calc(149px + var(--safe-top));right:9px;width:34px;height:34px}
+    #ticker{bottom:calc(137px + var(--safe-bottom));font-size:10px}
+    #context{bottom:calc(108px + var(--safe-bottom));font-size:9px}
+    #crosshair{display:none}
+    #mobileControls{display:block}
+    .modal{padding:17px;border-radius:15px}
+    .controlsList{grid-template-columns:1fr}
+  }
+  @media(max-width:380px){
+    #engineState{display:none}
+    #phaseClock{font-size:10px}
+    #nowLine,.coordinateLine,#nextLine{grid-template-columns:36px minmax(0,1fr);gap:6px}
+    #nowAction{font-size:14px}
+    #helpButton{top:calc(145px + var(--safe-top))}
+  }
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="fallback">
+  <div style="max-width:620px">
+    <div class="kicker">Simulation startup diagnostic</div>
+    <h1 id="fallbackTitle">The 3D engine could not start.</h1>
+    <p id="fallbackMessage">Keep an internet connection active. If this file was opened directly from Downloads, close it and double-click <strong>START_OBLIQUE_COMMONS.command</strong> instead.</p>
+  </div>
+</div>
+<div id="hud">
+  <section id="bearingCard" class="glass" aria-label="Current temporal and spatial coordinates">
+    <div class="bearingTop">
+      <span id="phaseName">ORIENT</span>
+      <span id="phaseClock">C01 · T+00:00 · 24s to GROUND</span>
+      <span id="engineState">LIVE 60 · Q0</span>
+    </div>
+    <div id="nowLine"><span>NOW</span><strong id="nowAction">ACTIVATE A POINT</strong></div>
+    <div class="coordinateLine"><span>TIME</span><strong class="coordinateValue" id="timeCoord">C01 · 00:00.0 · ORIENT 00/24</strong></div>
+    <div class="coordinateLine"><span>SPACE</span><strong class="coordinateValue" id="spaceCoord">CENTRAL FIELD · X +00 · Z +16 · N 000°</strong></div>
+    <div id="nextLine"><span>NEXT</span><strong id="nextTarget">↑ POINT 1 · 18m · ACT</strong></div>
+  </section>
+  <div id="ticker" class="glass" aria-live="polite"></div>
+  <div id="context" class="glass"></div>
+  <div id="crosshair"></div>
+  <button id="helpButton" aria-label="Help">?</button>
+  <div id="mobileControls">
+    <div id="joystick" aria-label="Movement control"><div id="stick"></div></div>
+    <div id="interactBtn" class="action">ACT</div>
+    <div id="attuneBtn" class="action">TUNE</div>
+    <div id="sprintBtn" class="action">FAST</div>
+  </div>
+</div>
+
+<div id="startScreen">
+  <div class="modal">
+    <div class="kicker">WorldText Simulation Compiler / Build 1.2 — temporal-spatial bearing</div>
+    <h1>The Oblique Commons</h1>
+    <p>Find common ground without flattening difference. The surface now answers only three questions: what time is it in the world, where are you, and what can you do next.</p>
+    <div class="bearingGuide">
+      <div class="guideRow"><b>TIME</b><span>Cycle, elapsed time, current phase, and seconds until the field changes.</span></div>
+      <div class="guideRow"><b>SPACE</b><span>Named zone, X/Z coordinates, and your absolute heading.</span></div>
+      <div class="guideRow"><b>NEXT</b><span>Turn arrow, nearest unfinished place, distance, and valid action.</span></div>
+    </div>
+    <button id="startBtn" class="primary">ENTER THE COMMONS</button>
+    <button id="openHelpBtn" class="secondary">CONTROLS AND OBJECTIVES</button>
+  </div>
+</div>
+
+<div id="helpPanel" class="hidden">
+  <div class="modal">
+    <div class="kicker">Operating the place</div>
+    <h1 style="font-size:34px">Controls</h1>
+    <div class="controlsList">
+      <div class="controlRow"><strong>Move</strong><span>WASD / arrows / left stick</span></div>
+      <div class="controlRow"><strong>Look</strong><span>Drag scene / right side</span></div>
+      <div class="controlRow"><strong>Interact</strong><span>E / ACT</span></div>
+      <div class="controlRow"><strong>Attune</strong><span>Hold Q or Space / TUNE</span></div>
+      <div class="controlRow"><strong>Sprint</strong><span>Shift / FAST</span></div>
+      <div class="controlRow"><strong>Help</strong><span>H or ?</span></div>
+    </div>
+    <div class="eyebrow">World objectives</div>
+    <div id="objectiveList"></div>
+    <div id="diagnostics">ENGINE · 60 FPS · TICK 0 · QUEUE 0</div>
+    <button id="closeHelpBtn" class="primary" style="margin-top:16px">RETURN TO WORLD</button>
+  </div>
+</div>
+
+<div id="completePanel" class="hidden">
+  <div class="modal">
+    <div class="kicker">A provisional settlement</div>
+    <h2>COMMON, NOT UNIFORM</h2>
+    <p>The world has reached a workable common ground while preserving oblique positions, unequal histories, and multiple modes of passage. The simulation remains live: every further crossing can alter the settlement.</p>
+    <button id="continueBtn" class="primary">CONTINUE INHABITING</button>
+  </div>
+</div>
+
+<script>
+function showBootError(message) {
+  const fallback = document.getElementById('fallback');
+  const start = document.getElementById('startScreen');
+  const text = document.getElementById('fallbackMessage');
+  if (text && message) text.textContent = message;
+  if (fallback) fallback.style.display = 'grid';
+  if (start) start.style.display = 'none';
+}
+window.addEventListener('error', function (event) {
+  if (event && event.message) showBootError('Startup error: ' + event.message + ' Use START_OBLIQUE_COMMONS.command to run through localhost.');
+});
+window.addEventListener('unhandledrejection', function (event) {
+  const reason = event && event.reason ? String(event.reason) : 'unknown promise rejection';
+  showBootError('Startup error: ' + reason + ' Use START_OBLIQUE_COMMONS.command to run through localhost.');
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.155.0/build/three.min.js" crossorigin="anonymous" onerror="showBootError('Three.js could not be downloaded. Check the internet connection, then use START_OBLIQUE_COMMONS.command.')"></script>
+<script>
+(() => {
+'use strict';
+
+if (!window.THREE) {
+  document.getElementById('fallback').style.display = 'grid';
+  document.getElementById('startScreen').style.display = 'none';
+  return;
+}
+
+const TAU = Math.PI * 2;
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const damp = (a, b, lambda, dt) => lerp(a, b, 1 - Math.exp(-lambda * dt));
+const rand = (a=0,b=1) => a + Math.random() * (b-a);
+const choose = arr => arr[(Math.random()*arr.length)|0];
+
+const PHASES = [
+  {name:'ORIENT', letter:'O', color:0xd7b56d, duration:24},
+  {name:'GROUND', letter:'G', color:0x72b6b1, duration:24},
+  {name:'CROSS', letter:'C', color:0xc74d52, duration:24},
+  {name:'UNFOLD', letter:'F', color:0x9d8bd4, duration:24},
+  {name:'ATTUNE', letter:'A', color:0xaacb8d, duration:24}
+];
+
+const WORLD = {
+  name: 'The Oblique Commons',
+  time: 0,
+  tick: 0,
+  phaseIndex: 0,
+  phaseTime: 0,
+  fixedStep: 1/60,
+  eventQueue: [],
+  currentEvent: null,
+  eventDisplayUntil: 0,
+  completed: false,
+  paused: true,
+  metrics: {
+    orientation: 0.05,
+    ground: 0.04,
+    boundary: 0.02,
+    fold: 0.03,
+    archive: 0.02,
+    attunement: 0.03,
+    obliqueness: 0.32,
+    normativePressure: 0
+  },
+  objectives: {
+    beacons: 0,
+    boundaries: 0,
+    folds: 0,
+    archives: 0,
+    attuned: false
+  },
+  uniqueActions: new Set(),
+  lastGroundPulse: 0,
+  lastNormativeEvent: -99
+};
+
+const OBJECTIVES = [
+  {key:'beacons', label:'Activate 5 orientation beacons', target:5},
+  {key:'boundaries', label:'Reconfigure all 3 legal membranes', target:3},
+  {key:'folds', label:'Unfold all 3 passage rings', target:3},
+  {key:'archives', label:'Enact all 4 archive stations', target:4},
+  {key:'attuned', label:'Attune the central basin', target:true}
+];
+
+const Entities = {
+  all: [],
+  interactables: [],
+  agents: [],
+  beacons: [],
+  boundaries: [],
+  folds: [],
+  archives: [],
+  plants: [],
+  add(entity){ this.all.push(entity); if(entity.interact) this.interactables.push(entity); return entity; }
+};
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x071012);
+scene.fog = new THREE.FogExp2(0x071012, 0.017);
+
+const camera = new THREE.PerspectiveCamera(62, innerWidth/innerHeight, 0.1, 320);
+camera.position.set(0, 7, 12);
+
+const renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance'});
+renderer.setPixelRatio(Math.min(devicePixelRatio, 1.65));
+renderer.setSize(innerWidth, innerHeight);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+document.body.insertBefore(renderer.domElement, document.getElementById('hud'));
+
+const hemi = new THREE.HemisphereLight(0xbad2d0, 0x241c15, 1.65);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffe2aa, 2.1);
+sun.position.set(-22, 38, 12);
+scene.add(sun);
+const redLight = new THREE.PointLight(0xc74d52, 18, 55, 2);
+redLight.position.set(-24, 7, -8);
+scene.add(redLight);
+const cyanLight = new THREE.PointLight(0x72b6b1, 16, 50, 2);
+cyanLight.position.set(25, 5, 18);
+scene.add(cyanLight);
+
+const worldRoot = new THREE.Group();
+scene.add(worldRoot);
+
+const materials = {
+  dark: new THREE.MeshStandardMaterial({color:0x11191a, roughness:.88, metalness:.12}),
+  stone: new THREE.MeshStandardMaterial({color:0x394441, roughness:.92, metalness:.06}),
+  copper: new THREE.MeshStandardMaterial({color:0x986f46, roughness:.55, metalness:.72}),
+  paper: new THREE.MeshStandardMaterial({color:0xd8d1bb, roughness:1}),
+  red: new THREE.MeshStandardMaterial({color:0x8b2f36, roughness:.76}),
+  cyan: new THREE.MeshStandardMaterial({color:0x4f8e8b, roughness:.65, metalness:.18}),
+  violet: new THREE.MeshStandardMaterial({color:0x76689f, roughness:.62}),
+  glow: new THREE.MeshBasicMaterial({color:0xd7b56d}),
+  glass: new THREE.MeshPhysicalMaterial({color:0x8fb1ad, transparent:true, opacity:.19, roughness:.18, metalness:.08, transmission:.18, side:THREE.DoubleSide, depthWrite:false}),
+  legal: new THREE.MeshPhysicalMaterial({color:0xb63c48, transparent:true, opacity:.24, roughness:.25, side:THREE.DoubleSide, depthWrite:false})
+};
+
+function addMesh(geometry, material, position, parent=worldRoot){
+  const mesh = new THREE.Mesh(geometry, material);
+  mesh.position.copy(position);
+  parent.add(mesh);
+  return mesh;
+}
+
+function makeLabel(text, color='#edf2ee', bg='rgba(8,12,14,.76)', scale=1){
+  const c = document.createElement('canvas');
+  c.width = 512; c.height = 128;
+  const x = c.getContext('2d');
+  x.clearRect(0,0,c.width,c.height);
+  x.fillStyle = bg; x.fillRect(2,2,508,124);
+  x.strokeStyle = 'rgba(255,255,255,.18)'; x.lineWidth = 3; x.strokeRect(2,2,508,124);
+  x.fillStyle = color; x.font = '700 42px system-ui'; x.textAlign='center'; x.textBaseline='middle';
+  x.fillText(text,256,64);
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace;
+  const spr = new THREE.Sprite(new THREE.SpriteMaterial({map:tex,transparent:true,depthWrite:false}));
+  spr.scale.set(8*scale,2*scale,1);
+  return spr;
+}
+
+// Conductive quilt: one instanced substrate, continuously reconfigured by contact.
+const TILE_N = 26;
+const TILE_SIZE = 3.8;
+const tileCount = TILE_N*TILE_N;
+const tileGeo = new THREE.BoxGeometry(TILE_SIZE*.97,.34,TILE_SIZE*.97);
+const tileMat = new THREE.MeshStandardMaterial({vertexColors:true,roughness:.82,metalness:.2});
+const tiles = new THREE.InstancedMesh(tileGeo,tileMat,tileCount);
+tiles.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+tiles.instanceColor = new THREE.InstancedBufferAttribute(new Float32Array(tileCount*3),3);
+worldRoot.add(tiles);
+const tileState = [];
+const dummy = new THREE.Object3D();
+const tileColor = new THREE.Color();
+let ti=0;
+for(let z=0;z<TILE_N;z++){
+  for(let x=0;x<TILE_N;x++){
+    const px=(x-(TILE_N-1)/2)*TILE_SIZE;
+    const pz=(z-(TILE_N-1)/2)*TILE_SIZE;
+    const variant=Math.sin(x*.74+z*.31)*.5+.5;
+    tileState.push({x:px,z:pz,charge:0,variant,height:Math.sin(x*.5)*Math.cos(z*.41)*.08});
+    dummy.position.set(px,-.24,pz); dummy.scale.set(1,1,1); dummy.updateMatrix(); tiles.setMatrixAt(ti,dummy.matrix);
+    tileColor.setHSL(.08+variant*.26,.18,.16+variant*.07); tiles.setColorAt(ti,tileColor);
+    ti++;
+  }
+}
+tiles.instanceMatrix.needsUpdate=true; tiles.instanceColor.needsUpdate=true;
+
+// Copper seams.
+for(let i=-44;i<=44;i+=11){
+  const seam = addMesh(new THREE.BoxGeometry(.08,.04,96), materials.copper, new THREE.Vector3(i,.02,0));
+  seam.rotation.y = (i%22===0)?0:Math.PI/2;
+}
+
+// Player: visible third-person body.
+const player = {
+  pos:new THREE.Vector3(0,0,16), vel:new THREE.Vector3(), yaw:Math.PI, cameraYaw:Math.PI, cameraPitch:.24,
+  speed:7.2, sprint:1, radius:.65, attuning:false, grounded:0, nearest:null,
+  mesh:new THREE.Group()
+};
+const body = addMesh(new THREE.CylinderGeometry(.36,.47,1.35,12), new THREE.MeshStandardMaterial({color:0xe6e1d3,roughness:.8}), new THREE.Vector3(0,.95,0), player.mesh);
+const head = addMesh(new THREE.SphereGeometry(.32,16,12), new THREE.MeshStandardMaterial({color:0xbfa98d,roughness:.85}), new THREE.Vector3(0,1.85,0), player.mesh);
+const facing = addMesh(new THREE.ConeGeometry(.12,.4,8), materials.glow, new THREE.Vector3(0,1.05,-.52), player.mesh);
+facing.rotation.x=-Math.PI/2;
+player.mesh.position.copy(player.pos); scene.add(player.mesh);
+
+// Central basin.
+const basin = new THREE.Group(); basin.position.set(0,0,0); worldRoot.add(basin);
+const basinRing = addMesh(new THREE.TorusGeometry(6,.18,10,96), materials.copper, new THREE.Vector3(0,.14,0), basin);
+basinRing.rotation.x=Math.PI/2;
+const basinFloor = addMesh(new THREE.CylinderGeometry(5.6,5.6,.16,64), new THREE.MeshStandardMaterial({color:0x142426,roughness:.65,metalness:.25}), new THREE.Vector3(0,-.04,0), basin);
+const basinPulse = addMesh(new THREE.RingGeometry(1.2,1.28,64), new THREE.MeshBasicMaterial({color:0x72b6b1,transparent:true,opacity:.4,side:THREE.DoubleSide,depthWrite:false}), new THREE.Vector3(0,.13,0), basin);
+basinPulse.rotation.x=-Math.PI/2;
+const basinLabel=makeLabel('ATTUNEMENT BASIN','#bfe3df'); basinLabel.position.set(0,3.2,0); basin.add(basinLabel);
+Entities.add({id:'basin',kind:'basin',mesh:basin,radius:6.3,position:basin.position,interact(){
+  WORLD.eventQueue.push({type:'instruction',text:'Hold ATTUNE here. The basin responds to sustained, not instant, agreement.'});
+}});
+
+// Orientation beacons.
+const beaconPositions = [
+  [-18,0,14],[-30,0,-4],[-12,0,-25],[15,0,-29],[30,0,-6],[21,0,19]
+];
+beaconPositions.forEach((p,i)=>{
+  const g=new THREE.Group(); g.position.set(...p); worldRoot.add(g);
+  const mast=addMesh(new THREE.CylinderGeometry(.17,.28,5.2,10),materials.copper,new THREE.Vector3(0,2.6,0),g);
+  const orbMat=new THREE.MeshStandardMaterial({color:0x4e4a39,emissive:0x000000,roughness:.25,metalness:.7});
+  const orb=addMesh(new THREE.SphereGeometry(.72,18,14),orbMat,new THREE.Vector3(0,5.55,0),g);
+  const ring=addMesh(new THREE.TorusGeometry(1.18,.08,8,48),materials.glow,new THREE.Vector3(0,5.55,0),g); ring.rotation.x=Math.PI/2;
+  const beam=addMesh(new THREE.CylinderGeometry(.05,.05,6,8),new THREE.MeshBasicMaterial({color:0xd7b56d,transparent:true,opacity:.15}),new THREE.Vector3(0,8.7,0),g);
+  const label=makeLabel('POINT '+(i+1),'#e8cc8d',undefined,.65); label.position.set(0,7.1,0); g.add(label);
+  const entity={id:'beacon'+i,kind:'beacon',mesh:g,position:g.position,radius:3.2,active:false,orb,ring,beam,phaseOffset:rand(0,TAU),interact(){
+    if(!this.active){
+      this.active=true; WORLD.objectives.beacons++; WORLD.uniqueActions.add('orient-'+WORLD.phaseIndex);
+      WORLD.metrics.orientation=clamp(WORLD.metrics.orientation+.17,0,1);
+      WORLD.metrics.obliqueness=clamp(WORLD.metrics.obliqueness+.025,0,1);
+      this.orb.material.emissive.setHex(0xd7b56d); this.orb.material.emissiveIntensity=1.6;
+      WORLD.eventQueue.push({type:'beacon',text:'A situated reference point joins the field. It guides attention without becoming the center.'});
+    } else {
+      WORLD.metrics.orientation=clamp(WORLD.metrics.orientation+.02,0,1);
+      WORLD.eventQueue.push({type:'beacon',text:'The point has shifted because your position has shifted.'});
+    }
+  }};
+  Entities.beacons.push(entity); Entities.add(entity);
+});
+
+// Legal membranes / boundary offices.
+const boundaryDefs=[
+  {p:[-8,0,-13],rot:0,label:'NDA MEMBRANE'},
+  {p:[16,0,8],rot:Math.PI/2,label:'GUEST ACCESS'},
+  {p:[-24,0,23],rot:-Math.PI/4,label:'RESEARCH LIMIT'}
+];
+boundaryDefs.forEach((d,i)=>{
+  const g=new THREE.Group(); g.position.set(...d.p); g.rotation.y=d.rot; worldRoot.add(g);
+  const wallMat=materials.legal.clone();
+  const wall=addMesh(new THREE.BoxGeometry(14,7,.16),wallMat,new THREE.Vector3(0,3.5,0),g);
+  const frameMat=materials.dark.clone();
+  addMesh(new THREE.BoxGeometry(14.4,.25,.35),frameMat,new THREE.Vector3(0,7.05,0),g);
+  addMesh(new THREE.BoxGeometry(14.4,.25,.35),frameMat,new THREE.Vector3(0,.1,0),g);
+  addMesh(new THREE.BoxGeometry(.25,7,.35),frameMat,new THREE.Vector3(-7.05,3.5,0),g);
+  addMesh(new THREE.BoxGeometry(.25,7,.35),frameMat,new THREE.Vector3(7.05,3.5,0),g);
+  const clauses=[];
+  for(let r=0;r<5;r++){
+    const clause=addMesh(new THREE.BoxGeometry(rand(2.4,5.6),.08,.05),new THREE.MeshBasicMaterial({color:0xe4a2a6,transparent:true,opacity:.45}),new THREE.Vector3(rand(-3,3),1.5+r*.9,.13),g);
+    clauses.push(clause);
+  }
+  const label=makeLabel(d.label,'#f2b2b7'); label.position.set(0,8.5,0); g.add(label);
+  const entity={id:'boundary'+i,kind:'boundary',mesh:g,position:g.position,radius:5.3,permeability:.08,reconfigured:false,wall,clauses,rotation:d.rot,interact(){
+    const mode = WORLD.phaseIndex===2 ? 'transgressed' : WORLD.phaseIndex===0 ? 'reoriented' : WORLD.phaseIndex===1 ? 'grounded' : WORLD.phaseIndex===3 ? 'folded' : 'attuned';
+    WORLD.uniqueActions.add('boundary-'+mode);
+    this.permeability=clamp(this.permeability+.34,0,1);
+    if(!this.reconfigured && this.permeability>.62){this.reconfigured=true;WORLD.objectives.boundaries++;}
+    WORLD.metrics.boundary=clamp(WORLD.metrics.boundary+.15,0,1);
+    WORLD.metrics.obliqueness=clamp(WORLD.metrics.obliqueness+(mode==='transgressed'?.06:.025),0,1);
+    WORLD.eventQueue.push({type:'boundary',text:'Boundary '+mode+'. Access changes, but the membrane keeps its legal and affective thickness.'});
+  }};
+  Entities.boundaries.push(entity); Entities.add(entity);
+});
+
+// Fold passages.
+const foldDefs=[
+  {a:[-30,0,-25],b:[26,0,27],color:0x9d8bd4},
+  {a:[32,0,-26],b:[-30,0,10],color:0x72b6b1},
+  {a:[8,0,31],b:[-4,0,-34],color:0xd7b56d}
+];
+foldDefs.forEach((d,i)=>{
+  const g=new THREE.Group(); g.position.set(...d.a); worldRoot.add(g);
+  const mat=new THREE.MeshStandardMaterial({color:d.color,emissive:0x000000,roughness:.35,metalness:.45});
+  const ring=addMesh(new THREE.TorusGeometry(2.7,.34,12,64),mat,new THREE.Vector3(0,3.0,0),g); ring.rotation.y=Math.PI/2;
+  const inner=addMesh(new THREE.CircleGeometry(2.35,48),new THREE.MeshBasicMaterial({color:d.color,transparent:true,opacity:.06,side:THREE.DoubleSide,depthWrite:false}),new THREE.Vector3(0,3,0),g); inner.rotation.y=Math.PI/2;
+  const thread=new THREE.Line(new THREE.BufferGeometry().setFromPoints([
+    new THREE.Vector3(0,.2,0),new THREE.Vector3(rand(-2,2),1.5,0),new THREE.Vector3(rand(-1,1),4,0),new THREE.Vector3(0,6,0)
+  ]),new THREE.LineBasicMaterial({color:d.color,transparent:true,opacity:.65})); g.add(thread);
+  const label=makeLabel('FOLD '+(i+1),'#d8ccf5',undefined,.7); label.position.set(0,7.0,0); g.add(label);
+  const entity={id:'fold'+i,kind:'fold',mesh:g,position:g.position,radius:4.2,active:false,ring,inner,destination:new THREE.Vector3(...d.b),cooldown:0,interact(){
+    if(!this.active){this.active=true;WORLD.objectives.folds++;WORLD.metrics.fold=clamp(WORLD.metrics.fold+.28,0,1);WORLD.metrics.obliqueness=clamp(WORLD.metrics.obliqueness+.04,0,1);WORLD.uniqueActions.add('fold-'+WORLD.phaseIndex);this.ring.material.emissive.setHex(d.color);this.ring.material.emissiveIntensity=1.15;this.inner.material.opacity=.28;WORLD.eventQueue.push({type:'fold',text:'The fold opens. A local gesture now touches a distant surface.'});}
+    else WORLD.eventQueue.push({type:'fold',text:'Walk through the ring. The passage bends distance rather than erasing it.'});
+  }};
+  Entities.folds.push(entity); Entities.add(entity);
+});
+
+// Archive theatre.
+const archiveCenter=new THREE.Vector3(12,0,-13);
+const archiveFloor=addMesh(new THREE.CylinderGeometry(10,10,.22,8),new THREE.MeshStandardMaterial({color:0x271b1e,roughness:.9}),new THREE.Vector3(archiveCenter.x,-.05,archiveCenter.z));
+for(let k=0;k<4;k++){
+  const a=k/4*TAU+.3;
+  const p=new THREE.Vector3(archiveCenter.x+Math.cos(a)*7.5,0,archiveCenter.z+Math.sin(a)*7.5);
+  const g=new THREE.Group();g.position.copy(p);g.rotation.y=-a+Math.PI/2;worldRoot.add(g);
+  const cabinet=addMesh(new THREE.BoxGeometry(3.5,4.7,1.5),materials.dark,new THREE.Vector3(0,2.35,0),g);
+  const drawers=[];
+  for(let j=0;j<5;j++){
+    const drawer=addMesh(new THREE.BoxGeometry(3.0,.62,1.58),new THREE.MeshStandardMaterial({color:j%2?0x4b3336:0x5c3c3f,roughness:.86}),new THREE.Vector3(0,.65+j*.82,.05),g);
+    addMesh(new THREE.BoxGeometry(.45,.08,.12),materials.copper,new THREE.Vector3(0,.65+j*.82,.88),g);
+    drawers.push(drawer);
+  }
+  const redaction=addMesh(new THREE.PlaneGeometry(3.1,4.2),new THREE.MeshBasicMaterial({color:0x030303,transparent:true,opacity:.74,side:THREE.DoubleSide}),new THREE.Vector3(0,2.35,.82),g);
+  const label=makeLabel('ARCHIVE '+(k+1),'#f0c8cb',undefined,.55);label.position.set(0,5.9,0);g.add(label);
+  const entity={id:'archive'+k,kind:'archive',mesh:g,position:g.position,radius:3.5,enacted:false,stage:0,drawers,redaction,interact(){
+    this.stage++;
+    const idx=Math.min(this.stage-1,this.drawers.length-1);
+    this.drawers[idx].position.z+=.65;
+    this.redaction.material.opacity=clamp(.74-this.stage*.15,.05,.74);
+    WORLD.metrics.archive=clamp(WORLD.metrics.archive+.09,0,1);
+    WORLD.uniqueActions.add('archive-'+WORLD.phaseIndex);
+    if(!this.enacted && this.stage>=3){this.enacted=true;WORLD.objectives.archives++;WORLD.metrics.archive=clamp(WORLD.metrics.archive+.13,0,1);WORLD.metrics.obliqueness=clamp(WORLD.metrics.obliqueness+.035,0,1);}
+    WORLD.eventQueue.push({type:'archive',text:this.enacted?'The archive is now an enacted relation, not a static repository.':'A redaction becomes a handle. The record changes through bodily performance.'});
+  }};
+  Entities.archives.push(entity);Entities.add(entity);
+}
+
+// Craft structures: stitched towers and thread spans.
+function makeThread(points,color=0xd7b56d,opacity=.5){
+  const curve=new THREE.CatmullRomCurve3(points);
+  const geo=new THREE.TubeGeometry(curve,64,.045,6,false);
+  const mat=new THREE.MeshBasicMaterial({color,transparent:true,opacity});
+  const mesh=new THREE.Mesh(geo,mat);worldRoot.add(mesh);return mesh;
+}
+for(let i=0;i<9;i++){
+  const px=rand(-42,42),pz=rand(-42,42);
+  if(Math.hypot(px,pz)<11){i--;continue;}
+  const h=rand(5,13);
+  const pole=addMesh(new THREE.CylinderGeometry(.12,.28,h,8),i%2?materials.copper:materials.stone,new THREE.Vector3(px,h/2,pz));
+  const top=new THREE.Vector3(px,h,pz);
+  makeThread([top,new THREE.Vector3(px+rand(-7,7),h+rand(1,5),pz+rand(-7,7)),new THREE.Vector3(px+rand(-12,12),rand(2,7),pz+rand(-12,12))],i%3===0?0x9d8bd4:0xd7b56d,.34);
+}
+
+// Conductive plants.
+for(let i=0;i<28;i++){
+  const a=rand(0,TAU),r=rand(8,46);const p=new THREE.Vector3(Math.cos(a)*r,0,Math.sin(a)*r);
+  const g=new THREE.Group();g.position.copy(p);worldRoot.add(g);
+  const stem=addMesh(new THREE.CylinderGeometry(.04,.08,rand(.9,1.8),7),materials.copper,new THREE.Vector3(0,.75,0),g);
+  for(let j=0;j<4;j++){
+    const leaf=addMesh(new THREE.SphereGeometry(rand(.12,.25),8,6),new THREE.MeshStandardMaterial({color:0x436a55,emissive:0x000000,roughness:.75}),new THREE.Vector3(rand(-.42,.42),rand(.6,1.7),rand(-.42,.42)),g);
+    leaf.scale.set(1.8,.6,1);leaf.rotation.set(rand(-.4,.4),rand(0,TAU),rand(-.4,.4));
+  }
+  const entity={id:'plant'+i,kind:'plant',mesh:g,position:g.position,radius:1.8,charge:0};Entities.plants.push(entity);Entities.all.push(entity);
+}
+
+// Inhabitants: researchers, craft-workers, guardians, echoes.
+const AGENT_TYPES=[
+  {kind:'researcher',color:0xd8d1bb,speed:.55},
+  {kind:'craftworker',color:0xd7b56d,speed:.42},
+  {kind:'guardian',color:0xc74d52,speed:.34},
+  {kind:'echo',color:0x72b6b1,speed:.7}
+];
+function makeAgent(type,index){
+  const g=new THREE.Group();
+  const mat=new THREE.MeshStandardMaterial({color:type.color,roughness:.72,transparent:type.kind==='echo',opacity:type.kind==='echo'?.52:1});
+  addMesh(new THREE.CylinderGeometry(.22,.34,1.15,10),mat,new THREE.Vector3(0,.72,0),g);
+  addMesh(new THREE.SphereGeometry(.23,12,9),mat,new THREE.Vector3(0,1.53,0),g);
+  const a=rand(0,TAU),r=rand(12,40);g.position.set(Math.cos(a)*r,0,Math.sin(a)*r);worldRoot.add(g);
+  return {id:type.kind+index,kind:type.kind,mesh:g,position:g.position,speed:type.speed,heading:rand(0,TAU),target:new THREE.Vector3(),changeIn:0,attunement:rand(.1,.4),phaseOffset:rand(0,TAU)};
+}
+for(let i=0;i<16;i++){const a=makeAgent(AGENT_TYPES[i%AGENT_TYPES.length],i);Entities.agents.push(a);Entities.all.push(a);}
+
+// Atmosphere particles / data points.
+const particleCount=720;
+const particlePos=new Float32Array(particleCount*3);
+const particleSeed=[];
+for(let i=0;i<particleCount;i++){
+  const a=rand(0,TAU),r=rand(4,62),h=rand(.4,18);particlePos[i*3]=Math.cos(a)*r;particlePos[i*3+1]=h;particlePos[i*3+2]=Math.sin(a)*r;particleSeed.push(rand(0,TAU));
+}
+const particleGeo=new THREE.BufferGeometry();particleGeo.setAttribute('position',new THREE.BufferAttribute(particlePos,3));
+const particles=new THREE.Points(particleGeo,new THREE.PointsMaterial({color:0xb7d4cf,size:.09,transparent:true,opacity:.36,depthWrite:false}));scene.add(particles);
+
+// Attunement waves pool.
+const wavePool=[];
+for(let i=0;i<10;i++){
+  const m=new THREE.Mesh(new THREE.RingGeometry(.96,1,64),new THREE.MeshBasicMaterial({color:0x72b6b1,transparent:true,opacity:0,side:THREE.DoubleSide,depthWrite:false}));
+  m.rotation.x=-Math.PI/2;m.visible=false;worldRoot.add(m);wavePool.push({mesh:m,life:0,max:1.8});
+}
+function emitWave(pos,color=0x72b6b1,max=1.8){
+  let w=wavePool.find(w=>w.life<=0) || wavePool[0];
+  w.life=max;w.max=max;w.mesh.visible=true;w.mesh.position.set(pos.x,.12,pos.z);w.mesh.scale.setScalar(.2);w.mesh.material.color.setHex(color);w.mesh.material.opacity=.55;
+}
+
+// Input system.
+const Input={keys:new Set(),moveX:0,moveY:0,lookDX:0,lookDY:0,dragging:false,lastX:0,lastY:0,sprint:false,interactPressed:false,attune:false};
+addEventListener('keydown',e=>{
+  Input.keys.add(e.code);
+  if(['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code)) e.preventDefault();
+  if(e.code==='KeyE') Input.interactPressed=true;
+  if(e.code==='KeyQ'||e.code==='Space') Input.attune=true;
+  if(e.code==='KeyH') toggleHelp();
+});
+addEventListener('keyup',e=>{Input.keys.delete(e.code);if(e.code==='KeyQ'||e.code==='Space')Input.attune=false;});
+renderer.domElement.addEventListener('pointerdown',e=>{
+  if(e.pointerType==='touch' && e.clientX<innerWidth*.48) return;
+  Input.dragging=true;Input.lastX=e.clientX;Input.lastY=e.clientY;renderer.domElement.setPointerCapture?.(e.pointerId);
+});
+renderer.domElement.addEventListener('pointermove',e=>{
+  if(!Input.dragging)return;
+  Input.lookDX+=e.clientX-Input.lastX;Input.lookDY+=e.clientY-Input.lastY;Input.lastX=e.clientX;Input.lastY=e.clientY;
+});
+renderer.domElement.addEventListener('pointerup',()=>Input.dragging=false);
+renderer.domElement.addEventListener('pointercancel',()=>Input.dragging=false);
+
+const joystick=document.getElementById('joystick'),stick=document.getElementById('stick');
+let joyId=null,joyCenter={x:0,y:0};
+function joyUpdate(e){const t=[...e.touches].find(t=>t.identifier===joyId);if(!t)return;let dx=t.clientX-joyCenter.x,dy=t.clientY-joyCenter.y;const len=Math.hypot(dx,dy),max=39;if(len>max){dx=dx/len*max;dy=dy/len*max;}Input.moveX=dx/max;Input.moveY=-dy/max;stick.style.transform=`translate(${dx}px,${dy}px)`;}
+joystick.addEventListener('touchstart',e=>{e.preventDefault();const t=e.changedTouches[0];joyId=t.identifier;const r=joystick.getBoundingClientRect();joyCenter={x:r.left+r.width/2,y:r.top+r.height/2};joyUpdate(e);},{passive:false});
+joystick.addEventListener('touchmove',e=>{e.preventDefault();joyUpdate(e);},{passive:false});
+joystick.addEventListener('touchend',e=>{if([...e.changedTouches].some(t=>t.identifier===joyId)){joyId=null;Input.moveX=0;Input.moveY=0;stick.style.transform='translate(0,0)';}},{passive:false});
+const interactBtn=document.getElementById('interactBtn');interactBtn.addEventListener('pointerdown',e=>{e.preventDefault();Input.interactPressed=true});
+const attuneBtn=document.getElementById('attuneBtn');attuneBtn.addEventListener('pointerdown',e=>{e.preventDefault();Input.attune=true;attuneBtn.setPointerCapture?.(e.pointerId)});attuneBtn.addEventListener('pointerup',()=>Input.attune=false);attuneBtn.addEventListener('pointercancel',()=>Input.attune=false);
+const sprintBtn=document.getElementById('sprintBtn');sprintBtn.addEventListener('pointerdown',e=>{e.preventDefault();Input.sprint=true;sprintBtn.setPointerCapture?.(e.pointerId)});sprintBtn.addEventListener('pointerup',()=>Input.sprint=false);sprintBtn.addEventListener('pointercancel',()=>Input.sprint=false);
+
+// UI. The primary surface is a bearing, not a dashboard.
+const ui={
+  phaseName:document.getElementById('phaseName'),phaseClock:document.getElementById('phaseClock'),engineState:document.getElementById('engineState'),
+  nowAction:document.getElementById('nowAction'),timeCoord:document.getElementById('timeCoord'),spaceCoord:document.getElementById('spaceCoord'),nextTarget:document.getElementById('nextTarget'),
+  ticker:document.getElementById('ticker'),context:document.getElementById('context'),diagnostics:document.getElementById('diagnostics')
+};
+function rebuildObjectives(){
+  const list=document.getElementById('objectiveList');list.innerHTML='';
+  OBJECTIVES.forEach(o=>{const v=WORLD.objectives[o.key];const done=o.target===true?!!v:v>=o.target;const d=document.createElement('div');d.className='objective'+(done?' done':'');d.innerHTML=`<span class="dot"></span><span>${o.label}${o.target!==true?` (${Math.min(v,o.target)}/${o.target})`:''}</span>`;list.appendChild(d);});
+}
+function showEvent(text){ui.ticker.textContent=text;ui.ticker.classList.add('show');WORLD.eventDisplayUntil=WORLD.time+4.4;}
+function toggleHelp(force){const p=document.getElementById('helpPanel');const open=typeof force==='boolean'?force:p.classList.contains('hidden');p.classList.toggle('hidden',!open);WORLD.paused=open || !document.getElementById('startScreen').classList.contains('hidden');rebuildObjectives();}
+document.getElementById('helpButton').onclick=()=>toggleHelp(true);document.getElementById('openHelpBtn').onclick=()=>toggleHelp(true);document.getElementById('closeHelpBtn').onclick=()=>toggleHelp(false);
+document.getElementById('startBtn').onclick=()=>{document.getElementById('startScreen').classList.add('hidden');WORLD.paused=false;WORLD.eventQueue.push({type:'start',text:'The commons is live. Read TIME, SPACE, and NEXT; then move toward the indicated point.'});};
+document.getElementById('continueBtn').onclick=()=>document.getElementById('completePanel').classList.add('hidden');
+
+// Systems.
+function phaseSystem(dt){
+  WORLD.phaseTime+=dt;
+  const phase=PHASES[WORLD.phaseIndex];
+  if(WORLD.phaseTime>=phase.duration){
+    WORLD.phaseTime-=phase.duration;WORLD.phaseIndex=(WORLD.phaseIndex+1)%PHASES.length;
+    const next=PHASES[WORLD.phaseIndex];WORLD.eventQueue.push({type:'phase',text:`The field enters ${next.name}. Different operations now carry different force.`});
+  }
+}
+
+function inputSystem(dt){
+  const keyX=(Input.keys.has('KeyD')||Input.keys.has('ArrowRight')?1:0)-(Input.keys.has('KeyA')||Input.keys.has('ArrowLeft')?1:0);
+  const keyY=(Input.keys.has('KeyW')||Input.keys.has('ArrowUp')?1:0)-(Input.keys.has('KeyS')||Input.keys.has('ArrowDown')?1:0);
+  const mx=clamp(keyX+Input.moveX,-1,1),my=clamp(keyY+Input.moveY,-1,1);
+  player.cameraYaw-=Input.lookDX*.0032;player.cameraPitch=clamp(player.cameraPitch-Input.lookDY*.0024,-.12,.72);Input.lookDX=Input.lookDY=0;
+  const forward=new THREE.Vector3(-Math.sin(player.cameraYaw),0,-Math.cos(player.cameraYaw));
+  const right=new THREE.Vector3(Math.cos(player.cameraYaw),0,-Math.sin(player.cameraYaw));
+  const dir=forward.multiplyScalar(my).add(right.multiplyScalar(mx));
+  if(dir.lengthSq()>1)dir.normalize();
+  const sprint=(Input.keys.has('ShiftLeft')||Input.keys.has('ShiftRight')||Input.sprint)?1.65:1;
+  const targetVel=dir.multiplyScalar(player.speed*sprint);
+  player.vel.x=damp(player.vel.x,targetVel.x,10,dt);player.vel.z=damp(player.vel.z,targetVel.z,10,dt);
+  if(targetVel.lengthSq()>.1)player.yaw=Math.atan2(-player.vel.x,-player.vel.z);
+  const old=player.pos.clone();
+  player.pos.addScaledVector(player.vel,dt);
+  player.pos.x=clamp(player.pos.x,-49,49);player.pos.z=clamp(player.pos.z,-49,49);
+  boundaryCollision(old);
+  player.mesh.position.copy(player.pos);player.mesh.rotation.y=player.yaw;
+  player.attuning=Input.attune;
+  if(Input.interactPressed){Input.interactPressed=false;if(player.nearest&&player.nearest.distance<player.nearest.entity.radius)player.nearest.entity.interact();else WORLD.eventQueue.push({type:'empty',text:'No operative threshold is within reach.'});}
+}
+
+function boundaryCollision(old){
+  Entities.boundaries.forEach(b=>{
+    if(b.permeability>.64)return;
+    const local=player.pos.clone().sub(b.position).applyAxisAngle(new THREE.Vector3(0,1,0),-b.rotation);
+    if(Math.abs(local.x)<7.3&&Math.abs(local.z)<.72){
+      player.pos.copy(old);player.vel.multiplyScalar(.25);
+      if(WORLD.time-(b.lastBump||-10)>1.7){b.lastBump=WORLD.time;WORLD.eventQueue.push({type:'boundary',text:'The membrane resists passage. Approach it and ACT to renegotiate its terms.'});}
+    }
+  });
+}
+
+function groundSystem(dt){
+  const phaseBoost=WORLD.phaseIndex===1?1.8:1;
+  player.grounded=damp(player.grounded,player.vel.length()<1.2?1:.25,2,dt);
+  if(WORLD.time-WORLD.lastGroundPulse>.16){
+    WORLD.lastGroundPulse=WORLD.time;
+    let touched=0;
+    for(let i=0;i<tileState.length;i++){
+      const t=tileState[i],d=Math.hypot(player.pos.x-t.x,player.pos.z-t.z);
+      t.charge=clamp(t.charge+((d<6?(1-d/6)*.08*phaseBoost:0)-.006),0,1);
+      const wave=Math.sin(WORLD.time*1.3+t.x*.08+t.z*.07)*.035;
+      const y=-.24+t.height+wave+t.charge*.22;
+      dummy.position.set(t.x,y,t.z);dummy.scale.set(1,1,1);dummy.updateMatrix();tiles.setMatrixAt(i,dummy.matrix);
+      const hue=.08+t.variant*.24+t.charge*.22;
+      tileColor.setHSL(hue,.18+t.charge*.45,.16+t.variant*.06+t.charge*.16);tiles.setColorAt(i,tileColor);
+      if(d<4)touched+=t.charge;
+    }
+    tiles.instanceMatrix.needsUpdate=true;tiles.instanceColor.needsUpdate=true;
+    if(touched>1.1)WORLD.metrics.ground=clamp(WORLD.metrics.ground+.003*phaseBoost,0,1);
+  }
+}
+
+function proximitySystem(){
+  let best=null,bestD=999;
+  Entities.interactables.forEach(e=>{const d=player.pos.distanceTo(e.position);if(d<bestD){best={entity:e,distance:d};bestD=d;}});
+  player.nearest=best;
+  if(best&&bestD<best.entity.radius){
+    const verbs={beacon:'ACT · ORIENT',boundary:'ACT · RECONFIGURE',fold:'ACT · UNFOLD',archive:'ACT · ENACT',basin:'HOLD TUNE · ATTUNE'};
+    ui.context.textContent=verbs[best.entity.kind]||'ACT';ui.context.classList.add('show');
+  }else ui.context.classList.remove('show');
+}
+
+function beaconSystem(dt){
+  Entities.beacons.forEach((b,i)=>{
+    b.ring.rotation.z+=dt*(b.active?1.2:.35);b.ring.rotation.y=Math.sin(WORLD.time*.6+b.phaseOffset)*.55;
+    b.orb.position.y=5.55+Math.sin(WORLD.time*1.4+b.phaseOffset)*.16;
+    b.beam.material.opacity=b.active?.22+.12*Math.sin(WORLD.time*2+b.phaseOffset):.05;
+  });
+}
+
+function boundarySystem(dt){
+  Entities.boundaries.forEach((b,i)=>{
+    b.permeability=clamp(b.permeability-dt*.0015,0,1);
+    b.wall.material.opacity=lerp(.33,.055,b.permeability);
+    b.wall.scale.x=1+Math.sin(WORLD.time*.7+i)*.015*(1-b.permeability);
+    b.clauses.forEach((c,j)=>c.position.x+=Math.sin(WORLD.time*.9+j+i)*.0007*(1-b.permeability));
+  });
+}
+
+function foldSystem(dt){
+  Entities.folds.forEach((f,i)=>{
+    f.cooldown=Math.max(0,f.cooldown-dt);f.ring.rotation.x+=dt*(f.active?.55:.1);f.inner.material.opacity=f.active?.18+.08*Math.sin(WORLD.time*1.5+i):.035;
+    if(f.active&&f.cooldown<=0&&player.pos.distanceTo(f.position)<2.45){
+      player.pos.copy(f.destination);player.vel.set(0,0,0);f.cooldown=2;emitWave(player.pos,0x9d8bd4,2.4);
+      WORLD.metrics.fold=clamp(WORLD.metrics.fold+.035,0,1);WORLD.eventQueue.push({type:'fold',text:'Distance bends. The arrival retains a trace of the departure.'});
+    }
+  });
+}
+
+function archiveSystem(dt){
+  Entities.archives.forEach((a,i)=>{
+    a.mesh.rotation.y+=Math.sin(WORLD.time*.3+i)*.00025;
+    if(a.enacted)a.redaction.material.opacity=.05+.025*Math.sin(WORLD.time*2+i);
+  });
+}
+
+function attunementSystem(dt){
+  const basinDist=player.pos.length();
+  if(player.attuning){
+    if((WORLD.tick%14)===0)emitWave(player.pos,WORLD.phaseIndex===4?0xaacb8d:0x72b6b1,1.7);
+    const boost=WORLD.phaseIndex===4?2.2:1;
+    WORLD.metrics.attunement=clamp(WORLD.metrics.attunement+dt*.026*boost,0,1);
+    Entities.agents.forEach(a=>{const d=a.position.distanceTo(player.pos);if(d<9){a.attunement=clamp(a.attunement+dt*.15*boost,0,1);}});
+    Entities.plants.forEach(p=>{const d=p.position.distanceTo(player.pos);if(d<6)p.charge=clamp(p.charge+dt*.5,0,1);});
+    if(basinDist<5.8){
+      WORLD.metrics.attunement=clamp(WORLD.metrics.attunement+dt*.055*boost,0,1);
+      if(WORLD.metrics.attunement>.68&&!WORLD.objectives.attuned){WORLD.objectives.attuned=true;WORLD.metrics.obliqueness=clamp(WORLD.metrics.obliqueness+.07,0,1);WORLD.uniqueActions.add('basin-attune');WORLD.eventQueue.push({type:'attune',text:'The basin holds a shared rhythm without forcing every body into the same beat.'});}
+    }
+  }
+  basinPulse.scale.setScalar(1+((WORLD.time*.45)%1)*4.2);basinPulse.material.opacity=.42*(1-((WORLD.time*.45)%1))*(WORLD.metrics.attunement+.15);
+  wavePool.forEach(w=>{if(w.life>0){w.life-=dt;const t=1-w.life/w.max;w.mesh.scale.setScalar(.2+t*8);w.mesh.material.opacity=(1-t)*.48;if(w.life<=0)w.mesh.visible=false;}});
+  Entities.plants.forEach((p,i)=>{p.charge=Math.max(0,p.charge-dt*.08);p.mesh.scale.y=1+p.charge*.22;const leaves=p.mesh.children.slice(1);leaves.forEach(l=>{if(l.material&&l.material.emissive){l.material.emissive.setHex(p.charge>.05?0x315e53:0x000000);l.material.emissiveIntensity=p.charge*.8;}});});
+}
+
+function agentSystem(dt){
+  Entities.agents.forEach((a,i)=>{
+    a.changeIn-=dt;
+    if(a.changeIn<=0){a.changeIn=rand(2.8,7.5);a.heading+=rand(-1.6,1.6);if(a.kind==='guardian'){const b=choose(Entities.boundaries);a.target.copy(b.position);}else if(a.kind==='craftworker'){a.target.set(rand(-35,35),0,rand(-35,35));}else if(a.kind==='researcher'){const b=choose(Entities.beacons);a.target.copy(b.position);}else a.target.set(rand(-42,42),0,rand(-42,42));}
+    const to=a.target.clone().sub(a.position);if(to.lengthSq()>.5){to.normalize();const phaseFactor=WORLD.phaseIndex===4?1+a.attunement*.35:1;a.position.addScaledVector(to,a.speed*phaseFactor*dt);a.mesh.rotation.y=Math.atan2(-to.x,-to.z);}
+    a.mesh.position.y=Math.sin(WORLD.time*2+a.phaseOffset)*.04;
+    if(a.kind==='echo')a.mesh.material?.opacity;
+    if(player.attuning&&a.position.distanceTo(player.pos)<9){const face=player.pos.clone().sub(a.position);a.mesh.rotation.y=Math.atan2(face.x,face.z);}
+  });
+}
+
+function systemicRuleEngine(dt){
+  const vals=['orientation','ground','boundary','fold','archive','attunement'].map(k=>WORLD.metrics[k]);
+  const mean=vals.reduce((a,b)=>a+b,0)/vals.length;
+  const variance=vals.reduce((s,v)=>s+(v-mean)*(v-mean),0)/vals.length;
+  const uniformity=1-clamp(Math.sqrt(variance)*2.6,0,1);
+  WORLD.metrics.normativePressure=clamp(mean*uniformity*(1-WORLD.metrics.obliqueness*.45),0,1);
+  WORLD.metrics.obliqueness=clamp(WORLD.metrics.obliqueness+WORLD.uniqueActions.size*.000002-dt*.00035,0.18,1);
+  if(WORLD.metrics.normativePressure>.72&&WORLD.time-WORLD.lastNormativeEvent>18){
+    WORLD.lastNormativeEvent=WORLD.time;
+    const b=choose(Entities.beacons);b.mesh.position.x+=rand(-2.2,2.2);b.mesh.position.z+=rand(-2.2,2.2);b.position=b.mesh.position;
+    WORLD.metrics.orientation=clamp(WORLD.metrics.orientation-.035,0,1);WORLD.metrics.obliqueness=clamp(WORLD.metrics.obliqueness+.055,0,1);
+    WORLD.eventQueue.push({type:'oblique',text:'Normative pressure rises. One reference point moves off-axis to keep the commons from becoming uniform.'});
+  }
+  const complete=OBJECTIVES.every(o=>o.target===true?WORLD.objectives[o.key]:WORLD.objectives[o.key]>=o.target)&&mean>.58&&WORLD.metrics.obliqueness>.24;
+  if(complete&&!WORLD.completed){WORLD.completed=true;document.getElementById('completePanel').classList.remove('hidden');WORLD.eventQueue.push({type:'complete',text:'A provisional common ground has formed without erasing oblique positions.'});}
+}
+
+function eventSystem(){
+  if(WORLD.currentEvent&&WORLD.time>WORLD.eventDisplayUntil){ui.ticker.classList.remove('show');WORLD.currentEvent=null;}
+  if(!WORLD.currentEvent&&WORLD.eventQueue.length){WORLD.currentEvent=WORLD.eventQueue.shift();showEvent(WORLD.currentEvent.text);}
+}
+
+function particleSystem(dt){
+  const p=particles.geometry.attributes.position.array;
+  for(let i=0;i<particleCount;i++){
+    p[i*3+1]+=Math.sin(WORLD.time*.45+particleSeed[i])*.0025;
+    p[i*3]+=Math.sin(WORLD.time*.08+particleSeed[i])*.0015;
+    p[i*3+2]+=Math.cos(WORLD.time*.07+particleSeed[i])*.0015;
+    if(p[i*3+1]>19)p[i*3+1]=.4;
+  }
+  particles.geometry.attributes.position.needsUpdate=true;
+}
+
+function cameraSystem(dt){
+  const dist=8.8,height=4.4;
+  const cp=Math.cos(player.cameraPitch),sp=Math.sin(player.cameraPitch);
+  const offset=new THREE.Vector3(Math.sin(player.cameraYaw)*dist*cp,height+sp*5,Math.cos(player.cameraYaw)*dist*cp);
+  const desired=player.pos.clone().add(offset);
+  camera.position.lerp(desired,1-Math.exp(-8*dt));
+  camera.lookAt(player.pos.x,1.15,player.pos.z);
+}
+
+let fpsSmooth=60,frames=0,fpsClock=0;
+const phaseActions={
+  ORIENT:'ACTIVATE A SITUATED POINT',
+  GROUND:'MOVE · LET THE GROUND REGISTER YOU',
+  CROSS:'ACT AT A LEGAL MEMBRANE',
+  UNFOLD:'ACTIVATE A FOLD PASSAGE',
+  ATTUNE:'HOLD TUNE NEAR BODIES OR BASIN'
+};
+function pad2(v){return String(Math.floor(v)).padStart(2,'0');}
+function formatElapsed(seconds,withTenths=false){
+  const m=Math.floor(seconds/60),s=seconds-m*60;
+  return pad2(m)+':'+(withTenths?s.toFixed(1).padStart(4,'0'):pad2(s));
+}
+function signed(v){const n=Math.round(v);return (n>=0?'+':'−')+String(Math.abs(n)).padStart(2,'0');}
+function compassName(deg){
+  const names=['N','NE','E','SE','S','SW','W','NW'];
+  return names[Math.round(deg/45)%8];
+}
+function turnArrow(delta){
+  const d=((delta+540)%360)-180;
+  if(d>=-22.5&&d<22.5)return '↑';
+  if(d>=22.5&&d<67.5)return '↗';
+  if(d>=67.5&&d<112.5)return '→';
+  if(d>=112.5&&d<157.5)return '↘';
+  if(d>=157.5||d<-157.5)return '↓';
+  if(d>=-157.5&&d<-112.5)return '↙';
+  if(d>=-112.5&&d<-67.5)return '←';
+  return '↖';
+}
+function entityName(e){
+  if(!e)return 'COMMONS';
+  if(e.kind==='basin')return 'ATTUNEMENT BASIN';
+  const index=Number(String(e.id).match(/\d+/)?.[0]||0)+1;
+  if(e.kind==='beacon')return 'POINT '+index;
+  if(e.kind==='boundary')return ['NDA MEMBRANE','GUEST ACCESS','RESEARCH LIMIT'][index-1]||'MEMBRANE '+index;
+  if(e.kind==='fold')return 'FOLD '+index;
+  if(e.kind==='archive')return 'ARCHIVE '+index;
+  return String(e.kind||'COMMONS').toUpperCase();
+}
+function zoneName(pos){
+  if(Math.hypot(pos.x,pos.z)<8)return 'ATTUNEMENT BASIN';
+  if(Math.hypot(pos.x-archiveCenter.x,pos.z-archiveCenter.z)<12)return 'ARCHIVE THEATRE';
+  const ns=pos.z<-8?'NORTH':pos.z>8?'SOUTH':'CENTRAL';
+  const ew=pos.x>8?'EAST':pos.x<-8?'WEST':'';
+  return (ns+(ew?' '+ew:'')+' FIELD').trim();
+}
+function nearestOf(list){
+  let best=null,bestD=Infinity;
+  list.forEach(e=>{const d=player.pos.distanceTo(e.position);if(d<bestD){best=e;bestD=d;}});
+  return best?{entity:best,distance:bestD}:null;
+}
+function objectiveTarget(){
+  const phase=PHASES[WORLD.phaseIndex].name;
+  const phaseLists={
+    ORIENT:Entities.beacons.filter(e=>!e.active),
+    CROSS:Entities.boundaries.filter(e=>!e.reconfigured),
+    UNFOLD:Entities.folds.filter(e=>!e.active),
+    ATTUNE:WORLD.objectives.attuned?[]:Entities.interactables.filter(e=>e.kind==='basin')
+  };
+  let target=nearestOf(phaseLists[phase]||[]);
+  if(target)return target;
+  const ordered=[
+    Entities.beacons.filter(e=>!e.active),
+    Entities.boundaries.filter(e=>!e.reconfigured),
+    Entities.folds.filter(e=>!e.active),
+    Entities.archives.filter(e=>!e.enacted),
+    WORLD.objectives.attuned?[]:Entities.interactables.filter(e=>e.kind==='basin')
+  ];
+  for(const list of ordered){target=nearestOf(list);if(target)return target;}
+  return player.nearest||nearestOf(Entities.interactables);
+}
+function hudSystem(dt){
+  const phase=PHASES[WORLD.phaseIndex];
+  const next=PHASES[(WORLD.phaseIndex+1)%PHASES.length];
+  const cycle=Math.floor(WORLD.time/PHASES.reduce((s,p)=>s+p.duration,0))+1;
+  const remaining=Math.max(0,Math.ceil(phase.duration-WORLD.phaseTime));
+  const heading=(THREE.MathUtils.radToDeg(-player.yaw)+360)%360;
+  const target=objectiveTarget();
+
+  ui.phaseName.textContent=phase.name;
+  ui.phaseName.style.color='#'+phase.color.toString(16).padStart(6,'0');
+  ui.phaseClock.textContent='C'+pad2(cycle)+' · T+'+formatElapsed(WORLD.time)+' · '+remaining+'s to '+next.name;
+  ui.nowAction.textContent=phaseActions[phase.name];
+  ui.timeCoord.textContent='C'+pad2(cycle)+' · '+formatElapsed(WORLD.time,true)+' · '+phase.name+' '+pad2(WORLD.phaseTime)+'/'+phase.duration;
+  ui.spaceCoord.textContent=zoneName(player.pos)+' · X '+signed(player.pos.x)+' · Z '+signed(player.pos.z)+' · '+compassName(heading)+' '+String(Math.round(heading)).padStart(3,'0')+'°';
+
+  if(target&&target.entity){
+    const dx=target.entity.position.x-player.pos.x,dz=target.entity.position.z-player.pos.z;
+    const targetBearing=(THREE.MathUtils.radToDeg(Math.atan2(dx,-dz))+360)%360;
+    const arrow=turnArrow(targetBearing-heading);
+    const verb=target.distance<target.entity.radius?(target.entity.kind==='basin'?'HOLD TUNE':'ACT'):'GO';
+    ui.nextTarget.textContent=arrow+' '+entityName(target.entity)+' · '+Math.max(0,Math.round(target.distance))+'m · '+verb;
+  }else ui.nextTarget.textContent='COMMON GROUND · CONTINUE INHABITING';
+
+  frames++;fpsClock+=dt;
+  if(fpsClock>.5){fpsSmooth=Math.round(frames/fpsClock);frames=0;fpsClock=0;}
+  ui.engineState.textContent='LIVE '+fpsSmooth+' · Q'+WORLD.eventQueue.length;
+  if(ui.diagnostics)ui.diagnostics.textContent='ENGINE · '+fpsSmooth+' FPS · TICK '+WORLD.tick+' · QUEUE '+WORLD.eventQueue.length;
+  if((WORLD.tick%30)===0)rebuildObjectives();
+}
+
+function renderSystem(){renderer.render(scene,camera);}
+
+let last=performance.now(),acc=0;
+function frame(now){
+  requestAnimationFrame(frame);
+  const realDt=Math.min((now-last)/1000,.08);last=now;
+  if(WORLD.paused){renderSystem();return;}
+  acc+=realDt;
+  while(acc>=WORLD.fixedStep){
+    const dt=WORLD.fixedStep;WORLD.time+=dt;WORLD.tick++;
+    phaseSystem(dt);inputSystem(dt);groundSystem(dt);proximitySystem();beaconSystem(dt);boundarySystem(dt);foldSystem(dt);archiveSystem(dt);attunementSystem(dt);agentSystem(dt);systemicRuleEngine(dt);eventSystem();particleSystem(dt);cameraSystem(dt);hudSystem(dt);
+    acc-=dt;
+  }
+  renderSystem();
+}
+requestAnimationFrame(frame);
+
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(devicePixelRatio,1.65));renderer.setSize(innerWidth,innerHeight);});
+rebuildObjectives();
+})();
+</script>
+</body>
+</html>

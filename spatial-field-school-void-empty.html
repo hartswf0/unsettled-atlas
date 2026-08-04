@@ -1,0 +1,885 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#ffffff">
+  <title>Spatial Scholarship Field School — Current Field</title>
+  <style>
+    :root{
+      --black:#000;
+      --white:#fff;
+      --edge:2px;
+      --max:860px;
+      --safe-bottom:max(16px,env(safe-area-inset-bottom));
+    }
+
+    *{box-sizing:border-box}
+    html{background:var(--white);color:var(--black);font-family:Arial,Helvetica,sans-serif;-webkit-text-size-adjust:100%}
+    body{margin:0;min-width:320px;min-height:100dvh;background:var(--white);color:var(--black)}
+    button{font:inherit;color:inherit}
+    button:focus-visible,[tabindex]:focus-visible{outline:4px solid var(--black);outline-offset:4px}
+    [hidden]{display:none!important}
+
+    .shell{width:min(100%,var(--max));margin:0 auto;border-inline:0 solid var(--black)}
+
+    .mast{
+      position:sticky;
+      top:0;
+      z-index:30;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:12px;
+      align-items:end;
+      padding:max(12px,env(safe-area-inset-top)) 16px 12px;
+      border-bottom:var(--edge) solid var(--black);
+      background:var(--white)
+    }
+    .mast p{margin:0;font-size:11px;font-weight:900;line-height:1.2;letter-spacing:.11em;text-transform:uppercase}
+    .mast h1{margin:4px 0 0;max-width:20ch;font-family:Georgia,"Times New Roman",serif;font-size:clamp(22px,7vw,34px);line-height:.94;letter-spacing:-.035em}
+    .mast .range{text-align:right;white-space:nowrap}
+
+    .now{
+      min-height:calc(100svh - 86px);
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      padding:22px 16px 18px;
+      border-bottom:4px solid var(--black)
+    }
+    .now-top{display:flex;justify-content:space-between;gap:16px;align-items:flex-start}
+    .state{
+      display:inline-flex;
+      align-items:center;
+      min-height:34px;
+      padding:7px 10px;
+      border:var(--edge) solid var(--black);
+      background:var(--black);
+      color:var(--white);
+      font-size:11px;
+      font-weight:900;
+      letter-spacing:.12em;
+      text-transform:uppercase
+    }
+    .clock{text-align:right;font-variant-numeric:tabular-nums}
+    .clock strong{display:block;font-size:24px;line-height:1}
+    .clock span{display:block;margin-top:4px;font-size:10px;font-weight:900;letter-spacing:.08em;text-transform:uppercase}
+
+    .current{padding:24px 0}
+    .current .relation{margin:0 0 9px;font-size:11px;font-weight:900;letter-spacing:.12em;text-transform:uppercase}
+    .current h2{margin:0;max-width:14ch;font-family:Georgia,"Times New Roman",serif;font-size:clamp(40px,13vw,74px);line-height:.88;letter-spacing:-.055em}
+    .current .time-state{margin:18px 0 0;font-size:clamp(18px,5vw,25px);font-weight:900;line-height:1.05}
+    .current .place{margin:10px 0 0;max-width:36ch;font-size:14px;font-weight:900;line-height:1.25;text-transform:uppercase}
+
+    .truths{display:grid;border-top:var(--edge) solid var(--black)}
+    .truth{display:grid;grid-template-columns:86px minmax(0,1fr);gap:12px;padding:12px 0;border-bottom:1px solid var(--black)}
+    .truth:last-child{border-bottom:0}
+    .truth b{font-size:10px;line-height:1.2;letter-spacing:.1em;text-transform:uppercase}
+    .truth span{font-size:14px;font-weight:800;line-height:1.28}
+
+    .locate{
+      width:100%;
+      min-height:54px;
+      margin-top:18px;
+      border:var(--edge) solid var(--black);
+      border-radius:0;
+      background:var(--black);
+      color:var(--white);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer
+    }
+    .locate:active{background:var(--white);color:var(--black)}
+
+    .field{padding:0 16px 90px}
+    .field-intro{padding:26px 0 16px;border-bottom:var(--edge) solid var(--black)}
+    .field-intro p{margin:0;max-width:42ch;font-size:13px;font-weight:800;line-height:1.35}
+    .field-intro strong{display:block;margin-bottom:7px;font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+
+    .day{position:relative;padding:0 0 34px}
+    .day-head{
+      position:sticky;
+      top:76px;
+      z-index:20;
+      display:grid;
+      grid-template-columns:minmax(0,1fr) auto;
+      gap:10px;
+      align-items:center;
+      margin:0 -16px;
+      padding:14px 16px 12px;
+      border-bottom:var(--edge) solid var(--black);
+      background:var(--white)
+    }
+    .day-head p{margin:0;font-size:10px;font-weight:900;letter-spacing:.11em;text-transform:uppercase}
+    .day-head h2{margin:4px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:23px;line-height:.98;letter-spacing:-.03em}
+    .passage{display:grid;place-items:center;min-width:66px;min-height:46px;border:var(--edge) solid var(--black);background:var(--black);color:var(--white);font-size:12px;font-weight:900;letter-spacing:.08em}
+
+    .route{position:relative;margin:0;padding:8px 0 0;list-style:none}
+    .route:before{content:"";position:absolute;left:71px;top:0;bottom:0;width:2px;background:var(--black)}
+
+    .event-wrap{position:relative;display:grid;grid-template-columns:56px 18px minmax(0,1fr);gap:0 8px;padding:11px 0}
+    .time{padding-top:3px;font-size:10px;font-weight:900;line-height:1.22;text-align:right;text-transform:uppercase;font-variant-numeric:tabular-nums}
+    .node{position:relative;z-index:2;width:14px;height:14px;margin:2px auto 0;border:var(--edge) solid var(--black);background:var(--white)}
+    .event-wrap[data-live="true"] .node{background:var(--black)}
+
+    .event{
+      width:100%;
+      padding:0 0 12px;
+      border:0;
+      border-bottom:1px solid var(--black);
+      border-radius:0;
+      background:var(--white);
+      text-align:left;
+      cursor:pointer
+    }
+    .event-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:start}
+    .event h3{margin:0;font-size:17px;line-height:1.06}
+    .duration{font-size:10px;font-weight:900;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+    .event .place{margin:6px 0 0;font-size:11px;font-weight:900;line-height:1.25;text-transform:uppercase}
+    .occupied{display:flex;align-items:center;gap:8px;margin-top:10px}
+    .occupied-bar{height:8px;border:1px solid var(--black);background:var(--white);flex:0 0 var(--occupancy)}
+    .occupied-bar:before{content:"";display:block;width:100%;height:100%;background:var(--black)}
+    .occupied span:last-child{font-size:9px;font-weight:900;letter-spacing:.09em;text-transform:uppercase}
+
+    .detail{display:none;margin-top:12px;padding:12px 0 0;border-top:var(--edge) solid var(--black)}
+    .event[aria-expanded="true"] .detail{display:block}
+    .detail-row{display:grid;grid-template-columns:78px minmax(0,1fr);gap:10px;padding:7px 0;border-bottom:1px solid var(--black)}
+    .detail-row:last-child{border-bottom:0}
+    .detail-row b{font-size:9px;line-height:1.2;letter-spacing:.09em;text-transform:uppercase}
+    .detail-row span{font-size:12px;font-weight:800;line-height:1.3}
+
+    .move{position:relative;display:grid;grid-template-columns:56px 18px minmax(0,1fr);gap:0 8px;padding:4px 0 8px}
+    .move-mark{grid-column:2;width:2px;min-height:36px;margin:0 auto;background:var(--black)}
+    .move-copy{align-self:center;border-block:var(--edge) solid var(--black);padding:8px 0;font-size:10px;font-weight:900;line-height:1.25;letter-spacing:.08em;text-transform:uppercase}
+
+    .day-end{margin-left:82px;padding:13px 0 0;border-top:var(--edge) solid var(--black)}
+    .day-end b{display:block;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+    .day-end p{margin:6px 0 0;font-family:Georgia,"Times New Roman",serif;font-size:18px;font-weight:700;line-height:1.15}
+
+    .return{
+      position:fixed;
+      z-index:50;
+      left:50%;
+      bottom:var(--safe-bottom);
+      transform:translateX(-50%);
+      width:min(calc(100% - 32px),calc(var(--max) - 32px));
+      min-height:50px;
+      border:var(--edge) solid var(--black);
+      border-radius:0;
+      background:var(--black);
+      color:var(--white);
+      font-weight:900;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      cursor:pointer
+    }
+
+    .fault{margin:16px;padding:16px;border:3px solid var(--black);font-weight:900}
+
+    @media (min-width:700px){
+      .shell{border-inline:var(--edge) solid var(--black)}
+      .mast{padding-inline:24px}
+      .now{min-height:720px;padding:32px 24px 24px}
+      .field{padding-inline:24px}
+      .day-head{margin-inline:-24px;padding-inline:24px;top:80px}
+      .route:before{left:91px}
+      .event-wrap,.move{grid-template-columns:72px 22px minmax(0,1fr);gap:0 12px}
+      .day-end{margin-left:106px}
+      .current h2{max-width:12ch}
+    }
+
+    @media (min-width:980px){
+      :root{--max:1180px}
+      .mast{position:static}
+      .now{min-height:640px;display:grid;grid-template-columns:minmax(0,1.25fr) minmax(320px,.75fr);gap:48px;align-items:center}
+      .now-top{grid-column:1/-1;align-self:start}
+      .current{grid-column:1;padding:0}
+      .now-bottom{grid-column:2}
+      .field{padding-bottom:120px}
+      .day-head{top:0}
+    }
+
+
+    @media (max-width:699px){
+      .mast{
+        min-height:48px;
+        align-items:center;
+        padding:max(8px,env(safe-area-inset-top)) 14px 8px;
+        border-bottom:var(--edge) solid var(--black)
+      }
+      .mast>div>p{display:none}
+      .mast h1{
+        margin:0;
+        max-width:none;
+        font-family:Arial,Helvetica,sans-serif;
+        font-size:14px;
+        line-height:1;
+        letter-spacing:.06em;
+        text-transform:uppercase
+      }
+      .mast .range{font-size:9px;line-height:1.05;letter-spacing:.08em}
+
+      .now{
+        min-height:0;
+        display:grid;
+        grid-template-columns:minmax(0,1fr) auto;
+        gap:8px 12px;
+        justify-content:normal;
+        padding:12px 14px 11px;
+        border-bottom:var(--edge) solid var(--black)
+      }
+      .now-top{grid-column:1/-1;align-items:center}
+      .state{min-height:24px;padding:4px 7px;font-size:9px;letter-spacing:.1em}
+      .clock strong{font-size:14px}
+      .clock span{display:none}
+
+      .current{grid-column:1;padding:0;align-self:center}
+      .current .relation{display:none}
+      .current h2{
+        max-width:none;
+        font-family:Arial,Helvetica,sans-serif;
+        font-size:24px;
+        line-height:.98;
+        letter-spacing:-.035em
+      }
+      .current .time-state{margin:7px 0 0;font-size:11px;line-height:1.15}
+      .current .place{margin:4px 0 0;font-size:9px;line-height:1.2;letter-spacing:.02em}
+
+      .now-bottom{grid-column:2;align-self:end}
+      .truths{display:none}
+      .locate{
+        width:auto;
+        min-height:36px;
+        margin:0;
+        padding:0 10px;
+        background:var(--white);
+        color:var(--black);
+        font-size:9px;
+        letter-spacing:.06em;
+        white-space:nowrap
+      }
+
+      .field{padding:0 14px 74px}
+      .field-intro{display:none}
+      .day{padding-bottom:24px}
+      .day-head{
+        top:48px;
+        margin:0 -14px;
+        padding:9px 14px 8px
+      }
+      .day-head p{font-size:8px}
+      .day-head h2{margin-top:2px;font-size:16px}
+      .passage{min-width:48px;min-height:32px;font-size:9px}
+      .route{padding-top:3px}
+      .route:before{left:61px}
+      .event-wrap{grid-template-columns:48px 14px minmax(0,1fr);gap:0 6px;padding:9px 0}
+      .time{font-size:8px}
+      .node{width:10px;height:10px;margin-top:2px}
+      .event{padding-bottom:9px}
+      .event h3{font-size:15px}
+      .event .place{font-size:9px;margin-top:4px}
+      .duration{font-size:8px}
+      .occupied{display:none}
+      .detail{margin-top:9px;padding-top:9px}
+      .detail-row{grid-template-columns:66px minmax(0,1fr);padding:6px 0}
+      .detail-row b{font-size:8px}
+      .detail-row span{font-size:11px}
+      .move{grid-template-columns:48px 14px minmax(0,1fr);gap:0 6px}
+      .move-copy{font-size:8px;padding:6px 0}
+      .day-end{margin-left:68px;padding-top:10px}
+      .day-end b{font-size:8px}
+      .day-end p{margin-top:4px;font-size:15px}
+    }
+
+
+    /* MOBILE VOID: one present-tense line, then the field. */
+    @media (max-width:699px){
+      body{min-width:280px}
+      .shell{width:100%}
+
+      .mast{display:none}
+
+      .now{
+        position:sticky;
+        top:0;
+        z-index:40;
+        min-height:38px;
+        height:38px;
+        display:grid;
+        grid-template-columns:minmax(0,1fr) auto;
+        gap:10px;
+        align-items:center;
+        padding:max(7px,env(safe-area-inset-top)) 11px 7px;
+        border:0;
+        border-bottom:2px solid var(--black);
+        background:var(--black);
+        color:var(--white);
+        cursor:pointer
+      }
+      .now-top,.current{display:contents}
+      .state,.relation,.time-state,.current .place,.now-bottom{display:none!important}
+      .current h2{
+        grid-column:1;
+        min-width:0;
+        margin:0;
+        max-width:none;
+        overflow:hidden;
+        color:var(--white);
+        font-family:Arial,Helvetica,sans-serif;
+        font-size:12px;
+        font-weight:900;
+        line-height:1;
+        letter-spacing:.02em;
+        text-overflow:ellipsis;
+        text-transform:uppercase;
+        white-space:nowrap
+      }
+      .clock{
+        grid-column:2;
+        color:var(--white);
+        text-align:right;
+        white-space:nowrap
+      }
+      .clock strong{font-size:11px;line-height:1;font-weight:900}
+      .clock span{display:none}
+
+      .field{padding:0 11px 58px}
+      .field-intro{display:none}
+      .day{padding:0 0 16px}
+      .day-head{
+        top:38px;
+        display:flex;
+        align-items:center;
+        gap:7px;
+        min-height:31px;
+        margin:0 -11px;
+        padding:7px 11px 6px;
+        border-bottom:1px solid var(--black)
+      }
+      .day-head>div:first-child{
+        min-width:0;
+        display:flex;
+        align-items:baseline;
+        gap:7px
+      }
+      .day-head p{
+        flex:0 0 auto;
+        margin:0;
+        font-size:8px;
+        line-height:1;
+        letter-spacing:.08em;
+        white-space:nowrap
+      }
+      .day-head h2{
+        min-width:0;
+        margin:0;
+        overflow:hidden;
+        font-family:Arial,Helvetica,sans-serif;
+        font-size:10px;
+        line-height:1;
+        letter-spacing:0;
+        text-overflow:ellipsis;
+        text-transform:uppercase;
+        white-space:nowrap
+      }
+      .passage{display:none}
+
+      .route{padding:0}
+      .route:before{display:none}
+      .event-wrap{
+        display:grid;
+        grid-template-columns:45px minmax(0,1fr);
+        gap:0 9px;
+        padding:0
+      }
+      .time{
+        grid-column:1;
+        padding:12px 0 0;
+        font-size:8px;
+        line-height:1.18;
+        text-align:right
+      }
+      .node{display:none}
+      .event{
+        grid-column:2;
+        min-height:54px;
+        padding:11px 0 10px;
+        border-bottom:1px solid var(--black)
+      }
+      .event-head{display:block}
+      .event h3{font-size:15px;line-height:1.04}
+      .duration{display:none}
+      .event .place{
+        margin-top:4px;
+        overflow:hidden;
+        font-size:8px;
+        line-height:1.15;
+        letter-spacing:.025em;
+        text-overflow:ellipsis;
+        white-space:nowrap
+      }
+      .occupied{display:none}
+
+      .detail{margin-top:9px;padding-top:8px;border-top:1px solid var(--black)}
+      .detail-row{
+        grid-template-columns:62px minmax(0,1fr);
+        gap:8px;
+        padding:6px 0
+      }
+      .detail-row b{font-size:7px}
+      .detail-row span{font-size:11px;line-height:1.25}
+
+      .move{
+        display:grid;
+        grid-template-columns:45px minmax(0,1fr);
+        gap:0 9px;
+        padding:0
+      }
+      .move>span:first-child,.move-mark{display:none}
+      .move-copy{
+        grid-column:2;
+        margin:0;
+        padding:6px 0;
+        border-block:1px solid var(--black);
+        font-size:7px;
+        line-height:1.2;
+        letter-spacing:.06em
+      }
+      .day-end{display:none}
+
+      .return{
+        left:auto;
+        right:11px;
+        bottom:var(--safe-bottom);
+        width:auto;
+        min-height:36px;
+        padding:0 10px;
+        transform:none;
+        font-size:8px
+      }
+    }
+
+
+    /* MOBILE VOID FINAL: no top surface; the present event is the interface. */
+    @media (max-width:699px){
+      .mast,.now,.return{display:none!important}
+      .field{padding:0 11px 36px}
+
+      .day{padding:0;border-bottom:1px solid var(--black)}
+      .day-head{
+        position:static;
+        display:flex;
+        min-height:38px;
+        margin:0 -11px;
+        padding:0 11px;
+        border:0;
+        background:var(--white);
+        cursor:pointer
+      }
+      .day-head>div:first-child{
+        width:100%;
+        display:grid;
+        grid-template-columns:auto minmax(0,1fr);
+        align-items:center;
+        gap:8px
+      }
+      .day-head p{font-size:8px;letter-spacing:.08em}
+      .day-head h2{font-size:10px}
+      .day-head:after{
+        content:"+";
+        flex:0 0 auto;
+        font-size:14px;
+        font-weight:900;
+        line-height:1
+      }
+      .day.is-open .day-head:after{content:"−"}
+      .day[data-current-day="true"] .day-head p:before{
+        content:"NOW · ";
+        font-weight:900
+      }
+
+      .route{display:none}
+      .day.is-open .route{display:block}
+      .day-end{display:none!important}
+
+      .event .place{display:none}
+      .route>.event-wrap:first-child .event .place,
+      .event-wrap[data-live="true"] .event .place{display:block}
+
+      .event-wrap[data-live="true"] .event{
+        margin:0 -11px;
+        width:calc(100% + 11px);
+        padding-left:11px;
+        padding-right:11px;
+        border-bottom:0;
+        background:var(--black);
+        color:var(--white)
+      }
+      .event-wrap[data-live="true"] .event:before{
+        content:attr(data-live-label);
+        display:block;
+        margin-bottom:5px;
+        font-size:7px;
+        font-weight:900;
+        letter-spacing:.1em;
+        text-transform:uppercase
+      }
+      .event-wrap[data-live="true"] .detail{border-color:var(--white)}
+      .event-wrap[data-live="true"] .detail-row{border-color:var(--white)}
+      .event-wrap[data-live="true"] .time{font-weight:900}
+
+      .event-wrap:not([data-live="true"]) .event .place{display:none}
+      .event[aria-expanded="true"] .place{display:block!important}
+
+      .move-copy{margin-block:3px}
+    }
+
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto!important}}
+
+    @media print{
+      .mast,.day-head{position:static}
+      .now{min-height:auto;page-break-after:always}
+      .return,.locate{display:none!important}
+      .detail{display:block!important}
+      .day{break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header class="mast">
+      <div>
+        <p>Georgia Tech · Atlanta</p>
+        <h1>Spatial Scholarship Field School</h1>
+      </div>
+      <p class="range">Aug 4–7<br>2026</p>
+    </header>
+
+    <main>
+      <section class="now" id="nowBar" aria-labelledby="currentTitle" role="button" tabindex="0" aria-label="Locate the event governing the current Atlanta time">
+        <div class="now-top">
+          <span class="state" id="state">REST</span>
+          <div class="clock" aria-live="polite">
+            <strong id="clock">—</strong>
+            <span id="clockDate">Atlanta time</span>
+          </div>
+        </div>
+
+        <div class="current">
+          <p class="relation" id="relation">Locating the current field</p>
+          <h2 id="currentTitle">Spatial Scholarship</h2>
+          <p class="time-state" id="timeState">Reading the schedule…</p>
+          <p class="place" id="currentPlace">Georgia Tech · Atlanta, Georgia</p>
+        </div>
+
+        <div class="now-bottom">
+          <div class="truths">
+            <div class="truth"><b>Valid action</b><span id="validAction">Wait for the schedule to load.</span></div>
+            <div class="truth"><b>Consequence</b><span id="consequence">The next state will appear here.</span></div>
+            <div class="truth" id="recoveryRow" hidden><b>Recovery</b><span id="recovery">Return to the scheduled field.</span></div>
+          </div>
+          <button class="locate" id="locate" type="button">Find ↓</button>
+        </div>
+      </section>
+
+      <section class="field" id="field" aria-label="Complete field school route">
+        <header class="field-intro">
+          <strong>The field</strong>
+          <p>Time runs downward. Each block occupies its literal duration. A marked crossing appears only when the group must change place. Tap an event to reveal its operation and consequence.</p>
+        </header>
+        <div id="days"></div>
+      </section>
+    </main>
+  </div>
+
+  <button class="return" id="return" type="button" hidden>Return to now</button>
+  <noscript><p class="fault">FAULT · JavaScript is required to calculate the current Atlanta-time state. The complete printed schedule remains available only when scripting is enabled.</p></noscript>
+
+  <script>
+  (()=>{
+    "use strict";
+
+    const TZ="America/New_York";
+    const places={
+      pgl:"Price Gilbert Library · Scholars Event Theater",
+      crosland:"Crosland Tower · Dean’s Conference Room",
+      various:"Various locations",
+      tech:"Tech Square"
+    };
+
+    const days=[
+      {
+        date:"2026-08-04",weekday:"Tuesday",label:"August 4",from:"A",to:"B",title:"Spatial Concepts to Spatial Questions",
+        result:"A shared vocabulary becomes a set of usable spatial questions.",
+        events:[
+          {start:"14:00",end:"15:00",title:"Welcome Coffee and Tea",place:places.pgl,action:"Arrive without requiring formal participation.",consequence:"The shared field is available before instruction begins.",source:"Optional welcome coffee and tea."},
+          {start:"15:00",end:"15:30",title:"Field School Start",place:places.pgl,action:"Attend the introductory remarks.",consequence:"The sequence and terms of participation become shared.",source:"Field School Start · Introductory Remarks."},
+          {start:"15:30",end:"18:00",title:"Constructing a Spatial STS Glossary",place:places.pgl,action:"Construct, contest, and use spatial terms with Richmond Wong and Ploypilin Pruekcharoen.",consequence:"Spatial concepts become questions that can direct research.",source:"Methodological Exploration · Facilitators: Richmond Wong and Ploypilin Pruekcharoen."},
+          {start:"18:00",end:"19:00",title:"Catered Dinner",place:places.crosland,action:"Move to Crosland Tower, eat, and continue using the emerging glossary.",consequence:"The vocabulary is tested through informal use.",source:"Menu to follow."}
+        ]
+      },
+      {
+        date:"2026-08-05",weekday:"Wednesday",label:"August 5",from:"B",to:"C",title:"Spatial Questions to Spatial Experiences",
+        result:"Questions pass through bodies and return as situated experience.",
+        events:[
+          {start:"08:30",end:"09:00",title:"Coffee and Tea",place:places.pgl,action:"Reassemble the group.",consequence:"The shared field resumes.",source:"Coffee and tea."},
+          {start:"09:00",end:"12:00",title:"Embodiment through Body Mapping",place:places.pgl,action:"Map sensation, posture, reach, exposure, and movement with Allie Riggs and Sylvia Janicki.",consequence:"Spatial questions become bodily experience.",source:"Methodological Exploration · Facilitators: Allie Riggs and Sylvia Janicki."},
+          {start:"12:00",end:"13:00",title:"Catered Lunch",place:places.pgl,action:"Pause formal work without leaving the shared field.",consequence:"Embodied observations circulate informally.",source:"Catered lunch."},
+          {start:"13:00",end:"14:00",title:"Embodiment in Spatial Scholarship",place:places.pgl,action:"Compare scholarly uses of embodiment with Allie Riggs, Jennifer Singh, Amit Prasad, and Abby Stangl.",consequence:"Bodily evidence is distinguished from claims made about bodies.",source:"Panel Discussion · Allie Riggs, Jennifer Singh, Amit Prasad, Abby Stangl."},
+          {start:"14:00",end:"15:30",title:"Guided Writing",place:places.various,action:"Write from the method just performed.",consequence:"Body mapping binds to each participant’s own research situation.",source:"Personal Research Reflection · Various locations."},
+          {start:"15:30",end:"17:00",title:"Shared Activity Period",place:places.crosland,action:"Choose or propose a tour, tutorial, making, doing, or discussion.",consequence:"Reflection becomes shared activity.",source:"Optional activities or participant proposals."},
+          {start:"17:00",end:"19:00",title:"Catered Dinner",place:places.crosland,action:"Continue exchange through dinner.",consequence:"The day’s experience travels beyond the formal session.",source:"Menu to follow."}
+        ]
+      },
+      {
+        date:"2026-08-06",weekday:"Thursday",label:"August 6",from:"C",to:"D",title:"Spatial Experiences to Spatial Claims",
+        result:"Situated experience becomes a claim with an explicit orientation.",
+        events:[
+          {start:"08:30",end:"09:00",title:"Coffee and Tea",place:places.pgl,action:"Reassemble the group.",consequence:"The shared field resumes.",source:"Coffee and tea."},
+          {start:"09:00",end:"12:00",title:"Orientation with Map Spot",place:places.pgl,action:"Use maps to position observers and relations with Yanni Loukissas, Ploypilin Pruekcharoen, and Sylvia Janicki.",consequence:"Orientation becomes an explicit methodological choice.",source:"Methodological Exploration · Orientation with Map Spot."},
+          {start:"12:00",end:"13:00",title:"Catered Lunch",place:places.pgl,action:"Pause formal work.",consequence:"Orientations circulate informally.",source:"Menu to follow."},
+          {start:"13:00",end:"14:00",title:"Orientation in Spatial Scholarship",place:places.pgl,action:"Compare orientations with Yanni Loukissas, Heidi Biggs, Robert Rosenberger, and Allison Mickel.",consequence:"The politics of orientation become available for analysis.",source:"Panel Discussion · Yanni Loukissas, Heidi Biggs, Robert Rosenberger, Allison Mickel."},
+          {start:"14:00",end:"15:30",title:"Guided Writing",place:places.various,action:"Form a claim from a specific site, relation, and consequence.",consequence:"Situated experience becomes a defensible proposition.",source:"Personal Research Reflection · Various locations."},
+          {start:"15:30",end:"17:00",title:"Shared Activity Period",place:places.crosland,action:"Test the claim through collective activity.",consequence:"The claim exposes what it permits, omits, or cannot support.",source:"Optional activities or participant proposals."},
+          {start:"17:00",end:"19:00",title:"Catered Dinner",place:places.tech,action:"Move the field school into Tech Square.",consequence:"The claim enters a different social and institutional setting.",source:"Catered dinner · Tech Square."},
+          {start:"19:00",end:"21:00",title:"Social Mixer",place:places.tech,action:"Bring claims into contact with colleagues from around Atlanta.",consequence:"Their portability is tested beyond the field school cohort.",source:"Open event with colleagues from around Atlanta."}
+        ]
+      },
+      {
+        date:"2026-08-07",weekday:"Friday",label:"August 7",from:"D",to:"E",title:"Spatial Claims to Spatial STS Questions",
+        result:"Claims reopen as questions capable of directing future work.",
+        events:[
+          {start:"08:30",end:"09:00",title:"Coffee",place:places.pgl,action:"Reassemble the group.",consequence:"The shared field resumes.",source:"Coffee."},
+          {start:"09:00",end:"12:00",title:"Spatializing 4S",place:places.pgl,action:"Place claims within 4S with Yanni Loukissas and Richmond Wong.",consequence:"The discipline’s organization of possible questions becomes visible.",source:"Methodological Exploration · Facilitators: Yanni Loukissas and Richmond Wong."},
+          {start:"12:00",end:"13:00",title:"Catered Lunch",place:places.pgl,action:"Pause formal work.",consequence:"Institutional implications circulate informally.",source:"Menu to follow."},
+          {start:"13:00",end:"14:00",title:"Spatial Scholarship Professional Pathways",place:places.pgl,action:"Identify where spatial scholarship can be practiced and sustained.",consequence:"Possible professional routes become concrete.",source:"Panel Discussion · Speakers TBD."},
+          {start:"14:00",end:"15:00",title:"Guided Writing",place:places.pgl,action:"Rewrite the spatial claim as a Spatial STS question.",consequence:"The question becomes capable of directing future work.",source:"Personal Research Reflection · Guided Writing."},
+          {start:"15:00",end:"15:00",title:"Field School End",place:places.pgl,action:"Leave with the revised question.",consequence:"Completion creates no new demand.",source:"Field School End."}
+        ]
+      }
+    ];
+
+    const el={
+      days:document.querySelector("#days"),state:document.querySelector("#state"),clock:document.querySelector("#clock"),clockDate:document.querySelector("#clockDate"),
+      relation:document.querySelector("#relation"),title:document.querySelector("#currentTitle"),timeState:document.querySelector("#timeState"),place:document.querySelector("#currentPlace"),
+      action:document.querySelector("#validAction"),consequence:document.querySelector("#consequence"),recoveryRow:document.querySelector("#recoveryRow"),recovery:document.querySelector("#recovery"),
+      locate:document.querySelector("#locate"),return:document.querySelector("#return")
+    };
+
+    const key=(d,e)=>`${d}-${e}`;
+    const mins=t=>{const [h,m]=t.split(":").map(Number);return h*60+m};
+    const fmt=t=>new Intl.DateTimeFormat("en-US",{hour:"numeric",minute:t.endsWith(":00")?undefined:"2-digit",timeZone:TZ}).format(new Date(`2026-01-01T${t}:00-05:00`));
+    const duration=(a,b)=>{const n=Math.max(0,mins(b)-mins(a));if(n===0)return "END";if(n<60)return `${n} MIN`;const h=Math.floor(n/60),m=n%60;return m?`${h}H ${m}M`:`${h}H`};
+    const shortPlace=p=>p.split(" · ")[0];
+
+    function nowAtlanta(){
+      const d=new Date();
+      const parts=new Intl.DateTimeFormat("en-CA",{timeZone:TZ,year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit",hourCycle:"h23"}).formatToParts(d);
+      const get=t=>parts.find(p=>p.type===t)?.value||"00";
+      return {date:`${get("year")}-${get("month")}-${get("day")}`,minutes:Number(get("hour"))*60+Number(get("minute")),dateObj:d};
+    }
+
+    function render(){
+      const maxDuration=180;
+      days.forEach((day,di)=>{
+        const section=document.createElement("section");
+        section.className="day";
+        section.id=`day-${di}`;
+        section.innerHTML=`
+          <header class="day-head" role="button" tabindex="0" aria-expanded="false">
+            <div><p>${day.weekday} · ${day.label}</p><h2>${day.title}</h2></div>
+            <div class="passage" aria-label="${day.from} to ${day.to}">${day.from} → ${day.to}</div>
+          </header>
+          <ol class="route" aria-label="${day.weekday} schedule"></ol>
+          <footer class="day-end"><b>Changed condition · ${day.from} → ${day.to}</b><p>${day.result}</p></footer>`;
+        const route=section.querySelector(".route");
+        day.events.forEach((event,ei)=>{
+          if(ei>0&&day.events[ei-1].place!==event.place){
+            const move=document.createElement("li");
+            move.className="move";
+            move.innerHTML=`<span></span><span class="move-mark" aria-hidden="true"></span><span class="move-copy">Move · ${shortPlace(day.events[ei-1].place)} → ${shortPlace(event.place)}</span>`;
+            route.append(move);
+          }
+          const li=document.createElement("li");
+          li.className="event-wrap";
+          li.dataset.key=key(di,ei);
+          const d=Math.max(0,mins(event.end)-mins(event.start));
+          const occupancy=Math.max(8,Math.min(100,(d/maxDuration)*100));
+          li.innerHTML=`
+            <span class="time">${fmt(event.start)}<br>${event.end===event.start?"":fmt(event.end)}</span>
+            <span class="node" aria-hidden="true"></span>
+            <button class="event" type="button" aria-expanded="false" data-key="${key(di,ei)}" style="--occupancy:${occupancy}%">
+              <span class="event-head"><span><h3>${event.title}</h3><span class="place">${event.place}</span></span><span class="duration">${duration(event.start,event.end)}</span></span>
+              <span class="occupied" aria-hidden="true"><span class="occupied-bar"></span><span>Occupied time</span></span>
+              <span class="detail">
+                <span class="detail-row"><b>Operation</b><span>${event.action}</span></span>
+                <span class="detail-row"><b>Consequence</b><span>${event.consequence}</span></span>
+                <span class="detail-row"><b>Agenda</b><span>${event.source}</span></span>
+              </span>
+            </button>`;
+          route.append(li);
+        });
+        el.days.append(section);
+      });
+    }
+
+    function locateState(now){
+      const flat=[];
+      days.forEach((day,di)=>day.events.forEach((event,ei)=>flat.push({day,di,event,ei,startDate:`${day.date}T${event.start}`,endDate:`${day.date}T${event.end}`})));
+      const first=flat[0],last=flat[flat.length-1];
+      if(now.date<days[0].date)return {state:"REST",relation:"The field has not opened",item:first,action:`Arrive at ${first.event.place} for ${fmt(first.event.start)} on Tuesday.`,consequence:first.event.consequence,time:`Begins ${days[0].label} · ${fmt(first.event.start)}`};
+      if(now.date>days[days.length-1].date)return {state:"COMPLETE",relation:"The scheduled field has ended",item:last,action:"Carry the revised Spatial STS question into future work.",consequence:"Completion creates no new demand.",time:"Ended Friday · 3 PM",complete:true};
+
+      const di=days.findIndex(d=>d.date===now.date);
+      if(di<0){
+        const nextDay=days.find(d=>d.date>now.date)||days[days.length-1];
+        const ndi=days.indexOf(nextDay),event=nextDay.events[0];
+        return {state:"READY",relation:"The next field opens later",item:{day:nextDay,di:ndi,event,ei:0},action:`Return ${nextDay.weekday} by ${fmt(event.start)}.`,consequence:event.consequence,time:`Next · ${nextDay.label} · ${fmt(event.start)}`};
+      }
+
+      const day=days[di];
+      const activeIndex=day.events.findIndex(e=>now.minutes>=mins(e.start)&&now.minutes<mins(e.end));
+      if(activeIndex>=0){
+        const event=day.events[activeIndex],remaining=mins(event.end)-now.minutes;
+        const next=day.events[activeIndex+1];
+        return {state:"WORKING",relation:`${day.weekday} · ${day.from} → ${day.to}`,item:{day,di,event,ei:activeIndex},action:event.action,consequence:next?`Next: ${next.title} at ${fmt(next.start)}${next.place!==event.place?` · move to ${shortPlace(next.place)}`:""}.`:event.consequence,time:`${remaining} min remaining · ends ${fmt(event.end)}`};
+      }
+
+      const nextIndex=day.events.findIndex(e=>mins(e.start)>now.minutes);
+      if(nextIndex>=0){
+        const event=day.events[nextIndex],delta=mins(event.start)-now.minutes,prev=day.events[nextIndex-1];
+        const move=prev&&prev.place!==event.place;
+        return {state:"READY",relation:`${day.weekday} · ${day.from} → ${day.to}`,item:{day,di,event,ei:nextIndex},action:move?`Move from ${shortPlace(prev.place)} to ${event.place}.`:event.action,consequence:event.consequence,time:`Begins in ${delta} min · ${fmt(event.start)}`};
+      }
+
+      const nextDay=days[di+1];
+      if(nextDay){
+        const event=nextDay.events[0];
+        return {state:"CHANGED",relation:`${day.weekday} is complete`,item:{day:nextDay,di:di+1,event,ei:0},action:`Return ${nextDay.weekday} by ${fmt(event.start)}.`,consequence:day.result,time:`Next field · ${nextDay.label} · ${fmt(event.start)}`};
+      }
+      return {state:"COMPLETE",relation:"The scheduled field has ended",item:{day,di,event:day.events.at(-1),ei:day.events.length-1},action:"Carry the revised Spatial STS question into future work.",consequence:"Completion creates no new demand.",time:"Ended Friday · 3 PM",complete:true};
+    }
+
+    let currentKey="";
+    let selectedKey="";
+    let openDay=null;
+
+    function update(){
+      try{
+        const now=nowAtlanta();
+        const state=locateState(now);
+        currentKey=key(state.item.di,state.item.ei);
+        el.state.textContent=state.state;
+        el.clock.textContent=new Intl.DateTimeFormat("en-US",{timeZone:TZ,hour:"numeric",minute:"2-digit"}).format(now.dateObj);
+        el.clockDate.textContent=new Intl.DateTimeFormat("en-US",{timeZone:TZ,weekday:"short",month:"short",day:"numeric"}).format(now.dateObj);
+        el.relation.textContent=state.relation;
+        el.title.textContent=matchMedia("(max-width:699px)").matches?`${state.state} · ${state.item.event.title}`:state.item.event.title;
+        el.timeState.textContent=state.time;
+        el.place.textContent=state.item.event.place;
+        el.action.textContent=state.action;
+        el.consequence.textContent=state.consequence;
+        el.locate.hidden=Boolean(state.complete);
+        document.querySelectorAll(".event-wrap").forEach(n=>{
+          const live=n.dataset.key===currentKey;
+          n.dataset.live=String(live);
+          const button=n.querySelector(".event");
+          if(live&&button)button.dataset.liveLabel=state.state==="WORKING"?"Now":state.state==="COMPLETE"?"Complete":"Next";
+          else if(button)delete button.dataset.liveLabel;
+        });
+        if(openDay===null)openDay=state.item.di;
+        document.querySelectorAll(".day").forEach((node,index)=>{
+          const open=index===openDay;
+          node.classList.toggle("is-open",open);
+          node.dataset.currentDay=String(index===state.item.di);
+          node.querySelector(".day-head")?.setAttribute("aria-expanded",String(open));
+        });
+      }catch(error){
+        el.state.textContent="FAULT";
+        el.relation.textContent="The current time could not be resolved";
+        el.title.textContent="Schedule preserved";
+        el.timeState.textContent="Use the complete field below.";
+        el.place.textContent="Georgia Tech · Atlanta, Georgia";
+        el.action.textContent="Read the printed times and locations.";
+        el.consequence.textContent="No agenda information has been removed.";
+        el.locate.hidden=true;
+        console.error(error);
+      }
+    }
+
+    function scrollToKey(k,expand=true){
+      const wrap=document.querySelector(`.event-wrap[data-key="${k}"]`);
+      if(!wrap)return;
+      if(expand){
+        const button=wrap.querySelector(".event");
+        document.querySelectorAll(".event[aria-expanded=true]").forEach(b=>{if(b!==button)b.setAttribute("aria-expanded","false")});
+        button.setAttribute("aria-expanded","true");
+      }
+      wrap.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion:reduce)").matches?"auto":"smooth",block:"center"});
+    }
+
+    const setOpenDay=index=>{
+      openDay=openDay===index?null:index;
+      document.querySelectorAll(".day").forEach((node,i)=>{
+        const open=i===openDay;
+        node.classList.toggle("is-open",open);
+        node.querySelector(".day-head")?.setAttribute("aria-expanded",String(open));
+      });
+    };
+
+    el.days.addEventListener("click",event=>{
+      const head=event.target.closest(".day-head");
+      if(head){setOpenDay([...document.querySelectorAll(".day-head")].indexOf(head));return;}
+      const button=event.target.closest(".event");
+      if(!button)return;
+      const open=button.getAttribute("aria-expanded")==="true";
+      document.querySelectorAll(".event[aria-expanded=true]").forEach(b=>{if(b!==button)b.setAttribute("aria-expanded","false")});
+      button.setAttribute("aria-expanded",String(!open));
+      selectedKey=button.dataset.key;
+      const away=selectedKey!==currentKey;
+      el.return.hidden=!away;
+      el.recoveryRow.hidden=!away;
+      if(away)el.recovery.textContent="Return to the event governing the present Atlanta-time state.";
+    });
+
+    el.days.addEventListener("keydown",event=>{
+      const head=event.target.closest(".day-head");
+      if(!head||!(event.key==="Enter"||event.key===" "))return;
+      event.preventDefault();
+      setOpenDay([...document.querySelectorAll(".day-head")].indexOf(head));
+    });
+
+    const nowBar=document.querySelector("#nowBar");
+    const locateCurrent=()=>{
+      if(!matchMedia("(max-width:699px)").matches)return;
+      selectedKey=currentKey;
+      el.return.hidden=true;
+      el.recoveryRow.hidden=true;
+      scrollToKey(currentKey,true);
+    };
+    nowBar.addEventListener("click",locateCurrent);
+    nowBar.addEventListener("keydown",event=>{
+      if(event.key==="Enter"||event.key===" "){event.preventDefault();locateCurrent();}
+    });
+
+    el.locate.addEventListener("click",()=>{
+      selectedKey=currentKey;
+      el.return.hidden=true;
+      el.recoveryRow.hidden=true;
+      scrollToKey(currentKey,true);
+    });
+
+    el.return.addEventListener("click",()=>{
+      selectedKey=currentKey;
+      el.return.hidden=true;
+      el.recoveryRow.hidden=true;
+      scrollToKey(currentKey,true);
+    });
+
+    render();
+    update();
+    setInterval(update,30000);
+  })();
+  </script>
+</body>
+</html>

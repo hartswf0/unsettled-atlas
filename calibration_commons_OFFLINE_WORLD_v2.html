@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+<title>The Calibration Commons — Offline Canvas World v2</title>
+<style>
+  :root{
+    --ink:#071015;
+    --paper:#eef7f5;
+    --muted:#b9c9c8;
+    --sun:#ffd85a;
+    --cyan:#72dcff;
+    --danger:#ff6f78;
+    --ok:#7ce5a0;
+    --glass:rgba(5,14,18,.76);
+  }
+  *{box-sizing:border-box}
+  html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--ink);color:var(--paper);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  button{font:inherit}
+  #app{position:fixed;inset:0;overflow:hidden}
+  #world{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none;outline:0}
+  #identity{position:absolute;left:max(18px,env(safe-area-inset-left));top:max(16px,env(safe-area-inset-top));pointer-events:none;text-shadow:0 2px 12px rgba(0,0,0,.55)}
+  #identity .kicker{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--sun);font-weight:800}
+  #identity h1{font-size:clamp(20px,2.1vw,32px);line-height:.96;margin:5px 0 4px;letter-spacing:-.025em}
+  #identity p{font-size:11px;margin:0;color:rgba(238,247,245,.78);max-width:420px}
+  #phaseHUD{position:absolute;left:50%;top:max(15px,env(safe-area-inset-top));transform:translateX(-50%);text-align:center;pointer-events:none;text-shadow:0 2px 12px rgba(0,0,0,.72)}
+  #phaseName{font-size:12px;letter-spacing:.23em;font-weight:900;color:var(--sun)}
+  #phasePrompt{font-size:10px;margin-top:4px;color:rgba(238,247,245,.74);white-space:nowrap}
+  #districtName{display:inline-block;margin-top:7px;padding:4px 7px;background:rgba(5,14,18,.58);font-size:9px;letter-spacing:.13em;text-transform:uppercase}
+  #sunReadout{position:absolute;right:max(18px,env(safe-area-inset-right));top:max(22px,env(safe-area-inset-top));width:220px;text-align:right;pointer-events:none;text-shadow:0 2px 12px rgba(0,0,0,.75)}
+  #sunReadout .role{font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:rgba(238,247,245,.68)}
+  #sunReadout .operation{font-size:12px;line-height:1.25;font-weight:800;margin-top:3px}
+  #sunReadout .tap{font-size:9px;margin-top:5px;color:var(--sun)}
+  #inspector{position:absolute;left:max(18px,env(safe-area-inset-left));bottom:max(20px,env(safe-area-inset-bottom));width:min(360px,calc(100vw - 210px));padding:10px 12px 11px;background:var(--glass);border-left:3px solid var(--cyan);box-shadow:0 12px 34px rgba(0,0,0,.24);pointer-events:none;transition:opacity .25s ease,transform .25s ease}
+  #inspector h2{font-size:8px;letter-spacing:.16em;text-transform:uppercase;color:var(--sun);margin:0 0 5px}
+  #inspectName{font-size:14px;font-weight:850;line-height:1.05}
+  #inspectKind{font-size:8px;text-transform:uppercase;letter-spacing:.13em;color:var(--cyan);margin-top:3px}
+  #inspectBody{font-size:10px;line-height:1.42;color:rgba(238,247,245,.72);margin-top:6px}
+  #controls{position:absolute;inset:0;pointer-events:none}
+  #actions{position:absolute;right:max(18px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));display:grid;grid-template-columns:repeat(2,72px);gap:8px;pointer-events:auto}
+  .action{height:56px;border:1px solid rgba(238,247,245,.24);background:rgba(5,14,18,.79);color:var(--paper);font-size:9px;text-transform:uppercase;letter-spacing:.08em;font-weight:850;padding:5px;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.2)}
+  .action:hover{border-color:var(--sun)}
+  .action:active,.action.active{background:var(--sun);border-color:var(--sun);color:#111}
+  #joystick{position:absolute;left:max(18px,env(safe-area-inset-left));bottom:max(20px,env(safe-area-inset-bottom));width:112px;height:112px;border-radius:50%;border:1px solid rgba(238,247,245,.25);background:rgba(5,14,18,.35);pointer-events:auto;touch-action:none;display:none}
+  #stick{position:absolute;width:46px;height:46px;border-radius:50%;left:32px;top:32px;border:1px solid rgba(238,247,245,.34);background:rgba(238,247,245,.13)}
+  #worldHint{position:absolute;left:50%;bottom:max(18px,env(safe-area-inset-bottom));transform:translateX(-50%);font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:rgba(238,247,245,.66);text-shadow:0 2px 9px #000;pointer-events:none;white-space:nowrap}
+  #toast{position:absolute;left:50%;top:22%;transform:translate(-50%,-16px);opacity:0;pointer-events:none;background:rgba(5,14,18,.93);border-left:3px solid var(--sun);padding:9px 12px;font-size:11px;font-weight:750;transition:.22s;z-index:15;box-shadow:0 12px 34px rgba(0,0,0,.35)}
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+  #intro{position:absolute;inset:0;background:rgba(2,8,10,.78);display:grid;place-items:center;padding:18px;z-index:20}
+  #introCard{width:min(660px,100%);padding:24px 24px 22px;background:#09151a;border-left:4px solid var(--sun);box-shadow:0 26px 90px rgba(0,0,0,.58)}
+  #introCard .kicker{font-size:9px;text-transform:uppercase;letter-spacing:.2em;color:var(--sun);font-weight:850}
+  #introCard h1{font-size:clamp(30px,5vw,58px);line-height:.9;letter-spacing:-.04em;margin:10px 0 13px;max-width:590px}
+  #introCard p{font-size:13px;line-height:1.55;color:var(--muted);max-width:590px;margin:0}
+  #verbs{display:flex;gap:14px;flex-wrap:wrap;margin:19px 0 18px;font-size:10px;letter-spacing:.13em;text-transform:uppercase;font-weight:850}
+  #verbs span{color:var(--sun)}
+  #enter{border:0;background:var(--sun);color:#111;font-weight:900;text-transform:uppercase;letter-spacing:.12em;padding:13px 17px;cursor:pointer}
+  #hint{font-size:9px;color:var(--muted);margin-left:10px}
+  #runtimeState{display:none!important}
+  @media(max-width:880px){
+    #identity p,#phasePrompt{display:none}
+    #sunReadout{width:160px;top:18px}
+    #sunReadout .operation{font-size:10px}
+    #worldHint{display:none}
+    #joystick{display:block;bottom:86px}
+    #actions{bottom:86px;grid-template-columns:repeat(2,64px)}
+    .action{height:52px;font-size:8px}
+    #inspector{bottom:18px;left:50%;transform:translateX(-50%);width:calc(100vw - 34px);max-width:520px;padding:8px 10px}
+    #inspectBody{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  }
+  @media(max-width:560px){
+    #identity{left:10px;top:10px}
+    #identity h1{font-size:17px}
+    #identity .kicker{font-size:7px}
+    #phaseHUD{top:54px;width:100%}
+    #districtName{font-size:7px}
+    #sunReadout{right:10px;top:9px;width:126px}
+    #sunReadout .tap{display:none}
+    #sunReadout .role{font-size:7px}
+    #sunReadout .operation{font-size:8px}
+    #actions{right:10px;bottom:74px;grid-template-columns:repeat(2,58px);gap:6px}
+    .action{height:46px;font-size:7px}
+    #joystick{left:10px;bottom:74px;width:96px;height:96px}
+    #stick{width:42px;height:42px;left:26px;top:26px}
+    #inspector{bottom:8px;width:calc(100vw - 16px)}
+    #inspectName{font-size:12px}
+    #inspectBody{font-size:9px}
+    #introCard{padding:20px 18px}
+    #hint{display:block;margin:10px 0 0}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <canvas id="world" tabindex="0" aria-label="Interactive Calibration Commons simulation"></canvas>
+
+  <header id="identity">
+    <div class="kicker">Offline WorldText simulation</div>
+    <h1>The Calibration Commons</h1>
+    <p>Walk the city. Reveal its assumptions. Build routes from situated knowledge.</p>
+  </header>
+
+  <section id="phaseHUD" aria-live="polite">
+    <div id="phaseName">OBSERVE</div>
+    <div id="phasePrompt">Enter a classification zone and reveal what the system assumes.</div>
+    <div id="districtName">Field School Commons</div>
+  </section>
+
+  <aside id="sunReadout">
+    <div class="role" id="activeRole">Participant</div>
+    <div class="operation" id="liveOperation">Reading spatial classifications</div>
+    <div class="tap">Tap the sun to reveal systems</div>
+  </aside>
+
+  <section id="inspector">
+    <h2>Nearby relation</h2>
+    <div id="inspectName">The city is listening</div>
+    <div id="inspectKind">Move near a person or system</div>
+    <div id="inspectBody">Approach inhabitants, sensors, vehicles, friction, and testimony to read how the place is changing them.</div>
+  </section>
+
+  <div id="controls">
+    <div id="joystick"><div id="stick"></div></div>
+    <div id="actions">
+      <button class="action" id="scanBtn">Reveal<br>systems</button>
+      <button class="action" id="testimonyBtn">Place<br>testimony</button>
+      <button class="action" id="pathBtn">Open<br>path</button>
+      <button class="action" id="pauseBtn">Pause<br>time</button>
+    </div>
+  </div>
+
+  <div id="worldHint">WASD / arrows to walk · drag to orbit · wheel to zoom · 1–4 actions</div>
+  <div id="toast"></div>
+
+  <div id="intro">
+    <div id="introCard">
+      <div class="kicker">Spatial Technologies in the Normal City · self-contained offline build</div>
+      <h1>The city calls its habits natural.</h1>
+      <p>Walk through the model. The sun shows the current field operation. Reveal classification systems, listen near bodies treated as deviations, place testimony, and open accountable routes through the city.</p>
+      <div id="verbs"><span>Observe</span><span>Question</span><span>Experiment</span><span>Remake</span></div>
+      <button id="enter">Enter the Commons</button><span id="hint">No server, CDN, or internet connection required.</span>
+    </div>
+  </div>
+
+  <div id="runtimeState" aria-hidden="true">
+    <span id="phaseProgress"></span><span id="actorCircle"></span><span id="liveDetail"></span><span id="simClock"></span>
+    <span id="mNormalcy"></span><span id="bNormalcy"></span><span id="mVisibility"></span><span id="bVisibility"></span><span id="mKnowledge"></span><span id="bKnowledge"></span><span id="mAccess"></span><span id="bAccess"></span><span id="mTrust"></span><span id="bTrust"></span>
+    <span id="countScholar"></span><span id="countResident"></span><span id="countPaths"></span><span id="countFriction"></span><span id="countVehicles"></span><span id="countSensors"></span>
+    <div id="logitems"></div><canvas id="mapCanvas" width="1" height="1"></canvas><canvas id="pulseCanvas" width="1" height="1"></canvas>
+  </div>
+</div>
+<script>
+(() => {
+  'use strict';
+
+  // OFFLINE CANVAS WORLD v2 — no modules, CDNs, fetches, external scripts, or local imports.
+  const $ = (id) => document.getElementById(id);
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const rand = (a, b) => a + Math.random() * (b - a);
+  const pick = (a) => a[(Math.random() * a.length) | 0];
+  const distance = (a, b) => Math.hypot(a.x - b.x, a.z - b.z);
+  const distToSegment = (p, a, b) => {
+    const vx = b.x - a.x, vz = b.z - a.z;
+    const wx = p.x - a.x, wz = p.z - a.z;
+    const vv = vx * vx + vz * vz || 1;
+    const t = clamp((wx * vx + wz * vz) / vv, 0, 1);
+    return Math.hypot(p.x - (a.x + vx * t), p.z - (a.z + vz * t));
+  };
+  const TAU = Math.PI * 2;
+
+  const canvas = $('world');
+  const ctx = canvas.getContext('2d', { alpha: false, desynchronized: true });
+  const mapCanvas = $('mapCanvas');
+  const mapCtx = mapCanvas.getContext('2d');
+  const pulseCanvas = $('pulseCanvas');
+  const pulseCtx = pulseCanvas.getContext('2d');
+
+  const COLORS = {
+    sky: '#86a4b4', ground: '#737f75', grass: '#526d57', road: '#293237', roadLine: '#d8c96a',
+    pavement: '#8b918e', building: '#50636b', buildingSide: '#34474f', buildingTop: '#71838a',
+    window: '#b8e6ef', scholar: '#68dcff', resident: '#f2b84b', wheelchair: '#79e29c', cyclist: '#ffd85a',
+    vehicle: '#d9dce1', sensor: '#ba82ff', friction: '#ff5965', path: '#61e6a0', testimony: '#ffd85a',
+    player: '#ffffff', ink: '#071015', muted: '#a8bcc2'
+  };
+
+  const phases = [
+    { name: 'OBSERVE', role: 'Participant', op: 'Reading spatial classifications', prompt: 'Enter a classification zone and reveal what the system assumes.' },
+    { name: 'QUESTION', role: 'Witness', op: 'Listening across incompatible routes', prompt: 'Approach a resident. Their movement is evidence, not error.' },
+    { name: 'EXPERIMENT', role: 'Researcher', op: 'Changing the local rule field', prompt: 'Place testimony where classification pressure is high.' },
+    { name: 'REMAKE', role: 'Co-designer', op: 'Opening a plural pathway', prompt: 'Connect testimony to an obstructed route and watch access change.' }
+  ];
+
+  const districts = [
+    { name: 'Calibration Quarter', x: -27, z: -23, r: 17, type: 'classification', tint: 'rgba(255,89,101,.13)' },
+    { name: 'Workshop Courtyards', x: 17, z: -27, r: 16, type: 'workshop', tint: 'rgba(255,216,90,.11)' },
+    { name: 'Field School Commons', x: 0, z: 0, r: 18, type: 'commons', tint: 'rgba(99,216,255,.10)' },
+    { name: 'Transit Interface', x: 29, z: 20, r: 16, type: 'transit', tint: 'rgba(217,220,225,.10)' },
+    { name: 'Peripheral Paths', x: -27, z: 27, r: 18, type: 'periphery', tint: 'rgba(97,230,160,.10)' },
+    { name: 'Testimony Archive', x: 4, z: 30, r: 13, type: 'archive', tint: 'rgba(186,130,255,.10)' }
+  ];
+
+  const props = [
+    {type:'tree',x:-46,z:-22},{type:'tree',x:-46,z:20},{type:'tree',x:-28,z:2},{type:'tree',x:-18,z:24},
+    {type:'tree',x:26,z:2},{type:'tree',x:44,z:23},{type:'tree',x:25,z:-24},{type:'tree',x:2,z:-27},
+    {type:'table',x:-3,z:1},{type:'table',x:4,z:2},{type:'table',x:16,z:-24},{type:'table',x:20,z:-27},
+    {type:'bench',x:-24,z:23},{type:'bench',x:25,z:24},{type:'bench',x:-2,z:14},{type:'canopy',x:0,z:-3},
+    {type:'archive',x:3,z:30},{type:'archive',x:7,z:31}
+  ];
+
+  const world = {
+    width: 100, depth: 100, time: 0, tick: 0, paused: false, reveal: false,
+    normalcy: 68, visibility: 32, knowledge: 18, access: 44, trust: 51,
+    phaseIndex: 0, phaseTime: 0, phaseDuration: 48,
+    agents: [], vehicles: [], sensors: [], frictions: [], testimonies: [], paths: [], buildings: [],
+    events: [], selected: null, fps: 60, stats: { classifications: 0, reroutes: 0, interventions: 0 }
+  };
+
+  const camera = { x: 0, z: 0, yaw: -0.68, zoom: 8, targetX: 0, targetZ: 0 };
+  const view = { w: 1, h: 1, dpr: 1 };
+  const player = { id: 'PLAYER', name: 'Field Participant', kind: 'scholar', x: 0, z: 7, y: 0, radius: 1.1, confidence: 0.91, deviation: 0.32, practice: 'investigative walking', state: 'observing', heading: 0 };
+
+  const input = {
+    keys: Object.create(null), moveX: 0, moveZ: 0, joyId: null,
+    dragging: false, pointerId: null, startX: 0, startY: 0, lastX: 0, moved: false
+  };
+
+  function addLog(title, detail) {
+    world.events.unshift({ title, detail, time: world.time });
+    world.events.length = Math.min(world.events.length, 7);
+    $('logitems').innerHTML = world.events.map(e => `<div class="logitem"><strong>${escapeHTML(e.title)}</strong><br>${escapeHTML(e.detail)}</div>`).join('');
+  }
+
+  function escapeHTML(value) {
+    return String(value).replace(/[&<>'"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[c]));
+  }
+
+  let toastTimer = 0;
+  function toast(text) {
+    const el = $('toast');
+    el.textContent = text;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 1300);
+  }
+
+  function getDistrict(p) {
+    let best = null;
+    for (const d of districts) if (distance(p, d) < d.r && (!best || d.r < best.r)) best = d;
+    return best;
+  }
+
+  function randomRoute() {
+    const routes = [
+      [{x:-44,z:-8},{x:44,z:-8}], [{x:44,z:8},{x:-44,z:8}],
+      [{x:-8,z:-44},{x:-8,z:44}], [{x:8,z:44},{x:8,z:-44}],
+      [{x:-42,z:-35},{x:34,z:38}], [{x:38,z:-38},{x:-36,z:36}],
+      [{x:-31,z:24},{x:0,z:0},{x:31,z:-24}], [{x:28,z:29},{x:0,z:0},{x:-28,z:-29}]
+    ];
+    return pick(routes).map(p => ({ x: p.x + rand(-2, 2), z: p.z + rand(-2, 2) }));
+  }
+
+  function makeAgent(i) {
+    const kinds = ['scholar','resident','resident','resident','wheelchair','cyclist'];
+    const practices = ['commuting','wandering','resting','care work','wheelchair navigation','cycling','street vending','field observation','walking with a child','maintenance'];
+    const kind = pick(kinds);
+    const route = randomRoute();
+    const deviation = kind === 'wheelchair' ? rand(.58,.92) : kind === 'cyclist' ? rand(.42,.72) : kind === 'scholar' ? rand(.22,.5) : rand(.18,.8);
+    return {
+      id: `A${i}`, name: kind === 'scholar' ? `Field Scholar ${i+1}` : kind === 'wheelchair' ? `Wheelchair Navigator ${i+1}` : kind === 'cyclist' ? `Cyclist ${i+1}` : `Resident ${i+1}`,
+      kind, x: route[0].x, z: route[0].z, y: 0, radius: kind === 'wheelchair' ? 1.1 : .75,
+      route, waypoint: 1, speed: kind === 'cyclist' ? rand(3.4,4.8) : kind === 'wheelchair' ? rand(1.25,1.8) : rand(1.35,2.3),
+      deviation, confidence: clamp(1 - deviation * .58 + rand(-.08,.08), .12, .98),
+      practice: pick(practices), state: 'moving', lastClassified: rand(-7,0), heading: 0, pause: 0, pulse: rand(0,TAU)
+    };
+  }
+
+  function makeVehicle(i) {
+    const horizontal = i % 2 === 0;
+    return {
+      id: `V${i}`, name: `Autonomous Shuttle ${i+1}`, kind: 'vehicle',
+      x: horizontal ? rand(-46,46) : (i % 4 < 2 ? -8 : 8),
+      z: horizontal ? (i % 4 < 2 ? -8 : 8) : rand(-46,46),
+      y: 0, axis: horizontal ? 'x' : 'z', dir: Math.random() < .5 ? -1 : 1,
+      speed: rand(4.3,6.2), confidence: rand(.72,.96), state: 'optimizing', heading: 0, pulse: rand(0,TAU)
+    };
+  }
+
+  function makeSensor(i) {
+    const positions = [[-29,-26],[-16,-17],[-35,-8],[0,-18],[19,-30],[31,18],[12,18],[-8,29],[-30,28],[26,-2],[0,8]];
+    const p = positions[i % positions.length];
+    return {
+      id: `S${i}`, name: `Normalization Sensor ${i+1}`, kind: 'sensor', x: p[0], z: p[1], y: 0,
+      range: rand(10,15), angle: rand(0,TAU), confidence: rand(.76,.96), state: 'scanning', pulse: rand(0,TAU)
+    };
+  }
+
+  function buildCity() {
+    const footprints = [
+      [-39,-34,10,10,13],[-24,-35,9,13,18],[-8,-34,10,9,11],[12,-37,12,10,16],[29,-34,11,11,20],
+      [-39,-15,10,9,15],[-24,-15,8,8,10],[18,-15,9,8,14],[34,-14,9,10,17],
+      [-39,12,10,11,18],[-22,13,9,8,12],[21,13,10,9,16],[36,12,9,12,21],
+      [-38,31,11,10,14],[-19,32,9,9,18],[15,34,13,9,12],[34,32,11,11,17]
+    ];
+    footprints.forEach((b,i) => world.buildings.push({ id:`B${i}`, name: pick(['Civic Laboratory','Predictive Tower','Media Archive','Maintenance Hall','XR Arcade','Workshop House','Classification Colonnade']), kind:'building', x:b[0], z:b[1], w:b[2], d:b[3], h:b[4] }));
+  }
+
+  function initialize() {
+    buildCity();
+    for (let i=0;i<34;i++) world.agents.push(makeAgent(i));
+    for (let i=0;i<9;i++) world.vehicles.push(makeVehicle(i));
+    for (let i=0;i<11;i++) world.sensors.push(makeSensor(i));
+    addLog('Simulation initialized', 'Normalcy systems are active. Local knowledge is scarce but not absent.');
+  }
+
+  function frictionAt(p) {
+    let value = 0;
+    for (const f of world.frictions) {
+      const d = distance(p, f);
+      if (d < f.radius) value += f.strength * (1 - d / f.radius);
+    }
+    for (const t of world.testimonies) {
+      const d = distance(p, t);
+      if (d < t.radius) value -= t.strength * .8 * (1 - d / t.radius);
+    }
+    for (const path of world.paths) if (distToSegment(p, path.a, path.b) < path.width) value -= .55;
+    return clamp(value, 0, 1.4);
+  }
+
+  function spawnFriction(agent, sensor) {
+    if (world.frictions.length > 22) return;
+    const near = world.frictions.some(f => distance(f, agent) < 4);
+    if (near) return;
+    const f = {
+      id: `F${world.tick}-${world.frictions.length}`, name: `Spatial Friction ${world.frictions.length+1}`, kind: 'friction',
+      x: agent.x + rand(-1.2,1.2), z: agent.z + rand(-1.2,1.2), y: 0, radius: rand(4.5,6.2),
+      strength: clamp((1-agent.confidence)*1.28,.25,1), age: 0, source: sensor.id, target: agent.id, state: 'active', pulse: rand(0,TAU)
+    };
+    world.frictions.push(f);
+    addLog('Friction generated', `${agent.name} was classified at ${Math.round(agent.confidence*100)}% confidence.`);
+  }
+
+  function moveToward(entity, target, speed, dt) {
+    const dx = target.x - entity.x, dz = target.z - entity.z;
+    const d = Math.hypot(dx,dz) || 1;
+    entity.heading = Math.atan2(dx,dz);
+    entity.x += dx / d * speed * dt;
+    entity.z += dz / d * speed * dt;
+    return d;
+  }
+
+  function updatePlayer(dt) {
+    let mx = input.moveX + (input.keys.KeyD || input.keys.ArrowRight ? 1 : 0) - (input.keys.KeyA || input.keys.ArrowLeft ? 1 : 0);
+    let mz = input.moveZ + (input.keys.KeyS || input.keys.ArrowDown ? 1 : 0) - (input.keys.KeyW || input.keys.ArrowUp ? 1 : 0);
+    const len = Math.hypot(mx,mz);
+    if (len > .05) {
+      mx /= Math.max(1,len); mz /= Math.max(1,len);
+      const c = Math.cos(camera.yaw), s = Math.sin(camera.yaw);
+      const wx = mx*c + mz*s, wz = -mx*s + mz*c;
+      const drag = frictionAt(player);
+      const speed = 7.8 * (1 - drag * .48);
+      player.x = clamp(player.x + wx*speed*dt,-48,48);
+      player.z = clamp(player.z + wz*speed*dt,-48,48);
+      player.heading = Math.atan2(wx,wz);
+      player.state = drag > .35 ? 'moving through friction' : 'field walking';
+    } else player.state = world.paused ? 'time paused' : 'observing';
+    camera.targetX = player.x; camera.targetZ = player.z;
+    camera.x = lerp(camera.x,camera.targetX,1-Math.exp(-dt*4.2));
+    camera.z = lerp(camera.z,camera.targetZ,1-Math.exp(-dt*4.2));
+  }
+
+  function updateAgents(dt) {
+    for (const a of world.agents) {
+      a.pulse += dt * 2;
+      if (a.pause > 0) { a.pause -= dt; a.state = 'waiting'; continue; }
+      const target = a.route[a.waypoint];
+      const localFriction = frictionAt(a);
+      const support = world.testimonies.some(t => distance(t,a) < t.radius);
+      const speed = a.speed * (1 - localFriction * .68 + (support ? .12 : 0));
+      const d = moveToward(a,target,Math.max(.2,speed),dt);
+      a.state = localFriction > .35 ? 'obstructed' : support ? 'locally supported' : 'moving';
+      if (d < 1.2) {
+        a.waypoint = (a.waypoint + 1) % a.route.length;
+        if (Math.random() < .22) a.pause = rand(.4,2.2);
+      }
+      if (a.x < -49 || a.x > 49 || a.z < -49 || a.z > 49) {
+        a.route = randomRoute(); a.waypoint = 1; a.x = a.route[0].x; a.z = a.route[0].z;
+      }
+    }
+  }
+
+  function updateSensors(dt) {
+    for (const s of world.sensors) {
+      s.angle += dt*.42; s.pulse += dt*1.7;
+      for (const a of world.agents) {
+        const d = distance(s,a);
+        if (d < s.range && world.time - a.lastClassified > 8.5) {
+          a.lastClassified = world.time; world.stats.classifications++;
+          const district = getDistrict(a);
+          const pressure = (district && district.type === 'classification' ? 1.28 : 1) * world.normalcy/100;
+          const testimony = world.testimonies.some(t => distance(t,a) < t.radius);
+          const correction = testimony ? .10 : 0;
+          a.confidence = clamp(a.confidence - a.deviation*.055*pressure + correction + rand(-.018,.018),.06,.99);
+          if (a.confidence < .54 && Math.random() < .38*pressure) spawnFriction(a,s);
+        }
+      }
+    }
+  }
+
+  function updateVehicles(dt) {
+    for (const v of world.vehicles) {
+      v.pulse += dt*1.8;
+      let nearest = null, nd = 999;
+      for (const a of world.agents) { const d = distance(v,a); if (d < nd) { nd=d; nearest=a; } }
+      let speed = v.speed;
+      if (nearest && nd < 7) {
+        const recognized = nearest.confidence > .48;
+        speed *= recognized ? clamp(nd/7,.08,1) : .86;
+        v.state = recognized ? 'yielding' : 'uncertain recognition';
+        v.confidence = lerp(v.confidence,recognized?.92:.42,.04);
+        if (!recognized && nd < 3.4 && Math.random() < dt*.7) {
+          addLog('Near conflict', `${v.name} failed to confidently model ${nearest.name}.`);
+          world.trust = clamp(world.trust-.7,0,100);
+        }
+      } else v.state = 'optimizing';
+      if (v.axis === 'x') { v.x += v.dir*speed*dt; v.heading = v.dir>0?Math.PI/2:-Math.PI/2; if (Math.abs(v.x)>49) v.x=-v.x; }
+      else { v.z += v.dir*speed*dt; v.heading = v.dir>0?0:Math.PI; if (Math.abs(v.z)>49) v.z=-v.z; }
+    }
+  }
+
+  function updateFriction(dt) {
+    for (let i=world.frictions.length-1;i>=0;i--) {
+      const f = world.frictions[i]; f.age += dt; f.pulse += dt*2.2;
+      let support = 0;
+      for (const t of world.testimonies) {
+        const d = distance(f,t);
+        if (d < f.radius+t.radius) support += t.strength*(1-d/(f.radius+t.radius));
+      }
+      for (const p of world.paths) if (distToSegment(f,p.a,p.b)<f.radius+p.width) support += .75;
+      f.strength = clamp(f.strength - dt*support*.025,0,1);
+      if (f.age>86 || f.strength<.035) {
+        world.frictions.splice(i,1); world.access=clamp(world.access+1.25,0,100);
+        addLog('Friction dissolved','A locally accountable route displaced a normalized obstruction.');
+      }
+    }
+  }
+
+  function updateMetrics(dt) {
+    const avgConfidence = world.agents.reduce((s,a)=>s+a.confidence,0)/world.agents.length;
+    const obstructed = world.agents.filter(a=>a.state==='obstructed').length;
+    world.visibility = clamp(world.visibility + (world.reveal?dt*.28:-dt*.035),0,100);
+    world.normalcy = clamp(world.normalcy + dt*(.014-world.testimonies.length*.0065-world.paths.length*.004),0,100);
+    world.access = clamp(world.access + dt*((avgConfidence-.56)*.027-obstructed*.0055+world.paths.length*.009),0,100);
+    world.trust = clamp(world.trust + dt*(world.testimonies.length*.007-world.frictions.length*.013),0,100);
+    world.knowledge = clamp(world.knowledge + dt*world.testimonies.length*.0035,0,100);
+  }
+
+  function updatePhase(dt) {
+    world.phaseTime += dt;
+    if (world.phaseTime > world.phaseDuration) {
+      world.phaseTime = 0; world.phaseIndex = (world.phaseIndex+1)%phases.length;
+      addLog('Field phase changed',`The Commons entered ${phases[world.phaseIndex].name.toLowerCase()}.`);
+    }
+  }
+
+  function actionReveal() {
+    world.reveal = !world.reveal;
+    $('scanBtn').classList.toggle('active',world.reveal);
+    world.visibility = clamp(world.visibility + (world.reveal?5:0),0,100);
+    addLog(world.reveal?'Systems revealed':'Systems veiled',world.reveal?'Sensor ranges, classifications, and predictions are now visible.':'The interfaces recede, but their rules continue operating.');
+    toast(world.reveal?'Classification layer visible':'Classification layer hidden');
+  }
+
+  function nearestAgent(max=8) {
+    let best=null,bd=max;
+    for (const a of world.agents) { const d=distance(player,a); if(d<bd){bd=d;best=a;} }
+    return best;
+  }
+
+  function actionTestimony() {
+    const witness = nearestAgent(9);
+    const t = {
+      id:`T${world.tick}`, name:witness?`${witness.name}'s Situated Account`:`Situated Testimony ${world.testimonies.length+1}`,
+      kind:'testimony', x:player.x, z:player.z, y:0, radius:12, strength:1, state:'active', pulse:0,
+      witness:witness?witness.id:null
+    };
+    world.testimonies.push(t); world.stats.interventions++;
+    world.knowledge=clamp(world.knowledge+(witness?7:3),0,100); world.trust=clamp(world.trust+3.5,0,100);
+    if(witness){witness.confidence=clamp(witness.confidence+.16,0,1);witness.state='heard';}
+    addLog('Testimony placed',witness?`${witness.name}'s spatial practice now changes nearby rules.`:'A situated account anchors this location against universal claims.');
+    toast(witness?'A movement became evidence':'Testimony anchored');
+  }
+
+  function actionPath() {
+    let anchor = world.testimonies[world.testimonies.length-1];
+    if (!anchor) {
+      toast('Place testimony first');
+      addLog('Path requires an anchor','Alternative infrastructure begins from situated knowledge, not an empty optimization target.');
+      return;
+    }
+    const angle = player.heading || rand(0,TAU);
+    const b = {x:clamp(player.x+Math.sin(angle)*22,-47,47),z:clamp(player.z+Math.cos(angle)*22,-47,47)};
+    const path = {id:`P${world.tick}`,name:`Alternative Path ${world.paths.length+1}`,kind:'path',a:{x:anchor.x,z:anchor.z},b,width:2.2,strength:1,state:'open'};
+    world.paths.push(path); world.stats.reroutes++; world.access=clamp(world.access+6,0,100); world.normalcy=clamp(world.normalcy-3,0,100);
+    for(const f of world.frictions) if(distToSegment(f,path.a,path.b)<f.radius+path.width) f.strength*=.58;
+    addLog('Alternative path opened','The path privileges accountable relation over statistically average movement.');
+    toast('Plural route opened');
+  }
+
+  function actionPause() {
+    world.paused=!world.paused;
+    $('pauseBtn').classList.toggle('active',world.paused);
+    $('pauseBtn').innerHTML=world.paused?'Resume<br>time':'Pause<br>time';
+    toast(world.paused?'Simulation paused':'Simulation resumed');
+  }
+
+  function project(p) {
+    const dx=p.x-camera.x, dz=p.z-camera.z;
+    const c=Math.cos(camera.yaw),s=Math.sin(camera.yaw);
+    const rx=dx*c-dz*s, rz=dx*s+dz*c;
+    return {x:view.w*.5+rx*camera.zoom,y:view.h*.63+rz*camera.zoom*.52-(p.y||0)*camera.zoom,depth:rz};
+  }
+
+  function unprojectGround(sx,sy) {
+    const rx=(sx-view.w*.5)/camera.zoom;
+    const rz=(sy-view.h*.63)/(camera.zoom*.52);
+    const c=Math.cos(camera.yaw),s=Math.sin(camera.yaw);
+    return {x:camera.x+rx*c+rz*s,z:camera.z-rx*s+rz*c};
+  }
+
+  function poly(points,fill,stroke=null,line=1) {
+    ctx.beginPath(); points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)); ctx.closePath();
+    if(fill){ctx.fillStyle=fill;ctx.fill();} if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=line;ctx.stroke();}
+  }
+
+  function lineWorld(points,color,width,dash=[]) {
+    ctx.save();ctx.strokeStyle=color;ctx.lineWidth=Math.max(1,width*camera.zoom);ctx.lineCap='round';ctx.lineJoin='round';ctx.setLineDash(dash.map(v=>v*camera.zoom));ctx.beginPath();
+    points.forEach((p,i)=>{const q=project({x:p.x,z:p.z,y:p.y||0});i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);});ctx.stroke();ctx.restore();
+  }
+
+  function ellipseWorld(p,r,color,stroke=null,alpha=1) {
+    const q=project(p);ctx.save();ctx.globalAlpha=alpha;ctx.beginPath();ctx.ellipse(q.x,q.y,r*camera.zoom,r*camera.zoom*.52,0,0,TAU);if(color){ctx.fillStyle=color;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1.2;ctx.stroke();}ctx.restore();
+  }
+
+  function sunScreen() {
+    return { x: view.w * .83, y: Math.max(92, view.h * .145), r: clamp(Math.min(view.w,view.h)*.052,34,58) };
+  }
+
+  function drawAtmosphere() {
+    ctx.fillStyle='#7898a7';ctx.fillRect(0,0,view.w,view.h);
+    ctx.fillStyle='#87a5b2';ctx.fillRect(0,0,view.w,view.h*.19);
+    ctx.fillStyle='#93adb7';ctx.fillRect(0,view.h*.19,view.w,view.h*.13);
+    const horizon=view.h*.31;
+    ctx.fillStyle='rgba(38,61,68,.34)';
+    for(let i=0;i<28;i++){
+      const w=18+(i%5)*9,h=15+((i*17)%58),x=i*(view.w/27)-10;
+      ctx.fillRect(x,horizon-h,w,h);
+      if(i%4===0)ctx.fillRect(x+w*.35,horizon-h-8,w*.22,8);
+    }
+    ctx.fillStyle='rgba(238,247,245,.22)';
+    for(let i=0;i<5;i++){
+      const x=((i*227+world.time*3.2)%(view.w+240))-120,y=48+i*29;
+      ctx.fillRect(x,y,64+i*13,2);ctx.fillRect(x+18,y-5,42+i*8,2);
+    }
+    ctx.strokeStyle='rgba(238,247,245,.16)';ctx.lineWidth=1;
+    for(let i=0;i<7;i++){
+      const x=(i*173+world.time*7)%(view.w+80)-40,y=65+(i%3)*36;
+      ctx.beginPath();ctx.moveTo(x-5,y);ctx.lineTo(x+5,y);ctx.moveTo(x,y-5);ctx.lineTo(x,y+5);ctx.stroke();
+    }
+  }
+
+  function drawSun() {
+    const p=sunScreen(), phase=phases[world.phaseIndex];
+    const palette=['#ffe16a','#ff927f','#bd8cff','#7ce5a0'];
+    const color=palette[world.phaseIndex];
+    const pressure=world.normalcy/100, access=world.access/100;
+    ctx.save();ctx.translate(p.x,p.y);
+    const rays=10+Math.round(access*10), pulse=1+Math.sin(world.time*1.7)*.045;
+    ctx.strokeStyle=color;ctx.lineWidth=1.5;ctx.globalAlpha=.72;
+    for(let i=0;i<rays;i++){
+      const a=i/rays*TAU+world.time*.03,len=p.r*(1.35+(i%3)*.12+Math.sin(world.time*2+i)*.05);
+      ctx.beginPath();ctx.moveTo(Math.cos(a)*p.r*1.03,Math.sin(a)*p.r*1.03);ctx.lineTo(Math.cos(a)*len,Math.sin(a)*len);ctx.stroke();
+    }
+    ctx.globalAlpha=.18;ctx.fillStyle=color;ctx.beginPath();ctx.arc(0,0,p.r*1.42*pulse,0,TAU);ctx.fill();
+    ctx.globalAlpha=1;ctx.fillStyle=color;ctx.beginPath();ctx.arc(0,0,p.r*pulse,0,TAU);ctx.fill();
+    // Normalcy pressure appears as an eclipse rather than a chart.
+    ctx.save();ctx.beginPath();ctx.arc(0,0,p.r*pulse,0,TAU);ctx.clip();ctx.fillStyle='rgba(7,16,21,.72)';ctx.beginPath();ctx.arc(p.r*(1.45-pressure*1.8),0,p.r*.98,0,TAU);ctx.fill();ctx.restore();
+    ctx.strokeStyle='rgba(7,16,21,.65)';ctx.lineWidth=2;
+    if(world.phaseIndex===0){
+      ctx.beginPath();ctx.arc(0,0,p.r*.35,0,TAU);ctx.stroke();ctx.fillStyle='rgba(7,16,21,.72)';ctx.beginPath();ctx.arc(0,0,p.r*.11,0,TAU);ctx.fill();
+    }else if(world.phaseIndex===1){
+      ctx.beginPath();ctx.moveTo(0,-p.r*.48);ctx.lineTo(0,p.r*.48);ctx.stroke();ctx.beginPath();ctx.arc(-p.r*.23,0,p.r*.1,0,TAU);ctx.arc(p.r*.23,0,p.r*.1,0,TAU);ctx.fillStyle='rgba(7,16,21,.72)';ctx.fill();
+    }else if(world.phaseIndex===2){
+      ctx.beginPath();ctx.arc(0,0,p.r*.43,0,TAU);ctx.stroke();for(let i=0;i<3;i++){const a=world.time+i*TAU/3;ctx.fillStyle='rgba(7,16,21,.72)';ctx.beginPath();ctx.arc(Math.cos(a)*p.r*.43,Math.sin(a)*p.r*.43,p.r*.09,0,TAU);ctx.fill();}
+    }else{
+      ctx.beginPath();ctx.moveTo(0,p.r*.45);ctx.lineTo(0,-p.r*.1);ctx.lineTo(-p.r*.35,-p.r*.4);ctx.moveTo(0,-p.r*.1);ctx.lineTo(p.r*.35,-p.r*.4);ctx.stroke();
+    }
+    if(world.reveal){ctx.strokeStyle='rgba(238,247,245,.8)';ctx.lineWidth=1.3;ctx.setLineDash([4,5]);ctx.beginPath();ctx.arc(0,0,p.r*1.18,world.time,world.time+Math.PI*1.35);ctx.stroke();}
+    if(world.paused){ctx.fillStyle='rgba(7,16,21,.72)';ctx.beginPath();ctx.arc(0,0,p.r*1.02,0,TAU);ctx.fill();ctx.fillStyle=color;ctx.fillRect(-p.r*.2,-p.r*.28,p.r*.12,p.r*.56);ctx.fillRect(p.r*.08,-p.r*.28,p.r*.12,p.r*.56);}
+    ctx.restore();
+  }
+
+  function drawGround() {
+    drawAtmosphere();
+    const corners=[project({x:-58,z:-58,y:0}),project({x:58,z:-58,y:0}),project({x:58,z:58,y:0}),project({x:-58,z:58,y:0})];
+    poly(corners,COLORS.ground,'rgba(238,247,245,.12)',1);
+    for(const d of districts) ellipseWorld(d,d.r,d.tint,world.reveal?'rgba(255,255,255,.2)':null,1);
+    for(let v=-50;v<=50;v+=10){lineWorld([{x:v,z:-50},{x:v,z:50}],'rgba(230,244,248,.055)',.07);lineWorld([{x:-50,z:v},{x:50,z:v}],'rgba(230,244,248,.055)',.07);}
+    const roads=[
+      [{x:-52,z:-8},{x:52,z:-8}],[{x:-52,z:8},{x:52,z:8}],
+      [{x:-8,z:-52},{x:-8,z:52}],[{x:8,z:-52},{x:8,z:52}]
+    ];
+    roads.forEach(r=>{lineWorld(r,COLORS.road,5.3);lineWorld(r,'rgba(255,216,90,.55)',.12,[1.6,1.6]);});
+    lineWorld([{x:-45,z:-37},{x:40,z:43}],COLORS.pavement,2.2);
+    lineWorld([{x:43,z:-43},{x:-42,z:42}],COLORS.pavement,2.2);
+    for(const p of world.paths){lineWorld([p.a,p.b],'rgba(97,230,160,.28)',p.width*2.7);lineWorld([p.a,p.b],COLORS.path,.28,[1.1,.7]);}
+    drawSun();
+  }
+
+  function drawProp(o) {
+    const q=project(o),s=camera.zoom;ctx.save();ctx.translate(q.x,q.y);
+    if(o.type==='tree'){
+      ctx.fillStyle='rgba(0,0,0,.2)';ctx.beginPath();ctx.ellipse(0,0,s*.75,s*.26,0,0,TAU);ctx.fill();
+      ctx.fillStyle='#283a32';ctx.fillRect(-s*.12,-s*1.4,s*.24,s*1.4);
+      ctx.fillStyle='#486b54';ctx.beginPath();ctx.arc(0,-s*1.75,s*.72,0,TAU);ctx.fill();ctx.fillStyle='#5f8064';ctx.beginPath();ctx.arc(-s*.28,-s*1.95,s*.45,0,TAU);ctx.fill();
+    }else if(o.type==='table'){
+      ctx.fillStyle='#b18a57';ctx.fillRect(-s*.75,-s*.55,s*1.5,s*.18);ctx.fillRect(-s*.55,-s*.37,s*.12,s*.42);ctx.fillRect(s*.43,-s*.37,s*.12,s*.42);
+    }else if(o.type==='bench'){
+      ctx.fillStyle='#8c7657';ctx.fillRect(-s*.85,-s*.65,s*1.7,s*.16);ctx.fillRect(-s*.85,-s*.3,s*1.7,s*.13);ctx.fillRect(-s*.65,-s*.2,s*.1,s*.35);ctx.fillRect(s*.55,-s*.2,s*.1,s*.35);
+    }else if(o.type==='canopy'){
+      ctx.strokeStyle='rgba(238,247,245,.65)';ctx.lineWidth=1.2;ctx.beginPath();ctx.moveTo(-s*3,0);ctx.lineTo(-s*2.4,-s*3);ctx.lineTo(s*2.4,-s*3);ctx.lineTo(s*3,0);ctx.stroke();ctx.fillStyle='rgba(238,247,245,.14)';ctx.beginPath();ctx.moveTo(-s*2.4,-s*3);ctx.lineTo(0,-s*3.7);ctx.lineTo(s*2.4,-s*3);ctx.closePath();ctx.fill();
+    }else{
+      ctx.fillStyle='#d4aa4e';ctx.fillRect(-s*.42,-s*1.55,s*.84,s*1.55);ctx.fillStyle='#0b171b';ctx.fillRect(-s*.25,-s*1.3,s*.5,s*.36);
+    }
+    ctx.restore();
+  }
+
+  function drawBuilding(b) {
+    const x0=b.x-b.w/2,x1=b.x+b.w/2,z0=b.z-b.d/2,z1=b.z+b.d/2,h=b.h;
+    const p000=project({x:x0,z:z0,y:0}),p100=project({x:x1,z:z0,y:0}),p110=project({x:x1,z:z1,y:0}),p010=project({x:x0,z:z1,y:0});
+    const p001=project({x:x0,z:z0,y:h}),p101=project({x:x1,z:z0,y:h}),p111=project({x:x1,z:z1,y:h}),p011=project({x:x0,z:z1,y:h});
+    const warm=b.name.includes('Workshop')||b.name.includes('Maintenance');
+    const base=warm?'#665d50':'#41555c', side=warm?'#50493e':'#34474e', top=warm?'#847867':'#71838a';
+    poly([p000,p100,p101,p001],side,'rgba(0,0,0,.25)');
+    poly([p100,p110,p111,p101],base,'rgba(0,0,0,.25)');
+    poly([p110,p010,p011,p111],warm?'#5a5246':'#394c54','rgba(0,0,0,.25)');
+    poly([p010,p000,p001,p011],warm?'#463f36':'#2f4249','rgba(0,0,0,.25)');
+    poly([p001,p101,p111,p011],top,'rgba(255,255,255,.16)');
+    const frontA=project({x:x0+.8,z:z0-.01,y:2}),frontB=project({x:x1-.8,z:z0-.01,y:2});
+    ctx.save();ctx.strokeStyle='rgba(184,230,239,.58)';ctx.lineWidth=1;
+    for(let y=3;y<h-1;y+=3.4){const a=project({x:x0+.8,z:z0-.02,y}),bb=project({x:x1-.8,z:z0-.02,y});ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(bb.x,bb.y);ctx.stroke();}
+    ctx.restore();
+  }
+
+  function drawPerson(a,isPlayer=false) {
+    const q=project({x:a.x,z:a.z,y:0});const scale=camera.zoom;
+    const color=isPlayer?COLORS.player:a.kind==='scholar'?COLORS.scholar:a.kind==='wheelchair'?COLORS.wheelchair:a.kind==='cyclist'?COLORS.cyclist:COLORS.resident;
+    ctx.save();ctx.translate(q.x,q.y);ctx.globalAlpha=a.state==='obstructed'?.72:1;
+    ctx.fillStyle='rgba(0,0,0,.23)';ctx.beginPath();ctx.ellipse(0,0,scale*.65,scale*.25,0,0,TAU);ctx.fill();
+    if(a.kind==='wheelchair'){
+      ctx.strokeStyle=color;ctx.lineWidth=Math.max(1.5,scale*.16);ctx.beginPath();ctx.arc(-scale*.35,-scale*.22,scale*.48,0,TAU);ctx.stroke();
+      ctx.fillStyle=color;ctx.fillRect(-scale*.18,-scale*1.45,scale*.55,scale*.8);ctx.beginPath();ctx.arc(scale*.05,-scale*1.72,scale*.3,0,TAU);ctx.fill();
+    } else if(a.kind==='cyclist'){
+      ctx.strokeStyle=color;ctx.lineWidth=Math.max(1.3,scale*.12);ctx.beginPath();ctx.arc(-scale*.55,-scale*.22,scale*.4,0,TAU);ctx.arc(scale*.55,-scale*.22,scale*.4,0,TAU);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(-scale*.55,-scale*.22);ctx.lineTo(0,-scale*.8);ctx.lineTo(scale*.55,-scale*.22);ctx.lineTo(-scale*.15,-scale*.22);ctx.closePath();ctx.stroke();
+      ctx.fillStyle=color;ctx.fillRect(-scale*.18,-scale*1.45,scale*.36,scale*.7);ctx.beginPath();ctx.arc(0,-scale*1.72,scale*.26,0,TAU);ctx.fill();
+    } else {
+      ctx.fillStyle=color;ctx.fillRect(-scale*.26,-scale*1.45,scale*.52,scale*1.05);ctx.beginPath();ctx.arc(0,-scale*1.78,scale*.31,0,TAU);ctx.fill();
+      ctx.strokeStyle=color;ctx.lineWidth=Math.max(1.3,scale*.15);ctx.beginPath();ctx.moveTo(-scale*.12,-scale*.42);ctx.lineTo(-scale*.26,0);ctx.moveTo(scale*.12,-scale*.42);ctx.lineTo(scale*.26,0);ctx.stroke();
+    }
+    if(isPlayer){ctx.strokeStyle=COLORS.testimony;ctx.lineWidth=2;ctx.beginPath();ctx.arc(0,-scale*.92,scale*1.18,0,TAU);ctx.stroke();}
+    if(world.reveal&&!isPlayer){ctx.font=`700 ${Math.max(8,scale*.9)}px system-ui`;ctx.textAlign='center';ctx.fillStyle=a.confidence<.52?COLORS.friction:COLORS.ink;ctx.fillText(`${Math.round(a.confidence*100)}%`,0,-scale*2.25);}
+    ctx.restore();
+  }
+
+  function drawVehicle(v) {
+    const q=project(v),s=camera.zoom;ctx.save();ctx.translate(q.x,q.y);ctx.rotate(0);
+    ctx.fillStyle='rgba(0,0,0,.24)';ctx.beginPath();ctx.ellipse(0,0,s*1.2,s*.35,0,0,TAU);ctx.fill();
+    ctx.fillStyle=COLORS.vehicle;ctx.fillRect(-s*1.2,-s*.75,s*2.4,s*.68);ctx.fillStyle='#7aa8b7';ctx.fillRect(-s*.65,-s*1.18,s*1.3,s*.52);
+    ctx.fillStyle=COLORS.ink;ctx.beginPath();ctx.arc(-s*.72,-s*.05,s*.24,0,TAU);ctx.arc(s*.72,-s*.05,s*.24,0,TAU);ctx.fill();
+    if(world.reveal){ctx.strokeStyle=v.state==='uncertain recognition'?COLORS.friction:COLORS.vehicle;ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(0,-s*.55,s*1.5,0,TAU);ctx.stroke();}
+    ctx.restore();
+  }
+
+  function drawSensor(s) {
+    const q=project(s),scale=camera.zoom;ctx.save();ctx.translate(q.x,q.y);
+    if(world.reveal){ctx.globalAlpha=.18;ctx.strokeStyle=COLORS.sensor;ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(0,0,s.range*scale,s.range*scale*.52,0,0,TAU);ctx.stroke();ctx.globalAlpha=.16;ctx.fillStyle=COLORS.sensor;ctx.beginPath();ctx.moveTo(0,-scale*1.6);ctx.lineTo(Math.sin(s.angle-.35)*s.range*scale,Math.cos(s.angle-.35)*s.range*scale*.52);ctx.lineTo(Math.sin(s.angle+.35)*s.range*scale,Math.cos(s.angle+.35)*s.range*scale*.52);ctx.closePath();ctx.fill();}
+    ctx.globalAlpha=1;ctx.fillStyle=COLORS.sensor;ctx.fillRect(-scale*.16,-scale*2.3,scale*.32,scale*2.3);ctx.beginPath();ctx.arc(0,-scale*2.45,scale*.38,0,TAU);ctx.fill();ctx.fillStyle=COLORS.ink;ctx.beginPath();ctx.arc(Math.sin(s.angle)*scale*.16,-scale*2.45+Math.cos(s.angle)*scale*.08,scale*.1,0,TAU);ctx.fill();ctx.restore();
+  }
+
+  function drawFriction(f) {
+    const q=project(f),s=camera.zoom,pulse=1+Math.sin(f.pulse)*.07;ctx.save();ctx.globalAlpha=.13+f.strength*.25;ctx.fillStyle=COLORS.friction;ctx.beginPath();ctx.ellipse(q.x,q.y,f.radius*s*pulse,f.radius*s*.52*pulse,0,0,TAU);ctx.fill();ctx.globalAlpha=.7;ctx.strokeStyle=COLORS.friction;ctx.lineWidth=1.2;ctx.setLineDash([4,4]);ctx.stroke();ctx.restore();
+  }
+
+  function drawTestimony(t) {
+    const q=project(t),s=camera.zoom,pulse=1+Math.sin(world.time*2+t.pulse)*.08;ctx.save();ctx.strokeStyle='rgba(255,216,90,.42)';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(q.x,q.y,t.radius*s,t.radius*s*.52,0,0,TAU);ctx.stroke();ctx.fillStyle=COLORS.testimony;ctx.fillRect(q.x-s*.38,q.y-s*2.1,s*.76,s*2.1);ctx.beginPath();ctx.arc(q.x,q.y-s*2.35,s*.46*pulse,0,TAU);ctx.fill();ctx.fillStyle=COLORS.ink;ctx.font=`900 ${Math.max(8,s*.8)}px system-ui`;ctx.textAlign='center';ctx.fillText('T',q.x,q.y-s*2.08);ctx.restore();
+  }
+
+  function render() {
+    drawGround();
+    for(const f of world.frictions) drawFriction(f);
+    const items=[];
+    for(const b of world.buildings){const d=project({x:b.x,z:b.z,y:0}).depth;items.push({d,fn:()=>drawBuilding(b)});}
+    for(const o of props){const d=project(o).depth;items.push({d,fn:()=>drawProp(o)});}
+    for(const s of world.sensors){const d=project(s).depth;items.push({d,fn:()=>drawSensor(s)});}
+    for(const t of world.testimonies){const d=project(t).depth;items.push({d,fn:()=>drawTestimony(t)});}
+    for(const v of world.vehicles){const d=project(v).depth;items.push({d,fn:()=>drawVehicle(v)});}
+    for(const a of world.agents){const d=project(a).depth;items.push({d,fn:()=>drawPerson(a,false)});}
+    items.push({d:project(player).depth,fn:()=>drawPerson(player,true)});
+    items.sort((a,b)=>a.d-b.d);items.forEach(i=>i.fn());
+    drawLabels();
+  }
+
+  function drawLabels() {
+    if(camera.zoom<5.4)return;
+    ctx.save();ctx.textAlign='center';ctx.font='800 9px system-ui';
+    for(const d of districts){
+      if(!world.reveal && distance(player,d)>d.r+10)continue;
+      const q=project({x:d.x,z:d.z,y:0});
+      ctx.fillStyle='rgba(7,16,21,.72)';ctx.fillRect(q.x-54,q.y+6,108,15);
+      ctx.fillStyle=d.type==='classification'?COLORS.friction:'#ecf6f7';ctx.fillText(d.name.toUpperCase(),q.x,q.y+17);
+    }
+    ctx.restore();
+  }
+
+  function chooseSelectedAt(sx,sy) {
+    const sun=sunScreen();
+    if(Math.hypot(sx-sun.x,sy-sun.y)<sun.r*1.45){actionReveal();return;}
+    let best=null,bd=24;
+    const entities=[...world.agents,...world.vehicles,...world.sensors,...world.testimonies,...world.frictions];
+    for(const e of entities){const q=project(e),d=Math.hypot(q.x-sx,q.y-sy);if(d<bd){bd=d;best=e;}}
+    world.selected=best;if(best)toast(best.name);
+  }
+
+  function nearestInspectable() {
+    if(world.selected)return world.selected;
+    let best=null,bd=9;
+    for(const e of [...world.agents,...world.vehicles,...world.sensors,...world.testimonies,...world.frictions]){const d=distance(e,player);if(d<bd){bd=d;best=e;}}
+    return best;
+  }
+
+  function updateInspector() {
+    const e=nearestInspectable();
+    if(!e){$('inspectName').textContent='No entity selected';$('inspectKind').textContent='Move near a person or system';$('inspectBody').textContent='The nearest entity’s classification confidence, movement state, and relation to the city’s model will appear here.';return;}
+    $('inspectName').textContent=e.name;$('inspectKind').textContent=e.kind;
+    let body='';
+    if(e.kind==='sensor')body=`State: ${e.state}. Detection range: ${Math.round(e.range)}m. System confidence: ${Math.round(e.confidence*100)}%. It turns embodied movement into a comparable signal.`;
+    else if(e.kind==='vehicle')body=`State: ${e.state}. Route confidence: ${Math.round(e.confidence*100)}%. Yielding depends on whether nearby bodies are recognized in time.`;
+    else if(e.kind==='testimony')body=`State: ${e.state}. Accountable radius: ${e.radius}m. Local knowledge reduces classification pressure and spatial friction here.`;
+    else if(e.kind==='friction')body=`State: ${e.state}. Strength: ${Math.round(e.strength*100)}%. This field slows movement that diverges from the modeled norm.`;
+    else body=`State: ${e.state}. Classification confidence: ${Math.round(e.confidence*100)}%. Spatial practice: ${e.practice}. Deviation is treated as ${Math.round(e.deviation*100)}% outside the default route model.`;
+    $('inspectBody').textContent=body;
+  }
+
+  function updateHUD() {
+    for(const [name,value] of [['Normalcy',world.normalcy],['Visibility',world.visibility],['Knowledge',world.knowledge],['Access',world.access],['Trust',world.trust]]){
+      $(`m${name}`).textContent=Math.round(value);$(`b${name}`).style.width=`${clamp(value,0,100)}%`;
+    }
+    const phase=phases[world.phaseIndex];$('phaseName').textContent=phase.name;$('phasePrompt').textContent=phase.prompt;$('phaseProgress').style.width=`${world.phaseTime/world.phaseDuration*100}%`;
+    const district=getDistrict(player);$('districtName').textContent=district?district.name:'Between mapped districts';
+    $('activeRole').textContent=phase.role;$('liveOperation').textContent=phase.op;$('actorCircle').textContent=phase.role[0];
+    $('liveDetail').textContent=`queue ${world.events.length} · tick ${world.tick} · ${Math.round(world.fps)} fps`;
+    $('simClock').textContent=`${String(Math.floor(world.time/60)).padStart(2,'0')}:${String(Math.floor(world.time%60)).padStart(2,'0')}`;
+    $('countScholar').textContent=world.agents.filter(a=>a.kind==='scholar').length;
+    $('countResident').textContent=world.agents.filter(a=>a.kind!=='scholar').length;
+    $('countPaths').textContent=world.paths.length;$('countFriction').textContent=world.frictions.length;$('countVehicles').textContent=world.vehicles.length;$('countSensors').textContent=world.sensors.length;
+  }
+
+  function drawMap() {
+    const w=mapCanvas.width/view.dpr,h=mapCanvas.height/view.dpr,g=mapCtx;g.setTransform(view.dpr,0,0,view.dpr,0,0);g.clearRect(0,0,w,h);g.fillStyle='#09151b';g.fillRect(0,0,w,h);
+    const mp=p=>({x:(p.x/world.width+.5)*w,y:(p.z/world.depth+.5)*h});
+    g.strokeStyle='rgba(255,255,255,.12)';g.lineWidth=3;[-40,-20,0,20,40].forEach(v=>{let x=(v/world.width+.5)*w,y=(v/world.depth+.5)*h;g.beginPath();g.moveTo(x,0);g.lineTo(x,h);g.stroke();g.beginPath();g.moveTo(0,y);g.lineTo(w,y);g.stroke();});
+    for(const d of districts){const p=mp(d);g.strokeStyle=d.type==='classification'?COLORS.friction:COLORS.scholar;g.lineWidth=1;g.beginPath();g.arc(p.x,p.y,d.r/world.width*w,0,TAU);g.stroke();}
+    for(const path of world.paths){const a=mp(path.a),b=mp(path.b);g.strokeStyle=COLORS.path;g.lineWidth=2;g.beginPath();g.moveTo(a.x,a.y);g.lineTo(b.x,b.y);g.stroke();}
+    for(const f of world.frictions){const p=mp(f);g.fillStyle='rgba(255,89,101,.8)';g.beginPath();g.arc(p.x,p.y,3,0,TAU);g.fill();}
+    for(const t of world.testimonies){const p=mp(t);g.fillStyle=COLORS.testimony;g.fillRect(p.x-2,p.y-2,4,4);}
+    for(const a of world.agents){const p=mp(a);g.fillStyle=a.kind==='scholar'?COLORS.scholar:a.kind==='wheelchair'?COLORS.wheelchair:COLORS.resident;g.fillRect(p.x,p.y,1.5,1.5);}
+    const pp=mp(player);g.fillStyle='#fff';g.beginPath();g.arc(pp.x,pp.y,4,0,TAU);g.fill();
+  }
+
+  function drawPulse() {
+    const w=pulseCanvas.width/view.dpr,h=pulseCanvas.height/view.dpr,g=pulseCtx;g.setTransform(view.dpr,0,0,view.dpr,0,0);g.clearRect(0,0,w,h);g.strokeStyle='rgba(99,216,255,.78)';g.lineWidth=1.3;g.beginPath();
+    const n=100;for(let i=0;i<n;i++){const x=i/(n-1)*w;const v=Math.sin(i*.23+world.time*2.4)*.24+Math.sin(i*.08-world.time*1.2)*.16;const pressure=(world.normalcy-world.access)/100;const y=h*.5+v*h*(.55+pressure*.35);i?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();
+    g.fillStyle='rgba(255,216,90,.9)';g.fillRect(world.phaseTime/world.phaseDuration*w,0,2,h);
+  }
+
+  function resize() {
+    view.dpr=Math.min(window.devicePixelRatio||1,1.75);view.w=innerWidth;view.h=innerHeight;
+    canvas.width=Math.max(1,Math.floor(view.w*view.dpr));canvas.height=Math.max(1,Math.floor(view.h*view.dpr));canvas.style.width=`${view.w}px`;canvas.style.height=`${view.h}px`;ctx.setTransform(view.dpr,0,0,view.dpr,0,0);
+    camera.zoom=clamp(Math.min(view.w,view.h)/78,4.8,9.3);
+  }
+
+  function bindInputs() {
+    addEventListener('keydown',e=>{
+      input.keys[e.code]=true;
+      if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();
+      if(e.repeat)return;
+      if(e.code==='Digit1')actionReveal();if(e.code==='Digit2')actionTestimony();if(e.code==='Digit3')actionPath();if(e.code==='Digit4')actionPause();
+      if(e.code==='Escape')world.selected=null;
+    },{passive:false});
+    addEventListener('keyup',e=>{input.keys[e.code]=false;});
+    canvas.addEventListener('wheel',e=>{e.preventDefault();camera.zoom=clamp(camera.zoom*Math.exp(-e.deltaY*.001),3.8,13);},{passive:false});
+    canvas.addEventListener('pointerdown',e=>{input.dragging=true;input.pointerId=e.pointerId;input.startX=input.lastX=e.clientX;input.startY=e.clientY;input.moved=false;canvas.setPointerCapture(e.pointerId);});
+    canvas.addEventListener('pointermove',e=>{if(!input.dragging||e.pointerId!==input.pointerId)return;const dx=e.clientX-input.lastX;input.lastX=e.clientX;if(Math.abs(e.clientX-input.startX)+Math.abs(e.clientY-input.startY)>6)input.moved=true;camera.yaw+=dx*.006;});
+    canvas.addEventListener('pointerup',e=>{if(e.pointerId!==input.pointerId)return;if(!input.moved)chooseSelectedAt(e.clientX,e.clientY);input.dragging=false;input.pointerId=null;});
+    canvas.addEventListener('pointercancel',()=>{input.dragging=false;input.pointerId=null;});
+    $('scanBtn').addEventListener('click',actionReveal);$('testimonyBtn').addEventListener('click',actionTestimony);$('pathBtn').addEventListener('click',actionPath);$('pauseBtn').addEventListener('click',actionPause);
+    $('enter').addEventListener('click',()=>{$('intro').style.display='none';canvas.focus();toast('Field walk begun');});
+
+    const joy=$('joystick'),stick=$('stick');
+    const updateJoy=e=>{const r=joy.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,max=r.width*.32,len=Math.hypot(dx,dy)||1,k=Math.min(1,max/len),x=dx*k,y=dy*k;stick.style.transform=`translate(${x}px,${y}px)`;input.moveX=x/max;input.moveZ=y/max;};
+    joy.addEventListener('pointerdown',e=>{input.joyId=e.pointerId;joy.setPointerCapture(e.pointerId);updateJoy(e);e.preventDefault();});
+    joy.addEventListener('pointermove',e=>{if(e.pointerId===input.joyId)updateJoy(e);});
+    const endJoy=e=>{if(e.pointerId!==input.joyId)return;input.joyId=null;input.moveX=input.moveZ=0;stick.style.transform='translate(0,0)';};
+    joy.addEventListener('pointerup',endJoy);joy.addEventListener('pointercancel',endJoy);
+    addEventListener('resize',resize);
+  }
+
+  initialize();bindInputs();resize();
+
+  let last=performance.now();
+  function frame(now) {
+    requestAnimationFrame(frame);
+    const dt=clamp((now-last)/1000,0,.05);last=now;world.fps=lerp(world.fps,1/Math.max(dt,.001),.06);
+    if(!world.paused){world.time+=dt;world.tick++;updatePlayer(dt);updateAgents(dt);updateVehicles(dt);updateSensors(dt);updateFriction(dt);updateMetrics(dt);updatePhase(dt);}else updatePlayer(dt);
+    ctx.setTransform(view.dpr,0,0,view.dpr,0,0);render();updateInspector();updateHUD();
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

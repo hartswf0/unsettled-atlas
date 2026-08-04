@@ -1,0 +1,1202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#10191b">
+<title>The Field of Unsettled Coordinates</title>
+<style>
+  :root {
+    --ink:#f4f0df;
+    --muted:#b9c0b6;
+    --panel:#10191be8;
+    --panel-solid:#10191b;
+    --line:#81918b;
+    --amber:#e6b84d;
+    --green:#9fbe72;
+    --violet:#b8a4d6;
+    --orange:#d47745;
+    --danger:#e2866d;
+    --safe:#8cc7a2;
+    --safe-top:env(safe-area-inset-top,0px);
+    --safe-right:env(safe-area-inset-right,0px);
+    --safe-bottom:env(safe-area-inset-bottom,0px);
+    --safe-left:env(safe-area-inset-left,0px);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{width:100%;height:100%;margin:0;overflow:hidden;background:#10191b;color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+  body{touch-action:none;overscroll-behavior:none}
+  button,input,textarea,select{font:inherit}
+  button{color:inherit}
+  #app,#world{position:fixed;inset:0}
+  #world canvas{display:block;width:100%;height:100%;touch-action:none}
+  .hidden{display:none!important}
+  .panel{background:var(--panel);border:1px solid #6f7d78;border-radius:14px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+  .button{border:1px solid #88958f;background:#182426;color:var(--ink);min-height:46px;border-radius:12px;padding:10px 14px;font-weight:700;letter-spacing:.01em}
+  .button:active{transform:translateY(1px);background:#233234}
+  .button.primary{background:var(--amber);color:#172022;border-color:#f3d37d}
+  .button.quiet{background:#111b1d;color:var(--muted)}
+  .button.danger{border-color:var(--danger);color:#ffd8ce}
+  .eyebrow{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--amber);font-weight:800}
+  .muted{color:var(--muted)}
+
+  #boot{
+    position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:calc(20px + var(--safe-top)) calc(18px + var(--safe-right)) calc(20px + var(--safe-bottom)) calc(18px + var(--safe-left));
+    background:#10191b;
+  }
+  #bootCard{width:min(620px,100%);padding:22px}
+  #boot h1{font-family:Georgia,"Times New Roman",serif;font-size:clamp(32px,8vw,58px);line-height:.96;margin:10px 0 14px;font-weight:600;max-width:12ch}
+  #boot p{font-size:16px;line-height:1.5;margin:0 0 18px;color:#d7d9cf;max-width:58ch}
+  .modeGrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+  .modeChoice{display:block;text-align:left;min-height:110px;padding:14px;border:1px solid #78857f;border-radius:14px;background:#172224;color:var(--ink)}
+  .modeChoice strong{display:block;font-size:18px;margin-bottom:6px}
+  .modeChoice span{display:block;font-size:13px;line-height:1.35;color:var(--muted)}
+  .modeChoice[data-active="true"]{border-color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+  #enterButton{width:100%;margin-top:12px}
+  #bootStatus{min-height:20px;margin-top:10px;font-size:12px;color:var(--muted)}
+
+  #hud{position:fixed;inset:0;z-index:10;pointer-events:none;padding:calc(10px + var(--safe-top)) calc(10px + var(--safe-right)) calc(10px + var(--safe-bottom)) calc(10px + var(--safe-left))}
+  #statusCluster{position:absolute;top:calc(10px + var(--safe-top));left:calc(10px + var(--safe-left));display:flex;gap:8px;align-items:flex-start;pointer-events:none}
+  #perfRing{width:56px;height:56px;position:relative;border-radius:50%;background:#10191be8;border:1px solid #73817b}
+  #perfRing svg{position:absolute;inset:4px;width:46px;height:46px;transform:rotate(-90deg)}
+  #perfArc{fill:none;stroke:var(--amber);stroke-width:3;stroke-linecap:round;stroke-dasharray:126;stroke-dashoffset:20}
+  #perfTrack{fill:none;stroke:#43524e;stroke-width:3}
+  #perfText{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font-size:9px;line-height:1.05;font-weight:800}
+  #perfText b{font-size:14px}
+  #zoneCard{max-width:min(270px,55vw);padding:8px 11px}
+  #zoneName{font-weight:800;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #zoneState{font-size:11px;color:var(--muted);margin-top:2px}
+  #menuButton{position:absolute;top:calc(10px + var(--safe-top));right:calc(10px + var(--safe-right));pointer-events:auto;width:48px;height:48px;border-radius:50%;padding:0;font-size:21px}
+  #timeRail{position:absolute;top:calc(10px + var(--safe-top));left:76px;right:68px;max-width:520px;margin:auto;padding:7px 10px;display:grid;grid-template-columns:auto 1fr auto;gap:9px;align-items:center;pointer-events:none}
+  #clockBlock{min-width:64px}
+  #clockNow{font-size:15px;font-weight:850;letter-spacing:.02em;white-space:nowrap}
+  #clockDate{font-size:9px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);white-space:nowrap;margin-top:1px}
+  #phaseBlock{min-width:0;border-left:1px solid #5d6b66;padding-left:9px}
+  #phaseState{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--amber);font-weight:850}
+  #phaseName{font-size:12px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+  #elapsedBlock{text-align:right;min-width:63px}
+  #elapsedTime{font-variant-numeric:tabular-nums;font-size:15px;font-weight:850}
+  #elapsedLabel{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+  #objectiveCard{position:absolute;top:calc(74px + var(--safe-top));left:calc(10px + var(--safe-left));right:calc(10px + var(--safe-right));max-width:520px;margin:auto;padding:9px 11px;display:flex;gap:10px;align-items:center}
+  #objectiveDot{width:10px;height:10px;border-radius:50%;background:var(--amber);flex:none}
+  #objectiveCopy{min-width:0;flex:1}
+  #objectiveTitle{font-size:13px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #objectiveHint{font-size:11px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+  #distanceBadge{font-size:10px;padding:4px 7px;border:1px solid #718079;border-radius:999px;color:#e6e3d8;white-space:nowrap;text-align:right;line-height:1.2}
+  #distanceBadge b{display:block;font-size:11px;color:var(--ink)}
+  #compass{position:absolute;top:calc(125px + var(--safe-top));left:50%;transform:translateX(-50%);font-size:11px;font-weight:800;letter-spacing:.18em;text-shadow:0 1px 4px #000}
+  #crosshair{position:absolute;left:50%;top:50%;width:18px;height:18px;transform:translate(-50%,-50%);opacity:.7}
+  #crosshair:before,#crosshair:after{content:"";position:absolute;background:#f5eed9}
+  #crosshair:before{width:14px;height:1px;left:2px;top:8px}
+  #crosshair:after{height:14px;width:1px;left:8px;top:2px}
+  #prompt{position:absolute;left:50%;bottom:calc(116px + var(--safe-bottom));transform:translateX(-50%);padding:9px 12px;max-width:calc(100vw - 32px);text-align:center;font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #message{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);padding:12px 16px;max-width:min(86vw,460px);text-align:center;font-weight:700;opacity:0;transition:opacity .18s ease}
+  #message.show{opacity:1}
+  #normalizationWrap{position:absolute;left:calc(12px + var(--safe-left));bottom:calc(95px + var(--safe-bottom));width:min(210px,45vw)}
+  #normalizationLabel{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;text-shadow:0 1px 3px #000;margin-bottom:5px}
+  #normalizationTrack{height:7px;border:1px solid #8b958e;background:#172123;border-radius:999px;overflow:hidden}
+  #normalizationFill{height:100%;width:35%;background:var(--amber)}
+
+  #joystick{position:absolute;left:calc(14px + var(--safe-left));bottom:calc(14px + var(--safe-bottom));width:112px;height:112px;border:1px solid #87938d;background:#10191ba8;border-radius:50%;pointer-events:auto;touch-action:none}
+  #stick{position:absolute;left:36px;top:36px;width:40px;height:40px;border-radius:50%;background:#d7d5c8;border:2px solid #263235;transform:translate(0,0)}
+  #actionStack{position:absolute;right:calc(14px + var(--safe-right));bottom:calc(14px + var(--safe-bottom));display:grid;grid-template-columns:58px 68px;gap:9px;align-items:end;pointer-events:auto}
+  .roundAction{width:58px;height:58px;border-radius:50%;padding:0;font-size:11px;text-transform:uppercase;letter-spacing:.08em}
+  #interactButton{width:68px;height:68px;border-radius:50%;background:var(--amber);color:#172022;border-color:#f3d37d}
+  #lookHint{position:absolute;right:calc(13px + var(--safe-right));bottom:calc(92px + var(--safe-bottom));font-size:10px;color:#d0d2c8;text-shadow:0 1px 4px #000}
+
+  #drawer{position:fixed;z-index:30;top:calc(66px + var(--safe-top));right:calc(10px + var(--safe-right));width:min(360px,calc(100vw - 20px - var(--safe-left) - var(--safe-right)));padding:14px;max-height:calc(100vh - 86px - var(--safe-top) - var(--safe-bottom));overflow:auto;touch-action:pan-y}
+  #drawer h2{font-size:18px;margin:4px 0 12px}
+  .drawerGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+  .drawerGrid .button{font-size:12px;padding:8px}
+  .fieldRow{margin-top:13px}
+  .fieldRow label{display:flex;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:6px}
+  .fieldRow select,.fieldRow input[type="range"]{width:100%}
+  .legend{margin:14px 0 0;padding:0;list-style:none;display:grid;gap:7px}
+  .legend li{display:flex;gap:9px;align-items:flex-start;font-size:12px;line-height:1.3;color:#d8dbd0}
+  .swatch{width:10px;height:10px;border-radius:50%;margin-top:2px;flex:none}
+  #tourList{margin-top:14px;border-top:1px solid #596761;padding-top:12px;display:grid;gap:7px}
+  .tourItem{display:flex;align-items:center;gap:8px;font-size:12px}
+  .tourMark{width:18px;height:18px;border:1px solid #74827c;border-radius:50%;display:grid;place-items:center;font-size:10px;flex:none}
+  .tourItem.done .tourMark{background:var(--safe);color:#13201b;border-color:var(--safe)}
+
+  #minimapPanel{position:fixed;z-index:20;right:calc(10px + var(--safe-right));top:calc(154px + var(--safe-top));width:172px;padding:8px;pointer-events:auto;overflow:hidden}
+  #minimapPanel.expanded{width:min(420px,calc(100vw - 20px - var(--safe-left) - var(--safe-right)));top:calc(74px + var(--safe-top));padding:10px}
+  #mapHeader{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}
+  #mapHeaderCopy{min-width:0}
+  #mapTitle{font-size:11px;font-weight:850;letter-spacing:.09em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  #mapSubhead{font-size:9px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+  #mapExpandButton{min-height:30px;padding:3px 8px;border-radius:8px;font-size:10px;flex:none}
+  #minimap{display:block;width:100%;aspect-ratio:1/1;border-radius:9px;background:#111a1c;border:1px solid #54635d;touch-action:none}
+  #mapCaption{font-size:9px;color:var(--muted);margin-top:5px;line-height:1.3;font-variant-numeric:tabular-nums}
+  #mapControls{display:none;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}
+  #mapControls .button{min-height:38px;padding:6px 8px;font-size:11px}
+  #eventTrace{display:none;margin-top:8px;border-top:1px solid #53615c;padding-top:7px;max-height:168px;overflow:auto;touch-action:pan-y}
+  #eventTraceTitle{font-size:9px;letter-spacing:.13em;text-transform:uppercase;color:var(--amber);font-weight:850;margin-bottom:5px}
+  .traceItem{display:grid;grid-template-columns:48px 1fr;gap:7px;padding:5px 0;border-top:1px solid #33423e;font-size:10px;line-height:1.25}
+  .traceItem:first-of-type{border-top:0}
+  .traceTime{font-variant-numeric:tabular-nums;color:var(--amber);font-weight:800}
+  .traceText{color:#e3e5dc}
+  #minimapPanel.expanded #mapControls,#minimapPanel.expanded #eventTrace{display:grid}
+  #minimapPanel.expanded #eventTrace{display:block}
+
+  #infoSheet,#annotationSheet{position:fixed;z-index:40;left:calc(10px + var(--safe-left));right:calc(10px + var(--safe-right));bottom:calc(10px + var(--safe-bottom));max-width:620px;margin:auto;padding:16px;touch-action:pan-y}
+  #infoSheet h2,#annotationSheet h2{font-family:Georgia,"Times New Roman",serif;font-size:25px;line-height:1.05;margin:5px 0 9px}
+  #infoSheet p,#annotationSheet p{font-size:14px;line-height:1.45;color:#dde0d5;margin:0 0 12px}
+  .sheetActions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap}
+  #annotationText{width:100%;min-height:92px;resize:none;border:1px solid #7e8b85;border-radius:10px;background:#0d1517;color:var(--ink);padding:10px;margin:4px 0 10px;touch-action:pan-y}
+
+  #orientationHint{position:fixed;z-index:60;inset:0;display:none;place-items:center;background:#10191b;padding:24px;text-align:center}
+  #orientationHint .panel{max-width:390px;padding:20px}
+  #orientationHint h2{margin:0 0 8px;font-size:22px}
+  #orientationHint p{margin:0;color:var(--muted);line-height:1.4}
+
+  @media (min-width:760px){
+    #joystick{width:126px;height:126px}
+    #stick{left:41px;top:41px;width:44px;height:44px}
+    #lookHint{bottom:calc(110px + var(--safe-bottom))}
+    #prompt{bottom:calc(105px + var(--safe-bottom))}
+    #normalizationWrap{bottom:calc(25px + var(--safe-bottom));left:50%;transform:translateX(-50%);width:260px}
+  }
+  @media (max-width:520px){
+    #zoneCard{display:none}
+    #timeRail{left:72px;right:66px;grid-template-columns:auto 1fr;padding:7px 9px}
+    #elapsedBlock{display:none}
+    #clockNow{font-size:14px}
+    #phaseName{font-size:11px}
+    #minimapPanel{top:calc(146px + var(--safe-top));width:150px}
+    #minimapPanel.expanded{top:calc(68px + var(--safe-top));width:calc(100vw - 20px - var(--safe-left) - var(--safe-right))}
+  }
+  @media (max-height:470px) and (orientation:landscape){
+    #timeRail{left:82px;right:82px}
+    #objectiveCard{top:calc(68px + var(--safe-top));left:88px;right:88px}
+    #compass{top:calc(116px + var(--safe-top))}
+    #minimapPanel{top:calc(68px + var(--safe-top));width:138px}
+    #minimapPanel.expanded{top:calc(68px + var(--safe-top));width:min(390px,calc(100vw - 20px))}
+    #normalizationWrap{display:none}
+    #joystick{width:96px;height:96px}
+    #stick{left:30px;top:30px;width:36px;height:36px}
+    #actionStack{grid-template-columns:52px 60px}
+    .roundAction{width:52px;height:52px}
+    #interactButton{width:60px;height:60px}
+    #prompt{bottom:calc(76px + var(--safe-bottom))}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="world" aria-label="Interactive 3D world"></div>
+
+  <section id="boot" aria-labelledby="title">
+    <div id="bootCard" class="panel">
+      <div class="eyebrow">Spatial Scholarship Field School</div>
+      <h1 id="title">The Field of Unsettled Coordinates</h1>
+      <p>Enter a research settlement where every path, wall, sensor, and map can be inspected. Follow the seven thresholds or roam freely and question what has been made to seem inevitable.</p>
+      <div class="modeGrid" role="radiogroup" aria-label="Exploration mode">
+        <button class="modeChoice" data-mode="guided" data-active="true" role="radio" aria-checked="true">
+          <strong>Guided fieldwork</strong>
+          <span>Follow seven thresholds. Each encounter reveals a different spatial assumption.</span>
+        </button>
+        <button class="modeChoice" data-mode="free" data-active="false" role="radio" aria-checked="false">
+          <strong>Free inquiry</strong>
+          <span>Explore immediately. The settlement remains fully interactive without a fixed route.</span>
+        </button>
+      </div>
+      <button id="enterButton" class="button primary" type="button">Enter the field school</button>
+      <div id="bootStatus" role="status">Loading Three.js and constructing the terrain…</div>
+    </div>
+  </section>
+
+  <div id="hud" class="hidden" aria-label="World controls">
+    <div id="statusCluster">
+      <div id="perfRing" aria-label="Live performance status">
+        <svg viewBox="0 0 48 48" aria-hidden="true"><circle id="perfTrack" cx="24" cy="24" r="20"></circle><circle id="perfArc" cx="24" cy="24" r="20"></circle></svg>
+        <div id="perfText"><b id="fpsText">60</b><span>FPS</span></div>
+      </div>
+      <div id="zoneCard" class="panel">
+        <div id="zoneName">Field Edge</div>
+        <div id="zoneState">Walking · 0 discoveries · 0 calls</div>
+      </div>
+    </div>
+
+    <button id="menuButton" class="button" type="button" aria-label="Open field controls">≡</button>
+
+    <div id="timeRail" class="panel" aria-label="Field time and current operation">
+      <div id="clockBlock">
+        <div id="clockNow">--:--</div>
+        <div id="clockDate">Local time</div>
+      </div>
+      <div id="phaseBlock">
+        <div id="phaseState">REST</div>
+        <div id="phaseName">Field not entered</div>
+      </div>
+      <div id="elapsedBlock">
+        <div id="elapsedTime">00:00</div>
+        <div id="elapsedLabel">Elapsed</div>
+      </div>
+    </div>
+
+    <div id="objectiveCard" class="panel">
+      <div id="objectiveDot"></div>
+      <div id="objectiveCopy">
+        <div id="objectiveTitle">Gate of First Assumptions</div>
+        <div id="objectiveHint">Approach the marked threshold and inspect it.</div>
+      </div>
+      <div id="distanceBadge"><b>42 m</b><span>ETA --:--</span></div>
+    </div>
+
+    <div id="compass">N</div>
+    <div id="crosshair" aria-hidden="true"></div>
+    <div id="prompt" class="panel hidden" role="status">INTERACT</div>
+    <div id="message" class="panel" role="status" aria-live="polite"></div>
+
+    <div id="normalizationWrap">
+      <div id="normalizationLabel">Normalization pressure <span id="normalizationValue">35</span>%</div>
+      <div id="normalizationTrack"><div id="normalizationFill"></div></div>
+    </div>
+
+    <div id="joystick" aria-label="Movement control"><div id="stick"></div></div>
+    <div id="actionStack">
+      <button id="scanButton" class="button roundAction" type="button">Scan</button>
+      <button id="interactButton" class="button roundAction" type="button">Inspect</button>
+    </div>
+    <div id="lookHint">Drag the right side to look</div>
+  </div>
+
+  <aside id="drawer" class="panel hidden" aria-label="Field controls">
+    <div class="eyebrow">Field controls</div>
+    <h2>Change how the place behaves</h2>
+    <div class="drawerGrid">
+      <button id="questionButton" class="button primary" type="button">Question arrangement</button>
+      <button id="mapButton" class="button" type="button">Show field map</button>
+      <button id="nextButton" class="button" type="button">Next threshold</button>
+      <button id="resetButton" class="button" type="button">Return to entrance</button>
+      <button id="undoReturnButton" class="button hidden" type="button">Undo return</button>
+      <button id="exitFieldButton" class="button quiet" type="button">Exit field</button>
+    </div>
+    <div class="fieldRow">
+      <label for="qualitySelect"><span>Render quality</span><span id="qualityStatus">Auto</span></label>
+      <select id="qualitySelect" class="button" aria-label="Render quality">
+        <option value="auto">Auto</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+    </div>
+    <div class="fieldRow">
+      <label for="motionRange"><span>Look sensitivity</span><span id="motionValue">55</span></label>
+      <input id="motionRange" type="range" min="25" max="90" value="55">
+    </div>
+    <ul class="legend" aria-label="District legend">
+      <li><span class="swatch" style="background:#e6b84d"></span><span><b>School Without Walls</b><br><span class="muted">Observe, build methods, reflect.</span></span></li>
+      <li><span class="swatch" style="background:#9fbe72"></span><span><b>Laboratory of Ordinary Space</b><br><span class="muted">Change familiar arrangements.</span></span></li>
+      <li><span class="swatch" style="background:#b8a4d6"></span><span><b>Commons of Situated Inquiry</b><br><span class="muted">Compare incompatible knowledge.</span></span></li>
+      <li><span class="swatch" style="background:#d47745"></span><span><b>Chamber of the Inevitable</b><br><span class="muted">Open what appears natural.</span></span></li>
+    </ul>
+    <div id="tourList" aria-label="Threshold discoveries"></div>
+  </aside>
+
+  <aside id="minimapPanel" class="panel hidden" aria-label="Live coordination map">
+    <div id="mapHeader">
+      <div id="mapHeaderCopy">
+        <div id="mapTitle">Coordination map</div>
+        <div id="mapSubhead">North-up · live route</div>
+      </div>
+      <button id="mapExpandButton" class="button quiet" type="button" aria-expanded="false">Expand</button>
+    </div>
+    <canvas id="minimap" width="600" height="600" aria-label="Map showing player, zones, route, and thresholds"></canvas>
+    <div id="mapCaption">X -- · Z -- · target -- · ETA --</div>
+    <div id="mapControls">
+      <button id="mapPrevButton" class="button" type="button">Previous target</button>
+      <button id="mapNextButton" class="button primary" type="button">Next target</button>
+    </div>
+    <div id="eventTrace" aria-live="polite">
+      <div id="eventTraceTitle">Field trace</div>
+      <div id="eventTraceList"></div>
+    </div>
+  </aside>
+
+  <section id="infoSheet" class="panel hidden" aria-modal="true" role="dialog" aria-labelledby="infoTitle">
+    <div id="infoType" class="eyebrow">Threshold</div>
+    <h2 id="infoTitle">Gate of First Assumptions</h2>
+    <p id="infoBody"></p>
+    <div class="sheetActions">
+      <button id="infoQuestion" class="button primary" type="button">Question this arrangement</button>
+      <button id="infoClose" class="button" type="button">Return to field</button>
+    </div>
+  </section>
+
+  <section id="annotationSheet" class="panel hidden" aria-modal="true" role="dialog" aria-labelledby="annotationTitle">
+    <div class="eyebrow">Public annotation wall</div>
+    <h2 id="annotationTitle">Add situated knowledge</h2>
+    <p>Place one concise observation into the world. It will become a sign beside the Commons for this session.</p>
+    <textarea id="annotationText" maxlength="120" placeholder="What does the official map leave out?"></textarea>
+    <div class="sheetActions">
+      <button id="annotationCancel" class="button" type="button">Cancel</button>
+      <button id="annotationPlace" class="button primary" type="button">Place observation</button>
+    </div>
+  </section>
+
+  <div id="orientationHint">
+    <div class="panel"><h2>Turn the device sideways</h2><p>Landscape gives the field more room, but portrait mode is still supported.</p></div>
+  </div>
+</div>
+<script>
+  window.addEventListener('error', function(event){
+    const s=document.getElementById('bootStatus');
+    if(s) s.textContent='The world could not start: '+(event.message||'unknown browser error')+'. Try a current Chrome, Safari, Firefox, or Edge browser.';
+  });
+</script>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.185.1/build/three.module.js';
+
+const $ = (id) => document.getElementById(id);
+const clamp = THREE.MathUtils.clamp;
+const lerp = THREE.MathUtils.lerp;
+const TAU = Math.PI * 2;
+
+const dom = {
+  world:$('world'), boot:$('boot'), bootStatus:$('bootStatus'), enter:$('enterButton'), hud:$('hud'),
+  drawer:$('drawer'), menu:$('menuButton'), mapPanel:$('minimapPanel'), minimap:$('minimap'), mapButton:$('mapButton'),
+  mapExpand:$('mapExpandButton'), mapPrev:$('mapPrevButton'), mapNext:$('mapNextButton'), mapCaption:$('mapCaption'), mapSubhead:$('mapSubhead'), eventTraceList:$('eventTraceList'),
+  clockNow:$('clockNow'), clockDate:$('clockDate'), elapsedTime:$('elapsedTime'), phaseState:$('phaseState'), phaseName:$('phaseName'),
+  objectiveCard:$('objectiveCard'), objectiveDot:$('objectiveDot'), objectiveTitle:$('objectiveTitle'), objectiveHint:$('objectiveHint'), distance:$('distanceBadge'),
+  zoneName:$('zoneName'), zoneState:$('zoneState'), fps:$('fpsText'), perfArc:$('perfArc'), compass:$('compass'),
+  prompt:$('prompt'), message:$('message'), joystick:$('joystick'), stick:$('stick'), interact:$('interactButton'), scan:$('scanButton'),
+  question:$('questionButton'), next:$('nextButton'), reset:$('resetButton'), undoReturn:$('undoReturnButton'), exitField:$('exitFieldButton'), quality:$('qualitySelect'), qualityStatus:$('qualityStatus'),
+  motion:$('motionRange'), motionValue:$('motionValue'), normFill:$('normalizationFill'), normValue:$('normalizationValue'),
+  info:$('infoSheet'), infoType:$('infoType'), infoTitle:$('infoTitle'), infoBody:$('infoBody'), infoClose:$('infoClose'), infoQuestion:$('infoQuestion'),
+  annotation:$('annotationSheet'), annotationText:$('annotationText'), annotationPlace:$('annotationPlace'), annotationCancel:$('annotationCancel'),
+  tourList:$('tourList')
+};
+
+const state = {
+  started:false,
+  mode:'guided',
+  contested:false,
+  scan:false,
+  modal:false,
+  drawer:false,
+  map:false,
+  quality:'auto',
+  normalization:35,
+  discoveries:new Set(),
+  currentObjective:0,
+  nearest:null,
+  yaw:-2.62,
+  pitch:-0.08,
+  moveX:0,
+  moveY:0,
+  keyX:0,
+  keyY:0,
+  lookSensitivity:0.0022,
+  lowPower:false,
+  fps:60,
+  drawCalls:0,
+  lastMessageTimer:0,
+  annotationCount:0,
+  activeZone:'Field Edge',
+  pathFollowing:false,
+  mapExpanded:false,
+  sessionStartedAt:0,
+  phaseStartedAt:0,
+  pausedAt:0,
+  pausedTotal:0,
+  operationalState:'REST',
+  operation:'Field not entered',
+  eventLog:[],
+  lastClockSecond:-1,
+  moving:false,
+  previousPose:null,
+  recoveryAvailable:false,
+  thresholdTimes:{},
+  lastMapDraw:0
+};
+
+const thresholds = [
+  {name:'Gate of First Assumptions', short:'Leave one map behind.', pos:new THREE.Vector3(-30,0,-24), color:0xe6b84d, body:'The entrance refuses a single authoritative view. Crossing it treats every map as a partial instrument that must disclose what it includes, excludes, and makes easier to govern.'},
+  {name:'Gradient of Access', short:'Feel where movement gains friction.', pos:new THREE.Vector3(-18,0,-6), color:0xb8a4d6, body:'The slope changes according to access, privilege, and technological support. A route that appears equally open can impose unequal effort, delay, exposure, or risk.'},
+  {name:'Bridge of Situated Knowledge', short:'Join incompatible observations.', pos:new THREE.Vector3(-6,0,5), color:0x9fbe72, body:'The bridge is assembled from observations that do not perfectly agree. It remains stable only when distant measurement, lived experience, memory, and public testimony stay in tension.'},
+  {name:'Public Interface', short:'Return findings to the terrain.', pos:new THREE.Vector3(6,0,2), color:0x8cc7a2, body:'Research becomes spatially consequential here. Findings do not remain in a closed laboratory; they alter signs, paths, boundaries, and decisions visible to affected publics.'},
+  {name:'Corridor of Efficient Inevitability', short:'Open the apparently neutral route.', pos:new THREE.Vector3(15,0,12), color:0xd47745, body:'This corridor looks direct because alternatives were removed from view. Questioning it reveals earlier forks, maintenance labor, institutional choices, and displaced routes.'},
+  {name:'Exclusion Perimeter', short:'Find the boundary that sees you.', pos:new THREE.Vector3(26,0,5), color:0xe2866d, body:'The perimeter is difficult to perceive from the authorized side. It becomes visible through the effects it imposes on those delayed, classified, watched, or prevented from crossing.'},
+  {name:'Return Path', short:'Carry transformed methods outward.', pos:new THREE.Vector3(28,0,-22), color:0x8cc7a2, body:'The field school is incomplete until its methods return to ordinary institutions. This path carries questions, responsibilities, and altered habits back into the world that produced the settlement.'}
+];
+
+const zones = [
+  {name:'School Without Walls', x:-22, z:-16, r:16},
+  {name:'Commons of Situated Inquiry', x:0, z:0, r:13},
+  {name:'Laboratory of Ordinary Space', x:22, z:-5, r:15},
+  {name:'Chamber of the Inevitable', x:14, z:22, r:17},
+  {name:'Normalization Bed', x:-13, z:25, r:15}
+];
+
+const interactables = [];
+const contestables = [];
+const people = [];
+const colliders = [];
+const pathSegments = [];
+let activeInfoObject = null;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x273a42);
+scene.fog = new THREE.FogExp2(0x273a42, 0.014);
+
+const camera = new THREE.PerspectiveCamera(66, innerWidth/innerHeight, 0.08, 180);
+camera.rotation.order = 'YXZ';
+camera.position.set(-34, 2.2, -31);
+
+const renderer = new THREE.WebGLRenderer({antialias:true, powerPreference:'high-performance', alpha:false});
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.setClearColor(0x273a42);
+renderer.domElement.setAttribute('aria-label','Three-dimensional field school world');
+dom.world.appendChild(renderer.domElement);
+
+const hemi = new THREE.HemisphereLight(0xb9d4dc, 0x3d3325, 1.8);
+scene.add(hemi);
+const sun = new THREE.DirectionalLight(0xffe0a2, 2.8);
+sun.position.set(-28,44,-18);
+sun.castShadow = true;
+sun.shadow.mapSize.set(1024,1024);
+sun.shadow.camera.left=-55; sun.shadow.camera.right=55; sun.shadow.camera.top=55; sun.shadow.camera.bottom=-55;
+sun.shadow.camera.near=1; sun.shadow.camera.far=120;
+scene.add(sun);
+
+const palette = {
+  ground:0x66705d,
+  path:0xa48c68,
+  dark:0x243033,
+  school:0xe6b84d,
+  lab:0x9fbe72,
+  commons:0xb8a4d6,
+  chamber:0xd47745,
+  steel:0x6f7f7d,
+  paper:0xe6dfc7,
+  wood:0x75563d,
+  water:0x496e76,
+  shadow:0x1a2224
+};
+
+function material(color, roughness=.82, metalness=.04){
+  return new THREE.MeshStandardMaterial({color,roughness,metalness});
+}
+function mesh(geometry, mat, x=0,y=0,z=0, cast=true, receive=true){
+  const m=new THREE.Mesh(geometry,mat); m.position.set(x,y,z); m.castShadow=cast; m.receiveShadow=receive; return m;
+}
+function heightAt(x,z){
+  const base = Math.sin(x*.075)*.34 + Math.cos(z*.085)*.28 + Math.sin((x+z)*.04)*.22;
+  const commonsFlatten = Math.max(0,1-Math.hypot(x,z)/15);
+  return base*(1-commonsFlatten*.85);
+}
+function setGroundY(object, extra=0){ object.position.y = heightAt(object.position.x,object.position.z)+extra; }
+function addCollider(x,z,hx,hz){ colliders.push({x,z,hx,hz}); }
+function collides(x,z){
+  return colliders.some(c => x>c.x-c.hx && x<c.x+c.hx && z>c.z-c.hz && z<c.z+c.hz);
+}
+function addInteractive(object, data){
+  object.userData.interactive = data;
+  interactables.push(object);
+  return object;
+}
+function registerContestable(object, alt={}){
+  object.userData.baseTransform={position:object.position.clone(),rotation:object.rotation.clone(),scale:object.scale.clone()};
+  object.userData.altTransform={
+    position:alt.position ? alt.position.clone() : object.position.clone(),
+    rotation:alt.rotation ? alt.rotation.clone() : object.rotation.clone(),
+    scale:alt.scale ? alt.scale.clone() : object.scale.clone()
+  };
+  contestables.push(object);
+  return object;
+}
+
+function makeTerrain(){
+  const g=new THREE.PlaneGeometry(120,120,60,60);
+  g.rotateX(-Math.PI/2);
+  const p=g.attributes.position;
+  for(let i=0;i<p.count;i++){
+    const x=p.getX(i), z=p.getZ(i);
+    p.setY(i,heightAt(x,z));
+  }
+  g.computeVertexNormals();
+  const terrain=mesh(g,material(palette.ground,1,0),0,0,0,false,true);
+  scene.add(terrain);
+
+  const grid = new THREE.GridHelper(120,40,0x87948c,0x738079);
+  grid.material.opacity=.16; grid.material.transparent=true;
+  grid.position.y=.1;
+  scene.add(grid);
+
+  for(let i=0;i<145;i++){
+    const x=(Math.random()-.5)*112, z=(Math.random()-.5)*112;
+    if(Math.hypot(x,z)<11) continue;
+    const h=.18+Math.random()*.5;
+    const blade=mesh(new THREE.ConeGeometry(.08,h,4),material(0x768064,1),x,heightAt(x,z)+h/2,z,false,true);
+    blade.rotation.y=Math.random()*TAU;
+    scene.add(blade);
+  }
+}
+
+function addPath(a,b,width=2.2){
+  const dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz),midX=(a.x+b.x)/2,midZ=(a.z+b.z)/2;
+  const y=heightAt(midX,midZ)+.055;
+  const p=mesh(new THREE.BoxGeometry(width,.08,len),material(palette.path,1),midX,y,midZ,false,true);
+  p.rotation.y=Math.atan2(dx,dz);
+  scene.add(p);
+  pathSegments.push({a:new THREE.Vector2(a.x,a.z),b:new THREE.Vector2(b.x,b.z),width});
+  return p;
+}
+function distanceToSegment(px,pz,a,b){
+  const vx=b.x-a.x,vy=b.y-a.y,wx=px-a.x,wy=pz-a.y;
+  const c1=vx*wx+vy*wy,c2=vx*vx+vy*vy;
+  const t=clamp(c1/c2,0,1);
+  return Math.hypot(px-(a.x+t*vx),pz-(a.y+t*vy));
+}
+function nearPath(x,z){ return pathSegments.some(s=>distanceToSegment(x,z,s.a,s.b)<s.width*.85); }
+
+function createSign(text, color=0xe6dfc7, width=3.6, height=1.5){
+  const canvas=document.createElement('canvas'); canvas.width=512; canvas.height=220;
+  const c=canvas.getContext('2d');
+  c.fillStyle='#192224'; c.fillRect(0,0,canvas.width,canvas.height);
+  c.strokeStyle='#c3bfae'; c.lineWidth=8; c.strokeRect(8,8,496,204);
+  c.fillStyle='#f2eedf'; c.font='700 34px system-ui'; c.textAlign='center'; c.textBaseline='middle';
+  const words=text.split(' '),lines=[]; let line='';
+  for(const w of words){ const test=line?line+' '+w:w; if(c.measureText(test).width>430 && line){lines.push(line);line=w}else line=test; }
+  if(line) lines.push(line);
+  const start=110-(lines.length-1)*23;
+  lines.slice(0,3).forEach((l,i)=>c.fillText(l,256,start+i*46));
+  const tex=new THREE.CanvasTexture(canvas); tex.colorSpace=THREE.SRGBColorSpace;
+  const sign=mesh(new THREE.PlaneGeometry(width,height),new THREE.MeshBasicMaterial({map:tex,side:THREE.DoubleSide}),0,0,0,false,false);
+  sign.userData.texture=tex;
+  return sign;
+}
+
+function createThreshold(data,index){
+  const group=new THREE.Group(); group.position.copy(data.pos); setGroundY(group,0);
+  const mat=material(data.color,.7,.08);
+  const left=mesh(new THREE.BoxGeometry(.28,3.2,.28),mat,-1.25,1.6,0);
+  const right=mesh(new THREE.BoxGeometry(.28,3.2,.28),mat,1.25,1.6,0);
+  const top=mesh(new THREE.BoxGeometry(2.8,.24,.28),mat,0,3.05,0);
+  const ring=mesh(new THREE.TorusGeometry(1.05,.055,8,28),new THREE.MeshBasicMaterial({color:data.color}),0,1.55,.01,false,false);
+  const plate=createSign(String(index+1).padStart(2,'0')+'  '+data.name,data.color,3.4,1.05); plate.position.set(0,2.15,.18); plate.scale.set(.68,.68,.68);
+  group.add(left,right,top,ring,plate);
+  const sensor=mesh(new THREE.CylinderGeometry(.12,.18,.35,8),material(0x263235,.45,.7),0,.3,.35); group.add(sensor);
+  addInteractive(group,{type:'Threshold',title:data.name,body:data.body,index});
+  group.userData.ring=ring; group.userData.sensor=sensor;
+  scene.add(group);
+  return group;
+}
+
+function createTent(x,z,scale=1){
+  const g=new THREE.Group(); g.position.set(x,heightAt(x,z),z);
+  const roof=mesh(new THREE.ConeGeometry(2.2*scale,1.5*scale,4),material(0xd6c99f,1),0,1.35*scale,0); roof.rotation.y=Math.PI/4;
+  const pole=mesh(new THREE.CylinderGeometry(.06,.06,2.3*scale,6),material(palette.wood),0,1.05*scale,0);
+  const table=mesh(new THREE.BoxGeometry(2.2*scale,.12*scale,1.1*scale),material(palette.wood),0,.62*scale,0);
+  const legs=[[-.8,-.35],[.8,-.35],[-.8,.35],[.8,.35]];
+  g.add(roof,pole,table);
+  legs.forEach(([lx,lz])=>g.add(mesh(new THREE.BoxGeometry(.08*scale,.6*scale,.08*scale),material(palette.wood),lx*scale,.3*scale,lz*scale)));
+  scene.add(g); return g;
+}
+
+function createTower(x,z){
+  const g=new THREE.Group(); g.position.set(x,heightAt(x,z),z);
+  const steel=material(palette.steel,.55,.65);
+  for(const [lx,lz] of [[-1,-1],[1,-1],[-1,1],[1,1]]){
+    const leg=mesh(new THREE.CylinderGeometry(.08,.12,8,6),steel,lx,4,lz); g.add(leg);
+  }
+  for(let y=1;y<8;y+=1.4){
+    g.add(mesh(new THREE.BoxGeometry(2.4,.08,.1),steel,0,y,-1));
+    g.add(mesh(new THREE.BoxGeometry(2.4,.08,.1),steel,0,y,1));
+    g.add(mesh(new THREE.BoxGeometry(.1,.08,2.4),steel,-1,y,0));
+    g.add(mesh(new THREE.BoxGeometry(.1,.08,2.4),steel,1,y,0));
+  }
+  const deck=mesh(new THREE.BoxGeometry(3,.25,3),material(0x59686a,.6,.4),0,7.8,0); g.add(deck);
+  const cabin=mesh(new THREE.BoxGeometry(2.1,1.6,2.1),material(0x9a8058,.8),0,8.65,0); g.add(cabin);
+  const mast=mesh(new THREE.CylinderGeometry(.05,.05,2.4,6),steel,0,10.6,0); g.add(mast);
+  const flag=mesh(new THREE.PlaneGeometry(1.2,.55),new THREE.MeshBasicMaterial({color:palette.school,side:THREE.DoubleSide}),.6,11.2,0,false,false); g.add(flag);
+  addInteractive(g,{type:'Instrument',title:'Observation Tower',body:'The tower extends vision while reducing contact with ground-level experience. It makes distant patterns legible and nearby exclusions easy to miss.'});
+  scene.add(g); addCollider(x,z,1.5,1.5); return g;
+}
+
+function createSchool(){
+  createTent(-25,-18,1.1); createTent(-20,-19,.9); createTent(-24,-12,.85);
+  createTower(-31,-12);
+  const wall=new THREE.Group(); wall.position.set(-16,heightAt(-16,-20),-20);
+  for(let i=0;i<4;i++){
+    const board=mesh(new THREE.BoxGeometry(2.4,1.7,.12),material(palette.paper,1),i*2.6,1.25,0);
+    const post1=mesh(new THREE.BoxGeometry(.08,2.2,.08),material(palette.wood),i*2.6-1,1,0);
+    const post2=mesh(new THREE.BoxGeometry(.08,2.2,.08),material(palette.wood),i*2.6+1,1,0);
+    wall.add(board,post1,post2);
+  }
+  wall.position.x=-21;
+  addInteractive(wall,{type:'Public tool',title:'Public Annotation Wall',body:'A surface where official representations can be amended by situated knowledge.',action:'annotate'});
+  scene.add(wall);
+
+  const shelter=mesh(new THREE.CylinderGeometry(2.8,2.8,.35,18),material(0x5d6a64),-15,heightAt(-15,-13)+.18,-13); scene.add(shelter);
+  const dome=mesh(new THREE.SphereGeometry(2.5,18,10,0,TAU,0,Math.PI/2),new THREE.MeshStandardMaterial({color:0x8fa1a0,roughness:.45,metalness:.2,transparent:true,opacity:.65}),-15,heightAt(-15,-13)+.35,-13); scene.add(dome);
+  addInteractive(dome,{type:'Pedagogical platform',title:'Listening Chamber',body:'The chamber amplifies testimony that sensors classify as noise. It asks what remains audible when data standards define relevance.'});
+}
+
+function createCommons(){
+  const centerY=heightAt(0,0);
+  const platform=mesh(new THREE.CylinderGeometry(3.5,3.9,.35,32),material(0x6b5d78),0,centerY+.18,0); scene.add(platform);
+  addInteractive(platform,{type:'Collective ground',title:'Commons of Situated Inquiry',body:'No single observation governs this circle. The site remains usable because disagreement is held in public rather than prematurely removed.'});
+  for(let r=6;r<=10;r+=2){
+    const count=Math.floor(r*1.8);
+    for(let i=0;i<count;i++){
+      const a=(i/count)*TAU+(r%4)*.1;
+      const x=Math.cos(a)*r,z=Math.sin(a)*r;
+      const bench=mesh(new THREE.BoxGeometry(1.5,.3,.45),material(palette.wood),x,heightAt(x,z)+.35,z);
+      bench.rotation.y=-a; scene.add(bench);
+    }
+  }
+  const compass=mesh(new THREE.CylinderGeometry(1.2,1.2,.08,32),material(0xc1b894,.8,.15),0,centerY+.4,0); scene.add(compass);
+  const needle=mesh(new THREE.BoxGeometry(.12,.05,1.6),material(0x382e2c,.5,.3),0,centerY+.47,0); needle.rotation.y=.55; scene.add(needle);
+  addInteractive(needle,{type:'Artifact',title:'Compass of Authority',body:'This compass does not point north. It turns toward the strongest concentration of rule-making power in the settlement.'});
+}
+
+function createLab(){
+  const mat=material(0x7e8d72,.9);
+  const modules=[[18,-10,5,3],[24,-10,4,4],[19,-3,4,3],[26,-2,5,3]];
+  modules.forEach(([x,z,w,d],i)=>{
+    const h=2.4+(i%2)*1.2, y=heightAt(x,z)+h/2;
+    const b=mesh(new THREE.BoxGeometry(w,h,d),mat,x,y,z); scene.add(b); addCollider(x,z,w*.48,d*.48);
+    const roof=mesh(new THREE.BoxGeometry(w+.3,.18,d+.3),material(0x4a5b54,.6,.3),x,y+h/2+.08,z); scene.add(roof);
+    for(let k=0;k<2;k++){
+      const win=mesh(new THREE.PlaneGeometry(.9,.6),new THREE.MeshBasicMaterial({color:0xb9d7d4}),x-w*.26+k*w*.52,y+.25,z+d/2+.01,false,false); scene.add(win);
+    }
+    registerContestable(b,{position:new THREE.Vector3(x+(i%2?1.8:-1.5),y,z+(i<2?1.5:-1.2)),rotation:new THREE.Euler(0,(i%2?-.15:.18),0)});
+  });
+  for(let i=0;i<7;i++){
+    const x=13+i*2.3,z=3+Math.sin(i)*.6;
+    const marker=mesh(new THREE.BoxGeometry(.18,1.8,.18),material(0xe2866d),x,heightAt(x,z)+.9,z);
+    scene.add(marker);
+    registerContestable(marker,{position:new THREE.Vector3(x,heightAt(x,z)+.9,z+3.5),rotation:new THREE.Euler(0,0,.18*(i-3))});
+  }
+  const twin=mesh(new THREE.TorusKnotGeometry(.75,.18,60,8),new THREE.MeshStandardMaterial({color:0x9fbe72,wireframe:true}),28,heightAt(28,-10)+1.7,-10); scene.add(twin);
+  addInteractive(twin,{type:'Spatial technology',title:'Digital Twin Model',body:'The model can be precise without being complete. Its omissions become consequential when prediction is mistaken for the place itself.'});
+}
+
+function createChamber(){
+  const x=14,z=23,ground=heightAt(x,z),stone=material(0x4a4542,.95);
+  const base=mesh(new THREE.BoxGeometry(16,4,12),stone,x,ground+2,z); scene.add(base); addCollider(x,z,7.7,5.7);
+  const upper=mesh(new THREE.BoxGeometry(10,3.2,8),stone,x,ground+5.5,z); scene.add(upper);
+  const towers=[[-7,-5],[7,-5],[-7,5],[7,5]];
+  towers.forEach(([dx,dz],i)=>{
+    const t=mesh(new THREE.CylinderGeometry(1.9,2.2,7.5,8),stone,x+dx,ground+3.75,z+dz); scene.add(t);
+    registerContestable(t,{position:new THREE.Vector3(x+dx*(1.16),ground+3.75,z+dz*(1.16)),rotation:new THREE.Euler(0,.18*(i%2?-1:1),0)});
+  });
+  const entrance=mesh(new THREE.BoxGeometry(3.2,3.2,.5),material(0x151a1a,.8),x,ground+1.6,z-6.25); scene.add(entrance);
+  addInteractive(entrance,{type:'Institutional complex',title:'Chamber of the Inevitable',body:'The complex presents accumulated decisions as natural order. Its central door opens only after the settlement has been questioned.',action:'chamber'});
+  for(let i=0;i<8;i++){
+    const battlement=mesh(new THREE.BoxGeometry(1.2,1,.9),stone,x-7+i*2,ground+4.5,z-5.6); scene.add(battlement);
+  }
+  const corridor=mesh(new THREE.BoxGeometry(2.4,.12,15),material(0xc1a16d,1),14,heightAt(14,12)+.1,12,false,true); scene.add(corridor);
+  registerContestable(corridor,{rotation:new THREE.Euler(0,.26,0),scale:new THREE.Vector3(.55,1,1)});
+}
+
+function createNormalizationBed(){
+  const x=-14,z=26,y=heightAt(x,z);
+  const pit=mesh(new THREE.BoxGeometry(18,.45,10),material(0x3a3028,1),x,y-.45,z); scene.add(pit);
+  for(let layer=0;layer<5;layer++){
+    const wall=mesh(new THREE.BoxGeometry(18-layer*.9,.42,1.2),material(0x4a382b+layer*0x050403,1),x,y-.3-layer*.44,z-4.3+layer*.55); scene.add(wall);
+  }
+  const labels=['HABITS','BORDERS','INFRASTRUCTURES','CATEGORIES','EXCLUSIONS'];
+  labels.forEach((label,i)=>{
+    const sign=createSign(label,0xe6dfc7,3,.75); sign.position.set(x-5.2,y+.25-i*.45,z-3.75+i*.55); sign.rotation.x=-.12; scene.add(sign);
+  });
+  for(let i=0;i<13;i++){
+    const pipe=mesh(new THREE.CylinderGeometry(.12,.12,2.8+Math.random()*2,8),material(0x50605d,.5,.7),x-7+i*1.1,y-.2-Math.random()*1.4,z+Math.random()*3);
+    pipe.rotation.z=Math.PI/2; scene.add(pipe);
+  }
+  const archive=mesh(new THREE.BoxGeometry(3.2,2.1,2.4),material(0x6c513a,.9),x+5.4,y+.9,z+2.2); scene.add(archive);
+  addInteractive(archive,{type:'Substrate',title:'The Normalization Bed',body:'Repeated arrangements settle here as habits, categories, borders, and infrastructures. Their depth makes them feel natural, but every layer remains historically constructed.'});
+}
+
+function createSensor(x,z){
+  const y=heightAt(x,z);
+  const g=new THREE.Group(); g.position.set(x,y,z);
+  const mast=mesh(new THREE.CylinderGeometry(.05,.08,2.2,6),material(0x65716e,.45,.7),0,1.1,0);
+  const head=mesh(new THREE.SphereGeometry(.18,10,8),material(0x9aa9a5,.3,.8),0,2.25,0);
+  const cone=mesh(new THREE.ConeGeometry(1.2,2.5,20,1,true),new THREE.MeshBasicMaterial({color:0x86bbb3,transparent:true,opacity:.08,side:THREE.DoubleSide,depthWrite:false}),0,1.2,1.25,false,false);
+  cone.rotation.x=Math.PI/2;
+  g.add(mast,head,cone);
+  addInteractive(g,{type:'Spatial technology',title:'Sensor Flock Node',body:'The sensor makes one field measurable while leaving another outside its range. Scan mode reveals its capture cone and blind area.'});
+  g.userData.scanVisual=cone; cone.visible=false;
+  scene.add(g); return g;
+}
+
+function createPerson(x,z,color,role){
+  const y=heightAt(x,z);
+  const g=new THREE.Group(); g.position.set(x,y,z);
+  const body=mesh(new THREE.CapsuleGeometry(.18,.68,4,8),material(color,.9),0,.78,0);
+  const head=mesh(new THREE.SphereGeometry(.18,10,8),material(0x9b7356,.95),0,1.48,0);
+  const shadow=mesh(new THREE.CircleGeometry(.25,12),new THREE.MeshBasicMaterial({color:0x1b2222,transparent:true,opacity:.3,depthWrite:false}),0,.015,0,false,false); shadow.rotation.x=-Math.PI/2;
+  g.add(body,head,shadow); g.userData.baseY=y; g.userData.phase=Math.random()*TAU; g.userData.role=role;
+  people.push(g); scene.add(g); return g;
+}
+
+function createInhabitants(){
+  const roles=[
+    ['Scholar-Walker',palette.school],['Boundary Keeper',palette.chamber],['Public Cartographer',palette.commons],['Method Maker',palette.lab],['Uncounted Presence',0x83908f]
+  ];
+  for(let i=0;i<38;i++){
+    const a=Math.random()*TAU,r=5+Math.random()*40;
+    let x=Math.cos(a)*r,z=Math.sin(a)*r;
+    if(collides(x,z)){x-=5;z-=5;}
+    const role=roles[i%roles.length]; createPerson(x,z,role[1],role[0]);
+  }
+}
+
+function createWorld(){
+  makeTerrain();
+  const points=[
+    [-38,-34],[-30,-24],[-18,-6],[-6,5],[6,2],[15,12],[26,5],[28,-22],[-38,-34]
+  ];
+  for(let i=0;i<points.length-1;i++) addPath({x:points[i][0],z:points[i][1]},{x:points[i+1][0],z:points[i+1][1]},i===4?2.8:2.2);
+  addPath({x:-30,z:-24},{x:-25,z:-16},1.7);
+  addPath({x:-6,z:5},{x:0,z:0},1.8);
+  addPath({x:6,z:2},{x:22,z:-5},1.8);
+  addPath({x:15,z:12},{x:14,z:23},2.1);
+  addPath({x:-6,z:5},{x:-14,z:26},1.7);
+
+  createSchool(); createCommons(); createLab(); createChamber(); createNormalizationBed();
+  thresholds.forEach(createThreshold);
+  [[-12,-7],[10,-7],[29,-15],[5,16],[-24,14],[-4,27]].forEach(([x,z])=>createSensor(x,z));
+  createInhabitants();
+
+  const boundaryMat=new THREE.MeshBasicMaterial({color:0xb8c5bf,transparent:true,opacity:.16});
+  for(let i=0;i<28;i++){
+    const a=(i/28)*TAU,x=Math.cos(a)*55,z=Math.sin(a)*55;
+    const post=mesh(new THREE.BoxGeometry(.08,2.4,.08),boundaryMat,x,heightAt(x,z)+1.2,z,false,false); scene.add(post);
+  }
+}
+
+createWorld();
+
+const clock=new THREE.Clock();
+const tempForward=new THREE.Vector3();
+const tempRight=new THREE.Vector3();
+const targetPos=new THREE.Vector3();
+const minimapCtx=dom.minimap.getContext('2d');
+let lastFrame=performance.now(), frames=0, fpsTimer=0, questionT=0, perfLast=performance.now();
+
+function detectPower(){
+  const memory=navigator.deviceMemory||4;
+  const cores=navigator.hardwareConcurrency||4;
+  state.lowPower=memory<=4 || cores<=4 || innerWidth<520;
+}
+function applyQuality(value=state.quality){
+  state.quality=value;
+  let ratio=1.25, shadows=true;
+  const autoLow=state.lowPower;
+  if(value==='low'||(value==='auto'&&autoLow)){ratio=1;shadows=false;dom.qualityStatus.textContent='Low'}
+  else if(value==='medium'||value==='auto'){ratio=Math.min(devicePixelRatio,1.45);shadows=true;dom.qualityStatus.textContent=value==='auto'?'Auto · Medium':'Medium'}
+  else {ratio=Math.min(devicePixelRatio,2);shadows=true;dom.qualityStatus.textContent='High'}
+  renderer.setPixelRatio(ratio); renderer.shadowMap.enabled=shadows; resize();
+}
+function resize(){
+  const w=innerWidth,h=innerHeight;
+  renderer.setSize(w,h,false); camera.aspect=w/h; camera.updateProjectionMatrix();
+  if(state.map)drawMinimap(true);
+}
+detectPower(); applyQuality('auto');
+window.addEventListener('resize',resize,{passive:true});
+
+dom.bootStatus.textContent='World ready. Choose a mode and enter.';
+
+function setMode(mode){
+  state.mode=mode;
+  document.querySelectorAll('.modeChoice').forEach(btn=>{
+    const active=btn.dataset.mode===mode;
+    btn.dataset.active=String(active); btn.setAttribute('aria-checked',String(active));
+  });
+}
+document.querySelectorAll('.modeChoice').forEach(btn=>btn.addEventListener('click',()=>setMode(btn.dataset.mode)));
+
+function pad2(n){return String(Math.max(0,Math.floor(n))).padStart(2,'0')}
+function formatElapsed(ms){
+  const total=Math.max(0,Math.floor(ms/1000));
+  const h=Math.floor(total/3600),m=Math.floor((total%3600)/60),s=total%60;
+  return h?`${pad2(h)}:${pad2(m)}:${pad2(s)}`:`${pad2(m)}:${pad2(s)}`;
+}
+function formatClock(date){return date.toLocaleTimeString([], {hour:'numeric',minute:'2-digit',second:'2-digit'});}
+function fieldElapsed(now=Date.now()){
+  if(!state.sessionStartedAt)return 0;
+  const activePause=state.pausedAt?now-state.pausedAt:0;
+  return Math.max(0,now-state.sessionStartedAt-state.pausedTotal-activePause);
+}
+function logEvent(text,kind='event'){
+  const now=Date.now();
+  const elapsed=fieldElapsed(now);
+  state.eventLog.unshift({text,kind,clock:formatClock(new Date(now)),elapsed:formatElapsed(elapsed)});
+  state.eventLog=state.eventLog.slice(0,18);
+  renderEventTrace();
+}
+function renderEventTrace(){
+  if(!dom.eventTraceList)return;
+  dom.eventTraceList.innerHTML='';
+  const list=state.eventLog.length?state.eventLog:[{clock:'--:--',elapsed:'00:00',text:'No field operations yet.'}];
+  list.forEach(item=>{
+    const row=document.createElement('div');row.className='traceItem';
+    row.innerHTML=`<div class="traceTime">${item.elapsed}<br><span class="muted">${item.clock}</span></div><div class="traceText">${item.text}</div>`;
+    dom.eventTraceList.appendChild(row);
+  });
+}
+function setOperation(nextState,operation,record=false){
+  if(state.operationalState===nextState&&state.operation===operation)return;
+  state.operationalState=nextState;state.operation=operation;state.phaseStartedAt=Date.now();
+  if(record)logEvent(operation,nextState.toLowerCase());
+}
+function updateTimeHUD(){
+  const now=Date.now(),d=new Date(now),second=Math.floor(now/1000);
+  if(second!==state.lastClockSecond){
+    state.lastClockSecond=second;
+    dom.clockNow.textContent=d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'});
+    dom.clockDate.textContent=d.toLocaleDateString([], {month:'short',day:'numeric'});
+    dom.elapsedTime.textContent=state.sessionStartedAt?formatElapsed(fieldElapsed(now)):'00:00';
+  }
+  dom.phaseState.textContent=state.operationalState;
+  const phaseElapsed=state.phaseStartedAt?formatElapsed(Math.max(0,now-state.phaseStartedAt)): '00:00';
+  dom.phaseName.textContent=state.operation+' · '+phaseElapsed;
+}
+
+dom.enter.addEventListener('click',()=>{
+  const now=Date.now(),returning=state.sessionStartedAt>0;
+  if(!returning){state.sessionStartedAt=now;state.pausedTotal=0;state.eventLog=[];state.thresholdTimes={};}
+  else if(state.pausedAt){state.pausedTotal+=now-state.pausedAt;state.pausedAt=0;}
+  state.started=true;state.phaseStartedAt=now;
+  dom.boot.classList.add('hidden'); dom.hud.classList.remove('hidden');
+  state.map=true;dom.mapPanel.classList.remove('hidden');dom.mapButton.textContent='Hide field map';drawMinimap(true);
+  if(state.mode==='free') dom.objectiveCard.classList.add('hidden');
+  setOperation('READY',state.mode==='guided'?'Route to threshold '+(state.currentObjective+1):'Free inquiry',false);
+  logEvent(returning?'Returned to the paused field session.':(state.mode==='guided'?'Entered guided fieldwork. Target 1 selected.':'Entered free inquiry.'));
+  dom.enter.textContent='Return to field';dom.bootStatus.textContent='Session preserved. Return when ready.';
+  announce(state.mode==='guided'?'Follow the amber route to the first threshold.':'The field is open. Move, scan, and inspect nearby structures.');
+  renderer.domElement.focus?.();
+});
+
+function announce(text,ms=2300){
+  dom.message.textContent=text; dom.message.classList.add('show');
+  clearTimeout(state.lastMessageTimer); state.lastMessageTimer=setTimeout(()=>dom.message.classList.remove('show'),ms);
+}
+function toggleDrawer(force){
+  state.drawer=typeof force==='boolean'?force:!state.drawer;
+  dom.drawer.classList.toggle('hidden',!state.drawer);
+  if(state.drawer){state.modal=true; resetMove();} else state.modal=!dom.info.classList.contains('hidden')||!dom.annotation.classList.contains('hidden');
+}
+dom.menu.addEventListener('click',()=>toggleDrawer());
+
+function selectObjective(delta){
+  state.currentObjective=(state.currentObjective+delta+thresholds.length)%thresholds.length;
+  setOperation('READY','Route to threshold '+(state.currentObjective+1),false);
+  logEvent('Target changed to '+(state.currentObjective+1)+': '+thresholds[state.currentObjective].name+'.');
+  updateObjective();drawMinimap(true);
+}
+dom.mapButton.addEventListener('click',()=>{
+  state.map=!state.map;
+  if(!state.map){state.mapExpanded=false;dom.mapPanel.classList.remove('expanded');dom.mapExpand.textContent='Expand';dom.mapExpand.setAttribute('aria-expanded','false');if(state.mode==='guided')dom.objectiveCard.classList.remove('hidden');}
+  dom.mapPanel.classList.toggle('hidden',!state.map); dom.mapButton.textContent=state.map?'Hide field map':'Show field map'; drawMinimap(true);
+});
+dom.mapExpand.addEventListener('click',()=>{
+  state.mapExpanded=!state.mapExpanded;dom.mapPanel.classList.toggle('expanded',state.mapExpanded);
+  if(state.mode==='guided')dom.objectiveCard.classList.toggle('hidden',state.mapExpanded);
+  dom.mapExpand.textContent=state.mapExpanded?'Collapse':'Expand';dom.mapExpand.setAttribute('aria-expanded',String(state.mapExpanded));drawMinimap(true);
+});
+dom.mapPrev.addEventListener('click',()=>selectObjective(-1));
+dom.mapNext.addEventListener('click',()=>selectObjective(1));
+
+dom.question.addEventListener('click',()=>{questionWorld();toggleDrawer(false)});
+dom.infoQuestion.addEventListener('click',()=>{questionWorld();closeInfo();});
+function questionWorld(){
+  state.contested=!state.contested;
+  state.normalization=clamp(state.normalization+(state.contested?-18:9),0,100);
+  dom.question.textContent=state.contested?'Restore arrangement':'Question arrangement';
+  setOperation('CHANGED',state.contested?'Arrangement exposed':'Arrangement restored',false);
+  logEvent(state.contested?'Questioned the arrangement; hidden alternatives exposed.':'Restored the normalized arrangement.');
+  announce(state.contested?'Hidden choices exposed. Boundaries and institutions are shifting.':'The settlement has returned to its normalized arrangement.');
+}
+
+dom.reset.addEventListener('click',()=>{
+  state.previousPose={position:camera.position.clone(),yaw:state.yaw,pitch:state.pitch,objective:state.currentObjective};state.recoveryAvailable=true;
+  camera.position.set(-34,2.2,-31); state.yaw=-2.62;state.pitch=-.08;state.currentObjective=0;resetMove();dom.undoReturn.classList.remove('hidden');toggleDrawer(false);
+  setOperation('RECOVERY','Returned to entrance',false);logEvent('Returned to the entrance. Previous position preserved for this session.');
+  announce('Returned to the Gate of First Assumptions.');
+});
+dom.undoReturn.addEventListener('click',()=>{
+  if(!state.recoveryAvailable||!state.previousPose)return;
+  camera.position.copy(state.previousPose.position);state.yaw=state.previousPose.yaw;state.pitch=state.previousPose.pitch;state.currentObjective=state.previousPose.objective;
+  state.recoveryAvailable=false;state.previousPose=null;dom.undoReturn.classList.add('hidden');resetMove();toggleDrawer(false);
+  setOperation('RECOVERY','Previous position restored',false);logEvent('Undo return restored the previous position and target.');announce('Previous field position restored.');
+});
+dom.exitField.addEventListener('click',()=>{
+  state.pausedAt=Date.now();logEvent('Exited the field; session timing paused.');state.started=false;resetMove();toggleDrawer(false);
+  state.map=false;state.mapExpanded=false;dom.mapPanel.classList.add('hidden');dom.mapPanel.classList.remove('expanded');dom.hud.classList.add('hidden');dom.boot.classList.remove('hidden');
+  dom.enter.textContent='Return to field';dom.bootStatus.textContent='Session paused. Position, discoveries, trace, and elapsed time are preserved.';
+  setOperation('REST','Session paused',false);
+});
+dom.next.addEventListener('click',()=>{selectObjective(1);toggleDrawer(false);announce('Next threshold selected: '+thresholds[state.currentObjective].name);});
+dom.quality.addEventListener('change',()=>applyQuality(dom.quality.value));
+dom.motion.addEventListener('input',()=>{dom.motionValue.textContent=dom.motion.value;state.lookSensitivity=Number(dom.motion.value)*.00004;});
+
+function populateTour(){
+  dom.tourList.innerHTML='';
+  thresholds.forEach((t,i)=>{
+    const row=document.createElement('div'); row.className='tourItem'+(state.discoveries.has(i)?' done':'');
+    row.innerHTML='<span class="tourMark">'+(state.discoveries.has(i)?'✓':i+1)+'</span><span>'+t.name+'</span>';
+    dom.tourList.appendChild(row);
+  });
+}
+populateTour();
+
+function openInfo(data,object){
+  activeInfoObject=object; state.modal=true; resetMove();
+  dom.infoType.textContent=data.type||'Field object'; dom.infoTitle.textContent=data.title; dom.infoBody.textContent=data.body;
+  dom.infoQuestion.classList.toggle('hidden',data.action==='annotate');
+  dom.info.classList.remove('hidden');
+  if(typeof data.index==='number'){
+    const first=!state.discoveries.has(data.index);
+    state.discoveries.add(data.index); state.currentObjective=Math.min(data.index+1,thresholds.length-1); populateTour();
+    if(first){
+      const now=Date.now();state.thresholdTimes[data.index]={elapsed:formatElapsed(fieldElapsed(now)),clock:formatClock(new Date(now))};
+      setOperation(state.discoveries.size===thresholds.length?'COMPLETE':'CHANGED','Threshold '+(data.index+1)+' investigated',false);
+      logEvent('Investigated '+(data.index+1)+': '+data.title+'.');
+    }
+    if(state.discoveries.size===thresholds.length){logEvent('All seven thresholds complete. Chamber return is valid.');announce('All seven thresholds have been investigated. The Chamber can now be opened.',3200);}
+  }
+  if(data.action==='annotate'){closeInfo();openAnnotation();}
+  if(data.action==='chamber'&&state.discoveries.size<thresholds.length){
+    dom.infoBody.textContent=data.body+' '+(thresholds.length-state.discoveries.size)+' thresholds remain before its central claim can be opened.';
+  }
+}
+function closeInfo(){dom.info.classList.add('hidden');state.modal=state.drawer||!dom.annotation.classList.contains('hidden');activeInfoObject=null;}
+dom.infoClose.addEventListener('click',closeInfo);
+
+function openAnnotation(){state.modal=true;dom.annotation.classList.remove('hidden');dom.annotationText.value='';setTimeout(()=>dom.annotationText.focus(),50);}
+function closeAnnotation(){dom.annotation.classList.add('hidden');state.modal=state.drawer||!dom.info.classList.contains('hidden');}
+dom.annotationCancel.addEventListener('click',closeAnnotation);
+dom.annotationPlace.addEventListener('click',()=>{
+  const text=dom.annotationText.value.trim(); if(!text){announce('Write one observation before placing it.');return;}
+  placeAnnotation(text); closeAnnotation();setOperation('CHANGED','Public observation placed',false);logEvent('Placed a public observation beside the Commons.');announce('Observation placed beside the Commons.');
+});
+function placeAnnotation(text){
+  const a=state.annotationCount*.55-1.2,x=-3+a,z=-9-Math.abs(a)*.25,y=heightAt(x,z);
+  const sign=createSign(text,0xe6dfc7,3.4,1.4); sign.position.set(x,y+1.5,z); sign.rotation.y=.12*a; scene.add(sign);
+  const post=mesh(new THREE.BoxGeometry(.08,1.5,.08),material(palette.wood),x,y+.75,z); scene.add(post);
+  addInteractive(sign,{type:'Public annotation',title:'Situated observation',body:text}); state.annotationCount++;
+}
+
+function resetMove(){state.moveX=state.moveY=state.keyX=state.keyY=0;dom.stick.style.transform='translate(0px,0px)';}
+
+let joyPointer=null,joyRect=null;
+dom.joystick.addEventListener('pointerdown',e=>{joyPointer=e.pointerId;dom.joystick.setPointerCapture(e.pointerId);joyRect=dom.joystick.getBoundingClientRect();updateJoy(e);});
+dom.joystick.addEventListener('pointermove',e=>{if(e.pointerId===joyPointer)updateJoy(e);});
+dom.joystick.addEventListener('pointerup',e=>{if(e.pointerId===joyPointer){joyPointer=null;state.moveX=state.moveY=0;dom.stick.style.transform='translate(0px,0px)';}});
+dom.joystick.addEventListener('pointercancel',()=>{joyPointer=null;state.moveX=state.moveY=0;dom.stick.style.transform='translate(0px,0px)';});
+function updateJoy(e){
+  const cx=joyRect.left+joyRect.width/2,cy=joyRect.top+joyRect.height/2,max=joyRect.width*.3;
+  let dx=e.clientX-cx,dy=e.clientY-cy,len=Math.hypot(dx,dy); if(len>max){dx=dx/len*max;dy=dy/len*max;}
+  state.moveX=dx/max;state.moveY=-dy/max;dom.stick.style.transform=`translate(${dx}px,${dy}px)`;
+}
+
+let lookPointer=null,lastLookX=0,lastLookY=0;
+renderer.domElement.addEventListener('pointerdown',e=>{
+  if(state.modal||e.clientX<innerWidth*.32)return;
+  lookPointer=e.pointerId;lastLookX=e.clientX;lastLookY=e.clientY;renderer.domElement.setPointerCapture(e.pointerId);
+});
+renderer.domElement.addEventListener('pointermove',e=>{
+  if(e.pointerId!==lookPointer||state.modal)return;
+  const dx=e.clientX-lastLookX,dy=e.clientY-lastLookY;lastLookX=e.clientX;lastLookY=e.clientY;
+  state.yaw-=dx*state.lookSensitivity;state.pitch=clamp(state.pitch-dy*state.lookSensitivity,-1.18,1.05);
+});
+renderer.domElement.addEventListener('pointerup',e=>{if(e.pointerId===lookPointer)lookPointer=null;});
+renderer.domElement.addEventListener('pointercancel',()=>{lookPointer=null;});
+
+window.addEventListener('keydown',e=>{
+  if(state.modal)return;
+  if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','KeyW','KeyA','KeyS','KeyD','KeyE','KeyQ','KeyM'].includes(e.code))e.preventDefault();
+  if(e.code==='KeyW'||e.code==='ArrowUp')state.keyY=1;
+  if(e.code==='KeyS'||e.code==='ArrowDown')state.keyY=-1;
+  if(e.code==='KeyA'||e.code==='ArrowLeft')state.keyX=-1;
+  if(e.code==='KeyD'||e.code==='ArrowRight')state.keyX=1;
+  if(e.code==='KeyE')interact(); if(e.code==='KeyQ')questionWorld(); if(e.code==='KeyM')dom.mapButton.click();
+},{passive:false});
+window.addEventListener('keyup',e=>{
+  if(e.code==='KeyW'||e.code==='ArrowUp'||e.code==='KeyS'||e.code==='ArrowDown')state.keyY=0;
+  if(e.code==='KeyA'||e.code==='ArrowLeft'||e.code==='KeyD'||e.code==='ArrowRight')state.keyX=0;
+});
+
+dom.interact.addEventListener('click',interact);
+dom.scan.addEventListener('click',()=>{
+  state.scan=!state.scan;dom.scan.textContent=state.scan?'Stop':'Scan';
+  interactables.forEach(o=>{o.traverse(c=>{if(c.userData.scanVisual)c.visible=state.scan}); if(o.userData.scanVisual)o.userData.scanVisual.visible=state.scan;});
+  scene.traverse(o=>{if(o.userData.scanVisual)o.userData.scanVisual.visible=state.scan;});
+  setOperation(state.scan?'WORKING':'READY',state.scan?'Scanning capture fields':'Fieldwork ready',false);
+  logEvent(state.scan?'Started spatial scan.':'Stopped spatial scan.');
+  announce(state.scan?'Capture fields and interactive claims are now visible.':'Scan overlay removed.');
+});
+function interact(){
+  if(state.modal||!state.nearest)return;
+  openInfo(state.nearest.object.userData.interactive,state.nearest.object);
+}
+
+function updateNearest(){
+  let best=null,bestDist=4.2;
+  for(const o of interactables){
+    const wp=new THREE.Vector3();o.getWorldPosition(wp);const d=Math.hypot(camera.position.x-wp.x,camera.position.z-wp.z);
+    if(d<bestDist){best={object:o,distance:d};bestDist=d;}
+  }
+  state.nearest=best;
+  if(best&&!state.modal){
+    const d=best.object.userData.interactive;
+    dom.prompt.textContent='INSPECT · '+d.title;dom.prompt.classList.remove('hidden');dom.interact.disabled=false;
+  } else {dom.prompt.classList.add('hidden');dom.interact.disabled=true;}
+}
+
+function updateMovement(dt){
+  if(!state.started||state.modal){state.moving=false;return;}
+  const mx=clamp(state.moveX+state.keyX,-1,1),my=clamp(state.moveY+state.keyY,-1,1);
+  const movingNow=Math.abs(mx)+Math.abs(my)>=.02;
+  if(movingNow!==state.moving){
+    state.moving=movingNow;
+    if(!state.scan)setOperation(movingNow?'WORKING':'READY',movingNow?'Travelling to threshold '+(state.currentObjective+1):'Fieldwork ready',false);
+  }
+  if(!movingNow)return;
+  camera.getWorldDirection(tempForward);tempForward.y=0;tempForward.normalize();
+  tempRight.crossVectors(tempForward,camera.up).normalize();
+  const speed=(state.scan?3.2:5.2)*dt;
+  targetPos.copy(camera.position).addScaledVector(tempForward,my*speed).addScaledVector(tempRight,mx*speed);
+  targetPos.x=clamp(targetPos.x,-56,56);targetPos.z=clamp(targetPos.z,-56,56);
+  if(!collides(targetPos.x,targetPos.z)){
+    camera.position.x=targetPos.x;camera.position.z=targetPos.z;
+  }
+  camera.position.y=lerp(camera.position.y,heightAt(camera.position.x,camera.position.z)+1.75,clamp(dt*10,0,1));
+  const onPath=nearPath(camera.position.x,camera.position.z);state.pathFollowing=onPath;
+  state.normalization=clamp(state.normalization+(onPath?.7:-.35)*dt,0,100);
+}
+
+function updateContestables(dt){
+  const target=state.contested?1:0;questionT=lerp(questionT,target,clamp(dt*2.3,0,1));
+  for(const o of contestables){
+    const a=o.userData.baseTransform,b=o.userData.altTransform;
+    o.position.lerpVectors(a.position,b.position,questionT);
+    o.scale.lerpVectors(a.scale,b.scale,questionT);
+    o.rotation.x=lerp(a.rotation.x,b.rotation.x,questionT);o.rotation.y=lerp(a.rotation.y,b.rotation.y,questionT);o.rotation.z=lerp(a.rotation.z,b.rotation.z,questionT);
+  }
+}
+
+function updatePeople(t){
+  for(let i=0;i<people.length;i++){
+    const p=people[i];p.position.y=p.userData.baseY+Math.sin(t*1.8+p.userData.phase)*.025;
+    if(i%4===0){p.rotation.y+=Math.sin(t*.3+p.userData.phase)*.0015;}
+  }
+}
+function updateThresholds(t){
+  thresholds.forEach((data,i)=>{
+    const obj=interactables.find(o=>o.userData.interactive?.index===i);if(!obj)return;
+    const discovered=state.discoveries.has(i);
+    obj.userData.ring.scale.setScalar(1+Math.sin(t*2+i)*.025);
+    obj.userData.ring.material.opacity=discovered?.45:1;obj.userData.ring.material.transparent=discovered;
+    obj.userData.sensor.rotation.y=t*.5+i;
+  });
+}
+
+function updateZone(){
+  let best='Field Edge',bestD=Infinity;
+  for(const z of zones){const d=Math.hypot(camera.position.x-z.x,camera.position.z-z.z);if(d<z.r&&d<bestD){best=z.name;bestD=d;}}
+  state.activeZone=best;dom.zoneName.textContent=best;
+}
+function updateObjective(){
+  if(state.mode!=='guided')return;
+  const index=clamp(state.currentObjective,0,thresholds.length-1),target=thresholds[index];
+  if(!target || !dom.objectiveTitle || !dom.objectiveHint || !dom.distance || !dom.objectiveDot)return;
+  const d=Math.hypot(camera.position.x-target.pos.x,camera.position.z-target.pos.z);
+  dom.objectiveTitle.textContent=(state.discoveries.has(index)?'Revisit: ':'')+target.name;
+  dom.objectiveHint.textContent=state.discoveries.size===thresholds.length?'All thresholds complete. Return to the Chamber.':target.short;
+  const eta=Math.max(0,Math.ceil(d/(state.scan?3.2:5.2)));
+  dom.distance.innerHTML=`<b>${Math.round(d)} m</b><span>ETA ${formatElapsed(eta*1000)}</span>`;
+  const angle=Math.atan2(target.pos.x-camera.position.x,target.pos.z-camera.position.z)-state.yaw;
+  const x=clamp(Math.sin(angle)*80,-80,80);
+  dom.objectiveDot.style.transform=`translateX(${x}px)`;
+}
+function updateHUD(){
+  dom.normFill.style.width=state.normalization.toFixed(1)+'%';dom.normValue.textContent=Math.round(state.normalization);
+  dom.zoneState.textContent=state.operationalState+' · '+state.discoveries.size+'/7 · '+state.drawCalls+' calls';
+  const dir=(((-state.yaw%(TAU))+TAU)%TAU)/TAU*8;const names=['N','NE','E','SE','S','SW','W','NW'];dom.compass.textContent=names[Math.round(dir)%8];
+}
+
+function drawMinimap(force=false){
+  if(!state.map)return;
+  const mapNow=performance.now();if(!force&&mapNow-state.lastMapDraw<120)return;state.lastMapDraw=mapNow;
+  const c=minimapCtx,w=dom.minimap.width,h=dom.minimap.height,scale=w/120,ox=w/2,oy=h/2;
+  const X=x=>ox+x*scale,Z=z=>oy+z*scale;
+  c.clearRect(0,0,w,h);c.fillStyle='#111a1c';c.fillRect(0,0,w,h);
+
+  // Coordinate grid and border make location measurable rather than decorative.
+  c.strokeStyle='#263632';c.lineWidth=1;c.font=`${Math.max(14,w/40)}px system-ui`;c.fillStyle='#71817b';c.textAlign='left';c.textBaseline='top';
+  for(let n=-50;n<=50;n+=10){
+    c.beginPath();c.moveTo(X(n),Z(-55));c.lineTo(X(n),Z(55));c.stroke();
+    c.beginPath();c.moveTo(X(-55),Z(n));c.lineTo(X(55),Z(n));c.stroke();
+    if(n%20===0){c.fillText(String(n),X(n)+3,Z(-54)+3);c.fillText(String(n),X(-54)+3,Z(n)+3);}
+  }
+  c.strokeStyle='#81918b';c.lineWidth=2;c.strokeRect(X(-55),Z(-55),110*scale,110*scale);
+
+  const zoneColors=['#e6b84d','#b8a4d6','#9fbe72','#d47745','#79614b'];
+  zones.forEach((z,i)=>{
+    c.beginPath();c.fillStyle=zoneColors[i];c.globalAlpha=.14;c.arc(X(z.x),Z(z.z),z.r*scale,0,TAU);c.fill();
+    c.globalAlpha=.72;c.strokeStyle=zoneColors[i];c.lineWidth=2;c.stroke();c.globalAlpha=1;
+    if(state.mapExpanded){const zoneLabel=['SCHOOL','COMMONS','LAB','CHAMBER','BED'][i];c.fillStyle='#dce1d8';c.font=`700 ${Math.max(15,w/38)}px system-ui`;c.textAlign='center';c.fillText(zoneLabel,X(z.x),Z(z.z)-3);}
+  });
+
+  // Full path network, then the active guided leg.
+  c.strokeStyle='#52635d';c.lineWidth=Math.max(3,w/150);c.setLineDash([]);
+  pathSegments.forEach(s=>{c.beginPath();c.moveTo(X(s.a.x),Z(s.a.y));c.lineTo(X(s.b.x),Z(s.b.y));c.stroke();});
+  if(state.mode==='guided'){
+    const target=thresholds[state.currentObjective];
+    c.strokeStyle='#e6b84d';c.lineWidth=Math.max(5,w/105);c.setLineDash([12,8]);c.beginPath();c.moveTo(X(camera.position.x),Z(camera.position.z));c.lineTo(X(target.pos.x),Z(target.pos.z));c.stroke();c.setLineDash([]);
+  }
+
+  thresholds.forEach((t,i)=>{
+    const x=X(t.pos.x),y=Z(t.pos.z),active=i===state.currentObjective&&state.mode==='guided';
+    if(active){c.beginPath();c.strokeStyle='#e6b84d';c.lineWidth=Math.max(4,w/120);c.arc(x,y,12+w/90,0,TAU);c.stroke();}
+    c.beginPath();c.fillStyle=state.discoveries.has(i)?'#8cc7a2':active?'#e6b84d':'#f4f0df';c.arc(x,y,Math.max(8,w/50),0,TAU);c.fill();
+    c.fillStyle='#111';c.font=`800 ${Math.max(16,w/34)}px system-ui`;c.textAlign='center';c.textBaseline='middle';c.fillText(String(i+1),x,y+1);
+    if(state.mapExpanded&&state.thresholdTimes[i]){c.fillStyle='#f4f0df';c.font=`700 ${Math.max(13,w/46)}px ui-monospace,monospace`;c.textBaseline='top';c.fillText(state.thresholdTimes[i].elapsed,x,y+14+w/90);}
+  });
+
+  // Player, heading, and view cone.
+  const px=X(camera.position.x),py=Z(camera.position.z),heading=-state.yaw;
+  c.save();c.translate(px,py);c.rotate(heading);c.fillStyle='rgba(255,242,196,.14)';c.beginPath();c.moveTo(0,0);c.lineTo(-32,72);c.lineTo(32,72);c.closePath();c.fill();
+  c.fillStyle='#fff2c4';c.beginPath();c.moveTo(0,-16);c.lineTo(10,12);c.lineTo(-10,12);c.closePath();c.fill();c.strokeStyle='#10191b';c.lineWidth=2;c.stroke();c.restore();
+
+  // North and scale.
+  c.fillStyle='#f4f0df';c.font=`800 ${Math.max(18,w/30)}px system-ui`;c.textAlign='right';c.textBaseline='top';c.fillText('N',w-12,10);
+  c.strokeStyle='#f4f0df';c.lineWidth=3;c.beginPath();c.moveTo(w-22,34);c.lineTo(w-22,14);c.stroke();
+  const bar=10*scale;c.textAlign='left';c.font=`${Math.max(14,w/42)}px system-ui`;c.fillText('10 m',12,h-32);c.beginPath();c.moveTo(12,h-14);c.lineTo(12+bar,h-14);c.stroke();
+
+  const target=thresholds[state.currentObjective],d=Math.hypot(camera.position.x-target.pos.x,camera.position.z-target.pos.z),eta=Math.ceil(d/(state.scan?3.2:5.2));
+  dom.mapCaption.textContent=`X ${camera.position.x.toFixed(1)} · Z ${camera.position.z.toFixed(1)} · target ${state.currentObjective+1} · ETA ${formatElapsed(eta*1000)}`;
+  dom.mapSubhead.textContent=state.activeZone+' · '+state.operationalState;
+}
+
+function updatePerformance(now){
+  frames++;fpsTimer+=now-perfLast;perfLast=now;
+  if(fpsTimer>=500){state.fps=Math.round(frames*1000/fpsTimer);frames=0;fpsTimer=0;state.drawCalls=renderer.info.render.calls;dom.fps.textContent=state.fps;const pct=clamp(state.fps/60,0,1);dom.perfArc.style.strokeDashoffset=String(126*(1-pct));}
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  const now=performance.now(),dt=Math.min((now-lastFrame)/1000,.05);lastFrame=now;
+  camera.rotation.y=state.yaw;camera.rotation.x=state.pitch;
+  updateMovement(dt);updateContestables(dt);updatePeople(now/1000);updateThresholds(now/1000);updateNearest();updateZone();updateObjective();updateHUD();updateTimeHUD();drawMinimap();
+  renderer.render(scene,camera);updatePerformance(now);
+}
+animate();
+
+// Initial camera and UI state.
+camera.position.y=heightAt(camera.position.x,camera.position.z)+1.75;
+renderEventTrace();updateObjective();updateHUD();updateTimeHUD();
+</script>
+</body>
+</html>

@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>THE SOFT CADASTRE — ATLANTA</title>
+<style>
+:root{
+  --paper:#f4f1e8; --panel:#fbf9f2; --sunk:#eceadf;
+  --ink:#171715; --muted:#69665f; --faint:#8d8a81;
+  --rule:#b8b2a5; --hair:#d8d3c6;
+  --pos:#145a73; --neg:#9a2e22; --neu:#5f5b53; --amber:#8a6a12;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --pad:clamp(16px,3.4vw,44px);
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--mono);font-size:13px;line-height:1.55;
+  background-image:linear-gradient(180deg,rgba(0,0,0,.018),transparent 220px)}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding:0 var(--pad) 90px}
+
+/* ---------- masthead ---------- */
+.mast{padding:clamp(30px,6vw,64px) 0 20px;border-bottom:2px solid var(--ink)}
+.mast .over{font-size:9px;letter-spacing:.34em;color:var(--muted);text-transform:uppercase}
+h1{margin:14px 0 0;font-size:clamp(30px,7.4vw,68px);line-height:.94;letter-spacing:-.01em;font-weight:800}
+h1 em{font-style:normal;color:var(--muted);font-weight:400}
+.mast .sub{margin-top:12px;font-size:10px;letter-spacing:.24em;color:var(--muted)}
+.mast .premise{margin-top:20px;max-width:66ch;font-size:14px;line-height:1.62}
+.mastFoot{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:22px;font-size:9px;letter-spacing:.16em;color:var(--muted)}
+.mastFoot b{color:var(--ink);font-weight:700}
+
+/* ---------- generic section ---------- */
+section{padding-top:46px}
+.hd{display:flex;align-items:baseline;gap:14px;border-bottom:1px solid var(--ink);padding-bottom:7px;margin-bottom:20px}
+.hd h2{margin:0;font-size:13px;letter-spacing:.26em;font-weight:800;text-transform:uppercase}
+.hd .n{font-size:9px;letter-spacing:.2em;color:var(--faint)}
+.hd .aside{margin-left:auto;font-size:9px;letter-spacing:.16em;color:var(--muted);text-align:right}
+.lede{max-width:70ch;color:var(--muted);margin:-6px 0 20px;font-size:12px}
+
+/* ---------- law ---------- */
+.laws{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));border-top:1px solid var(--hair);border-left:1px solid var(--hair)}
+.law{border-right:1px solid var(--hair);border-bottom:1px solid var(--hair);padding:15px 16px;background:var(--panel)}
+.law b{display:block;font-size:10px;letter-spacing:.14em;margin-bottom:7px}
+.law p{margin:0;font-size:11.5px;line-height:1.6;color:var(--muted)}
+.law i{display:block;font-style:normal;font-size:8px;letter-spacing:.2em;color:var(--faint);margin-bottom:9px}
+
+/* ---------- registries ---------- */
+.regs{display:grid;gap:22px;grid-template-columns:repeat(auto-fit,minmax(430px,1fr))}
+.reg{border:1px solid var(--ink);background:var(--panel);display:flex;flex-direction:column}
+.reg > .top{padding:16px 18px 14px;border-bottom:1px solid var(--ink)}
+.reg .code{font-size:8px;letter-spacing:.28em;color:var(--muted)}
+.reg h3{margin:6px 0 2px;font-size:22px;letter-spacing:.05em;font-weight:800}
+.reg .exp{font-size:9px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase}
+.reg .holds{margin-top:12px;font-size:12.5px;line-height:1.55}
+.facts{display:grid;grid-template-columns:auto 1fr;gap:0}
+.facts dt{padding:7px 10px 7px 18px;font-size:8px;letter-spacing:.16em;color:var(--faint);border-bottom:1px solid var(--hair);text-transform:uppercase;white-space:nowrap}
+.facts dd{margin:0;padding:7px 18px 7px 0;font-size:11.5px;border-bottom:1px solid var(--hair);color:var(--muted)}
+.counts{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:1px solid var(--hair)}
+.ct{padding:11px 8px 10px 18px;border-right:1px solid var(--hair)}
+.ct:last-child{border-right:0}
+.ct b{display:block;font-size:22px;line-height:1;font-variant-numeric:tabular-nums}
+.ct span{font-size:7.5px;letter-spacing:.14em;color:var(--faint);text-transform:uppercase}
+.surfs{padding:14px 18px 4px}
+.surf{display:block;text-decoration:none;border:1px solid var(--rule);padding:11px 13px;margin-bottom:9px;background:var(--paper);transition:border-color .12s,transform .12s}
+.surf:hover,.surf:focus{border-color:var(--ink);transform:translateX(2px);outline:none}
+.surf .sname{display:flex;align-items:baseline;gap:9px}
+.surf .sname b{font-size:12px;letter-spacing:.18em}
+.surf .sname em{font-style:normal;font-size:8px;letter-spacing:.16em;color:var(--faint);text-transform:uppercase}
+.surf .sname .go{margin-left:auto;font-size:9px;color:var(--muted)}
+.surf p{margin:6px 0 0;font-size:10.5px;line-height:1.5;color:var(--muted)}
+.surf .for{display:inline-block;margin-top:7px;font-size:8px;letter-spacing:.14em;color:var(--amber);text-transform:uppercase}
+.state{margin-top:auto;padding:12px 18px 14px;border-top:1px solid var(--neg);color:var(--neg);font-size:10px;line-height:1.5}
+.state b{letter-spacing:.18em}
+
+/* ---------- pipeline ---------- */
+.pipe{border:1px solid var(--hair);background:var(--panel)}
+.stage{display:grid;grid-template-columns:44px 128px 1fr;align-items:start;gap:14px;padding:12px 16px;border-bottom:1px solid var(--hair)}
+.stage:last-child{border-bottom:0}
+.stage .num{font-size:9px;letter-spacing:.16em;color:var(--faint);padding-top:2px}
+.stage .nm{font-size:11px;letter-spacing:.2em;font-weight:700}
+.stage code{display:block;font-size:10.5px;color:var(--pos);word-break:break-all}
+.stage .makes{font-size:9px;letter-spacing:.1em;color:var(--faint);margin-top:3px}
+.stage .note{font-size:10.5px;color:var(--muted);margin-top:5px;line-height:1.5;max-width:74ch}
+
+/* ---------- gates ---------- */
+.gates{border:1px solid var(--hair)}
+.gate{display:grid;grid-template-columns:34px 1fr 88px;gap:12px;align-items:center;padding:11px 15px;border-bottom:1px solid var(--hair);background:var(--panel)}
+.gate:last-child{border-bottom:0}
+.gate .g{font-size:9px;letter-spacing:.16em;color:var(--faint)}
+.gate .gn{font-size:11.5px}
+.gate .gd{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+.verdict{justify-self:end;font-size:9px;letter-spacing:.18em;padding:4px 8px;border:1px solid currentColor;white-space:nowrap}
+.verdict.pass{color:var(--pos)} .verdict.fail{color:var(--neg)}
+.gateNote{margin-top:12px;font-size:10.5px;color:var(--muted);max-width:74ch}
+
+/* ---------- table ---------- */
+.tblWrap{overflow-x:auto;border:1px solid var(--hair)}
+table{border-collapse:collapse;width:100%;min-width:760px;background:var(--panel)}
+th,td{text-align:left;padding:9px 12px;border-bottom:1px solid var(--hair);font-size:11px;vertical-align:top}
+th{font-size:8px;letter-spacing:.18em;color:var(--faint);text-transform:uppercase;background:var(--sunk);white-space:nowrap}
+tr:last-child td{border-bottom:0}
+td.blind{color:var(--muted)}
+.tag{display:inline-block;font-size:8px;letter-spacing:.12em;border:1px solid var(--rule);padding:2px 5px;white-space:nowrap}
+.tag.runnable{color:var(--pos);border-color:var(--pos)}
+.tag.pending{color:var(--amber);border-color:var(--amber)}
+.tag.gated,.tag\[data-s="reference-only"\]{color:var(--neg);border-color:var(--neg)}
+.tag.refonly{color:var(--neg);border-color:var(--neg)}
+.lane{font-size:8px;letter-spacing:.14em;color:var(--faint)}
+.vocab{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:0 26px;margin-top:14px;font-size:10.5px;color:var(--muted)}
+.vocab div{padding:4px 0;border-bottom:1px dotted var(--hair)}
+.vocab b{color:var(--ink);font-weight:700}
+
+/* ---------- honest / docs / next ---------- */
+.honest{border-left:3px solid var(--neg);padding:2px 0 2px 16px;max-width:76ch}
+.honest li{margin-bottom:9px;font-size:12px;line-height:1.6}
+.honest li b{color:var(--neg)}
+.docs{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.doc{display:block;text-decoration:none;border:1px solid var(--rule);background:var(--panel);padding:13px 15px;transition:border-color .12s}
+.doc:hover,.doc:focus{border-color:var(--ink);outline:none}
+.doc b{font-size:11px;letter-spacing:.2em}
+.doc p{margin:6px 0 0;font-size:10.5px;color:var(--muted);line-height:1.5}
+ol.next{padding-left:20px;max-width:74ch}
+ol.next li{margin-bottom:7px;font-size:12px}
+pre.serve{background:var(--ink);color:var(--paper);padding:13px 15px;overflow-x:auto;font-size:11.5px;margin:14px 0 0}
+.files{background:var(--panel);border:1px solid var(--hair);padding:14px 16px;overflow-x:auto;font-size:10.5px;line-height:1.65;color:var(--muted);white-space:pre;margin:0}
+
+/* ---------- probe strip ---------- */
+#probe{position:sticky;top:0;z-index:20;display:flex;flex-wrap:wrap;align-items:center;gap:7px 16px;
+  padding:8px var(--pad);background:var(--ink);color:var(--paper);font-size:9px;letter-spacing:.16em}
+#probe .dot{width:7px;height:7px;border-radius:50%;background:#8d8a81;flex:none}
+#probe .dot.live{background:#4fb3a0} #probe .dot.rec{background:#c9a227}
+#probe b{font-weight:700}
+#probe .sp{margin-left:auto;color:#b8b2a5}
+footer.end{margin-top:56px;padding-top:16px;border-top:2px solid var(--ink);display:flex;flex-wrap:wrap;gap:8px 22px;font-size:9px;letter-spacing:.16em;color:var(--muted)}
+@media(max-width:620px){
+  .stage{grid-template-columns:1fr;gap:4px}
+  .gate{grid-template-columns:26px 1fr;}
+  .verdict{grid-column:2;justify-self:start;margin-top:5px}
+  .counts{grid-template-columns:repeat(2,1fr)}
+  .ct:nth-child(2n){border-right:0}
+  .facts{grid-template-columns:1fr}
+  .facts dt{padding:8px 18px 0;border-bottom:0}
+  .facts dd{padding:2px 18px 8px}
+}
+</style>
+<script src="registry.embed.js"></script>
+</head>
+<body>
+
+<div id="probe">
+  <span class="dot" id="pDot"></span><b id="pMode">READING REGISTER…</b>
+  <span id="pSeres">SERES —</span>
+  <span id="pHalf">HALFWORLD —</span>
+  <span id="pGates">GATES —</span>
+  <span class="sp" id="pBuilt"></span>
+</div>
+
+<div class="wrap">
+
+  <header class="mast">
+    <div class="over">Atlanta · a register of claimed extent</div>
+    <h1>THE SOFT<br>CADASTRE</h1>
+    <div class="sub" id="mSub">TWO REGISTRIES · ONE CONTRACT</div>
+    <p class="premise" id="mPremise"></p>
+    <div class="mastFoot">
+      <span><b>SOURCE ANCHOR</b> ≠ TARGET</span>
+      <span><b>ABSENCE</b> ≠ NEUTRALITY</span>
+      <span><b>THE COMPILER</b> OWNS GEOMETRY</span>
+      <span><b>LOOK</b> IS A GATE</span>
+    </div>
+  </header>
+
+  <section id="sec-law">
+    <div class="hd"><span class="n">§ 01</span><h2>The law</h2><span class="aside">six rules · both registries obey all six</span></div>
+    <p class="lede">A surface that breaks one of these is a bug, not a style choice.</p>
+    <div class="laws" id="lawGrid"></div>
+  </section>
+
+  <section id="sec-reg">
+    <div class="hd"><span class="n">§ 02</span><h2>The registries</h2><span class="aside">click any surface to open it</span></div>
+    <p class="lede">The same instrument pointed at the two ways a city talks about itself: one person at a time, and one meeting at a time.</p>
+    <div class="regs" id="regGrid"></div>
+  </section>
+
+  <section id="sec-acq">
+    <div class="hd"><span class="n">§ 03</span><h2>Acquisition</h2><span class="aside">registry i · run from the root</span></div>
+    <p class="lede">OpenStreetMap Notes are the only source in the register runnable with no key, no agreement and no records request: a public API of people reporting that the map and the ground disagree. That disagreement is testimony about place.</p>
+    <div class="pipe" id="pipeSeres"></div>
+    <pre class="serve">node seres/harness/osm-notes.mjs --city atlanta &amp;&amp; node seres/harness/build-atlas.mjs</pre>
+  </section>
+
+  <section id="sec-pipe">
+    <div class="hd"><span class="n">§ 04</span><h2>The loop</h2><span class="aside">registry ii · run from <code>halfworld/</code></span></div>
+    <p class="lede">Every stage writes a ledger line beside itself. The ledger is not logging — it is the record of what the machine claims it did, kept next to the thing it made.</p>
+    <div class="pipe" id="pipeList"></div>
+    <pre class="serve" id="demoCmd"></pre>
+  </section>
+
+  <section id="sec-scale">
+    <div class="hd"><span class="n">§ 05</span><h2>How this grows</h2><span class="aside">ranked by return on effort</span></div>
+    <p class="lede">The first move is not more sources. It is reading the sources already acquired: the lexicon resolves 15% of the notes on disk, and the other 85% are stored, waiting, costing nothing to re-read.</p>
+    <div class="pipe" id="scaleList"></div>
+    <div class="hd" style="margin-top:34px"><span class="n">§ 05b</span><h2>Other cities</h2><span class="aside">what ported, and what was Atlanta all along</span></div>
+    <div class="tblWrap" style="margin-bottom:18px"><table id="cityTable"><thead><tr>
+      <th>City</th><th>Registry I</th><th>Registry II</th><th>Config</th>
+    </tr></thead><tbody id="cityBody"></tbody></table></div>
+    <div class="regs">
+      <div class="reg" style="border-color:var(--pos)"><div class="top" style="border-color:var(--pos)"><div class="code">PORTED</div><h3 style="font-size:15px">Carries to any city</h3></div><ul class="honest" id="portable" style="border-left-color:var(--pos);margin:14px 18px"></ul></div>
+      <div class="reg" style="border-color:var(--neg)"><div class="top" style="border-color:var(--neg)"><div class="code">DID NOT PORT</div><h3 style="font-size:15px">Was Atlanta all along</h3></div><ul class="honest" id="notPortable" style="margin:14px 18px"></ul></div>
+    </div>
+    <p class="lede" style="margin-top:20px">Beyond cities, the same claim schema takes other corpora: <span id="otherData"></span></p>
+  </section>
+
+  <section id="sec-gate">
+    <div class="hd"><span class="n">§ 06</span><h2>Gates</h2><span class="aside" id="gateAside">recorded at build</span></div>
+    <p class="lede">Executable. <code>gate.mjs</code> prints what failed <em>and which stage fixes it</em>, and exits 1 if any failed. A gate that only says <code>false</code> makes the next person guess.</p>
+    <div class="gates" id="gateList"></div>
+    <p class="gateNote"><b>Gate 2</b> is the ratio test: if the top five anchors cover less than a third of the corpus you do not have a world, you have a travelogue, and the fix is to grow the gazetteer before spending more compute. <b>Gate 5</b> is the one that cannot be satisfied by working harder.</p>
+  </section>
+
+  <section id="sec-src">
+    <div class="hd"><span class="n">§ 07</span><h2>Source register</h2><span class="aside">a source with no stated blind spot has not been examined</span></div>
+    <div class="tblWrap"><table id="srcTable"><thead><tr>
+      <th>Source</th><th>Lane</th><th>Acquisition</th><th>Status</th><th>Primary value</th><th>Primary blind spot</th>
+    </tr></thead><tbody id="srcBody"></tbody></table></div>
+    <div class="vocab" id="vocab"></div>
+  </section>
+
+  <section id="sec-honest">
+    <div class="hd"><span class="n">§ 08</span><h2>What is honestly wrong right now</h2><span class="aside">the alternative is a register that flatters itself</span></div>
+    <ul class="honest">
+      <li><b>Registry I is now mixed, and that is more dangerous than fixture-only.</b> 228 of 258 claims are acquired from a real API; 30 are invented. Every surface states the split, but a reader who skims will average them. Registry II is still entirely synthetic.</li>
+      <li><b>85% of acquired notes produce nothing.</b> 1242 of 1457 Atlanta observations and 576 of 674 in New Orleans matched no lexicon entry and are kept unresolved. That number measures the regex, not the city — and until an LLM tier reads them, the dimension histogram is a picture of the lexicon's vocabulary.</li>
+      <li><b>An OSM note's pin is where a contributor clicked.</b> It is treated as an anchor, and spatial probability is lowered when the text gestures rather than names. It is still the weakest geometry in the system.</li>
+      <li><b>The corpus is contributor-shaped.</b> OSM Notes over-represent people who edit maps. High note density is evidence of mapping attention, and reading it as neighbourhood condition would be the exact error this system is built to refuse.</li>
+      <li><b>HALFWORLD's anchor coordinates are eyeballed.</b> Nine anchors, provisional, on one corridor. OSM footprints are the first real join.</li>
+      <li><b><code>--stub</code> extraction is regex over alias phrases.</b> It flows the pipeline and is blind to any vernacular the alias table lacks — which is most vernacular.</li>
+      <li><b>PDFs are not guaranteed readable.</b> <code>fetch-minutes.mjs</code> saves them, tries <code>pdftotext</code>, and otherwise ledgers NEEDS-OCR. Those absences must never be read as quiet neighborhoods.</li>
+      <li><b>The registries do not share a place-id space.</b> A SERES claim and a HALFWORLD territory box can be about the same corner and the system cannot tell. This is the most interesting missing join — it is where testimony and record would be forced to disagree in public.</li>
+      <li><b>Nobody has passed gate 5.</b></li>
+    </ul>
+  </section>
+
+  <section id="sec-next">
+    <div class="hd"><span class="n">§ 09</span><h2>Next joins</h2><span class="aside">in order</span></div>
+    <ol class="next" id="nextList"></ol>
+  </section>
+
+  <section id="sec-docs">
+    <div class="hd"><span class="n">§ 10</span><h2>Documents &amp; files</h2><span class="aside">serve the directory for live data</span></div>
+    <div class="docs" id="docGrid"></div>
+    <pre class="serve">cd ~/Downloads/soft-cadastre &amp;&amp; python3 -m http.server 8777</pre>
+    <p class="lede" style="margin-top:14px">Opened as plain files, everything still works: the Sheet falls back to its embedded atlas, and this register falls back to recorded counts and says so in the strip above.</p>
+    <pre class="files">soft-cadastre/
+  index.html              this register
+  SYSTEM.md               the contract both registries answer to
+  SOURCE-REGISTER.md      sources, modes, status, blind spots
+  registry.json           machine-readable manifest — this page reads it
+  registry.embed.js       file:// fallback, generated from registry.json
+  sync-embeds.mjs         regenerates both embeds; --check exits 1 on drift
+
+  seres/
+    index.html            THE SHEET      paper survey over the atlas
+    helm.html             THE HELM       instrument over the same atlas
+    data.json             the atlas      schema seres/atlas/v1
+    data.embed.js         file:// fallback, generated from data.json
+    runtime/status.json   heartbeat polled by the Sheet
+
+  halfworld/
+    viewer.html           LOOK           gate surface (built)
+    helm.html             THE HELM       console (built)
+    *.template.html       the sources of those two — edit these
+    world.config.json     gazetteer · anchors · relation kernels · grid · gates
+    atlas/                source → extracted → compiled
+    harness/              fetch · segment · extract · compile-field · gate
+    ledger/               one line per stage, beside the stage
+    sample/               the synthetic minutes</pre>
+  </section>
+
+  <footer class="end">
+    <span>THE SOFT CADASTRE · ATLANTA</span>
+    <span id="fBuilt"></span>
+    <span id="fCredit">© OpenStreetMap contributors</span>
+    <span>REGISTRY II IS STILL SAMPLE MATERIAL WITH PROVISIONAL ANCHORS</span>
+  </footer>
+</div>
+
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+/* Read the manifest. Served → registry.json. file:// → the embedded copy.
+   Either way the page renders; only the LIVE/RECORDED strip changes. */
+fetch('registry.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw 0;return r.json()})
+  .catch(()=>window.CADASTRE_REGISTRY)
+  .then(R=>{ if(!R) return fault('no registry — restore registry.json or registry.embed.js'); render(R); probe(R); })
+  .catch(e=>fault(String(e&&e.message||e)));
+
+function fault(msg){ $('#pMode').textContent='REGISTER UNREADABLE'; $('#pSeres').textContent=msg; }
+
+function render(R){
+  $('#mPremise').textContent=R.premise;
+  $('#mSub').textContent=R.registries.map(r=>r.name).join('  ·  ')+'  ·  ONE CONTRACT';
+  $('#pBuilt').textContent='BUILT '+R.built;
+  $('#fBuilt').textContent='BUILT '+R.built;
+
+  $('#lawGrid').innerHTML=R.law.map((l,i)=>
+    `<div class="law"><i>${String(i+1).padStart(2,'0')}</i><b>${esc(l.name)}</b><p>${esc(l.text)}</p></div>`).join('');
+
+  $('#regGrid').innerHTML=R.registries.map(reg=>{
+    const c=reg.recorded, keys=Object.keys(c).filter(k=>typeof c[k]==='number').slice(0,4);
+    return `<article class="reg" data-reg="${esc(reg.id)}">
+      <div class="top">
+        <div class="code">${esc(reg.code)}</div>
+        <h3>${esc(reg.name)}</h3>
+        <div class="exp">${esc(reg.expansion)}</div>
+        <div class="holds">${esc(reg.holds)}.</div>
+      </div>
+      <div class="counts" data-counts="${esc(reg.id)}">${keys.map(k=>
+        `<div class="ct"><b data-c="${esc(reg.id)}:${esc(k)}">${c[k]}</b><span>${esc(k.replace(/_/g,' '))}</span></div>`).join('')}</div>
+      <dl class="facts">
+        <dt>corpus</dt><dd>${esc(reg.corpus)}</dd>
+        <dt>unit</dt><dd>${esc(reg.unit)}</dd>
+        <dt>claim</dt><dd>${esc(reg.claim_shape)}</dd>
+        <dt>geometry</dt><dd>${esc(reg.geometry)}</dd>
+      </dl>
+      <div class="surfs">${reg.surfaces.map(s=>
+        `<a class="surf" href="${esc(s.path)}"><span class="sname"><b>${esc(s.name)}</b><em>${esc(s.register)}</em><span class="go">OPEN ▸</span></span>
+          <p>${esc(s.does)}</p><span class="for">for ${esc(s.read_it_for)}</span></a>`).join('')}</div>
+      <div class="state"><b>STATE ·</b> ${esc(reg.state)}</div>
+    </article>`;
+  }).join('');
+
+  const stageRow=s=>`<div class="stage"><div class="num">STAGE ${s.n}</div><div class="nm">${esc(s.name)}</div>
+      <div><code>${esc(s.runs)}</code><div class="makes">→ ${esc(s.makes)}</div><div class="note">${esc(s.note)}</div></div></div>`;
+  $('#pipeSeres').innerHTML=(R.pipeline_seres||[]).map(stageRow).join('');
+
+  const S=R.scaling||{moves:[],other_datasets:[]};
+  $('#scaleList').innerHTML=S.moves.map(m=>
+    `<div class="stage"><div class="num">${String(m.rank).padStart(2,'0')}</div><div class="nm">${esc(m.name)}</div>
+      <div><div style="font-size:11.5px"><b>gain</b> ${esc(m.gain)}</div>
+        <div class="makes" style="margin-top:4px">COST · ${esc(m.cost)}</div>
+        <div class="note">${esc(m.how)}</div>
+        <span class="for" style="display:inline-block;margin-top:6px;font-size:8px;letter-spacing:.14em;color:${m.status==='pending'?'var(--amber)':'var(--pos)'};text-transform:uppercase">${esc(m.status)}</span></div></div>`).join('');
+  $('#otherData').textContent=(S.other_datasets||[]).join(' ');
+
+  const C=R.cities||{entries:[],portable:[],not_portable:[]};
+  $('#cityBody').innerHTML=C.entries.map(c=>
+    `<tr><td><b>${esc(c.name)}</b>${c.slug===C.reference?' <span class="lane">REFERENCE</span>':''}</td>
+      <td>${esc(c.registry_i)}</td><td class="blind">${esc(c.registry_ii)}</td><td><code style="font-size:10px">${esc(c.config)}</code></td></tr>`).join('');
+  $('#portable').innerHTML=C.portable.map(x=>`<li>${esc(x)}</li>`).join('');
+  $('#notPortable').innerHTML=C.not_portable.map(x=>`<li>${esc(x)}</li>`).join('');
+
+  $('#pipeList').innerHTML=R.pipeline.map(s=>
+    `<div class="stage"><div class="num">STAGE ${s.n}</div><div class="nm">${esc(s.name)}</div>
+      <div><code>${esc(s.runs)}</code><div class="makes">→ ${esc(s.makes)}</div><div class="note">${esc(s.note)}</div></div></div>`).join('');
+  $('#demoCmd').textContent='cd halfworld && node harness/segment.mjs sample/NPU-N-SAMPLE-2026-06.txt && node harness/extract.mjs --stub && node harness/compile-field.mjs && node harness/gate.mjs';
+
+  $('#gateList').innerHTML=R.gates.map(g=>{
+    const pass=g.recorded==='PASS';
+    return `<div class="gate" data-gate="${g.n}"><div class="g">G${g.n}</div>
+      <div><div class="gn">${esc(g.name)}</div><span class="gd" data-gd="${g.n}">${esc(g.detail)}</span>
+        ${pass?'':`<span class="gd" style="color:var(--neg)">fix: ${esc(g.fixed_by)}</span>`}</div>
+      <span class="verdict ${pass?'pass':'fail'}" data-v="${g.n}">${pass?'PASS':'FAIL'}</span></div>`;
+  }).join('');
+
+  const cls=s=>s==='runnable'?'runnable':s==='pending'?'pending':s==='gated'?'gated':'refonly';
+  $('#srcBody').innerHTML=R.sources.map(s=>
+    `<tr><td>${esc(s.source)}</td><td><span class="lane">${esc(s.lane)}</span></td><td>${esc(s.mode)}</td>
+      <td><span class="tag ${cls(s.status)}">${esc(s.status)}</span></td>
+      <td>${esc(s.value)}</td><td class="blind">${esc(s.blind_spot)}</td></tr>`).join('');
+  $('#vocab').innerHTML=Object.entries(R.source_states).map(([k,v])=>`<div><b>${esc(k)}</b> — ${esc(v)}</div>`).join('');
+
+  $('#nextList').innerHTML=R.next_joins.map(n=>`<li>${esc(n)}</li>`).join('');
+  $('#docGrid').innerHTML=R.documents.map(d=>
+    `<a class="doc" href="${esc(d.path)}"><b>${esc(d.name)} ▸</b><p>${esc(d.does)}</p></a>`).join('');
+}
+
+/* Live probe. Reads the actual data files when served and overwrites the recorded
+   numbers; when it cannot read them it says RECORDED rather than pretending. */
+async function probe(R){
+  const j=async u=>{const r=await fetch(u,{cache:'no-store'});if(!r.ok)throw 0;return r.json()};
+  let live=0,tried=0;
+  const set=(id,k,v)=>{const el=document.querySelector(`[data-c="${id}:${k}"]`);if(el)el.textContent=v;};
+
+  tried++;
+  try{
+    const a=await j('seres/data.json');
+    set('seres','observations',a.totals.observations);set('seres','acquired_claims',a.totals.acquired_claims);
+    set('seres','claims',a.totals.claims);set('seres','places',a.totals.places);
+    $('#pSeres').textContent=`SERES ${a.totals.claims} CLAIMS · ${a.totals.acquired_claims} ACQUIRED`;
+    if((a.attribution||[]).length)$('#fCredit').textContent=a.attribution.join(' · ');
+    live++;
+  }catch{ const c=R.registries[0].recorded; $('#pSeres').textContent=`SERES ${c.claims} CLAIMS · ${c.places} PLACES`; }
+
+  tried++;
+  try{
+    const c=await j('halfworld/atlas/compiled.json'),s=c.sanity;
+    set('halfworld','units',s.units);set('halfworld','kernels_stamped',s.stamped);
+    set('halfworld','unresolved',s.unresolved);set('halfworld','topics',s.topics.length);
+    $('#pHalf').textContent=`HALFWORLD ${s.units} UNITS · ${s.stamped} KERNELS · ${s.topics.length} TOPICS`;
+    live++;
+  }catch{ const c=R.registries[1].recorded; $('#pHalf').textContent=`HALFWORLD ${c.units} UNITS · ${c.kernels_stamped} KERNELS`; }
+
+  /* Gate 5 is the only gate a browser can honestly re-check: does the look ledger exist? */
+  let g5=null;
+  try{ const r=await fetch('halfworld/ledger/look.jsonl',{cache:'no-store'});
+       g5=r.ok?(await r.text()).trim().split('\n').filter(Boolean).length:0; }catch{}
+  if(g5!==null){
+    const v=document.querySelector('[data-v="5"]'),d=document.querySelector('[data-gd="5"]');
+    if(v){v.className='verdict '+(g5>0?'pass':'fail');v.textContent=g5>0?'PASS':'FAIL';}
+    if(d)d.textContent=g5>0?`${g5} look entr${g5===1?'y':'ies'} on record`:'no ledger/look.jsonl — nobody has looked. Correct behavior.';
+    $('#gateAside').textContent='gate 5 re-checked live · gates 1–4 recorded';
+  }
+  const passed=R.gates.filter(g=>g.recorded==='PASS').length + (g5>0?1:0);
+  $('#pGates').textContent=`GATES ${Math.min(passed,5)}/5`;
+
+  const allLive=live===tried;
+  $('#pDot').className='dot '+(allLive?'live':'rec');
+  $('#pMode').textContent=allLive?'LIVE · READ FROM DISK':'RECORDED · SERVE THE DIRECTORY FOR LIVE COUNTS';
+}
+</script>
+</body>
+</html>

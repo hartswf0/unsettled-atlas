@@ -1,0 +1,77 @@
+{
+  "title": "ATL NPU HALFWORLD — PERCEPTUAL TERRITORIES",
+  "source": "source.json",
+
+  "//npus": "Fetch manifest lives in atlas/manifest.json. Seed with the NPUs you are actually pulling; N covers the Beltline Eastside corridor and is the reference build.",
+  "npus": ["N", "M", "F"],
+
+  "//planOf": "Raw vernacular -> canonical anchor. Collapse aggressively, exactly as headings collapse to plans. Aliases are matched case-insensitively as whole phrases. PROVISIONAL coordinates: verify against OSM before any real claim.",
+  "planOf": {
+    "PONCE CITY MARKET": "ponce-city-market",
+    "PCM": "ponce-city-market",
+    "THE OLD SEARS BUILDING": "ponce-city-market",
+    "OLD SEARS BUILDING": "ponce-city-market",
+    "SEARS BUILDING": "ponce-city-market",
+    "CITY HALL EAST": "ponce-city-market",
+    "KROG STREET MARKET": "krog-street-market",
+    "KROG": "krog-street-market",
+    "THE KROG TUNNEL": "krog-street-market",
+    "PIEDMONT PARK": "piedmont-park",
+    "THE PARK": "piedmont-park",
+    "THE BELTLINE": "beltline-eastside",
+    "EASTSIDE TRAIL": "beltline-eastside",
+    "THE TRAIL": "beltline-eastside",
+    "FIVE POINTS": "five-points-station",
+    "FIVE POINTS STATION": "five-points-station",
+    "MERCEDES-BENZ STADIUM": "mercedes-benz-stadium",
+    "THE STADIUM": "mercedes-benz-stadium",
+    "THE BENZ": "mercedes-benz-stadium",
+    "HISTORIC FOURTH WARD PARK": "fourth-ward-park",
+    "FOURTH WARD PARK": "fourth-ward-park",
+    "O4W PARK": "fourth-ward-park",
+    "NORTH AVENUE": "north-avenue",
+    "PONCE": "ponce-de-leon-ave"
+  },
+
+  "//anchors": "Geometry the compiler owns. kind point|segment. rear_bearing_deg: direction 'behind' points, degrees clockwise from north. PROVISIONAL — replace with OSM footprints in a real run.",
+  "anchors": {
+    "ponce-city-market":     { "kind": "point",   "lat": 33.7726, "lon": -84.3655, "rear_bearing_deg": 90,  "label": "PONCE CITY MARKET" },
+    "krog-street-market":    { "kind": "point",   "lat": 33.7570, "lon": -84.3637, "rear_bearing_deg": 180, "label": "KROG STREET MARKET" },
+    "piedmont-park":         { "kind": "point",   "lat": 33.7851, "lon": -84.3738, "rear_bearing_deg": 0,   "label": "PIEDMONT PARK" },
+    "five-points-station":   { "kind": "point",   "lat": 33.7540, "lon": -84.3915, "rear_bearing_deg": 180, "label": "FIVE POINTS" },
+    "mercedes-benz-stadium": { "kind": "point",   "lat": 33.7554, "lon": -84.4008, "rear_bearing_deg": 270, "label": "MB STADIUM" },
+    "fourth-ward-park":      { "kind": "point",   "lat": 33.7660, "lon": -84.3669, "rear_bearing_deg": 90,  "label": "4TH WARD PARK" },
+    "north-avenue":          { "kind": "segment", "pts": [[33.7712, -84.3850], [33.7714, -84.3655]], "label": "NORTH AVE" },
+    "ponce-de-leon-ave":     { "kind": "segment", "pts": [[33.7724, -84.3850], [33.7726, -84.3560]], "label": "PONCE DE LEON" },
+    "beltline-eastside":     { "kind": "segment", "pts": [[33.7530, -84.3650], [33.7620, -84.3645], [33.7726, -84.3655], [33.7800, -84.3690], [33.7851, -84.3738]], "label": "BELTLINE EASTSIDE" }
+  },
+
+  "//relations": "Vernacular relation -> kernel family the compiler implements. Distances in meters. The LLM may only emit these names.",
+  "relations": {
+    "at":          { "kernel": "iso",    "sigma": 40 },
+    "in-front-of": { "kernel": "offset", "dist": 60,  "sigma_along": 40, "sigma_across": 25, "bearing": "front" },
+    "behind":      { "kernel": "offset", "dist": 80,  "sigma_along": 60, "sigma_across": 35, "bearing": "rear" },
+    "near":        { "kernel": "iso",    "sigma": 140 },
+    "across-from": { "kernel": "offset", "dist": 50,  "sigma_along": 30, "sigma_across": 30, "bearing": "front" },
+    "along":       { "kernel": "line",   "sigma": 55 },
+    "between":     { "kernel": "pair",   "sigma": 90 }
+  },
+
+  "grid": {
+    "//": "Equirectangular local grid. PROVISIONAL bbox covers the Eastside corridor demo.",
+    "lat_min": 33.748, "lat_max": 33.792,
+    "lon_min": -84.408, "lon_max": -84.348,
+    "cell_m": 30
+  },
+
+  "gates": {
+    "min_units": 4,
+    "gazetteer_top_n": 5,
+    "gazetteer_min_ratio": 0.3333,
+    "extract_min_parse_rate": 0.9,
+    "extract_min_anchor_rate": 0.5
+  },
+
+  "sameHeading": "^(SAME|CONTINUED)$",
+  "defaultNpu": "N"
+}

@@ -1,0 +1,27 @@
+{
+  "schema": "soft-cadastre/city/v1",
+  "slug": "atlanta",
+  "name": "Atlanta",
+  "region_name": "Atlanta study area",
+
+  "//bbox": "lon_min, lat_min, lon_max, lat_max — the study area for REGISTRY I acquisition.",
+  "bbox": [-84.55, 33.62, -84.2, 33.9],
+
+  "//tiles": "The OSM Notes API caps results per request. Split the bbox into this many columns × rows so a dense city is not silently truncated. Raised from 4×4 after a run reported a tile AT LIMIT over the Beltline corridor — if the ingester warns, raise these before trusting the corpus.",
+  "tiles": { "cols": 6, "rows": 6 },
+
+  "//query": "closed_days: -1 keeps resolved notes in the corpus. A closed note is not a non-event — it is testimony that was acted on, and its status travels with every claim.",
+  "query": { "closed_days": -1, "per_tile": 300 },
+
+  "//institutional": "REGISTRY II. The bodies whose minutes are the corpus, and where their calendars live. Filling these in is what makes a second city real rather than sketched.",
+  "institutional": {
+    "body": "Neighborhood Planning Unit (NPU)",
+    "units": ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","V","W","X","Y","Z"],
+    "reference_unit": "N",
+    "directory": "https://www.atlantaga.gov/government/departments/city-planning/office-of-zoning-development/neighborhood-planning-unit-npu",
+    "appeals_bodies": ["BZA", "ZRB", "Tree Conservation Commission"],
+    "case_number_pattern": "\\b[VZ]-\\d{2}-\\d{2,4}\\b"
+  },
+
+  "//note": "Grid and gazetteer for REGISTRY II live in halfworld/world.config.json — a second city forks that file, not this one. This file is what REGISTRY I acquisition needs."
+}

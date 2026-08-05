@@ -1,0 +1,23 @@
+{
+  "schema": "soft-cadastre/city/v1",
+  "slug": "new-orleans",
+  "name": "New Orleans",
+  "region_name": "New Orleans study area",
+
+  "//why": "A second city is here to answer one question honestly: what in this system is universal and what was Atlanta all along? REGISTRY I ported with nothing but this file — bbox, tiling, and a name. REGISTRY II did not, and the institutional block below says exactly why.",
+
+  "bbox": [-90.15, 29.87, -89.85, 30.06],
+  "tiles": { "cols": 5, "rows": 5 },
+  "query": { "closed_days": -1, "per_tile": 300 },
+
+  "institutional": {
+    "body": "Neighborhood Participation Program (NPP) — advisory, not the NPU's chartered review role",
+    "units": [],
+    "reference_unit": null,
+    "directory": "https://nola.gov/next/city-planning/topics/neighborhood-participation-program/",
+    "appeals_bodies": ["Board of Zoning Adjustments", "City Planning Commission", "Historic District Landmarks Commission"],
+    "case_number_pattern": "\\bZD\\s?\\d{1,4}/\\d{2}\\b",
+
+    "//status": "SKETCHED, NOT RUNNABLE. The NPP is not the NPU: participation is convened per application rather than by standing chartered unit, so 'the agenda item' does not segment the same way. A real REGISTRY II here needs its own segmentation rule, its own planOf gazetteer, and its own anchor set — halfworld/world.config.json is forked, not parameterised. Nothing about this city's institutional lane should be trusted until that fork exists and its gates pass."
+  }
+}

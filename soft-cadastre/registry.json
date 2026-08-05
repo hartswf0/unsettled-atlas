@@ -1,0 +1,264 @@
+{
+  "schema": "soft-cadastre/registry/v1",
+  "title": "THE SOFT CADASTRE",
+  "subtitle": "ATLANTA · A REGISTER OF CLAIMED EXTENT",
+  "built": "2026-08-05",
+  "premise": "A cadastre records who holds which parcel, in hard lines. This one records what people and institutions claim about places — felt, contested, refused, forgotten — and holds every claim as bounded fuzzy extent that is never sharpened into a boundary it did not earn.",
+
+  "law": [
+    {
+      "id": "anchor-not-target",
+      "name": "SOURCE ANCHOR ≠ TARGET",
+      "text": "The place a sentence names is not the place it is about. 'Behind Ponce City Market' anchors on PCM and targets somewhere else. The anchor is recorded; the target is computed as a field, never asserted as a point."
+    },
+    {
+      "id": "compiler-owns-geometry",
+      "name": "THE COMPILER OWNS GEOMETRY",
+      "text": "No model ever emits a coordinate. Language models emit closed-vocabulary anchors and relations. Deterministic code turns a relation into a kernel. A hallucinated relation is a wrong shape; a hallucinated coordinate is a lie with a decimal point."
+    },
+    {
+      "id": "absence-is-not-neutral",
+      "name": "ABSENCE IS NOT NEUTRALITY",
+      "text": "Unmapped is not calm, safe, or fine. Blank grid means nobody spoke, or nobody was recorded speaking. Both surfaces refuse to shade absence."
+    },
+    {
+      "id": "unresolved-is-data",
+      "name": "THE UNRESOLVED IS KEPT",
+      "text": "A place the gazetteer cannot resolve is stored with anchor:null and counted. Vernacular the alias table lacks is a measurement of the alias table, not of the city."
+    },
+    {
+      "id": "look-cannot-be-automated",
+      "name": "LOOK IS A GATE",
+      "text": "The last gate is a human reading the frames. It cannot be passed by code, and the pipeline exits non-zero until a person has looked. A frame nobody read is a frame nobody checked."
+    },
+    {
+      "id": "fixture-declares-itself",
+      "name": "FIXTURE DECLARES ITSELF",
+      "text": "Synthetic and researcher-entered material is flagged in the data, on the map, and in this register. Provisional coordinates say PROVISIONAL everywhere they appear."
+    }
+  ],
+
+  "registries": [
+    {
+      "id": "seres",
+      "code": "REGISTRY I",
+      "name": "SERES ATLANTA",
+      "expansion": "Spatial Exhaust and Residual Evidence Survey",
+      "holds": "What individuals said about places",
+      "corpus": "Vernacular and residual testimony — reviews, notes, service narratives, trail talk",
+      "unit": "the observation → the claim",
+      "claim_shape": "dimension × polarity × intensity × confidence × spatial_probability, attached to bounded geometry",
+      "geometry": "GeoJSON Point / LineString / Polygon in EPSG:4326, rendered as stacked translucent passes so width reads as uncertainty",
+      "lanes": ["RESIDUAL", "VERNACULAR"],
+      "dimensions": ["amenity_loss", "commercial_vacancy", "cycling_comfort", "event_egress_friction", "maintenance_neglect", "recreational_value", "route_severance", "temporal_crowding", "transit_walk_advantage", "waste_accumulation"],
+      "data": [
+        { "path": "seres/atlas/fixture.json", "role": "part — authored test material", "schema": "seres/part/v1" },
+        { "path": "seres/atlas/osm-notes-atlanta.json", "role": "part — acquired from the OSM Notes API", "schema": "seres/part/v1" },
+        { "path": "seres/harness/osm-notes.mjs", "role": "acquisition — public API, no key, no agreement" },
+        { "path": "seres/harness/build-atlas.mjs", "role": "compose parts → atlas, and gate it" },
+        { "path": "seres/data.json", "role": "atlas (built)", "schema": "seres/atlas/v1" },
+        { "path": "seres/data.embed.js", "role": "offline fallback for file:// reads (built)" },
+        { "path": "seres/runtime/status.json", "role": "runtime heartbeat, polled every 1.5s" }
+      ],
+      "surfaces": [
+        {
+          "id": "seres-sheet",
+          "name": "THE SHEET",
+          "path": "seres/index.html",
+          "register": "paper",
+          "does": "Flat survey sheet. Filter by dimension and lane, hover to inspect, click to lock a claim and read its evidence span, condition, source population, and limiting ideal type.",
+          "read_it_for": "reading the evidence"
+        },
+        {
+          "id": "seres-helm",
+          "name": "THE HELM",
+          "path": "seres/helm.html",
+          "register": "instrument",
+          "does": "Cinematic console over the same atlas. Support arc, minimum-support ring, hold-to-probe, myth layer, conflict telemetry. Self-contained — the atlas is embedded.",
+          "read_it_for": "feeling the field"
+        }
+      ],
+      "recorded": { "observations": 1457, "claims": 258, "acquired_claims": 228, "places": 8, "fixture_claims": 30, "unresolved_observations": 1242, "llm_enabled": false },
+      "attribution": ["© OpenStreetMap contributors"],
+      "state": "MIXED. 30 fixture claims (authored, to exercise the schema) and 228 acquired from the OpenStreetMap Notes API under ODbL 1.0. The two are counted separately everywhere and never merged into a total that hides the split. 1242 of 1457 acquired observations produced no claim and are kept as unresolved — that number measures the extraction lexicon, not the city."
+    },
+    {
+      "id": "halfworld",
+      "code": "REGISTRY II",
+      "name": "ATL NPU HALFWORLD",
+      "expansion": "Perceptual Territories",
+      "holds": "What institutions claimed about places, on the record",
+      "corpus": "NPU minutes and BZA outcomes — the meetings where territory is argued",
+      "unit": "the agenda item — the unit the institution already uses",
+      "claim_shape": "anchor + relation + topic, per agenda item, with V-/Z- case numbers retained",
+      "geometry": "A local equirectangular grid (30 m cells). Relations compile to kernel families — iso, offset-behind, along-line, between — stamped into scalar fields per topic.",
+      "topics": ["density", "parking", "general", "traffic", "safety", "noise"],
+      "marks": [
+        { "name": "claim line", "from": "co-mention of two anchors in one item", "reads": "these two places were argued about together" },
+        { "name": "territory box", "from": "possessive spans — 'our street', 'the neighborhood'", "reads": "someone drew a perimeter with a pronoun" },
+        { "name": "refusal wall", "from": "denied variances", "reads": "the city said no here" }
+      ],
+      "data": [
+        { "path": "halfworld/world.config.json", "role": "gazetteer, relation kernels, grid, gate thresholds" },
+        { "path": "halfworld/atlas/source.json", "role": "segmented agenda-item units" },
+        { "path": "halfworld/atlas/extracted.json", "role": "anchors and relations per unit" },
+        { "path": "halfworld/atlas/compiled.json", "role": "kernel fields, lines, boxes, walls" },
+        { "path": "halfworld/ledger/", "role": "one ledger line per stage, beside the stage" }
+      ],
+      "surfaces": [
+        {
+          "id": "halfworld-look",
+          "name": "LOOK",
+          "path": "halfworld/viewer.html",
+          "register": "instrument",
+          "does": "The gate surface. Halftone frames per topic with claim lines, territory boxes and refusal walls. Read every frame, press MARK READ, drop the downloaded ledger into ledger/look.jsonl. Gate 5 passes only after this.",
+          "read_it_for": "passing gate 5"
+        },
+        {
+          "id": "halfworld-helm",
+          "name": "THE HELM",
+          "path": "halfworld/helm.html",
+          "register": "instrument",
+          "does": "Full console over the compiled field — unit HUD, topic rail, field arc, minimap, look dock. Self-contained.",
+          "read_it_for": "walking the territory"
+        }
+      ],
+      "recorded": { "units": 7, "kernels_stamped": 26, "unresolved": 0, "topics": 6, "lines": 12, "boxes": 3, "walls": 1 },
+      "state": "SAMPLE. The minutes are synthetic, written to exercise the pipeline. Anchor coordinates are PROVISIONAL eyeball values and must be replaced with OSM footprints before any claim leaves the building."
+    }
+  ],
+
+  "pipeline_seres": [
+    { "n": 1, "name": "ACQUIRE", "runs": "node seres/harness/osm-notes.mjs --city atlanta", "makes": "seres/atlas/osm-notes-<city>.json", "note": "Public API, no key, no agreement. Tiles the city bbox and warns when a tile comes back full — a silent truncation would read as a quiet neighbourhood. Author usernames are deliberately not stored.", "registry": "seres" },
+    { "n": 2, "name": "EXTRACT", "runs": "(inside the ingester)", "makes": "claims + unresolved observations", "note": "Closed-vocabulary lexicon over note text, the same tier as halfworld's --stub. Every claim carries via:'lexicon' and confidence 0.55. A note matching nothing is kept, not dropped.", "registry": "seres" },
+    { "n": 3, "name": "BUILD", "runs": "node seres/harness/build-atlas.mjs [--city <slug>]", "makes": "seres/data.json · data.embed.js · the helm's inline ATLAS", "note": "Composes every part for one city and gates it: ranges, polarity, geometry, evidence span, fixture flag, provenance. All three artifacts written together so none can disagree. One atlas per city — merging two would put one city's notes inside another's bbox and call it a region.", "registry": "seres" }
+  ],
+
+  "pipeline": [
+    { "n": 0, "name": "FETCH", "runs": "node harness/fetch-minutes.mjs", "makes": "text/*.txt", "note": "Zero-dep. Saves PDFs, uses pdftotext if present, otherwise ledgers NEEDS-OCR. The gaps are data.", "registry": "halfworld" },
+    { "n": 1, "name": "SEGMENT", "runs": "node harness/segment.mjs", "makes": "atlas/source.json", "note": "Cut at the agenda item. Never at the paragraph.", "registry": "halfworld" },
+    { "n": 3, "name": "EXTRACT", "runs": "node harness/extract.mjs [--stub]", "makes": "atlas/extracted.json", "note": "The model is a semiotic translator with a closed vocabulary. --stub is regex over planOf aliases; the LLM path is the real translator.", "registry": "halfworld" },
+    { "n": 4, "name": "COMPILE", "runs": "node harness/compile-field.mjs", "makes": "atlas/compiled.json", "note": "All geometry is made here, by code, from relations.", "registry": "halfworld" },
+    { "n": 5, "name": "GATE", "runs": "node harness/gate.mjs", "makes": "exit code", "note": "Exits 1 until every gate passes. Each failure names the stage that fixes it.", "registry": "halfworld" },
+    { "n": 6, "name": "LOOK", "runs": "open viewer.html", "makes": "ledger/look.jsonl", "note": "A human. This is the point.", "registry": "halfworld" }
+  ],
+
+  "gates": [
+    { "n": 1, "name": "corpus is well formed", "fixed_by": "STAGE 1 — segment", "recorded": "PASS", "detail": "7 units, ids unique" },
+    { "n": 2, "name": "gazetteer covers the corpus (the ratio test)", "fixed_by": "grow planOf aliases, re-run extract", "recorded": "PASS", "detail": "top 5 anchors cover 5/7 units (71%) — you have a world" },
+    { "n": 3, "name": "extraction parses and resolves", "fixed_by": "STAGE 3 — extract", "recorded": "PASS", "detail": "parse 100% · resolve 26/26" },
+    { "n": 4, "name": "compiled fields are sane", "fixed_by": "STAGE 4 — compile", "recorded": "PASS", "detail": "26 kernels over 6 topics; 0 unresolved kept as data" },
+    { "n": 5, "name": "LOOK — a human has read the frames", "fixed_by": "open viewer.html, read every frame, MARK READ", "recorded": "FAIL", "detail": "no ledger/look.jsonl — nobody has looked. Correct behavior." }
+  ],
+
+  "sources": [
+    { "source": "Atlanta NPU directory / agendas", "lane": "INSTITUTIONAL", "registry": "halfworld", "mode": "Public HTML/PDF discovery", "status": "runnable", "value": "Neighborhood debates and agenda context", "blind_spot": "Uneven minutes and participant selection" },
+    { "source": "NPU library", "lane": "INSTITUTIONAL", "registry": "halfworld", "mode": "Public HTML/PDF discovery", "status": "runnable", "value": "Institutional rules and historical context", "blind_spot": "Less direct experiential language" },
+    { "source": "BZA", "lane": "INSTITUTIONAL", "registry": "halfworld", "mode": "Public HTML/PDF discovery", "status": "runnable", "value": "Variances, staff reasoning, deferrals, decisions", "blind_spot": "Application-centered, not population-representative" },
+    { "source": "ZRB", "lane": "INSTITUTIONAL", "registry": "halfworld", "mode": "Public HTML/PDF discovery", "status": "runnable", "value": "Rezonings, public positions, alternative futures", "blind_spot": "Final documents can obscure negotiation history" },
+    { "source": "Tree Conservation Commission", "lane": "INSTITUTIONAL", "registry": "halfworld", "mode": "Public HTML/PDF discovery", "status": "runnable", "value": "Parcel–canopy conflict and appeals", "blind_spot": "Individual appeals do not measure canopy experience generally" },
+    { "source": "Boards and commissions calendar", "lane": "INSTITUTIONAL", "registry": "halfworld", "mode": "Public HTML/PDF discovery", "status": "runnable", "value": "Licensing, appeals, accessibility, waste and oversight traces", "blind_spot": "Heterogeneous and difficult to normalize" },
+    { "source": "OpenStreetMap Notes", "lane": "VERNACULAR", "registry": "seres", "mode": "Public API", "status": "acquired", "value": "Access, closure, entrance, path and map-ground mismatch — 1457 observations, 228 claims in the Atlanta corpus; 674 / 113 in New Orleans", "blind_spot": "Contributor population and task-focused language. 85% of acquired notes produced no claim under the current lexicon" },
+    { "source": "ATL311", "lane": "RESIDUAL", "registry": "seres", "mode": "De-identified records request", "status": "pending", "value": "High-volume service narratives and outcomes", "blind_spot": "Reporting propensity, privacy, uncertain narrative fields" },
+    { "source": "Yelp Open Dataset", "lane": "VERNACULAR", "registry": "seres", "mode": "Manual agreement-gated import", "status": "gated", "value": "Place-attached reviews, tips and attributes", "blind_spot": "Current Atlanta coverage unverified; platform selection" },
+    { "source": "Google Places reviews", "lane": "VERNACULAR", "registry": "seres", "mode": "Reference-only", "status": "reference-only", "value": "Place identifiers and limited display context", "blind_spot": "Storage, reuse, sample-size and model-development restrictions" },
+    { "source": "OSM footprints / segment polylines", "lane": "GEOMETRY", "registry": "halfworld", "mode": "Public API", "status": "pending", "value": "Real anchor geometry to replace PROVISIONAL eyeball coordinates", "blind_spot": "Footprint ≠ perceived extent; still an anchor, never a target" },
+    { "source": "GDOT AADT per street segment", "lane": "GEOMETRY", "registry": "halfworld", "mode": "Public dataset", "status": "pending", "value": "Traffic volume for Appleyard stratification of claim lines", "blind_spot": "Volume is not severance; correlation must stay declared" }
+  ],
+
+  "cities": {
+    "//": "REGISTRY I ported to a second city with nothing but a config file. REGISTRY II did not, and the difference is the most useful thing the second city taught.",
+    "reference": "atlanta",
+    "entries": [
+      { "slug": "atlanta", "name": "Atlanta", "registry_i": "acquired · 1457 observations · 228 claims", "registry_ii": "sample corpus, provisional anchors, gates 1–4 pass", "config": "cities/atlanta.json" },
+      { "slug": "new-orleans", "name": "New Orleans", "registry_i": "acquired · 674 observations · 113 claims", "registry_ii": "sketched, not runnable — see below", "config": "cities/new-orleans.json" }
+    ],
+    "portable": [
+      "REGISTRY I whole. Acquisition, extraction, compose and gate are city-agnostic; a new city is a bbox, a tiling and a name.",
+      "The six laws.",
+      "The relation → kernel table. 'Behind' is a bearing and an offset anywhere.",
+      "The gate structure, including the ratio test and LOOK."
+    ],
+    "not_portable": [
+      "The gazetteer. planOf is vernacular, and vernacular is the least transferable thing a city has.",
+      "The anchors and the grid — halfworld/world.config.json is forked per city, not parameterised.",
+      "The segmentation unit. Atlanta's NPU agenda item is a chartered review unit; New Orleans' NPP convenes per application, so 'the agenda item' does not cut the same way and a REGISTRY II there needs its own segmentation rule before any compute is spent.",
+      "The extraction lexicon, partly — regional vernacular for the same condition differs."
+    ]
+  },
+
+  "source_states": {
+    "acquired": "in the corpus now, with provenance and licence recorded per claim",
+    "runnable": "public acquisition path is configured",
+    "pending": "requested but not yet received",
+    "gated": "requires user acceptance or a separate data agreement",
+    "reference-only": "may identify or link a place, but is not archived as a textual corpus",
+    "quarantined": "obtained material contains privacy or rights concerns requiring review"
+  },
+
+  "documents": [
+    { "path": "SYSTEM.md", "name": "SYSTEM", "does": "The contract both registries answer to — laws, stages, schemas, gates, and what is honestly wrong right now." },
+    { "path": "SOURCE-REGISTER.md", "name": "SOURCE REGISTER", "does": "Every source, its acquisition mode, corpus status, primary value and primary blind spot." },
+    { "path": "halfworld/README.md", "name": "HALFWORLD README", "does": "The harness loop, verbatim from the fork." }
+  ],
+
+  "scaling": {
+    "//": "How this corpus grows, ranked by return on effort. The first move is not more sources — it is reading the sources already acquired.",
+    "moves": [
+      {
+        "rank": 1,
+        "name": "Read what is already acquired",
+        "gain": "1242 Atlanta observations + 576 New Orleans, already on disk, currently producing nothing",
+        "cost": "One LLM extraction pass over stored text. No new acquisition, no new agreements.",
+        "how": "The lexicon resolves 15% of notes. The LLM tier — same closed vocabulary, same prohibition on emitting coordinates — is the real translator. Every unresolved observation is already stored with its text; nothing needs re-fetching.",
+        "status": "ready to build"
+      },
+      {
+        "rank": 2,
+        "name": "Widen the bbox and the window",
+        "gain": "Roughly linear in area; the metro beyond the current study area is untouched",
+        "cost": "Minutes of polite crawling. Raise tiles.cols/rows when the ingester warns AT LIMIT.",
+        "how": "cities/<slug>.json owns bbox, tiling and the closed-note window. Nothing else changes.",
+        "status": "runnable now"
+      },
+      {
+        "rank": 3,
+        "name": "Turn on REGISTRY II acquisition",
+        "gain": "The institutional lane, which no other source substitutes for",
+        "cost": "atlas/manifest.json with real NPU minutes URLs, plus OCR for the NPUs that post scans",
+        "how": "fetch-minutes.mjs is written and waiting on that manifest. Six public bodies are already listed as runnable in the source register.",
+        "status": "needs a manifest"
+      },
+      {
+        "rank": 4,
+        "name": "ATL311",
+        "gain": "High-volume service narratives — the largest residual corpus available",
+        "cost": "A de-identified records request, and a privacy review of the free-text field before a single record is archived",
+        "how": "Already requested and pending. Lands as one more part in seres/atlas/.",
+        "status": "pending"
+      },
+      {
+        "rank": 5,
+        "name": "More cities",
+        "gain": "Comparison, and a test of which findings were ever about Atlanta",
+        "cost": "REGISTRY I: a config file. REGISTRY II: a forked world.config.json and a segmentation rule per institution.",
+        "how": "cities/new-orleans.json is the worked example, including what did not port.",
+        "status": "proven for REGISTRY I"
+      }
+    ],
+    "other_datasets": [
+      "OSM changeset comments — the same API family, contributor reasoning rather than reports.",
+      "Wikipedia/Wikidata place descriptions — ideal-type language, useful precisely as the limiting construct the schema already models.",
+      "Public transit rider feedback and MARTA board minutes — a second institutional lane with a different franchise.",
+      "Historic newspaper archives — the same claim schema over a time axis, which is where 'condition' stops being a time-of-day clause and becomes a decade."
+    ]
+  },
+
+  "next_joins": [
+    "An LLM extraction tier over the 1818 observations already acquired and unresolved — the cheapest large gain available.",
+    "BZA docket outcomes keyed to the V-/Z- numbers already captured per unit.",
+    "GDOT AADT per street segment, for Appleyard stratification of claim lines.",
+    "ATL311 as corpus three for SERES, once its free-text field is confirmed de-identifiable.",
+    "One shared place-id space, so a SERES claim and a HALFWORLD territory box can name the same corner and disagree in public."
+  ]
+}

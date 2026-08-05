@@ -1,0 +1,227 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>SERES ATLANTA</title>
+<style>
+:root{
+  --paper:#f4f1e8; --panel:#fbf9f2; --ink:#171715; --muted:#69665f; --rule:#b8b2a5;
+  --positive:#145a73; --negative:#9a2e22; --neutral:#5f5b53; --focus:#111;
+  --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--paper);color:var(--ink);font-family:var(--mono)}
+body{display:grid;grid-template-rows:50px minmax(0,1fr) 34px}
+header{display:flex;align-items:center;gap:16px;padding:0 14px;border-bottom:1px solid var(--rule);background:var(--panel);min-width:0}
+.brand{font-weight:800;letter-spacing:.16em;white-space:nowrap}
+.brand small{font-weight:400;color:var(--muted);letter-spacing:.08em}
+.status{margin-left:auto;display:flex;align-items:center;gap:12px;font-size:10px;white-space:nowrap}
+.pulse{width:10px;height:10px;border:1px solid var(--ink);border-radius:50%;background:transparent}
+.pulse.working{background:var(--negative)} .pulse.ready,.pulse.complete{background:var(--positive)} .pulse.fault{background:var(--negative)}
+main{min-height:0;display:grid;grid-template-columns:260px minmax(0,1fr) 310px}
+aside{min-height:0;background:var(--panel);border-right:1px solid var(--rule);padding:12px;display:flex;flex-direction:column;gap:12px}
+aside.right{border-right:0;border-left:1px solid var(--rule)}
+label,.eyebrow{font-size:9px;letter-spacing:.15em;color:var(--muted);text-transform:uppercase}
+select,input,button{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--rule);border-radius:0}
+select,button{height:34px;padding:0 9px;width:100%}
+button{text-align:left;cursor:pointer} button:hover,button:focus{border-color:var(--ink);outline:none}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--rule)}
+.metric{padding:9px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.metric:nth-child(2n){border-right:0}.metric:nth-last-child(-n+2){border-bottom:0}
+.metric b{display:block;font-size:19px;line-height:1}.metric span{font-size:8px;color:var(--muted);letter-spacing:.1em}
+.legend{display:flex;flex-direction:column;gap:6px;font-size:10px}
+.legend div{display:flex;align-items:center;gap:8px}.swatch{width:18px;height:8px;border:1px solid var(--ink)}
+.swatch.pos{background:var(--positive)}.swatch.neg{background:var(--negative)}.swatch.neu{background:var(--neutral)}
+.note{font-size:10px;line-height:1.45;color:var(--muted)}
+.fixture{border:1px solid var(--negative);padding:8px;font-size:9px;line-height:1.4;color:var(--negative);display:none}
+#stage{position:relative;min-width:0;min-height:0;background:var(--paper)}
+canvas{display:block;width:100%;height:100%;touch-action:none}
+#hover{position:absolute;pointer-events:none;display:none;max-width:310px;background:var(--panel);border:1px solid var(--ink);padding:9px;font-size:10px;line-height:1.45;z-index:4}
+#hover b{display:block;font-size:11px;margin-bottom:4px}
+#detail{min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:9px}
+#detailText{font-size:11px;line-height:1.5;white-space:pre-wrap;overflow:auto;padding-right:5px}
+.evidence{border-left:3px solid var(--ink);padding-left:8px}
+.chip{display:inline-block;border:1px solid var(--rule);padding:3px 5px;margin:0 3px 4px 0;font-size:8px;letter-spacing:.05em}
+footer{display:flex;align-items:center;padding:0 12px;border-top:1px solid var(--rule);background:var(--panel);font-size:9px;color:var(--muted);gap:16px;white-space:nowrap;overflow:hidden}
+footer strong{color:var(--ink)}
+@media(max-width:850px){main{grid-template-columns:190px minmax(0,1fr)}aside.right{display:none}.status span:nth-of-type(n+3){display:none}}
+@media(max-width:590px){body{grid-template-rows:44px minmax(0,1fr) 30px}main{grid-template-columns:1fr}aside{position:absolute;z-index:5;top:44px;left:0;bottom:30px;width:220px;transform:translateX(-100%);transition:transform .15s linear}aside.open{transform:translateX(0)}header{padding:0 9px}.brand small{display:none}}
+</style>
+<script src="data.embed.js"></script>
+</head>
+<body>
+<header>
+  <div class="brand">SERES <small>ATLANTA / PERCEPTION FIELD</small></div>
+  <button id="menu" style="display:none;width:auto;height:28px">CONTROLS</button>
+  <div class="status"><i id="pulse" class="pulse"></i><span id="phase">REST</span><span id="actor">MAP</span><span id="elapsed">0 ms</span><span id="queue">Q 0</span><span id="llm">LLM OFF</span></div>
+</header>
+<main>
+  <aside id="controls">
+    <div>
+      <label for="dimension">Perception dimension</label>
+      <select id="dimension"></select>
+    </div>
+    <div>
+      <label for="lane">Evidence lane</label>
+      <select id="lane"></select>
+    </div>
+    <div class="row">
+      <button id="fit">FIT ATLANTA</button>
+      <button id="reset">RESET VIEW</button>
+    </div>
+    <div class="metrics">
+      <div class="metric"><b id="mObs">0</b><span>OBSERVATIONS</span></div>
+      <div class="metric"><b id="mClaims">0</b><span>CLAIM EDGES</span></div>
+      <div class="metric"><b id="mPlaces">0</b><span>PLACES</span></div>
+      <div class="metric"><b id="mVisible">0</b><span>VISIBLE</span></div>
+    </div>
+    <div class="legend">
+      <div><i class="swatch pos"></i> positive perception</div>
+      <div><i class="swatch neg"></i> negative perception</div>
+      <div><i class="swatch neu"></i> neutral or unresolved</div>
+      <div class="note">Opacity encodes confidence × spatial probability × intensity. Softness comes from repeated bounded geometry, not invented precision.</div>
+    </div>
+    <div id="fixture" class="fixture">FIXTURE DATA VISIBLE. These records are user-entered and researcher-entered test material, not acquired municipal or platform records.</div>
+    <div class="note">Drag to pan. Wheel or pinch to zoom. Hover to inspect. Click a field to lock its evidence.</div>
+  </aside>
+  <section id="stage">
+    <canvas id="map" aria-label="Fuzzy spatial perception map"></canvas>
+    <div id="hover"></div>
+  </section>
+  <aside class="right">
+    <div class="eyebrow">Selected evidence</div>
+    <div id="detail">
+      <div id="detailText">Nothing selected. The map does not convert absence into neutrality.</div>
+    </div>
+  </aside>
+</main>
+<footer>
+  <a href="../index.html" style="color:var(--ink);text-decoration:none;border:1px solid var(--rule);padding:3px 7px;letter-spacing:.16em;font-weight:700" title="Return to the Soft Cadastre index">◀ CADASTRE</a>
+  <span><strong>SOURCE ANCHOR ≠ TARGET</strong></span>
+  <span>Every field retains alternatives, evidence spans, source population, time condition, and construction state.</span>
+  <span id="credit" style="margin-left:auto;color:var(--ink)"></span>
+</footer>
+<script>
+'use strict';
+const $=s=>document.querySelector(s);
+const canvas=$('#map'),ctx=canvas.getContext('2d',{alpha:false});
+const hover=$('#hover'),detail=$('#detailText'),controls=$('#controls');
+let atlas=null,status={state:'REST',phase:'loading',queue:0,llm:{enabled:false}};
+let dpr=1,w=1,h=1,view={scale:1,ox:0,oy:0},drag=null,selected=null,hovered=null,lastFrame=performance.now();
+let dimension='ALL',lane='ALL';
+const palette={positive:'#145a73',negative:'#9a2e22',neutral:'#5f5b53',paper:'#f4f1e8',rule:'#b8b2a5',ink:'#171715',muted:'#69665f'};
+
+/* SOFT CADASTRE: fetch the served atlas; fall back to the embedded copy so the
+   sheet still reads from file:// with no server. Absence of a runtime is not a fault. */
+const loadAtlas=()=>fetch('data.json',{cache:'no-store'}).then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.json()})
+  .catch(()=>{if(window.SERES_ATLAS_EMBED)return window.SERES_ATLAS_EMBED;throw new Error('no atlas: serve this directory or restore data.embed.js')});
+Promise.all([loadAtlas(),fetch('runtime/status.json',{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)])
+.then(([a,s])=>{atlas=a;if(s)status=s;else status={state:'READY',phase:'embedded atlas',queue:0,llm:{enabled:false}};init();})
+.catch(e=>{status={state:'FAULT',phase:e.message,queue:0,llm:{enabled:false}};syncStatus();});
+
+function init(){
+  const dims=['ALL',...(atlas.dimensions||[])],lanes=['ALL',...(atlas.source_lanes||[])];
+  fillSelect($('#dimension'),dims);fillSelect($('#lane'),lanes);
+  $('#mObs').textContent=atlas.totals.observations;$('#mClaims').textContent=atlas.totals.claims;$('#mPlaces').textContent=atlas.totals.places;
+  declareCorpus();
+  $('#dimension').onchange=e=>{dimension=e.target.value;selected=null;renderDetail();};
+  $('#lane').onchange=e=>{lane=e.target.value;selected=null;renderDetail();};
+  $('#fit').onclick=fit;$('#reset').onclick=fit;
+  $('#menu').onclick=()=>controls.classList.toggle('open');
+  if(matchMedia('(max-width:590px)').matches)$('#menu').style.display='block';
+  setupPointer();resize();fit();syncStatus();requestAnimationFrame(frame);
+  setInterval(refreshStatus,1500);
+}
+/* Law 6. With one corpus the rail said FIXTURE and that was the whole truth.
+   With a mixed corpus the whole truth is the split, per part, plus whatever
+   licence the acquired material travels under. */
+function declareCorpus(){
+  const t=atlas.totals||{},fx=t.fixture_claims??(atlas.claims||[]).filter(c=>c.fixture).length,aq=t.acquired_claims??((atlas.claims||[]).length-fx);
+  const el=$('#fixture');
+  if(!fx&&!aq){el.style.display='none';return}
+  el.style.display='block';
+  const parts=(atlas.state.parts||[]).map(p=>`${p.fixture?'FIXTURE':'ACQUIRED'} · ${p.claims} claims · ${esc(p.source)} · ${esc(p.extraction)}`).join('<br>');
+  const attr=(atlas.attribution||[]).join(' · ');
+  el.innerHTML = fx&&aq
+    ? `MIXED CORPUS · ${fx} FIXTURE + ${aq} ACQUIRED CLAIMS.<br><br>${parts}<br><br>Fixture records are user- and researcher-entered test material, not acquired municipal or platform records. They are counted separately and never merged into a total that hides them.${attr?'<br><br>'+esc(attr):''}`
+    : fx ? 'FIXTURE DATA VISIBLE. These records are user-entered and researcher-entered test material, not acquired municipal or platform records.'
+         : `ACQUIRED CORPUS · ${aq} claims.<br><br>${parts}${attr?'<br><br>'+esc(attr):''}`;
+  el.style.borderColor = fx ? 'var(--negative)' : 'var(--rule)';
+  el.style.color = fx ? 'var(--negative)' : 'var(--muted)';
+  const credit=$('#credit'); if(credit) credit.textContent=attr||'';
+}
+function fillSelect(el,values){el.innerHTML='';for(const v of values){const o=document.createElement('option');o.value=v;o.textContent=v.replaceAll('_',' ');el.append(o)}}
+function resize(){const r=canvas.getBoundingClientRect();dpr=Math.min(2,devicePixelRatio||1);w=Math.max(1,r.width);h=Math.max(1,r.height);canvas.width=Math.floor(w*dpr);canvas.height=Math.floor(h*dpr);ctx.setTransform(dpr,0,0,dpr,0,0)}
+/* A fit computed while the stage has no height locks in a nonsense scale and the
+   whole region smears into one blot. Watch the element, and refit until a fit
+   has actually happened at a real size. */
+let fitted=false;
+new ResizeObserver(()=>{resize();if(!fitted)fit();draw()}).observe(canvas);
+addEventListener('resize',()=>{resize();if(!fitted)fit();draw()});
+function fit(){if(!atlas)return;if(w<=2||h<=2){fitted=false;return}const [minLon,minLat,maxLon,maxLat]=atlas.region.bbox;const sx=w/(maxLon-minLon),sy=h/(maxLat-minLat);view.scale=Math.min(sx,sy)*.88;view.ox=w/2-((minLon+maxLon)/2)*view.scale;view.oy=h/2+((minLat+maxLat)/2)*view.scale;fitted=true;}
+function project(p){return{x:p[0]*view.scale+view.ox,y:-p[1]*view.scale+view.oy}}
+function unproject(x,y){return[(x-view.ox)/view.scale,-(y-view.oy)/view.scale]}
+function visibleClaims(){return (atlas.claims||[]).filter(c=>(dimension==='ALL'||c.dimension===dimension)&&(lane==='ALL'||c.source_lane===lane))}
+function frame(t){lastFrame=t;draw();requestAnimationFrame(frame)}
+function draw(){
+  if(!atlas)return;ctx.fillStyle=palette.paper;ctx.fillRect(0,0,w,h);drawGrid();
+  const claims=visibleClaims();$('#mVisible').textContent=claims.length;
+  const ordered=[...claims].sort((a,b)=>weight(a)-weight(b));
+  for(const c of ordered)drawClaim(c,c===selected||c===hovered);
+  drawLabels();
+}
+function drawGrid(){
+  ctx.save();ctx.strokeStyle=palette.rule;ctx.globalAlpha=.33;ctx.lineWidth=1;
+  const step=view.scale>.0001?.02:.05;const a=unproject(0,h),b=unproject(w,0);
+  const minLon=Math.floor(a[0]/step)*step,maxLon=Math.ceil(b[0]/step)*step,minLat=Math.floor(a[1]/step)*step,maxLat=Math.ceil(b[1]/step)*step;
+  for(let x=minLon;x<=maxLon;x+=step){const p=project([x,0]);ctx.beginPath();ctx.moveTo(p.x,0);ctx.lineTo(p.x,h);ctx.stroke()}
+  for(let y=minLat;y<=maxLat;y+=step){const p=project([0,y]);ctx.beginPath();ctx.moveTo(0,p.y);ctx.lineTo(w,p.y);ctx.stroke()}
+  ctx.restore();
+}
+function weight(c){return clamp(c.confidence*c.spatial_probability*c.intensity,0,1)}
+/* Uncertainty is a distance on the ground, not a width on the screen. A fixed
+   pixel halo lies twice: it grows the claim when you zoom out and shrinks it
+   when you zoom in. Radius is metres, converted at the current scale. */
+const M_PER_DEG=111320;
+function groundPx(c){return clamp((40+(1-c.spatial_probability)*300)/M_PER_DEG*view.scale,1.2,90)}
+function drawClaim(c,focus){
+  const alpha=.08+weight(c)*.52,color=c.polarity>0?palette.positive:c.polarity<0?palette.negative:palette.neutral;
+  ctx.save();ctx.strokeStyle=color;ctx.fillStyle=color;ctx.lineCap='round';ctx.lineJoin='round';
+  const passes=focus?6:4,r=groundPx(c);
+  for(let i=passes;i>=1;i--){ctx.globalAlpha=alpha/(i*.85);drawGeometry(c.geometry,Math.max(.8,r*(i/passes)),true)}
+  ctx.globalAlpha=focus?1:.75;drawGeometry(c.geometry,focus?3:1.2,false);ctx.restore();
+}
+function drawGeometry(g,width,fill){
+  if(g.type==='Point'){const p=project(g.coordinates);ctx.beginPath();ctx.arc(p.x,p.y,width*1.7,0,Math.PI*2);fill?ctx.fill():ctx.stroke();return}
+  if(g.type==='LineString'){ctx.lineWidth=width;ctx.beginPath();g.coordinates.forEach((q,i)=>{const p=project(q);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});ctx.stroke();return}
+  if(g.type==='Polygon'){ctx.lineWidth=width;ctx.beginPath();g.coordinates[0].forEach((q,i)=>{const p=project(q);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});ctx.closePath();fill?ctx.fill():ctx.stroke()}
+}
+function drawLabels(){
+  ctx.save();ctx.font='10px ui-monospace,monospace';ctx.textBaseline='middle';ctx.fillStyle=palette.ink;ctx.globalAlpha=.86;
+  for(const p of atlas.places||[]){const c=centroid(p.geometry),q=project(c);if(q.x<-100||q.x>w+100||q.y<-20||q.y>h+20)continue;ctx.fillRect(q.x-2,q.y-2,4,4);ctx.fillText(p.name,q.x+6,q.y)}ctx.restore();
+}
+function centroid(g){if(g.type==='Point')return g.coordinates;const pts=g.type==='LineString'?g.coordinates:g.coordinates[0];return pts.reduce((a,p)=>[a[0]+p[0]/pts.length,a[1]+p[1]/pts.length],[0,0])}
+function setupPointer(){
+  canvas.addEventListener('pointerdown',e=>{canvas.setPointerCapture(e.pointerId);drag={x:e.clientX,y:e.clientY,ox:view.ox,oy:view.oy,moved:false}});
+  canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;if(drag){const dx=e.clientX-drag.x,dy=e.clientY-drag.y;if(Math.abs(dx)+Math.abs(dy)>3)drag.moved=true;view.ox=drag.ox+dx;view.oy=drag.oy+dy;hideHover();return}hovered=hit(x,y);if(hovered)showHover(hovered,x,y);else hideHover()});
+  canvas.addEventListener('pointerup',e=>{if(drag&&!drag.moved){const r=canvas.getBoundingClientRect();selected=hit(e.clientX-r.left,e.clientY-r.top);renderDetail();}drag=null});
+  canvas.addEventListener('pointerleave',()=>{if(!drag){hovered=null;hideHover()}});
+  canvas.addEventListener('wheel',e=>{e.preventDefault();const r=canvas.getBoundingClientRect(),mx=e.clientX-r.left,my=e.clientY-r.top,before=unproject(mx,my),factor=Math.exp(-e.deltaY*.001);view.scale=clamp(view.scale*factor,400,90000);view.ox=mx-before[0]*view.scale;view.oy=my+before[1]*view.scale},{passive:false});
+}
+function hit(x,y){let best=null,bd=Infinity;for(const c of visibleClaims()){const d=distanceToGeometry(x,y,c.geometry);const threshold=Math.max(9,groundPx(c));if(d<threshold&&d<bd){best=c;bd=d}}return best}
+function distanceToGeometry(x,y,g){if(g.type==='Point'){const p=project(g.coordinates);return Math.hypot(x-p.x,y-p.y)}const pts=(g.type==='LineString'?g.coordinates:g.coordinates[0]).map(project);let d=Infinity;for(let i=1;i<pts.length;i++)d=Math.min(d,segDist(x,y,pts[i-1],pts[i]));if(g.type==='Polygon'&&inside(x,y,pts))return 0;return d}
+function segDist(x,y,a,b){const dx=b.x-a.x,dy=b.y-a.y,t=clamp(((x-a.x)*dx+(y-a.y)*dy)/(dx*dx+dy*dy||1),0,1);return Math.hypot(x-(a.x+t*dx),y-(a.y+t*dy))}
+function inside(x,y,p){let c=false;for(let i=0,j=p.length-1;i<p.length;j=i++){if(((p[i].y>y)!==(p[j].y>y))&&(x<(p[j].x-p[i].x)*(y-p[i].y)/(p[j].y-p[i].y)+p[i].x))c=!c}return c}
+function showHover(c,x,y){hover.style.display='block';hover.style.left=Math.min(w-320,x+14)+'px';hover.style.top=Math.min(h-130,y+14)+'px';hover.innerHTML=`<b>${esc(c.place_name)}</b>${esc(c.dimension.replaceAll('_',' '))}<br>mass ${pct(c.spatial_probability)} · support ${pct(weight(c))}<br>${esc(c.evidence)}`}
+function hideHover(){hover.style.display='none'}
+function renderDetail(){if(!selected){detail.textContent='Nothing selected. The map does not convert absence into neutrality.';return}const c=selected;detail.innerHTML=`<span class="chip">${esc(c.source_lane)}</span><span class="chip">${esc(c.place_kind)}</span><span class="chip">${pct(c.spatial_probability)} spatial</span><span class="chip">${pct(c.confidence)} claim</span>\n\n<b>${esc(c.place_name)}</b>\n${esc(c.dimension.replaceAll('_',' '))} · ${c.polarity>0?'positive':c.polarity<0?'negative':'neutral'} · intensity ${pct(c.intensity)}\n\n<div class="evidence">${esc(c.evidence)}</div>\n\n${esc(c.text)}\n\nRELATION\n${esc(c.relation)}\n\nCONDITION\n${esc(c.condition||'unknown')}\n\nEXPERIENCER\n${esc(c.experiencer||'unknown')}\n\nSOURCE POPULATION\n${esc(c.source_population)}\n\nIDEAL TYPE\n${esc(c.ideal_type?.name||'none')} ${c.ideal_type?'— limiting construct':''}${c.fixture?'\n\nFIXTURE: not acquired evidence.':''}`}
+async function refreshStatus(){try{const r=await fetch('runtime/status.json?'+Date.now(),{cache:'no-store'});if(r.ok){status=await r.json();syncStatus()}}catch{}}
+function syncStatus(){const state=(status.state||'REST').toLowerCase();$('#pulse').className='pulse '+state;$('#phase').textContent=(status.phase||status.state||'REST').toUpperCase();$('#actor').textContent='RENDER';$('#queue').textContent='Q '+(status.queue||0);$('#llm').textContent=status.llm?.enabled?'LLM ON':'LLM OFF';$('#elapsed').textContent=Math.round(performance.now()-lastFrame)+' ms'}
+function pct(v){return Math.round((v||0)*100)+'%'}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}function esc(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+</script>
+
+
+</body>
+</html>

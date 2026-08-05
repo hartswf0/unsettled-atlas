@@ -14,6 +14,18 @@ A synthetic place is changed by being entered. Its instruments alter what they m
 
 An unsettled place is not incomplete. Its conditions remain visible, contestable, and available for reconstruction.
 
+The Soft Cadastre
+
+A cadastre is the official register of land: who holds which parcel, in hard lines. The Soft Cadastre is the other one. It registers claimed extent — what people and institutions say about places — and holds every claim as bounded fuzzy ground that is never sharpened into a boundary it did not earn.
+
+Two registries, one contract. SERES holds what individuals said, acquired from the OpenStreetMap Notes API. ATL NPU HALFWORLD holds what institutions claimed on the record, compiled from neighborhood planning minutes into kernel fields, claim lines, territory boxes and refusal walls.
+
+Six laws govern both. Source anchor is not target. The compiler owns geometry, and no model ever emits a coordinate. Absence is not neutrality. The unresolved is kept and counted. LOOK is a gate a human must pass. Fixture declares itself.
+
+Atlanta is the reference build; New Orleans tests what generalises. See soft-cadastre/SYSTEM.md.
+
+Data: OpenStreetMap Notes, © OpenStreetMap contributors, ODbL 1.0.
+
 Created independently by Watson Hartsoe in connection with the Spatial Scholarship Field School 2026: “Spatial Technologies in the Normal City.” It is not owned, endorsed, or maintained by the Field School or Georgia Tech.
 
 Field School: https://sites.gatech.edu/sts-fieldschool/

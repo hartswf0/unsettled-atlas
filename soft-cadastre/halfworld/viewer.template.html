@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ATL NPU HALFWORLD — LOOK</title>
+<style>
+  /* light mode only · absolute white/black · accents teal amber red blue
+     no border-radius anywhere · no emoji · icons are drawn marks */
+  :root{
+    --ink:#000; --paper:#fff;
+    --teal:#19e6c8; --amber:#ffd23f; --red:#ff2e2e; --blue:#3b82f6;
+  }
+  *{ box-sizing:border-box; border-radius:0 !important; }
+  html,body{ margin:0; height:100%; background:var(--paper); color:var(--ink);
+    font:13px/1.45 "IBM Plex Mono", ui-monospace, "Courier New", monospace; }
+  @font-face{ font-family:"IBM Plex Mono"; src:local("IBM Plex Mono"); }
+  #app{ display:grid; grid-template-columns:minmax(240px,44ch) 1fr; height:100%; }
+  @media (max-width:760px){ #app{ grid-template-columns:1fr; grid-template-rows:45% 55%; } }
+
+  /* ---- left rail: flat left-rule units, no boxes, no grid ---- */
+  #rail{ overflow-y:auto; padding:14px 12px 60px 14px; border-right:1px solid var(--ink); }
+  #rail h1{ font-size:13px; font-weight:700; letter-spacing:.08em; margin:0 0 2px; }
+  #rail .sub{ font-size:11px; margin:0 0 14px; }
+  #rail .prov{ border-left:3px solid var(--amber); padding:4px 0 4px 8px; margin:0 0 14px; font-size:11px; }
+  .unit{ border-left:3px solid var(--ink); padding:6px 0 6px 10px; margin:0 0 10px; cursor:pointer; }
+  .unit:hover{ border-left-color:var(--blue); }
+  .unit.sel{ border-left-color:var(--amber); }
+  .unit .id{ font-size:10px; letter-spacing:.06em; }
+  .unit .t{ font-weight:700; }
+  .unit .m{ font-size:11px; }
+  .unit.denied .id::after{ content:" · DENIED"; color:var(--red); font-weight:700; }
+  #topics{ margin:0 0 14px; }
+  .chip{ display:inline-block; border:1px solid var(--ink); padding:2px 7px; margin:0 6px 6px 0;
+         cursor:pointer; font-size:11px; letter-spacing:.05em; }
+  .chip.on{ background:var(--ink); color:var(--paper); }
+  /* legend marks: drawn, not glyphs */
+  .lg{ display:flex; gap:8px; align-items:center; margin:3px 0; font-size:11px; }
+  .lg .mk{ width:26px; height:12px; flex:none; position:relative; }
+  .mk.dots::before{ content:""; position:absolute; inset:0;
+    background:radial-gradient(circle at 4px 6px, #000 2.4px, transparent 2.6px),
+               radial-gradient(circle at 13px 6px, #000 1.6px, transparent 1.8px),
+               radial-gradient(circle at 22px 6px, #000 .9px, transparent 1.1px); }
+  .mk.line::before{ content:""; position:absolute; left:0; right:0; top:5px; height:2px; background:var(--blue); }
+  .mk.box::before{ content:""; position:absolute; inset:1px 4px; border:2px solid var(--teal); }
+  .mk.wall::before{ content:""; position:absolute; inset:1px 4px; border:2px solid var(--red); }
+  .mk.cross::before,.mk.cross::after{ content:""; position:absolute; background:#000; }
+  .mk.cross::before{ left:12px; top:1px; bottom:1px; width:2px; }
+  .mk.cross::after{ top:5px; left:6px; right:6px; height:2px; }
+
+  /* ---- stage ---- */
+  #stage{ position:relative; overflow:hidden; }
+  canvas{ position:absolute; inset:0; width:100%; height:100%; display:block; }
+  #hud{ position:absolute; left:12px; top:10px; font-size:11px; letter-spacing:.06em;
+        background:var(--paper); border-left:3px solid var(--ink); padding:4px 8px; }
+  #lookbar{ position:absolute; right:12px; bottom:12px; display:flex; gap:8px; align-items:center; }
+  button{ font:inherit; background:var(--paper); color:var(--ink); border:1px solid var(--ink);
+          padding:6px 12px; cursor:pointer; letter-spacing:.06em; }
+  button:hover{ background:var(--ink); color:var(--paper); }
+  #looked{ font-size:11px; }
+  #load{ position:absolute; left:12px; bottom:12px; font-size:11px; }
+  input[type=file]{ font:inherit; font-size:11px; max-width:200px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="rail">
+    <h1>ATL NPU HALFWORLD</h1>
+    <a class="cadastre-rail-tie" href="../index.html" title="Return to the Soft Cadastre index" style="display:inline-block;margin:0 0 10px;font-size:8px;letter-spacing:.2em;text-decoration:none;color:inherit;opacity:.55;border:1px solid currentColor;padding:3px 7px">◀ CADASTRE</a>
+    <p class="sub">perceptual territories · gate 5 instrument</p>
+    <p class="prov" id="prov">PROVISIONAL geometry — sample corpus. Judge the image, never the code.</p>
+    <div id="topics"></div>
+    <div class="lg"><span class="mk dots"></span><span>field · ordered-dot halftone, 8 levels</span></div>
+    <div class="lg"><span class="mk line"></span><span>claim line · co-mention across units</span></div>
+    <div class="lg"><span class="mk box"></span><span>territory · possessive span</span></div>
+    <div class="lg"><span class="mk wall"></span><span>refusal wall · variance denied</span></div>
+    <div class="lg"><span class="mk cross"></span><span>anchor</span></div>
+    <div style="height:14px"></div>
+    <div id="units"></div>
+  </div>
+  <div id="stage">
+    <canvas id="cv"></canvas>
+    <div id="hud">ALL TOPICS</div>
+    <div id="load"><input type="file" id="file" accept=".json"> load atlas/compiled.json</div>
+    <div id="lookbar">
+      <span id="looked">0 frames read</span>
+      <button id="mark">MARK READ</button>
+      <button id="dl">DOWNLOAD LOOK LEDGER</button>
+    </div>
+  </div>
+</div>
+<script>
+"use strict";
+/* Data: embedded sample fallback; replace by loading atlas/compiled.json. */
+let C = /*__EMBED__*/null;
+
+const cv = document.getElementById("cv"), ctx = cv.getContext("2d");
+const unitsEl = document.getElementById("units"), topicsEl = document.getElementById("topics");
+const hud = document.getElementById("hud");
+let activeTopics = new Set(), selUnit = null, looks = [];
+
+/* 4x4 Bayer matrix — ordered halftone thresholds (DOT law: 8 quantized levels) */
+const BAYER = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]].map(r => r.map(v => (v+0.5)/16));
+
+function fit(){
+  const r = cv.parentElement.getBoundingClientRect();
+  cv.width = r.width * devicePixelRatio; cv.height = r.height * devicePixelRatio;
+  draw();
+}
+addEventListener("resize", fit);
+
+function view(){
+  const pad = 20 * devicePixelRatio;
+  const s = Math.min((cv.width - 2*pad) / C.meta.W, (cv.height - 2*pad) / C.meta.H);
+  return { s, ox: (cv.width - C.meta.W * s) / 2, oy: (cv.height - C.meta.H * s) / 2 };
+}
+const px = (x, y, v) => [v.ox + x * v.s, v.oy + y * v.s];
+
+function draw(){
+  if (!C) return;
+  const v = view();
+  ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, cv.width, cv.height);
+
+  /* fields as ordered-dot halftone */
+  const topics = Object.keys(C.fields);
+  const shown = topics.filter(t => !activeTopics.size || activeTopics.has(t));
+  const acc = new Map();
+  for (const t of shown) for (const [x, y, val] of C.fields[t]) {
+    const k = y * C.meta.W + x;
+    acc.set(k, Math.min(1, (acc.get(k) || 0) + val));
+  }
+  ctx.fillStyle = "#000";
+  for (const [k, val] of acc) {
+    const x = k % C.meta.W, y = (k - x) / C.meta.W;
+    const level = Math.round(val * 7) / 7;                 /* 8 levels incl. zero */
+    if (level <= BAYER[y % 4][x % 4] * 0.999 && level < 1) continue;
+    const [cx, cy] = px(x + 0.5, y + 0.5, v);
+    const r = Math.max(0.6, level * v.s * 0.52);
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, 6.2832); ctx.fill();
+  }
+
+  /* anchors: drawn cross marks + small caps labels */
+  ctx.strokeStyle = "#000"; ctx.lineWidth = Math.max(1, devicePixelRatio);
+  ctx.font = `${10 * devicePixelRatio}px "IBM Plex Mono", monospace`;
+  for (const a of Object.values(C.anchors)) {
+    if (a.kind === "segment") {
+      ctx.beginPath();
+      a.pts.forEach(([x, y], i) => { const [X, Y] = px(x, y, v); i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
+      ctx.setLineDash([4 * devicePixelRatio, 5 * devicePixelRatio]); ctx.stroke(); ctx.setLineDash([]);
+      const [lx, ly] = px(...a.pts[Math.floor(a.pts.length / 2)], v);
+      ctx.fillStyle = "#000"; ctx.fillText(a.label, lx + 6, ly - 6);
+    } else {
+      const [X, Y] = px(...a.xy, v), c = 6 * devicePixelRatio;
+      ctx.beginPath(); ctx.moveTo(X - c, Y); ctx.lineTo(X + c, Y);
+      ctx.moveTo(X, Y - c); ctx.lineTo(X, Y + c); ctx.stroke();
+      ctx.fillStyle = "#000"; ctx.fillText(a.label, X + 8, Y - 8);
+    }
+  }
+
+  const emph = (unit) => selUnit && unit === selUnit;
+  const dim  = (unit) => selUnit && unit !== selUnit;
+
+  /* claim lines — Appleyard curves in blue */
+  for (const L of C.lines) {
+    const [x1, y1] = px(...L.from, v), [x2, y2] = px(...L.to, v);
+    const mx = (x1 + x2) / 2 + (y2 - y1) * 0.18, my = (y1 + y2) / 2 - (x2 - x1) * 0.18;
+    ctx.strokeStyle = "#3b82f6";
+    ctx.globalAlpha = dim(L.unit) ? 0.15 : 1;
+    ctx.lineWidth = (emph(L.unit) ? 2.5 : 1.4) * devicePixelRatio;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.quadraticCurveTo(mx, my, x2, y2); ctx.stroke();
+    ctx.globalAlpha = 1;
+  }
+  /* territory boxes — teal, square corners */
+  for (const B of C.boxes) {
+    const [X, Y] = px(...B.at, v), r = B.r_cells * v.s;
+    ctx.strokeStyle = "#19e6c8";
+    ctx.globalAlpha = dim(B.unit) ? 0.2 : 1;
+    ctx.lineWidth = (emph(B.unit) ? 3 : 2) * devicePixelRatio;
+    ctx.strokeRect(X - r, Y - r, 2 * r, 2 * r);
+    ctx.globalAlpha = 1;
+  }
+  /* refusal walls — red */
+  for (const Wl of C.walls) {
+    const [X, Y] = px(...Wl.at, v), r = Wl.r_cells * v.s;
+    ctx.strokeStyle = "#ff2e2e";
+    ctx.globalAlpha = dim(Wl.unit) ? 0.25 : 1;
+    ctx.lineWidth = (emph(Wl.unit) ? 3.5 : 2.5) * devicePixelRatio;
+    ctx.strokeRect(X - r, Y - r, 2 * r, 2 * r);
+    ctx.strokeRect(X - r - 4 * devicePixelRatio, Y - r - 4 * devicePixelRatio,
+                   2 * r + 8 * devicePixelRatio, 2 * r + 8 * devicePixelRatio);
+    ctx.globalAlpha = 1;
+  }
+}
+
+function buildRail(){
+  topicsEl.innerHTML = "";
+  for (const t of Object.keys(C.fields)) {
+    const c = document.createElement("span");
+    c.className = "chip"; c.textContent = t.toUpperCase();
+    c.onclick = () => {
+      activeTopics.has(t) ? activeTopics.delete(t) : activeTopics.add(t);
+      c.classList.toggle("on");
+      hud.textContent = activeTopics.size ? [...activeTopics].join(" + ").toUpperCase() : "ALL TOPICS";
+      draw();
+    };
+    topicsEl.appendChild(c);
+  }
+  unitsEl.innerHTML = "";
+  for (const u of C.perUnit) {
+    const d = document.createElement("div");
+    d.className = "unit" + (C.walls.some(w => w.unit === u.id) ? " denied" : "");
+    d.innerHTML = `<div class="id">${u.id}</div>` +
+      `<div class="m">${u.stamped} kernel(s)${u.dominant ? " · " + u.dominant : ""}${u.err ? " · EXTRACT-FAIL" : ""}</div>`;
+    d.onclick = () => {
+      selUnit = selUnit === u.id ? null : u.id;
+      document.querySelectorAll(".unit").forEach(x => x.classList.remove("sel"));
+      if (selUnit) d.classList.add("sel");
+      hud.textContent = selUnit || (activeTopics.size ? [...activeTopics].join(" + ").toUpperCase() : "ALL TOPICS");
+      draw();
+    };
+    unitsEl.appendChild(d);
+  }
+  document.getElementById("prov").textContent =
+    (C.meta.provisional ? "PROVISIONAL — " : "") + C.meta.note + " Built " + C.meta.built.slice(0, 10) + ".";
+}
+
+/* LOOK ledger — gate 5's other half */
+document.getElementById("mark").onclick = () => {
+  looks.push({ t: new Date().toISOString(), frame: selUnit || "ALL",
+               topics: activeTopics.size ? [...activeTopics] : ["all"], verdict: "read" });
+  document.getElementById("looked").textContent = looks.length + " frames read";
+};
+document.getElementById("dl").onclick = () => {
+  const blob = new Blob([looks.map(l => JSON.stringify(l)).join("\n") + "\n"], { type: "application/jsonl" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "look.jsonl"; a.click();
+};
+document.getElementById("file").onchange = async (e) => {
+  const f = e.target.files[0]; if (!f) return;
+  C = JSON.parse(await f.text());
+  activeTopics.clear(); selUnit = null; buildRail(); fit();
+};
+
+if (C) { buildRail(); fit(); }
+</script>
+
+
+</body>
+</html>

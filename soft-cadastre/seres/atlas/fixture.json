@@ -1,0 +1,1526 @@
+{
+ "schema": "seres/part/v1",
+ "part": "fixture",
+ "built_at": "2026-08-05T02:52:19.590Z",
+ "fixture": true,
+ "region": {
+  "name": "Atlanta study area",
+  "bbox": [
+   -84.55,
+   33.62,
+   -84.2,
+   33.9
+  ],
+  "crs": "EPSG:4326"
+ },
+ "dimensions": [
+  "amenity_loss",
+  "commercial_vacancy",
+  "cycling_comfort",
+  "event_egress_friction",
+  "maintenance_neglect",
+  "recreational_value",
+  "route_severance",
+  "temporal_crowding",
+  "transit_walk_advantage",
+  "waste_accumulation"
+ ],
+ "source_lanes": [
+  "RESIDUAL",
+  "VERNACULAR"
+ ],
+ "acquisition": {
+  "source": "user- and researcher-entered",
+  "mode": "fixture",
+  "extraction": "authored",
+  "extraction_note": "Written to exercise the schema. Not acquired from any municipal or platform record.",
+  "attribution": null
+ },
+ "totals": {
+  "observations": 4,
+  "resolved_observations": 4,
+  "unresolved_observations": 0,
+  "claims": 30
+ },
+ "places": [
+  {
+   "id": "venue:mercedes-benz-stadium",
+   "name": "Mercedes-Benz Stadium",
+   "kind": "venue",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.4008,
+     33.7554
+    ]
+   },
+   "aliases": [
+    "the stadium",
+    "Falcons stadium",
+    "MBS"
+   ],
+   "status": "seed_approximate"
+  },
+  {
+   "id": "station:vine-city",
+   "name": "Vine City MARTA station",
+   "kind": "transit_station",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.4049,
+     33.7566
+    ]
+   },
+   "aliases": [
+    "Vine City",
+    "Vine City station"
+   ],
+   "status": "seed_approximate"
+  },
+  {
+   "id": "route:mbs-vine-city",
+   "name": "Stadium to Vine City walking field",
+   "kind": "route",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.4008,
+      33.7554
+     ],
+     [
+      -84.4027,
+      33.756
+     ],
+     [
+      -84.4049,
+      33.7566
+     ]
+    ]
+   },
+   "aliases": [
+    "walk to Vine City",
+    "stadium exit route"
+   ],
+   "status": "seed_approximate"
+  },
+  {
+   "id": "park:piedmont",
+   "name": "Piedmont Park",
+   "kind": "park",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -84.3797,
+       33.7794
+      ],
+      [
+       -84.3692,
+       33.7794
+      ],
+      [
+       -84.3658,
+       33.7902
+      ],
+      [
+       -84.3769,
+       33.792
+      ],
+      [
+       -84.3797,
+       33.7794
+      ]
+     ]
+    ]
+   },
+   "aliases": [
+    "Piedmont",
+    "the park"
+   ],
+   "status": "seed_approximate"
+  },
+  {
+   "id": "corridor:beltline-eastside",
+   "name": "Atlanta BeltLine Eastside Trail",
+   "kind": "trail_corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.365,
+      33.7665
+     ],
+     [
+      -84.3635,
+      33.7595
+     ],
+     [
+      -84.3648,
+      33.7569
+     ]
+    ]
+   },
+   "aliases": [
+    "the BeltLine",
+    "Eastside Trail"
+   ],
+   "status": "seed_approximate"
+  },
+  {
+   "id": "segment:beltline-ponce",
+   "name": "Eastside Trail at Ponce City Market",
+   "kind": "trail_segment",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3666,
+      33.775
+     ],
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.3652,
+      33.7699
+     ]
+    ]
+   },
+   "aliases": [
+    "around Ponce",
+    "PCM segment",
+    "Ponce on the BeltLine"
+   ],
+   "status": "seed_approximate"
+  },
+  {
+   "id": "poi:ponce-city-market",
+   "name": "Ponce City Market",
+   "kind": "mixed_use_destination",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.3658,
+     33.7726
+    ]
+   },
+   "aliases": [
+    "Ponce",
+    "PCM",
+    "old Sears building",
+    "Sears building"
+   ],
+   "status": "seed_approximate"
+  },
+  {
+   "id": "corridor:lenox-piedmont",
+   "name": "Lenox–Piedmont Buckhead corridor",
+   "kind": "corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3656,
+      33.8467
+     ],
+     [
+      -84.3699,
+      33.8396
+     ],
+     [
+      -84.3717,
+      33.8325
+     ]
+    ]
+   },
+   "aliases": [
+    "off Piedmont",
+    "on Lenox",
+    "near Lenox"
+   ],
+   "status": "seed_approximate"
+  }
+ ],
+ "claims": [
+  {
+   "id": "fixture:beltline-brunch:recreational_value:segment:beltline-ponce",
+   "observation_id": "fixture:beltline-brunch",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "trail_user",
+   "text": "The BeltLine is wonderful early, but by brunch it becomes impossible to ride around Ponce.",
+   "evidence": "wonderful early",
+   "dimension": "recreational_value",
+   "polarity": 1,
+   "intensity": 0.74,
+   "confidence": 0.82,
+   "condition": "early",
+   "experiencer": "trail_user",
+   "spatial_probability": 0.67,
+   "relation": "around_named_landmark",
+   "place_id": "segment:beltline-ponce",
+   "place_name": "Eastside Trail at Ponce City Market",
+   "place_kind": "trail_segment",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3666,
+      33.775
+     ],
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.3652,
+      33.7699
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Performative Leisure Corridor",
+    "confidence": 0.61,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:beltline-brunch:recreational_value:corridor:beltline-eastside",
+   "observation_id": "fixture:beltline-brunch",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "trail_user",
+   "text": "The BeltLine is wonderful early, but by brunch it becomes impossible to ride around Ponce.",
+   "evidence": "wonderful early",
+   "dimension": "recreational_value",
+   "polarity": 1,
+   "intensity": 0.74,
+   "confidence": 0.82,
+   "condition": "early",
+   "experiencer": "trail_user",
+   "spatial_probability": 0.24,
+   "relation": "source_corridor",
+   "place_id": "corridor:beltline-eastside",
+   "place_name": "Atlanta BeltLine Eastside Trail",
+   "place_kind": "trail_corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.365,
+      33.7665
+     ],
+     [
+      -84.3635,
+      33.7595
+     ],
+     [
+      -84.3648,
+      33.7569
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Performative Leisure Corridor",
+    "confidence": 0.61,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:beltline-brunch:recreational_value:poi:ponce-city-market",
+   "observation_id": "fixture:beltline-brunch",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "trail_user",
+   "text": "The BeltLine is wonderful early, but by brunch it becomes impossible to ride around Ponce.",
+   "evidence": "wonderful early",
+   "dimension": "recreational_value",
+   "polarity": 1,
+   "intensity": 0.74,
+   "confidence": 0.82,
+   "condition": "early",
+   "experiencer": "trail_user",
+   "spatial_probability": 0.09,
+   "relation": "named_landmark",
+   "place_id": "poi:ponce-city-market",
+   "place_name": "Ponce City Market",
+   "place_kind": "mixed_use_destination",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.3658,
+     33.7726
+    ]
+   },
+   "ideal_type": {
+    "name": "Performative Leisure Corridor",
+    "confidence": 0.61,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:beltline-brunch:temporal_crowding:segment:beltline-ponce",
+   "observation_id": "fixture:beltline-brunch",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "trail_user",
+   "text": "The BeltLine is wonderful early, but by brunch it becomes impossible to ride around Ponce.",
+   "evidence": "by brunch it becomes impossible",
+   "dimension": "temporal_crowding",
+   "polarity": -1,
+   "intensity": 0.88,
+   "confidence": 0.92,
+   "condition": "brunch period",
+   "experiencer": "cyclist",
+   "spatial_probability": 0.67,
+   "relation": "around_named_landmark",
+   "place_id": "segment:beltline-ponce",
+   "place_name": "Eastside Trail at Ponce City Market",
+   "place_kind": "trail_segment",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3666,
+      33.775
+     ],
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.3652,
+      33.7699
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Performative Leisure Corridor",
+    "confidence": 0.61,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:beltline-brunch:temporal_crowding:corridor:beltline-eastside",
+   "observation_id": "fixture:beltline-brunch",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "trail_user",
+   "text": "The BeltLine is wonderful early, but by brunch it becomes impossible to ride around Ponce.",
+   "evidence": "by brunch it becomes impossible",
+   "dimension": "temporal_crowding",
+   "polarity": -1,
+   "intensity": 0.88,
+   "confidence": 0.92,
+   "condition": "brunch period",
+   "experiencer": "cyclist",
+   "spatial_probability": 0.24,
+   "relation": "source_corridor",
+   "place_id": "corridor:beltline-eastside",
+   "place_name": "Atlanta BeltLine Eastside Trail",
+   "place_kind": "trail_corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.365,
+      33.7665
+     ],
+     [
+      -84.3635,
+      33.7595
+     ],
+     [
+      -84.3648,
+      33.7569
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Performative Leisure Corridor",
+    "confidence": 0.61,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:beltline-brunch:temporal_crowding:poi:ponce-city-market",
+   "observation_id": "fixture:beltline-brunch",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "trail_user",
+   "text": "The BeltLine is wonderful early, but by brunch it becomes impossible to ride around Ponce.",
+   "evidence": "by brunch it becomes impossible",
+   "dimension": "temporal_crowding",
+   "polarity": -1,
+   "intensity": 0.88,
+   "confidence": 0.92,
+   "condition": "brunch period",
+   "experiencer": "cyclist",
+   "spatial_probability": 0.09,
+   "relation": "named_landmark",
+   "place_id": "poi:ponce-city-market",
+   "place_name": "Ponce City Market",
+   "place_kind": "mixed_use_destination",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.3658,
+     33.7726
+    ]
+   },
+   "ideal_type": {
+    "name": "Performative Leisure Corridor",
+    "confidence": 0.61,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:beltline-brunch:cycling_comfort:segment:beltline-ponce",
+   "observation_id": "fixture:beltline-brunch",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "trail_user",
+   "text": "The BeltLine is wonderful early, but by brunch it becomes impossible to ride around Ponce.",
+   "evidence": "impossible to ride around Ponce",
+   "dimension": "cycling_comfort",
+   "polarity": -1,
+   "intensity": 0.91,
+   "confidence": 0.94,
+   "condition": "brunch period",
+   "experiencer": "cyclist",
+   "spatial_probability": 0.67,
+   "relation": "around_named_landmark",
+   "place_id": "segment:beltline-ponce",
+   "place_name": "Eastside Trail at Ponce City Market",
+   "place_kind": "trail_segment",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3666,
+      33.775
+     ],
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.3652,
+      33.7699
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Performative Leisure Corridor",
+    "confidence": 0.61,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:beltline-brunch:cycling_comfort:corridor:beltline-eastside",
+   "observation_id": "fixture:beltline-brunch",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "trail_user",
+   "text": "The BeltLine is wonderful early, but by brunch it becomes impossible to ride around Ponce.",
+   "evidence": "impossible to ride around Ponce",
+   "dimension": "cycling_comfort",
+   "polarity": -1,
+   "intensity": 0.91,
+   "confidence": 0.94,
+   "condition": "brunch period",
+   "experiencer": "cyclist",
+   "spatial_probability": 0.24,
+   "relation": "source_corridor",
+   "place_id": "corridor:beltline-eastside",
+   "place_name": "Atlanta BeltLine Eastside Trail",
+   "place_kind": "trail_corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.365,
+      33.7665
+     ],
+     [
+      -84.3635,
+      33.7595
+     ],
+     [
+      -84.3648,
+      33.7569
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Performative Leisure Corridor",
+    "confidence": 0.61,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:beltline-brunch:cycling_comfort:poi:ponce-city-market",
+   "observation_id": "fixture:beltline-brunch",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "trail_user",
+   "text": "The BeltLine is wonderful early, but by brunch it becomes impossible to ride around Ponce.",
+   "evidence": "impossible to ride around Ponce",
+   "dimension": "cycling_comfort",
+   "polarity": -1,
+   "intensity": 0.91,
+   "confidence": 0.94,
+   "condition": "brunch period",
+   "experiencer": "cyclist",
+   "spatial_probability": 0.09,
+   "relation": "named_landmark",
+   "place_id": "poi:ponce-city-market",
+   "place_name": "Ponce City Market",
+   "place_kind": "mixed_use_destination",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.3658,
+     33.7726
+    ]
+   },
+   "ideal_type": {
+    "name": "Performative Leisure Corridor",
+    "confidence": 0.61,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:npu-b-exhaust:commercial_vacancy:corridor:lenox-piedmont",
+   "observation_id": "fixture:npu-b-exhaust",
+   "source_lane": "RESIDUAL",
+   "source_type": "researcher_entered",
+   "source_population": "civic_participant",
+   "text": "The abandoned property on Lenox and the closed grocery off Piedmont have made the route to the trail feel cut off.",
+   "evidence": "abandoned property",
+   "dimension": "commercial_vacancy",
+   "polarity": -1,
+   "intensity": 0.76,
+   "confidence": 0.84,
+   "condition": "during redevelopment discussion",
+   "experiencer": "resident",
+   "spatial_probability": 0.79,
+   "relation": "between_named_corridor_clues",
+   "place_id": "corridor:lenox-piedmont",
+   "place_name": "Lenox–Piedmont Buckhead corridor",
+   "place_kind": "corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3656,
+      33.8467
+     ],
+     [
+      -84.3699,
+      33.8396
+     ],
+     [
+      -84.3717,
+      33.8325
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Interrupted Amenity Corridor",
+    "confidence": 0.63,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:npu-b-exhaust:commercial_vacancy:park:piedmont",
+   "observation_id": "fixture:npu-b-exhaust",
+   "source_lane": "RESIDUAL",
+   "source_type": "researcher_entered",
+   "source_population": "civic_participant",
+   "text": "The abandoned property on Lenox and the closed grocery off Piedmont have made the route to the trail feel cut off.",
+   "evidence": "abandoned property",
+   "dimension": "commercial_vacancy",
+   "polarity": -1,
+   "intensity": 0.76,
+   "confidence": 0.84,
+   "condition": "during redevelopment discussion",
+   "experiencer": "resident",
+   "spatial_probability": 0.05,
+   "relation": "false_friend_low_probability",
+   "place_id": "park:piedmont",
+   "place_name": "Piedmont Park",
+   "place_kind": "park",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -84.3797,
+       33.7794
+      ],
+      [
+       -84.3692,
+       33.7794
+      ],
+      [
+       -84.3658,
+       33.7902
+      ],
+      [
+       -84.3769,
+       33.792
+      ],
+      [
+       -84.3797,
+       33.7794
+      ]
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Interrupted Amenity Corridor",
+    "confidence": 0.63,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:npu-b-exhaust:commercial_vacancy:corridor:beltline-eastside",
+   "observation_id": "fixture:npu-b-exhaust",
+   "source_lane": "RESIDUAL",
+   "source_type": "researcher_entered",
+   "source_population": "civic_participant",
+   "text": "The abandoned property on Lenox and the closed grocery off Piedmont have made the route to the trail feel cut off.",
+   "evidence": "abandoned property",
+   "dimension": "commercial_vacancy",
+   "polarity": -1,
+   "intensity": 0.76,
+   "confidence": 0.84,
+   "condition": "during redevelopment discussion",
+   "experiencer": "resident",
+   "spatial_probability": 0.16,
+   "relation": "trail_unspecified",
+   "place_id": "corridor:beltline-eastside",
+   "place_name": "Atlanta BeltLine Eastside Trail",
+   "place_kind": "trail_corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.365,
+      33.7665
+     ],
+     [
+      -84.3635,
+      33.7595
+     ],
+     [
+      -84.3648,
+      33.7569
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Interrupted Amenity Corridor",
+    "confidence": 0.63,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:npu-b-exhaust:amenity_loss:corridor:lenox-piedmont",
+   "observation_id": "fixture:npu-b-exhaust",
+   "source_lane": "RESIDUAL",
+   "source_type": "researcher_entered",
+   "source_population": "civic_participant",
+   "text": "The abandoned property on Lenox and the closed grocery off Piedmont have made the route to the trail feel cut off.",
+   "evidence": "closed grocery",
+   "dimension": "amenity_loss",
+   "polarity": -1,
+   "intensity": 0.82,
+   "confidence": 0.88,
+   "condition": "after closure",
+   "experiencer": "resident",
+   "spatial_probability": 0.79,
+   "relation": "between_named_corridor_clues",
+   "place_id": "corridor:lenox-piedmont",
+   "place_name": "Lenox–Piedmont Buckhead corridor",
+   "place_kind": "corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3656,
+      33.8467
+     ],
+     [
+      -84.3699,
+      33.8396
+     ],
+     [
+      -84.3717,
+      33.8325
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Interrupted Amenity Corridor",
+    "confidence": 0.63,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:npu-b-exhaust:amenity_loss:park:piedmont",
+   "observation_id": "fixture:npu-b-exhaust",
+   "source_lane": "RESIDUAL",
+   "source_type": "researcher_entered",
+   "source_population": "civic_participant",
+   "text": "The abandoned property on Lenox and the closed grocery off Piedmont have made the route to the trail feel cut off.",
+   "evidence": "closed grocery",
+   "dimension": "amenity_loss",
+   "polarity": -1,
+   "intensity": 0.82,
+   "confidence": 0.88,
+   "condition": "after closure",
+   "experiencer": "resident",
+   "spatial_probability": 0.05,
+   "relation": "false_friend_low_probability",
+   "place_id": "park:piedmont",
+   "place_name": "Piedmont Park",
+   "place_kind": "park",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -84.3797,
+       33.7794
+      ],
+      [
+       -84.3692,
+       33.7794
+      ],
+      [
+       -84.3658,
+       33.7902
+      ],
+      [
+       -84.3769,
+       33.792
+      ],
+      [
+       -84.3797,
+       33.7794
+      ]
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Interrupted Amenity Corridor",
+    "confidence": 0.63,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:npu-b-exhaust:amenity_loss:corridor:beltline-eastside",
+   "observation_id": "fixture:npu-b-exhaust",
+   "source_lane": "RESIDUAL",
+   "source_type": "researcher_entered",
+   "source_population": "civic_participant",
+   "text": "The abandoned property on Lenox and the closed grocery off Piedmont have made the route to the trail feel cut off.",
+   "evidence": "closed grocery",
+   "dimension": "amenity_loss",
+   "polarity": -1,
+   "intensity": 0.82,
+   "confidence": 0.88,
+   "condition": "after closure",
+   "experiencer": "resident",
+   "spatial_probability": 0.16,
+   "relation": "trail_unspecified",
+   "place_id": "corridor:beltline-eastside",
+   "place_name": "Atlanta BeltLine Eastside Trail",
+   "place_kind": "trail_corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.365,
+      33.7665
+     ],
+     [
+      -84.3635,
+      33.7595
+     ],
+     [
+      -84.3648,
+      33.7569
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Interrupted Amenity Corridor",
+    "confidence": 0.63,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:npu-b-exhaust:route_severance:corridor:lenox-piedmont",
+   "observation_id": "fixture:npu-b-exhaust",
+   "source_lane": "RESIDUAL",
+   "source_type": "researcher_entered",
+   "source_population": "civic_participant",
+   "text": "The abandoned property on Lenox and the closed grocery off Piedmont have made the route to the trail feel cut off.",
+   "evidence": "route to the trail feel cut off",
+   "dimension": "route_severance",
+   "polarity": -1,
+   "intensity": 0.79,
+   "confidence": 0.81,
+   "condition": "current",
+   "experiencer": "pedestrian",
+   "spatial_probability": 0.79,
+   "relation": "between_named_corridor_clues",
+   "place_id": "corridor:lenox-piedmont",
+   "place_name": "Lenox–Piedmont Buckhead corridor",
+   "place_kind": "corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3656,
+      33.8467
+     ],
+     [
+      -84.3699,
+      33.8396
+     ],
+     [
+      -84.3717,
+      33.8325
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Interrupted Amenity Corridor",
+    "confidence": 0.63,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:npu-b-exhaust:route_severance:park:piedmont",
+   "observation_id": "fixture:npu-b-exhaust",
+   "source_lane": "RESIDUAL",
+   "source_type": "researcher_entered",
+   "source_population": "civic_participant",
+   "text": "The abandoned property on Lenox and the closed grocery off Piedmont have made the route to the trail feel cut off.",
+   "evidence": "route to the trail feel cut off",
+   "dimension": "route_severance",
+   "polarity": -1,
+   "intensity": 0.79,
+   "confidence": 0.81,
+   "condition": "current",
+   "experiencer": "pedestrian",
+   "spatial_probability": 0.05,
+   "relation": "false_friend_low_probability",
+   "place_id": "park:piedmont",
+   "place_name": "Piedmont Park",
+   "place_kind": "park",
+   "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+     [
+      [
+       -84.3797,
+       33.7794
+      ],
+      [
+       -84.3692,
+       33.7794
+      ],
+      [
+       -84.3658,
+       33.7902
+      ],
+      [
+       -84.3769,
+       33.792
+      ],
+      [
+       -84.3797,
+       33.7794
+      ]
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Interrupted Amenity Corridor",
+    "confidence": 0.63,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:npu-b-exhaust:route_severance:corridor:beltline-eastside",
+   "observation_id": "fixture:npu-b-exhaust",
+   "source_lane": "RESIDUAL",
+   "source_type": "researcher_entered",
+   "source_population": "civic_participant",
+   "text": "The abandoned property on Lenox and the closed grocery off Piedmont have made the route to the trail feel cut off.",
+   "evidence": "route to the trail feel cut off",
+   "dimension": "route_severance",
+   "polarity": -1,
+   "intensity": 0.79,
+   "confidence": 0.81,
+   "condition": "current",
+   "experiencer": "pedestrian",
+   "spatial_probability": 0.16,
+   "relation": "trail_unspecified",
+   "place_id": "corridor:beltline-eastside",
+   "place_name": "Atlanta BeltLine Eastside Trail",
+   "place_kind": "trail_corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.365,
+      33.7665
+     ],
+     [
+      -84.3635,
+      33.7595
+     ],
+     [
+      -84.3648,
+      33.7569
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Interrupted Amenity Corridor",
+    "confidence": 0.63,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:sears-alley:waste_accumulation:poi:ponce-city-market",
+   "observation_id": "fixture:sears-alley",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "service_request_reporter",
+   "text": "There is broken glass and dumping in the alley behind the old Sears building.",
+   "evidence": "broken glass and dumping",
+   "dimension": "waste_accumulation",
+   "polarity": -1,
+   "intensity": 0.86,
+   "confidence": 0.94,
+   "condition": null,
+   "experiencer": "nearby_user",
+   "spatial_probability": 0.58,
+   "relation": "behind_historic_alias",
+   "place_id": "poi:ponce-city-market",
+   "place_name": "Ponce City Market",
+   "place_kind": "mixed_use_destination",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.3658,
+     33.7726
+    ]
+   },
+   "ideal_type": {
+    "name": "Civic Neglect Edge",
+    "confidence": 0.67,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:sears-alley:waste_accumulation:segment:beltline-ponce",
+   "observation_id": "fixture:sears-alley",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "service_request_reporter",
+   "text": "There is broken glass and dumping in the alley behind the old Sears building.",
+   "evidence": "broken glass and dumping",
+   "dimension": "waste_accumulation",
+   "polarity": -1,
+   "intensity": 0.86,
+   "confidence": 0.94,
+   "condition": null,
+   "experiencer": "nearby_user",
+   "spatial_probability": 0.27,
+   "relation": "adjacent_service_area",
+   "place_id": "segment:beltline-ponce",
+   "place_name": "Eastside Trail at Ponce City Market",
+   "place_kind": "trail_segment",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3666,
+      33.775
+     ],
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.3652,
+      33.7699
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Civic Neglect Edge",
+    "confidence": 0.67,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:sears-alley:waste_accumulation:corridor:beltline-eastside",
+   "observation_id": "fixture:sears-alley",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "service_request_reporter",
+   "text": "There is broken glass and dumping in the alley behind the old Sears building.",
+   "evidence": "broken glass and dumping",
+   "dimension": "waste_accumulation",
+   "polarity": -1,
+   "intensity": 0.86,
+   "confidence": 0.94,
+   "condition": null,
+   "experiencer": "nearby_user",
+   "spatial_probability": 0.15,
+   "relation": "broader_context",
+   "place_id": "corridor:beltline-eastside",
+   "place_name": "Atlanta BeltLine Eastside Trail",
+   "place_kind": "trail_corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.365,
+      33.7665
+     ],
+     [
+      -84.3635,
+      33.7595
+     ],
+     [
+      -84.3648,
+      33.7569
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Civic Neglect Edge",
+    "confidence": 0.67,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:sears-alley:maintenance_neglect:poi:ponce-city-market",
+   "observation_id": "fixture:sears-alley",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "service_request_reporter",
+   "text": "There is broken glass and dumping in the alley behind the old Sears building.",
+   "evidence": "in the alley",
+   "dimension": "maintenance_neglect",
+   "polarity": -1,
+   "intensity": 0.72,
+   "confidence": 0.78,
+   "condition": null,
+   "experiencer": "nearby_user",
+   "spatial_probability": 0.58,
+   "relation": "behind_historic_alias",
+   "place_id": "poi:ponce-city-market",
+   "place_name": "Ponce City Market",
+   "place_kind": "mixed_use_destination",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.3658,
+     33.7726
+    ]
+   },
+   "ideal_type": {
+    "name": "Civic Neglect Edge",
+    "confidence": 0.67,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:sears-alley:maintenance_neglect:segment:beltline-ponce",
+   "observation_id": "fixture:sears-alley",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "service_request_reporter",
+   "text": "There is broken glass and dumping in the alley behind the old Sears building.",
+   "evidence": "in the alley",
+   "dimension": "maintenance_neglect",
+   "polarity": -1,
+   "intensity": 0.72,
+   "confidence": 0.78,
+   "condition": null,
+   "experiencer": "nearby_user",
+   "spatial_probability": 0.27,
+   "relation": "adjacent_service_area",
+   "place_id": "segment:beltline-ponce",
+   "place_name": "Eastside Trail at Ponce City Market",
+   "place_kind": "trail_segment",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3666,
+      33.775
+     ],
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.3652,
+      33.7699
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Civic Neglect Edge",
+    "confidence": 0.67,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:sears-alley:maintenance_neglect:corridor:beltline-eastside",
+   "observation_id": "fixture:sears-alley",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "service_request_reporter",
+   "text": "There is broken glass and dumping in the alley behind the old Sears building.",
+   "evidence": "in the alley",
+   "dimension": "maintenance_neglect",
+   "polarity": -1,
+   "intensity": 0.72,
+   "confidence": 0.78,
+   "condition": null,
+   "experiencer": "nearby_user",
+   "spatial_probability": 0.15,
+   "relation": "broader_context",
+   "place_id": "corridor:beltline-eastside",
+   "place_name": "Atlanta BeltLine Eastside Trail",
+   "place_kind": "trail_corridor",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.3658,
+      33.7726
+     ],
+     [
+      -84.365,
+      33.7665
+     ],
+     [
+      -84.3635,
+      33.7595
+     ],
+     [
+      -84.3648,
+      33.7569
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Civic Neglect Edge",
+    "confidence": 0.67,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:stadium-egress:event_egress_friction:route:mbs-vine-city",
+   "observation_id": "fixture:stadium-egress",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "event_attendee",
+   "text": "Getting out after a Falcons game is chaos unless you walk to Vine City.",
+   "evidence": "Getting out after a Falcons game is chaos",
+   "dimension": "event_egress_friction",
+   "polarity": -1,
+   "intensity": 0.92,
+   "confidence": 0.93,
+   "condition": "after Falcons game",
+   "experiencer": "event_attendee",
+   "spatial_probability": 0.64,
+   "relation": "route_between",
+   "place_id": "route:mbs-vine-city",
+   "place_name": "Stadium to Vine City walking field",
+   "place_kind": "route",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.4008,
+      33.7554
+     ],
+     [
+      -84.4027,
+      33.756
+     ],
+     [
+      -84.4049,
+      33.7566
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Event-Egress Bottleneck",
+    "confidence": 0.72,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:stadium-egress:event_egress_friction:venue:mercedes-benz-stadium",
+   "observation_id": "fixture:stadium-egress",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "event_attendee",
+   "text": "Getting out after a Falcons game is chaos unless you walk to Vine City.",
+   "evidence": "Getting out after a Falcons game is chaos",
+   "dimension": "event_egress_friction",
+   "polarity": -1,
+   "intensity": 0.92,
+   "confidence": 0.93,
+   "condition": "after Falcons game",
+   "experiencer": "event_attendee",
+   "spatial_probability": 0.21,
+   "relation": "source_venue",
+   "place_id": "venue:mercedes-benz-stadium",
+   "place_name": "Mercedes-Benz Stadium",
+   "place_kind": "venue",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.4008,
+     33.7554
+    ]
+   },
+   "ideal_type": {
+    "name": "Event-Egress Bottleneck",
+    "confidence": 0.72,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:stadium-egress:event_egress_friction:station:vine-city",
+   "observation_id": "fixture:stadium-egress",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "event_attendee",
+   "text": "Getting out after a Falcons game is chaos unless you walk to Vine City.",
+   "evidence": "Getting out after a Falcons game is chaos",
+   "dimension": "event_egress_friction",
+   "polarity": -1,
+   "intensity": 0.92,
+   "confidence": 0.93,
+   "condition": "after Falcons game",
+   "experiencer": "event_attendee",
+   "spatial_probability": 0.15,
+   "relation": "destination",
+   "place_id": "station:vine-city",
+   "place_name": "Vine City MARTA station",
+   "place_kind": "transit_station",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.4049,
+     33.7566
+    ]
+   },
+   "ideal_type": {
+    "name": "Event-Egress Bottleneck",
+    "confidence": 0.72,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:stadium-egress:transit_walk_advantage:route:mbs-vine-city",
+   "observation_id": "fixture:stadium-egress",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "event_attendee",
+   "text": "Getting out after a Falcons game is chaos unless you walk to Vine City.",
+   "evidence": "unless you walk to Vine City",
+   "dimension": "transit_walk_advantage",
+   "polarity": 1,
+   "intensity": 0.72,
+   "confidence": 0.82,
+   "condition": "post-event",
+   "experiencer": "pedestrian transit user",
+   "spatial_probability": 0.64,
+   "relation": "route_between",
+   "place_id": "route:mbs-vine-city",
+   "place_name": "Stadium to Vine City walking field",
+   "place_kind": "route",
+   "geometry": {
+    "type": "LineString",
+    "coordinates": [
+     [
+      -84.4008,
+      33.7554
+     ],
+     [
+      -84.4027,
+      33.756
+     ],
+     [
+      -84.4049,
+      33.7566
+     ]
+    ]
+   },
+   "ideal_type": {
+    "name": "Event-Egress Bottleneck",
+    "confidence": 0.72,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:stadium-egress:transit_walk_advantage:venue:mercedes-benz-stadium",
+   "observation_id": "fixture:stadium-egress",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "event_attendee",
+   "text": "Getting out after a Falcons game is chaos unless you walk to Vine City.",
+   "evidence": "unless you walk to Vine City",
+   "dimension": "transit_walk_advantage",
+   "polarity": 1,
+   "intensity": 0.72,
+   "confidence": 0.82,
+   "condition": "post-event",
+   "experiencer": "pedestrian transit user",
+   "spatial_probability": 0.21,
+   "relation": "source_venue",
+   "place_id": "venue:mercedes-benz-stadium",
+   "place_name": "Mercedes-Benz Stadium",
+   "place_kind": "venue",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.4008,
+     33.7554
+    ]
+   },
+   "ideal_type": {
+    "name": "Event-Egress Bottleneck",
+    "confidence": 0.72,
+    "limiting_construct": true
+   },
+   "fixture": true
+  },
+  {
+   "id": "fixture:stadium-egress:transit_walk_advantage:station:vine-city",
+   "observation_id": "fixture:stadium-egress",
+   "source_lane": "VERNACULAR",
+   "source_type": "user_entered",
+   "source_population": "event_attendee",
+   "text": "Getting out after a Falcons game is chaos unless you walk to Vine City.",
+   "evidence": "unless you walk to Vine City",
+   "dimension": "transit_walk_advantage",
+   "polarity": 1,
+   "intensity": 0.72,
+   "confidence": 0.82,
+   "condition": "post-event",
+   "experiencer": "pedestrian transit user",
+   "spatial_probability": 0.15,
+   "relation": "destination",
+   "place_id": "station:vine-city",
+   "place_name": "Vine City MARTA station",
+   "place_kind": "transit_station",
+   "geometry": {
+    "type": "Point",
+    "coordinates": [
+     -84.4049,
+     33.7566
+    ]
+   },
+   "ideal_type": {
+    "name": "Event-Egress Bottleneck",
+    "confidence": 0.72,
+    "limiting_construct": true
+   },
+   "fixture": true
+  }
+ ],
+ "city": {
+  "slug": "atlanta",
+  "name": "Atlanta",
+  "bbox": [
+   -84.55,
+   33.62,
+   -84.2,
+   33.9
+  ]
+ }
+}

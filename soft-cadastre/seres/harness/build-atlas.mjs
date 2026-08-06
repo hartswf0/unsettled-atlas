@@ -46,6 +46,15 @@ const parts = fs.readdirSync(dir).filter(f => f.endsWith(".json")).sort()
 
 if (!parts.length) { console.error(`no parts for city "${CITY}" in seres/atlas/ — nothing to build`); process.exit(1); }
 
+/* Reference geography, loaded separately and kept separately. It is never a part,
+   never a claim, and never counted in a total that describes evidence. */
+const bmFile = path.join(dir, `basemap-${CITY}.json`);
+const basemap = fs.existsSync(bmFile) ? JSON.parse(fs.readFileSync(bmFile, "utf8")) : null;
+if (basemap && basemap.evidence !== false) {
+  console.error(`${path.basename(bmFile)}: a basemap must declare evidence:false`);
+  process.exit(1);
+}
+
 const fail = [];
 for (const part of parts) {
   if (typeof part.fixture !== "boolean") fail.push(`${part.file}: no fixture flag — a part must say whether it is invented`);
@@ -117,7 +126,8 @@ const atlas = {
     parts: parts.map(x => ({ part: x.part, fixture: x.fixture, source: x.acquisition.source, extraction: x.acquisition.extraction, claims: (x.claims || []).length })),
   },
   /* Licences travel with the data or the data should not travel. */
-  attribution: [...new Set(parts.map(x => x.acquisition.attribution).filter(Boolean))],
+  attribution: [...new Set([...parts, ...(basemap ? [basemap] : [])].map(x => x.acquisition.attribution).filter(Boolean))],
+  basemap: basemap ? { evidence: false, note: basemap.note, acquisition: basemap.acquisition, totals: basemap.totals, layers: basemap.layers, places: basemap.places } : null,
   dimensions: [...dims].sort(),
   source_lanes: [...lanes].sort(),
   places,
@@ -172,7 +182,10 @@ for (const [rel, body] of writes) {
   fs.writeFileSync(p(rel), body);
   console.log(`WROTE   ${rel}`);
 }
-function strip(s) { return s.replace(/"built_at":"[^"]*"/g, '"built_at":"*"'); }
+/* built_at moves every run and must not count as drift. Tolerate the space that
+   pretty-printing puts after the colon — without it, data.json reported STALE on
+   every single run, and a check that always cries wolf gets ignored. */
+function strip(s) { return s.replace(/"built_at":\s*"[^"]*"/g, '"built_at":"*"'); }
 
 console.log(`\nREGISTRY I · ${parts.length} part(s)`);
 for (const x of atlas.state.parts)
@@ -180,5 +193,8 @@ for (const x of atlas.state.parts)
 console.log(`\n  ${atlas.totals.observations} observations · ${atlas.totals.claims} claims · ${atlas.totals.places} named places`);
 console.log(`  ${atlas.totals.fixture_claims} fixture · ${atlas.totals.acquired_claims} acquired · ${atlas.totals.unresolved_observations} observations kept unresolved`);
 console.log(`  ${atlas.dimensions.length} dimensions · ${atlas.source_lanes.length} lanes`);
+console.log(basemap
+  ? `  basemap: ${basemap.totals.lines} reference lines, ${basemap.totals.places} names — geography, not evidence`
+  : `  basemap: NONE — the field will have no ground under it. Run: node seres/harness/basemap.mjs --city ${CITY}`);
 console.log(`\nGATE PASS · REGISTRY I`);
 process.exit(CHECK && stale ? 1 : 0);

@@ -165,6 +165,35 @@ HALFWORLD's `--stub`. Every claim it makes carries `via: "lexicon"` and a
 deliberately low confidence of 0.55, because this is regex, not reading. A note that
 matches nothing is kept as an observation with zero claims.
 
+### Reference geography
+
+```
+node seres/harness/basemap.mjs --city atlanta      → seres/atlas/basemap-<city>.json
+```
+
+A field of claims with no ground under it is unreadable. Two hundred and fifty-eight
+glowing points on a lat/lon grid say that something was said somewhere, and nothing
+else. So a minimal vector basemap — boundary, water, the major road classes, rail,
+and ninety orienting place names — is pulled from OpenStreetMap via Overpass and
+drawn beneath the field on both surfaces.
+
+**It is not evidence.** It lives under its own key, never in `claims`, is excluded
+from every count, and `build-atlas.mjs` refuses to load a basemap that does not
+declare `evidence: false`. Both surfaces draw it in one flat neutral weight that
+cannot be mistaken for a claim. It answers *where am I*, never *what was said*.
+
+Two things make it small enough to embed. OSM splits a road into a new way at every
+intersection, so the ways are **chained end to end first** — 2,005 motorway fragments
+become 50 continuous lines — and only then simplified, which is where Douglas–Peucker
+earns its keep. Then features below a minimum extent are dropped: farm ponds and rail
+yard spurs cost bytes and add clutter without helping anyone orient. Both the chaining
+and the drops are reported, because a silent cap reads as *this is everything*.
+The result is 764 lines from 99,999 raw points, 94% dropped, 139 KB.
+
+The one risk it introduces is stated in the source register: drawing a road under a
+claim tempts a reader to read the claim as sitting *on* that road. It locates the
+reader, never the claim.
+
 `build-atlas.mjs` composes every part for one city and gates it — ranges, polarity,
 geometry, evidence span, fixture flag, provenance — then writes all three artifacts
 together so the served sheet, the file:// twin and the self-contained helm cannot

@@ -31,6 +31,7 @@ they never resolve where a claim is *about*.
 
 | Source | Acquisition mode | Corpus status | Primary value | Primary blind spot |
 |---|---|---|---|---|
+| OpenStreetMap via Overpass API | Public API | **Acquired** | Reference basemap for orientation — boundary, water, road classes, rail, 90 place names. 764 chained lines, 94% of raw points dropped. ODbL 1.0 | Reference only. It locates the reader, never the claim; drawing a road under a claim tempts a reader to read the claim as sitting *on* it |
 | OSM footprints and segment polylines | Public API | Pending | Real anchor geometry to replace PROVISIONAL eyeball coordinates | A footprint is not a perceived extent; still an anchor, never a target |
 | GDOT AADT per street segment | Public dataset | Pending | Traffic volume for Appleyard stratification of claim lines | Volume is not severance; any correlation must be declared, not implied |
 

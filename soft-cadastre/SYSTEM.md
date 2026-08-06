@@ -259,13 +259,44 @@ anywhere else invents a structure the corpus does not have.
 ### The loop
 
 ```
-node harness/fetch-minutes.mjs      STAGE 0   urls → text/*.txt   (PDFs → pdftotext, else NEEDS-OCR)
-node harness/segment.mjs            STAGE 1   text → atlas/source.json
-node harness/extract.mjs [--stub]   STAGE 3   units → atlas/extracted.json
-node harness/compile-field.mjs      STAGE 4   relations → atlas/compiled.json
-node harness/gate.mjs               GATES     exits 1 until all five pass
-open viewer.html                    STAGE 5   LOOK → ledger/look.jsonl
+node harness/fetch-minutes.mjs           STAGE 0   urls → text/*.txt  (PDFs → pdftotext, else NEEDS-OCR)
+node harness/segment.mjs                 STAGE 1   text → atlas/source.json
+node harness/extract-operator.mjs --emit STAGE 3   units → one rendered prompt each
+      … the model answers …
+node harness/extract-operator.mjs --ingest atlas/extract-response.json
+node harness/compile-field.mjs           STAGE 4   relations → atlas/compiled.json
+node harness/build-surfaces.mjs          STAGE 4b  compiled → viewer.html · helm.html
+node harness/gate.mjs                    GATES     exits 1 until all five pass
+open viewer.html                         STAGE 5   LOOK → ledger/look.jsonl
 ```
+
+### Three extraction tiers, not two
+
+`extract.mjs --stub` is regex. `extract.mjs` calls an API and needs a key and a
+bill. Both were in the harness from the start, and the second one never ran — so
+every compiled field and every published frame came from the regex.
+
+The third tier was sitting in plain sight. `extract-operator.mjs --emit` renders one
+prompt per unit with the closed vocabularies substituted; a model already reading the
+repository answers; `--ingest` validates and merges. No key, no separate spend.
+
+**The validator is the point.** A model in the loop is not trusted more than a model
+behind an API. Ingest refuses, and names the unit that broke it:
+
+- an anchor, relation, topic or stance outside the closed list
+- **any number describing space** — coordinates, distances, radii, bearings (law 2:
+  the translator may write *behind*; it may never write how far behind)
+- a surface form or possessive span not present verbatim in the unit text
+- a co-mention naming an anchor the mentions did not resolve
+
+Provenance is recorded per record — `via`, `model`, `operated_at`. A record whose
+provenance is unstated is refused like any other part in this system.
+
+`--diff` compares the tiers on the same units. On the sample corpus the operator tier
+cut 26 mentions to 20 by removing alias duplicates, corrected *fronting the Eastside
+Trail* from `behind` to `in-front-of`, stopped resolving "Ponce City Market" to the
+`ponce-de-leon-ave` anchor, and recovered `our street` where the regex had captured
+only `street` — the pronoun being the whole point of a territorial claim.
 
 Every stage writes a ledger line beside itself in `ledger/`. The ledger is not
 logging; it is the record of what the machine claims it did, kept next to the thing
@@ -424,10 +455,8 @@ Stated plainly, because the alternative is a register that flatters itself.
   neighbourhood condition would be the exact error this system exists to refuse.
 - **HALFWORLD's anchor coordinates are eyeballed.** Nine anchors, provisional, on one
   corridor. OSM footprints are the first real join.
-- **`--stub` extraction is regex over alias phrases.** It flows the pipeline and is
-  blind to any vernacular the alias table lacks — which is most vernacular. The LLM
-  path (`harness/prompts/extract.md`) is the real translator; the stub exists so the
-  pipeline can be tested without spending tokens or trust.
+- **The regex tier built everything published before 2026-08-05.** The operator tier
+  now runs by default; the stub is kept for offline smoke tests only.
 - **`fetch-minutes.mjs` cannot read PDFs zero-dep.** It saves them, tries `pdftotext`,
   and otherwise ledgers NEEDS-OCR. Some NPUs post scans, or post irregularly. Those
   absences are logged as absences and must never be read as quiet neighborhoods.

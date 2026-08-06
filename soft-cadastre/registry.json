@@ -214,14 +214,14 @@
       ],
       "recorded": {
         "units": 7,
-        "kernels_stamped": 26,
-        "unresolved": 0,
-        "topics": 6,
-        "lines": 12,
-        "boxes": 3,
+        "kernels_stamped": 15,
+        "unresolved": 5,
+        "topics": 5,
+        "lines": 5,
+        "boxes": 4,
         "walls": 1
       },
-      "state": "SAMPLE. The minutes are synthetic, written to exercise the pipeline. Anchor coordinates are PROVISIONAL eyeball values and must be replaced with OSM footprints before any claim leaves the building."
+      "state": "SAMPLE. The minutes are synthetic, written to exercise the pipeline, and the anchor coordinates are PROVISIONAL eyeball values. Extraction now runs on the operator tier — a model read each agenda item and emitted a relation program, validated against the closed vocabularies. Gates 1–4 pass; gate 5 fails until a human opens the viewer and reads every frame."
     }
   ],
   "pipeline_seres": [
@@ -278,9 +278,9 @@
     {
       "n": 3,
       "name": "EXTRACT",
-      "runs": "node harness/extract.mjs [--stub]",
-      "makes": "atlas/extracted.json",
-      "note": "The model is a semiotic translator with a closed vocabulary. --stub is regex over planOf aliases; the LLM path is the real translator.",
+      "runs": "node harness/extract-operator.mjs --emit | --ingest | --diff",
+      "makes": "atlas/extract-request.json → atlas/extracted.json",
+      "note": "Three tiers, not two. --stub is regex. The API tier needs a key and a bill. The OPERATOR tier emits one fully-rendered prompt per unit for a model that is already reading the repository, and ingests its answer through a validator that refuses anything breaking the contract: an anchor or relation outside the closed list, a surface form not present verbatim in the unit, a co-mention naming an unresolved anchor, or any number describing space. A model in the loop is not trusted more than a model behind an API.",
       "registry": "halfworld"
     },
     {
@@ -297,6 +297,14 @@
       "runs": "node harness/gate.mjs",
       "makes": "exit code",
       "note": "Exits 1 until every gate passes. Each failure names the stage that fixes it.",
+      "registry": "halfworld"
+    },
+    {
+      "n": "4b",
+      "name": "BUILD SURFACES",
+      "runs": "node harness/build-surfaces.mjs [--check]",
+      "makes": "viewer.html · helm.html",
+      "note": "Inlines the compiled atlas at the __EMBED__ marker so both surfaces work from a double-click. This step had no script and was done by hand once, which meant every later compile left the surfaces showing an older world. A pipeline whose last step is manual is a pipeline that lies about its own output.",
       "registry": "halfworld"
     },
     {
@@ -596,6 +604,37 @@
       "consequence": "The bottleneck was never the extractor. An LLM extraction pass over this material would have bought more accurate classification of a map-maintenance queue. The part is withdrawn and the ranked plan corrected.",
       "cost_of_learning_it_late": "The corpus was acquired, compiled, published and reported as a result before anyone read the text it contained.",
       "structural_cause": "Registry II cannot pass its gates until a human reads every frame. Registry I had no equivalent gate, so 228 unreviewed claims went straight into the atlas."
+    },
+    {
+      "id": "stub-tier-was-not-good-enough",
+      "on": "2026-08-05",
+      "claim_tested": "The regex --stub tier is good enough to flow the pipeline while the real translator waits for an API key.",
+      "verdict": "REFUTED — and the waiting was unnecessary",
+      "how": "Ran the LLM tier with the assistant already in the session as the operator, then diffed it against the stub on the same seven units.",
+      "findings": [
+        "The stub emitted the same building three times per topic — 'THE OLD SEARS BUILDING', 'OLD SEARS BUILDING', 'SEARS BUILDING' — because the alias table matches overlapping substrings. 26 mentions collapsed to 20 real ones.",
+        "The stub read 'fronting the Eastside Trail' as relation 'behind'. It fronts the trail; the addition is behind the building and in front of the trail, which is two relations to two anchors in one sentence.",
+        "The stub resolved 'Ponce City Market' to the anchor ponce-de-leon-ave twice, because the alias PONCE matches inside it.",
+        "The stub emitted stances outside the closed vocabulary — 'approv' and 'no action' — and nothing in the pipeline checked. The operator validator rejects them.",
+        "The stub's possessive span was 'street'; the actual claim in the minutes is 'our street'. The pronoun is the whole point of a territorial claim."
+      ],
+      "consequence": "The operator tier costs no API key and no separate spend. It should have been the default from the first run, and the stub kept only for offline smoke tests.",
+      "cost_of_learning_it_late": "Every compiled field, every published frame and the whole first LOOK surface was built from the regex tier.",
+      "structural_cause": "The harness offered '--stub or an API key' and nobody asked whether a model was already present."
+    },
+    {
+      "id": "dominance-by-mention-count",
+      "on": "2026-08-05",
+      "claim_tested": "The unit's dominant anchor — the one mentioned most — is the right place to sit a refusal wall or a territory box.",
+      "verdict": "REFUTED",
+      "how": "The cleaner extraction made a segment dominant, and the refusal wall for a plainly denied variance silently vanished from the compiled output.",
+      "findings": [
+        "Dominance by raw mention count rewards repetition, which is exactly what the regex tier's overlapping aliases produced. The stub 'won' the wall by accident.",
+        "Walls and boxes can only sit on a point anchor, and the compiler skipped them without a word when the dominant anchor was a street."
+      ],
+      "consequence": "compile-field.mjs now prefers the dominant anchor, falls back to the best point anchor in the same unit, and records a drop when the unit has no point anchor at all. Walls went 0 → 1 and boxes 2 → 4.",
+      "cost_of_learning_it_late": "A better extraction made the output worse, which is the failure mode hardest to notice.",
+      "structural_cause": "A silent skip. Everywhere else this system logs what it drops; this path did not."
     }
   ]
 }

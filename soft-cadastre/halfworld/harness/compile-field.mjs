@@ -88,7 +88,7 @@ function stampMention(m, unit) {
 }
 
 /* ---- walk extraction records ------------------------------------------- */
-const lines = [], boxes = [], walls = [], perUnit = [];
+const lines = [], boxes = [], walls = [], dropped = [], perUnit = [];
 let stamped = 0, unresolved = 0;
 for (const rec of EX) {
   if (!rec.ok) { perUnit.push({ id: rec.id, stamped: 0, err: rec.err }); continue; }
@@ -98,7 +98,18 @@ for (const rec of EX) {
     if (!m.anchor) { unresolved++; continue; }
     if (stampMention(m, rec)) { n++; stamped++; counts[m.anchor] = (counts[m.anchor] || 0) + 1; }
   }
-  const dominant = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]?.[0] || null;
+  const ranked = Object.entries(counts).sort((a, b) => b[1] - a[1]);
+  const dominant = ranked[0]?.[0] || null;
+  /* Walls and boxes need somewhere to sit, and only a point anchor can hold one.
+     Dominance is decided by mention count, which rewards repetition — the regex
+     tier used to win it by matching three overlapping aliases for one building.
+     A cleaner extraction can therefore make a segment dominant and silently lose
+     the refusal wall for a denial that was plainly stated. Prefer the dominant
+     anchor; fall back to the best point anchor in the same unit; and if the unit
+     has no point anchor at all, record the drop instead of swallowing it. */
+  const site = (dominant && anchorXY[dominant].kind === "point")
+    ? dominant
+    : (ranked.find(([a]) => anchorXY[a]?.kind === "point")?.[0] || null);
   for (const [a, b] of rec.claims.comention || []) {
     const A = anchorXY[a], B = anchorXY[b];
     if (!A || !B) continue;
@@ -106,14 +117,16 @@ for (const rec of EX) {
     const pb = B.kind === "point" ? B.xy : nearestOn(B.pts, pa);
     lines.push({ unit: rec.id, a, b, from: pa, to: pb });
   }
-  if ((rec.claims.possessive || []).length && dominant && anchorXY[dominant].kind === "point") {
-    boxes.push({ unit: rec.id, anchor: dominant, at: anchorXY[dominant].xy,
-                 spans: rec.claims.possessive, r_cells: 220 / G.cell_m });
+  if ((rec.claims.possessive || []).length) {
+    if (site) boxes.push({ unit: rec.id, anchor: site, at: anchorXY[site].xy,
+                           spans: rec.claims.possessive, r_cells: 220 / G.cell_m });
+    else dropped.push({ unit: rec.id, kind: "territory box", why: "unit resolved no point anchor to sit on", spans: rec.claims.possessive });
   }
-  if (rec.stance === "deny" && dominant && anchorXY[dominant].kind === "point") {
-    walls.push({ unit: rec.id, anchor: dominant, at: anchorXY[dominant].xy, r_cells: 150 / G.cell_m });
+  if (rec.stance === "deny") {
+    if (site) walls.push({ unit: rec.id, anchor: site, at: anchorXY[site].xy, r_cells: 150 / G.cell_m });
+    else dropped.push({ unit: rec.id, kind: "refusal wall", why: "unit resolved no point anchor to sit on" });
   }
-  perUnit.push({ id: rec.id, stamped: n, dominant });
+  perUnit.push({ id: rec.id, stamped: n, dominant, site });
 }
 
 /* ---- normalize + sparsify ---------------------------------------------- */
@@ -138,12 +151,13 @@ const compiled = {
   meta: { title: cfg.title, W, H, cell_m: G.cell_m, bbox: G,
           built: new Date().toISOString(), provisional: true,
           note: "PROVISIONAL anchor geometry — verify against OSM before any real claim." },
-  anchors: anchorsOut, fields: sparse, lines, boxes, walls, perUnit,
+  anchors: anchorsOut, fields: sparse, lines, boxes, walls, dropped, perUnit,
   sanity: { units: EX.length, stamped, unresolved,
-            topics: Object.keys(sparse), lines: lines.length, boxes: boxes.length, walls: walls.length }
+            topics: Object.keys(sparse), lines: lines.length, boxes: boxes.length, walls: walls.length, dropped: dropped.length }
 };
 fs.writeFileSync(p("atlas", "compiled.json"), JSON.stringify(compiled));
 fs.mkdirSync(p("ledger"), { recursive: true });
 fs.appendFileSync(p("ledger", "compile.jsonl"),
   JSON.stringify({ t: new Date().toISOString(), ...compiled.sanity }) + "\n");
 console.log(`COMPILED ${W}x${H} grid · ${stamped} kernel(s) · ${lines.length} line(s) · ${boxes.length} box(es) · ${walls.length} wall(s) · ${unresolved} unresolved mention(s) kept as data`);
+for (const d of dropped) console.log(`  DROPPED ${d.kind} for ${d.unit} — ${d.why}`);

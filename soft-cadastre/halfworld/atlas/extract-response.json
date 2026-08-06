@@ -1,0 +1,98 @@
+{
+  "schema": "halfworld/extract-response/v1",
+  "via": "llm-operator",
+  "model": "claude-opus-5 (assistant in session — no API key, no separate spend)",
+  "operated_at": "2026-08-05",
+  "note": "Read each agenda item and emitted a spatial relation program. No coordinates, no distances, no radii — those belong to compile-field.mjs. Surfaces are copied verbatim and kept within a single line so they can be checked against the source. Places with no anchor in the closed list are kept with anchor:null rather than guessed.",
+  "records": [
+    {
+      "id": "NPU-N-SAMPLE-2026-06-item00",
+      "mentions": [],
+      "claims": { "possessive": [], "comention": [] },
+      "stance": null,
+      "reading": "Provenance banner, not an agenda item. Nothing spatial is claimed."
+    },
+    {
+      "id": "NPU-N-SAMPLE-2026-06-item01",
+      "mentions": [],
+      "claims": { "possessive": [], "comention": [] },
+      "stance": null,
+      "reading": "Procedural. A time and a quorum, no place."
+    },
+    {
+      "id": "NPU-N-SAMPLE-2026-06-item02",
+      "mentions": [
+        { "surface": "the old Sears building", "anchor": "ponce-city-market", "relation": "behind", "topic": "density" },
+        { "surface": "the Eastside Trail", "anchor": "beltline-eastside", "relation": "in-front-of", "topic": "density" },
+        { "surface": "the alley", "anchor": null, "relation": "behind", "topic": "general" },
+        { "surface": "the Beltline", "anchor": "beltline-eastside", "relation": "along", "topic": "parking" },
+        { "surface": "our street", "anchor": null, "relation": "at", "topic": "traffic" }
+      ],
+      "claims": {
+        "possessive": ["our street"],
+        "comention": [["ponce-city-market", "beltline-eastside"]]
+      },
+      "stance": "deny",
+      "reading": "The addition sits BEHIND the old Sears building and FRONTS the trail — two different relations to two different anchors, in one sentence. The alley is a real place the gazetteer has no anchor for; it is kept unresolved rather than collapsed onto the market. 'Our street' is a territorial claim by a speaker whose street is never named."
+    },
+    {
+      "id": "NPU-N-SAMPLE-2026-06-item03",
+      "mentions": [
+        { "surface": "Krog Street Market", "anchor": "krog-street-market", "relation": "near", "topic": "traffic" },
+        { "surface": "the Krog Tunnel", "anchor": "krog-street-market", "relation": "at", "topic": "traffic" },
+        { "surface": "the trail", "anchor": "beltline-eastside", "relation": "at", "topic": "safety" },
+        { "surface": "across from Krog Street Market", "anchor": "krog-street-market", "relation": "across-from", "topic": "traffic" },
+        { "surface": "our block", "anchor": null, "relation": "at", "topic": "traffic" }
+      ],
+      "claims": {
+        "possessive": ["our block"],
+        "comention": [["krog-street-market", "beltline-eastside"]]
+      },
+      "stance": "approve",
+      "reading": "Three distinct positions relative to one anchor: near it, at the tunnel, and across from it on the market side. The children crossing to reach 'the trail' is a safety reading of the Beltline, not a recreation one."
+    },
+    {
+      "id": "NPU-N-SAMPLE-2026-06-item04",
+      "mentions": [
+        { "surface": "Historic Fourth Ward Park", "anchor": "fourth-ward-park", "relation": "along", "topic": "safety" },
+        { "surface": "Fourth Ward Park", "anchor": "fourth-ward-park", "relation": "between", "topic": "safety" },
+        { "surface": "Ponce City Market", "anchor": "ponce-city-market", "relation": "between", "topic": "safety" },
+        { "surface": "our sidewalk", "anchor": null, "relation": "at", "topic": "safety" }
+      ],
+      "claims": {
+        "possessive": ["our sidewalk"],
+        "comention": [["fourth-ward-park", "ponce-city-market"]]
+      },
+      "stance": "defer",
+      "reading": "Two spatial facts about the same park: darkness ALONG its north edge, and fear on the walk BETWEEN it and Ponce City Market. The between-claim is the one the grid cannot get from either anchor alone."
+    },
+    {
+      "id": "NPU-N-SAMPLE-2026-06-item05",
+      "mentions": [
+        { "surface": "Piedmont Park", "anchor": "piedmont-park", "relation": "near", "topic": "noise" },
+        { "surface": "the Beltline", "anchor": "beltline-eastside", "relation": "along", "topic": "noise" }
+      ],
+      "claims": {
+        "possessive": [],
+        "comention": [["piedmont-park", "beltline-eastside"]]
+      },
+      "stance": null,
+      "reading": "Noise originates NEAR one anchor and is received ALONG another. 'No action taken' is not one of approve/deny/defer/withdraw, so stance stays null rather than being rounded to 'defer'."
+    },
+    {
+      "id": "NPU-N-SAMPLE-2026-06-item06",
+      "mentions": [
+        { "surface": "North Avenue frontage", "anchor": "north-avenue", "relation": "along", "topic": "density" },
+        { "surface": "Ponce City Market", "anchor": "ponce-city-market", "relation": "near", "topic": "density" },
+        { "surface": "North Avenue frontage", "anchor": "north-avenue", "relation": "along", "topic": "parking" },
+        { "surface": "our community garden", "anchor": null, "relation": "at", "topic": "density" }
+      ],
+      "claims": {
+        "possessive": ["our community garden"],
+        "comention": [["north-avenue", "ponce-city-market"]]
+      },
+      "stance": "defer",
+      "reading": "The rezoning is ALONG a segment and NEAR a point at once. The parking-minimum reduction is the same frontage read under a different topic. The shadow objection claims a garden the minutes never locate."
+    }
+  ]
+}

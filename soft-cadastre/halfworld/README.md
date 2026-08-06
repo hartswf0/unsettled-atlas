@@ -12,8 +12,13 @@ without a human.
     node harness/fetch-minutes.mjs              # STAGE 0 — needs atlas/manifest.json with real urls
     node harness/segment.mjs                    # STAGE 1 — text/*.txt -> atlas/source.json
     node harness/extract.mjs --stub             # STAGE 3 — offline regex extraction
-    node harness/extract.mjs                    # STAGE 3 — LLM extraction (ANTHROPIC_API_KEY)
+    node harness/extract-operator.mjs --emit    # STAGE 3 — LLM tier, no API key:
+                                                #   renders one prompt per unit; a model
+                                                #   already in the room answers; then
+    node harness/extract-operator.mjs --ingest atlas/extract-response.json
+    node harness/extract-operator.mjs --diff    #   compare tiers on the same units
     node harness/compile-field.mjs              # STAGE 4 — atlas/compiled.json
+    node harness/build-surfaces.mjs             # STAGE 4b — embed into viewer + helm
     node harness/gate.mjs                       # gates 1-5; exits 1 until all pass
     open viewer.html                            # STAGE 5 — LOOK; MARK READ; download look.jsonl -> ledger/
 
@@ -43,9 +48,13 @@ correct behavior.
 - SAMPLE minutes are synthetic, written to exercise the pipeline. Anchor
   coordinates are PROVISIONAL eyeball values — replace with OSM footprints
   and real segment polylines before any claim leaves the building.
-- --stub extraction is regex over planOf aliases: good enough to flow the
-  pipeline, blind to vernacular the alias table lacks. The LLM path is the
-  real translator; its prompt is harness/prompts/extract.md.
+- --stub extraction is regex over planOf aliases and it is worse than it looks:
+  it emitted one building three times (overlapping aliases), read "fronting the
+  Eastside Trail" as `behind`, resolved "Ponce City Market" to ponce-de-leon-ave,
+  and produced stances outside the closed vocabulary that nothing checked.
+  extract-operator.mjs is the real translator and needs no API key. Its ingest
+  validator refuses out-of-vocabulary values, non-verbatim spans, and any number
+  describing space.
 - fetch-minutes.mjs cannot read PDFs zero-dep. It saves them, uses pdftotext
   if present, and otherwise ledgers NEEDS-OCR. The gaps are data.
 - Some NPUs post minutes irregularly or as scans. Log the absence.

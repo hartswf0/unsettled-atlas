@@ -1,0 +1,89 @@
+{
+ "schema": "halfworld/extract-request/v1",
+ "emitted_at": "2026-08-06T03:22:26.975Z",
+ "contract": {
+  "anchors": [
+   "ponce-city-market",
+   "krog-street-market",
+   "piedmont-park",
+   "five-points-station",
+   "mercedes-benz-stadium",
+   "fourth-ward-park",
+   "north-avenue",
+   "ponce-de-leon-ave",
+   "beltline-eastside"
+  ],
+  "relations": [
+   "at",
+   "in-front-of",
+   "behind",
+   "near",
+   "across-from",
+   "along",
+   "between"
+  ],
+  "topics": [
+   "parking",
+   "cycling",
+   "noise",
+   "traffic",
+   "safety",
+   "density",
+   "trees",
+   "general"
+  ],
+  "stances": [
+   "approve",
+   "deny",
+   "defer",
+   "withdraw",
+   null
+  ],
+  "forbidden": "coordinates, distances, radii, bearings, bounding boxes — any number describing space",
+  "unresolved": "a named place matching no anchor takes anchor:null with the surface form copied verbatim"
+ },
+ "units": [
+  {
+   "id": "NPU-N-SAMPLE-2026-06-item00",
+   "title": "PREAMBLE",
+   "text": "SYNTHETIC SAMPLE — written to exercise the pipeline. Not a record of any\nactual NPU-N meeting. Replace with real minutes via fetch-minutes.mjs.",
+   "prompt": "# SEMIOTIC TRANSLATOR — NPU UNIT EXTRACTION\n\nYou are translating one agenda item from Atlanta Neighborhood Planning Unit\nminutes into a spatial relation program. You are the translator, not the\ncartographer: YOU NEVER EMIT COORDINATES, DISTANCES, RADII, OR BOUNDING\nBOXES. Geometry belongs to a deterministic compiler downstream. Your job is\nvernacular: \"the old Sears building\" is Ponce City Market; \"the trail\" in an\nEastside NPU is the Beltline; a speaker's \"our corner\" is a territorial claim.\n\nClosed vocabularies — you may only use these values:\n- anchor: ponce-city-market, krog-street-market, piedmont-park, five-points-station, mercedes-benz-stadium, fourth-ward-park, north-avenue, ponce-de-leon-ave, beltline-eastside\n- relation: at, in-front-of, behind, near, across-from, along, between\n\nIf a place is named that matches no anchor, set \"anchor\": null and copy the\nsurface form exactly into \"surface\" — an unresolved mention is data; a\nguessed one is contamination. Do not invent mentions. Do not resolve a\nvernacular name unless the cultural reading is confident.\n\nUNIT:\nPREAMBLE\nSYNTHETIC SAMPLE — written to exercise the pipeline. Not a record of any\nactual NPU-N meeting. Replace with real minutes via fetch-minutes.mjs.\n\nRespond with ONLY a JSON object, no prose, no fences:\n\n{\n  \"mentions\": [\n    { \"surface\": \"exact phrase from the text\",\n      \"anchor\": \"one of the closed anchor list, or null\",\n      \"relation\": \"one of the closed relation list\",\n      \"topic\": \"parking|cycling|noise|traffic|safety|density|trees|general\" }\n  ],\n  \"claims\": {\n    \"possessive\": [\"each span claimed with our/my/we-keep, verbatim\"],\n    \"comention\": [[\"anchorA\",\"anchorB\"]]\n  },\n  \"stance\": \"approve|deny|defer|withdraw|null — the item's outcome if stated\"\n}\n"
+  },
+  {
+   "id": "NPU-N-SAMPLE-2026-06-item01",
+   "title": "CALL TO ORDER",
+   "text": "Chair Whitfield called the meeting to order at 7:02 PM. Quorum present.",
+   "prompt": "# SEMIOTIC TRANSLATOR — NPU UNIT EXTRACTION\n\nYou are translating one agenda item from Atlanta Neighborhood Planning Unit\nminutes into a spatial relation program. You are the translator, not the\ncartographer: YOU NEVER EMIT COORDINATES, DISTANCES, RADII, OR BOUNDING\nBOXES. Geometry belongs to a deterministic compiler downstream. Your job is\nvernacular: \"the old Sears building\" is Ponce City Market; \"the trail\" in an\nEastside NPU is the Beltline; a speaker's \"our corner\" is a territorial claim.\n\nClosed vocabularies — you may only use these values:\n- anchor: ponce-city-market, krog-street-market, piedmont-park, five-points-station, mercedes-benz-stadium, fourth-ward-park, north-avenue, ponce-de-leon-ave, beltline-eastside\n- relation: at, in-front-of, behind, near, across-from, along, between\n\nIf a place is named that matches no anchor, set \"anchor\": null and copy the\nsurface form exactly into \"surface\" — an unresolved mention is data; a\nguessed one is contamination. Do not invent mentions. Do not resolve a\nvernacular name unless the cultural reading is confident.\n\nUNIT:\nCALL TO ORDER\nChair Whitfield called the meeting to order at 7:02 PM. Quorum present.\n\nRespond with ONLY a JSON object, no prose, no fences:\n\n{\n  \"mentions\": [\n    { \"surface\": \"exact phrase from the text\",\n      \"anchor\": \"one of the closed anchor list, or null\",\n      \"relation\": \"one of the closed relation list\",\n      \"topic\": \"parking|cycling|noise|traffic|safety|density|trees|general\" }\n  ],\n  \"claims\": {\n    \"possessive\": [\"each span claimed with our/my/we-keep, verbatim\"],\n    \"comention\": [[\"anchorA\",\"anchorB\"]]\n  },\n  \"stance\": \"approve|deny|defer|withdraw|null — the item's outcome if stated\"\n}\n"
+  },
+  {
+   "id": "NPU-N-SAMPLE-2026-06-item02",
+   "title": "ITEM 1. V-26-118 VARIANCE, REAR SETBACK REDUCTION",
+   "text": "Application V-26-118 seeks a rear setback reduction for a three-story\naddition behind the old Sears building fronting the Eastside Trail.\nMr. Okafor spoke for the applicant. Ms. Delgado said the alley behind\nthe old Sears building already floods and the parking situation along\nthe Beltline is at capacity every weekend. Mr. Haynes agreed and said\ncut-through traffic on our street has doubled since the deck opened.\nMotion to deny carried 14-3. The variance was denied.",
+   "prompt": "# SEMIOTIC TRANSLATOR — NPU UNIT EXTRACTION\n\nYou are translating one agenda item from Atlanta Neighborhood Planning Unit\nminutes into a spatial relation program. You are the translator, not the\ncartographer: YOU NEVER EMIT COORDINATES, DISTANCES, RADII, OR BOUNDING\nBOXES. Geometry belongs to a deterministic compiler downstream. Your job is\nvernacular: \"the old Sears building\" is Ponce City Market; \"the trail\" in an\nEastside NPU is the Beltline; a speaker's \"our corner\" is a territorial claim.\n\nClosed vocabularies — you may only use these values:\n- anchor: ponce-city-market, krog-street-market, piedmont-park, five-points-station, mercedes-benz-stadium, fourth-ward-park, north-avenue, ponce-de-leon-ave, beltline-eastside\n- relation: at, in-front-of, behind, near, across-from, along, between\n\nIf a place is named that matches no anchor, set \"anchor\": null and copy the\nsurface form exactly into \"surface\" — an unresolved mention is data; a\nguessed one is contamination. Do not invent mentions. Do not resolve a\nvernacular name unless the cultural reading is confident.\n\nUNIT:\nITEM 1. V-26-118 VARIANCE, REAR SETBACK REDUCTION\nApplication V-26-118 seeks a rear setback reduction for a three-story\naddition behind the old Sears building fronting the Eastside Trail.\nMr. Okafor spoke for the applicant. Ms. Delgado said the alley behind\nthe old Sears building already floods and the parking situation along\nthe Beltline is at capacity every weekend. Mr. Haynes agreed and said\ncut-through traffic on our street has doubled since the deck opened.\nMotion to deny carried 14-3. The variance was denied.\n\nRespond with ONLY a JSON object, no prose, no fences:\n\n{\n  \"mentions\": [\n    { \"surface\": \"exact phrase from the text\",\n      \"anchor\": \"one of the closed anchor list, or null\",\n      \"relation\": \"one of the closed relation list\",\n      \"topic\": \"parking|cycling|noise|traffic|safety|density|trees|general\" }\n  ],\n  \"claims\": {\n    \"possessive\": [\"each span claimed with our/my/we-keep, verbatim\"],\n    \"comention\": [[\"anchorA\",\"anchorB\"]]\n  },\n  \"stance\": \"approve|deny|defer|withdraw|null — the item's outcome if stated\"\n}\n"
+  },
+  {
+   "id": "NPU-N-SAMPLE-2026-06-item03",
+   "title": "ITEM 2. SPEED TABLE PETITION, AIRLINE STREET",
+   "text": "Ms. Delgado presented a petition for speed tables near Krog Street\nMarket. She said drivers leaving the Krog Tunnel treat our block as a\nramp, and children cross there to reach the trail. Mr. Haynes noted\nthe same speeding pattern across from Krog Street Market on the\nmarket side. Petition endorsed; forwarded to ATLDOT. Approved.",
+   "prompt": "# SEMIOTIC TRANSLATOR — NPU UNIT EXTRACTION\n\nYou are translating one agenda item from Atlanta Neighborhood Planning Unit\nminutes into a spatial relation program. You are the translator, not the\ncartographer: YOU NEVER EMIT COORDINATES, DISTANCES, RADII, OR BOUNDING\nBOXES. Geometry belongs to a deterministic compiler downstream. Your job is\nvernacular: \"the old Sears building\" is Ponce City Market; \"the trail\" in an\nEastside NPU is the Beltline; a speaker's \"our corner\" is a territorial claim.\n\nClosed vocabularies — you may only use these values:\n- anchor: ponce-city-market, krog-street-market, piedmont-park, five-points-station, mercedes-benz-stadium, fourth-ward-park, north-avenue, ponce-de-leon-ave, beltline-eastside\n- relation: at, in-front-of, behind, near, across-from, along, between\n\nIf a place is named that matches no anchor, set \"anchor\": null and copy the\nsurface form exactly into \"surface\" — an unresolved mention is data; a\nguessed one is contamination. Do not invent mentions. Do not resolve a\nvernacular name unless the cultural reading is confident.\n\nUNIT:\nITEM 2. SPEED TABLE PETITION, AIRLINE STREET\nMs. Delgado presented a petition for speed tables near Krog Street\nMarket. She said drivers leaving the Krog Tunnel treat our block as a\nramp, and children cross there to reach the trail. Mr. Haynes noted\nthe same speeding pattern across from Krog Street Market on the\nmarket side. Petition endorsed; forwarded to ATLDOT. Approved.\n\nRespond with ONLY a JSON object, no prose, no fences:\n\n{\n  \"mentions\": [\n    { \"surface\": \"exact phrase from the text\",\n      \"anchor\": \"one of the closed anchor list, or null\",\n      \"relation\": \"one of the closed relation list\",\n      \"topic\": \"parking|cycling|noise|traffic|safety|density|trees|general\" }\n  ],\n  \"claims\": {\n    \"possessive\": [\"each span claimed with our/my/we-keep, verbatim\"],\n    \"comention\": [[\"anchorA\",\"anchorB\"]]\n  },\n  \"stance\": \"approve|deny|defer|withdraw|null — the item's outcome if stated\"\n}\n"
+  },
+  {
+   "id": "NPU-N-SAMPLE-2026-06-item04",
+   "title": "ITEM 3. LIGHTING AT HISTORIC FOURTH WARD PARK",
+   "text": "Commissioner Pratt reported that lighting along the north edge of\nHistoric Fourth Ward Park remains dark and residents feel unsafe\nwalking between Fourth Ward Park and Ponce City Market after events.\nMs. Ruiz said our sidewalk on the park side has no working fixture.\nNo action; carried to next month. Deferred.",
+   "prompt": "# SEMIOTIC TRANSLATOR — NPU UNIT EXTRACTION\n\nYou are translating one agenda item from Atlanta Neighborhood Planning Unit\nminutes into a spatial relation program. You are the translator, not the\ncartographer: YOU NEVER EMIT COORDINATES, DISTANCES, RADII, OR BOUNDING\nBOXES. Geometry belongs to a deterministic compiler downstream. Your job is\nvernacular: \"the old Sears building\" is Ponce City Market; \"the trail\" in an\nEastside NPU is the Beltline; a speaker's \"our corner\" is a territorial claim.\n\nClosed vocabularies — you may only use these values:\n- anchor: ponce-city-market, krog-street-market, piedmont-park, five-points-station, mercedes-benz-stadium, fourth-ward-park, north-avenue, ponce-de-leon-ave, beltline-eastside\n- relation: at, in-front-of, behind, near, across-from, along, between\n\nIf a place is named that matches no anchor, set \"anchor\": null and copy the\nsurface form exactly into \"surface\" — an unresolved mention is data; a\nguessed one is contamination. Do not invent mentions. Do not resolve a\nvernacular name unless the cultural reading is confident.\n\nUNIT:\nITEM 3. LIGHTING AT HISTORIC FOURTH WARD PARK\nCommissioner Pratt reported that lighting along the north edge of\nHistoric Fourth Ward Park remains dark and residents feel unsafe\nwalking between Fourth Ward Park and Ponce City Market after events.\nMs. Ruiz said our sidewalk on the park side has no working fixture.\nNo action; carried to next month. Deferred.\n\nRespond with ONLY a JSON object, no prose, no fences:\n\n{\n  \"mentions\": [\n    { \"surface\": \"exact phrase from the text\",\n      \"anchor\": \"one of the closed anchor list, or null\",\n      \"relation\": \"one of the closed relation list\",\n      \"topic\": \"parking|cycling|noise|traffic|safety|density|trees|general\" }\n  ],\n  \"claims\": {\n    \"possessive\": [\"each span claimed with our/my/we-keep, verbatim\"],\n    \"comention\": [[\"anchorA\",\"anchorB\"]]\n  },\n  \"stance\": \"approve|deny|defer|withdraw|null — the item's outcome if stated\"\n}\n"
+  },
+  {
+   "id": "NPU-N-SAMPLE-2026-06-item05",
+   "title": "ITEM 4. NOISE, EVENT VENUE NEAR THE PARK",
+   "text": "Complaint of amplified noise near Piedmont Park during festival\nload-out reaching residents along the Beltline. Mr. Okafor asked for\ndecibel logging. Chair Whitfield will request data from the venue.\nNo action taken.",
+   "prompt": "# SEMIOTIC TRANSLATOR — NPU UNIT EXTRACTION\n\nYou are translating one agenda item from Atlanta Neighborhood Planning Unit\nminutes into a spatial relation program. You are the translator, not the\ncartographer: YOU NEVER EMIT COORDINATES, DISTANCES, RADII, OR BOUNDING\nBOXES. Geometry belongs to a deterministic compiler downstream. Your job is\nvernacular: \"the old Sears building\" is Ponce City Market; \"the trail\" in an\nEastside NPU is the Beltline; a speaker's \"our corner\" is a territorial claim.\n\nClosed vocabularies — you may only use these values:\n- anchor: ponce-city-market, krog-street-market, piedmont-park, five-points-station, mercedes-benz-stadium, fourth-ward-park, north-avenue, ponce-de-leon-ave, beltline-eastside\n- relation: at, in-front-of, behind, near, across-from, along, between\n\nIf a place is named that matches no anchor, set \"anchor\": null and copy the\nsurface form exactly into \"surface\" — an unresolved mention is data; a\nguessed one is contamination. Do not invent mentions. Do not resolve a\nvernacular name unless the cultural reading is confident.\n\nUNIT:\nITEM 4. NOISE, EVENT VENUE NEAR THE PARK\nComplaint of amplified noise near Piedmont Park during festival\nload-out reaching residents along the Beltline. Mr. Okafor asked for\ndecibel logging. Chair Whitfield will request data from the venue.\nNo action taken.\n\nRespond with ONLY a JSON object, no prose, no fences:\n\n{\n  \"mentions\": [\n    { \"surface\": \"exact phrase from the text\",\n      \"anchor\": \"one of the closed anchor list, or null\",\n      \"relation\": \"one of the closed relation list\",\n      \"topic\": \"parking|cycling|noise|traffic|safety|density|trees|general\" }\n  ],\n  \"claims\": {\n    \"possessive\": [\"each span claimed with our/my/we-keep, verbatim\"],\n    \"comention\": [[\"anchorA\",\"anchorB\"]]\n  },\n  \"stance\": \"approve|deny|defer|withdraw|null — the item's outcome if stated\"\n}\n"
+  },
+  {
+   "id": "NPU-N-SAMPLE-2026-06-item06",
+   "title": "ITEM 5. Z-26-041 REZONING, NORTH AVENUE FRONTAGE",
+   "text": "Application Z-26-041 proposes five stories on the North Avenue\nfrontage near Ponce City Market with reduced parking minimums.\nMs. Ruiz spoke in support citing transit. Mr. Haynes opposed, citing\ndensity and shadow on our community garden. Motion to defer for a\ntraffic study carried. Deferred.",
+   "prompt": "# SEMIOTIC TRANSLATOR — NPU UNIT EXTRACTION\n\nYou are translating one agenda item from Atlanta Neighborhood Planning Unit\nminutes into a spatial relation program. You are the translator, not the\ncartographer: YOU NEVER EMIT COORDINATES, DISTANCES, RADII, OR BOUNDING\nBOXES. Geometry belongs to a deterministic compiler downstream. Your job is\nvernacular: \"the old Sears building\" is Ponce City Market; \"the trail\" in an\nEastside NPU is the Beltline; a speaker's \"our corner\" is a territorial claim.\n\nClosed vocabularies — you may only use these values:\n- anchor: ponce-city-market, krog-street-market, piedmont-park, five-points-station, mercedes-benz-stadium, fourth-ward-park, north-avenue, ponce-de-leon-ave, beltline-eastside\n- relation: at, in-front-of, behind, near, across-from, along, between\n\nIf a place is named that matches no anchor, set \"anchor\": null and copy the\nsurface form exactly into \"surface\" — an unresolved mention is data; a\nguessed one is contamination. Do not invent mentions. Do not resolve a\nvernacular name unless the cultural reading is confident.\n\nUNIT:\nITEM 5. Z-26-041 REZONING, NORTH AVENUE FRONTAGE\nApplication Z-26-041 proposes five stories on the North Avenue\nfrontage near Ponce City Market with reduced parking minimums.\nMs. Ruiz spoke in support citing transit. Mr. Haynes opposed, citing\ndensity and shadow on our community garden. Motion to defer for a\ntraffic study carried. Deferred.\n\nRespond with ONLY a JSON object, no prose, no fences:\n\n{\n  \"mentions\": [\n    { \"surface\": \"exact phrase from the text\",\n      \"anchor\": \"one of the closed anchor list, or null\",\n      \"relation\": \"one of the closed relation list\",\n      \"topic\": \"parking|cycling|noise|traffic|safety|density|trees|general\" }\n  ],\n  \"claims\": {\n    \"possessive\": [\"each span claimed with our/my/we-keep, verbatim\"],\n    \"comention\": [[\"anchorA\",\"anchorB\"]]\n  },\n  \"stance\": \"approve|deny|defer|withdraw|null — the item's outcome if stated\"\n}\n"
+  }
+ ]
+}

@@ -1,0 +1,1772 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>COMMON GROUND v4 · void cartography</title>
+<meta name="description" content="Collaborative generative mapping. The Oracle deals, the Void consumes, the ledger keeps the census of dead places.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+/* ============ COMMON GROUND v4 · POML v2 ============ */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+:root{ --ink:#000; --paper:#fff;
+  --teal:#19e6c8; --amber:#ffd23f; --red:#ff2e2e; --blue:#3b82f6; }
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;border-radius:0!important}
+html,body{height:100%;width:100%;overflow:hidden;background:var(--paper)}
+body{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;color:var(--ink);position:fixed;inset:0;
+  -webkit-user-select:none;user-select:none}
+input{-webkit-user-select:text;user-select:text}
+button,input{font:inherit;color:inherit;background:var(--paper);border:1px solid var(--ink)}
+button{cursor:pointer;padding:8px 10px;letter-spacing:.06em}
+button:active{background:var(--ink);color:var(--paper)}
+#map{position:absolute;inset:0;z-index:1;background:var(--paper)}
+.leaflet-container{font-family:inherit;background:var(--paper)}
+.leaflet-control-attribution{font-size:9px;background:rgba(255,255,255,.85)!important}
+body.mind .leaflet-tile-pane{opacity:0}
+body.blind .namelab, body.blind .utt{display:none!important}
+
+#topbar{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;
+  padding:max(8px,env(safe-area-inset-top)) 8px 0 8px;overflow-x:auto;scrollbar-width:none}
+#topbar::-webkit-scrollbar{display:none}
+.badge{border:1px solid var(--ink);background:var(--paper);font-size:10px;font-weight:700;
+  letter-spacing:.14em;padding:8px 10px;display:flex;align-items:center;white-space:nowrap;flex:none}
+#roomchip{border-left:none;font-weight:400}
+#roomchip b{font-weight:700;margin-left:5px}
+.tbtn{border:1px solid var(--ink);background:var(--paper);font-size:10px;font-weight:600;
+  letter-spacing:.08em;padding:8px 9px;margin-left:-1px;flex:none;white-space:nowrap}
+.tbtn.on{background:var(--ink);color:var(--paper)}
+#oraclebtn{background:var(--ink);color:var(--paper);font-weight:700}
+#oraclebtn:active{background:var(--red);border-color:var(--red)}
+#walkbtn.on{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+#mindbtn.blind{background:var(--red);border-color:var(--red);color:var(--paper)}
+
+#dock{position:absolute;left:0;right:0;bottom:0;z-index:20;
+  padding:0 8px calc(max(8px,env(safe-area-inset-bottom))) 8px;display:flex;flex-direction:column}
+#layerbar{display:flex;overflow-x:auto;scrollbar-width:none;margin-bottom:-1px}
+#layerbar::-webkit-scrollbar{display:none}
+.lychip{flex:none;border:1px solid var(--ink);margin-left:-1px;background:var(--paper);
+  font-size:9px;font-weight:600;letter-spacing:.1em;padding:6px 9px}
+.lychip:first-child{margin-left:0}
+.lychip.act{background:var(--ink);color:var(--paper)}
+.lychip.hid{text-decoration:line-through;opacity:.5}
+#palette{display:none;background:var(--paper);border:1px solid var(--ink);border-bottom:none;
+  overflow-x:auto;white-space:nowrap;padding:6px;scrollbar-width:none}
+#palette::-webkit-scrollbar{display:none}
+#palette.show{display:block}
+.pal{display:inline-flex;flex-direction:column;align-items:center;border:1px solid var(--ink);
+  margin-right:6px;padding:4px 6px;background:var(--paper);vertical-align:top}
+.pal svg{width:28px;height:28px;display:block}
+.pal span{font-size:8px;letter-spacing:.08em;margin-top:2px}
+.pal.sel{background:var(--ink);color:var(--paper)}
+.pal.sel svg *{stroke:#fff}
+#drawbar,#carrybar{display:none;margin-bottom:-1px}
+#drawbar.show,#carrybar.show{display:flex}
+#drawbar button,#carrybar button{flex:1;margin-left:-1px;font-size:10px;font-weight:700;letter-spacing:.1em;padding:10px 2px}
+#drawbar button:first-child,#carrybar button:first-child{margin-left:0}
+#drawbar .done{background:var(--ink);color:var(--paper)}
+#carrybar .carrymsg{flex:2.2;border:1px solid var(--ink);display:flex;align-items:center;justify-content:center;
+  font-size:9px;letter-spacing:.1em;background:var(--ink);color:var(--paper)}
+#namebar{display:none;margin-bottom:-1px}
+#namebar.show{display:flex}
+#namebar input{flex:1;border:1px solid var(--ink);padding:10px;font-size:16px;outline:none;min-width:0;text-transform:uppercase}
+#namebar button{margin-left:-1px;font-size:10px;font-weight:700;width:64px}
+#toolrow{display:flex;overflow-x:auto;scrollbar-width:none}
+#toolrow::-webkit-scrollbar{display:none}
+.tool{flex:none;border:1px solid var(--ink);margin-left:-1px;background:var(--paper);
+  font-size:10px;font-weight:600;letter-spacing:.06em;padding:8px 9px;display:flex;align-items:center;gap:5px}
+.tool:first-child{margin-left:0}
+.tool svg{width:16px;height:16px;display:block}
+.tool.armed{background:var(--ink);color:var(--paper)}
+.tool.armed svg *{stroke:#fff}
+#inputrow{display:flex;margin-top:-1px}
+#sayinput{flex:1;border:1px solid var(--ink);padding:10px;font-size:16px;outline:none;min-width:0}
+#sayinput::placeholder{color:#000;opacity:.35}
+#sayinput.cardmode{background:var(--ink);color:var(--paper)}
+#sayinput.cardmode::placeholder{color:#fff;opacity:.6}
+#undobtn,#micbtn,#sendbtn{border:1px solid var(--ink);margin-left:-1px;width:50px;font-weight:700;font-size:10px}
+#micbtn.live{background:var(--red);border-color:var(--red);color:var(--paper);animation:micpulse 1.1s steps(2) infinite}
+@keyframes micpulse{50%{background:var(--paper);color:var(--red)}}
+#hint{position:absolute;left:50%;transform:translateX(-50%);bottom:172px;z-index:19;
+  background:var(--ink);color:var(--paper);font-size:10px;letter-spacing:.1em;padding:6px 10px;
+  display:none;white-space:nowrap;max-width:94vw;overflow:hidden;text-overflow:ellipsis}
+#hint.show{display:block}
+
+#sheet{position:absolute;left:8px;right:8px;bottom:0;z-index:26;background:var(--paper);
+  border:1px solid var(--ink);transform:translateY(120%);transition:transform .18s;
+  padding:8px 8px calc(max(8px,env(safe-area-inset-bottom)))}
+#sheet.show{transform:none}
+#sheethead{display:flex;align-items:center;gap:7px;font-size:10px;margin-bottom:7px}
+#sheethead svg{width:22px;height:22px;flex:none}
+#sheethead .own{font-weight:700}
+#sheethead .what{letter-spacing:.1em;opacity:.6;margin:0 2px}
+#sheethead .nm{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+#sheetrow{display:flex}
+#sheetrow button{flex:1;margin-left:-1px;font-size:9.5px;font-weight:700;letter-spacing:.06em;padding:10px 2px}
+#sheetrow button:first-child{margin-left:0}
+#sheetrow button:disabled{opacity:.3}
+
+/* oracle card */
+#cardov{position:absolute;left:8px;right:8px;bottom:0;z-index:30;background:var(--paper);
+  border:2px solid var(--ink);transform:translateY(130%);transition:transform .2s;
+  padding:12px 12px calc(max(10px,env(safe-area-inset-bottom)))}
+#cardov.show{transform:none}
+#cardov .chead{font-size:10px;font-weight:700;letter-spacing:.3em;display:flex;justify-content:space-between}
+#cardov .ctext{font-size:14px;font-weight:700;line-height:1.5;letter-spacing:.04em;margin:10px 0 6px}
+#cardov .ctag{font-size:9px;letter-spacing:.14em;padding:3px 6px;border:1px solid var(--ink);display:inline-block}
+#cardov .ctag.mand{background:var(--red);border-color:var(--red);color:var(--paper)}
+#cardov .cbtns{display:flex;margin-top:10px}
+#cardov .cbtns button{flex:1;margin-left:-1px;font-size:10px;font-weight:700;padding:11px 2px}
+#cardov .cbtns button:first-child{margin-left:0}
+
+#ledger{position:absolute;left:0;right:0;bottom:0;height:46vh;z-index:25;
+  background:var(--paper);border-top:1px solid var(--ink);transform:translateY(105%);
+  transition:transform .22s;display:flex;flex-direction:column}
+#ledger.open{transform:none}
+#ledhead{border-bottom:1px solid var(--ink);padding:8px 10px;display:flex;align-items:center;gap:10px}
+#ledhead .badge{border:none;padding:0;flex:none}
+#inv{font-size:9px;letter-spacing:.06em;display:flex;gap:8px;flex-wrap:wrap;flex:1}
+#inv b{font-weight:700}
+#inv .ok{color:var(--teal)} #inv .bad{color:var(--red)} #inv .vd{color:var(--red)}
+#ledclose{flex:none;padding:5px 9px;font-size:10px;font-weight:700}
+#ledlist{flex:1;overflow-y:auto;overscroll-behavior:contain}
+.lline{border-bottom:1px solid #000;padding:7px 10px;font-size:10px;line-height:1.5;cursor:pointer;display:flex;gap:7px;align-items:flex-start}
+.lline svg{width:18px;height:18px;flex:none;margin-top:1px}
+.lline .who{font-weight:700}
+.lline .verb{letter-spacing:.1em;opacity:.55;margin:0 4px}
+.lline.hot{background:var(--ink);color:var(--paper)}
+.lline.demise{background:#000;color:#fff}
+.lline.demise .verb{opacity:.7}
+.lline .gone{text-decoration:line-through;opacity:.5}
+
+#radar{position:absolute;left:8px;bottom:196px;z-index:18;border:1px solid var(--ink);
+  background:var(--paper);display:block}
+#radar.hide{display:none}
+
+.overlay{position:absolute;inset:0;z-index:40;background:rgba(255,255,255,.5);
+  display:none;align-items:flex-end;justify-content:center}
+.overlay.show{display:flex}
+.overlay.centered{align-items:center;background:rgba(255,255,255,.94);padding:20px}
+.card{background:var(--paper);border:1px solid var(--ink);width:min(420px,100vw);padding:16px;
+  max-height:70vh;overflow-y:auto}
+.overlay.centered .card{width:min(380px,92vw);max-height:86vh}
+.card h1{font-size:13px;letter-spacing:.2em;font-weight:700;margin-bottom:2px}
+.card .sub{font-size:10px;letter-spacing:.06em;opacity:.7;margin-bottom:14px}
+.frow{display:flex;margin-top:8px}
+.frow input{flex:1;padding:10px;min-width:0;font-size:16px}
+.frow button{margin-left:-1px;font-weight:700;font-size:10px}
+.wide{width:100%;margin-top:10px;font-weight:700;font-size:11px;letter-spacing:.14em;padding:12px}
+.wide.prime{background:var(--ink);color:var(--paper)}
+.rule{border-top:1px solid var(--ink);margin:14px 0 4px}
+.note{font-size:9px;letter-spacing:.05em;opacity:.65;margin-top:8px;line-height:1.6}
+#qrbox{display:flex;justify-content:center;margin:12px 0}
+#qrbox img,#qrbox canvas{border:1px solid var(--ink);padding:8px;background:#fff}
+#qrcode-text{text-align:center;font-size:16px;font-weight:700;letter-spacing:.3em}
+#theorytext{font-size:10px;line-height:1.65;white-space:pre-wrap}
+#theorytext b{letter-spacing:.14em}
+
+.gm{background:none;border:none}
+.utt{background:var(--paper);border:1px solid var(--ink);border-left:4px solid var(--ink);
+  padding:5px 7px 5px 6px;line-height:1.4;max-width:200px;width:max-content;
+  box-shadow:3px 3px 0 rgba(0,0,0,.18);display:flex;gap:6px;align-items:flex-start}
+.utt svg{flex:none;margin-top:1px}
+.utt .u-who{display:block;font-weight:700;letter-spacing:.12em;opacity:.65}
+.reveal{animation:rv .5s steps(5) backwards}
+@keyframes rv{from{opacity:0;transform:scale(.2)}}
+.pic{border:1px solid var(--ink);background:#fff;padding:3px;box-shadow:3px 3px 0 rgba(0,0,0,.18)}
+.pic img{display:block;image-rendering:pixelated}
+.pres{width:30px;height:30px;border:2px solid var(--ink);background:var(--paper);
+  display:flex;align-items:center;justify-content:center}
+.pres svg{width:24px;height:24px}
+.pres.mine{outline:2px solid var(--ink);outline-offset:2px}
+.namelab{background:var(--paper);border:1px solid var(--ink);color:var(--ink);
+  font-family:"IBM Plex Mono",monospace;font-size:9px;font-weight:700;letter-spacing:.14em;
+  padding:2px 5px;box-shadow:none;white-space:nowrap}
+.namelab::before{display:none}
+.dlab{background:none;border:none;box-shadow:none;font-size:10px;font-weight:700;letter-spacing:.3em;opacity:.85}
+.voidlab{background:#000;border:1px solid #000;color:#fff;font-size:8px;letter-spacing:.14em;
+  padding:2px 5px;box-shadow:none;white-space:nowrap}
+.voidlab::before{display:none}
+.vdot{width:10px;height:10px;border:2px solid #000;background:#fff}
+.carrying{opacity:.45;filter:grayscale(1)}
+.ruin{filter:grayscale(1) contrast(.7);opacity:.38}
+.flash{animation:fl .9s steps(6)}
+@keyframes fl{0%,40%{filter:invert(1)}}
+#toast{position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:60;
+  background:var(--ink);color:var(--paper);font-size:10px;letter-spacing:.12em;
+  padding:8px 12px;display:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="topbar">
+  <div class="badge">COMMON GROUND</div>
+  <div class="badge" id="roomchip">GRD <b id="roomcode">&mdash;</b></div>
+  <button class="tbtn" id="oraclebtn">ORACLE</button>
+  <button class="tbtn" id="gridbtn">GRID</button>
+  <button class="tbtn" id="mindbtn">MIND</button>
+  <button class="tbtn on" id="radarbtn">RADAR</button>
+  <button class="tbtn" id="walkbtn">WALK</button>
+  <button class="tbtn" id="qrbtn">QR</button>
+  <button class="tbtn" id="ledbtn">LOG</button>
+  <button class="tbtn" id="thbtn">THEORY</button>
+</div>
+
+<div id="hint"></div>
+<canvas id="radar" width="136" height="136"></canvas>
+
+<div id="sheet">
+  <div id="sheethead">
+    <span id="sh-av"></span>
+    <span class="own" id="sh-own"></span>
+    <span class="what" id="sh-what"></span>
+    <span class="nm" id="sh-nm"></span>
+    <button class="tbtn" id="sh-close">X</button>
+  </div>
+  <div id="sheetrow">
+    <button id="sh-move">MOVE</button>
+    <button id="sh-shrink">SIZE&minus;</button>
+    <button id="sh-grow">SIZE+</button>
+    <button id="sh-dup">DUP</button>
+    <button id="sh-ann">ANNOTATE</button>
+    <button id="sh-strike">STRIKE</button>
+  </div>
+</div>
+
+<div id="cardov">
+  <div class="chead"><span>THE ORACLE</span><span id="c-no"></span></div>
+  <div class="ctext" id="c-text"></div>
+  <span class="ctag" id="c-tag"></span>
+  <div class="cbtns">
+    <button id="c-ok">SO BE IT</button>
+  </div>
+</div>
+
+<div id="dock">
+  <div id="layerbar"></div>
+  <div id="palette"></div>
+  <div id="carrybar">
+    <div class="carrymsg" id="carrymsg">CARRYING &mdash; TAP THE MAP TO DROP</div>
+    <button id="carrycancel">CANCEL</button>
+  </div>
+  <div id="drawbar">
+    <button id="dundo">UNDO PT</button>
+    <button id="dcancel">CANCEL</button>
+    <button id="ddone" class="done">DONE</button>
+  </div>
+  <div id="namebar">
+    <input id="nameel" maxlength="24" placeholder="NAME IT (OPTIONAL)">
+    <button id="nameok">SET</button>
+    <button id="nameskip">SKIP</button>
+  </div>
+  <div id="toolrow"></div>
+  <div id="inputrow">
+    <input id="sayinput" autocomplete="off" placeholder="speak or type &mdash; it lands at your here">
+    <button id="undobtn">UNDO</button>
+    <button id="micbtn">MIC</button>
+    <button id="sendbtn">SAY</button>
+  </div>
+</div>
+
+<div id="ledger">
+  <div id="ledhead">
+    <div class="badge">LEDGER</div>
+    <div id="inv">
+      <span>P <b id="ct-PATH">0</b></span><span>E <b id="ct-EDGE">0</b></span>
+      <span>D <b id="ct-DIST">0</b></span><span>N <b id="ct-NODE">0</b></span>
+      <span>L <b id="ct-LAND">0</b></span>
+      <span class="vd">VOID <b id="ct-VOID">0</b></span>
+      <span>EV <b id="inv-e">0</b></span>
+      <span>FOLD <b id="inv-f" class="ok">OK</b></span>
+    </div>
+    <button id="ledclose">CLOSE</button>
+  </div>
+  <div id="ledlist"></div>
+</div>
+
+<div class="overlay centered show" id="joinov">
+  <div class="card">
+    <h1>COMMON GROUND v4</h1>
+    <div class="sub">void cartography &middot; the oracle deals, the void consumes, the ledger keeps the census</div>
+    <div class="frow"><input id="nameinput" maxlength="14" placeholder="YOUR NAME"></div>
+    <button class="wide prime" id="hostbtn">OPEN NEW GROUND</button>
+    <div class="rule"></div>
+    <div class="frow">
+      <input id="codeinput" maxlength="12" placeholder="GROUND CODE" style="text-transform:uppercase">
+      <button id="joinbtn">JOIN</button>
+    </div>
+    <div class="note">Build the image of the city together, then press ORACLE: the deck is fixed at the ground's birth and never shuffled &mdash; a draw may take YOUR piece or hand you a mandate (defensive edges, evacuations, eulogies), and one card lets you write a new card into the bottom of the deck. What the Void takes stays as ruin, journaled with name and population. LAYERS open imagined dimensions over the real map; GENERATE grows procedural settlements with their own toponyms. Glue real ephemera over the loss with PHOTO.</div>
+  </div>
+</div>
+
+<div class="overlay" id="qrov">
+  <div class="card">
+    <h1>SCAN TO STAND HERE</h1>
+    <div class="sub">one scan = same ground, same ledger, same deck</div>
+    <div id="qrbox"></div>
+    <div id="qrcode-text">&mdash;</div>
+    <div class="note" id="qrnote"></div>
+    <button class="wide" data-close="qrov">CLOSE</button>
+  </div>
+</div>
+
+<div class="overlay" id="thov">
+  <div class="card">
+    <h1>THEORY OF THE PROGRAM</h1>
+    <div class="sub">the instrument states its own argument</div>
+    <div id="theorytext"></div>
+    <button class="wide" data-close="thov">CLOSE</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="picfile" accept="image/*" style="display:none">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* =====================================================================
+   COMMON GROUND v4 — VOID CARTOGRAPHY
+   the ledger is the census; the deck is the software; you are the hardware
+   ===================================================================== */
+'use strict';
+
+const GROUND_THEORY = Object.freeze({
+  claim:  'A living map is one the group keeps building while an algorithm keeps taking it away.',
+  lynch:  'five element types exhaust the mental map: PATH, EDGE, DISTRICT, NODE, LANDMARK',
+  oracle: 'the deck is fixed at the ground\u2019s birth, never shuffled; a draw is absolute; one card writes new cards',
+  voidr:  'the Void targets what the ledger loves — oldest, most-handled, largest, another mind\u2019s newest — so it cannot be isolated at the edges',
+  ruin:   'what the Void takes stays as ruin: journaled by name and population, never resurrected',
+  layers: 'imagined dimensions stack over the real; each deposit belongs to a world',
+  hands:  'anyone may move or resize any piece; every manipulation is attributed; only striking is own-only'
+});
+
+const CAP = Object.freeze({
+  EVENTS: 4096, VERTS: 512, PEERS: 12,
+  GLYPHS_PER_SAY: 4, PIC_PX: 120, UTT_CHARS: 140, LEDGER_LINES: 400, NAME_CHARS: 24,
+  SCALE_MIN: .4, SCALE_MAX: 3, VOID_BLOBS: 4
+});
+const ACCENTS = ['#19e6c8', '#ffd23f', '#ff2e2e', '#3b82f6'];
+
+/* ---------------------------------------------------------------
+   SVG GLYPH ENGINE (unchanged from v3)
+---------------------------------------------------------------- */
+function svgOpen(size){ return '<svg class="gicon" width="' + size + '" height="' + size + '" viewBox="0 0 48 48" fill="none" stroke="#000" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">'; }
+function el(t, attrs){ let s = '<' + t; for (const k in attrs) s += ' ' + k + '="' + attrs[k] + '"'; return s + '/>'; }
+
+const GDEF = {
+  tree: a => [el('polygon',{points:'24,6 38,26 10,26',fill:a}), el('rect',{x:21,y:26,width:6,height:14,fill:'#000',stroke:'none'})],
+  house: a => [el('rect',{x:10,y:22,width:28,height:18}), el('polygon',{points:'24,6 42,22 6,22',fill:a}), el('rect',{x:20,y:30,width:8,height:10,fill:'#000',stroke:'none'})],
+  water: a => [el('path',{d:'M4 16q5 -7 10 0t10 0t10 0t10 0',stroke:a,'stroke-width':3}), el('path',{d:'M4 26q5 -7 10 0t10 0t10 0t10 0',stroke:a,'stroke-width':3}), el('path',{d:'M4 36q5 -7 10 0t10 0t10 0t10 0',stroke:a,'stroke-width':3})],
+  fire: a => [el('polygon',{points:'24,4 34,20 30,22 38,34 10,34 18,20 14,18',fill:a}), el('circle',{cx:24,cy:30,r:4,fill:'#000',stroke:'none'})],
+  danger: a => [el('polygon',{points:'24,4 44,40 4,40',fill:a,'stroke-width':2.4}), el('line',{x1:24,y1:15,x2:24,y2:29}), el('circle',{cx:24,cy:35,r:2.2,fill:'#000',stroke:'none'})],
+  food: a => [el('circle',{cx:24,cy:24,r:13}), el('circle',{cx:24,cy:24,r:8,fill:a,stroke:'none'}), el('line',{x1:4,y1:10,x2:4,y2:26}), el('line',{x1:44,y1:10,x2:44,y2:26})],
+  star: a => [el('polygon',{points:'24,7 28.1,18.3 40.2,18.8 30.7,26.2 34,37.8 24,31 14,37.8 17.3,26.2 7.8,18.8 19.9,18.3',fill:a})],
+  heart: a => [el('path',{d:'M24 40C2 24 8 6 24 16C40 6 46 24 24 40',fill:a})],
+  arrow: a => [el('line',{x1:8,y1:40,x2:36,y2:12,'stroke-width':3}), el('polygon',{points:'40,8 40,24 24,8',fill:a})],
+  car: a => [el('rect',{x:6,y:20,width:36,height:12,fill:a}), el('rect',{x:14,y:12,width:20,height:8}), el('circle',{cx:15,cy:34,r:5,fill:'#000',stroke:'none'}), el('circle',{cx:33,cy:34,r:5,fill:'#000',stroke:'none'})],
+  bridge: a => [el('line',{x1:4,y1:30,x2:44,y2:30,'stroke-width':2.6}), el('path',{d:'M10 30A14 14 0 0 1 38 30','stroke-width':2.6}), el('line',{x1:10,y1:30,x2:10,y2:40}), el('line',{x1:38,y1:30,x2:38,y2:40}), el('line',{x1:4,y1:40,x2:44,y2:40,stroke:a})],
+  bird: a => [el('path',{d:'M6 26Q15 12 24 26','stroke-width':2.6}), el('path',{d:'M24 26Q33 12 42 26','stroke-width':2.6}), el('circle',{cx:24,cy:30,r:3,fill:a,stroke:'none'})],
+  boat: a => [el('polygon',{points:'6,30 42,30 34,40 14,40',fill:'#000',stroke:'none'}), el('polygon',{points:'24,6 24,28 38,28',fill:a})],
+  camp: a => [el('polygon',{points:'24,8 42,40 6,40',fill:a}), el('polygon',{points:'24,22 31,40 17,40',fill:'#000',stroke:'none'})],
+  gate: a => [el('line',{x1:10,y1:8,x2:10,y2:40,'stroke-width':2.6}), el('line',{x1:38,y1:8,x2:38,y2:40,'stroke-width':2.6}), el('line',{x1:10,y1:14,x2:38,y2:14,stroke:a}), el('line',{x1:10,y1:24,x2:38,y2:24,stroke:a}), el('line',{x1:10,y1:34,x2:38,y2:34,stroke:a})],
+  tower: a => [el('rect',{x:18,y:10,width:12,height:30,fill:a}), el('line',{x1:14,y1:10,x2:34,y2:10}), el('rect',{x:16,y:6,width:4,height:4,fill:'#000',stroke:'none'}), el('rect',{x:22,y:6,width:4,height:4,fill:'#000',stroke:'none'}), el('rect',{x:28,y:6,width:4,height:4,fill:'#000',stroke:'none'})],
+  road: a => [el('line',{x1:10,y1:44,x2:20,y2:4,'stroke-width':3}), el('line',{x1:38,y1:44,x2:28,y2:4,'stroke-width':3}), el('line',{x1:24,y1:44,x2:24,y2:4,stroke:a,'stroke-dasharray':'4 5'})],
+  dog: a => [el('rect',{x:10,y:20,width:24,height:12,fill:a}), el('rect',{x:30,y:12,width:10,height:10}), el('line',{x1:12,y1:32,x2:12,y2:42,'stroke-width':2.4}), el('line',{x1:32,y1:32,x2:32,y2:42,'stroke-width':2.4}), el('line',{x1:10,y1:22,x2:4,y2:14,'stroke-width':2.4})],
+  person: a => [el('circle',{cx:24,cy:12,r:6,fill:a}), el('line',{x1:24,y1:18,x2:24,y2:32,'stroke-width':2.6}), el('line',{x1:12,y1:24,x2:36,y2:24,'stroke-width':2.6}), el('line',{x1:24,y1:32,x2:14,y2:44,'stroke-width':2.6}), el('line',{x1:24,y1:32,x2:34,y2:44,'stroke-width':2.6})],
+  flag: a => [el('line',{x1:14,y1:4,x2:14,y2:44,'stroke-width':2.6}), el('polygon',{points:'14,6 38,12 14,20',fill:a})],
+  coffee: a => [el('rect',{x:10,y:18,width:22,height:18,fill:a}), el('path',{d:'M32 19a6 6 0 0 1 0 12'}), el('line',{x1:16,y1:14,x2:17,y2:8,'stroke-width':1.6}), el('line',{x1:24,y1:14,x2:25,y2:8,'stroke-width':1.6})],
+  music: a => [el('line',{x1:20,y1:36,x2:20,y2:8,'stroke-width':2.6}), el('line',{x1:36,y1:32,x2:36,y2:6,'stroke-width':2.6}), el('line',{x1:20,y1:8,x2:36,y2:6,'stroke-width':2.6}), el('circle',{cx:15,cy:37,r:5,fill:a}), el('circle',{cx:31,cy:33,r:5,fill:a})],
+  book: a => [el('path',{d:'M24 10Q12 5 4 10L4 38Q12 33 24 38Q36 33 44 38L44 10Q36 5 24 10','stroke-width':2.4}), el('line',{x1:24,y1:10,x2:24,y2:38}), el('line',{x1:9,y1:16,x2:19,y2:15,stroke:a}), el('line',{x1:9,y1:22,x2:19,y2:21,stroke:a})],
+  phone: a => [el('rect',{x:15,y:4,width:18,height:40,fill:a}), el('rect',{x:18,y:8,width:12,height:26,fill:'#000',stroke:'none'})],
+  sun: a => [el('circle',{cx:24,cy:24,r:9,fill:a}), el('line',{x1:37,y1:24,x2:43,y2:24}), el('line',{x1:33.2,y1:33.2,x2:37.4,y2:37.4}), el('line',{x1:24,y1:37,x2:24,y2:43}), el('line',{x1:14.8,y1:33.2,x2:10.6,y2:37.4}), el('line',{x1:11,y1:24,x2:5,y2:24}), el('line',{x1:14.8,y1:14.8,x2:10.6,y2:10.6}), el('line',{x1:24,y1:11,x2:24,y2:5}), el('line',{x1:33.2,y1:14.8,x2:37.4,y2:10.6})],
+  moon: a => [el('path',{d:'M30 5A16 16 0 1 0 43 30A12 12 0 1 1 30 5',fill:a})],
+  rain: a => [el('path',{d:'M10 16A8 8 0 0 1 26 14A7 7 0 0 1 38 16','stroke-width':2.4}), el('line',{x1:8,y1:16,x2:40,y2:16,'stroke-width':2.4}), el('line',{x1:12,y1:22,x2:9,y2:34,stroke:a}), el('line',{x1:20,y1:22,x2:17,y2:34,stroke:a}), el('line',{x1:28,y1:22,x2:25,y2:34,stroke:a}), el('line',{x1:36,y1:22,x2:33,y2:34,stroke:a})],
+  mountain: a => [el('polygon',{points:'4,40 18,12 30,32 36,20 44,40',fill:a}), el('polygon',{points:'18,12 22,20 14,20',fill:'#000',stroke:'none'})],
+  flower: a => [el('line',{x1:24,y1:26,x2:24,y2:44}), el('circle',{cx:24,cy:10,r:5.5,fill:a,stroke:'none'}), el('circle',{cx:31.6,cy:15.5,r:5.5,fill:a,stroke:'none'}), el('circle',{cx:28.7,cy:24.5,r:5.5,fill:a,stroke:'none'}), el('circle',{cx:19.3,cy:24.5,r:5.5,fill:a,stroke:'none'}), el('circle',{cx:16.4,cy:15.5,r:5.5,fill:a,stroke:'none'}), el('circle',{cx:24,cy:18,r:4,fill:'#000',stroke:'none'})],
+  fish: a => [el('ellipse',{cx:21,cy:24,rx:14,ry:8,fill:a}), el('polygon',{points:'34,24 44,16 44,32'}), el('circle',{cx:13,cy:22,r:1.8,fill:'#000',stroke:'none'})],
+  key: a => [el('circle',{cx:15,cy:16,r:8,'stroke-width':2.6}), el('line',{x1:20,y1:22,x2:38,y2:40,'stroke-width':2.6}), el('line',{x1:32,y1:34,x2:38,y2:28,'stroke-width':2.6}), el('line',{x1:36,y1:38,x2:42,y2:32,'stroke-width':2.6}), el('circle',{cx:15,cy:16,r:3.5,fill:a,stroke:'none'})],
+  door: a => [el('rect',{x:14,y:6,width:20,height:38,fill:a}), el('circle',{cx:29,cy:26,r:2.2,fill:'#000',stroke:'none'})],
+  light: a => [el('circle',{cx:24,cy:18,r:10,fill:a}), el('rect',{x:20,y:28,width:8,height:6}), el('line',{x1:20,y1:38,x2:28,y2:38,'stroke-width':1.6})],
+  trash: a => [el('polygon',{points:'12,14 36,14 33,42 15,42',fill:a}), el('line',{x1:8,y1:14,x2:40,y2:14}), el('rect',{x:20,y:8,width:8,height:4}), el('line',{x1:20,y1:20,x2:20,y2:36,'stroke-width':1.8}), el('line',{x1:28,y1:20,x2:28,y2:36,'stroke-width':1.8})],
+  bench: a => [el('line',{x1:6,y1:26,x2:42,y2:26,'stroke-width':2.8}), el('line',{x1:6,y1:18,x2:42,y2:18,'stroke-width':2.8}), el('line',{x1:10,y1:26,x2:10,y2:40,'stroke-width':2.8}), el('line',{x1:38,y1:26,x2:38,y2:40,'stroke-width':2.8}), el('line',{x1:6,y1:22,x2:42,y2:22,stroke:a})],
+  ball: a => [el('circle',{cx:24,cy:24,r:15,fill:a}), el('path',{d:'M9 30A15 15 0 0 0 39 30'}), el('path',{d:'M9 18A15 15 0 0 1 39 18'})],
+  shop: a => [el('rect',{x:8,y:20,width:32,height:20}), el('polygon',{points:'6,20 42,20 38,10 10,10',fill:a}), el('rect',{x:26,y:28,width:10,height:12,fill:'#000',stroke:'none'}), el('rect',{x:12,y:26,width:9,height:8})],
+  help: a => [el('polygon',{points:'18,6 30,6 30,18 42,18 42,30 30,30 30,42 18,42 18,30 6,30 6,18 18,18',fill:a})],
+  money: a => [el('rect',{x:6,y:14,width:36,height:20,fill:a}), el('circle',{cx:24,cy:24,r:6}), el('line',{x1:24,y1:20,x2:24,y2:28,'stroke-width':1.8})],
+  work: a => [el('rect',{x:8,y:18,width:32,height:22,fill:a}), el('rect',{x:18,y:12,width:12,height:6}), el('line',{x1:8,y1:28,x2:40,y2:28})],
+  train: a => [el('rect',{x:10,y:8,width:28,height:26,fill:a}), el('rect',{x:14,y:12,width:20,height:8,fill:'#000',stroke:'none'}), el('circle',{cx:17,cy:39,r:4,fill:'#000',stroke:'none'}), el('circle',{cx:31,cy:39,r:4,fill:'#000',stroke:'none'}), el('line',{x1:12,y1:44,x2:20,y2:34,'stroke-width':2}), el('line',{x1:36,y1:44,x2:28,y2:34,'stroke-width':2})],
+  bike: a => [el('circle',{cx:12,cy:32,r:9,'stroke-width':2.4}), el('circle',{cx:36,cy:32,r:9,'stroke-width':2.4}), el('line',{x1:12,y1:32,x2:22,y2:16,stroke:a}), el('line',{x1:22,y1:16,x2:36,y2:32,stroke:a}), el('line',{x1:22,y1:16,x2:30,y2:16,stroke:a}), el('line',{x1:12,y1:32,x2:26,y2:32}), el('line',{x1:26,y1:32,x2:30,y2:16})],
+  ghost: a => [el('path',{d:'M11 40L11 20A13 13 0 0 1 37 20L37 40L32 34L28 40L24 34L20 40L16 34Z',fill:a}), el('circle',{cx:19,cy:20,r:2.2,fill:'#000',stroke:'none'}), el('circle',{cx:29,cy:20,r:2.2,fill:'#000',stroke:'none'})]
+};
+const ALIAS = {
+  trees:'tree', wood:'tree', woods:'tree', forest:'tree', park:'tree', oak:'tree', pine:'tree',
+  home:'house', houses:'house', building:'house', apartment:'house', cabin:'house',
+  river:'water', lake:'water', sea:'water', ocean:'water', creek:'water', pond:'water', pool:'water',
+  flame:'fire', burn:'fire', hot:'fire', grill:'fire',
+  warning:'danger', careful:'danger', hazard:'danger', beware:'danger', avoid:'danger',
+  eat:'food', pizza:'food', lunch:'food', dinner:'food', restaurant:'food', snack:'food', taco:'food', tacos:'food',
+  stars:'star', good:'star', best:'star', favorite:'star',
+  love:'heart', like:'heart', hearts:'heart',
+  there:'arrow', here:'arrow', go:'arrow', way:'arrow', point:'arrow',
+  cars:'car', truck:'car', parking:'car', drive:'car', bus:'car',
+  birds:'bird', crow:'bird', owl:'bird', hawk:'bird',
+  ship:'boat', boats:'boat', kayak:'boat', canoe:'boat',
+  tent:'camp', camping:'camp', tents:'camp',
+  fence:'gate', wall:'gate', gates:'gate',
+  antenna:'tower', castle:'tower', towers:'tower',
+  street:'road', trail:'road', roads:'road', route:'road', highway:'road', freeway:'road',
+  dogs:'dog', puppy:'dog', cat:'dog', cats:'dog',
+  people:'person', me:'person', you:'person', someone:'person', friend:'person', crowd:'person', us:'person',
+  flags:'flag', meet:'flag', meeting:'flag', start:'flag', finish:'flag', base:'flag',
+  cafe:'coffee', tea:'coffee', drink:'coffee', beer:'coffee', bar:'coffee',
+  song:'music', band:'music', concert:'music', radio:'music', sing:'music',
+  books:'book', library:'book', read:'book', school:'book', study:'book',
+  call:'phone', text:'phone', phones:'phone',
+  sunny:'sun', day:'sun', noon:'sun',
+  night:'moon', dark:'moon', midnight:'moon',
+  storm:'rain', wet:'rain', flood:'rain', cloud:'rain', clouds:'rain',
+  hill:'mountain', mountains:'mountain', hills:'mountain', rock:'mountain', cliff:'mountain',
+  flowers:'flower', garden:'flower', plant:'flower', rose:'flower',
+  fishing:'fish', trout:'fish',
+  keys:'key', lock:'key', locked:'key', secret:'key',
+  doors:'door', entrance:'door', exit:'door',
+  lamp:'light', lights:'light', bright:'light',
+  garbage:'trash', dump:'trash', junk:'trash', litter:'trash',
+  sit:'bench', rest:'bench', wait:'bench', benches:'bench',
+  play:'ball', game:'ball', soccer:'ball', football:'ball', basketball:'ball',
+  store:'shop', market:'shop', buy:'shop', shopping:'shop', mall:'shop',
+  doctor:'help', hospital:'help', hurt:'help', emergency:'help', medic:'help', aid:'help',
+  cash:'money', pay:'money', bank:'money', atm:'money', cost:'money',
+  office:'work', job:'work', desk:'work',
+  station:'train', metro:'train', subway:'train', trains:'train', tram:'train',
+  bikes:'bike', bicycle:'bike', cycle:'bike', scooter:'bike',
+  spooky:'ghost', ghosts:'ghost', haunted:'ghost', lost:'ghost', void:'ghost', ruin:'ghost', ruins:'ghost'
+};
+const STOP = new Set(('the a an and or but of to at on in is are was were be been am i we you they he she it my your our their its '+
+  'for with from as by so if then than very really just too also not no yes ok okay do does did done will would can could should '+
+  'have has had what when where who why how all any some more most over under up down let lets get got this that').split(' '));
+
+function hash32(str){ let h = 2166136261; for (let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+function seedSVG(word, a){
+  const h = hash32(word), n = 4 + (h % 4), pts = [];
+  for (let i = 0; i < n; i++){
+    const hh = hash32(word + ':' + i);
+    pts.push((8 + (hh % 32)) + ',' + (8 + ((hh >>> 8) % 32)));
+  }
+  const out = [el('polygon', { points: pts.join(' '), fill: a })];
+  if (h % 3 === 0){ const p0 = pts[0].split(','); out.push(el('circle', { cx: p0[0], cy: p0[1], r: 2.5, fill: '#000', stroke: 'none' })); }
+  return out;
+}
+function glyphSVG(word, accent, size){
+  const def = GDEF[word] || GDEF[ALIAS[word]];
+  const body = def ? def(accent) : seedSVG(word, accent);
+  return svgOpen(size || 34) + body.join('') + '</svg>';
+}
+function avatarSVG(name, colorIdx, size){
+  const a = ACCENTS[colorIdx % ACCENTS.length], h = hash32('av:' + name);
+  const heads = [
+    el('circle',{cx:24,cy:24,r:15,fill:a}),
+    el('rect',{x:10,y:10,width:28,height:28,fill:a}),
+    el('polygon',{points:'24,7 41,17 41,34 24,42 7,34 7,17',fill:a}),
+    el('path',{d:'M9 12H39V28A15 15 0 0 1 9 28Z',fill:a})
+  ];
+  const eyeY = 20 + (h >>> 3) % 4, ex1 = 17, ex2 = 31;
+  const eyes = [
+    el('circle',{cx:ex1,cy:eyeY,r:2.4,fill:'#000',stroke:'none'}) + el('circle',{cx:ex2,cy:eyeY,r:2.4,fill:'#000',stroke:'none'}),
+    el('line',{x1:ex1-3,y1:eyeY,x2:ex1+3,y2:eyeY,'stroke-width':2.6}) + el('line',{x1:ex2-3,y1:eyeY,x2:ex2+3,y2:eyeY,'stroke-width':2.6}),
+    el('circle',{cx:ex1,cy:eyeY,r:3.4}) + el('circle',{cx:ex2,cy:eyeY,r:3.4}),
+    el('rect',{x:ex1-2.5,y:eyeY-2.5,width:5,height:5,fill:'#000',stroke:'none'}) + el('rect',{x:ex2-2.5,y:eyeY-2.5,width:5,height:5,fill:'#000',stroke:'none'})
+  ];
+  const my = eyeY + 10;
+  const mouths = [
+    el('line',{x1:19,y1:my,x2:29,y2:my,'stroke-width':2.4}),
+    el('path',{d:'M18 ' + (my-2) + 'Q24 ' + (my+5) + ' 30 ' + (my-2)}),
+    el('rect',{x:20,y:my-2,width:8,height:4,fill:'#fff'}),
+    el('path',{d:'M18 ' + (my+2) + 'Q24 ' + (my-5) + ' 30 ' + (my+2)})
+  ];
+  return svgOpen(size || 24) + heads[h % 4] + eyes[(h >>> 5) % 4] + mouths[(h >>> 9) % 4] + '</svg>';
+}
+function extractWords(text){
+  const raw = text.toLowerCase().replace(/[^a-z0-9\s']/g, ' ').split(/\s+/).filter(Boolean);
+  const found = [], unknown = [];
+  for (const w of raw){
+    if (STOP.has(w) || w.length < 2) continue;
+    if (GDEF[w] || ALIAS[w]) { if (!found.includes(w)) found.push(w); }
+    else if (w.length >= 4 && !unknown.includes(w)) unknown.push(w);
+  }
+  while (found.length < CAP.GLYPHS_PER_SAY && unknown.length && found.length < 2) found.push(unknown.shift());
+  return found.slice(0, CAP.GLYPHS_PER_SAY);
+}
+
+/* ---------------------------------------------------------------
+   TOPONYM ENGINE + SETTLEMENT GENERATOR
+---------------------------------------------------------------- */
+const TOPO_A = ['KAL','VOR','MER','ASH','BEL','DUN','HOL','QUI','SOL','TAN','ULM','ZAR','ORR','WYN','FEN','CAS'];
+const TOPO_B = ['DORA','MOOR','WICK','FELL','GATE','HAVEN','MARSH','SPIRE','REACH','FORD','HOLLOW','CREST','BARROW','SHORE','VALE','ROW'];
+function toponym(seed){
+  const h = hash32('topo:' + seed);
+  return TOPO_A[h % 16] + ((h >>> 4) % 3 === 0 ? ' ' : '') + TOPO_B[(h >>> 8) % 16];
+}
+function destLL(ll, m, ang){
+  return [ll[0] + (Math.sin(ang) * m) / 111111,
+          ll[1] + (Math.cos(ang) * m) / (111111 * Math.cos(ll[0] * Math.PI / 180))];
+}
+function blobPts(centerLL, radiusM, seed, nv){
+  const n = nv || 9, pts = [];
+  for (let i = 0; i < n; i++){
+    const h = hash32(seed + ':' + i);
+    const ang = (i / n) * Math.PI * 2 + ((h % 40) - 20) * Math.PI / 180;
+    const r = radiusM * (.6 + (h >>> 8) % 100 / 125);
+    pts.push(destLL(centerLL, r, ang));
+  }
+  return pts;
+}
+
+/* ---------------------------------------------------------------
+   THE ORACLE DECK — fixed at birth, never shuffled, meta-mutable
+---------------------------------------------------------------- */
+const BASE_DECK = [
+  { kind:'void', pick:'oldest',  t:'THE VOID TAKES THE OLDEST STANDING PIECE' },
+  { kind:'void', pick:'handled', t:'THE VOID TAKES THE MOST-HANDLED PIECE' },
+  { kind:'void', pick:'other',   t:'THE VOID TAKES ANOTHER MIND\u2019S NEWEST DEPOSIT' },
+  { kind:'void', pick:'bigdist', t:'THE VOID TAKES THE LARGEST DISTRICT' },
+  { kind:'void', pick:'named',   t:'THE VOID TAKES A NAMED PIECE, CHOSEN BY FATE' },
+  { kind:'void', pick:'grow',    t:'THE VOID SPREADS \u2014 THE NEWEST VOID GROWS' },
+  { kind:'void', pick:'all',     t:'THE VOID TAKES ONE PIECE FROM EVERY MIND' },
+  { kind:'do', verb:'EDGE',  t:'DRAW A DEFENSIVE EDGE HOLDING BACK THE NEWEST VOID' },
+  { kind:'do', verb:'PATH',  t:'EVACUATE \u2014 DRAW A PATH OUT OF THE NEWEST VOID' },
+  { kind:'do', verb:'DIST',  t:'FOUND A DISTRICT INSIDE ANOTHER MIND\u2019S VOID' },
+  { kind:'do', verb:'LAND',  t:'RAISE A LANDMARK TO WHAT WAS LOST' },
+  { kind:'do', verb:'SAY',   t:'SPEAK A EULOGY OVER THE NEWEST VOID' },
+  { kind:'do', verb:'ANY',   t:'TWIN CITY \u2014 DUPLICATE ANOTHER MIND\u2019S PIECE AND CLAIM IT' },
+  { kind:'do', verb:'ANY',   t:'STRICT GRID \u2014 GENERATE A SETTLEMENT AT THE EDGE OF THE NEWEST VOID' },
+  { kind:'do', verb:'LAYER', t:'DIMENSION SHIFT \u2014 OPEN A NEW LAYER AND BUILD THERE' },
+  { kind:'meta', t:'WRITE A NEW CARD INTO THE DECK \u2014 BOTTOM, NEVER SHUFFLED' },
+  { kind:'blank', t:'A BLANK CARD \u2014 FATE PASSES' }
+];
+function deckOrder(roomSeed){
+  const idx = BASE_DECK.map((_, i) => i);
+  let h = hash32('deck:' + roomSeed);
+  for (let i = idx.length - 1; i > 0; i--){
+    h = Math.imul(h ^ (h >>> 13), 16777619) >>> 0;
+    const j = h % (i + 1);
+    const t = idx[i]; idx[i] = idx[j]; idx[j] = t;
+  }
+  return idx;
+}
+
+/* ---------------------------------------------------------------
+   STATE
+---------------------------------------------------------------- */
+let map, tiles, presLayer, depositLayer, gridLayer;
+const S = {
+  log: [], byId: {}, erased: new Set(), seq: 0,
+  me: { id: null, name: 'ANON', color: 0 },
+  room: null, isHost: false, peer: null, hostConn: null,
+  conns: new Map(), roster: {}, presence: {}, views: {},
+  tool: 'SAY', anchor: null, placeWord: 'flag', pendingPic: null,
+  draw: null, drawTemp: [], pendingCommit: null, carry: null,
+  myStack: [], gridMode: 0, radarOn: true,
+  walk: false, walkId: null, mic: null, micOn: false, mind: 0,
+  ly: '', hidLy: new Set(), layers: [], writtenCards: [], draws: 0,
+  mandate: null, writingCard: false
+};
+const COUNTS = { PATH: 0, EDGE: 0, DIST: 0, NODE: 0, LAND: 0, VOID: 0 };
+const M = {};
+const layersByEv = {};
+const consumed = new Set();          /* what the Void keeps */
+
+const POINTY = { SAY: 1, NODE: 1, LAND: 1, PIC: 1 };
+const GEOMY  = { PATH: 1, EDGE: 1, DIST: 1, BOUND: 1 };
+const CREATES = Object.assign({}, POINTY, GEOMY);
+
+const $ = id => document.getElementById(id);
+function toast(msg, ms){
+  const t = $('toast'); t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toast._t); toast._t = setTimeout(() => { t.style.display = 'none'; }, ms || 2200);
+}
+function hint(msg, hold){
+  const h = $('hint');
+  if (!msg){ h.classList.remove('show'); return; }
+  h.textContent = msg; h.classList.add('show');
+  clearTimeout(hint._t);
+  if (!hold) hint._t = setTimeout(() => h.classList.remove('show'), 2600);
+}
+function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : 'e' + Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 13); }
+function accOf(ev){ return ACCENTS[(ev.c || 0) % ACCENTS.length]; }
+function esc(s){ return String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+function offsetLL(ll, evid, i){
+  const h = hash32(evid + ':' + i);
+  return destLL(ll, 14 + ((h >>> 9) % 22), (h % 360) * Math.PI / 180);
+}
+function centroid(pts){
+  let la = 0, lo = 0;
+  pts.forEach(p => { la += p[0]; lo += p[1]; });
+  return [la / pts.length, lo / pts.length];
+}
+function stateLL(ev){
+  const st = M[ev.id];
+  if (!st) return null;
+  if (st.ll) return st.ll;
+  if (st.pts) return (ev.v === 'DIST' || ev.v === 'BOUND') ? centroid(st.pts) : st.pts[Math.floor(st.pts.length / 2)];
+  return null;
+}
+function inPoly(ll, pts){
+  let inside = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++){
+    const yi = pts[i][0], xi = pts[i][1], yj = pts[j][0], xj = pts[j][1];
+    if ((yi > ll[0]) !== (yj > ll[0]) &&
+        ll[1] < (xj - xi) * (ll[0] - yi) / (yj - yi) + xi) inside = !inside;
+  }
+  return inside;
+}
+function polyRadius(pts){
+  const c = centroid(pts);
+  let r = 0;
+  pts.forEach(p => {
+    const dla = (p[0] - c[0]) * 111111;
+    const dlo = (p[1] - c[1]) * 111111 * Math.cos(c[0] * Math.PI / 180);
+    r = Math.max(r, Math.hypot(dla, dlo));
+  });
+  return r;
+}
+function popOf(id){ return 130 + hash32('pop:' + id) % 9870; }
+function pieceName(ev){ return ev.name || (ev.word ? ev.word.toUpperCase() : (ev.text ? '\u00ab' + ev.text.slice(0, 18) + '\u00bb' : ev.v)); }
+
+/* ---------------------------------------------------------------
+   ORACLE RESOLUTION — pure functions of the fold
+---------------------------------------------------------------- */
+function candidates(){
+  return S.log.filter(e => CREATES[e.v] && e.v !== 'BOUND' &&
+    !S.erased.has(e.id) && !consumed.has(e.id) && M[e.id]);
+}
+function voidsSoFar(){
+  const vs = [];
+  S.log.forEach(e => { if (e.v === 'DRAW' && M[e.id] && M[e.id].voids) M[e.id].voids.forEach(v => vs.push(v)); });
+  return vs;
+}
+function handledCount(id){
+  let n = 0;
+  S.log.forEach(e => { if ((e.v === 'MOVE' || e.v === 'SIZE') && e.ref === id) n++; });
+  return n;
+}
+function pickTargets(pick, ev){
+  const cand = candidates();
+  if (!cand.length) return [];
+  const hpick = arr => arr[hash32(ev.id) % arr.length];
+  if (pick === 'oldest') return [cand[0]];
+  if (pick === 'handled'){
+    let best = cand[0], bn = -1;
+    cand.forEach(c => { const n = handledCount(c.id); if (n > bn){ bn = n; best = c; } });
+    return [best];
+  }
+  if (pick === 'other'){
+    const others = cand.filter(c => c.a !== ev.a);
+    const pool = others.length ? others : cand;
+    return [pool[pool.length - 1]];
+  }
+  if (pick === 'bigdist'){
+    const ds = cand.filter(c => c.v === 'DIST');
+    if (!ds.length) return [hpick(cand)];
+    let best = ds[0], br = -1;
+    ds.forEach(d => { const r = polyRadius(M[d.id].pts); if (r > br){ br = r; best = d; } });
+    return [best];
+  }
+  if (pick === 'named'){
+    const nm = cand.filter(c => c.name);
+    return [hpick(nm.length ? nm : cand)];
+  }
+  if (pick === 'all'){
+    const by = {};
+    cand.forEach(c => { (by[c.a] = by[c.a] || []).push(c); });
+    return Object.keys(by).sort().slice(0, CAP.VOID_BLOBS)
+      .map(a => by[a][hash32(ev.id + a) % by[a].length]);
+  }
+  return [];
+}
+function resolveDraw(ev){
+  /* deck at this moment: base order + cards written before this draw */
+  const order = deckOrder(S.room || 'solo');
+  const deck = order.map(i => BASE_DECK[i]).concat(S.writtenCards);
+  const idx = S.draws % deck.length;
+  const card = deck[idx];
+  S.draws++;
+  const out = { card, no: idx + 1, of: deck.length, voids: [], demises: [] };
+
+  if (card.kind === 'void'){
+    let targets = [];
+    if (card.pick === 'grow'){
+      const vs = voidsSoFar();
+      if (vs.length){
+        const last = vs[vs.length - 1];
+        out.voids.push({ pts: blobPts(last.c, last.r * 1.6, ev.id + ':g'), c: last.c, r: last.r * 1.6,
+          ly: last.ly, label: 'THE VOID, GROWN' });
+      }
+    } else {
+      targets = pickTargets(card.pick, ev);
+    }
+    targets.forEach((t, ti) => {
+      const c = stateLL(t);
+      const r = GEOMY[t.v] ? Math.max(70, polyRadius(M[t.id].pts) * 1.15) : 75;
+      out.voids.push({ pts: blobPts(c, r, ev.id + ':' + ti), c, r, ly: t.ly || '',
+        label: 'TOOK ' + t.an + '\u2019S ' + pieceName(t) + ' \u00b7 POP ' + popOf(t.id) });
+    });
+    /* consumption: every candidate whose heart lies in a new blob, same layer */
+    out.voids.forEach(v => {
+      candidates().forEach(c => {
+        if ((c.ly || '') !== v.ly) return;
+        const ll = stateLL(c);
+        if (ll && inPoly(ll, v.pts)){
+          consumed.add(c.id);
+          out.demises.push({ id: c.id, an: c.an, nm: pieceName(c), pop: popOf(c.id) });
+        }
+      });
+    });
+    COUNTS.VOID += out.voids.length;
+  }
+  return out;
+}
+
+/* ---------------------------------------------------------------
+   RENDER
+---------------------------------------------------------------- */
+function nameTip(layer, ev, cls, dir){
+  if (!ev.name) return;
+  layer.bindTooltip(esc(ev.name), { permanent: true, direction: dir || 'center',
+    className: 'namelab ' + (cls || ''), opacity: 1 });
+}
+function wireGroup(ev, group){
+  layersByEv[ev.id] = group;
+  group.forEach(l => {
+    l.on('click', () => { if (S.tool !== 'ERASE' && !S.carry) focusLine(ev.id); });
+    l.on('contextmenu', e => {
+      if (e.originalEvent) e.originalEvent.preventDefault();
+      if (CREATES[ev.v]) openSheet(ev.id);
+    });
+  });
+}
+function unrender(id){
+  const g = layersByEv[id];
+  if (g){ g.forEach(l => depositLayer.removeLayer(l)); delete layersByEv[id]; }
+}
+function render(ev, reveal){
+  unrender(ev.id);
+  if (S.erased.has(ev.id)) return;
+  const st = M[ev.id]; if (!st) return;
+
+  if (ev.v === 'DRAW'){                               /* void blobs live on the draw */
+    const group = [];
+    (st.voids || []).forEach(v => {
+      if (S.hidLy.has(v.ly)) return;
+      group.push(L.polygon(v.pts, { color: '#000', weight: 2.5,
+        fillColor: '#fff', fillOpacity: .96 }).addTo(depositLayer));
+      const inner = L.polygon(v.pts.map(p => [ (p[0] + v.c[0]) / 2, (p[1] + v.c[1]) / 2 ]),
+        { color: '#000', weight: 1, dashArray: '2 6', fill: false }).addTo(depositLayer);
+      inner.bindTooltip('VOID \u00b7 ' + esc(v.label),
+        { permanent: true, direction: 'center', className: 'voidlab', opacity: 1 });
+      group.push(inner);
+    });
+    if (group.length) wireGroup(ev, group);
+    return;
+  }
+  if (!CREATES[ev.v]) return;
+  if (S.hidLy.has(ev.ly || '')) return;
+
+  const acc = accOf(ev), k = st.k || 1, group = [];
+  const dead = consumed.has(ev.id);
+  const rv = (reveal && !dead) ? ' reveal' : '';
+  const dcls = dead ? ' ruin' : '';
+  const lineCol = dead ? '#888' : acc;
+  const inkCol = dead ? '#888' : '#000';
+  const dash = dead ? '3 7' : null;
+
+  if (ev.v === 'SAY'){
+    const fs = Math.round(11 * k), av = Math.round(20 * k), gsz = Math.round(32 * k);
+    const icon = L.divIcon({ className: 'gm', html:
+      '<div class="utt' + rv + dcls + '" style="border-left-color:' + acc + ';font-size:' + fs + 'px;max-width:' + Math.round(200 * k) + 'px">' +
+      avatarSVG(ev.an, ev.c, av) +
+      '<div><span class="u-who" style="font-size:' + Math.max(7, Math.round(8 * k)) + 'px">' + esc(ev.an) + '</span>' + esc(ev.text) + '</div></div>',
+      iconAnchor: [8, 8] });
+    group.push(L.marker(st.ll, { icon }).addTo(depositLayer));
+    (ev.words || []).forEach((w, i) => {
+      const gi = L.divIcon({ className: 'gm', html:
+        '<div class="' + (rv ? 'reveal' : '') + dcls + '" style="animation-delay:' + (0.12 + i * 0.14) + 's">' + glyphSVG(w, acc, gsz) + '</div>',
+        iconSize: [gsz, gsz], iconAnchor: [gsz / 2, gsz / 2] });
+      group.push(L.marker(offsetLL(st.ll, ev.id, i), { icon: gi }).addTo(depositLayer));
+    });
+  }
+  else if (ev.v === 'PATH'){
+    group.push(L.polyline(st.pts, { color: inkCol, weight: 7 * Math.sqrt(k), opacity: dead ? .35 : .9, dashArray: dash }).addTo(depositLayer));
+    const top = L.polyline(st.pts, { color: lineCol, weight: 3.5 * Math.sqrt(k), opacity: dead ? .35 : 1, dashArray: dash }).addTo(depositLayer);
+    nameTip(top, ev); group.push(top);
+  }
+  else if (ev.v === 'EDGE'){
+    group.push(L.polyline(st.pts, { color: lineCol, weight: 10 * Math.sqrt(k), opacity: dead ? .12 : .3 }).addTo(depositLayer));
+    const top = L.polyline(st.pts, { color: inkCol, weight: 4.5 * Math.sqrt(k), dashArray: '12 5', opacity: dead ? .35 : .95 }).addTo(depositLayer);
+    nameTip(top, ev); group.push(top);
+  }
+  else if (ev.v === 'DIST'){
+    const poly = L.polygon(st.pts, { color: lineCol, weight: 2, dashArray: '7 4',
+      fillColor: lineCol, fillOpacity: dead ? .05 : .14, opacity: dead ? .4 : 1 }).addTo(depositLayer);
+    nameTip(poly, ev, 'dlab'); group.push(poly);
+  }
+  else if (ev.v === 'BOUND'){
+    group.push(L.polygon(st.pts, { color: '#000', weight: 6, fill: false }).addTo(depositLayer));
+    const inner = L.polygon(st.pts, { color: '#fff', weight: 1.6, dashArray: '6 6', fill: false }).addTo(depositLayer);
+    nameTip(inner, ev, 'dlab'); group.push(inner);
+  }
+  else if (ev.v === 'NODE'){
+    const sz = Math.round(30 * k);
+    const gi = L.divIcon({ className: 'gm', html:
+      '<div class="' + (rv ? 'reveal' : '') + dcls + '">' + svgOpen(sz) +
+      el('circle', { cx: 24, cy: 24, r: 17, fill: '#fff', 'stroke-width': 3 }) +
+      el('circle', { cx: 24, cy: 24, r: 9, fill: acc, 'stroke-width': 2.2 }) +
+      el('circle', { cx: 24, cy: 24, r: 2.6, fill: '#000', stroke: 'none' }) +
+      '</svg></div>', iconSize: [sz, sz], iconAnchor: [sz / 2, sz / 2] });
+    const mk = L.marker(st.ll, { icon: gi }).addTo(depositLayer);
+    nameTip(mk, ev, '', 'bottom'); group.push(mk);
+  }
+  else if (ev.v === 'LAND'){
+    const gsz = Math.round(34 * k), box = gsz + 10;
+    const gi = L.divIcon({ className: 'gm', html:
+      '<div class="' + (rv ? 'reveal' : '') + dcls + '" style="border:2px solid #000;background:#fff;padding:3px;box-shadow:3px 3px 0 rgba(0,0,0,.2)">' +
+      glyphSVG(ev.word, acc, gsz) + '</div>',
+      iconSize: [box, box], iconAnchor: [box / 2, box] });
+    const mk = L.marker(st.ll, { icon: gi }).addTo(depositLayer);
+    nameTip(mk, ev, '', 'bottom'); group.push(mk);
+  }
+  else if (ev.v === 'PIC'){
+    const w = Math.round(ev.w * k), h = Math.round(ev.h * k);
+    const gi = L.divIcon({ className: 'gm', html:
+      '<div class="pic' + rv + dcls + '" style="outline:2px solid ' + acc + '">' +
+      '<img src="' + ev.data + '" width="' + w + '" height="' + h + '"></div>',
+      iconAnchor: [w / 2, h / 2] });
+    const mk = L.marker(st.ll, { icon: gi }).addTo(depositLayer);
+    nameTip(mk, ev, '', 'bottom'); group.push(mk);
+  }
+  if (group.length) wireGroup(ev, group);
+}
+function reRenderAll(){
+  S.log.forEach(ev => { if (CREATES[ev.v] || ev.v === 'DRAW') render(ev, false); });
+}
+
+/* ---------------------------------------------------------------
+   FOLD
+---------------------------------------------------------------- */
+function apply(ev){
+  if (S.byId[ev.id]) return;
+  if (S.log.length >= CAP.EVENTS) return toast('GROUND FULL \u00b7 ' + CAP.EVENTS + ' EVENTS');
+  S.log.push(ev); S.byId[ev.id] = ev;
+
+  if (CREATES[ev.v]){
+    M[ev.id] = ev.ll ? { ll: ev.ll.slice(), k: ev.k0 || 1 }
+                     : { pts: ev.pts.map(p => p.slice()), k: ev.k0 || 1 };
+    render(ev, true);
+    if (COUNTS[ev.v] !== undefined) COUNTS[ev.v]++;
+    /* a create fulfills a standing mandate of mine */
+    if (ev.a === S.me.id && S.mandate &&
+        (S.mandate.verb === 'ANY' || S.mandate.verb === ev.v)){
+      S.mandate = null; hint(''); toast('MANDATE FULFILLED \u00b7 THE ORACLE IS SATISFIED');
+    }
+  }
+  else if (ev.v === 'LAYER'){
+    S.layers.push({ id: ev.id, name: ev.name || 'DIM ' + (S.layers.length + 1) });
+    buildLayerbar();
+    if (ev.a === S.me.id){
+      S.ly = ev.id; buildLayerbar();
+      if (S.mandate && S.mandate.verb === 'LAYER'){ S.mandate = null; hint(''); toast('MANDATE FULFILLED'); }
+    }
+  }
+  else if (ev.v === 'CARD'){
+    S.writtenCards.push({ kind: 'do', verb: 'ANY', t: ev.text, by: ev.an });
+  }
+  else if (ev.v === 'DRAW'){
+    const res = resolveDraw(ev);
+    M[ev.id] = { voids: res.voids };
+    ev._card = res.card; ev._no = res.no; ev._of = res.of;
+    render(ev, false);
+    res.demises.forEach(d => {
+      render(S.byId[d.id], false);                    /* redraw as ruin */
+      ledDemise(d);
+    });
+    if (ev.a === S.me.id) showCard(res, ev);
+    else toast('ORACLE \u00b7 ' + ev.an + ' DRAWS: ' + res.card.t, 3400);
+  }
+  else if (ev.v === 'MOVE'){
+    const t = S.byId[ev.ref], st = M[ev.ref];
+    if (t && st && !S.erased.has(ev.ref)){
+      if (ev.ll && st.ll) st.ll = ev.ll.slice();
+      else if (ev.dll && st.pts) st.pts = st.pts.map(p => [p[0] + ev.dll[0], p[1] + ev.dll[1]]);
+      render(t, false);
+    }
+  }
+  else if (ev.v === 'SIZE'){
+    const t = S.byId[ev.ref], st = M[ev.ref];
+    if (t && st && !S.erased.has(ev.ref)){
+      st.k = Math.min(CAP.SCALE_MAX, Math.max(CAP.SCALE_MIN, (st.k || 1) * ev.k));
+      render(t, false);
+    }
+  }
+  else if (ev.v === 'ERASE'){
+    const t = S.byId[ev.ref];
+    if (t && !S.erased.has(ev.ref)){
+      S.erased.add(ev.ref);
+      unrender(ev.ref);
+      if (COUNTS[t.v] !== undefined) COUNTS[t.v]--;
+      const line = document.querySelector('[data-ev="' + ev.ref + '"] .txt');
+      if (line) line.classList.add('gone');
+    }
+  }
+  ledLine(ev);
+  invariants();
+}
+
+/* ---- ledger ---- */
+const VERB_MARK = {
+  SAY: a => svgOpen(18) + el('polygon',{points:'6,10 42,10 42,32 20,32 10,42 12,32 6,32',fill:a}) + '</svg>',
+  PATH: a => svgOpen(18) + el('path',{d:'M6 40Q18 28 24 24T42 8',stroke:a,'stroke-width':5}) + '</svg>',
+  EDGE: a => svgOpen(18) + el('line',{x1:8,y1:40,x2:40,y2:8,'stroke-width':5,'stroke-dasharray':'9 5'}) + el('line',{x1:8,y1:40,x2:40,y2:8,stroke:a,'stroke-width':10,opacity:.35}) + '</svg>',
+  DIST: a => svgOpen(18) + el('rect',{x:8,y:10,width:32,height:28,fill:a,'fill-opacity':.3,'stroke-dasharray':'6 4'}) + '</svg>',
+  NODE: a => svgOpen(18) + el('circle',{cx:24,cy:24,r:15,'stroke-width':3}) + el('circle',{cx:24,cy:24,r:6,fill:a}) + '</svg>',
+  LAND: a => svgOpen(18) + el('polygon',{points:'24,4 34,40 14,40',fill:a}) + el('line',{x1:10,y1:44,x2:38,y2:44}) + '</svg>',
+  BOUND: a => svgOpen(18) + el('rect',{x:6,y:6,width:36,height:36,'stroke-width':4}) + el('rect',{x:13,y:13,width:22,height:22,stroke:a,'stroke-dasharray':'5 4'}) + '</svg>',
+  PIC: a => svgOpen(18) + el('rect',{x:6,y:10,width:36,height:28}) + el('circle',{cx:17,cy:20,r:3.5,fill:a}) + el('polygon',{points:'12,34 24,22 32,30 38,24 40,34',fill:'#000',stroke:'none'}) + '</svg>',
+  MOVE: a => svgOpen(18) + el('line',{x1:8,y1:24,x2:40,y2:24,'stroke-width':3}) + el('polygon',{points:'40,24 30,16 30,32',fill:a}) + el('circle',{cx:10,cy:24,r:4,fill:a}) + '</svg>',
+  SIZE: a => svgOpen(18) + el('rect',{x:8,y:20,width:16,height:16,stroke:a}) + el('rect',{x:18,y:6,width:24,height:24,'stroke-width':2.6}) + '</svg>',
+  ERASE: a => svgOpen(18) + el('line',{x1:10,y1:10,x2:38,y2:38,stroke:a,'stroke-width':4}) + el('line',{x1:38,y1:10,x2:10,y2:38,'stroke-width':4}) + '</svg>',
+  DRAW: a => svgOpen(18) + el('rect',{x:10,y:6,width:28,height:36,'stroke-width':2.6}) + el('circle',{cx:24,cy:24,r:6,fill:a}) + '</svg>',
+  CARD: a => svgOpen(18) + el('rect',{x:10,y:6,width:28,height:36,'stroke-width':2.6}) + el('line',{x1:16,y1:18,x2:32,y2:18,stroke:a}) + el('line',{x1:16,y1:26,x2:32,y2:26,stroke:a}) + '</svg>',
+  LAYER: a => svgOpen(18) + el('polygon',{points:'24,6 44,16 24,26 4,16',fill:a}) + el('polygon',{points:'24,20 44,30 24,40 4,30'}) + '</svg>'
+};
+function possess(t){ return t ? esc(t.an) + '\u2019S ' + esc(pieceName(t)) : '?'; }
+function ledLineRaw(html, cls, onclick){
+  const list = $('ledlist');
+  const div = document.createElement('div');
+  div.className = 'lline' + (cls ? ' ' + cls : '');
+  div.innerHTML = html;
+  if (onclick) div.addEventListener('click', onclick);
+  list.appendChild(div);
+  while (list.children.length > CAP.LEDGER_LINES) list.removeChild(list.firstChild);
+  list.scrollTop = list.scrollHeight;
+}
+function ledDemise(d){
+  ledLineRaw(
+    svgOpen(18) + el('circle',{cx:24,cy:24,r:16,'stroke-width':3,stroke:'#fff'}) +
+    el('line',{x1:16,y1:16,x2:32,y2:32,stroke:'#fff','stroke-width':3}) +
+    el('line',{x1:32,y1:16,x2:16,y2:32,stroke:'#fff','stroke-width':3}) + '</svg>' +
+    '<div><span class="who">THE VOID</span><span class="verb">TAKES</span>' +
+    '<span class="txt">' + esc(d.an) + '\u2019S ' + esc(d.nm) + ' \u00b7 POP ' + d.pop + '</span></div>',
+    'demise',
+    () => focusEvent(d.id));
+}
+function ledLine(ev){
+  const list = $('ledlist');
+  const div = document.createElement('div');
+  div.className = 'lline'; div.dataset.ev = ev.id;
+  let body = '';
+  if (ev.v === 'SAY') body = '&laquo;' + esc(ev.text) + '&raquo;';
+  else if (ev.v === 'MOVE') body = possess(S.byId[ev.ref]);
+  else if (ev.v === 'SIZE') body = possess(S.byId[ev.ref]) + ' \u00d7' + ev.k.toFixed(2);
+  else if (ev.v === 'ERASE') body = 'STRIKES ' + possess(S.byId[ev.ref]);
+  else if (ev.v === 'DRAW') body = (ev._card ? '&laquo;' + esc(ev._card.t) + '&raquo;' : 'DRAWS');
+  else if (ev.v === 'CARD') body = 'WRITES: &laquo;' + esc(ev.text) + '&raquo;';
+  else if (ev.v === 'LAYER') body = 'OPENS DIMENSION ' + esc(ev.name || '');
+  else body = esc(ev.name || (ev.word ? ev.word.toUpperCase() : (ev.pts ? ev.pts.length + ' PTS' : ev.v)));
+  div.innerHTML = (VERB_MARK[ev.v] ? VERB_MARK[ev.v](accOf(ev)) : '') +
+    '<div><span class="who">' + esc(ev.an) + '</span><span class="verb">' + ev.v + '</span>' +
+    '<span class="txt">' + body + '</span></div>';
+  div.addEventListener('click', () => focusEvent(ev.id));
+  list.appendChild(div);
+  while (list.children.length > CAP.LEDGER_LINES) list.removeChild(list.firstChild);
+  list.scrollTop = list.scrollHeight;
+}
+function focusEvent(id){
+  let ev = S.byId[id]; if (!ev) return;
+  if (ev.v === 'MOVE' || ev.v === 'SIZE' || ev.v === 'ERASE') ev = S.byId[ev.ref];
+  if (!ev) return;
+  let ll = null;
+  if (ev.v === 'DRAW'){ const st = M[ev.id]; if (st && st.voids && st.voids.length) ll = st.voids[0].c; }
+  else ll = stateLL(ev) || ev.ll || (ev.pts && centroid(ev.pts));
+  if (!ll) return;
+  map.flyTo(ll, Math.max(map.getZoom(), (ev.v === 'DIST' || ev.v === 'BOUND' || ev.v === 'DRAW') ? 15 : 17), { duration: .6 });
+  const g = layersByEv[ev.id];
+  if (g) setTimeout(() => g.forEach(l => {
+    const elx = l.getElement && l.getElement();
+    if (elx){ elx.classList.remove('flash'); void elx.offsetWidth; elx.classList.add('flash'); }
+  }), 620);
+}
+function focusLine(id){
+  openLedger(true);
+  const line = document.querySelector('[data-ev="' + id + '"]');
+  if (!line) return;
+  line.scrollIntoView({ block: 'center' });
+  document.querySelectorAll('.lline.hot').forEach(x => x.classList.remove('hot'));
+  line.classList.add('hot');
+  setTimeout(() => line.classList.remove('hot'), 1600);
+}
+function invariants(){
+  ['PATH','EDGE','DIST','NODE','LAND','VOID'].forEach(v => { $('ct-' + v).textContent = COUNTS[v]; });
+  $('inv-e').textContent = S.log.length;
+  let ok = true;
+  for (let i = 1; i < S.log.length; i++) if (!(S.log[i].s > S.log[i - 1].s)) ok = false;
+  if (Object.keys(S.byId).length !== S.log.length) ok = false;
+  const f = $('inv-f'); f.textContent = ok ? 'OK' : 'BROKEN'; f.className = ok ? 'ok' : 'bad';
+}
+
+/* ---------------------------------------------------------------
+   NET (host = sequencer; deck advances by fold order)
+---------------------------------------------------------------- */
+function commit(part, opts){
+  const ev = Object.assign({ id: uid(), a: S.me.id, an: S.me.name, c: S.me.color, t: Date.now() }, part);
+  if (CREATES[ev.v] && S.ly && !ev.ly) ev.ly = S.ly;
+  if (S.isHost){ ev.s = ++S.seq; apply(ev); broadcast({ type: 'ev', ev }); }
+  else if (S.hostConn && S.hostConn.open) S.hostConn.send({ type: 'ev', ev });
+  else { ev.s = ++S.seq; apply(ev); }
+  if (!(opts && opts.noUndo) && ev.v !== 'DRAW' && ev.v !== 'CARD') S.myStack.push(ev);
+  if (S.myStack.length > 64) S.myStack.shift();
+  return ev;
+}
+function broadcast(msg, except){
+  S.conns.forEach((c, id) => { if (id !== except && c.open) c.send(msg); });
+}
+function roomCode(){
+  const A = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s = '';
+  for (let i = 0; i < 4; i++) s += A[Math.floor(Math.random() * A.length)];
+  return s;
+}
+function startHost(name){
+  S.me.name = name; S.isHost = true; S.room = roomCode();
+  S.peer = new Peer('cground4-' + S.room.toLowerCase());
+  S.peer.on('open', id => {
+    S.me.id = id; S.me.color = 0;
+    S.roster[id] = { name: S.me.name, color: 0 };
+    enterGround();
+  });
+  S.peer.on('connection', conn => {
+    if (S.conns.size + 1 >= CAP.PEERS){ conn.close(); return; }
+    conn.on('data', msg => hostData(conn, msg));
+    conn.on('close', () => {
+      S.conns.delete(conn.peer); delete S.roster[conn.peer];
+      dropPresence(conn.peer); delete S.views[conn.peer];
+      broadcast({ type: 'roster', roster: S.roster });
+    });
+  });
+  S.peer.on('error', e => {
+    if (!S.me.id){ S.me.id = 'solo'; S.roster.solo = { name: S.me.name, color: 0 }; enterGround(); }
+    toast('RELAY UNREACHABLE \u00b7 SOLO GROUND (' + e.type + ')', 3200);
+  });
+}
+function hostData(conn, msg){
+  if (msg.type === 'hello'){
+    S.conns.set(conn.peer, conn);
+    const color = Object.keys(S.roster).length % ACCENTS.length;
+    S.roster[conn.peer] = { name: msg.name, color };
+    conn.send({ type: 'sync', log: S.log, roster: S.roster, room: S.room, you: { color } });
+    broadcast({ type: 'roster', roster: S.roster }, conn.peer);
+    toast(msg.name + ' STANDS ON THIS GROUND');
+  }
+  else if (msg.type === 'ev'){ msg.ev.s = ++S.seq; apply(msg.ev); broadcast({ type: 'ev', ev: msg.ev }); }
+  else if (msg.type === 'pos'){ takePos(msg); broadcast(msg, conn.peer); }
+}
+function joinRoom(code, name){
+  S.me.name = name; S.room = code.toUpperCase();
+  S.peer = new Peer();
+  S.peer.on('open', id => {
+    S.me.id = id;
+    const conn = S.peer.connect('cground4-' + S.room.toLowerCase(), { reliable: true });
+    S.hostConn = conn;
+    conn.on('open', () => conn.send({ type: 'hello', name }));
+    conn.on('data', msg => {
+      if (msg.type === 'sync'){
+        S.me.color = msg.you.color; S.roster = msg.roster; S.room = msg.room || S.room;
+        msg.log.forEach(ev => { S.seq = Math.max(S.seq, ev.s); apply(ev); });
+        enterGround();
+        for (let i = msg.log.length - 1; i >= 0; i--){
+          const ll = msg.log[i].ll || (msg.log[i].pts && centroid(msg.log[i].pts));
+          if (ll){ map.setView(ll, 15); break; }
+        }
+      }
+      else if (msg.type === 'ev'){ S.seq = Math.max(S.seq, msg.ev.s); apply(msg.ev); }
+      else if (msg.type === 'roster'){ S.roster = msg.roster; }
+      else if (msg.type === 'pos'){ takePos(msg); }
+    });
+    conn.on('close', () => toast('HOST LEFT \u00b7 GROUND ORPHANED (LEDGER SURVIVES HERE)', 4200));
+  });
+  S.peer.on('error', e => toast('CANNOT REACH GROUND ' + S.room + ' (' + e.type + ')', 3200));
+}
+
+/* ---- presence + viewports + radar ---- */
+function takePos(msg){
+  if (msg.from === S.me.id) return;
+  showPresence(msg.from, msg);
+  if (msg.vb) S.views[msg.from] = { vb: msg.vb, seen: Date.now() };
+}
+function presIcon(name, color, mine){
+  return L.divIcon({ className: 'gm',
+    html: '<div class="pres' + (mine ? ' mine' : '') + '" style="border-color:' + ACCENTS[color % ACCENTS.length] + '">' +
+          avatarSVG(name, color, 24) + '</div>',
+    iconSize: [30, 30], iconAnchor: [15, 15] });
+}
+function showPresence(id, msg){
+  const r = S.roster[id] || { name: msg.name || '?', color: 3 };
+  let p = S.presence[id];
+  if (!p) p = S.presence[id] = L.marker(msg.ll, { icon: presIcon(msg.name || r.name, r.color), zIndexOffset: 900 }).addTo(presLayer);
+  else p.setLatLng(msg.ll);
+  p._seen = Date.now();
+}
+function dropPresence(id){ if (S.presence[id]){ presLayer.removeLayer(S.presence[id]); delete S.presence[id]; } }
+function sendPos(){
+  if (!S.peer || !S.anchor || !map) return;
+  const b = map.getBounds();
+  const msg = { type: 'pos', from: S.me.id, name: S.me.name, ll: S.anchor,
+    vb: [[b.getSouth(), b.getWest()], [b.getNorth(), b.getEast()]] };
+  if (S.isHost) broadcast(msg);
+  else if (S.hostConn && S.hostConn.open) S.hostConn.send(msg);
+}
+setInterval(() => {
+  const now = Date.now();
+  Object.keys(S.presence).forEach(id => { if (now - S.presence[id]._seen > 8000) dropPresence(id); });
+  Object.keys(S.views).forEach(id => { if (now - S.views[id].seen > 8000) delete S.views[id]; });
+  sendPos();
+  drawRadar();
+}, 1400);
+
+let myRing = null;
+function setAnchor(ll, pan){
+  S.anchor = [ll.lat !== undefined ? ll.lat : ll[0], ll.lng !== undefined ? ll.lng : ll[1]];
+  if (!myRing) myRing = L.marker(S.anchor, { icon: presIcon(S.me.name, S.me.color, true), zIndexOffset: 1000 }).addTo(presLayer);
+  else myRing.setLatLng(S.anchor);
+  if (pan) map.panTo(S.anchor);
+}
+function drawRadar(){
+  const cv = $('radar');
+  if (!S.radarOn || !map) return;
+  const c = cv.getContext('2d'), W = cv.width, H = cv.height;
+  c.clearRect(0, 0, W, H);
+  c.fillStyle = '#fff'; c.fillRect(0, 0, W, H);
+  let s = 90, w = 180, n = -90, e = -180, any = false;
+  function eat(la, lo){ s = Math.min(s, la); n = Math.max(n, la); w = Math.min(w, lo); e = Math.max(e, lo); any = true; }
+  for (const id in M){
+    const ev = S.byId[id]; if (!ev || S.erased.has(id) || !CREATES[ev.v]) continue;
+    const ll = stateLL(ev); if (ll) eat(ll[0], ll[1]);
+  }
+  const mb = map.getBounds();
+  eat(mb.getSouth(), mb.getWest()); eat(mb.getNorth(), mb.getEast());
+  for (const id in S.views){ const vb = S.views[id].vb; eat(vb[0][0], vb[0][1]); eat(vb[1][0], vb[1][1]); }
+  if (!any) return;
+  const padLa = (n - s) * .1 + 1e-4, padLo = (e - w) * .1 + 1e-4;
+  s -= padLa; n += padLa; w -= padLo; e += padLo;
+  const X = lo => (lo - w) / (e - w) * W, Y = la => H - (la - s) / (n - s) * H;
+  c.fillStyle = '#000';
+  for (const id in M){
+    const ev = S.byId[id]; if (!ev || S.erased.has(id) || !CREATES[ev.v]) continue;
+    const ll = stateLL(ev); if (!ll) continue;
+    c.fillRect(X(ll[1]) - 1, Y(ll[0]) - 1, 2, 2);
+  }
+  for (const id in S.views){
+    const vb = S.views[id].vb, r = S.roster[id] || { color: 3 };
+    c.strokeStyle = ACCENTS[r.color % ACCENTS.length]; c.lineWidth = 1.6;
+    c.strokeRect(X(vb[0][1]), Y(vb[1][0]), X(vb[1][1]) - X(vb[0][1]), Y(vb[0][0]) - Y(vb[1][0]));
+  }
+  c.strokeStyle = '#000'; c.lineWidth = 1.6;
+  c.strokeRect(X(mb.getWest()), Y(mb.getNorth()), X(mb.getEast()) - X(mb.getWest()), Y(mb.getSouth()) - Y(mb.getNorth()));
+  for (const id in S.presence){
+    const p = S.presence[id].getLatLng(), r = S.roster[id] || { color: 3 };
+    c.fillStyle = ACCENTS[r.color % ACCENTS.length];
+    c.fillRect(X(p.lng) - 2, Y(p.lat) - 2, 4, 4);
+  }
+  cv._proj = { s, w, n, e };
+}
+$('radar').addEventListener('click', function(ev){
+  const pr = this._proj; if (!pr) return;
+  const r = this.getBoundingClientRect();
+  const lo = pr.w + (ev.clientX - r.left) / r.width * (pr.e - pr.w);
+  const la = pr.n - (ev.clientY - r.top) / r.height * (pr.n - pr.s);
+  map.setView([la, lo], map.getZoom());
+});
+$('radarbtn').addEventListener('click', function(){
+  S.radarOn = !S.radarOn;
+  this.classList.toggle('on', S.radarOn);
+  $('radar').classList.toggle('hide', !S.radarOn);
+  if (S.radarOn) drawRadar();
+});
+
+/* ---------------------------------------------------------------
+   LAYERS · imagined dimensions
+---------------------------------------------------------------- */
+function buildLayerbar(){
+  const bar = $('layerbar');
+  bar.innerHTML = '';
+  const all = [{ id: '', name: 'REAL' }].concat(S.layers);
+  all.forEach(ly => {
+    const b = document.createElement('button');
+    b.className = 'lychip' + (S.ly === ly.id ? ' act' : '') + (S.hidLy.has(ly.id) ? ' hid' : '');
+    b.textContent = ly.name;
+    b.addEventListener('click', () => {
+      if (S.ly === ly.id){                            /* second tap = hide/show */
+        if (S.hidLy.has(ly.id)) S.hidLy.delete(ly.id); else S.hidLy.add(ly.id);
+        reRenderAll();
+      } else S.ly = ly.id;
+      buildLayerbar();
+    });
+    bar.appendChild(b);
+  });
+  const add = document.createElement('button');
+  add.className = 'lychip'; add.textContent = '+ DIMENSION';
+  add.addEventListener('click', () => openNamebar({ v: 'LAYER' }, 'NAME THE NEW DIMENSION'));
+  bar.appendChild(add);
+}
+
+/* ---------------------------------------------------------------
+   ORACLE UI
+---------------------------------------------------------------- */
+function showCard(res, ev){
+  $('c-no').textContent = 'CARD ' + res.no + ' / ' + res.of;
+  $('c-text').textContent = res.card.t + (res.card.by ? '  \u2014 WRITTEN BY ' + res.card.by : '');
+  const tag = $('c-tag');
+  if (res.card.kind === 'void'){
+    tag.className = 'ctag'; tag.textContent = res.voids.length ? 'EXECUTED \u00b7 THE VOID HAS EATEN' : 'THE VOID FOUND NOTHING';
+  } else if (res.card.kind === 'meta'){
+    tag.className = 'ctag mand'; tag.textContent = 'WRITE IT BELOW';
+    S.writingCard = true;
+    $('sayinput').classList.add('cardmode');
+    $('sayinput').placeholder = 'WRITE THE NEW CARD \u2014 IT GOES TO THE BOTTOM';
+  } else if (res.card.kind === 'do'){
+    tag.className = 'ctag mand'; tag.textContent = 'YOUR MANDATE \u00b7 OBEY';
+    S.mandate = { verb: res.card.verb, text: res.card.t };
+    hint('MANDATE: ' + res.card.t, 1);
+  } else {
+    tag.className = 'ctag'; tag.textContent = 'FATE PASSES';
+  }
+  $('cardov').classList.add('show');
+  if (res.voids.length && res.voids[0].c) map.flyTo(res.voids[0].c, Math.max(map.getZoom(), 15), { duration: .8 });
+}
+$('c-ok').addEventListener('click', () => $('cardov').classList.remove('show'));
+$('oraclebtn').addEventListener('click', () => {
+  if (candidates().length < 3) return toast('THE ORACLE WAITS FOR A WORLD \u00b7 BUILD 3+ PIECES FIRST');
+  commit({ v: 'DRAW' });
+});
+
+/* ---------------------------------------------------------------
+   GENERATE · procedural settlement in the active dimension
+---------------------------------------------------------------- */
+function genSettlement(ll){
+  const seed = uid(), h = hash32('gen:' + seed);
+  const distPts = blobPts(ll, 70 + h % 60, seed + ':d', 7);
+  const name = toponym(seed);
+  commit({ v: 'DIST', pts: distPts, name });
+  const n1 = destLL(ll, 50 + (h >>> 4) % 40, (h % 360) * Math.PI / 180);
+  const n2 = destLL(ll, 50 + (h >>> 8) % 40, ((h >>> 6) % 360) * Math.PI / 180);
+  commit({ v: 'PATH', pts: [n1, ll, n2], name: name.split(' ')[0] + ' WAY' });
+  commit({ v: 'NODE', ll: n1, name: toponym(seed + ':n1') });
+  commit({ v: 'NODE', ll: n2, name: toponym(seed + ':n2') });
+  const words = Object.keys(GDEF);
+  commit({ v: 'LAND', ll: destLL(ll, 30, ((h >>> 10) % 360) * Math.PI / 180),
+    word: words[(h >>> 12) % words.length], name: toponym(seed + ':l') });
+  toast('SETTLED \u00b7 ' + name + ' \u00b7 POP ' + popOf(seed));
+}
+
+/* ---------------------------------------------------------------
+   TOOLS
+---------------------------------------------------------------- */
+const TOOLS = [
+  { k:'SAY',  label:'SAY' }, { k:'PATH', label:'PATH' }, { k:'EDGE', label:'EDGE' },
+  { k:'DIST', label:'DISTRICT' }, { k:'NODE', label:'NODE' }, { k:'LAND', label:'LANDMARK' },
+  { k:'GEN',  label:'GENERATE' },
+  { k:'BOUND',label:'FRAME' }, { k:'PHOTO',label:'PHOTO' }, { k:'ERASE',label:'ERASE' }
+];
+const TOOL_HINT = {
+  SAY: 'TAP MAP = MOVE YOUR HERE \u00b7 LONG-PRESS ANY PIECE FOR HANDS',
+  PATH: 'TAP VERTICES OR DRAG \u00b7 DONE TO SET',
+  EDGE: 'TAP VERTICES OR DRAG \u00b7 DONE TO SET',
+  DIST: 'TAP CORNERS \u00b7 CLOSES ITSELF',
+  NODE: 'TAP A JUNCTION \u00b7 THEN NAME IT',
+  LAND: 'PICK A MARK \u00b7 TAP WHERE IT STANDS',
+  GEN: 'TAP \u2014 A SETTLEMENT GROWS IN THE ACTIVE DIMENSION',
+  BOUND: 'TAP CORNERS \u00b7 THE FRAME OF PLAY',
+  PHOTO: 'CHOOSE A PICTURE \u00b7 THEN TAP WHERE IT LANDS \u00b7 GLUE EPHEMERA OVER LOSS',
+  ERASE: 'TAP ONE OF YOUR OWN DEPOSITS TO STRIKE IT'
+};
+const DRAWERS = { PATH: 1, EDGE: 1, DIST: 1, BOUND: 1 };
+const GEN_MARK = a => svgOpen(16) + el('rect',{x:6,y:26,width:10,height:16,fill:a}) + el('rect',{x:19,y:16,width:10,height:26}) + el('rect',{x:32,y:6,width:10,height:36,fill:a}) + '</svg>';
+
+function armTool(name){
+  if (S.draw) cancelDraw();
+  endCarry();
+  closeNamebar(); closeSheet();
+  S.tool = name;
+  document.querySelectorAll('.tool').forEach(b => b.classList.toggle('armed', b.dataset.tool === name));
+  $('palette').classList.toggle('show', name === 'LAND');
+  $('drawbar').classList.toggle('show', !!DRAWERS[name]);
+  hint(TOOL_HINT[name]);
+  if (DRAWERS[name]){ map.dragging.disable(); startDraw(); } else map.dragging.enable();
+  if (name === 'PHOTO' && !S.pendingPic) $('picfile').click();
+}
+(function buildTools(){
+  const row = $('toolrow');
+  TOOLS.forEach(t => {
+    const b = document.createElement('button');
+    b.className = 'tool' + (t.k === 'SAY' ? ' armed' : '');
+    b.dataset.tool = t.k;
+    const mk = t.k === 'GEN' ? GEN_MARK : VERB_MARK[t.k === 'PHOTO' ? 'PIC' : t.k];
+    b.innerHTML = (mk ? mk('#19e6c8') : '') + '<span>' + t.label + '</span>';
+    b.addEventListener('click', () => armTool(t.k));
+    row.appendChild(b);
+  });
+})();
+(function buildPalette(){
+  const pal = $('palette');
+  Object.keys(GDEF).forEach(w => {
+    const b = document.createElement('button');
+    b.className = 'pal' + (w === S.placeWord ? ' sel' : '');
+    b.innerHTML = glyphSVG(w, '#19e6c8', 28) + '<span>' + w.toUpperCase() + '</span>';
+    b.addEventListener('click', () => {
+      S.placeWord = w;
+      document.querySelectorAll('.pal').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+    });
+    pal.appendChild(b);
+  });
+})();
+
+/* ---- vertex draw session ---- */
+function startDraw(){ S.draw = { pts: [] }; renderDraw(); }
+function renderDraw(){
+  S.drawTemp.forEach(l => map.removeLayer(l)); S.drawTemp = [];
+  if (!S.draw) return;
+  const pts = S.draw.pts, acc = ACCENTS[S.me.color % ACCENTS.length];
+  const closed = S.tool === 'DIST' || S.tool === 'BOUND';
+  if (pts.length > 1){
+    if (closed && pts.length > 2)
+      S.drawTemp.push(L.polygon(pts, { color: S.tool === 'BOUND' ? '#000' : acc, weight: 2, dashArray: '7 4',
+        fillColor: acc, fillOpacity: S.tool === 'BOUND' ? 0 : .12 }).addTo(map));
+    else
+      S.drawTemp.push(L.polyline(pts, { color: acc, weight: 3.5, dashArray: S.tool === 'EDGE' ? '10 5' : null }).addTo(map));
+  }
+  pts.forEach(p => S.drawTemp.push(L.marker(p, {
+    icon: L.divIcon({ className: 'gm', html: '<div class="vdot"></div>', iconSize: [10, 10], iconAnchor: [5, 5] })
+  }).addTo(map)));
+}
+function addVertex(ll){
+  if (!S.draw) return;
+  if (S.draw.pts.length >= CAP.VERTS) return toast('VERTEX CEILING \u00b7 ' + CAP.VERTS);
+  S.draw.pts.push([ll.lat, ll.lng]);
+  renderDraw();
+}
+function cancelDraw(){
+  S.draw = null;
+  S.drawTemp.forEach(l => map.removeLayer(l)); S.drawTemp = [];
+}
+$('dundo').addEventListener('click', () => { if (S.draw){ S.draw.pts.pop(); renderDraw(); } });
+$('dcancel').addEventListener('click', () => { cancelDraw(); startDraw(); hint('CLEARED \u00b7 TAP TO BEGIN AGAIN'); });
+$('ddone').addEventListener('click', () => {
+  if (!S.draw) return;
+  const need = (S.tool === 'DIST' || S.tool === 'BOUND') ? 3 : 2;
+  if (S.draw.pts.length < need) return toast('NEEDS ' + need + '+ POINTS');
+  openNamebar({ v: S.tool, pts: S.draw.pts.slice() }, 'NAME THIS ' + (S.tool === 'DIST' ? 'DISTRICT' : S.tool === 'BOUND' ? 'FRAME' : S.tool));
+});
+
+/* ---- namebar ---- */
+function openNamebar(pending, placeholder){
+  S.pendingCommit = pending;
+  $('nameel').value = ''; $('nameel').placeholder = placeholder + ' (OPTIONAL)';
+  $('namebar').classList.add('show');
+}
+function closeNamebar(){ S.pendingCommit = null; $('namebar').classList.remove('show'); }
+function settleName(withName){
+  if (!S.pendingCommit) return;
+  const p = S.pendingCommit;
+  if (withName){
+    const n = $('nameel').value.trim().toUpperCase().slice(0, CAP.NAME_CHARS);
+    if (n) p.name = n;
+  }
+  closeNamebar();
+  commit(p);
+  if (DRAWERS[S.tool]){ cancelDraw(); startDraw(); }
+}
+$('nameok').addEventListener('click', () => settleName(true));
+$('nameskip').addEventListener('click', () => settleName(false));
+$('nameel').addEventListener('keydown', e => { if (e.key === 'Enter') settleName(true); });
+
+/* ---------------------------------------------------------------
+   HANDS (sheet, carry, undo — v3 mechanics)
+---------------------------------------------------------------- */
+let sheetFor = null;
+function openSheet(id){
+  const ev = S.byId[id];
+  if (!ev || S.erased.has(id)) return;
+  sheetFor = id;
+  $('sh-av').innerHTML = avatarSVG(ev.an, ev.c, 22);
+  $('sh-own').textContent = ev.an;
+  $('sh-what').textContent = (consumed.has(id) ? 'RUIN \u00b7 ' : '') + ev.v;
+  $('sh-nm').textContent = pieceName(ev);
+  const dead = consumed.has(id);
+  $('sh-strike').disabled = ev.a !== S.me.id;
+  $('sh-move').disabled = dead;                       /* the Void keeps what it takes */
+  $('sh-shrink').disabled = dead;
+  $('sh-grow').disabled = dead;
+  $('sheet').classList.add('show');
+}
+function closeSheet(){ sheetFor = null; $('sheet').classList.remove('show'); }
+$('sh-close').addEventListener('click', closeSheet);
+$('sh-move').addEventListener('click', () => {
+  if (!sheetFor) return;
+  const ev = S.byId[sheetFor];
+  S.carry = { ref: sheetFor };
+  const g = layersByEv[sheetFor];
+  if (g) g.forEach(l => { const elx = l.getElement && l.getElement(); if (elx) elx.classList.add('carrying'); });
+  $('carrymsg').textContent = 'CARRYING ' + ev.an + '\u2019S ' + pieceName(ev) + ' \u2014 TAP TO DROP';
+  $('carrybar').classList.add('show');
+  closeSheet();
+  hint('TAP THE MAP WHERE IT GOES', 1);
+});
+function endCarry(){
+  if (!S.carry) return;
+  const g = layersByEv[S.carry.ref];
+  if (g) g.forEach(l => { const elx = l.getElement && l.getElement(); if (elx) elx.classList.remove('carrying'); });
+  S.carry = null;
+  $('carrybar').classList.remove('show');
+  hint('');
+}
+$('carrycancel').addEventListener('click', endCarry);
+$('sh-shrink').addEventListener('click', () => { if (sheetFor) commit({ v: 'SIZE', ref: sheetFor, k: .8 }); });
+$('sh-grow').addEventListener('click', () => { if (sheetFor) commit({ v: 'SIZE', ref: sheetFor, k: 1.25 }); });
+$('sh-dup').addEventListener('click', () => {
+  if (!sheetFor) return;
+  const ev = S.byId[sheetFor], st = M[sheetFor];
+  if (!ev || !st) return;
+  const d = [0.00012, 0.00016];
+  const clone = { v: ev.v };
+  if (ev.name) clone.name = ev.name;
+  if (ev.word) clone.word = ev.word;
+  if (ev.text){ clone.text = ev.text; clone.words = ev.words; }
+  if (ev.data){ clone.data = ev.data; clone.w = ev.w; clone.h = ev.h; }
+  if (ev.ly) clone.ly = ev.ly;
+  clone.k0 = st.k || 1;
+  if (st.ll) clone.ll = [st.ll[0] - d[0], st.ll[1] + d[1]];
+  else clone.pts = st.pts.map(p => [p[0] - d[0], p[1] + d[1]]);
+  commit(clone);
+  closeSheet();
+  toast('DUPLICATED \u00b7 THE COPY IS YOURS');
+});
+$('sh-ann').addEventListener('click', () => {
+  if (!sheetFor) return;
+  const ll = stateLL(S.byId[sheetFor]);
+  if (ll) setAnchor(ll);
+  closeSheet();
+  $('sayinput').focus();
+  hint('SPEAK OR TYPE \u2014 IT LANDS ON THIS PIECE', 1);
+});
+$('sh-strike').addEventListener('click', () => {
+  if (!sheetFor) return;
+  const ev = S.byId[sheetFor];
+  if (ev.a !== S.me.id) return;
+  commit({ v: 'ERASE', ref: sheetFor });
+  closeSheet();
+});
+
+$('undobtn').addEventListener('click', () => {
+  const ev = S.myStack.pop();
+  if (!ev) return toast('NOTHING OF YOURS TO UNDO');
+  if (CREATES[ev.v]){
+    if (S.erased.has(ev.id)) return toast('ALREADY STRUCK');
+    commit({ v: 'ERASE', ref: ev.id }, { noUndo: true });
+    toast('UNDONE \u00b7 STRUCK YOUR ' + ev.v);
+  }
+  else if (ev.v === 'MOVE'){
+    if (ev.ll && ev.prev) commit({ v: 'MOVE', ref: ev.ref, ll: ev.prev, prev: ev.ll }, { noUndo: true });
+    else if (ev.dll) commit({ v: 'MOVE', ref: ev.ref, dll: [-ev.dll[0], -ev.dll[1]] }, { noUndo: true });
+    toast('UNDONE \u00b7 MOVED BACK');
+  }
+  else if (ev.v === 'SIZE'){
+    commit({ v: 'SIZE', ref: ev.ref, k: 1 / ev.k }, { noUndo: true });
+    toast('UNDONE \u00b7 RESIZED BACK');
+  }
+  else if (ev.v === 'ERASE'){
+    const t = S.byId[ev.ref];
+    if (t){
+      const st = M[ev.ref] || {};
+      const clone = { v: t.v };
+      if (t.name) clone.name = t.name;
+      if (t.word) clone.word = t.word;
+      if (t.text){ clone.text = t.text; clone.words = t.words; }
+      if (t.data){ clone.data = t.data; clone.w = t.w; clone.h = t.h; }
+      if (t.ly) clone.ly = t.ly;
+      clone.k0 = st.k || 1;
+      if (st.ll) clone.ll = st.ll.slice(); else if (st.pts) clone.pts = st.pts.map(p => p.slice());
+      commit(clone, { noUndo: true });
+      toast('UNDONE \u00b7 RESTORED AS A NEW DEPOSIT');
+    }
+  }
+  else if (ev.v === 'LAYER') toast('DIMENSIONS, ONCE OPENED, STAY OPEN');
+});
+
+/* ---- map interactions ---- */
+function onMapTap(e){
+  const ll = [e.latlng.lat, e.latlng.lng];
+  if (S.carry){
+    const ref = S.carry.ref, ev = S.byId[ref], st = M[ref];
+    if (ev && st){
+      if (st.ll) commit({ v: 'MOVE', ref, ll, prev: st.ll.slice() });
+      else {
+        const c = centroid(st.pts);
+        commit({ v: 'MOVE', ref, dll: [ll[0] - c[0], ll[1] - c[1]] });
+      }
+    }
+    endCarry();
+    return;
+  }
+  if (S.draw){ addVertex(e.latlng); return; }
+  if (S.pendingCommit) return;
+  if (S.tool === 'SAY'){ setAnchor(e.latlng); }
+  else if (S.tool === 'NODE'){ openNamebar({ v: 'NODE', ll }, 'NAME THIS NODE'); }
+  else if (S.tool === 'LAND'){ openNamebar({ v: 'LAND', ll, word: S.placeWord }, 'NAME THIS LANDMARK'); }
+  else if (S.tool === 'GEN'){ genSettlement(ll); }
+  else if (S.tool === 'PHOTO'){
+    if (S.pendingPic){
+      commit({ v: 'PIC', data: S.pendingPic.data, w: S.pendingPic.w, h: S.pendingPic.h, ll });
+      S.pendingPic = null; hint(''); armTool('SAY');
+    } else $('picfile').click();
+  }
+  else if (S.tool === 'ERASE'){
+    const pt = map.latLngToContainerPoint(e.latlng);
+    let best = null, bd = 34;
+    for (const ev2 of S.log){
+      if (ev2.a !== S.me.id || !CREATES[ev2.v] || S.erased.has(ev2.id)) continue;
+      const ll2 = stateLL(ev2); if (!ll2) continue;
+      const d = pt.distanceTo(map.latLngToContainerPoint(ll2));
+      if (d < bd){ bd = d; best = ev2; }
+    }
+    if (best) commit({ v: 'ERASE', ref: best.id });
+    else toast('NOTHING OF YOURS HERE \u00b7 ERASE STRIKES ONLY YOUR OWN');
+  }
+}
+let dragging = false, lastPt = null;
+function dragStart(e){ if (!S.draw) return; dragging = true; lastPt = null; dragMove(e); }
+function dragMove(e){
+  if (!dragging || !S.draw) return;
+  const p = map.latLngToContainerPoint(e.latlng);
+  if (lastPt && lastPt.distanceTo(p) < 14) return;
+  lastPt = p;
+  addVertex(e.latlng);
+}
+function dragEnd(){ dragging = false; lastPt = null; }
+
+const BAYER = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+$('picfile').addEventListener('change', function(){
+  const f = this.files && this.files[0]; this.value = '';
+  if (!f) return;
+  const img = new Image();
+  img.onload = () => {
+    const sc = Math.min(1, CAP.PIC_PX / Math.max(img.width, img.height));
+    const w = Math.max(1, Math.round(img.width * sc)), h = Math.max(1, Math.round(img.height * sc));
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const c = cv.getContext('2d'); c.drawImage(img, 0, 0, w, h);
+    const idt = c.getImageData(0, 0, w, h), px = idt.data;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++){
+      const i = (y * w + x) * 4;
+      const g = (px[i] * .299 + px[i+1] * .587 + px[i+2] * .114) / 255;
+      const v = g > (BAYER[y % 4][x % 4] + .5) / 16 ? 255 : 0;
+      px[i] = px[i+1] = px[i+2] = v; px[i+3] = 255;
+    }
+    c.putImageData(idt, 0, 0);
+    S.pendingPic = { data: cv.toDataURL('image/png'), w, h };
+    URL.revokeObjectURL(img.src);
+    hint('NOW TAP THE MAP WHERE THE PICTURE LANDS', 1);
+  };
+  img.src = URL.createObjectURL(f);
+});
+
+/* ---- SAY (+ card-writing mode) ---- */
+function commitSay(text){
+  text = String(text || '').trim().slice(0, CAP.UTT_CHARS);
+  if (!text) return;
+  if (S.writingCard){
+    S.writingCard = false;
+    $('sayinput').classList.remove('cardmode');
+    $('sayinput').placeholder = 'speak or type \u2014 it lands at your here';
+    $('sayinput').value = '';
+    commit({ v: 'CARD', text: text.toUpperCase() });
+    toast('CARD WRITTEN TO THE BOTTOM OF THE DECK \u00b7 NEVER SHUFFLED');
+    return;
+  }
+  const ll = S.anchor || (() => { const c = map.getCenter(); return [c.lat, c.lng]; })();
+  if (!S.anchor) setAnchor({ lat: ll[0], lng: ll[1] });
+  commit({ v: 'SAY', text, ll, words: extractWords(text) });
+  $('sayinput').value = '';
+}
+$('sendbtn').addEventListener('click', () => commitSay($('sayinput').value));
+$('sayinput').addEventListener('keydown', e => { if (e.key === 'Enter') commitSay($('sayinput').value); });
+$('micbtn').addEventListener('click', () => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return toast('NO SPEECH ENGINE HERE \u00b7 THE TYPED BAR IS THE SAME MORPHISM');
+  if (S.micOn){ S.micOn = false; try { S.mic.stop(); } catch(_){} $('micbtn').classList.remove('live'); return; }
+  const rec = new SR();
+  rec.continuous = true; rec.interimResults = true; rec.lang = 'en-US';
+  rec.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      const r = e.results[i];
+      if (r.isFinal) commitSay(r[0].transcript);
+      else interim += r[0].transcript;
+    }
+    $('sayinput').value = interim;
+  };
+  rec.onend = () => { if (S.micOn){ try { rec.start(); } catch(_){ S.micOn = false; $('micbtn').classList.remove('live'); } } };
+  rec.onerror = ev => { if (ev.error === 'not-allowed'){ S.micOn = false; $('micbtn').classList.remove('live'); toast('MIC BLOCKED BY BROWSER'); } };
+  S.mic = rec; S.micOn = true; $('micbtn').classList.add('live');
+  try { rec.start(); toast('LIVE \u00b7 WHAT YOU SPEAK LANDS AT YOUR HERE'); } catch(_){}
+});
+
+/* ---- MIND / GRID / WALK / chrome ---- */
+$('mindbtn').addEventListener('click', function(){
+  S.mind = (S.mind + 1) % 3;
+  document.body.classList.toggle('mind', S.mind >= 1);
+  document.body.classList.toggle('blind', S.mind === 2);
+  this.classList.toggle('on', S.mind === 1);
+  this.classList.toggle('blind', S.mind === 2);
+  this.textContent = S.mind === 0 ? 'MIND' : (S.mind === 1 ? 'MIND ON' : 'BLIND');
+  toast(S.mind === 0 ? 'BASEMAP RESTORED'
+      : S.mind === 1 ? 'BASEMAP OFF \u00b7 DOES YOUR IMAGE STAND?'
+      : 'NAMES OFF TOO \u00b7 DOES YOUR GEOMETRY STAND?', 2800);
+});
+const GRID_STEPS = [10, 5, 2, 1, .5, .2, .1, .05, .02, .01, .005, .002, .001, .0005, .0002];
+function redrawGrid(){
+  gridLayer.clearLayers();
+  if (!S.gridMode) return;
+  const b = map.getBounds();
+  const span = Math.max(b.getNorth() - b.getSouth(), (b.getEast() - b.getWest()) * .7);
+  const target = S.gridMode === 1 ? 6 : 14;
+  let step = GRID_STEPS[0];
+  for (const st of GRID_STEPS){ if (span / st >= target){ step = st; break; } step = st; }
+  const s = Math.floor(b.getSouth() / step) * step, n = b.getNorth();
+  const w = Math.floor(b.getWest() / step) * step, e = b.getEast();
+  const style = { color: '#000', weight: 1, opacity: .16, interactive: false };
+  let guard = 0;
+  for (let la = s; la <= n && guard < 80; la += step, guard++)
+    gridLayer.addLayer(L.polyline([[la, w], [la, e + step]], style));
+  for (let lo = w; lo <= e && guard < 160; lo += step, guard++)
+    gridLayer.addLayer(L.polyline([[s, lo], [n + step, lo]], style));
+}
+$('gridbtn').addEventListener('click', function(){
+  S.gridMode = (S.gridMode + 1) % 3;
+  this.textContent = ['GRID', 'GRID ON', 'GRID XX'][S.gridMode];
+  this.classList.toggle('on', S.gridMode > 0);
+  redrawGrid();
+});
+$('walkbtn').addEventListener('click', function(){
+  if (S.walk){
+    S.walk = false; this.classList.remove('on');
+    if (S.walkId !== null) navigator.geolocation.clearWatch(S.walkId);
+    return;
+  }
+  if (!navigator.geolocation) return toast('NO GPS HERE');
+  S.walk = true; this.classList.add('on');
+  let first = true;
+  S.walkId = navigator.geolocation.watchPosition(p => {
+    setAnchor({ lat: p.coords.latitude, lng: p.coords.longitude }, first);
+    first = false;
+  }, () => { S.walk = false; this.classList.remove('on'); toast('GPS REFUSED'); }, { enableHighAccuracy: true });
+});
+function openLedger(open){ $('ledger').classList.toggle('open', open); }
+$('ledbtn').addEventListener('click', () => openLedger(!$('ledger').classList.contains('open')));
+$('ledclose').addEventListener('click', () => openLedger(false));
+document.querySelectorAll('[data-close]').forEach(b =>
+  b.addEventListener('click', () => $(b.dataset.close).classList.remove('show')));
+$('qrbtn').addEventListener('click', () => {
+  if (!S.room) return;
+  const box = $('qrbox'); box.innerHTML = '';
+  const url = location.href.split('#')[0] + '#join=' + S.room;
+  try { new QRCode(box, { text: url, width: 220, height: 220, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); }
+  catch(_){ box.textContent = url; }
+  $('qrcode-text').textContent = S.room;
+  $('qrnote').textContent = S.isHost
+    ? 'You are the sequencer of this ground. If you leave, the room orphans \u2014 the ledger survives on every phone that holds it.'
+    : 'Ground ' + S.room + ' \u00b7 sequenced elsewhere.';
+  $('qrov').classList.add('show');
+});
+$('thbtn').addEventListener('click', () => {
+  const t = GROUND_THEORY;
+  $('theorytext').innerHTML =
+    '<b>CLAIM</b>\n' + esc(t.claim) + '\n\n' +
+    '<b>THE ORACLE</b>\n' + esc(t.oracle) +
+    '\nthe drawer obeys; the draw is on the record with the drawer\u2019s name.\n\n' +
+    '<b>THE VOID</b>\n' + esc(t.voidr) + '\n' + esc(t.ruin) +
+    '\nevery demise is journaled: name, owner, population. the ledger is the census.\n\n' +
+    '<b>DIMENSIONS</b>\n' + esc(t.layers) +
+    '\nGENERATE grows settlements with their own toponyms in the active dimension.\n\n' +
+    '<b>HANDS</b>\n' + esc(t.hands) + '\nthe Void\u2019s ruins cannot be moved \u2014 the Void keeps what it takes.\n\n' +
+    '<b>PLAY</b>\nthe brain wants a permanent optimal city; the deck subverts permanence.' +
+    '\ngrief becomes lore: eulogies, evacuations, districts founded inside the loss.' +
+    '\nMIND: basemap off \u2014 does what remains still navigate?\n\n' +
+    '<b>FAILURE</b>\nthe Void cannot be isolated at the edges: it targets what the ledger loves.' +
+    '\nhost leaves \u2192 room orphans; ledger survives locally.';
+  $('thov').classList.add('show');
+});
+
+/* ---------------------------------------------------------------
+   BOOT
+---------------------------------------------------------------- */
+function initMap(){
+  map = L.map('map', { zoomControl: false, attributionControl: true })
+    .setView([33.7756, -84.3963], 15);
+  tiles = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 20, subdomains: 'abcd', attribution: '&copy; OpenStreetMap &copy; CARTO'
+  }).addTo(map);
+  gridLayer = L.layerGroup().addTo(map);
+  depositLayer = L.layerGroup().addTo(map);
+  presLayer = L.layerGroup().addTo(map);
+  map.on('click', onMapTap);
+  map.on('mousedown', dragStart); map.on('mousemove', dragMove);
+  window.addEventListener('mouseup', dragEnd);
+  map.on('moveend zoomend', () => { redrawGrid(); drawRadar(); });
+  map.on('contextmenu', e => { if (e.originalEvent) e.originalEvent.preventDefault(); });
+  const cont = map.getContainer();
+  cont.addEventListener('touchstart', e => {
+    if (!S.draw || e.touches.length !== 1) return;
+    dragging = true; lastPt = null;
+  }, { passive: true });
+  cont.addEventListener('touchmove', e => {
+    if (!dragging || !S.draw || e.touches.length !== 1) return;
+    e.preventDefault();
+    dragMove({ latlng: map.mouseEventToLatLng(e.touches[0]) });
+  }, { passive: false });
+  cont.addEventListener('touchend', dragEnd);
+}
+function enterGround(){
+  $('joinov').classList.remove('show');
+  $('roomcode').textContent = S.room || 'SOLO';
+  setAnchor(map.getCenter());
+  buildLayerbar();
+  toast(S.isHost ? 'GROUND ' + S.room + ' IS OPEN \u00b7 SHOW THE QR' : 'YOU STAND ON GROUND ' + S.room);
+  drawRadar();
+  if (navigator.geolocation && S.isHost)
+    navigator.geolocation.getCurrentPosition(p => {
+      map.setView([p.coords.latitude, p.coords.longitude], 16);
+      setAnchor({ lat: p.coords.latitude, lng: p.coords.longitude });
+    }, () => {}, { timeout: 4000 });
+}
+$('hostbtn').addEventListener('click', function(){
+  if (this.disabled) return; this.disabled = true;
+  this.textContent = 'OPENING\u2026';
+  startHost($('nameinput').value.trim().toUpperCase() || 'ANON');
+});
+$('joinbtn').addEventListener('click', function(){
+  const code = $('codeinput').value.trim().toUpperCase();
+  if (!code) return toast('ENTER A GROUND CODE OR SCAN A QR');
+  if (this.disabled) return; this.disabled = true; this.textContent = '\u2026';
+  joinRoom(code, $('nameinput').value.trim().toUpperCase() || 'ANON');
+});
+(function parseHash(){
+  const m = location.hash.match(/join=([A-Za-z0-9]+)/);
+  if (m){ $('codeinput').value = m[1].toUpperCase(); $('nameinput').placeholder = 'YOUR NAME \u2192 THEN JOIN'; }
+})();
+
+initMap();
+console.log('COMMON GROUND v4 ::', GROUND_THEORY.claim);
+</script>
+</body>
+</html>

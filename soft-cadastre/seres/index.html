@@ -166,7 +166,7 @@ function unproject(x,y){return[(x-view.ox)/view.scale,-(y-view.oy)/view.scale]}
 function visibleClaims(){return (atlas.claims||[]).filter(c=>(dimension==='ALL'||c.dimension===dimension)&&(lane==='ALL'||c.source_lane===lane))}
 function frame(t){lastFrame=t;draw();requestAnimationFrame(frame)}
 function draw(){
-  if(!atlas)return;ctx.fillStyle=palette.paper;ctx.fillRect(0,0,w,h);drawGrid();drawBasemap();
+  if(!atlas)return;labelBoxes=[];ctx.fillStyle=palette.paper;ctx.fillRect(0,0,w,h);drawGrid();drawBasemap();
   const claims=visibleClaims();$('#mVisible').textContent=claims.length;
   const ordered=[...claims].sort((a,b)=>weight(a)-weight(b));
   for(const c of ordered)drawClaim(c,c===selected||c===hovered);
@@ -212,7 +212,7 @@ function drawBasemap(){
       const big=pl.kind==='city'||pl.kind==='town';
       ctx.fillStyle=big?'#8a8474':'#a8a294';
       ctx.fillRect(p.x-1.5,p.y-1.5,3,3);
-      ctx.fillText(pl.name.toUpperCase(),p.x+5,p.y);
+      if(claimLabel(p.x+5,p.y,pl.name,9))ctx.fillText(pl.name.toUpperCase(),p.x+5,p.y);
     }
   }
   ctx.restore();
@@ -235,9 +235,26 @@ function drawGeometry(g,width,fill){
   if(g.type==='LineString'){ctx.lineWidth=width;ctx.beginPath();g.coordinates.forEach((q,i)=>{const p=project(q);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});ctx.stroke();return}
   if(g.type==='Polygon'){ctx.lineWidth=width;ctx.beginPath();g.coordinates[0].forEach((q,i)=>{const p=project(q);i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y)});ctx.closePath();fill?ctx.fill():ctx.stroke()}
 }
+/* Eight named places that cluster on one corridor will write over each other and
+   the result is unreadable at any zoom. Claim a box per label and skip anything
+   that would land on top of one already drawn — dropping a label is honest, an
+   illegible pile is not. */
+let labelBoxes=[];
+function claimLabel(x,y,text,size){
+  const wpx=text.length*size*.62,box={x:x-2,y:y-size*.7,w:wpx+10,h:size*1.5};
+  for(const b of labelBoxes)
+    if(box.x<b.x+b.w&&box.x+box.w>b.x&&box.y<b.y+b.h&&box.y+box.h>b.y)return false;
+  labelBoxes.push(box);return true;
+}
 function drawLabels(){
   ctx.save();ctx.font='10px ui-monospace,monospace';ctx.textBaseline='middle';ctx.fillStyle=palette.ink;ctx.globalAlpha=.86;
-  for(const p of atlas.places||[]){const c=centroid(p.geometry),q=project(c);if(q.x<-100||q.x>w+100||q.y<-20||q.y>h+20)continue;ctx.fillRect(q.x-2,q.y-2,4,4);ctx.fillText(p.name,q.x+6,q.y)}ctx.restore();
+  for(const p of atlas.places||[]){
+    const c=centroid(p.geometry),q=project(c);
+    if(q.x<-100||q.x>w+100||q.y<-20||q.y>h+20)continue;
+    ctx.fillRect(q.x-2,q.y-2,4,4);
+    if(claimLabel(q.x+6,q.y,p.name,10))ctx.fillText(p.name,q.x+6,q.y);
+  }
+  ctx.restore();
 }
 function centroid(g){if(g.type==='Point')return g.coordinates;const pts=g.type==='LineString'?g.coordinates:g.coordinates[0];return pts.reduce((a,p)=>[a[0]+p[0]/pts.length,a[1]+p[1]/pts.length],[0,0])}
 function setupPointer(){

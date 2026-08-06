@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#ffffff">
+<title>COMMON GROUND · a map you talk onto</title>
+<meta name="description" content="Collaborative real-map whiteboard. What you speak is passed through onto shared ground. The chat log is the territory.">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+/* ============ COMMON GROUND · POML v2 ============
+   absolute white/black · four named accents · no border-radius
+   IBM Plex Mono · drawn marks, never emoji glyphs            */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap');
+:root{
+  --ink:#000; --paper:#fff;
+  --teal:#19e6c8; --amber:#ffd23f; --red:#ff2e2e; --blue:#3b82f6;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;border-radius:0!important}
+html,body{height:100%;width:100%;overflow:hidden;background:var(--paper)}
+body{font-family:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;color:var(--ink);position:fixed;inset:0}
+button,input{font:inherit;color:inherit;background:var(--paper);border:1px solid var(--ink)}
+button{cursor:pointer;padding:8px 10px;letter-spacing:.06em}
+button:active{background:var(--ink);color:var(--paper)}
+#map{position:absolute;inset:0;z-index:1;background:var(--paper)}
+.leaflet-container{font-family:inherit}
+.leaflet-control-attribution{font-size:9px;background:rgba(255,255,255,.85)!important}
+
+/* ---- top bar ---- */
+#topbar{position:absolute;top:0;left:0;right:0;z-index:20;display:flex;align-items:stretch;gap:0;
+  padding:max(8px,env(safe-area-inset-top)) 8px 0 8px;pointer-events:none}
+#topbar>*{pointer-events:auto}
+.badge{border:1px solid var(--ink);background:var(--paper);font-size:10px;font-weight:700;
+  letter-spacing:.18em;padding:8px 10px;display:flex;align-items:center;white-space:nowrap}
+#roomchip{border-left:none;font-weight:400;letter-spacing:.1em}
+#roomchip b{font-weight:700;margin-left:6px}
+#topspace{flex:1}
+.tbtn{border:1px solid var(--ink);background:var(--paper);font-size:10px;font-weight:600;
+  letter-spacing:.12em;padding:8px 9px;margin-left:-1px}
+.tbtn.on{background:var(--ink);color:var(--paper)}
+#walkbtn.on{background:var(--blue);border-color:var(--blue);color:var(--paper)}
+
+/* ---- bottom dock ---- */
+#dock{position:absolute;left:0;right:0;bottom:0;z-index:20;
+  padding:0 8px calc(max(8px,env(safe-area-inset-bottom))) 8px;display:flex;flex-direction:column;gap:0}
+#palette{display:none;background:var(--paper);border:1px solid var(--ink);border-bottom:none;
+  overflow-x:auto;white-space:nowrap;padding:6px}
+#palette.show{display:block}
+.pal{display:inline-flex;flex-direction:column;align-items:center;border:1px solid var(--ink);
+  margin-right:6px;padding:4px 6px;background:var(--paper);vertical-align:top}
+.pal img{width:30px;height:30px;display:block}
+.pal span{font-size:8px;letter-spacing:.08em;margin-top:2px}
+.pal.sel{background:var(--ink);color:var(--paper)}
+#toolrow{display:flex}
+.tool{flex:1;border:1px solid var(--ink);margin-left:-1px;background:var(--paper);
+  font-size:10px;font-weight:600;letter-spacing:.1em;padding:9px 2px;text-align:center}
+.tool:first-child{margin-left:0}
+.tool.armed{background:var(--ink);color:var(--paper)}
+#inputrow{display:flex;margin-top:-1px}
+#sayinput{flex:1;border:1px solid var(--ink);padding:11px 10px;font-size:13px;outline:none;min-width:0}
+#sayinput::placeholder{color:#000;opacity:.35}
+#micbtn,#sendbtn{border:1px solid var(--ink);margin-left:-1px;width:52px;font-weight:700;font-size:10px;letter-spacing:.06em}
+#micbtn.live{background:var(--red);border-color:var(--red);color:var(--paper);animation:micpulse 1.1s steps(2) infinite}
+@keyframes micpulse{50%{background:var(--paper);color:var(--red)}}
+#hint{position:absolute;left:50%;transform:translateX(-50%);bottom:118px;z-index:19;
+  background:var(--ink);color:var(--paper);font-size:10px;letter-spacing:.12em;padding:6px 10px;
+  display:none;white-space:nowrap}
+#hint.show{display:block}
+
+/* ---- ledger panel ---- */
+#ledger{position:absolute;top:0;right:0;bottom:0;width:min(320px,86vw);z-index:25;
+  background:var(--paper);border-left:1px solid var(--ink);transform:translateX(102%);
+  transition:transform .22s;display:flex;flex-direction:column}
+#ledger.open{transform:none}
+#ledhead{border-bottom:1px solid var(--ink);padding:max(10px,env(safe-area-inset-top)) 10px 8px 10px}
+#ledhead .badge{border:none;padding:0;letter-spacing:.18em}
+#inv{font-size:9px;letter-spacing:.1em;margin-top:5px;display:flex;gap:10px}
+#inv b{font-weight:700}
+#inv .ok{color:var(--teal)} #inv .bad{color:var(--red)}
+#ledlist{flex:1;overflow-y:auto;overscroll-behavior:contain}
+.lline{border-bottom:1px solid #000;padding:8px 10px;font-size:10px;line-height:1.5;cursor:pointer}
+.lline .who{font-weight:700;letter-spacing:.06em}
+.lline .verb{letter-spacing:.12em;opacity:.55;margin:0 4px}
+.lline.hot{background:var(--ink);color:var(--paper)}
+.lline.hot .swatch{outline:1px solid var(--paper)}
+.swatch{display:inline-block;width:8px;height:8px;margin-right:6px;vertical-align:baseline}
+.lline .gone{text-decoration:line-through;opacity:.5}
+#ledclose{position:absolute;top:max(8px,env(safe-area-inset-top));right:8px}
+
+/* ---- overlays ---- */
+.overlay{position:absolute;inset:0;z-index:40;background:rgba(255,255,255,.94);
+  display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.show{display:flex}
+.card{background:var(--paper);border:1px solid var(--ink);width:min(360px,92vw);padding:16px;
+  max-height:86vh;overflow-y:auto}
+.card h1{font-size:13px;letter-spacing:.22em;font-weight:700;margin-bottom:2px}
+.card .sub{font-size:10px;letter-spacing:.06em;opacity:.7;margin-bottom:14px}
+.frow{display:flex;margin-top:8px}
+.frow input{flex:1;padding:10px;min-width:0}
+.frow button{margin-left:-1px;font-weight:700;font-size:10px}
+.wide{width:100%;margin-top:10px;font-weight:700;font-size:11px;letter-spacing:.14em;padding:12px}
+.wide.prime{background:var(--ink);color:var(--paper)}
+.rule{border-top:1px solid var(--ink);margin:14px 0 4px}
+.note{font-size:9px;letter-spacing:.06em;opacity:.65;margin-top:8px;line-height:1.6}
+#qrbox{display:flex;justify-content:center;margin:12px 0;image-rendering:pixelated}
+#qrbox img,#qrbox canvas{border:1px solid var(--ink);padding:8px;background:#fff}
+#qrcode-text{text-align:center;font-size:16px;font-weight:700;letter-spacing:.3em}
+#theorytext{font-size:10px;line-height:1.65;white-space:pre-wrap}
+#theorytext b{letter-spacing:.14em}
+
+/* ---- deposits on the ground ---- */
+.gm{background:none;border:none}
+.utt{background:var(--paper);border:1px solid var(--ink);border-left:4px solid var(--ink);
+  padding:5px 8px;font-size:11px;line-height:1.45;max-width:180px;width:max-content;
+  box-shadow:3px 3px 0 rgba(0,0,0,.18)}
+.utt .u-who{display:block;font-size:8px;font-weight:700;letter-spacing:.14em;opacity:.65}
+.gicon{display:block;background:transparent}
+.reveal{animation:rv .5s steps(5) backwards}
+@keyframes rv{from{opacity:0;transform:scale(.2)}}
+.pic{border:1px solid var(--ink);background:#fff;padding:3px;box-shadow:3px 3px 0 rgba(0,0,0,.18)}
+.pic img{display:block;image-rendering:pixelated}
+.pres{width:26px;height:26px;border:2px solid var(--ink);background:var(--paper);
+  display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700}
+.pres.mine{outline:2px solid var(--ink);outline-offset:2px}
+.flash{animation:fl .9s steps(6)}
+@keyframes fl{0%,40%{filter:invert(1)}}
+#toast{position:absolute;top:64px;left:50%;transform:translateX(-50%);z-index:60;
+  background:var(--ink);color:var(--paper);font-size:10px;letter-spacing:.14em;
+  padding:8px 12px;display:none;white-space:nowrap;max-width:92vw;overflow:hidden;text-overflow:ellipsis}
+</style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="topbar">
+  <div class="badge">COMMON GROUND</div>
+  <div class="badge" id="roomchip">GROUND <b id="roomcode">—</b></div>
+  <div id="topspace"></div>
+  <button class="tbtn" id="walkbtn" title="anchor follows GPS">WALK</button>
+  <button class="tbtn" id="qrbtn">QR</button>
+  <button class="tbtn" id="ledbtn">LEDGER</button>
+  <button class="tbtn" id="thbtn">THEORY</button>
+</div>
+
+<div id="hint"></div>
+
+<div id="dock">
+  <div id="palette"></div>
+  <div id="toolrow">
+    <button class="tool armed" data-tool="SAY">SAY</button>
+    <button class="tool" data-tool="MARK">MARK</button>
+    <button class="tool" data-tool="PLACE">PLACE</button>
+    <button class="tool" data-tool="PHOTO">PHOTO</button>
+    <button class="tool" data-tool="ERASE">ERASE</button>
+  </div>
+  <div id="inputrow">
+    <input id="sayinput" autocomplete="off" placeholder="speak or type — it lands on the map">
+    <button id="micbtn">MIC</button>
+    <button id="sendbtn">SAY</button>
+  </div>
+</div>
+
+<div id="ledger">
+  <div id="ledhead">
+    <div class="badge">LEDGER · THE CHAT IS THE MAP</div>
+    <div id="inv">
+      <span>EVENTS <b id="inv-e">0</b></span>
+      <span>AUTHORS <b id="inv-a">0</b></span>
+      <span>FOLD <b id="inv-f" class="ok">OK</b></span>
+    </div>
+  </div>
+  <div id="ledlist"></div>
+  <button class="tbtn" id="ledclose">CLOSE</button>
+</div>
+
+<div class="overlay show" id="joinov">
+  <div class="card">
+    <h1>COMMON GROUND</h1>
+    <div class="sub">a real map everyone talks onto · the chat log is the territory</div>
+    <div class="frow"><input id="nameinput" maxlength="14" placeholder="YOUR NAME"></div>
+    <button class="wide prime" id="hostbtn">OPEN NEW GROUND</button>
+    <div class="rule"></div>
+    <div class="frow">
+      <input id="codeinput" maxlength="12" placeholder="GROUND CODE" style="text-transform:uppercase">
+      <button id="joinbtn">JOIN</button>
+    </div>
+    <div class="note">Open a ground, then show the QR under the QR chip — anyone who scans it lands on the same map. What you speak passes through onto shared ground: nouns become drawn things, marks are ink, pictures are dithered to bone. Nothing is anonymous; nothing is deleted, only erased on the record.</div>
+  </div>
+</div>
+
+<div class="overlay" id="qrov">
+  <div class="card">
+    <h1>SCAN TO STAND HERE</h1>
+    <div class="sub">one scan = same ground, same ledger</div>
+    <div id="qrbox"></div>
+    <div id="qrcode-text">—</div>
+    <div class="note" id="qrnote"></div>
+    <button class="wide" data-close="qrov">CLOSE</button>
+  </div>
+</div>
+
+<div class="overlay" id="thov">
+  <div class="card">
+    <h1>THEORY OF THE PROGRAM</h1>
+    <div class="sub">the instrument states its own argument</div>
+    <div id="theorytext"></div>
+    <button class="wide" data-close="thov">CLOSE</button>
+  </div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="picfile" accept="image/*" style="display:none">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* =====================================================================
+   COMMON GROUND — theory-bearing collaborative map whiteboard
+   ===================================================================== */
+'use strict';
+
+const GROUND_THEORY = Object.freeze({
+  claim:  'A map becomes common when speech leaves the mouth and lands as territory.',
+  ground: 'the one substrate nobody here authored — the real map',
+  anchor: 'the deictic HERE that your speech lands on',
+  event:  'one authored act: SAY, MARK, PLACE, PICTURE, ERASE',
+  ledger: 'the append-only chat log; the visible world is fold(ledger)',
+  glyph:  'the drawn body a word compiles to — every word gets a body',
+  erase:  'not deletion — an event about an event; curation is play'
+});
+
+const CAP = Object.freeze({          /* named ceilings, per doctrine */
+  EVENTS: 4096, STROKE_PTS: 512, PEERS: 12,
+  GLYPHS_PER_SAY: 4, PIC_PX: 120, UTT_CHARS: 140, LEDGER_LINES: 400
+});
+
+const ACCENTS = ['#19e6c8', '#ffd23f', '#ff2e2e', '#3b82f6'];
+
+/* ---------------------------------------------------------------
+   WORD → WORLD lexicon: each painter draws a 48px vector glyph.
+   d = {c:ctx, s:size, k:ink, a:accent}
+---------------------------------------------------------------- */
+function P_line(c, x1, y1, x2, y2){ c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2, y2); c.stroke(); }
+function P_circ(c, x, y, r, fill){ c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); if (fill) c.fill(); else c.stroke(); }
+function P_poly(c, pts, fill){ c.beginPath(); c.moveTo(pts[0][0], pts[0][1]); for (let i = 1; i < pts.length; i++) c.lineTo(pts[i][0], pts[i][1]); c.closePath(); if (fill) c.fill(); else c.stroke(); }
+
+const LEX = {
+  tree(d){ const c = d.c; c.fillStyle = d.a; P_poly(c, [[24,6],[38,26],[10,26]], 1); c.strokeStyle = d.k; P_poly(c, [[24,6],[38,26],[10,26]], 0); c.fillStyle = d.k; c.fillRect(21, 26, 6, 14); },
+  house(d){ const c = d.c; c.strokeStyle = d.k; c.strokeRect(10, 22, 28, 18); c.fillStyle = d.a; P_poly(c, [[24,6],[42,22],[6,22]], 1); c.strokeStyle = d.k; P_poly(c, [[24,6],[42,22],[6,22]], 0); c.fillStyle = d.k; c.fillRect(20, 30, 8, 10); },
+  water(d){ const c = d.c; c.strokeStyle = d.a; c.lineWidth = 3; for (let r = 0; r < 3; r++){ c.beginPath(); for (let x = 4; x <= 44; x += 2) c.lineTo(x, 14 + r * 10 + Math.sin(x / 4) * 3); c.stroke(); } },
+  fire(d){ const c = d.c; c.fillStyle = d.a; P_poly(c, [[24,4],[34,20],[30,22],[38,34],[10,34],[18,20],[14,18]], 1); c.strokeStyle = d.k; P_poly(c, [[24,4],[34,20],[30,22],[38,34],[10,34],[18,20],[14,18]], 0); c.fillStyle = d.k; P_circ(c, 24, 30, 4, 1); },
+  danger(d){ const c = d.c; c.fillStyle = d.a; P_poly(c, [[24,4],[44,40],[4,40]], 1); c.strokeStyle = d.k; c.lineWidth = 2.4; P_poly(c, [[24,4],[44,40],[4,40]], 0); P_line(c, 24, 15, 24, 29); c.fillStyle = d.k; P_circ(c, 24, 35, 2.2, 1); },
+  food(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.4; P_circ(c, 24, 24, 13, 0); c.fillStyle = d.a; P_circ(c, 24, 24, 8, 1); P_line(c, 4, 10, 4, 26); P_line(c, 44, 10, 44, 26); },
+  star(d){ const c = d.c, p = []; for (let i = 0; i < 10; i++){ const a = -Math.PI/2 + i * Math.PI/5, r = i % 2 ? 7 : 17; p.push([24 + Math.cos(a) * r, 24 + Math.sin(a) * r]); } c.fillStyle = d.a; P_poly(c, p, 1); c.strokeStyle = d.k; P_poly(c, p, 0); },
+  heart(d){ const c = d.c; c.fillStyle = d.a; c.beginPath(); c.moveTo(24, 40); c.bezierCurveTo(2, 24, 8, 6, 24, 16); c.bezierCurveTo(40, 6, 46, 24, 24, 40); c.fill(); c.strokeStyle = d.k; c.stroke(); },
+  arrow(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 3; P_line(c, 8, 40, 36, 12); c.fillStyle = d.a; P_poly(c, [[40,8],[40,24],[24,8]], 1); c.strokeStyle = d.k; P_poly(c, [[40,8],[40,24],[24,8]], 0); },
+  car(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(6, 20, 36, 12); c.strokeStyle = d.k; c.strokeRect(6, 20, 36, 12); c.strokeRect(14, 12, 20, 8); c.fillStyle = d.k; P_circ(c, 15, 34, 5, 1); P_circ(c, 33, 34, 5, 1); },
+  bridge(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.6; P_line(c, 4, 30, 44, 30); c.beginPath(); c.arc(24, 30, 14, Math.PI, 0); c.stroke(); P_line(c, 10, 30, 10, 40); P_line(c, 38, 30, 38, 40); c.strokeStyle = d.a; P_line(c, 4, 40, 44, 40); },
+  bird(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.6; c.beginPath(); c.arc(15, 22, 9, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); c.beginPath(); c.arc(33, 22, 9, Math.PI * 1.1, Math.PI * 1.9); c.stroke(); c.fillStyle = d.a; P_circ(c, 24, 30, 3, 1); },
+  boat(d){ const c = d.c; c.fillStyle = d.k; P_poly(c, [[6,30],[42,30],[34,40],[14,40]], 1); c.fillStyle = d.a; P_poly(c, [[24,6],[24,28],[38,28]], 1); c.strokeStyle = d.k; P_poly(c, [[24,6],[24,28],[38,28]], 0); },
+  camp(d){ const c = d.c; c.fillStyle = d.a; P_poly(c, [[24,8],[42,40],[6,40]], 1); c.strokeStyle = d.k; P_poly(c, [[24,8],[42,40],[6,40]], 0); c.fillStyle = d.k; P_poly(c, [[24,22],[31,40],[17,40]], 1); },
+  gate(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.6; P_line(c, 10, 8, 10, 40); P_line(c, 38, 8, 38, 40); c.strokeStyle = d.a; P_line(c, 10, 14, 38, 14); P_line(c, 10, 24, 38, 24); P_line(c, 10, 34, 38, 34); },
+  tower(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(18, 10, 12, 30); c.strokeStyle = d.k; c.strokeRect(18, 10, 12, 30); P_line(c, 14, 10, 34, 10); c.fillStyle = d.k; c.fillRect(16, 6, 4, 4); c.fillRect(28, 6, 4, 4); c.fillRect(22, 6, 4, 4); },
+  road(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 3; P_line(c, 10, 44, 20, 4); P_line(c, 38, 44, 28, 4); c.strokeStyle = d.a; c.setLineDash([4, 5]); P_line(c, 24, 44, 24, 4); c.setLineDash([]); },
+  dog(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(10, 20, 24, 12); c.strokeStyle = d.k; c.strokeRect(10, 20, 24, 12); c.strokeRect(30, 12, 10, 10); c.lineWidth = 2.4; P_line(c, 12, 32, 12, 42); P_line(c, 32, 32, 32, 42); P_line(c, 10, 22, 4, 14); },
+  person(d){ const c = d.c; c.fillStyle = d.a; P_circ(c, 24, 12, 6, 1); c.strokeStyle = d.k; P_circ(c, 24, 12, 6, 0); c.lineWidth = 2.6; P_line(c, 24, 18, 24, 32); P_line(c, 12, 24, 36, 24); P_line(c, 24, 32, 14, 44); P_line(c, 24, 32, 34, 44); },
+  flag(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.6; P_line(c, 14, 4, 14, 44); c.fillStyle = d.a; P_poly(c, [[14,6],[38,12],[14,20]], 1); c.strokeStyle = d.k; P_poly(c, [[14,6],[38,12],[14,20]], 0); },
+  coffee(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(10, 18, 22, 18); c.strokeStyle = d.k; c.strokeRect(10, 18, 22, 18); c.beginPath(); c.arc(34, 25, 6, -Math.PI/2, Math.PI/2); c.stroke(); c.lineWidth = 1.6; P_line(c, 16, 14, 17, 8); P_line(c, 24, 14, 25, 8); },
+  music(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.6; P_line(c, 20, 36, 20, 8); P_line(c, 36, 32, 36, 6); P_line(c, 20, 8, 36, 6); c.fillStyle = d.a; P_circ(c, 15, 37, 5, 1); P_circ(c, 31, 33, 5, 1); c.strokeStyle = d.k; P_circ(c, 15, 37, 5, 0); P_circ(c, 31, 33, 5, 0); },
+  book(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.4; c.beginPath(); c.moveTo(24, 10); c.quadraticCurveTo(12, 5, 4, 10); c.lineTo(4, 38); c.quadraticCurveTo(12, 33, 24, 38); c.quadraticCurveTo(36, 33, 44, 38); c.lineTo(44, 10); c.quadraticCurveTo(36, 5, 24, 10); c.stroke(); P_line(c, 24, 10, 24, 38); c.strokeStyle = d.a; P_line(c, 9, 16, 19, 15); P_line(c, 9, 22, 19, 21); },
+  phone(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(15, 4, 18, 40); c.strokeStyle = d.k; c.strokeRect(15, 4, 18, 40); c.fillStyle = d.k; c.fillRect(18, 8, 12, 26); },
+  sun(d){ const c = d.c; c.fillStyle = d.a; P_circ(c, 24, 24, 9, 1); c.strokeStyle = d.k; P_circ(c, 24, 24, 9, 0); c.lineWidth = 2.2; for (let i = 0; i < 8; i++){ const a = i * Math.PI/4; P_line(c, 24 + Math.cos(a)*13, 24 + Math.sin(a)*13, 24 + Math.cos(a)*19, 24 + Math.sin(a)*19); } },
+  moon(d){ const c = d.c; c.fillStyle = d.a; c.beginPath(); c.arc(24, 24, 15, Math.PI * .3, Math.PI * 1.7); c.arc(31, 24, 11, Math.PI * 1.62, Math.PI * .38, true); c.fill(); c.strokeStyle = d.k; c.stroke(); },
+  rain(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.4; c.beginPath(); c.arc(18, 16, 8, Math.PI, 0); c.arc(31, 16, 7, Math.PI, 0); c.stroke(); P_line(c, 8, 16, 40, 16); c.strokeStyle = d.a; for (let i = 0; i < 4; i++) P_line(c, 12 + i * 8, 22, 9 + i * 8, 34); },
+  mountain(d){ const c = d.c; c.fillStyle = d.a; P_poly(c, [[4,40],[18,12],[30,32],[36,20],[44,40]], 1); c.strokeStyle = d.k; P_poly(c, [[4,40],[18,12],[30,32],[36,20],[44,40]], 0); c.fillStyle = d.k; P_poly(c, [[18,12],[22,20],[14,20]], 1); },
+  flower(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.2; P_line(c, 24, 26, 24, 44); c.fillStyle = d.a; for (let i = 0; i < 5; i++){ const a = -Math.PI/2 + i * Math.PI*2/5; P_circ(c, 24 + Math.cos(a)*8, 18 + Math.sin(a)*8, 5.5, 1); } c.fillStyle = d.k; P_circ(c, 24, 18, 4, 1); },
+  fish(d){ const c = d.c; c.fillStyle = d.a; c.beginPath(); c.ellipse(21, 24, 14, 8, 0, 0, Math.PI * 2); c.fill(); c.strokeStyle = d.k; c.stroke(); P_poly(c, [[34,24],[44,16],[44,32]], 0); c.fillStyle = d.k; P_circ(c, 13, 22, 1.8, 1); },
+  key(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.6; P_circ(c, 15, 16, 8, 0); P_line(c, 20, 22, 38, 40); P_line(c, 32, 34, 38, 28); P_line(c, 36, 38, 42, 32); c.fillStyle = d.a; P_circ(c, 15, 16, 3.5, 1); },
+  door(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(14, 6, 20, 38); c.strokeStyle = d.k; c.strokeRect(14, 6, 20, 38); c.fillStyle = d.k; P_circ(c, 29, 26, 2.2, 1); },
+  light(d){ const c = d.c; c.fillStyle = d.a; P_circ(c, 24, 18, 10, 1); c.strokeStyle = d.k; P_circ(c, 24, 18, 10, 0); c.strokeRect(20, 28, 8, 6); c.lineWidth = 1.6; P_line(c, 20, 38, 28, 38); },
+  trash(d){ const c = d.c; c.fillStyle = d.a; P_poly(c, [[12,14],[36,14],[33,42],[15,42]], 1); c.strokeStyle = d.k; P_poly(c, [[12,14],[36,14],[33,42],[15,42]], 0); P_line(c, 8, 14, 40, 14); c.strokeRect(20, 8, 8, 4); c.lineWidth = 1.8; P_line(c, 20, 20, 20, 36); P_line(c, 28, 20, 28, 36); },
+  bench(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.8; P_line(c, 6, 26, 42, 26); P_line(c, 6, 18, 42, 18); P_line(c, 10, 26, 10, 40); P_line(c, 38, 26, 38, 40); c.strokeStyle = d.a; P_line(c, 6, 22, 42, 22); },
+  ball(d){ const c = d.c; c.fillStyle = d.a; P_circ(c, 24, 24, 15, 1); c.strokeStyle = d.k; P_circ(c, 24, 24, 15, 0); c.beginPath(); c.arc(24, 24, 15, Math.PI * .25, Math.PI * .75); c.stroke(); c.beginPath(); c.arc(24, 24, 15, Math.PI * 1.25, Math.PI * 1.75); c.stroke(); },
+  shop(d){ const c = d.c; c.strokeStyle = d.k; c.strokeRect(8, 20, 32, 20); c.fillStyle = d.a; P_poly(c, [[6,20],[42,20],[38,10],[10,10]], 1); c.strokeStyle = d.k; P_poly(c, [[6,20],[42,20],[38,10],[10,10]], 0); c.fillStyle = d.k; c.fillRect(26, 28, 10, 12); c.strokeRect(12, 26, 9, 8); },
+  help(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(18, 6, 12, 36); c.fillRect(6, 18, 36, 12); c.strokeStyle = d.k; P_poly(c, [[18,6],[30,6],[30,18],[42,18],[42,30],[30,30],[30,42],[18,42],[18,30],[6,30],[6,18],[18,18]], 0); },
+  money(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(6, 14, 36, 20); c.strokeStyle = d.k; c.strokeRect(6, 14, 36, 20); P_circ(c, 24, 24, 6, 0); c.lineWidth = 1.8; P_line(c, 24, 20, 24, 28); },
+  work(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(8, 18, 32, 22); c.strokeStyle = d.k; c.strokeRect(8, 18, 32, 22); c.strokeRect(18, 12, 12, 6); P_line(c, 8, 28, 40, 28); },
+  train(d){ const c = d.c; c.fillStyle = d.a; c.fillRect(10, 8, 28, 26); c.strokeStyle = d.k; c.strokeRect(10, 8, 28, 26); c.fillStyle = d.k; c.fillRect(14, 12, 20, 8); P_circ(c, 17, 39, 4, 1); P_circ(c, 31, 39, 4, 1); c.lineWidth = 2; P_line(c, 12, 44, 20, 34); P_line(c, 36, 44, 28, 34); },
+  bike(d){ const c = d.c; c.strokeStyle = d.k; c.lineWidth = 2.4; P_circ(c, 12, 32, 9, 0); P_circ(c, 36, 32, 9, 0); c.strokeStyle = d.a; P_line(c, 12, 32, 22, 16); P_line(c, 22, 16, 36, 32); P_line(c, 22, 16, 30, 16); c.strokeStyle = d.k; P_line(c, 12, 32, 26, 32); P_line(c, 26, 32, 30, 16); },
+  ghost(d){ const c = d.c; c.fillStyle = d.a; c.beginPath(); c.arc(24, 20, 13, Math.PI, 0); c.lineTo(37, 40); c.lineTo(32, 34); c.lineTo(28, 40); c.lineTo(24, 34); c.lineTo(20, 40); c.lineTo(16, 34); c.lineTo(11, 40); c.closePath(); c.fill(); c.strokeStyle = d.k; c.stroke(); c.fillStyle = d.k; P_circ(c, 19, 20, 2.2, 1); P_circ(c, 29, 20, 2.2, 1); }
+};
+
+const ALIAS = {
+  trees:'tree', wood:'tree', woods:'tree', forest:'tree', park:'tree', oak:'tree', pine:'tree',
+  home:'house', houses:'house', building:'house', apartment:'house', cabin:'house',
+  river:'water', lake:'water', sea:'water', ocean:'water', creek:'water', pond:'water', rain2:'rain',
+  flame:'fire', burn:'fire', hot:'fire', grill:'fire',
+  warning:'danger', careful:'danger', hazard:'danger', beware:'danger', avoid:'danger',
+  eat:'food', pizza:'food', lunch:'food', dinner:'food', restaurant:'food', snack:'food', taco:'food', tacos:'food',
+  stars:'star', good:'star', best:'star', favorite:'star',
+  love:'heart', like:'heart', hearts:'heart',
+  there:'arrow', here:'arrow', this:'arrow', that:'arrow', go:'arrow', way:'arrow', point:'arrow',
+  cars:'car', truck:'car', parking:'car', drive:'car', bus:'car',
+  birds:'bird', crow:'bird', owl:'bird', hawk:'bird',
+  ship:'boat', boats:'boat', kayak:'boat', canoe:'boat',
+  tent:'camp', camping:'camp', tents:'camp',
+  fence:'gate', wall:'gate', gates:'gate',
+  antenna:'tower', castle:'tower', towers:'tower',
+  street:'road', path:'road', trail:'road', roads:'road', route:'road',
+  dogs:'dog', puppy:'dog', cat:'dog', cats:'dog',
+  people:'person', me:'person', you:'person', someone:'person', friend:'person', crowd:'person', us:'person',
+  flags:'flag', meet:'flag', meeting:'flag', start:'flag', finish:'flag', base:'flag',
+  cafe:'coffee', tea:'coffee', drink:'coffee', beer:'coffee', bar:'coffee',
+  song:'music', band:'music', concert:'music', radio:'music', sing:'music',
+  books:'book', library:'book', read:'book', school:'book', study:'book',
+  call:'phone', text:'phone', phones:'phone',
+  sunny:'sun', day:'sun', noon:'sun',
+  night:'moon', dark:'moon', midnight:'moon',
+  storm:'rain', wet:'rain', flood:'rain', cloud:'rain', clouds:'rain',
+  hill:'mountain', mountains:'mountain', hills:'mountain', rock:'mountain', cliff:'mountain',
+  flowers:'flower', garden:'flower', plant:'flower', rose:'flower',
+  fishing:'fish', trout:'fish',
+  keys:'key', lock:'key', locked:'key', secret:'key',
+  doors:'door', entrance:'door', exit:'door', in:'door', out:'door',
+  lamp:'light', lights:'light', bright:'light',
+  garbage:'trash', dump:'trash', junk:'trash', litter:'trash',
+  sit:'bench', rest:'bench', wait:'bench', benches:'bench',
+  play:'ball', game:'ball', soccer:'ball', football:'ball', basketball:'ball',
+  store:'shop', market:'shop', buy:'shop', shopping:'shop', mall:'shop',
+  doctor:'help', hospital:'help', hurt:'help', emergency:'help', medic:'help', aid:'help',
+  cash:'money', pay:'money', bank:'money', atm:'money', cost:'money',
+  office:'work', job:'work', desk:'work',
+  station:'train', metro:'train', subway:'train', trains:'train', tram:'train',
+  bikes:'bike', bicycle:'bike', cycle:'bike', scooter:'bike',
+  spooky:'ghost', ghosts:'ghost', haunted:'ghost', gone:'ghost', lost:'ghost'
+};
+
+const STOP = new Set(('the a an and or but of to at on in is are was were be been am i we you they he she it my your our their its '+
+  'for with from as by so if then than very really just too also not no yes ok okay do does did done will would can could should '+
+  'have has had what when where who why how all any some more most over under up down let lets get got').split(' '));
+
+function hash32(str){ let h = 2166136261; for (let i = 0; i < str.length; i++){ h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+
+function seedGlyph(word){                           /* any unknown word gets a body */
+  return function(d){
+    const c = d.c, h = hash32(word), n = 4 + (h % 4);
+    const pts = [];
+    for (let i = 0; i < n; i++){
+      const hh = hash32(word + ':' + i);
+      pts.push([8 + (hh % 32), 8 + ((hh >> 8) % 32)]);
+    }
+    c.fillStyle = d.a; P_poly(c, pts, 1);
+    c.strokeStyle = d.k; c.lineWidth = 2; P_poly(c, pts, 0);
+    if (h % 3 === 0){ c.fillStyle = d.k; P_circ(c, pts[0][0], pts[0][1], 2.5, 1); }
+  };
+}
+
+const glyphCache = {};
+function glyphURL(word, accent){
+  const key = word + '|' + accent;
+  if (glyphCache[key]) return glyphCache[key];
+  const cv = document.createElement('canvas'); cv.width = 48; cv.height = 48;
+  const c = cv.getContext('2d');
+  c.lineWidth = 2.2; c.lineJoin = 'round'; c.lineCap = 'round';
+  const painter = LEX[word] || LEX[ALIAS[word]] || seedGlyph(word);
+  painter({ c: c, s: 48, k: '#000', a: accent });
+  const url = cv.toDataURL();
+  glyphCache[key] = url;
+  return url;
+}
+
+function extractWords(text){                        /* nouns-of-interest, capped */
+  const raw = text.toLowerCase().replace(/[^a-z0-9\s']/g, ' ').split(/\s+/).filter(Boolean);
+  const found = [], unknown = [];
+  for (const w of raw){
+    if (STOP.has(w) || w.length < 2) continue;
+    if (LEX[w] || ALIAS[w]) { if (!found.includes(w)) found.push(w); }
+    else if (w.length >= 4 && !unknown.includes(w)) unknown.push(w);
+  }
+  while (found.length < CAP.GLYPHS_PER_SAY && unknown.length && found.length < 2) found.push(unknown.shift());
+  return found.slice(0, CAP.GLYPHS_PER_SAY);
+}
+
+/* ---------------------------------------------------------------
+   STATE · the ledger and its fold
+---------------------------------------------------------------- */
+let map, presLayer, depositLayer;
+const S = {
+  log: [], byId: {}, erased: new Set(), seq: 0,
+  me: { id: null, name: 'ANON', color: 0 },
+  room: null, isHost: false, peer: null, hostConn: null,
+  conns: new Map(), roster: {}, presence: {},
+  tool: 'SAY', anchor: null, placeWord: 'flag', pendingPic: null,
+  stroke: null, strokeLine: null, walk: false, walkId: null, mic: null, micOn: false
+};
+
+const $ = id => document.getElementById(id);
+function toast(msg, ms){
+  const t = $('toast'); t.textContent = msg; t.style.display = 'block';
+  clearTimeout(toast._t); toast._t = setTimeout(() => { t.style.display = 'none'; }, ms || 2200);
+}
+function hint(msg){
+  const h = $('hint');
+  if (!msg){ h.classList.remove('show'); return; }
+  h.textContent = msg; h.classList.add('show');
+}
+
+function uid(){ return (crypto.randomUUID ? crypto.randomUUID() : 'e' + Math.random().toString(36).slice(2) + Date.now().toString(36)).slice(0, 13); }
+function accOf(ev){ return ACCENTS[(ev.c || 0) % ACCENTS.length]; }
+
+/* deterministic glyph offsets: fold must match on every peer */
+function offsetLL(ll, evid, i){
+  const h = hash32(evid + ':' + i);
+  const ang = (h % 360) * Math.PI / 180;
+  const m = 14 + ((h >> 9) % 22);                    /* 14–36 m ring */
+  const dLat = (Math.sin(ang) * m) / 111111;
+  const dLng = (Math.cos(ang) * m) / (111111 * Math.cos(ll[0] * Math.PI / 180));
+  return [ll[0] + dLat, ll[1] + dLng];
+}
+
+/* ---- fold: event → scene ---- */
+const layersByEv = {};
+function apply(ev){
+  if (S.byId[ev.id]) return;                          /* idempotent */
+  if (S.log.length >= CAP.EVENTS) return toast('GROUND FULL · ' + CAP.EVENTS + ' EVENTS');
+  S.log.push(ev); S.byId[ev.id] = ev;
+  const acc = accOf(ev), group = [];
+
+  if (ev.v === 'SAY'){
+    const icon = L.divIcon({ className: 'gm', html:
+      '<div class="utt reveal" style="border-left-color:' + acc + '">' +
+      '<span class="u-who">' + esc(ev.an) + '</span>' + esc(ev.text) + '</div>',
+      iconAnchor: [8, 8] });
+    group.push(L.marker(ev.ll, { icon }).addTo(depositLayer));
+    (ev.words || []).forEach((w, i) => {
+      const gll = offsetLL(ev.ll, ev.id, i);
+      const gi = L.divIcon({ className: 'gm', html:
+        '<img class="gicon reveal" style="animation-delay:' + (0.12 + i * 0.14) + 's;width:34px;height:34px" src="' + glyphURL(w, acc) + '">',
+        iconSize: [34, 34], iconAnchor: [17, 17] });
+      group.push(L.marker(gll, { icon: gi }).addTo(depositLayer));
+    });
+  }
+  else if (ev.v === 'MARK'){
+    group.push(L.polyline(ev.pts, { color: acc, weight: 4, opacity: .95 }).addTo(depositLayer));
+    group.push(L.polyline(ev.pts, { color: '#000', weight: 1.4, opacity: .8 }).addTo(depositLayer));
+  }
+  else if (ev.v === 'PLACE'){
+    const gi = L.divIcon({ className: 'gm', html:
+      '<img class="gicon reveal" style="width:38px;height:38px" src="' + glyphURL(ev.word, acc) + '">',
+      iconSize: [38, 38], iconAnchor: [19, 19] });
+    group.push(L.marker(ev.ll, { icon: gi }).addTo(depositLayer));
+  }
+  else if (ev.v === 'PIC'){
+    const gi = L.divIcon({ className: 'gm', html:
+      '<div class="pic reveal" style="border-color:#000;outline:2px solid ' + acc + '">' +
+      '<img src="' + ev.data + '" width="' + ev.w + '" height="' + ev.h + '"></div>',
+      iconAnchor: [ev.w / 2, ev.h / 2] });
+    group.push(L.marker(ev.ll, { icon: gi }).addTo(depositLayer));
+  }
+  else if (ev.v === 'ERASE'){
+    const tgt = layersByEv[ev.ref];
+    if (tgt){ tgt.forEach(l => depositLayer.removeLayer(l)); delete layersByEv[ev.ref]; }
+    S.erased.add(ev.ref);
+    const line = document.querySelector('[data-ev="' + ev.ref + '"] .txt');
+    if (line) line.classList.add('gone');
+  }
+
+  if (group.length){
+    layersByEv[ev.id] = group;
+    group.forEach(l => l.on('click', () => { if (S.tool !== 'ERASE') focusLine(ev.id); }));
+  }
+  ledLine(ev);
+  invariants();
+}
+
+function esc(s){ return String(s).replace(/[&<>"]/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m])); }
+
+/* ---- ledger panel: the chat that is the map ---- */
+function ledLine(ev){
+  const list = $('ledlist');
+  const div = document.createElement('div');
+  div.className = 'lline'; div.dataset.ev = ev.id;
+  let body = '';
+  if (ev.v === 'SAY') body = '&laquo;' + esc(ev.text) + '&raquo;';
+  else if (ev.v === 'MARK') body = ev.pts.length + ' PT INK';
+  else if (ev.v === 'PLACE') body = esc(ev.word.toUpperCase());
+  else if (ev.v === 'PIC') body = 'PICTURE';
+  else if (ev.v === 'ERASE'){ const t = S.byId[ev.ref]; body = 'STRIKES #' + (t ? t.s : '?'); }
+  div.innerHTML = '<span class="swatch" style="background:' + accOf(ev) + '"></span>' +
+    '<span class="who">' + esc(ev.an) + '</span><span class="verb">' + ev.v + '</span>' +
+    '<span class="txt">' + body + '</span>';
+  div.addEventListener('click', () => focusEvent(ev.id));
+  list.appendChild(div);
+  while (list.children.length > CAP.LEDGER_LINES) list.removeChild(list.firstChild);
+  list.scrollTop = list.scrollHeight;
+}
+function focusEvent(id){                              /* line → mark */
+  const ev = S.byId[id]; if (!ev) return;
+  let ll = ev.ll;
+  if (ev.v === 'MARK') ll = ev.pts[Math.floor(ev.pts.length / 2)];
+  if (ev.v === 'ERASE'){ const t = S.byId[ev.ref]; if (t) return focusEvent(t.id); return; }
+  if (!ll) return;
+  map.flyTo(ll, Math.max(map.getZoom(), 17), { duration: .6 });
+  const g = layersByEv[id];
+  if (g) setTimeout(() => g.forEach(l => {
+    const el = l.getElement && l.getElement();
+    if (el){ el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
+  }), 620);
+}
+function focusLine(id){                               /* mark → line */
+  openLedger(true);
+  const line = document.querySelector('[data-ev="' + id + '"]');
+  if (!line) return;
+  line.scrollIntoView({ block: 'center' });
+  document.querySelectorAll('.lline.hot').forEach(x => x.classList.remove('hot'));
+  line.classList.add('hot');
+  setTimeout(() => line.classList.remove('hot'), 1600);
+}
+function invariants(){
+  $('inv-e').textContent = S.log.length;
+  $('inv-a').textContent = Object.keys(S.roster).length || 1;
+  let ok = true;
+  for (let i = 1; i < S.log.length; i++) if (!(S.log[i].s > S.log[i - 1].s)) ok = false;
+  if (Object.keys(S.byId).length !== S.log.length) ok = false;
+  const f = $('inv-f');
+  f.textContent = ok ? 'OK' : 'BROKEN';
+  f.className = ok ? 'ok' : 'bad';
+}
+
+/* ---------------------------------------------------------------
+   NET · PeerJS star; host is the sequencer
+---------------------------------------------------------------- */
+function commit(part){
+  const ev = Object.assign({
+    id: uid(), a: S.me.id, an: S.me.name, c: S.me.color, t: Date.now()
+  }, part);
+  if (S.isHost){ ev.s = ++S.seq; apply(ev); broadcast({ type: 'ev', ev }); }
+  else if (S.hostConn && S.hostConn.open) S.hostConn.send({ type: 'ev', ev });
+  else { ev.s = ++S.seq; apply(ev); }                 /* solo ground */
+  return ev;
+}
+function broadcast(msg, except){
+  S.conns.forEach((c, id) => { if (id !== except && c.open) c.send(msg); });
+}
+function roomCode(){
+  const A = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s = '';
+  for (let i = 0; i < 4; i++) s += A[Math.floor(Math.random() * A.length)];
+  return s;
+}
+function startHost(name){
+  S.me.name = name; S.isHost = true;
+  S.room = roomCode();
+  S.peer = new Peer('cground-' + S.room.toLowerCase());
+  S.peer.on('open', id => {
+    S.me.id = id; S.me.color = 0;
+    S.roster[id] = { name: S.me.name, color: 0 };
+    enterGround();
+  });
+  S.peer.on('connection', conn => {
+    if (S.conns.size + 1 >= CAP.PEERS){ conn.close(); return; }
+    conn.on('data', msg => hostData(conn, msg));
+    conn.on('close', () => {
+      S.conns.delete(conn.peer); delete S.roster[conn.peer];
+      dropPresence(conn.peer);
+      broadcast({ type: 'roster', roster: S.roster }); invariants();
+    });
+  });
+  S.peer.on('error', e => {
+    if (!S.me.id){ S.me.id = 'solo'; S.roster.solo = { name: S.me.name, color: 0 }; enterGround(); }
+    toast('RELAY UNREACHABLE · SOLO GROUND (' + e.type + ')', 3200);
+  });
+}
+function hostData(conn, msg){
+  if (msg.type === 'hello'){
+    S.conns.set(conn.peer, conn);
+    const color = Object.keys(S.roster).length % ACCENTS.length;
+    S.roster[conn.peer] = { name: msg.name, color };
+    conn.send({ type: 'sync', log: S.log, roster: S.roster, you: { color } });
+    broadcast({ type: 'roster', roster: S.roster }, conn.peer);
+    toast(msg.name + ' STANDS ON THIS GROUND');
+  }
+  else if (msg.type === 'ev'){
+    msg.ev.s = ++S.seq; apply(msg.ev); broadcast({ type: 'ev', ev: msg.ev });
+  }
+  else if (msg.type === 'pos'){
+    showPresence(conn.peer, msg); broadcast(msg, conn.peer);
+  }
+}
+function joinRoom(code, name){
+  S.me.name = name; S.room = code.toUpperCase();
+  S.peer = new Peer();
+  S.peer.on('open', id => {
+    S.me.id = id;
+    const conn = S.peer.connect('cground-' + S.room.toLowerCase(), { reliable: true });
+    S.hostConn = conn;
+    conn.on('open', () => conn.send({ type: 'hello', name }));
+    conn.on('data', msg => {
+      if (msg.type === 'sync'){
+        S.me.color = msg.you.color; S.roster = msg.roster;
+        msg.log.forEach(ev => { S.seq = Math.max(S.seq, ev.s); apply(ev); });
+        enterGround();
+        if (msg.log.length){ const last = msg.log[msg.log.length - 1]; if (last.ll) map.setView(last.ll, 16); }
+      }
+      else if (msg.type === 'ev'){ S.seq = Math.max(S.seq, msg.ev.s); apply(msg.ev); }
+      else if (msg.type === 'roster'){ S.roster = msg.roster; invariants(); }
+      else if (msg.type === 'pos'){ showPresence(msg.from, msg); }
+    });
+    conn.on('close', () => toast('HOST LEFT · GROUND IS ORPHANED (LEDGER SURVIVES HERE)', 4200));
+  });
+  S.peer.on('error', e => toast('CANNOT REACH GROUND ' + S.room + ' (' + e.type + ')', 3200));
+}
+
+/* ---- presence: ephemeral, never logged ---- */
+function showPresence(id, msg){
+  if (id === S.me.id) return;
+  let p = S.presence[id];
+  const r = S.roster[id] || { name: '?', color: 3 };
+  const html = '<div class="pres" style="border-color:' + ACCENTS[r.color % ACCENTS.length] + '">' +
+    esc((msg.name || r.name || '?').slice(0, 2).toUpperCase()) + '</div>';
+  if (!p){
+    p = S.presence[id] = L.marker(msg.ll, {
+      icon: L.divIcon({ className: 'gm', html, iconSize: [26, 26], iconAnchor: [13, 13] }),
+      zIndexOffset: 900
+    }).addTo(presLayer);
+  } else {
+    p.setLatLng(msg.ll);
+    p.setIcon(L.divIcon({ className: 'gm', html, iconSize: [26, 26], iconAnchor: [13, 13] }));
+  }
+  p._seen = Date.now();
+}
+function dropPresence(id){ if (S.presence[id]){ presLayer.removeLayer(S.presence[id]); delete S.presence[id]; } }
+setInterval(() => {
+  const now = Date.now();
+  Object.keys(S.presence).forEach(id => { if (now - S.presence[id]._seen > 8000) dropPresence(id); });
+  if (S.peer && S.anchor){
+    const msg = { type: 'pos', from: S.me.id, name: S.me.name, ll: S.anchor };
+    if (S.isHost) broadcast(msg);
+    else if (S.hostConn && S.hostConn.open) S.hostConn.send(msg);
+  }
+}, 1500);
+
+/* my own anchor ring */
+let myRing = null;
+function setAnchor(ll, pan){
+  S.anchor = [ll.lat !== undefined ? ll.lat : ll[0], ll.lng !== undefined ? ll.lng : ll[1]];
+  const html = '<div class="pres mine" style="border-color:' + ACCENTS[S.me.color % ACCENTS.length] + '">' +
+    esc(S.me.name.slice(0, 2).toUpperCase()) + '</div>';
+  const icon = L.divIcon({ className: 'gm', html, iconSize: [26, 26], iconAnchor: [13, 13] });
+  if (!myRing) myRing = L.marker(S.anchor, { icon, zIndexOffset: 1000 }).addTo(presLayer);
+  else { myRing.setLatLng(S.anchor); myRing.setIcon(icon); }
+  if (pan) map.panTo(S.anchor);
+}
+
+/* ---------------------------------------------------------------
+   TOOLS · SAY / MARK / PLACE / PHOTO / ERASE
+---------------------------------------------------------------- */
+const TOOL_HINT = {
+  SAY: 'TAP MAP = MOVE YOUR HERE · SPEAK OR TYPE BELOW',
+  MARK: 'DRAG ON THE MAP TO INK',
+  PLACE: 'PICK A THING · TAP THE MAP TO SET IT DOWN',
+  PHOTO: 'CHOOSE A PICTURE · THEN TAP WHERE IT LANDS',
+  ERASE: 'TAP ONE OF YOUR OWN DEPOSITS TO STRIKE IT'
+};
+function armTool(name){
+  S.tool = name;
+  document.querySelectorAll('.tool').forEach(b => b.classList.toggle('armed', b.dataset.tool === name));
+  $('palette').classList.toggle('show', name === 'PLACE');
+  hint(TOOL_HINT[name]);
+  clearTimeout(armTool._t); armTool._t = setTimeout(() => hint(''), 2600);
+  if (name === 'MARK') map.dragging.disable(); else map.dragging.enable();
+  if (name === 'PHOTO' && !S.pendingPic) $('picfile').click();
+}
+document.querySelectorAll('.tool').forEach(b => b.addEventListener('click', () => armTool(b.dataset.tool)));
+
+/* palette of placeable glyphs */
+(function buildPalette(){
+  const pal = $('palette');
+  Object.keys(LEX).forEach(w => {
+    const b = document.createElement('button');
+    b.className = 'pal' + (w === S.placeWord ? ' sel' : '');
+    b.innerHTML = '<img src="' + glyphURL(w, '#19e6c8') + '"><span>' + w.toUpperCase() + '</span>';
+    b.addEventListener('click', () => {
+      S.placeWord = w;
+      document.querySelectorAll('.pal').forEach(x => x.classList.remove('sel'));
+      b.classList.add('sel');
+    });
+    pal.appendChild(b);
+  });
+})();
+
+/* map interactions per tool */
+function onMapTap(e){
+  const ll = [e.latlng.lat, e.latlng.lng];
+  if (S.tool === 'SAY'){ setAnchor(e.latlng); }
+  else if (S.tool === 'PLACE'){ commit({ v: 'PLACE', word: S.placeWord, ll }); }
+  else if (S.tool === 'PHOTO'){
+    if (S.pendingPic){ commit({ v: 'PIC', data: S.pendingPic.data, w: S.pendingPic.w, h: S.pendingPic.h, ll }); S.pendingPic = null; hint(''); armTool('SAY'); }
+    else $('picfile').click();
+  }
+  else if (S.tool === 'ERASE'){
+    const pt = map.latLngToContainerPoint(e.latlng);
+    let best = null, bd = 30;
+    for (const ev of S.log){
+      if (ev.a !== S.me.id || ev.v === 'ERASE' || S.erased.has(ev.id)) continue;
+      let ll2 = ev.ll; if (ev.v === 'MARK') ll2 = ev.pts[Math.floor(ev.pts.length / 2)];
+      if (!ll2) continue;
+      const d = pt.distanceTo(map.latLngToContainerPoint(ll2));
+      if (d < bd){ bd = d; best = ev; }
+    }
+    if (best) commit({ v: 'ERASE', ref: best.id });
+    else toast('NOTHING OF YOURS HERE · ERASE STRIKES ONLY YOUR OWN');
+  }
+}
+
+/* MARK: freehand geo ink */
+function strokeStart(e){
+  if (S.tool !== 'MARK') return;
+  S.stroke = [[e.latlng.lat, e.latlng.lng]];
+  S.strokeLine = L.polyline(S.stroke, { color: ACCENTS[S.me.color % ACCENTS.length], weight: 4 }).addTo(map);
+}
+function strokeMove(e){
+  if (!S.stroke) return;
+  const last = S.stroke[S.stroke.length - 1];
+  const p1 = map.latLngToContainerPoint(last), p2 = map.latLngToContainerPoint(e.latlng);
+  if (p1.distanceTo(p2) < 5) return;
+  if (S.stroke.length >= CAP.STROKE_PTS) return strokeEnd();
+  S.stroke.push([e.latlng.lat, e.latlng.lng]);
+  S.strokeLine.setLatLngs(S.stroke);
+}
+function strokeEnd(){
+  if (!S.stroke) return;
+  if (S.strokeLine){ map.removeLayer(S.strokeLine); S.strokeLine = null; }
+  if (S.stroke.length > 1) commit({ v: 'MARK', pts: S.stroke });
+  S.stroke = null;
+}
+
+/* PHOTO: downscale + Bayer 4x4 ordered dither to 1-bit bone */
+const BAYER = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
+$('picfile').addEventListener('change', function(){
+  const f = this.files && this.files[0]; this.value = '';
+  if (!f) return;
+  const img = new Image();
+  img.onload = () => {
+    const sc = Math.min(1, CAP.PIC_PX / Math.max(img.width, img.height));
+    const w = Math.max(1, Math.round(img.width * sc)), h = Math.max(1, Math.round(img.height * sc));
+    const cv = document.createElement('canvas'); cv.width = w; cv.height = h;
+    const c = cv.getContext('2d'); c.drawImage(img, 0, 0, w, h);
+    const id = c.getImageData(0, 0, w, h), px = id.data;
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++){
+      const i = (y * w + x) * 4;
+      const g = (px[i] * .299 + px[i+1] * .587 + px[i+2] * .114) / 255;
+      const v = g > (BAYER[y % 4][x % 4] + .5) / 16 ? 255 : 0;
+      px[i] = px[i+1] = px[i+2] = v; px[i+3] = 255;
+    }
+    c.putImageData(id, 0, 0);
+    S.pendingPic = { data: cv.toDataURL('image/png'), w, h };
+    URL.revokeObjectURL(img.src);
+    hint('NOW TAP THE MAP WHERE THE PICTURE LANDS');
+  };
+  img.src = URL.createObjectURL(f);
+});
+
+/* ---------------------------------------------------------------
+   SAY · speech passes through onto the ground
+---------------------------------------------------------------- */
+function commitSay(text){
+  text = String(text || '').trim().slice(0, CAP.UTT_CHARS);
+  if (!text) return;
+  const ll = S.anchor || (() => { const cnt = map.getCenter(); return [cnt.lat, cnt.lng]; })();
+  if (!S.anchor) setAnchor({ lat: ll[0], lng: ll[1] });
+  commit({ v: 'SAY', text, ll, words: extractWords(text) });
+  $('sayinput').value = '';
+}
+$('sendbtn').addEventListener('click', () => commitSay($('sayinput').value));
+$('sayinput').addEventListener('keydown', e => { if (e.key === 'Enter') commitSay($('sayinput').value); });
+
+$('micbtn').addEventListener('click', () => {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return toast('NO SPEECH ENGINE HERE · THE TYPED BAR IS THE SAME MORPHISM');
+  if (S.micOn){ S.micOn = false; try { S.mic.stop(); } catch(_){} $('micbtn').classList.remove('live'); return; }
+  const rec = new SR();
+  rec.continuous = true; rec.interimResults = true; rec.lang = 'en-US';
+  rec.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++){
+      const r = e.results[i];
+      if (r.isFinal) commitSay(r[0].transcript);      /* pass-through: final speech lands */
+      else interim += r[0].transcript;
+    }
+    $('sayinput').value = interim;
+  };
+  rec.onend = () => { if (S.micOn){ try { rec.start(); } catch(_){ S.micOn = false; $('micbtn').classList.remove('live'); } } };
+  rec.onerror = ev => { if (ev.error === 'not-allowed'){ S.micOn = false; $('micbtn').classList.remove('live'); toast('MIC BLOCKED BY BROWSER'); } };
+  S.mic = rec; S.micOn = true; $('micbtn').classList.add('live');
+  try { rec.start(); toast('LIVE · WHAT YOU SPEAK LANDS AT YOUR HERE'); } catch(_){}
+});
+
+/* ---------------------------------------------------------------
+   WALK · anchor follows GPS (séance mode)
+---------------------------------------------------------------- */
+$('walkbtn').addEventListener('click', () => {
+  if (S.walk){
+    S.walk = false; $('walkbtn').classList.remove('on');
+    if (S.walkId !== null) navigator.geolocation.clearWatch(S.walkId);
+    return;
+  }
+  if (!navigator.geolocation) return toast('NO GPS HERE');
+  S.walk = true; $('walkbtn').classList.add('on');
+  let first = true;
+  S.walkId = navigator.geolocation.watchPosition(p => {
+    setAnchor({ lat: p.coords.latitude, lng: p.coords.longitude }, first);
+    first = false;
+  }, () => { S.walk = false; $('walkbtn').classList.remove('on'); toast('GPS REFUSED'); }, { enableHighAccuracy: true });
+});
+
+/* ---------------------------------------------------------------
+   CHROME · panels, QR, theory
+---------------------------------------------------------------- */
+function openLedger(open){ $('ledger').classList.toggle('open', open); }
+$('ledbtn').addEventListener('click', () => openLedger(!$('ledger').classList.contains('open')));
+$('ledclose').addEventListener('click', () => openLedger(false));
+document.querySelectorAll('[data-close]').forEach(b =>
+  b.addEventListener('click', () => $(b.dataset.close).classList.remove('show')));
+
+$('qrbtn').addEventListener('click', () => {
+  if (!S.room) return;
+  const box = $('qrbox'); box.innerHTML = '';
+  const url = location.href.split('#')[0] + '#join=' + S.room;
+  try { new QRCode(box, { text: url, width: 220, height: 220, colorDark: '#000000', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M }); }
+  catch(_){ box.textContent = url; }
+  $('qrcode-text').textContent = S.room;
+  $('qrnote').textContent = S.isHost
+    ? 'You are the sequencer of this ground. If you leave, the room orphans — the ledger survives on every phone that holds it.'
+    : 'Ground ' + S.room + ' · sequenced elsewhere.';
+  $('qrov').classList.add('show');
+});
+
+$('thbtn').addEventListener('click', () => {
+  const t = GROUND_THEORY;
+  $('theorytext').innerHTML =
+    '<b>CLAIM</b>\n' + esc(t.claim) + '\n\n' +
+    '<b>ENTITIES</b>\nGROUND — ' + esc(t.ground) + '\nANCHOR — ' + esc(t.anchor) +
+    '\nEVENT — ' + esc(t.event) + '\nLEDGER — ' + esc(t.ledger) + '\nGLYPH — ' + esc(t.glyph) + '\n\n' +
+    '<b>INVARIANTS</b>\n1 append-only: ' + esc(t.erase) +
+    '\n2 everything visible is attributable — name + color on every deposit' +
+    '\n3 speech passes through unedited; the instrument never paraphrases you' +
+    '\n4 scene == fold(ledger) on every peer (glyph offsets hashed from event ids)' +
+    '\n5 ceilings: ' + CAP.EVENTS + ' events · ' + CAP.STROKE_PTS + ' stroke pts · ' + CAP.PEERS + ' peers · ' + CAP.GLYPHS_PER_SAY + ' glyphs/say\n\n' +
+    '<b>PLAY</b>\nthe pattern is shared deixis — a group learning to point together.' +
+    '\nturf, trail, exquisite-corpse cartography, radio play, WALK séance.' +
+    '\nspam is self-defeating: your name is on every deposit; the ledger makes it legible.' +
+    '\nwhen the map fills, ERASE begins the second game: curation.\n\n' +
+    '<b>FAILURE</b>\nhost leaves → room orphans (star topology); ledger survives locally.' +
+    '\nno speech engine → the typed bar is the same morphism, slower.' +
+    '\ntiles need network — the ledger does not.';
+  $('thov').classList.add('show');
+});
+
+/* ---------------------------------------------------------------
+   BOOT
+---------------------------------------------------------------- */
+function initMap(){
+  map = L.map('map', { zoomControl: false, attributionControl: true })
+    .setView([33.7756, -84.3963], 15);                /* a default somewhere real */
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    maxZoom: 20, subdomains: 'abcd',
+    attribution: '&copy; OpenStreetMap &copy; CARTO'
+  }).addTo(map);
+  depositLayer = L.layerGroup().addTo(map);
+  presLayer = L.layerGroup().addTo(map);
+  map.on('click', onMapTap);
+  map.on('mousedown', strokeStart); map.on('mousemove', strokeMove);
+  window.addEventListener('mouseup', strokeEnd);
+  const cont = map.getContainer();
+  cont.addEventListener('touchstart', e => {
+    if (S.tool !== 'MARK' || e.touches.length !== 1) return;
+    strokeStart({ latlng: map.mouseEventToLatLng(e.touches[0]) });
+  }, { passive: true });
+  cont.addEventListener('touchmove', e => {
+    if (!S.stroke || e.touches.length !== 1) return;
+    e.preventDefault();
+    strokeMove({ latlng: map.mouseEventToLatLng(e.touches[0]) });
+  }, { passive: false });
+  cont.addEventListener('touchend', strokeEnd);
+}
+function enterGround(){
+  $('joinov').classList.remove('show');
+  $('roomcode').textContent = S.room || 'SOLO';
+  const cnt = map.getCenter(); setAnchor(cnt);
+  toast(S.isHost ? 'GROUND ' + S.room + ' IS OPEN · SHOW THE QR' : 'YOU STAND ON GROUND ' + S.room);
+  if (navigator.geolocation && S.isHost)
+    navigator.geolocation.getCurrentPosition(p => {
+      map.setView([p.coords.latitude, p.coords.longitude], 16);
+      setAnchor({ lat: p.coords.latitude, lng: p.coords.longitude });
+    }, () => {}, { timeout: 4000 });
+}
+
+$('hostbtn').addEventListener('click', () => {
+  const n = $('nameinput').value.trim().toUpperCase() || 'ANON';
+  $('hostbtn').textContent = 'OPENING\u2026';
+  startHost(n);
+});
+$('joinbtn').addEventListener('click', () => {
+  const n = $('nameinput').value.trim().toUpperCase() || 'ANON';
+  const code = $('codeinput').value.trim().toUpperCase();
+  if (!code) return toast('ENTER A GROUND CODE OR SCAN A QR');
+  $('joinbtn').textContent = '\u2026';
+  joinRoom(code, n);
+});
+(function parseHash(){
+  const m = location.hash.match(/join=([A-Za-z0-9]+)/);
+  if (m){ $('codeinput').value = m[1].toUpperCase(); $('nameinput').placeholder = 'YOUR NAME \u2192 THEN JOIN'; }
+})();
+
+initMap();
+console.log('COMMON GROUND ::', GROUND_THEORY.claim);
+</script>
+</body>
+</html>

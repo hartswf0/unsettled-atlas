@@ -19,7 +19,7 @@ A source with no stated blind spot has not been examined.
 
 | Source | Lane | Acquisition mode | Corpus status | Primary value | Primary blind spot |
 |---|---|---|---|---|---|
-| OpenStreetMap Notes | VERNACULAR | Public API | **Acquired** | Access, closure, entrance, path and map-ground mismatch. **Atlanta: 1457 observations → 228 claims. New Orleans: 674 → 113.** ODbL 1.0, © OpenStreetMap contributors | Contributor population and task-focused language. **85% of acquired notes matched no lexicon entry and are kept unresolved** |
+| OpenStreetMap Notes | VERNACULAR | Public API | **Withdrawn** | Nothing usable for this registry. Acquired in full (Atlanta 1457 observations, New Orleans 674), audited, and refused admission | **Not a testimony corpus.** 42% of extracted claims derive from app-generated text (StreetComplete, Organic Maps, Scout); the human-written remainder is overwhelmingly map-editing requests |
 | ATL311 | RESIDUAL | De-identified records request | Pending | High-volume service narratives and outcomes | Reporting propensity, privacy, uncertain narrative fields |
 | Yelp Open Dataset | VERNACULAR | Manual agreement-gated import | Gated | Place-attached reviews, tips and attributes | Current Atlanta coverage unverified; platform selection |
 | Google Places reviews | VERNACULAR | Reference-only | Excluded from corpus ingestion | Place identifiers and limited display context | Storage, reuse, sample-size and model-development restrictions |
@@ -38,6 +38,7 @@ they never resolve where a claim is *about*.
 ## Source state vocabulary
 
 - `acquired`: in the corpus now, with provenance and licence recorded per claim.
+- `withdrawn`: acquired, audited, and refused admission to the atlas; kept on disk with its reason.
 - `runnable`: public acquisition path is configured.
 - `pending`: requested but not yet received.
 - `gated`: requires user acceptance or a separate data agreement.
@@ -46,12 +47,12 @@ they never resolve where a claim is *about*.
 
 ## Present holdings
 
-- **REGISTRY I — SERES** holds a **mixed** corpus: 30 fixture claims (user- and
-  researcher-entered, written to exercise the schema) and **228 acquired** from the
-  OpenStreetMap Notes API under ODbL 1.0. The two are counted separately on every
-  surface and never merged into a total that hides the split. Of 1457 acquired
-  observations, **1242 produced no claim** and are kept unresolved — that number
-  measures the extraction lexicon, not the city.
+- **REGISTRY I — SERES** holds **fixture only**: 30 authored claims across 8 places,
+  written to exercise the schema. An acquired corpus of 228 claims from the
+  OpenStreetMap Notes API was built and then **withdrawn** after audit — OSM Notes
+  turned out to be a map-maintenance queue rather than testimony about place. The
+  parts remain on disk marked `admitted: false` with their reason attached. See
+  [SYSTEM.md](SYSTEM.md) § *What was tried and refused*.
 - **REGISTRY II — HALFWORLD** is still running on a **synthetic sample**: 7 agenda
   items in one file, with **PROVISIONAL** anchor coordinates. No acquired
   institutional record is present.
@@ -59,8 +60,9 @@ they never resolve where a claim is *about*.
 ### A second city
 
 New Orleans was acquired to test what generalises: **674 observations → 113 claims**,
-from nothing but `cities/new-orleans.json`. Its institutional lane is *sketched, not
-runnable* — the Neighborhood Participation Program convenes per application rather
+from nothing but `cities/new-orleans.json` — which proved the acquisition machinery
+ports even though the corpus itself was later withdrawn. Its institutional lane is
+*sketched, not runnable* — the Neighborhood Participation Program convenes per application rather
 than by standing chartered unit, so Atlanta's "agenda item" does not segment it. That
 finding is recorded in the city file itself so nobody runs REGISTRY II there thinking
 it is configured.

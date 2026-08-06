@@ -44,6 +44,12 @@ const parts = fs.readdirSync(dir).filter(f => f.endsWith(".json")).sort()
   .filter(x => x.schema === "seres/part/v1")
   .filter(x => (x.city?.slug || "atlanta") === CITY);
 
+/* A part can be withdrawn without being deleted. Audited-and-rejected material is
+   the record of a negative result, and deleting it would leave only the claim that
+   it was rejected. It stays on disk, out of the atlas, with its reason attached. */
+const withdrawn = parts.filter(x => x.admitted === false);
+const admitted = parts.filter(x => x.admitted !== false);
+
 if (!parts.length) { console.error(`no parts for city "${CITY}" in seres/atlas/ — nothing to build`); process.exit(1); }
 
 /* Reference geography, loaded separately and kept separately. It is never a part,
@@ -56,7 +62,7 @@ if (basemap && basemap.evidence !== false) {
 }
 
 const fail = [];
-for (const part of parts) {
+for (const part of admitted) {
   if (typeof part.fixture !== "boolean") fail.push(`${part.file}: no fixture flag — a part must say whether it is invented`);
   if (!part.acquisition) fail.push(`${part.file}: no acquisition block — provenance is not optional`);
 }
@@ -67,7 +73,7 @@ const lanes = new Set(), dims = new Set();
 const seenClaim = new Set(), seenPlace = new Set(), observations = new Set();
 let fixtureClaims = 0, acquiredClaims = 0, unresolvedObs = 0;
 
-for (const part of parts) {
+for (const part of admitted) {
   for (const d of part.dimensions || []) dims.add(d);
   for (const c of part.claims || []) {
     if (seenClaim.has(c.id)) { fail.push(`duplicate claim id ${c.id}`); continue; }
@@ -98,11 +104,11 @@ for (const c of claims) {
   if (!c.evidence) fail.push(`${c.id}: no evidence span — a claim must point at the words it came from`);
 }
 
-let region = parts.find(x => x.region)?.region || null;
+let region = admitted.find(x => x.region)?.region || null;
 if (!region) {
   /* A city with no authored region still has a study area: the bbox its own
      acquisition was bounded by. */
-  const c = parts.find(x => x.city)?.city;
+  const c = admitted.find(x => x.city)?.city;
   if (c) region = { name: `${c.name} study area`, bbox: c.bbox, crs: "EPSG:4326" };
 }
 if (!region) fail.push("no part declares a region and no city bbox to fall back on");
@@ -116,17 +122,18 @@ if (fail.length) {
 const atlas = {
   schema: "seres/atlas/v1",
   built_at: new Date().toISOString(),
-  title: `SERES ${(parts.find(x => x.city)?.city?.name || "ATLANTA").toUpperCase()}`,
+  title: `SERES ${(admitted.find(x => x.city)?.city?.name || "ATLANTA").toUpperCase()}`,
   city: CITY,
   region,
   state: {
-    fixture_present: parts.some(x => x.fixture),
-    acquired_present: parts.some(x => !x.fixture),
+    fixture_present: admitted.some(x => x.fixture),
+    acquired_present: admitted.some(x => !x.fixture),
     llm_enabled: false,
-    parts: parts.map(x => ({ part: x.part, fixture: x.fixture, source: x.acquisition.source, extraction: x.acquisition.extraction, claims: (x.claims || []).length })),
+    parts: admitted.map(x => ({ part: x.part, fixture: x.fixture, source: x.acquisition.source, extraction: x.acquisition.extraction, claims: (x.claims || []).length })),
   },
   /* Licences travel with the data or the data should not travel. */
-  attribution: [...new Set([...parts, ...(basemap ? [basemap] : [])].map(x => x.acquisition.attribution).filter(Boolean))],
+  attribution: [...new Set([...admitted, ...(basemap ? [basemap] : [])].map(x => x.acquisition.attribution).filter(Boolean))],
+  withdrawn: withdrawn.map(x => ({ part: x.part, source: x.acquisition.source, claims: (x.claims||[]).length, observations: x.totals?.observations ?? null, ...x.withdrawn })),
   basemap: basemap ? { evidence: false, note: basemap.note, acquisition: basemap.acquisition, totals: basemap.totals, layers: basemap.layers, places: basemap.places } : null,
   dimensions: [...dims].sort(),
   source_lanes: [...lanes].sort(),
@@ -187,7 +194,9 @@ for (const [rel, body] of writes) {
    every single run, and a check that always cries wolf gets ignored. */
 function strip(s) { return s.replace(/"built_at":\s*"[^"]*"/g, '"built_at":"*"'); }
 
-console.log(`\nREGISTRY I · ${parts.length} part(s)`);
+console.log(`\nREGISTRY I · ${admitted.length} admitted part(s), ${withdrawn.length} withdrawn`);
+for (const x of withdrawn)
+  console.log(`  WITHDRAWN  ${String((x.claims||[]).length).padStart(5)} claims  ${x.part}  — audited and refused admission`);
 for (const x of atlas.state.parts)
   console.log(`  ${x.fixture ? "FIXTURE " : "ACQUIRED"}  ${String(x.claims).padStart(5)} claims  ${x.part}  (${x.source}, ${x.extraction})`);
 console.log(`\n  ${atlas.totals.observations} observations · ${atlas.totals.claims} claims · ${atlas.totals.places} named places`);

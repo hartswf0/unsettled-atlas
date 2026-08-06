@@ -18,11 +18,11 @@ Two registries answer to one contract.
 | | REGISTRY I — SERES ATLANTA | REGISTRY II — ATL NPU HALFWORLD |
 |---|---|---|
 | Holds | what individuals said about places | what institutions claimed about places, on the record |
-| Corpus | vernacular and residual testimony · OSM Notes acquired | NPU minutes, BZA outcomes |
+| Corpus | vernacular and residual testimony (none acquired yet) | NPU minutes, BZA outcomes |
 | Unit | the observation → the claim | the agenda item |
 | Geometry | GeoJSON, stacked translucent passes | 30 m local grid, kernel fields |
 | Surfaces | the Sheet, the Helm | LOOK, the Helm |
-| State | MIXED — 30 fixture + 228 acquired | SAMPLE, PROVISIONAL geometry |
+| State | FIXTURE — 30 authored; one corpus withdrawn | SAMPLE, PROVISIONAL geometry |
 
 They are the same instrument pointed at the two ways a city talks about itself:
 one person at a time, and one meeting at a time.
@@ -200,13 +200,46 @@ together so the served sheet, the file:// twin and the self-contained helm canno
 disagree. One atlas per city; merging two would put one city's notes inside another's
 bbox and call the result a region.
 
-**Current state: MIXED.** 30 fixture claims and 228 acquired from the OSM Notes API
-under ODbL 1.0, counted separately on every surface. Of 1457 acquired observations,
-**1242 produced no claim** and are kept unresolved. That 85% is the most honest number
-in the system: it measures the lexicon's vocabulary, not Atlanta.
+**Current state: FIXTURE.** 30 authored claims. The OSM Notes corpus was acquired,
+compiled, published — and then withdrawn. See *What was tried and refused* below.
 
-A mixed corpus is more dangerous than a fixture-only one. Every surface states the
-split; a reader who skims will average them anyway.
+## What was tried and refused
+
+A register that only records what worked is a brochure.
+
+**Claim tested:** OpenStreetMap Notes are a vernacular testimony corpus — people
+reporting that the map and the ground disagree.
+
+**Verdict: refuted.** 1,457 Atlanta observations and 674 in New Orleans were
+acquired, extracted, compiled and put on both surfaces before anyone read the text
+they contained. Reading it afterwards:
+
+- The largest dimension, `recreational_value`, was 78 claims — **34% of the whole
+  corpus** — produced by one regex matching the word *park*. Its top hits are the
+  street name *"Park Bench Place, Mableton, GA 30126"* and the instruction *"Park at
+  the end of street"*.
+- **42% of claims derive from text no human wrote**: StreetComplete quest templates,
+  Organic Maps POI reports, Scout app error reports.
+- Of the 1,007 human-written notes, the great majority are map-editing requests —
+  *"Could you add the name?"*, *"I added service roads, please verify the oneways"* —
+  not statements about place.
+- Other false positives: *"cobblinc route 15 bus stop"* scored
+  `transit_walk_advantage +1`; a business listing containing the word *damaged*
+  scored `maintenance_neglect`.
+
+**Consequence.** OSM Notes are a map-maintenance queue. The bottleneck was never the
+extractor, so an LLM extraction pass over this material would have bought more
+accurate classification of the wrong thing. The earlier ranked plan put *read what is
+already acquired* first; that was wrong, and it is corrected below.
+
+**Structural cause, which matters more than the corpus.** Registry II cannot pass its
+gates until a human has read every frame. Registry I had no equivalent gate, so 228
+unreviewed claims went straight into the atlas and onto both surfaces. The asymmetry
+is the bug. The bad corpus is only what it let through.
+
+The parts stay on disk, marked `admitted: false` with their reason attached, and
+`build-atlas.mjs` honours the withdrawal. Deleting rejected material would leave
+nothing but the assertion that it was rejected.
 
 ---
 
@@ -348,19 +381,20 @@ runs the institutional lane there thinking it is configured.
 
 Ranked by return on effort. The first move is not more sources.
 
-1. **Read what is already acquired.** 1242 Atlanta observations and 576 in New
-   Orleans matched no lexicon entry, are stored with their text, and produce nothing.
-   An LLM extraction tier — same closed vocabulary, same prohibition on emitting
-   coordinates — needs no new acquisition and no new agreements. Largest available
-   gain, cheapest cost.
-2. **Widen the bbox and the window.** Roughly linear in area. `cities/<slug>.json`
-   owns bbox, tiling and the closed-note window; raise the tiling when the ingester
-   warns AT LIMIT.
+1. **Give Registry I a LOOK gate.** The thing that would have caught the withdrawal
+   above before it was published. Sample n claims per dimension, require a human
+   verdict on each, fail the build until the verdicts exist. No acquisition, no spend.
+2. **Read a corpus before compiling it.** Print fifty random rows and read them. The
+   OSM Notes corpus advertised itself in its own source-register blind-spot column —
+   *"contributor population and task-focused language"* — and that warning was
+   under-weighted through a full acquisition cycle.
 3. **Turn on REGISTRY II acquisition.** `fetch-minutes.mjs` is written and waiting on
    `atlas/manifest.json` with real NPU minutes URLs, plus OCR for the NPUs that post
    scans. Six public bodies are already listed runnable.
-4. **ATL311.** The largest residual corpus available, already requested. Lands as one
-   more part — after a privacy review of the free-text field, not before.
+4. **ATL311.** Actual service narratives — the corpus Registry I was designed for,
+   and unlike map notes these are people describing conditions in places. Already
+   requested. Lands as one more part after a privacy review of the free-text field —
+   and after a sample of it has been read.
 5. **More cities.** REGISTRY I: a config file. REGISTRY II: a forked config and a
    segmentation rule per institution.
 

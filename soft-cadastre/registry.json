@@ -124,18 +124,18 @@
         }
       ],
       "recorded": {
-        "observations": 1457,
-        "claims": 258,
-        "acquired_claims": 228,
+        "observations": 4,
+        "claims": 30,
+        "acquired_claims": 0,
         "places": 8,
         "fixture_claims": 30,
-        "unresolved_observations": 1242,
+        "withdrawn_claims": 228,
         "llm_enabled": false
       },
       "attribution": [
         "© OpenStreetMap contributors"
       ],
-      "state": "MIXED. 30 fixture claims (authored, to exercise the schema) and 228 acquired from the OpenStreetMap Notes API under ODbL 1.0. The two are counted separately everywhere and never merged into a total that hides the split. 1242 of 1457 acquired observations produced no claim and are kept as unresolved — that number measures the extraction lexicon, not the city. A reference basemap is drawn beneath the field so a reader can tell where a claim is; it is geography, not evidence, and is excluded from every count."
+      "state": "FIXTURE. All 30 claims are authored test material, written to exercise the schema. An acquired corpus of 228 claims from the OpenStreetMap Notes API was built, audited and WITHDRAWN — see negative results. It remains on disk with its reason attached, because deleting rejected material would leave only the claim that it was rejected. A reference basemap is drawn beneath the field so a reader can tell where a claim is; it is geography, not evidence, and is excluded from every count."
     },
     {
       "id": "halfworld",
@@ -230,7 +230,7 @@
       "name": "ACQUIRE",
       "runs": "node seres/harness/osm-notes.mjs --city atlanta",
       "makes": "seres/atlas/osm-notes-<city>.json",
-      "note": "Public API, no key, no agreement. Tiles the city bbox and warns when a tile comes back full — a silent truncation would read as a quiet neighbourhood. Author usernames are deliberately not stored.",
+      "note": "Public API, no key, no agreement. Tiles the city bbox and warns when a tile comes back full. Author usernames are deliberately not stored. NOTE: the corpus it was written for has been withdrawn — see negative results. The ingester is kept because the acquisition machinery is sound; what failed was the choice of source.",
       "registry": "seres"
     },
     {
@@ -238,7 +238,7 @@
       "name": "EXTRACT",
       "runs": "(inside the ingester)",
       "makes": "claims + unresolved observations",
-      "note": "Closed-vocabulary lexicon over note text, the same tier as halfworld's --stub. Every claim carries via:'lexicon' and confidence 0.55. A note matching nothing is kept, not dropped.",
+      "note": "Closed-vocabulary lexicon over note text. Every claim carries via:'lexicon' and confidence 0.55. Audited 2026-08-05: mostly false positives, one regex on the word 'park' producing 34% of all claims. The lesson is not that the lexicon was weak — it was declared weak — but that nobody read its output before it was published.",
       "registry": "seres"
     },
     {
@@ -405,9 +405,9 @@
       "lane": "VERNACULAR",
       "registry": "seres",
       "mode": "Public API",
-      "status": "acquired",
-      "value": "Access, closure, entrance, path and map-ground mismatch — 1457 observations, 228 claims in the Atlanta corpus; 674 / 113 in New Orleans",
-      "blind_spot": "Contributor population and task-focused language. 85% of acquired notes produced no claim under the current lexicon"
+      "status": "withdrawn",
+      "value": "Nothing usable for this registry. Acquired in full (1457 Atlanta observations, 674 New Orleans) and then refused admission.",
+      "blind_spot": "Not a testimony corpus. 42% of extracted claims derive from text no human wrote — StreetComplete quest templates, Organic Maps reports, Scout app error reports — and the human-written remainder is overwhelmingly map-editing requests (\"Could you add the name?\", \"I added service roads, please verify the oneways\") rather than statements about place."
     },
     {
       "source": "ATL311",
@@ -502,7 +502,8 @@
     "pending": "requested but not yet received",
     "gated": "requires user acceptance or a separate data agreement",
     "reference-only": "may identify or link a place, but is not archived as a textual corpus",
-    "quarantined": "obtained material contains privacy or rights concerns requiring review"
+    "quarantined": "obtained material contains privacy or rights concerns requiring review",
+    "withdrawn": "acquired, audited, and refused admission to the atlas; kept on disk with its reason"
   },
   "documents": [
     {
@@ -522,47 +523,47 @@
     }
   ],
   "scaling": {
-    "//": "How this corpus grows, ranked by return on effort. The first move is not more sources — it is reading the sources already acquired.",
+    "//": "How this corpus grows, ranked by return on effort — corrected after the OSM Notes withdrawal. The earlier ranking put 'read what is already acquired' first, which was wrong: the material was not worth reading.",
     "moves": [
       {
         "rank": 1,
-        "name": "Read what is already acquired",
-        "gain": "1242 Atlanta observations + 576 New Orleans, already on disk, currently producing nothing",
-        "cost": "One LLM extraction pass over stored text. No new acquisition, no new agreements.",
-        "how": "The lexicon resolves 15% of notes. The LLM tier — same closed vocabulary, same prohibition on emitting coordinates — is the real translator. Every unresolved observation is already stored with its text; nothing needs re-fetching.",
-        "status": "ready to build"
+        "name": "Give Registry I a LOOK gate",
+        "gain": "The thing that would have caught this before it was published",
+        "cost": "One gate in build-atlas.mjs plus a reading surface. No acquisition, no API spend.",
+        "how": "Registry II refuses to pass until a human has read every frame. Registry I has no such gate and admitted 228 unreviewed claims. Sample n claims per dimension, require a human verdict on each, and fail the build until the verdicts exist.",
+        "status": "the actual next job"
       },
       {
         "rank": 2,
-        "name": "Widen the bbox and the window",
-        "gain": "Roughly linear in area; the metro beyond the current study area is untouched",
-        "cost": "Minutes of polite crawling. Raise tiles.cols/rows when the ingester warns AT LIMIT.",
-        "how": "cities/<slug>.json owns bbox, tiling and the closed-note window. Nothing else changes.",
-        "status": "runnable now"
+        "name": "Read a corpus before compiling it",
+        "gain": "Avoids repeating the OSM Notes result on the next source",
+        "cost": "Ten minutes of reading raw text.",
+        "how": "Before writing an ingester, print fifty random rows of the source and read them. The OSM Notes corpus advertised itself in its own source-register blind-spot column — 'contributor population and task-focused language' — and that warning was under-weighted for a full acquisition cycle.",
+        "status": "free"
       },
       {
         "rank": 3,
-        "name": "Turn on REGISTRY II acquisition",
-        "gain": "The institutional lane, which no other source substitutes for",
-        "cost": "atlas/manifest.json with real NPU minutes URLs, plus OCR for the NPUs that post scans",
-        "how": "fetch-minutes.mjs is written and waiting on that manifest. Six public bodies are already listed as runnable in the source register.",
-        "status": "needs a manifest"
+        "name": "ATL311",
+        "gain": "Actual service narratives — the corpus Registry I was designed for",
+        "cost": "A de-identified records request, and a privacy review of the free-text field before a single record is archived.",
+        "how": "Already requested and pending. Unlike map notes, these are people describing conditions in places. Read a sample before building anything.",
+        "status": "pending"
       },
       {
         "rank": 4,
-        "name": "ATL311",
-        "gain": "High-volume service narratives — the largest residual corpus available",
-        "cost": "A de-identified records request, and a privacy review of the free-text field before a single record is archived",
-        "how": "Already requested and pending. Lands as one more part in seres/atlas/.",
-        "status": "pending"
+        "name": "Turn on Registry II acquisition",
+        "gain": "The institutional lane, which no other source substitutes for",
+        "cost": "atlas/manifest.json with real NPU minutes URLs, plus OCR for the NPUs that post scans.",
+        "how": "fetch-minutes.mjs is written and waiting on that manifest. Minutes are unambiguously human statements about territory, which is what the corpus test above would have asked of any source.",
+        "status": "needs a manifest"
       },
       {
         "rank": 5,
         "name": "More cities",
         "gain": "Comparison, and a test of which findings were ever about Atlanta",
-        "cost": "REGISTRY I: a config file. REGISTRY II: a forked world.config.json and a segmentation rule per institution.",
+        "cost": "Registry I: a config file. Registry II: a forked world.config.json and a segmentation rule per institution.",
         "how": "cities/new-orleans.json is the worked example, including what did not port.",
-        "status": "proven for REGISTRY I"
+        "status": "proven for Registry I"
       }
     ],
     "other_datasets": [
@@ -573,10 +574,28 @@
     ]
   },
   "next_joins": [
-    "An LLM extraction tier over the 1818 observations already acquired and unresolved — the cheapest large gain available.",
+    "A LOOK gate for Registry I, so no claim counts as evidence until a human has sampled it.",
+    "ATL311, once its free-text field is confirmed de-identifiable — and read before it is compiled.",
     "BZA docket outcomes keyed to the V-/Z- numbers already captured per unit.",
     "GDOT AADT per street segment, for Appleyard stratification of claim lines.",
-    "ATL311 as corpus three for SERES, once its free-text field is confirmed de-identifiable.",
-    "One shared place-id space, so a SERES claim and a HALFWORLD territory box can name the same corner and disagree in public."
+    "One shared place-id space, so a Registry I claim and a Registry II territory box can name the same corner and disagree in public."
+  ],
+  "negative_results": [
+    {
+      "id": "osm-notes-not-testimony",
+      "on": "2026-08-05",
+      "claim_tested": "OpenStreetMap Notes are a vernacular testimony corpus — people reporting that the map and the ground disagree.",
+      "verdict": "REFUTED",
+      "how": "Sampled the extracted claims per dimension and measured what share of the corpus is machine-written.",
+      "findings": [
+        "The largest dimension, recreational_value, was 78 claims (34% of the corpus) from a single regex matching the word 'park'. Its top hits are the street name 'Park Bench Place, Mableton, GA 30126' and the instruction 'Park at the end of street'.",
+        "42% of claims derive from app-generated text: StreetComplete quest templates, Organic Maps POI reports, Scout app error reports.",
+        "Of the 1007 human-written notes, the great majority are map-editing requests, not statements about place.",
+        "Other false positives: 'cobblinc route 15 bus stop' scored transit_walk_advantage +1; a business listing containing the word 'damaged' scored maintenance_neglect."
+      ],
+      "consequence": "The bottleneck was never the extractor. An LLM extraction pass over this material would have bought more accurate classification of a map-maintenance queue. The part is withdrawn and the ranked plan corrected.",
+      "cost_of_learning_it_late": "The corpus was acquired, compiled, published and reported as a result before anyone read the text it contained.",
+      "structural_cause": "Registry II cannot pass its gates until a human reads every frame. Registry I had no equivalent gate, so 228 unreviewed claims went straight into the atlas."
+    }
   ]
 }

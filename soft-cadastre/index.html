@@ -176,8 +176,9 @@ footer p{margin:0 0 8px;font-size:14px}
       <li><span class="num">06</span><a href="#grow">How this grows</a></li>
       <li><span class="num">07</span><a href="#cities">Other cities</a></li>
       <li><span class="num">08</span><a href="#sources">Source register</a></li>
-      <li><span class="num">09</span><a href="#wrong">What is wrong with it</a></li>
-      <li><span class="num">10</span><a href="#files">Files and running it</a></li>
+      <li><span class="num">09</span><a href="#negative">What was tried and refused</a></li>
+      <li><span class="num">10</span><a href="#wrong">What is wrong with it</a></li>
+      <li><span class="num">11</span><a href="#files">Files and running it</a></li>
     </ol>
   </nav>
   <p class="status" id="status">Reading the register…</p>
@@ -263,21 +264,26 @@ footer p{margin:0 0 8px;font-size:14px}
   <ul class="tight" id="vocab"></ul>
 </section>
 
+<section id="negative">
+  <h2><span class="num">09</span>What was tried and refused</h2><hr class="sechr">
+  <p>A register that only records what worked is a brochure. Material that was acquired, audited and rejected stays on disk with its reason attached, because deleting it would leave nothing but the assertion that it was rejected.</p>
+  <div id="negatives"></div>
+</section>
+
 <section id="wrong">
-  <h2><span class="num">09</span>What is wrong with it</h2><hr class="sechr">
+  <h2><span class="num">10</span>What is wrong with it</h2><hr class="sechr">
   <p>Stated plainly, because the alternative is a register that flatters itself.</p>
   <blockquote>
-    <p><b>Registry I is mixed, and that is more dangerous than invented-only.</b> Most of its claims come from a real public API; thirty are authored test material. Every surface states the split. A reader who skims will average them.</p>
-    <p><b>Registry II is entirely synthetic.</b> The minutes are written to exercise the pipeline and its anchor coordinates are eyeballed. Nothing in it is a finding about Atlanta.</p>
-    <p><b>Most acquired notes produce nothing.</b> Extraction is currently a regex lexicon, and the great majority of notes match no entry in it. Those are kept and counted, but until something reads them the histogram of dimensions is a picture of the lexicon's vocabulary, not of the city.</p>
-    <p><b>A map note's pin is where a contributor clicked.</b> It is treated as an anchor, and the register lowers its spatial confidence when the text gestures rather than names — but it is still the weakest geometry here.</p>
-    <p><b>The corpus is contributor-shaped.</b> Map notes over-represent people who edit maps. High note density is evidence of mapping attention. Reading it as neighbourhood condition would be the exact error this system exists to refuse.</p>
+    <p><b>Both registries currently run on invented material.</b> Registry I holds thirty authored claims. Registry II's minutes are written to exercise the pipeline and its anchor coordinates are eyeballed. Nothing here is a finding about Atlanta.</p>
+    <p><b>An acquired corpus was built, published, and then withdrawn.</b> See the section above. It was reported as a result before anyone read the text it contained.</p>
+    <p><b>Registry I has no LOOK gate, and that is why.</b> Registry II cannot pass until a human has read every frame. Registry I had no equivalent, so two hundred and twenty-eight unreviewed claims went straight into the atlas and onto both surfaces. The asymmetry is the bug; the bad corpus was only what it let through.</p>
+    <p><b>The basemap can mislead.</b> Drawing a road beneath a claim tempts a reader to place the claim on that road. It locates the reader, never the claim.</p>
     <p><b>The two registries do not share a place identifier.</b> A claim from one and a territory box from the other can be about the same corner and the system cannot tell. This is the most interesting missing join, because it is where personal testimony and institutional record would be forced to disagree in public.</p>
   </blockquote>
 </section>
 
 <section id="files">
-  <h2><span class="num">10</span>Files and running it</h2><hr class="sechr">
+  <h2><span class="num">11</span>Files and running it</h2><hr class="sechr">
   <p>Serve the directory to read everything with live data:</p>
   <pre>cd soft-cadastre &amp;&amp; python3 -m http.server 8777</pre>
   <p>Opened as plain files it all still works. The sheet falls back to an embedded copy of the atlas, and this page falls back to figures recorded at build time and says so in the line under the contents.</p>
@@ -405,6 +411,14 @@ function render(R){
   $('#vocab').innerHTML=Object.entries(R.source_states).map(([k,v])=>
     `<li><b>${esc(k)}</b> — ${esc(v)}</li>`).join('');
 
+  $('#negatives').innerHTML=(R.negative_results||[]).map(nr=>
+    `<h4>${esc(nr.claim_tested)}</h4>
+     <p class="note"><b>Verdict.</b> ${esc(nr.verdict)} · ${esc(nr.on)} · ${esc(nr.how)}</p>
+     <ul class="tight">${nr.findings.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>
+     <p>${esc(nr.consequence)}</p>
+     <p class="note"><b>What it cost.</b> ${esc(nr.cost_of_learning_it_late)}<br><b>Structural cause.</b> ${esc(nr.structural_cause)}</p>`).join('')
+    || '<p class="note">Nothing has been refused yet. That is not the same as nothing being wrong.</p>';
+
   $('#docs').innerHTML=R.documents.map(d=>
     `<li><a href="${esc(d.path)}">${esc(d.name)}</a><p>${esc(d.does)}</p></li>`).join('');
 }
@@ -447,7 +461,7 @@ async function probe(R){
 
   const passed=R.gates.filter(g=>g.recorded==='PASS').length+(g5>0?1:0);
   const source=live===tried?'read live from disk':'as recorded at build — serve the directory to read them live';
-  $('#status').innerHTML=`Figures below are <b>${source}</b>. Registry I holds ${n(claims)} claims, ${n(acquired)} of them acquired. Registry II holds ${n(units)} units. ${Math.min(passed,5)} of 5 gates pass.`;
+  $('#status').innerHTML=`Figures below are <b>${source}</b>. Registry I holds ${n(claims)} claims, all authored fixture — an acquired corpus was withdrawn after audit. Registry II holds ${n(units)} units. ${Math.min(passed,5)} of 5 gates pass.`;
 }
 </script>
 </body>

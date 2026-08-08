@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content=PAPER>
+<meta name="theme-color" content="#efeadd">
 <meta name="description" content="Common Ground: a living map woven by the people who move through a place.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Common Ground · Living Mapmaker</title>
@@ -77,6 +77,7 @@
   }
   #say input{
     font:italic 17px/1.2 Georgia,"Times New Roman",serif;
+    max-width:calc(100vw - 96px);
     color:var(--ink);background:transparent;border:0;border-bottom:1.5px solid var(--ink);
     outline:none;padding:2px 2px 4px;width:min(58vw,230px);caret-color:var(--signal);
   }
@@ -128,7 +129,7 @@
 </div>
 
 <div id="hud">
-  <div id="say"><input id="sayIn" type="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="…"><div id="mic"><svg width="11" height="14" viewBox="0 0 11 14"><path d="M5.5 1.2a2 2 0 0 1 2 2v3.4a2 2 0 1 1-4 0V3.2a2 2 0 0 1 2-2Zm-4 5.6a4 4 0 0 0 8 0M5.5 10.8v2" fill="none" stroke="#1d201d" stroke-width="1.3" stroke-linecap="round"/></svg></div></div>
+  <div id="say"><input id="sayIn" type="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="…"><div id="mic"><svg width="11" height="14" viewBox="0 0 11 14"><path id="micVoice" d="M5.5 1.2a2 2 0 0 1 2 2v3.4a2 2 0 1 1-4 0V3.2a2 2 0 0 1 2-2Zm-4 5.6a4 4 0 0 0 8 0M5.5 10.8v2" fill="none" stroke="#1d201d" stroke-width="1.3" stroke-linecap="round"/><path id="micDrop" d="M2 3l7 8M9 3l-7 8" fill="none" stroke="#1d201d" stroke-width="1.4" stroke-linecap="round" style="display:none"/></svg></div></div>
 
   <div class="pip" id="back" role="button" aria-label="Unweave">
     <svg width="24" height="24" viewBox="0 0 24 24">
@@ -196,7 +197,9 @@ var FIBRES = [
   { c: "#54263c", m: "dash", warm: 1 },    /* deep madder     */
   { c: "#8fc0c2", m: "solid", warm: 0 },   /* pale verdigris  */
   { c: "#e08a6e", m: "dash", warm: 1 },    /* faded vermilion */
-  { c: "#0b555c", m: "solid", warm: 0 }    /* ink teal        */
+  { c: "#0b555c", m: "solid", warm: 0 },   /* ink teal        */
+  { c: "#b8563d", m: "ply", warm: 1 },     /* rust            */
+  { c: "#46888c", m: "solid", warm: 0 }    /* sea             */
 ];
 var STROKE_MIN_PX = 7;             /* travel before a drag becomes a thread */
 var HOLD_MS = 520;                 /* long-press to say something into place */
@@ -270,11 +273,13 @@ function hashAuthor(a) {
 var fibreIndex = Object.create(null), fibreOrderDirty = true;
 function rebuildFibreOrder() {
   var firstSeen = Object.create(null);
-  for (var i = 0; i < Store.ops.length; i++) {
-    var o = Store.ops[i];
+  var ops = (typeof Store !== "undefined" && Store && Store.ops) ? Store.ops : [];
+  for (var i = 0; i < ops.length; i++) {
+    var o = ops[i];
     if (firstSeen[o.a] === undefined || o.t < firstSeen[o.a]) firstSeen[o.a] = o.t;
   }
   if (firstSeen[ME] === undefined) firstSeen[ME] = Infinity;   /* you join at the end until you weave */
+  if (!ops.length) fibreOrderDirty = true;                     /* provisional until there is a log */
   var people = Object.keys(firstSeen).sort(function (a, b) {
     if (firstSeen[a] !== firstSeen[b]) return firstSeen[a] - firstSeen[b];
     return a < b ? -1 : 1;
@@ -285,16 +290,25 @@ function rebuildFibreOrder() {
   }
   fibreOrderDirty = false;
 }
+/* whenever the order is rebuilt, the shorthand follows it in the same breath */
+function syncMine() {
+  if (typeof MY_FIBRE === "undefined") return;
+  var f = FIBRES[fibreIndex[ME] !== undefined ? fibreIndex[ME] : (hashAuthor(ME) % FIBRES.length)];
+  if (f && f !== MY_FIBRE) { MY_FIBRE = f; MY_COLOR = f.c; }
+}
 function fibreOf(author) {
-  if (fibreOrderDirty) rebuildFibreOrder();
+  if (fibreOrderDirty) { rebuildFibreOrder(); syncMine(); }
   var idx = fibreIndex[author];
   if (idx === undefined) idx = hashAuthor(author) % FIBRES.length;
   return FIBRES[idx];
 }
 function colorOf(author) { return fibreOf(author).c; }
-var MY_FIBRE = FIBRES[hashAuthor(ME) % FIBRES.length];
+/* MY_COLOR and MY_FIBRE are conveniences kept in step with fibreOf(ME); they are
+   never an independent second opinion about which fibre is yours. */
+var MY_FIBRE = fibreOf(ME);
 var MY_COLOR = MY_FIBRE.c;
 function refreshMyFibre() {
+  if (fibreOrderDirty) rebuildFibreOrder();
   MY_FIBRE = fibreOf(ME); MY_COLOR = MY_FIBRE.c;
   for (var i = 0; i < Store.threads.length; i++) {
     var fb2 = fibreOf(Store.threads[i].a);
@@ -446,7 +460,7 @@ function removeOp(id, by) {
 function rebuild() {
   fibreOrderDirty = true;
   Store.threads = []; Store.notes = []; Store.knots = new Map();
-  aggDirty = true; aggCache = null; aggLevel = -1; openKnot = null; weaveDirty = true; wearDirty = true;
+  aggCache = null; aggLevel = -1; openKnot = null; touchWeave();
   Store.bounds = { t0: Infinity, t1: 0 };
   var ops = Store.ops.slice().sort(function (a, b) { return a.t - b.t; });
   for (var i = 0; i < ops.length; i++) {
@@ -528,9 +542,7 @@ function weaveThread(th) {
     if (th.t > kn.t1) kn.t1 = th.t;
     kn.grew = Math.max(kn.grew, th.t);
   }
-  aggDirty = true;
-  weaveDirty = true;
-  wearDirty = true;
+  touchWeave();
 }
 
 /* co  = how many threads have come through this place
@@ -737,6 +749,27 @@ var INK_ORDER = ["boundary", "rail", "secondary", "water", "primary", "motorway"
 
 var groundLaid = [];
 
+/* how full the ground is, decided once, before anything reads it */
+function measureCrowd() {
+  var m = LAYER_PAD;
+  var vx0 = fromScreenX(-m), vx1 = fromScreenX(W + m);
+  var vy0 = fromScreenY(-m), vy1 = fromScreenY(H + m);
+  var count = 0, all = 0;
+  for (var i = 0; i < Store.threads.length; i++) {
+    var t = Store.threads[i];
+    if (t.bx1 < vx0 || t.bx0 > vx1 || t.by1 < vy0 || t.by0 > vy1) continue;
+    all++;
+    if (t.t <= timeCursor) count++;
+  }
+  placeCrowd = count;
+  /* Pressure follows how full this ground IS, not how much of it the time
+     cursor happens to be showing — winding time back must thin the cloth, not
+     change the language it is drawn in. */
+  press = clamp(1 - Math.log2(1 + all / 36) * 0.17, 0.34, 1);
+  plainWeave = all > 1400;
+  laid = plainWeave ? null : groundLaid.slice(0, 190);
+}
+
 function drawInk() {
   var ws = worldSize();
   var zt = clamp((V.z - 9) / 8, 0, 1);
@@ -842,7 +875,7 @@ function drawPlaces() {
    THE WEAVE — threads, knots, common ground
    ============================================================ */
 var timeCursor = Infinity;   /* unweave cursor */
-var LAST_VISIT = 0, SESSION_T0 = Date.now();
+var LAST_VISIT = 0, SESSION_T0 = Date.now(), arrivalSet = null;
 var openKnot = null;
 
 function threadWidth() { return clamp(1.0 + (V.z - 10) * 0.42, 1.1, 4.6); }
@@ -1055,6 +1088,9 @@ function drawWeave(now) {
   buildAggregate();
   var nowMs = Date.now();
   var pending = 0, settled = 0;
+  var m = LAYER_PAD;
+  var vx0 = fromScreenX(-m), vx1 = fromScreenX(W + m);
+  var vy0 = fromScreenY(-m), vy1 = fromScreenY(H + m);
   var ws = worldSize();
   var base = threadWidth();
   var dimOthers = !!openKnot;
@@ -1065,23 +1101,7 @@ function drawWeave(now) {
     Store.threads.sort(function (p, q) { return p.t - q.t; });
     Store.threadsDirty = false;
   }
-  var m = LAYER_PAD;
-  var vx0 = fromScreenX(-m), vx1 = fromScreenX(W + m);
-  var vy0 = fromScreenY(-m), vy1 = fromScreenY(H + m);
-  var count = 0;
-  for (var c0 = 0; c0 < Store.threads.length; c0++) {
-    var tc = Store.threads[c0];
-    if (tc.t > timeCursor) continue;
-    if (tc.bx1 < vx0 || tc.bx0 > vx1 || tc.by1 < vy0 || tc.by0 > vy1) continue;
-    count++;
-  }
-  plainWeave = count > 420;   /* a very full ground drops the casing and the haze */
-  /* The more that has been woven here, the less any single strand insists on
-     itself. A busy ground settles toward a low field the city still reads
-     through; only the newest threads and the knots keep their ink. */
-  press = clamp(1 - Math.log2(1 + count / 36) * 0.17, 0.34, 1);
-  placeCrowd = count;
-  laid = plainWeave ? null : groundLaid.slice(0, 190);
+
   for (var i = 0; i < Store.threads.length; i++) {
     var th = Store.threads[i];
     if (th.t > timeCursor) continue;
@@ -1132,6 +1152,16 @@ function drawWeave(now) {
    and its rank on the ladder never changes just because you zoomed. */
 var renderedKnots = [];
 var aggDirty = true, aggLevel = -1, aggCache = null, aggCut = Infinity, wearDirty = true;
+
+/* ---- one owner of "the cloth is no longer what is on screen" ----
+   Every cache below hangs off this one number. Nothing else may decide on its
+   own that a repaint is or is not needed: five flags that each knew a little
+   went out of step with one another, and the screen showed the disagreement. */
+var weaveVersion = 1;
+function touchWeave() {
+  weaveVersion++;
+  aggDirty = true; wearDirty = true; weaveDirty = true; dirty = true;
+}
 
 /* how worn is the ground each thread runs through — only recomputed when the
    ground itself changes, never merely because you zoomed */
@@ -1193,6 +1223,10 @@ function buildAggregate() {
 
   aggTopW = 1;
   for (var tw = 0; tw < list.length; tw++) if (list[tw].w > aggTopW) aggTopW = list[tw].w;
+  if (LAST_VISIT && !arrivalSet && Date.now() - SESSION_T0 < 45000) {
+    arrivalSet = new Set();
+    for (var av = 0; av < list.length; av++) if (list[av].grew > LAST_VISIT) arrivalSet.add(list[av].key);
+  }
   if (wearDirty) computeWear();
   aggCache = list; aggLevel = L; aggDirty = false;
   return list;
@@ -1204,7 +1238,11 @@ function buildAggregate() {
    progression from a first crossing to common ground stays legible forever. */
 var aggTopW = 1;
 function knotStage(w, au) {
-  var abs = w < 8 ? 0 : w < 17 ? 1 : w < 34 ? 2 : w < 68 ? 3 : 4;
+  /* A coarser aggregation gathers more threads into one cell, so raw weight
+     climbs as you pull back. Normalise it to a reference scale first, or the
+     same place is common ground from far away and a first crossing up close. */
+  var wr = w / Math.pow(2, 18 - aggLevel);
+  var abs = wr < 8 ? 0 : wr < 17 ? 1 : wr < 34 ? 2 : wr < 68 ? 3 : 4;
   var rel = 1;
   if (aggTopW > 40) {
     var q = w / aggTopW;
@@ -1235,10 +1273,12 @@ function buildKnotClusters() {
     var vf = vis[fi];
     vf.fresh = Math.max(
       clamp(1 - (nowT - vf.grew) / (25 * 60000), 0, 1),        /* the last half hour */
-      /* what changed while you were away, but only while you are still arriving */
-      (LAST_VISIT && vf.grew > LAST_VISIT && (nowT - SESSION_T0) < 45000) ? 0.55 : 0
+      /* what changed while you were away — settled once, at the door, so knots
+         do not appear and vanish under a motionless hand */
+      (arrivalSet && arrivalSet.has(vf.key)) ? 0.55 : 0
     );
   }
+  if (arrivalSet && Date.now() - SESSION_T0 > 45000) arrivalSet = null;
   var freshOnes = vis.filter(function (v) { return v.fresh > 0.02; })
     .sort(function (p, q) { return q.grew - p.grew; })
     .slice(0, Math.max(4, Math.round(cap * 0.4)));
@@ -1323,7 +1363,6 @@ function drawKnot(kn, now) {
   if (sx < -80 || sx > W + 80 || sy < -80 || sy > H + 80) return;
   var w = kn.w, st = knotStage(w, kn.au);
   var r = knotRadius(w);
-  var justHappened = kn.fresh || 0;
   var isOpen = openKnot === kn;
   var HM = ((openKnot && !isOpen) ? 0.2 : 1) * clamp(1 / (0.45 + 0.55 * press), 1, 1.7) * reveal
     * (1 + (kn.fresh || 0) * 0.55);
@@ -1436,11 +1475,7 @@ function drawKnot(kn, now) {
   /* the pulse and the just-happened halo are drawn live, over the cloth, so a
      new meeting can breathe without repainting the whole fabric behind it */
   if (isOpen) {
-    ctx.globalAlpha = (0.42) * HM;
-    ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 1;
-    ctx.setLineDash([2, 3]);
-    ctx.beginPath(); ctx.arc(0, 0, r + 12 + Math.sin(now / 420) * 1.6, 0, TAU); ctx.stroke();
-    ctx.setLineDash([]);
+    /* the breathing ring is drawn on the live pass; only what is still is cached */
     /* one bead for every hand that has been here, in that person's own fibre */
     var hands = [], seen = {};
     for (var hi = 0; hi < kn.threadList.length && hands.length < 14; hi++) {
@@ -1463,7 +1498,6 @@ function drawKnot(kn, now) {
       ctx.arc(0, 0, r + 19 + a4 * 2.6, -Math.PI * 0.42, Math.PI * 0.42);
       ctx.stroke();
     }
-    dirty = true;
   }
   ctx.restore();
 }
@@ -1569,8 +1603,21 @@ function drawLive(now) {
 /* what has just happened, drawn over the cloth every frame */
 function drawFreshMarks(now) {
   if (!renderedKnots.length) return;
+  /* while a pinch is in flight the cached cloth is being scaled and the live
+     marks are not; rather than contradict it, they wait for the gesture to end */
+  if (lTag && Math.abs(lTag.z - V.z) > 0.01) return;
   var ws = worldSize(), t = Date.now();
   ctx.save();
+  if (openKnot) {
+    var ox3 = (openKnot.x - V.x) * ws + W / 2, oy3 = (openKnot.y - V.y) * ws + H / 2;
+    ctx.globalAlpha = 0.42; ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 1;
+    ctx.setLineDash([2, 3]);
+    ctx.beginPath();
+    ctx.arc(ox3, oy3, knotRadius(openKnot.w) + 12 + Math.sin(now / 420) * 1.6, 0, TAU);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    dirty = true;
+  }
   for (var i = 0; i < renderedKnots.length; i++) {
     var kn = renderedKnots[i];
     var f = kn.fresh || 0;
@@ -1668,7 +1715,9 @@ function buildDemoGeom() {
     return out;
   }
   /* mine leaves the control and rises through the middle of the ground */
-  var A = bez([bx, by], [bx - R * 1.15, by - H * 0.10], [cx - R * 0.85, cy - H * 0.02], [cx + R * 0.72, cy - H * 0.16], 60);
+  /* it starts clear of the control: the gesture is press here, then draw there */
+  var A = bez([bx - R * 0.62, by - H * 0.055], [bx - R * 1.15, by - H * 0.12],
+    [cx - R * 0.85, cy - H * 0.02], [cx + R * 0.72, cy - H * 0.16], 60);
   /* someone else comes across it */
   var B = bez([cx - R * 1.12, cy - H * 0.16], [cx - R * 0.3, cy - H * 0.02], [cx + R * 0.2, cy + H * 0.02], [cx + R * 1.05, cy + H * 0.10], 60);
 
@@ -1695,7 +1744,7 @@ function buildDemoGeom() {
 
 function drawDemo(now) {
   /* the ground stops explaining itself the moment anything real is happening on it */
-  if (demoOff || Store.threads.length || Store.notes.length || drawingPts || livePeers.size || peers.size) {
+  if (demoOff || sayAt || Store.threads.length || Store.notes.length || drawingPts || livePeers.size || peers.size) {
     if (demoPulse) { demoPulse = 0; threadBtn.classList.remove("beat"); }
     return;
   }
@@ -1792,8 +1841,6 @@ function drawEra() {
   ctx.font = '600 10px -apple-system,system-ui,"Helvetica Neue",sans-serif';
   var lw3 = ctx.measureText(label).width + (label.length - 1) * 2.2;
   var tx3 = (W - lw3) / 2, ty3 = 18 + safeTop();
-  ctx.globalAlpha = 0.82; ctx.fillStyle = PAPER;
-  ctx.fillRect(tx3 - 10, ty3 - 6, lw3 + 20, 20);
   for (var ci2 = 0; ci2 < label.length; ci2++) {
     var ch2 = label.charAt(ci2);
     ctx.globalAlpha = 0.85; ctx.strokeStyle = "rgba(241,236,224,.9)"; ctx.lineWidth = 3.4; ctx.lineJoin = "round";
@@ -1814,7 +1861,6 @@ var layer = document.createElement("canvas");
 var lctx = layer.getContext("2d");
 var lTag = null;
 var weaveDirty = true;
-var mainCtx = ctx;
 
 function renderLayer(now) {
   weaveDirty = false;            /* anything the draw itself marks must survive */
@@ -1828,12 +1874,13 @@ function renderLayer(now) {
   ctx.fillStyle = PAPER;
   ctx.fillRect(-pad, -pad, W + pad * 2, H + pad * 2);
   drawTiles();
-  if (!paperTex) paperTex = mainCtx.createPattern(paperTile(), "repeat");
+  if (!paperTex) paperTex = cv.getContext("2d").createPattern(paperTile(), "repeat");
   if (paperTex) { ctx.save(); ctx.fillStyle = paperTex; ctx.fillRect(-pad, -pad, W + pad * 2, H + pad * 2); ctx.restore(); }
+  measureCrowd();
   drawInk();
   drawWeave(now);
   ctx = prev;
-  lTag = { x: V.x, y: V.y, z: V.z, pad: pad, w: W, h: H };
+  lTag = { x: V.x, y: V.y, z: V.z, pad: pad, w: W, h: H, v: weaveVersion };
 }
 
 function frame(now) {
@@ -1842,10 +1889,8 @@ function frame(now) {
   if (!dirty) return;
   dirty = false;
 
-  buildKnotClusters();
-
   var ws = worldSize();
-  var needs = weaveDirty || !lTag || lTag.w !== W || lTag.h !== H;
+  var needs = weaveDirty || !lTag || lTag.v !== weaveVersion || lTag.w !== W || lTag.h !== H;
   if (!needs && lTag.z === V.z) {
     var dx = (lTag.x - V.x) * ws, dy = (lTag.y - V.y) * ws;
     if (Math.abs(dx) > LAYER_PAD - 4 || Math.abs(dy) > LAYER_PAD - 4) needs = true;
@@ -1864,6 +1909,7 @@ function frame(now) {
     var dstY = (-lTag.pad - H / 2) * sc + (lTag.y - V.y) * ws + H / 2;
     ctx.drawImage(layer, dstX, dstY, lw * sc, lh * sc);
   }
+  if (!needs) buildKnotClusters();   /* kept current for the live pass and for taps */
 
   drawWarp();
   drawFreshMarks(now);
@@ -1893,7 +1939,7 @@ function flingVelocity(now) {
   if (speed > cap) { vx *= cap / speed; vy *= cap / speed; }
   return { x: vx, y: vy };
 }
-var unweave = { held: false, rate: 0 };
+var unweave = { held: false };
 
 function stepMotion(now) {
   var dt = Math.min(50, now - (lastMotion || now)); lastMotion = now;
@@ -2131,10 +2177,10 @@ function openSay(sx, sy, wx, wy) {
   say.style.display = "block";
   var nearRight = sx > W - 170;
   say.classList.toggle("flip", nearRight);
-  say.style.left = clamp(sx, 40, W - 40) + "px";
+  say.style.left = clamp(sx, 46, W - 46) + "px";
   say.style.top = clamp(sy - 26, 44, H - 130) + "px";
   sayIn.value = "";
-  if (window.SpeechRecognition || window.webkitSpeechRecognition) micBtn.classList.add("avail");
+  syncMicGlyph();
 
   /* The finger that opened this is still on the glass. Focusing now means the
      keyboard steals it and the lift blurs it straight back out. Wait for the lift. */
@@ -2177,8 +2223,17 @@ sayIn.addEventListener("blur", function () {
     if (say.style.display === "block") closeSay(true);
   }, 140);
 });
+/* with something written, the glyph becomes the way to throw it away */
+function syncMicGlyph() {
+  var has = sayIn.value.trim().length > 0;
+  document.getElementById("micVoice").style.display = has ? "none" : "";
+  document.getElementById("micDrop").style.display = has ? "" : "none";
+  micBtn.classList.add("avail");
+}
+sayIn.addEventListener("input", syncMicGlyph);
 micBtn.addEventListener("click", function (e) {
   e.stopPropagation();
+  if (sayIn.value.trim()) { sayIn.value = ""; syncMicGlyph(); closeSay(false); return; }
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SR) return;
   if (recog) { try { recog.stop(); } catch (er) { } recog = null; micBtn.classList.remove("on"); return; }
@@ -2249,8 +2304,13 @@ window.addEventListener("pointerup", function () { unweave.held = false; });
 /* people */
 function refreshPeopleGlyph() {
   var g = document.getElementById("peopleGlyph");
-  var list = [MY_COLOR];
-  peers.forEach(function (p) { if (list.length < 6) list.push(p.c); });
+  var list = [MY_COLOR], seenA = {};
+  seenA[ME] = 1;
+  peers.forEach(function (p, a) { if (!seenA[a] && list.length < 6) { seenA[a] = 1; list.push(p.c); } });
+  for (var i = Store.threads.length - 1; i >= 0 && list.length < 6; i--) {
+    var a2 = Store.threads[i].a;
+    if (!seenA[a2]) { seenA[a2] = 1; list.push(Store.threads[i].c); }
+  }
   var s = "";
   if (list.length === 1) {
     s = '<circle cx="15" cy="9.6" r="3.3" fill="' + MY_COLOR + '"/>' +
@@ -2282,8 +2342,13 @@ function openKey() {
   keyOpen = true;
   keyEl.classList.add("show");
   document.getElementById("keyUrl").textContent = joinUrl();
-  var here = [MY_COLOR];
-  peers.forEach(function (pp) { if (here.length < 9) here.push(pp.c); });
+  var here = [MY_COLOR], seenK = {};
+  seenK[ME] = 1;
+  peers.forEach(function (pp, a) { if (!seenK[a] && here.length < 12) { seenK[a] = 1; here.push(pp.c); } });
+  for (var hi = Store.threads.length - 1; hi >= 0 && here.length < 12; hi--) {
+    var ha = Store.threads[hi].a;
+    if (!seenK[ha]) { seenK[ha] = 1; here.push(Store.threads[hi].c); }
+  }
   var dots = here.map(function (c) {
     return '<span style="display:inline-block;width:11px;height:11px;border-radius:50%;margin:0 5px;background:' + c + '"></span>';
   });
@@ -2483,7 +2548,6 @@ function drawQR(canvas, text) {
    ============================================================ */
 var net = { state: "local", mqtt: null, bc: null, tried: 0 };
 
-function encodeMsg(o) { return JSON.stringify(o); }
 function handleMsg(raw) { try { handleMsgInner(raw); } catch (e) { /* one bad message is one bad message */ } }
 function handleMsgInner(msg) {
   if (!msg || typeof msg !== "object" || msg.from === SITE || msg.g !== GID) return;
@@ -2544,7 +2608,7 @@ function publishChunked(ops) {
   }
 }
 function send(msg) {
-  var s = encodeMsg(msg);
+  var s = JSON.stringify(msg);
   try { if (net.bc) net.bc.postMessage(s); } catch (e) { }
   try { if (net.mqtt && net.mqtt.ready) net.mqtt.publish(s); } catch (e) { }
 }

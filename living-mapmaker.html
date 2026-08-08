@@ -641,34 +641,35 @@ function makePaper() {
 /* ============================================================
    INK GROUND
    ============================================================ */
+/* ----------------------------------------------------------------
+   THE GROUND IS FIBRE TOO.
+   The city is not a printed basemap with drawing on top of it. Water, rail
+   and roads are threads already laid in the cloth — spun, tapered, breathing —
+   and a thread somebody leaves today passes over some of them and under others.
+   ---------------------------------------------------------------- */
 var INK_STYLE = {
-  water: { col: "#8ab0b6", w: [0.9, 4.2], a: 0.60, dash: null },
-  rail: { col: "#6f746f", w: [0.34, 0.85], a: 0.26, dash: [1.5, 3.4] },
-  secondary: { col: "#565c56", w: [0.32, 1.05], a: 0.30, dash: null },
-  primary: { col: "#3f453f", w: [0.5, 1.7], a: 0.42, dash: null },
-  motorway: { col: "#323833", w: [0.85, 2.8], a: 0.56, dash: null, casing: true },
-  boundary: { col: "#9a9083", w: [0.6, 1.2], a: 0.34, dash: [5, 4] }
+  water: { col: "#7fa9b0", w: [1.4, 6.0], a: 0.62, make: "solid", bind: 1 },
+  rail: { col: "#6e736d", w: [0.6, 1.5], a: 0.28, make: "dash", bind: 1 },
+  secondary: { col: "#5d635c", w: [0.5, 1.5], a: 0.24, make: "solid", bind: 0 },
+  primary: { col: "#484e47", w: [0.8, 2.8], a: 0.40, make: "solid", bind: 1 },
+  motorway: { col: "#3a403a", w: [1.3, 4.6], a: 0.52, make: "solid", bind: 1 },
+  boundary: { col: "#9a9083", w: [0.7, 1.4], a: 0.30, make: "dash", bind: 0 }
 };
-var INK_ORDER = ["water", "rail", "secondary", "primary", "motorway", "boundary"];
+var INK_ORDER = ["boundary", "rail", "secondary", "water", "primary", "motorway"];
 
-function pathLayer(lines, ws) {
-  ctx.beginPath();
-  for (var i = 0; i < lines.length; i++) {
-    var p = lines[i], started = false, lastX = 0, lastY = 0;
-    for (var j = 0; j < p.length; j += 2) {
-      var sx = (p[j] - V.x) * ws + W / 2, sy = (p[j + 1] - V.y) * ws + H / 2;
-      if (started && Math.abs(sx - lastX) < 0.7 && Math.abs(sy - lastY) < 0.7) continue;
-      if (!started) { ctx.moveTo(sx, sy); started = true; } else ctx.lineTo(sx, sy);
-      lastX = sx; lastY = sy;
-    }
-  }
-}
+var groundLaid = [];
 
 function drawInk() {
   var ws = worldSize();
   var zt = clamp((V.z - 9) / 8, 0, 1);
-  var thin = Tiles.off ? 1 : 0.62;        /* when tiles carry detail, ink steps back */
-  var lift = 1 - warp * 0.22;             /* the paper lifts while a thread can be left */
+  var thin = (Tiles.off || !Tiles.anyOk) ? 1 : 0.72;
+  var lift = 1 - warp * 0.18;
+  var mg = LAYER_PAD;
+  var vx0 = fromScreenX(-mg), vx1 = fromScreenX(W + mg);
+  var vy0 = fromScreenY(-mg), vy1 = fromScreenY(H + mg);
+  groundLaid.length = 0;
+  var bindCap = 190;
+
   for (var li = 0; li < INK_ORDER.length; li++) {
     var name = INK_ORDER[li], lines = INK[name];
     if (!lines || !lines.length) continue;
@@ -678,18 +679,40 @@ function drawInk() {
     var lw = lerp(st.w[0], st.w[1], zt) * thin;
     ctx.save();
     ctx.lineCap = "round"; ctx.lineJoin = "round";
-    if (st.casing && V.z > 11) {
-      /* an engraved road: paper cut either side of the line */
-      ctx.strokeStyle = "#f3efe5"; ctx.globalAlpha = 0.75 * lift;
-      ctx.lineWidth = lw + 2.2;
-      pathLayer(lines, ws); ctx.stroke();
+    ctx.fillStyle = st.col;
+    ctx.globalAlpha = st.a * lift;
+
+    for (var i = 0; i < lines.length; i++) {
+      var p = lines[i];
+      var n = 0, lastX = -1e9, lastY = -1e9, on = false;
+      _tx.length = 0; _ty.length = 0;
+      for (var j = 0; j < p.length; j += 2) {
+        if (p[j] > vx0 && p[j] < vx1 && p[j + 1] > vy0 && p[j + 1] < vy1) on = true;
+        var sx = (p[j] - V.x) * ws + W / 2, sy = (p[j + 1] - V.y) * ws + H / 2;
+        if (n > 0 && Math.abs(sx - lastX) < 0.5 && Math.abs(sy - lastY) < 0.5) continue;
+        _tx.push(sx); _ty.push(sy); lastX = sx; lastY = sy; n++;
+      }
+      if (!on || n < 2) continue;
+      _seed = (i * 2654435761) % 100000;
+      ribbon(n, lw);
+      ctx.fill();
+      if (st.make === "dash" && lw > 0.9) {
+        ctx.save();
+        ctx.globalAlpha = st.a * lift * 0.9;
+        ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = lw * 0.62;
+        ctx.setLineDash([lw * 0.8, lw * 2.4]);
+        ctx.beginPath();
+        for (var q = 0; q < n; q++) { if (q === 0) ctx.moveTo(_tx[q], _ty[q]); else ctx.lineTo(_tx[q], _ty[q]); }
+        ctx.stroke();
+        ctx.restore();
+      }
+      /* the strong ground fibres are part of the weave and can surface through it */
+      if (st.bind && groundLaid.length < bindCap && lw > 1.0) {
+        var kx = new Float32Array(n), ky = new Float32Array(n);
+        for (var c = 0; c < n; c++) { kx[c] = _tx[c]; ky[c] = _ty[c]; }
+        groundLaid.push({ th: { c: st.col, id: "g" + li + "_" + i }, x: kx, y: ky, n: n, w: lw, a: st.a * lift });
+      }
     }
-    ctx.strokeStyle = st.col;
-    ctx.globalAlpha = st.a * lift * (name === "boundary" ? clamp(1.4 - zt, .25, 1) : 1);
-    ctx.lineWidth = lw;
-    if (st.dash) ctx.setLineDash([st.dash[0] * (1 + zt), st.dash[1] * (1 + zt)]);
-    pathLayer(lines, ws);
-    ctx.stroke();
     ctx.restore();
   }
   drawPlaces();
@@ -710,18 +733,25 @@ function drawPlaces() {
     if (sx < -60 || sx > W + 60 || sy < -20 || sy > H + 20) continue;
     var clash = false;
     for (var d = 0; d < drawn.length; d++) {
-      if (Math.abs(drawn[d][0] - sx) < 76 && Math.abs(drawn[d][1] - sy) < 20) { clash = true; break; }
+      if (Math.abs(drawn[d][0] - sx) < 92 && Math.abs(drawn[d][1] - sy) < 24) { clash = true; break; }
     }
     if (clash) continue;
     drawn.push([sx, sy]);
     var big = p.kind === "city";
-    ctx.font = (big ? "italic 13px " : "italic 10.5px ") + 'Georgia,"Times New Roman",serif';
-    ctx.globalAlpha = 0.85 * (1 - warp * 0.4);
-    ctx.strokeStyle = "rgba(239,234,221,.85)";
-    ctx.strokeText(p.name, sx, sy);
-    ctx.globalAlpha = (big ? 0.60 : 0.40) * (1 - warp * 0.4);
-    ctx.fillStyle = "#1d201d";
-    ctx.fillText(p.name, sx, sy);
+    ctx.font = (big ? "600 9.5px " : "600 8.5px ") + '-apple-system,system-ui,"Helvetica Neue",sans-serif';
+    var label = p.name.toUpperCase();
+    var lw2 = ctx.measureText(label).width + (label.length - 1) * 1.6;
+    if (sx - lw2 / 2 < 6 || sx + lw2 / 2 > W - 6) continue;   /* never clipped mid-word */
+    var tx0 = sx - lw2 / 2, alpha = (big ? 0.42 : 0.28) * (1 - warp * 0.5);
+    ctx.textAlign = "left";
+    for (var ci = 0; ci < label.length; ci++) {
+      var ch = label.charAt(ci);
+      ctx.globalAlpha = 0.8 * (1 - warp * 0.5);
+      ctx.strokeStyle = "rgba(239,234,221,.9)"; ctx.strokeText(ch, tx0, sy);
+      ctx.globalAlpha = alpha; ctx.fillStyle = "#1d201d"; ctx.fillText(ch, tx0, sy);
+      tx0 += ctx.measureText(ch).width + 1.6;
+    }
+    ctx.textAlign = "center";
   }
   ctx.restore();
 }
@@ -808,7 +838,7 @@ function drawThread(th, alpha, width, dim) {
   if (n < 2) return;
   var i;
   _seed = (th.id.charCodeAt(0) * 31 + th.id.charCodeAt(th.id.length - 1)) * 13;
-  if (laid && laid.length < 300 && !dim) {
+  if (laid && laid.length < 520 && !dim) {
     var kx = new Float32Array(n), ky = new Float32Array(n);
     kx.set(_tx.slice(0, n)); ky.set(_ty.slice(0, n));
     laid.push({ th: th, x: kx, y: ky, n: n, w: width, a: alpha });
@@ -956,7 +986,7 @@ function drawWeave(now) {
     count++;
   }
   plainWeave = count > 420;   /* a very full ground drops the casing and the haze */
-  laid = plainWeave ? null : [];
+  laid = plainWeave ? null : groundLaid.slice(0, 190);
   for (var i = 0; i < Store.threads.length; i++) {
     var th = Store.threads[i];
     if (th.t > timeCursor) continue;
@@ -1095,7 +1125,7 @@ function threadById(id) {
 }
 
 function knotRadius(w) {
-  return clamp(2.4 + Math.pow(w, 0.62) * (1.5 + clamp(V.z - 11, 0, 6) * 0.20), 2.4, 46);
+  return clamp(2.4 + Math.pow(w, 0.46) * (2.0 + clamp(V.z - 11, 0, 6) * 0.34), 2.4, 34);
 }
 
 function drawKnot(kn, now, base) {
@@ -1106,6 +1136,7 @@ function drawKnot(kn, now, base) {
   var r = knotRadius(w);
   var fresh = clamp(1 - (Date.now() - kn.grew) / 2600, 0, 1);
   var isOpen = openKnot === kn;
+  var HM = (openKnot && !isOpen) ? 0.2 : 1;
   var many = kn.au > 1;
   var accent = many ? "#bf4526" : "#2f7d84";
 
@@ -1122,8 +1153,8 @@ function drawKnot(kn, now, base) {
     ctx.beginPath(); ctx.arc(0, 0, fr, 0, TAU); ctx.fill();
     ctx.save();
     ctx.rotate(Math.PI / 4);
-    ctx.globalAlpha = 0.34;
-    ctx.strokeStyle = "#2f7d84"; ctx.lineWidth = 0.7;
+    ctx.globalAlpha = (0.42) * HM;
+    ctx.strokeStyle = "#2f7d84"; ctx.lineWidth = 0.8;
     /* the cloth is squared off here: warp one way, weft the other */
     var half = r * 1.15, step = Math.max(2.4, half / 4.2);
     ctx.beginPath();
@@ -1134,7 +1165,7 @@ function drawKnot(kn, now, base) {
       ctx.moveTo(-h, q); ctx.lineTo(h, q);
     }
     ctx.stroke();
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = (0.40) * HM;
     ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 0.9;
     ctx.beginPath();
     ctx.moveTo(-half, 0); ctx.lineTo(0, -half); ctx.lineTo(half, 0); ctx.lineTo(0, half); ctx.closePath();
@@ -1144,7 +1175,7 @@ function drawKnot(kn, now, base) {
 
   /* the threads read under the knot */
   if (r > 6) {
-    ctx.globalAlpha = 0.18;
+    ctx.globalAlpha = (0.13) * HM;
     ctx.fillStyle = "#f3efe5";
     ctx.beginPath(); ctx.arc(0, 0, r * 0.78, 0, TAU); ctx.fill();
   }
@@ -1156,15 +1187,15 @@ function drawKnot(kn, now, base) {
     ctx.beginPath();
     ctx.arc(0, 0, rr, 0, TAU);
     var outer = i === rings - 1;
-    ctx.strokeStyle = (outer && st >= 2) ? accent : "rgba(29,32,29,.7)";
-    ctx.globalAlpha = st === 0 ? 0.34 : (0.34 + 0.44 * ((i + 1) / rings)) * (isOpen ? 1 : 0.92);
-    ctx.lineWidth = st === 0 ? 0.6 : 0.75 + (outer ? 0.35 : 0);
+    ctx.strokeStyle = (outer && st >= 3) ? accent : "rgba(29,32,29,.66)";
+    ctx.globalAlpha = (st === 0 ? 0.30 : (0.24 + 0.34 * ((i + 1) / rings)) * (isOpen ? 1 : 0.9)) * HM;
+    ctx.lineWidth = st === 0 ? 0.55 : 0.7 + (outer ? 0.3 : 0);
     ctx.stroke();
   }
 
   /* 3+ · the ends of the threads that hold it */
   if (st >= 3 && r > 6) {
-    ctx.globalAlpha = 0.4; ctx.strokeStyle = "rgba(29,32,29,.75)"; ctx.lineWidth = 0.6;
+    ctx.globalAlpha = (0.4) * HM; ctx.strokeStyle = "rgba(29,32,29,.75)"; ctx.lineWidth = 0.6;
     var spokes = clamp(kn.au * 3, 3, 21);
     var off = (Math.abs(kn.x) * 977) % 1;
     ctx.beginPath();
@@ -1178,20 +1209,20 @@ function drawKnot(kn, now, base) {
 
   /* the eye */
   if (st >= 1) {
-    ctx.globalAlpha = 0.88;
-    ctx.fillStyle = st >= 4 ? "#bf4526" : "#1d201d";
-    ctx.beginPath(); ctx.arc(0, 0, clamp(r * 0.2, 0.9, 3.6), 0, TAU); ctx.fill();
+    ctx.globalAlpha = (0.78) * HM;
+    ctx.fillStyle = st >= 4 ? "#bf4526" : "#262a26";
+    ctx.beginPath(); ctx.arc(0, 0, clamp(r * 0.14, 0.8, 2.6), 0, TAU); ctx.fill();
   }
 
   /* a knot that just tightened sends out one pulse */
   if (fresh > 0) {
-    ctx.globalAlpha = fresh * 0.5;
+    ctx.globalAlpha = (fresh * 0.5) * HM;
     ctx.strokeStyle = accent; ctx.lineWidth = 1.1;
     ctx.beginPath(); ctx.arc(0, 0, r + (1 - fresh) * 34, 0, TAU); ctx.stroke();
     dirty = true; weaveDirty = true;
   }
   if (isOpen) {
-    ctx.globalAlpha = 0.42;
+    ctx.globalAlpha = (0.42) * HM;
     ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 1;
     ctx.setLineDash([2, 3]);
     ctx.beginPath(); ctx.arc(0, 0, r + 12 + Math.sin(now / 420) * 1.6, 0, TAU); ctx.stroke();
@@ -1206,14 +1237,14 @@ function drawKnot(kn, now, base) {
     var hr = r + 12;
     for (var b2 = 0; b2 < hands.length; b2++) {
       var ang2 = -Math.PI / 2 + (b2 / hands.length) * TAU;
-      ctx.globalAlpha = 0.95; ctx.fillStyle = hands[b2];
+      ctx.globalAlpha = (0.95) * HM; ctx.fillStyle = hands[b2];
       ctx.beginPath(); ctx.arc(Math.cos(ang2) * hr, Math.sin(ang2) * hr, 2.9, 0, TAU); ctx.fill();
-      ctx.globalAlpha = 0.5; ctx.strokeStyle = "#f3efe5"; ctx.lineWidth = 0.8; ctx.stroke();
+      ctx.globalAlpha = (0.5) * HM; ctx.strokeStyle = "#f3efe5"; ctx.lineWidth = 0.8; ctx.stroke();
     }
     /* and one arc for every time somebody came back */
     var arcs = Math.min(kn.ret, 12);
     for (var a4 = 0; a4 < arcs; a4++) {
-      ctx.globalAlpha = 0.30; ctx.strokeStyle = "rgba(29,32,29,.8)"; ctx.lineWidth = 0.8;
+      ctx.globalAlpha = (0.30) * HM; ctx.strokeStyle = "rgba(29,32,29,.8)"; ctx.lineWidth = 0.8;
       ctx.beginPath();
       ctx.arc(0, 0, r + 19 + a4 * 2.6, -Math.PI * 0.42, Math.PI * 0.42);
       ctx.stroke();
@@ -1253,7 +1284,8 @@ function drawNotes(now) {
     ctx.font = 'italic 12.5px Georgia,"Times New Roman",serif';
     ctx.textAlign = "left";
     var tw = ctx.measureText(n.text).width;
-    var tx = sx + 6 > W - tw - 8 ? sx - 6 - tw : sx + 6;
+    var tx = sx + 6 + tw > W - 8 ? sx - 6 - tw : sx + 6;
+    if (tx < 8 || tx + tw > W - 8) continue;
     ctx.globalAlpha = a * 0.85;
     ctx.strokeStyle = "rgba(239,234,221,.9)"; ctx.lineWidth = 3; ctx.lineJoin = "round";
     ctx.strokeText(n.text, tx, sy - 16);
@@ -1425,17 +1457,38 @@ function drawDemo(now) {
 
   ctx.save();
   ctx.lineCap = "round"; ctx.lineJoin = "round";
-  function lay(path, prog, col, wid) {
+  /* laid in exactly the fibre the person will be given, so the demonstration
+     teaches the language the ground actually speaks */
+  function lay(path, prog, col, wid, seed) {
     if (prog <= 0.005) return null;
     var n = Math.max(2, Math.round(prog * (path.length - 1)) + 1);
+    _tx.length = 0; _ty.length = 0;
+    for (var i = 0; i < n; i++) { _tx.push(path[i][0]); _ty.push(path[i][1]); }
+    _seed = seed;
     ctx.beginPath();
-    for (var i = 0; i < n; i++) { if (i === 0) ctx.moveTo(path[i][0], path[i][1]); else ctx.lineTo(path[i][0], path[i][1]); }
-    ctx.globalAlpha = out * 0.26; ctx.strokeStyle = col; ctx.lineWidth = wid * 2.7; ctx.stroke();
-    ctx.globalAlpha = out * 0.82; ctx.lineWidth = wid; ctx.stroke();
+    for (var j = 0; j < n; j++) { if (j === 0) ctx.moveTo(_tx[j], _ty[j]); else ctx.lineTo(_tx[j], _ty[j]); }
+    ctx.globalAlpha = out * 0.78; ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = wid + 1.7;
+    ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.stroke();
+    ctx.globalAlpha = out * 0.10; ctx.strokeStyle = col; ctx.lineWidth = wid * 2.2; ctx.stroke();
+    ctx.globalAlpha = out * 0.9; ctx.fillStyle = col;
+    ribbon(n, wid); ctx.fill();
     return prog < 1 ? path[n - 1] : null;
   }
-  var headA = lay(G.A, pA, MY_COLOR, 3.0);
-  var headB = lay(G.B, pB, other, 2.7);
+  var headA = lay(G.A, pA, MY_COLOR, 3.2, 311);
+  var headB = lay(G.B, pB, other, 2.9, 977);
+  /* and the first thread surfaces back over the second, the way cloth does */
+  if (pB > G.tb && pA >= G.ta) {
+    var iA = Math.max(1, Math.round(G.ta * (G.A.length - 1)));
+    _tx.length = 0; _ty.length = 0;
+    for (var q2 = Math.max(0, iA - 3); q2 <= Math.min(G.A.length - 1, iA + 3); q2++) { _tx.push(G.A[q2][0]); _ty.push(G.A[q2][1]); }
+    ctx.save();
+    ctx.beginPath(); ctx.arc(G.ix, G.iy, 9, 0, TAU); ctx.clip();
+    ctx.beginPath();
+    for (var q3 = 0; q3 < _tx.length; q3++) { if (q3 === 0) ctx.moveTo(_tx[q3], _ty[q3]); else ctx.lineTo(_tx[q3], _ty[q3]); }
+    ctx.globalAlpha = out * 0.78; ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = 3.2 + 1.7; ctx.stroke();
+    ctx.globalAlpha = out * 0.9; ctx.strokeStyle = MY_COLOR; ctx.lineWidth = 3.0; ctx.stroke();
+    ctx.restore();
+  }
   var head = headB || headA;
   if (head) {
     ctx.globalAlpha = out * (atCross ? 1 : 0.9);

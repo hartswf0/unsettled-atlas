@@ -303,9 +303,12 @@ function hash1(n, salt){
   return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
 }
 
-/* one-euro-ish adaptive smoothing for landmark streams */
-function smoothTo(cur, tgt, dt, speed){
-  const tau = clamp(0.085 - speed*0.65, 0.018, 0.085);
+/* one-euro-ish adaptive smoothing for landmark streams. `doubt` slows the
+   absorption of a detection that disagrees with the one before it, so a single
+   bad frame barely moves the body while a real approach still arrives. */
+function smoothTo(cur, tgt, dt, speed, doubt){
+  let tau = clamp(0.085 - speed*0.65, 0.018, 0.085);
+  tau *= 1 + (doubt||0)*5;
   return cur + (tgt - cur) * (1 - Math.exp(-dt/tau));
 }
 
@@ -359,6 +362,7 @@ class Small {
     this.x = 0; this.y = 0; this.vx = 0; this.vy = 0;
     this.ang = -Math.PI/2; this.angV = 0;
     this.tx = 0; this.ty = 0; this.hasT = false;
+    this.ptx = 0; this.pty = 0;        // where its address was last frame
     this.hx = 0; this.hy = 0;                          // slow home (memory pull)
     this.ten = 0;                                      // strain
     this.sup = 0;                                      // support / presence 0..1
@@ -883,8 +887,14 @@ function applyPoses(poseList, now){
       const hx = (lm[L_HIP].x + lm[R_HIP].x)/2, hy = (lm[L_HIP].y + lm[R_HIP].y)/2;
       const sy = (lm[L_SHO].y + lm[R_SHO].y)/2, sx = (lm[L_SHO].x + lm[R_SHO].x)/2;
       const len = Math.hypot(sx-hx, sy-hy) || 1e-3;
+      // two poses of the same build standing within a body's width of each
+      // other are one person found twice, not two people
       let dup = false;
-      for (const k of keep){ if (Math.hypot(k.hx-hx, k.hy-hy) < Math.max(len, k.len)*0.75) dup = true; }
+      for (const k of keep){
+        const near = Math.hypot(k.hx-hx, k.hy-hy) < Math.max(len, k.len)*1.5;
+        const alike = Math.abs(Math.log(len/k.len)) < 0.3;
+        if (near && alike) dup = true;
+      }
       if (!dup) keep.push({lm, hx, hy, len});
     }
     poseList = keep.map(k=>k.lm);
@@ -949,7 +959,7 @@ function updateBody(B, dt){
       const dtd = clamp((tnow - B.prevT)/1000, 0.02, 0.5);
       const scaleRate = Math.abs(Math.log(nl/B.prevL))/dtd;
       const shiftRate = Math.hypot(hx-B.prevHx, hy-B.prevHy)/nl/dtd;
-      const j = Math.max((scaleRate-2.4)/7, (shiftRate-4.5)/9);
+      const j = Math.max((scaleRate-1.6)/5, (shiftRate-4.5)/9);
       B.jump = clamp(Math.max(B.jump*0.5, j), 0, 1);
     }
     B.prevL = nl; B.prevHx = hx; B.prevHy = hy; B.prevT = tnow;
@@ -967,8 +977,8 @@ function updateBody(B, dt){
       const sp = Math.hypot(tx-sm[i].x, ty-sm[i].y) / Math.max(1,S.h) / Math.max(dt,1e-3);
       sm[i].jx = lerp(sm[i].jx, Math.abs(tx-sm[i].x), 0.2);
       sm[i].jy = lerp(sm[i].jy, Math.abs(ty-sm[i].y), 0.2);
-      sm[i].x = smoothTo(sm[i].x, tx, dt, sp);
-      sm[i].y = smoothTo(sm[i].y, ty, dt, sp);
+      sm[i].x = smoothTo(sm[i].x, tx, dt, sp, B.jump);
+      sm[i].y = smoothTo(sm[i].y, ty, dt, sp, B.jump);
       sm[i].z = lerp(sm[i].z, raw[i].z||0, 0.25);
 
       // confidence: model visibility when offered, otherwise a real proxy
@@ -1058,6 +1068,13 @@ function resolveGeometry(B, dt){
       z: ((a.z||0)+(b.z||0))/2,
     };
   }
+
+  // how much body there is to inhabit, in pixels of surface
+  let area = Math.PI*G.head.rx*G.head.ry + Math.PI*G.neck.r*G.neck.r;
+  area += Math.PI*(G.balls[T_LSHO].r*G.balls[T_LSHO].r + G.balls[T_RSHO].r*G.balls[T_RSHO].r);
+  area += L*1.34 * (shoHalf + hipHalf) * 1.30;
+  for (let t=0;t<NT;t++){ const b = G.bones[t]; if (b) area += b.len * b.w * 2; }
+  G.area = area;
 
   // confidence per territory, from the landmarks that define it
   for (let t=0;t<NT;t++){
@@ -1188,9 +1205,18 @@ function buildGrid(B, n, cell){
   }
 }
 
+/* One figure's height is set so that the population, whatever its current
+   size, covers the body it has been given: a posture spread wide would
+   otherwise thin the same crowd out into twigs, and a close-up would jam it. */
+const FIG_K = 1.76;
+function figureHeight(G, n){
+  if (!G || !G.area || !n) return 16;
+  return clamp(FIG_K * Math.sqrt(G.area / n), Math.max(7, G.L*0.085), G.L*0.30);
+}
+
 function simulate(B, G, dt){
   const n = Math.min(S.active, B.pop.length);
-  const figH = G ? clamp(G.L*0.145, 9, 54) : 16;
+  const figH = figureHeight(G, n);
   const cell = Math.max(10, figH*1.35);
   buildGrid(B, n, cell);
 
@@ -1231,6 +1257,7 @@ function simulate(B, G, dt){
     }
 
     if (tgt.ok){
+      c.ptx = c.hasT ? c.tx : tgt.x; c.pty = c.hasT ? c.ty : tgt.y;
       c.tx = tgt.x; c.ty = tgt.y; c.hasT = true;
       if (!c.born){
         // arrival: the population gathers from the edges of its territory
@@ -1259,9 +1286,20 @@ function simulate(B, G, dt){
     let fx = 0, fy = 0;
     if (c.hasT){
       // familiar ground is arrived at faster and held more tightly
-      const k = 26 * c.stiff * (0.34 + 0.66*conf) * (0.58 + 1.05*c.fam);
+      const k = 34 * c.stiff * (0.34 + 0.66*conf) * (0.58 + 1.05*c.fam);
       fx += (c.tx - c.x) * k;
       fy += (c.ty - c.y) * k;
+      // and it is carried along with the anatomy it belongs to, each at its own
+      // rate — this is what makes a raised arm arrive already raised, instead
+      // of the crowd chasing the limb from behind
+      const tvx = (c.tx - c.ptx)/dt, tvy = (c.ty - c.pty)/dt;
+      if (Number.isFinite(tvx) && Number.isFinite(tvy)){
+        // doubt loosens the crowd around a limb; it must not leave the crowd
+        // behind the limb, so being carried along does not depend on confidence
+        const follow = 11 * (0.35 + 0.75*c.stiff);
+        fx += (tvx - c.vx) * follow;
+        fy += (tvy - c.vy) * follow;
+      }
     }
 
     // ---- relation with neighbours -----------------------------------------
@@ -1323,7 +1361,7 @@ function simulate(B, G, dt){
       fx += nx*amp; fy += ny*amp;
       // where the model loses hold, individuals begin to let go one by one:
       // the more doubt, the more of them stop being held by the anatomy
-      if (hash1(c.id, 41) < unc*0.75){
+      if (hash1(c.id, 41) < unc*0.5){
         fx *= 0.12; fy *= 0.12;
         fx += nx*figH*11*c.mob; fy += ny*figH*11*c.mob;
       }
@@ -1356,7 +1394,7 @@ function simulate(B, G, dt){
     if (c.hasT){
       const dx = c.x-c.tx, dy = c.y-c.ty;
       const d = Math.hypot(dx,dy);
-      const lim = figH * (0.85 + loosen*2.4);
+      const lim = figH * (0.85 + Math.min(loosen, 1.25)*1.7);
       if (d > lim){
         const k = (d-lim)/d * 0.55;
         c.x -= dx*k; c.y -= dy*k;
@@ -1645,7 +1683,7 @@ function renderBridges(){
 
 function renderBody(B, dt){
   const G = B.G;
-  const figH = G ? clamp(G.L*0.145, 9, 54) : 16;
+  const figH = figureHeight(G, Math.min(S.active, B.pop.length));
   const n = Math.min(S.active, B.pop.length);
 
   // ---- ghost murmur: previous organisations, only where they differ -------
@@ -1672,8 +1710,8 @@ function renderBody(B, dt){
         const d = Math.hypot(gx-c.x, gy-c.y);
         const sepT = figH*0.42;
         if (d < sepT) continue;                    // stillness → residue vanishes
-        const rise = clamp((d - sepT)/(figH*2.0), 0, 1) *
-                     clamp(1 - (d - figH*6)/(figH*6), 0, 1);
+        const rise = clamp((d - sepT)/(figH*1.6), 0, 1) *
+                     clamp(1 - (d - figH*3.6)/(figH*4.4), 0, 1);
         if (rise <= 0.02) continue;                // a jump is not a memory
         const a = 0.30 * fade * rise * (0.55 + c.fam*0.7) * B.seen;
         drawSmall(gx, gy, ga, figH*c.sc*0.92, 2, a, 0, 0,0,0, c.phase, c.gait, c.mirror,
@@ -1737,7 +1775,7 @@ function renderHold(){
   const B = H.body, c = H.c;
   if (!c || !c.born) return;
   const G = B.G;
-  const figH = G ? clamp(G.L*0.145, 9, 54) : 16;
+  const figH = figureHeight(G, Math.min(S.active, B.pop.length));
 
   // its own past
   ctx.strokeStyle = `rgba(${PAL.cool[0]},${PAL.cool[1]},${PAL.cool[2]},0.55)`;

@@ -1347,7 +1347,7 @@ function buildKnotClusters() {
       clamp(1 - (nowT - vf.grew) / (25 * 60000), 0, 1),        /* the last half hour */
       /* what changed while you were away — settled once, at the door, so knots
          do not appear and vanish under a motionless hand */
-      (arrivalSet && arrivalSet.has(vf.key)) ? 0.55 : 0
+      (arrivalSet && arrivalSet.has(vf.key)) ? 1 : 0
     );
   }
   if (arrivalSet && Date.now() - SESSION_T0 > 45000) arrivalSet = null;
@@ -1699,10 +1699,12 @@ function drawFreshMarks(now) {
     var r = knotRadius(kn.w);
     var accent = kn.au > 1 ? "#bf4526" : "#2f7d84";
     /* the standing halo: a new meeting among old heavy ones */
-    ctx.globalAlpha = f * 0.34;
-    ctx.strokeStyle = accent; ctx.lineWidth = 0.9;
-    ctx.setLineDash([1.6, 3]);
-    ctx.beginPath(); ctx.arc(sx, sy, r + 6 + Math.sin(now / 900 + i) * 0.8, 0, TAU); ctx.stroke();
+    ctx.globalAlpha = f * 0.52;
+    ctx.strokeStyle = accent; ctx.lineWidth = 1.2;
+    ctx.setLineDash([2, 3.2]);
+    ctx.beginPath(); ctx.arc(sx, sy, r + 7 + Math.sin(now / 900 + i) * 1.1, 0, TAU); ctx.stroke();
+    ctx.globalAlpha = f * 0.22; ctx.lineWidth = 0.9;
+    ctx.beginPath(); ctx.arc(sx, sy, r + 13, 0, TAU); ctx.stroke();
     ctx.setLineDash([]);
     /* and one ring outward at the moment it tightened */
     var pulse = clamp(1 - (t - kn.grew) / 2600, 0, 1);
@@ -1727,13 +1729,17 @@ function drawPresence(now) {
     if (sx < -40 || sx > W + 40 || sy < -40 || sy > H + 40) return;
     var pulse = 0.5 + 0.5 * Math.sin(now / 900 + a.charCodeAt(0));
     ctx.save();
-    ctx.globalAlpha = 0.16 + pulse * 0.1;
-    var g = ctx.createRadialGradient(sx, sy, 0, sx, sy, 34);
-    g.addColorStop(0, p.c); g.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, 34, 0, TAU); ctx.fill();
-    ctx.globalAlpha = 0.5; ctx.strokeStyle = p.c; ctx.lineWidth = 1.1;
-    ctx.setLineDash([2.2, 3.2]);
-    ctx.beginPath(); ctx.arc(sx, sy, 8 + pulse * 2.5, 0, TAU); ctx.stroke();
+    /* a shuttle resting on the cloth where somebody is working */
+    ctx.globalAlpha = 0.62; ctx.strokeStyle = p.c; ctx.lineWidth = 1.3;
+    ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.arc(sx, sy, 5.5 + pulse * 0.8, 0, TAU);
+    ctx.stroke();
+    ctx.globalAlpha = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(sx - 11, sy); ctx.lineTo(sx - 7, sy);
+    ctx.moveTo(sx + 7, sy); ctx.lineTo(sx + 11, sy);
+    ctx.stroke();
     ctx.restore();
     dirty = true;
   });
@@ -1816,6 +1822,11 @@ function buildDemoGeom() {
 
 function drawDemo(now) {
   /* the ground stops explaining itself the moment anything real is happening on it */
+  /* until the meeting point has answered, this place might be full */
+  if (!GOT_CLOTH && net.state === "open" && Date.now() - SESSION_T0 < 7000 && !Store.threads.length) {
+    if (demoPulse) { demoPulse = 0; threadBtn.classList.remove("beat"); }
+    return;
+  }
   if (demoOff || sayAt || Store.threads.length || Store.notes.length || drawingPts || livePeers.size || peers.size) {
     if (demoPulse) { demoPulse = 0; threadBtn.classList.remove("beat"); }
     return;
@@ -2231,10 +2242,10 @@ function settleThread(mercPts) {
   for (var i = 0; i < mercPts.length; i += 2) {
     packed.push(Math.round(unMercY(mercPts[i + 1]) * 1e5), Math.round(unMercX(mercPts[i]) * 1e5));
   }
-  writeLS("cg.where." + GID, JSON.stringify([V.x, V.y, Math.max(V.z, 14.6), Date.now()]));
+  writeLS("cg.where." + GID, JSON.stringify([V.x, V.y, Math.max(V.z, 14.2), Date.now()]));
   var op = { i: opId(), a: ME, t: Date.now(), k: "t", d: { p: packed } };
   addOp(op); saveLocal(); publish([op]);
-  lastMine = op.i; showUndo(); syncPips(); refreshMyFibre();
+  lastMine = op.i; showUndo(); syncPips(); refreshMyFibre(); publishCloth(6000);
   dirty = true;
 }
 
@@ -2284,7 +2295,7 @@ function closeSay(commit) {
       d: { ll: [Math.round(unMercY(sayAt.y) * 1e5), Math.round(unMercX(sayAt.x) * 1e5)], x: text.slice(0, 140) }
     };
     addOp(op); saveLocal(); publish([op]);
-    lastMine = op.i; showUndo(); syncPips(); refreshMyFibre();
+    lastMine = op.i; showUndo(); syncPips(); refreshMyFibre(); publishCloth(6000);
   }
   sayAt = null; sayIn.blur(); dirty = true;
 }
@@ -2357,7 +2368,7 @@ function stepZoom(now) {
 }
 
 function setTrace(on) {
-  if (on) easeZoomTo(15.1);
+  if (on) easeZoomTo(14.5);
   traceMode = on;
   threadBtn.classList.toggle("on", on);
   threadBtn.style.background = on ? MY_COLOR : "";
@@ -2412,13 +2423,19 @@ function refreshPeopleGlyph() {
       '<circle cx="15" cy="15" r="3.4" fill="' + MY_COLOR + '"/>' +
       '<circle cx="21.4" cy="15" r="3.1" fill="none" stroke="rgba(29,32,29,.40)" stroke-width="1.1"/>';
   } else {
-    var r = 8.4;
-    for (var i = 0; i < list.length; i++) {
-      var a = -Math.PI / 2 + (i / list.length) * TAU;
-      s += '<circle cx="' + (15 + Math.cos(a) * r).toFixed(1) + '" cy="' + (15 + Math.sin(a) * r).toFixed(1) +
-        '" r="3.1" fill="' + list[i] + '"/>';
+    /* a little crowd standing together, in their own fibres */
+    var n = list.length;
+    var rr = n <= 3 ? 3.3 : n <= 4 ? 3.0 : 2.6;
+    var gap = rr * 2 + 1.4;
+    var row = Math.min(n, 3), rows = Math.ceil(n / 3);
+    for (var i = 0; i < n; i++) {
+      var ri = Math.floor(i / 3), ci = i % 3;
+      var wide = Math.min(n - ri * 3, 3);
+      var cx2 = 15 + (ci - (wide - 1) / 2) * gap;
+      var cy2 = 15 + (ri - (rows - 1) / 2) * (gap * 0.92);
+      s += '<circle cx="' + cx2.toFixed(1) + '" cy="' + cy2.toFixed(1) +
+        '" r="' + rr + '" fill="' + list[i] + '"/>';
     }
-    s += '<circle cx="15" cy="15" r="1.5" fill="rgba(29,32,29,.5)"/>';
   }
   g.innerHTML = s;
 }
@@ -2647,6 +2664,17 @@ function handleMsg(raw) { try { handleMsgInner(raw); } catch (e) { /* one bad me
 function handleMsgInner(msg) {
   if (!msg || typeof msg !== "object" || msg.from === SITE || msg.g !== GID) return;
   if (msg.ops && !Array.isArray(msg.ops)) return;
+  if (msg.cloth) {
+    /* the folded cloth, handed over on arrival */
+    GOT_CLOTH = true;
+    var wasEmpty = !Store.threads.length;
+    var got = 0;
+    for (var ci = 0; ci < msg.ops.length; ci++) if (addOp(msg.ops[ci], { animate: false })) got++;
+    if (got) { saveLocal(); syncPips(); refreshMyFibre(); }
+    if (got && wasEmpty && !readLS("cg.where." + GID, "")) frameTheWeave();
+    if (Store.ops.length > (msg.n || 0)) publishCloth(3000 + Math.random() * 4000);
+    return;
+  }
   if (msg.ops) {
     var added = 0;
     for (var i = 0; i < msg.ops.length; i++) {
@@ -2654,7 +2682,7 @@ function handleMsgInner(msg) {
       if (op.k === "x") { if (removeOp(op.d.r, op.a)) added++; continue; }
       if (addOp(op, { animate: true })) added++;
     }
-    if (added) { saveLocal(); syncPips(); refreshMyFibre(); }
+    if (added) { saveLocal(); syncPips(); refreshMyFibre(); publishCloth(12000 + Math.random() * 8000); }
   }
   if (msg.hello || msg.helloBack) {
     /* someone arrived: send them what they are missing, and say what we hold
@@ -2683,6 +2711,44 @@ function handleMsgInner(msg) {
     livePeers.set(who2, lp);
     dirty = true;
   }
+}
+
+/* ---- where the cloth rests ----
+   Gossip only reaches people who are awake at the same moment. A city is not
+   used that way. Whoever weaves last leaves the whole cloth folded on the
+   meeting point, so somebody arriving an hour later is handed the place rather
+   than told it is empty. */
+var snapTimer = 0, GOT_CLOTH = false;
+function publishCloth(delay) {
+  clearTimeout(snapTimer);
+  snapTimer = setTimeout(function () {
+    if (!net.mqtt || !net.mqtt.ready || !Store.ops.length) return;
+    var ops = Store.ops;
+    if (ops.length > 1500) ops = ops.slice(ops.length - 1500);
+    var body = JSON.stringify({ g: GID, from: SITE, cloth: 1, n: Store.ops.length, ops: ops });
+    while (body.length > 280000 && ops.length > 40) {
+      ops = ops.slice(Math.floor(ops.length * 0.3));
+      body = JSON.stringify({ g: GID, from: SITE, cloth: 1, n: Store.ops.length, ops: ops });
+    }
+    try { net.mqtt.publishRetained(body); } catch (e) { }
+  }, delay);
+}
+
+/* stand in front of what is already here, rather than above the whole county */
+function frameTheWeave() {
+  if (!Store.threads.length) return;
+  var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+  for (var i = 0; i < Store.threads.length; i++) {
+    var t = Store.threads[i];
+    if (t.bx0 < x0) x0 = t.bx0; if (t.bx1 > x1) x1 = t.bx1;
+    if (t.by0 < y0) y0 = t.by0; if (t.by1 > y1) y1 = t.by1;
+  }
+  if (!isFinite(x0)) return;
+  V.x = (x0 + x1) / 2; V.y = (y0 + y1) / 2;
+  var span = Math.max(x1 - x0, (y1 - y0) * (W / Math.max(1, H)), 1e-6);
+  var z = Math.log2((W * 0.78) / (span * 256));
+  V.z = clamp(z, 11, 16.5);
+  clampView(); touchWeave();
 }
 
 function haveVector() {
@@ -2715,7 +2781,7 @@ try {
 } catch (e) { net.bc = null; }
 
 /* ---------- minimal MQTT 3.1.1 over WebSocket ---------- */
-function MqttClient(url, topic, onMsg, onOpen, onFail) {
+function MqttClient(url, topic, snapTopic, onMsg, onOpen, onFail) {
   var ws, ready = false, pingTimer = 0, self = this;
   var cid = "cg" + ME + Math.random().toString(36).slice(2, 7);
   function enc(str) { return new TextEncoder().encode(str); }
@@ -2772,7 +2838,10 @@ function MqttClient(url, topic, onMsg, onOpen, onFail) {
     if (type === 2) {                                     /* CONNACK */
       if (body.length >= 2 && body[1] === 0) {
         ready = true; self.ready = true; clearTimeout(guard);
-        ws.send(pack(8, 2, cat(new Uint8Array([0, 1]), strBuf(topic), new Uint8Array([0]))));
+        /* the live gossip, and the ground's own resting place */
+        ws.send(pack(8, 2, cat(new Uint8Array([0, 1]),
+          strBuf(topic), new Uint8Array([0]),
+          strBuf(snapTopic), new Uint8Array([0]))));
         pingTimer = setInterval(function () { try { ws.send(new Uint8Array([0xC0, 0])); } catch (e) { } }, 20000);
         onOpen && onOpen();
       } else { closedOut = true; failed = true; clearTimeout(guard); try { ws.close(); } catch (e) { } onFail && onFail(); }
@@ -2794,6 +2863,12 @@ function MqttClient(url, topic, onMsg, onOpen, onFail) {
     if (!ready) return;
     try { ws.send(pack(3, 0, cat(strBuf(topic), enc(str)))); } catch (e) { }
   };
+  /* A retained message is the only thing on a public broker that outlives the
+     people holding it. It is where the cloth rests between visits. */
+  this.publishRetained = function (str) {
+    if (!ready) return;
+    try { ws.send(pack(3, 1, cat(strBuf(snapTopic), enc(str)))); } catch (e) { }
+  };
   this.close = function () { clearInterval(pingTimer); try { ws.close(); } catch (e) { } };
 }
 
@@ -2811,12 +2886,14 @@ function connectNet() {
   if (net.tried >= BROKERS.length || net.state === "open") return;
   var url = BROKERS[net.tried++];
   var topic = "unsettled-atlas/commonground/" + GID;
-  net.mqtt = new MqttClient(url, topic,
+  net.mqtt = new MqttClient(url, topic, topic + "/cloth",
     function (s) { try { handleMsg(JSON.parse(s)); } catch (e) { } },
     function () {
       net.state = "open";
       send({ g: GID, from: SITE, hello: 1, have: haveVector() });
       sendPresence();
+      /* nothing was left here: leave it now */
+      setTimeout(function () { if (!GOT_CLOTH && Store.ops.length) publishCloth(200); }, 3500);
     },
     function () { net.state = "local"; net.mqtt = null; setTimeout(connectNet, 600); }
   );

@@ -31,7 +31,7 @@
   .pip{
     position:absolute;pointer-events:auto;display:grid;place-items:center;
     background:var(--paper-lit);border-radius:50%;
-    box-shadow:0 1px 0 rgba(29,32,29,.30),0 6px 18px rgba(29,32,29,.13);
+    box-shadow:inset 0 0 0 1px rgba(29,32,29,.34),0 1px 2px rgba(29,32,29,.10);
     transition:transform .16s cubic-bezier(.2,.8,.3,1),opacity .22s ease;
     cursor:pointer;
   }
@@ -51,7 +51,11 @@
   #thread .glyph{fill:none;stroke:var(--ink);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
   #thread .knob{fill:var(--ink);stroke:none}
 
-  #people{width:46px;height:46px;right:calc(16px + env(safe-area-inset-right));bottom:calc(35px + env(safe-area-inset-bottom))}
+  #people{
+    width:46px;height:46px;right:calc(16px + env(safe-area-inset-right));bottom:calc(35px + env(safe-area-inset-bottom));
+    opacity:0;pointer-events:none;
+  }
+  #people.show{opacity:1;pointer-events:auto}
   #back{
     width:46px;height:46px;left:calc(16px + env(safe-area-inset-left));bottom:calc(35px + env(safe-area-inset-bottom));
     opacity:0;pointer-events:none;
@@ -87,15 +91,16 @@
   /* the ground key (share) */
   #key{
     position:fixed;inset:0;z-index:9;display:none;place-items:center;
-    background:rgba(239,234,221,.90);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+    background:rgba(239,234,221,.94);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
     pointer-events:auto;
   }
   #key.show{display:grid}
   #keyInner{display:grid;justify-items:center;gap:16px;padding:24px;max-width:92vw}
   #qr{width:min(62vw,262px);height:min(62vw,262px);position:static;image-rendering:pixelated}
   #keyUrl{
-    font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em;
-    color:var(--ink-soft);word-break:break-all;text-align:center;max-width:34ch;
+    font:italic 13px/1.5 Georgia,"Times New Roman",serif;letter-spacing:.01em;
+    color:var(--ink-soft);text-align:center;max-width:30ch;
+    overflow-wrap:anywhere;cursor:pointer;
   }
   #keyNote{font:italic 14px/1.4 Georgia,serif;color:var(--ink-soft);text-align:center;max-width:26ch}
 
@@ -165,14 +170,14 @@ var TAU = Math.PI * 2;
 /* Authorship lives inside the two accents of the ground: teal, vermillion, graphite.
    People are told apart by value and by the make of the fibre, never by a new hue. */
 var FIBRES = [
-  { c: "#2f7d84", m: "solid" },   /* teal          */
-  { c: "#bf4526", m: "solid" },   /* vermillion    */
-  { c: "#164e55", m: "dash" },    /* deep teal     */
-  { c: "#8a2e16", m: "dash" },    /* deep vermillion */
-  { c: "#6aa9ad", m: "ply" },     /* pale teal     */
-  { c: "#d5795d", m: "ply" },     /* pale vermillion */
-  { c: "#41473f", m: "solid" },   /* graphite      */
-  { c: "#8b8f85", m: "bead" }     /* pale graphite */
+  { c: "#2f7d84", m: "solid", warm: 0 },   /* teal            */
+  { c: "#bf4526", m: "solid", warm: 1 },   /* vermillion      */
+  { c: "#215f67", m: "dash", warm: 0 },    /* deep teal       */
+  { c: "#8a2e16", m: "dash", warm: 1 },    /* deep vermillion */
+  { c: "#6aa9ad", m: "ply", warm: 0 },     /* pale teal       */
+  { c: "#d5795d", m: "ply", warm: 1 },     /* pale vermillion */
+  { c: "#41473f", m: "solid", warm: 1 },   /* graphite        */
+  { c: "#8b8f85", m: "bead", warm: 0 }     /* pale graphite   */
 ];
 var KNOT_CELL_Z = 20;              /* merc cell for knot merging (~19 m) */
 var STROKE_MIN_PX = 7;             /* travel before a drag becomes a thread */
@@ -387,14 +392,14 @@ function weaveThread(th) {
       kn = {
         key: k, cx: cx, cy: cy,
         x: (cx + 0.5) * BASE_CELL, y: (cy + 0.5) * BASE_CELL,
-        threads: [], authors: new Set(), visits: new Set(),
+        eid: [], ea: [], eb: [], et: [],
         t0: Infinity, t1: 0, grew: 0
       };
       Store.knots.set(k, kn);
     }
-    if (kn.threads.indexOf(th.id) < 0) kn.threads.push(th.id);
-    kn.authors.add(th.a);
-    kn.visits.add(th.a + "|" + bucket);
+    if (kn.eid.indexOf(th.id) < 0) {
+      kn.eid.push(th.id); kn.ea.push(th.a); kn.eb.push(bucket); kn.et.push(th.t);
+    }
     if (th.t < kn.t0) kn.t0 = th.t;
     if (th.t > kn.t1) kn.t1 = th.t;
     kn.grew = Math.max(kn.grew, th.t);
@@ -406,15 +411,22 @@ function weaveThread(th) {
 /* co  = how many threads have come through this place
    au  = how many people
    ret = how many times someone came back on a later occasion */
+/* A place worn deep by one person is not the same thing as a place shared wide.
+   Depth adds; people multiply; and common ground is not something you can make alone. */
+function weighPlace(co, au, ret) { return (co + ret) * (1 + Math.log2(Math.max(1, au))); }
+function maxStageFor(au) { return au >= 3 ? 4 : 3; }
 function knotWeight(kn) {
-  var co = kn.threads.length, au = kn.authors.size, ret = kn.visits.size - au;
-  return co + au * 2 + ret * 2;
+  var au = new Set(), vi = new Set();
+  for (var i = 0; i < kn.ea.length; i++) { au.add(kn.ea[i]); vi.add(kn.ea[i] + "|" + kn.eb[i]); }
+  return weighPlace(kn.eid.length, au.size, vi.size - au.size);
 }
 
 function syncPips() {
   var has = Store.ops.length > 0;
   var b = document.getElementById("back");
   if (b) b.classList.toggle("show", has);
+  var pe = document.getElementById("people");
+  if (pe) pe.classList.toggle("show", has || peers.size > 0);
 }
 
 /* ---------- persistence ---------- */
@@ -549,13 +561,29 @@ function drawTiles() {
 var paperTex = null, paperCanvas = null;
 function paperTile() { if (!paperCanvas) paperCanvas = makePaper(); return paperCanvas; }
 function makePaper() {
-  var s = 180, c = document.createElement("canvas");
+  /* correlated grain, so ink has something to sit in */
+  var s = 192, L = 48, c = document.createElement("canvas");
   c.width = s; c.height = s;
   var g = c.getContext("2d");
-  var im = g.createImageData(s, s);
-  for (var i = 0; i < im.data.length; i += 4) {
-    var v = 236 + ((hash01(i) * 22) | 0);
-    im.data[i] = v; im.data[i + 1] = v - 3; im.data[i + 2] = v - 12; im.data[i + 3] = 26;
+  var lat = new Float32Array((L + 1) * (L + 1));
+  for (var i = 0; i <= L; i++) for (var j = 0; j <= L; j++) {
+    lat[i * (L + 1) + j] = hash01(i * 131 + j * 977 + 7);
+  }
+  var im = g.createImageData(s, s), k = s / L;
+  for (var y = 0; y < s; y++) {
+    for (var x = 0; x < s; x++) {
+      var fx = x / k, fy = y / k;
+      var x0 = fx | 0, y0 = fy | 0, tx = fx - x0, ty = fy - y0;
+      var a = lat[y0 * (L + 1) + x0], b = lat[y0 * (L + 1) + x0 + 1];
+      var cL = lat[(y0 + 1) * (L + 1) + x0], d = lat[(y0 + 1) * (L + 1) + x0 + 1];
+      tx = tx * tx * (3 - 2 * tx); ty = ty * ty * (3 - 2 * ty);
+      var nv = (a + (b - a) * tx) * (1 - ty) + (cL + (d - cL) * tx) * ty;
+      var fine = hash01(x * 7919 + y * 104729);
+      var v = 232 + nv * 16 + fine * 7;
+      var o = (y * s + x) * 4;
+      im.data[o] = v; im.data[o + 1] = v - 4; im.data[o + 2] = v - 14;
+      im.data[o + 3] = 40 + (fine * 26) | 0;
+    }
   }
   g.putImageData(im, 0, 0);
   return c;
@@ -665,8 +693,8 @@ function threadScreen(th, upto, ws) {
   _tx.length = 0; _ty.length = 0;
   var lastX = -1e9, lastY = -1e9;
   for (var i = 0; i < upto; i++) {
-    var jx = (hash01(seedBase + i * 2) - 0.5) * 0.5;
-    var jy = (hash01(seedBase + i * 2 + 1) - 0.5) * 0.5;
+    var jx = (hash01(seedBase + i * 2) - 0.5) * 0.5 + (hash01(seedBase + Math.floor(i / 5)) - 0.5) * 0.8;
+    var jy = (hash01(seedBase + i * 2 + 1) - 0.5) * 0.5 + (hash01(seedBase + 57 + Math.floor(i / 5)) - 0.5) * 0.8;
     var sx = (pts[i * 2] - V.x) * ws + W / 2 + jx;
     var sy = (pts[i * 2 + 1] - V.y) * ws + H / 2 + jy;
     if (n > 0 && Math.abs(sx - lastX) < 0.5 && Math.abs(sy - lastY) < 0.5 && i !== upto - 1) continue;
@@ -683,6 +711,17 @@ function threadScreen(th, upto, ws) {
   return n;
 }
 
+var _seed = 0;
+/* no two threads are the same slab: both ends draw to a point and the body
+   swells and thins along its length, the way a spun fibre does */
+function halfWidth(t, i, width) {
+  var ends = Math.min(1, Math.pow(clamp(t / 0.13, 0, 1), 0.75) * Math.pow(clamp((1 - t) / 0.13, 0, 1), 0.75) + 0.06);
+  var slow = hash01(_seed + Math.floor(i / 7)) - 0.5;
+  var slow2 = hash01(_seed + 91 + Math.floor(i / 17)) - 0.5;
+  var body = 1 + slow * 0.30 + slow2 * 0.22;
+  return width * 0.5 * ends * body + 0.16;
+}
+
 function ribbon(n, width, off) {
   /* offset outline, so the stroke can breathe along its length */
   off = off || 0;
@@ -690,7 +729,7 @@ function ribbon(n, width, off) {
   var i, nx, ny, len, hw, ax, ay;
   for (i = 0; i < n; i++) {
     var t = n < 2 ? 1 : i / (n - 1);
-    hw = width * (0.34 + 0.66 * Math.sin(Math.PI * Math.pow(t, 0.72))) * 0.5 + 0.18;
+    hw = halfWidth(t, i, width);
     ax = _tx[Math.min(i + 1, n - 1)] - _tx[Math.max(i - 1, 0)];
     ay = _ty[Math.min(i + 1, n - 1)] - _ty[Math.max(i - 1, 0)];
     len = Math.hypot(ax, ay) || 1;
@@ -700,7 +739,7 @@ function ribbon(n, width, off) {
   }
   for (i = n - 1; i >= 0; i--) {
     var t2 = n < 2 ? 1 : i / (n - 1);
-    hw = width * (0.34 + 0.66 * Math.sin(Math.PI * Math.pow(t2, 0.72))) * 0.5 + 0.18;
+    hw = halfWidth(t2, i, width);
     ax = _tx[Math.min(i + 1, n - 1)] - _tx[Math.max(i - 1, 0)];
     ay = _ty[Math.min(i + 1, n - 1)] - _ty[Math.max(i - 1, 0)];
     len = Math.hypot(ax, ay) || 1;
@@ -710,7 +749,7 @@ function ribbon(n, width, off) {
   ctx.closePath();
 }
 
-var plainWeave = false;
+var plainWeave = false, laid = null;
 function drawThread(th, alpha, width, dim) {
   var ws = worldSize();
   var count = th.pts.length / 2;
@@ -719,6 +758,12 @@ function drawThread(th, alpha, width, dim) {
   var n = threadScreen(th, upto, ws);
   if (n < 2) return;
   var i;
+  _seed = (th.id.charCodeAt(0) * 31 + th.id.charCodeAt(th.id.length - 1)) * 13;
+  if (laid && laid.length < 300 && !dim) {
+    var kx = new Float32Array(n), ky = new Float32Array(n);
+    kx.set(_tx.slice(0, n)); ky.set(_ty.slice(0, n));
+    laid.push({ th: th, x: kx, y: ky, n: n, w: width, a: alpha });
+  }
   ctx.save();
   ctx.lineCap = "round"; ctx.lineJoin = "round";
 
@@ -753,9 +798,9 @@ function drawThread(th, alpha, width, dim) {
     ribbon(n, width); ctx.fill();
     if (mk === "dash" && width > 1.4) {
       /* stitches: the paper shows through the thread at intervals */
-      ctx.globalAlpha = alpha * (dim ? 0.16 : 0.92);
-      ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = width * 0.86;
-      ctx.setLineDash([width * 0.9, width * 2.2]);
+      ctx.globalAlpha = alpha * (dim ? 0.12 : 0.62);
+      ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = width * 0.5;
+      ctx.setLineDash([width * 0.7, width * 2.6]);
       ctx.beginPath();
       for (i = 0; i < n; i++) { if (i === 0) ctx.moveTo(_tx[i], _ty[i]); else ctx.lineTo(_tx[i], _ty[i]); }
       ctx.stroke();
@@ -768,6 +813,75 @@ function drawThread(th, alpha, width, dim) {
       }
     }
   }
+  ctx.restore();
+}
+
+/* ---- the weave goes over and under ----
+   Threads are laid in order, so the last one drawn sits on top of every crossing.
+   Cloth does not behave like that. Here every meeting of two threads is given a
+   side by the pair itself, and wherever the older thread should have surfaced,
+   a short span of it is drawn back over the newer one. */
+function interlace() {
+  if (!laid || laid.length < 2) { laid = null; return; }
+  var grid = new Map(), G = 26, fixups = 0, MAX = 340;
+  function key(x, y) { return ((x / G) | 0) + ":" + ((y / G) | 0); }
+  for (var t = 0; t < laid.length; t++) {
+    var L = laid[t];
+    for (var i = 0; i + 1 < L.n; i++) {
+      var k = key((L.x[i] + L.x[i + 1]) / 2, (L.y[i] + L.y[i + 1]) / 2);
+      var arr = grid.get(k); if (!arr) { arr = []; grid.set(k, arr); }
+      arr.push(t * 100000 + i);
+    }
+  }
+  var prev = ctx;
+  for (var t2 = laid.length - 1; t2 > 0 && fixups < MAX; t2--) {
+    var Lb = laid[t2];
+    for (var j = 0; j + 1 < Lb.n && fixups < MAX; j++) {
+      var cx = (Lb.x[j] + Lb.x[j + 1]) / 2, cy = (Lb.y[j] + Lb.y[j + 1]) / 2;
+      var gx = (cx / G) | 0, gy = (cy / G) | 0;
+      for (var ox = -1; ox <= 1 && fixups < MAX; ox++) for (var oy = -1; oy <= 1 && fixups < MAX; oy++) {
+        var arr2 = grid.get((gx + ox) + ":" + (gy + oy));
+        if (!arr2) continue;
+        for (var q = 0; q < arr2.length; q++) {
+          var enc = arr2[q], ti = (enc / 100000) | 0, si = enc - ti * 100000;
+          if (ti >= t2) continue;                       /* only what was laid earlier */
+          var La = laid[ti];
+          var p = xsect(La.x[si], La.y[si], La.x[si + 1], La.y[si + 1], Lb.x[j], Lb.y[j], Lb.x[j + 1], Lb.y[j + 1]);
+          if (!p) continue;
+          /* the pair decides which of them is on top, and it is not always the newer */
+          if (hash01(ti * 7919 + t2 * 104729 + si * 31 + j) < 0.5) continue;
+          surface(La, si, p[0], p[1]);
+          if (++fixups >= MAX) break;
+        }
+      }
+    }
+  }
+  ctx = prev;
+  laid = null;
+}
+
+function xsect(ax, ay, bx, by, cx, cy, dx, dy) {
+  var d = (bx - ax) * (dy - cy) - (by - ay) * (dx - cx);
+  if (Math.abs(d) < 1e-9) return null;
+  var t = ((cx - ax) * (dy - cy) - (cy - ay) * (dx - cx)) / d;
+  var u = ((cx - ax) * (by - ay) - (cy - ay) * (bx - ax)) / d;
+  if (t < 0 || t > 1 || u < 0 || u > 1) return null;
+  return [ax + t * (bx - ax), ay + t * (by - ay)];
+}
+
+/* bring a short span of an earlier thread back up over a later one */
+function surface(L, si, px, py) {
+  var r = Math.max(4.5, L.w * 2.2);
+  var i0 = Math.max(0, si - 3), i1 = Math.min(L.n - 1, si + 4);
+  ctx.save();
+  ctx.beginPath(); ctx.arc(px, py, r, 0, TAU); ctx.clip();
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.beginPath();
+  for (var i = i0; i <= i1; i++) { if (i === i0) ctx.moveTo(L.x[i], L.y[i]); else ctx.lineTo(L.x[i], L.y[i]); }
+  ctx.globalAlpha = L.a * 0.8;
+  ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = L.w + 1.7; ctx.stroke();
+  ctx.globalAlpha = L.a;
+  ctx.strokeStyle = L.th.c; ctx.lineWidth = L.w * 0.92; ctx.stroke();
   ctx.restore();
 }
 
@@ -793,6 +907,7 @@ function drawWeave(now) {
     count++;
   }
   plainWeave = count > 420;   /* a very full ground drops the casing and the haze */
+  laid = plainWeave ? null : [];
   for (var i = 0; i < Store.threads.length; i++) {
     var th = Store.threads[i];
     if (th.t > timeCursor) continue;
@@ -809,6 +924,8 @@ function drawWeave(now) {
     drawThread(th, a, w, dim);
   }
 
+  interlace();
+
   /* knots gather as you pull back: at a distance the weave is fabric, not beads */
   buildKnotClusters();
   for (var k = 0; k < renderedKnots.length; k++) drawKnot(renderedKnots[k], now, base);
@@ -822,15 +939,17 @@ function drawWeave(now) {
    about 20 px across, so a knot always means "this much happened around here",
    and its rank on the ladder never changes just because you zoomed. */
 var renderedKnots = [];
-var aggDirty = true, aggLevel = -1, aggCache = null;
+var aggDirty = true, aggLevel = -1, aggCache = null, aggCut = Infinity;
 
 function levelForZoom() { return clamp(Math.round(V.z) + 6, 12, BASE_Z); }
 
 function buildAggregate() {
   var L = levelForZoom();
-  if (!aggDirty && L === aggLevel && aggCache) return aggCache;
+  if (!aggDirty && L === aggLevel && aggCache && aggCut === timeCursor) return aggCache;
+  aggCut = timeCursor;
   var shift = BASE_Z - L, span = 1 << L;
   var out = new Map();
+  var cut = timeCursor;
   Store.knots.forEach(function (kn) {
     var cx = kn.cx >> shift, cy = kn.cy >> shift;
     var k = cx * span + cy;
@@ -839,13 +958,16 @@ function buildAggregate() {
       a = { key: k, sx: 0, sy: 0, np: 0, threads: new Set(), authors: new Set(), visits: new Set(), t0: Infinity, t1: 0, grew: 0 };
       out.set(k, a);
     }
-    var wgt = kn.threads.length;
-    a.sx += kn.x * wgt; a.sy += kn.y * wgt; a.np += wgt;
-    for (var i = 0; i < kn.threads.length; i++) a.threads.add(kn.threads[i]);
-    kn.authors.forEach(function (v) { a.authors.add(v); });
-    kn.visits.forEach(function (v) { a.visits.add(v); });
-    if (kn.t0 < a.t0) a.t0 = kn.t0;
-    if (kn.t1 > a.t1) a.t1 = kn.t1;
+    var here = 0;
+    for (var i = 0; i < kn.eid.length; i++) {
+      if (kn.et[i] > cut) continue;               /* unwoven threads take their knots with them */
+      here++;
+      a.threads.add(kn.eid[i]); a.authors.add(kn.ea[i]); a.visits.add(kn.ea[i] + "|" + kn.eb[i]);
+      if (kn.et[i] < a.t0) a.t0 = kn.et[i];
+      if (kn.et[i] > a.t1) a.t1 = kn.et[i];
+    }
+    if (!here) return;
+    a.sx += kn.x * here; a.sy += kn.y * here; a.np += here;
     if (kn.grew > a.grew) a.grew = kn.grew;
   });
   var list = [];
@@ -854,7 +976,7 @@ function buildAggregate() {
     a.co = a.threads.size;
     a.au = a.authors.size;
     a.ret = Math.max(0, a.visits.size - a.au);
-    a.w = a.co + a.au * 2 + a.ret * 2;
+    a.w = weighPlace(a.co, a.au, a.ret);
     a.threadList = Array.from(a.threads);
     if (a.co >= 2) list.push(a);
   });
@@ -862,13 +984,10 @@ function buildAggregate() {
   return list;
 }
 
-/* the ladder, read off weight alone — never off the zoom */
-function knotStage(w) {
-  if (w < 6) return 0;      /* first crossing: a faint ring */
-  if (w < 10) return 1;     /* early knot */
-  if (w < 18) return 2;     /* growing */
-  if (w < 34) return 3;     /* strong */
-  return 4;                 /* common ground */
+/* the ladder, read off the place's own history — never off the zoom */
+function knotStage(w, au) {
+  var st = w < 8 ? 0 : w < 17 ? 1 : w < 34 ? 2 : w < 68 ? 3 : 4;
+  return Math.min(st, maxStageFor(au || 1));
 }
 
 function buildKnotClusters() {
@@ -877,7 +996,6 @@ function buildKnotClusters() {
   var vis = [];
   for (var i = 0; i < all.length; i++) {
     var a = all[i];
-    if (a.t0 > timeCursor) continue;
     var sx = (a.x - V.x) * ws + W / 2, sy = (a.y - V.y) * ws + H / 2;
     if (sx < -60 || sx > W + 60 || sy < -60 || sy > H + 60) continue;
     vis.push(a);
@@ -894,13 +1012,17 @@ function buildKnotClusters() {
     var ar = knotRadius(a2.w), ok = true;
     for (var u = 0; u < kept.length; u++) {
       var bx = (kept[u].x - V.x) * ws + W / 2, by = (kept[u].y - V.y) * ws + H / 2;
-      if (Math.hypot(ax - bx, ay - by) < Math.max(34, (ar + knotRadius(kept[u].w)) * 1.05)) { ok = false; break; }
+      var kr = knotRadius(kept[u].w);
+      var d2 = Math.hypot(ax - bx, ay - by);
+      if (d2 < Math.max(34, (ar + kr) * 1.05)) { ok = false; break; }
+      /* a much stronger place nearby speaks for its own surroundings */
+      if (kept[u].w >= a2.w * 3 && d2 < kr * 2.6) { ok = false; break; }
     }
     if (ok) kept.push(a2);
   }
   /* on an empty ground the very first crossing must be seen; on a full one it
      would only be litter, so the faintest stage steps back once the weave is busy */
-  if (kept.length > 12) kept = kept.filter(function (a3) { return knotStage(a3.w) >= 1; });
+  if (kept.length > 12) kept = kept.filter(function (a3) { return knotStage(a3.w, a3.au) >= 1; });
   kept.sort(function (p, q) { return p.w - q.w; });
   renderedKnots = kept;
   if (openKnot && renderedKnots.indexOf(openKnot) < 0) {
@@ -913,6 +1035,16 @@ function buildKnotClusters() {
   }
 }
 
+var _thById = null, _thByIdN = -1;
+function threadById(id) {
+  if (_thByIdN !== Store.threads.length) {
+    _thById = new Map();
+    for (var i = 0; i < Store.threads.length; i++) _thById.set(Store.threads[i].id, Store.threads[i]);
+    _thByIdN = Store.threads.length;
+  }
+  return _thById.get(id);
+}
+
 function knotRadius(w) {
   return clamp(2.4 + Math.pow(w, 0.62) * (1.5 + clamp(V.z - 11, 0, 6) * 0.20), 2.4, 46);
 }
@@ -921,7 +1053,7 @@ function drawKnot(kn, now, base) {
   var ws = worldSize();
   var sx = (kn.x - V.x) * ws + W / 2, sy = (kn.y - V.y) * ws + H / 2;
   if (sx < -80 || sx > W + 80 || sy < -80 || sy > H + 80) return;
-  var w = kn.w, st = knotStage(w);
+  var w = kn.w, st = knotStage(w, kn.au);
   var r = knotRadius(w);
   var fresh = clamp(1 - (Date.now() - kn.grew) / 2600, 0, 1);
   var isOpen = openKnot === kn;
@@ -969,7 +1101,7 @@ function drawKnot(kn, now, base) {
   }
 
   /* 0 · FIRST CROSSING — barely there. 1-3 · the knot tightens, ring by ring. */
-  var rings = st === 0 ? 1 : Math.min(st, 3);
+  var rings = st === 0 ? 1 : clamp(1 + Math.floor(Math.log2(1 + kn.ret + kn.co / 2)), 1, 3);
   for (var i = 0; i < rings; i++) {
     var rr = r * (rings === 1 ? 1 : (0.44 + 0.56 * ((i + 1) / rings)));
     ctx.beginPath();
@@ -984,7 +1116,7 @@ function drawKnot(kn, now, base) {
   /* 3+ · the ends of the threads that hold it */
   if (st >= 3 && r > 6) {
     ctx.globalAlpha = 0.4; ctx.strokeStyle = "rgba(29,32,29,.75)"; ctx.lineWidth = 0.6;
-    var spokes = clamp(kn.au * 2 + kn.ret, 4, 18);
+    var spokes = clamp(kn.au * 3, 3, 21);
     var off = (Math.abs(kn.x) * 977) % 1;
     ctx.beginPath();
     for (var sp = 0; sp < spokes; sp++) {
@@ -1010,10 +1142,34 @@ function drawKnot(kn, now, base) {
     dirty = true; weaveDirty = true;
   }
   if (isOpen) {
-    ctx.globalAlpha = 0.5;
+    ctx.globalAlpha = 0.42;
     ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 1;
     ctx.setLineDash([2, 3]);
-    ctx.beginPath(); ctx.arc(0, 0, r + 9 + Math.sin(now / 420) * 1.6, 0, TAU); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, r + 12 + Math.sin(now / 420) * 1.6, 0, TAU); ctx.stroke();
+    ctx.setLineDash([]);
+    /* one bead for every hand that has been here, in that person's own fibre */
+    var hands = [], seen = {};
+    for (var hi = 0; hi < kn.threadList.length && hands.length < 14; hi++) {
+      var thh = threadById(kn.threadList[hi]);
+      if (!thh || seen[thh.a]) continue;
+      seen[thh.a] = 1; hands.push(thh.c);
+    }
+    var hr = r + 12;
+    for (var b2 = 0; b2 < hands.length; b2++) {
+      var ang2 = -Math.PI / 2 + (b2 / hands.length) * TAU;
+      ctx.globalAlpha = 0.95; ctx.fillStyle = hands[b2];
+      ctx.beginPath(); ctx.arc(Math.cos(ang2) * hr, Math.sin(ang2) * hr, 2.9, 0, TAU); ctx.fill();
+      ctx.globalAlpha = 0.5; ctx.strokeStyle = "#f3efe5"; ctx.lineWidth = 0.8; ctx.stroke();
+    }
+    /* and one arc for every time somebody came back */
+    var arcs = Math.min(kn.ret, 12);
+    for (var a4 = 0; a4 < arcs; a4++) {
+      ctx.globalAlpha = 0.30; ctx.strokeStyle = "rgba(29,32,29,.8)"; ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.arc(0, 0, r + 19 + a4 * 2.6, -Math.PI * 0.42, Math.PI * 0.42);
+      ctx.stroke();
+    }
+    dirty = true;
   }
   ctx.restore();
 }
@@ -1151,71 +1307,114 @@ function drawWarp() {
    No words, no arrow, no coach mark. The ground simply does the thing once,
    in the same fibre you will be given: a thread is laid, another crosses it,
    the crossing tightens into a knot. Then it lets go. It is never written down. */
-var demoOff = false;
+var demoOff = false, demoPulse = 0, demoGeom = null;
+
+/* two paths that genuinely meet; the meeting point is found, never assumed */
+function buildDemoGeom() {
+  var bx = W / 2, by = H - 54 - safeBottom();
+  var cx = W / 2, cy = H * 0.44;
+  var R = Math.min(W * 0.40, H * 0.20, 168);
+  function bez(p0, p1, p2, p3, N) {
+    var out = [];
+    for (var i = 0; i < N; i++) {
+      var t = i / (N - 1), u = 1 - t;
+      out.push([
+        u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
+        u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1]
+      ]);
+    }
+    return out;
+  }
+  /* mine leaves the control and rises through the middle of the ground */
+  var A = bez([bx, by], [bx - R * 1.15, by - H * 0.10], [cx - R * 0.85, cy - H * 0.02], [cx + R * 0.72, cy - H * 0.16], 60);
+  /* someone else comes across it */
+  var B = bez([cx - R * 1.12, cy - H * 0.16], [cx - R * 0.3, cy - H * 0.02], [cx + R * 0.2, cy + H * 0.02], [cx + R * 1.05, cy + H * 0.10], 60);
+
+  /* where do they actually cross? */
+  var best = null;
+  for (var i = 0; i + 1 < A.length && !best; i++) {
+    for (var j = 0; j + 1 < B.length; j++) {
+      var a1 = A[i], a2 = A[i + 1], b1 = B[j], b2 = B[j + 1];
+      var d = (a2[0] - a1[0]) * (b2[1] - b1[1]) - (a2[1] - a1[1]) * (b2[0] - b1[0]);
+      if (Math.abs(d) < 1e-9) continue;
+      var t = ((b1[0] - a1[0]) * (b2[1] - b1[1]) - (b1[1] - a1[1]) * (b2[0] - b1[0])) / d;
+      var u = ((b1[0] - a1[0]) * (a2[1] - a1[1]) - (b1[1] - a1[1]) * (a2[0] - a1[0])) / d;
+      if (t < 0 || t > 1 || u < 0 || u > 1) continue;
+      best = {
+        x: a1[0] + t * (a2[0] - a1[0]), y: a1[1] + t * (a2[1] - a1[1]),
+        ta: (i + t) / (A.length - 1), tb: (j + u) / (B.length - 1)
+      };
+      break;
+    }
+  }
+  if (!best) best = { x: cx, y: cy, ta: 0.6, tb: 0.5 };
+  return { A: A, B: B, ix: best.x, iy: best.y, ta: best.ta, tb: best.tb, w: W, h: H };
+}
+
 function drawDemo(now) {
   /* the ground stops explaining itself the moment anything real is happening on it */
   if (demoOff || Store.threads.length || Store.notes.length || drawingPts) return;
   if (livePeers.size || peers.size) return;
-  var T = 7200, u = (now % T) / T;
-  var bx = W / 2, by = H - 54 - safeBottom();
-  var reach = Math.min(W * 0.34, 150);
-  var cx = W / 2, cy = H * 0.44;
+  if (!demoGeom || demoGeom.w !== W || demoGeom.h !== H) demoGeom = buildDemoGeom();
+  var G = demoGeom;
 
-  /* the two paths: mine leaves the control, another comes across it */
-  function mine(t) {
-    var x = bx + (t - 0.5) * reach * 2.1;
-    var lift = Math.sin(Math.pow(t, 0.6) * Math.PI);
-    return [x, by - lift * (H * 0.30) - t * H * 0.06];
-  }
-  function other(t) {
-    return [cx - reach * 0.95 + t * reach * 1.9, cy - reach * 0.72 + t * reach * 1.5];
-  }
-  var crossX = cx + reach * 0.02, crossY = cy - reach * 0.02;
+  var T = 7600, u = (now % T) / T;
+  var pA = clamp((u - 0.04) / 0.28, 0, 1);
+  var sB = clamp((u - 0.34) / 0.30, 0, 1);
+  var out = u < 0.82 ? 1 : clamp((1 - u) / 0.18, 0, 1);
 
-  var pA = clamp((u - 0.04) / 0.26, 0, 1);            /* my thread lays itself   */
-  var pB = clamp((u - 0.34) / 0.22, 0, 1);            /* another crosses it      */
-  var pK = clamp((u - 0.56) / 0.14, 0, 1);            /* the knot tightens       */
-  var out = u < 0.80 ? 1 : clamp((1 - u) / 0.20, 0, 1);
+  /* the second thread slows as it passes over the first */
+  var s1 = G.tb * 0.72, s2 = s1 + 0.17, pB;
+  if (sB <= s1) pB = G.tb * (sB / (s1 || 1));
+  else if (sB <= s2) pB = G.tb;
+  else pB = G.tb + (1 - G.tb) * ((sB - s2) / (1 - s2));
+  var atCross = sB > s1 && sB <= s2;
+  var pK = clamp((sB - s2) / 0.26, 0, 1);
+
+  var warm = MY_FIBRE.warm;
+  var other = warm ? "#2f7d84" : "#bf4526";
 
   ctx.save();
   ctx.lineCap = "round"; ctx.lineJoin = "round";
-  function lay(fn, prog, col, wid) {
-    if (prog <= 0.01) return null;
-    var N = 46, n = Math.max(2, Math.round(prog * N));
+  function lay(path, prog, col, wid) {
+    if (prog <= 0.005) return null;
+    var n = Math.max(2, Math.round(prog * (path.length - 1)) + 1);
     ctx.beginPath();
-    var last = null;
-    for (var i = 0; i < n; i++) { var q = fn(i / (N - 1)); if (i === 0) ctx.moveTo(q[0], q[1]); else ctx.lineTo(q[0], q[1]); last = q; }
-    ctx.globalAlpha = out * 0.30; ctx.strokeStyle = col; ctx.lineWidth = wid * 2.6; ctx.stroke();
-    ctx.globalAlpha = out * 0.80; ctx.lineWidth = wid; ctx.stroke();
-    return prog < 1 ? last : null;
+    for (var i = 0; i < n; i++) { if (i === 0) ctx.moveTo(path[i][0], path[i][1]); else ctx.lineTo(path[i][0], path[i][1]); }
+    ctx.globalAlpha = out * 0.26; ctx.strokeStyle = col; ctx.lineWidth = wid * 2.7; ctx.stroke();
+    ctx.globalAlpha = out * 0.82; ctx.lineWidth = wid; ctx.stroke();
+    return prog < 1 ? path[n - 1] : null;
   }
-  var headA = lay(mine, pA, MY_COLOR, 3.0);
-  var headB = lay(other, pB, MY_COLOR === "#bf4526" ? "#2f7d84" : "#bf4526", 2.6);
+  var headA = lay(G.A, pA, MY_COLOR, 3.0);
+  var headB = lay(G.B, pB, other, 2.7);
   var head = headB || headA;
   if (head) {
-    ctx.globalAlpha = out * 0.9;
-    ctx.fillStyle = headB ? (MY_COLOR === "#bf4526" ? "#2f7d84" : "#bf4526") : MY_COLOR;
-    ctx.beginPath(); ctx.arc(head[0], head[1], 3.6, 0, TAU); ctx.fill();
+    ctx.globalAlpha = out * (atCross ? 1 : 0.9);
+    ctx.fillStyle = headB ? other : MY_COLOR;
+    ctx.beginPath(); ctx.arc(head[0], head[1], atCross ? 4.6 : 3.6, 0, TAU); ctx.fill();
+    if (atCross) {
+      ctx.globalAlpha = out * 0.42; ctx.strokeStyle = other; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.arc(head[0], head[1], 9 + Math.sin(now / 130) * 2, 0, TAU); ctx.stroke();
+    }
   }
-  /* and where they met, a knot */
+  /* and where they met, exactly there, a knot */
   if (pK > 0) {
-    var r = 4 + pK * 9;
-    ctx.globalAlpha = out * pK * 0.85;
+    var r = 4 + pK * 10;
+    ctx.globalAlpha = out * pK * 0.9;
     ctx.strokeStyle = "rgba(29,32,29,.8)"; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.arc(crossX, crossY, r, 0, TAU); ctx.stroke();
-    ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 1.1;
-    ctx.beginPath(); ctx.arc(crossX, crossY, r * 0.55, 0, TAU); ctx.stroke();
-    ctx.globalAlpha = out * pK * (1 - pK) * 2.2;
-    ctx.beginPath(); ctx.arc(crossX, crossY, r + pK * 22, 0, TAU); ctx.stroke();
+    ctx.beginPath(); ctx.arc(G.ix, G.iy, r, 0, TAU); ctx.stroke();
+    ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.arc(G.ix, G.iy, r * 0.52, 0, TAU); ctx.stroke();
+    ctx.globalAlpha = out * pK * (1 - pK) * 2.4;
+    ctx.beginPath(); ctx.arc(G.ix, G.iy, r + pK * 24, 0, TAU); ctx.stroke();
   }
   ctx.restore();
 
-  /* the control breathes while the ground is drawing its own thread */
-  var want = pA > 0 && pA < 1 ? 1 : 0;
+  /* the control keeps time from the first stroke until the knot is tied */
+  var want = (pA > 0 && pK < 1) ? 1 : 0;
   if (want !== demoPulse) { demoPulse = want; threadBtn.classList.toggle("beat", !!want); }
   dirty = true;
 }
-var demoPulse = 0;
 
 /* while the fabric is running backwards, say plainly which day you are looking at */
 var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -1246,6 +1445,7 @@ var weaveDirty = true;
 var mainCtx = ctx;
 
 function renderLayer(now) {
+  weaveDirty = false;            /* anything the draw itself marks must survive */
   var pad = LAYER_PAD;
   var cw = Math.round((W + pad * 2) * DPR), ch = Math.round((H + pad * 2) * DPR);
   if (layer.width !== cw || layer.height !== ch) { layer.width = cw; layer.height = ch; }
@@ -1262,7 +1462,6 @@ function renderLayer(now) {
   drawWeave(now);
   ctx = prev;
   lTag = { x: V.x, y: V.y, z: V.z, pad: pad, w: W, h: H };
-  weaveDirty = false;
 }
 
 function frame(now) {
@@ -1907,7 +2106,7 @@ function handleMsg(msg) {
     var p = peers.get(msg.from) || {};
     p.c = msg.pres.c; p.x = msg.pres.x; p.y = msg.pres.y; p.ts = performance.now();
     peers.set(msg.from, p);
-    refreshPeopleGlyph(); dirty = true;
+    refreshPeopleGlyph(); syncPips(); dirty = true;
   }
   if (msg.live) {
     var lp = livePeers.get(msg.from) || { pts: [], c: colorOf(msg.from) };

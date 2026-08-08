@@ -1234,20 +1234,27 @@ function drawKnot(kn, now) {
   ctx.save();
   ctx.translate(sx, sy);
 
-  /* 4 · COMMON GROUND — a woven field where many have come, and come back */
+  /* 4 · COMMON GROUND — a woven field where many have come, and come back.
+     The ladder does not stop here. Past the threshold the cloth keeps squaring
+     off: the field spreads, the warp closes up, and a second diamond is thrown
+     around the first, so the strongest place on a city is plainly the strongest. */
   if (st >= 4) {
-    var fr = r * 2.3;
+    var over = clamp(Math.log2(w / 68), 0, 3.2);
+    var fr = r * (2.2 + over * 0.85);
     var g = ctx.createRadialGradient(0, 0, r * 0.3, 0, 0, fr);
-    g.addColorStop(0, "rgba(47,125,132,.13)");
+    g.addColorStop(0, "rgba(47,125,132," + (0.11 + over * 0.045).toFixed(3) + ")");
     g.addColorStop(1, "rgba(47,125,132,0)");
+    ctx.globalAlpha = HM;
     ctx.fillStyle = g;
     ctx.beginPath(); ctx.arc(0, 0, fr, 0, TAU); ctx.fill();
     ctx.save();
-    ctx.rotate(Math.PI / 4);
-    ctx.globalAlpha = (0.42) * HM;
-    ctx.strokeStyle = "#2f7d84"; ctx.lineWidth = 0.8;
-    /* the cloth is squared off here: warp one way, weft the other */
-    var half = r * 1.15, step = Math.max(2.2, half / clamp(3.2 + Math.log2(1 + kn.au) * 1.6, 3.2, 9));
+    /* warp one way, weft the other, and the cloth cut on the diamond —
+       drawn straight, so the mark reads as a square knot and not a box */
+    var half = r * (1.12 + over * 0.30);
+    var divisions = clamp(3.4 + Math.log2(1 + kn.au) * 1.5 + over * 2.6, 3.4, 16);
+    ctx.globalAlpha = (0.36 + over * 0.05) * HM;
+    ctx.strokeStyle = "#2f7d84"; ctx.lineWidth = 0.75;
+    var step = Math.max(1.9, half / divisions);
     ctx.beginPath();
     for (var q = -half; q <= half + 0.01; q += step) {
       var h = half - Math.abs(q);              /* a diamond, not a disc */
@@ -1256,11 +1263,19 @@ function drawKnot(kn, now) {
       ctx.moveTo(-h, q); ctx.lineTo(h, q);
     }
     ctx.stroke();
-    ctx.globalAlpha = (0.40) * HM;
-    ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 0.9;
+    ctx.globalAlpha = (0.42) * HM;
+    ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 0.9 + over * 0.18;
     ctx.beginPath();
     ctx.moveTo(-half, 0); ctx.lineTo(0, -half); ctx.lineTo(half, 0); ctx.lineTo(0, half); ctx.closePath();
     ctx.stroke();
+    if (over >= 0.9) {
+      var outer = half * (1.22 + (over - 0.9) * 0.16);
+      ctx.globalAlpha = (0.20 + (over - 0.9) * 0.10) * HM;
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(-outer, 0); ctx.lineTo(0, -outer); ctx.lineTo(outer, 0); ctx.lineTo(0, outer); ctx.closePath();
+      ctx.stroke();
+    }
     ctx.restore();
   }
 
@@ -1302,7 +1317,8 @@ function drawKnot(kn, now) {
   if (st >= 1) {
     ctx.globalAlpha = (0.78) * HM;
     ctx.fillStyle = st >= 4 ? "#bf4526" : "#262a26";
-    ctx.beginPath(); ctx.arc(0, 0, clamp(r * 0.14, 0.8, 2.6), 0, TAU); ctx.fill();
+    var eye = clamp(r * 0.14, 0.8, 2.6) * (st >= 4 ? 1 + clamp(Math.log2(w / 68), 0, 3.2) * 0.22 : 1);
+    ctx.beginPath(); ctx.arc(0, 0, eye, 0, TAU); ctx.fill();
   }
 
   /* a knot that just tightened sends out one pulse */

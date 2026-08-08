@@ -257,14 +257,54 @@ if (!/^[a-z0-9]{6,10}$/.test(ME)) {
   ME = Math.random().toString(36).slice(2, 8);
   writeLS("cg.me", ME);
 }
-function fibreOf(author) {
+function hashAuthor(a) {
   var h = 0;
-  for (var i = 0; i < author.length; i++) h = (h * 31 + author.charCodeAt(i)) >>> 0;
-  return FIBRES[h % FIBRES.length];
+  for (var i = 0; i < a.length; i++) h = (h * 31 + a.charCodeAt(i)) >>> 0;
+  return h;
+}
+/* Hashing straight to a fibre collides at three or four people, and then two
+   humans on one ground look like one. Instead the people of a ground are put in
+   the order they first left something, which every client works out identically
+   from the same log, and handed the fibres in turn. Up to eighteen hands are
+   distinct; past that it falls back to the hash. */
+var fibreIndex = Object.create(null), fibreOrderDirty = true;
+function rebuildFibreOrder() {
+  var firstSeen = Object.create(null);
+  for (var i = 0; i < Store.ops.length; i++) {
+    var o = Store.ops[i];
+    if (firstSeen[o.a] === undefined || o.t < firstSeen[o.a]) firstSeen[o.a] = o.t;
+  }
+  if (firstSeen[ME] === undefined) firstSeen[ME] = Infinity;   /* you join at the end until you weave */
+  var people = Object.keys(firstSeen).sort(function (a, b) {
+    if (firstSeen[a] !== firstSeen[b]) return firstSeen[a] - firstSeen[b];
+    return a < b ? -1 : 1;
+  });
+  fibreIndex = Object.create(null);
+  for (var k = 0; k < people.length; k++) {
+    fibreIndex[people[k]] = k < FIBRES.length ? k : (hashAuthor(people[k]) % FIBRES.length);
+  }
+  fibreOrderDirty = false;
+}
+function fibreOf(author) {
+  if (fibreOrderDirty) rebuildFibreOrder();
+  var idx = fibreIndex[author];
+  if (idx === undefined) idx = hashAuthor(author) % FIBRES.length;
+  return FIBRES[idx];
 }
 function colorOf(author) { return fibreOf(author).c; }
-var MY_FIBRE = fibreOf(ME);
+var MY_FIBRE = FIBRES[hashAuthor(ME) % FIBRES.length];
 var MY_COLOR = MY_FIBRE.c;
+function refreshMyFibre() {
+  MY_FIBRE = fibreOf(ME); MY_COLOR = MY_FIBRE.c;
+  for (var i = 0; i < Store.threads.length; i++) {
+    var fb2 = fibreOf(Store.threads[i].a);
+    Store.threads[i].c = fb2.c; Store.threads[i].m = fb2.m;
+  }
+  for (var j = 0; j < Store.notes.length; j++) Store.notes[j].c = colorOf(Store.notes[j].a);
+  if (typeof threadBtn !== "undefined" && threadBtn) setTrace(traceMode);
+  if (typeof refreshPeopleGlyph === "function") refreshPeopleGlyph();
+  weaveDirty = true; dirty = true;
+}
 
 /* The person keeps one identity, so their fibre is theirs everywhere. Each open
    client gets its own, so two tabs on one device are two clients that can weave
@@ -341,6 +381,7 @@ function addOp(op, opts) {
     var n = parseInt((op.i.split(".")[1] || "0"), 36);
     if (n > Store.seq) Store.seq = n;
   }
+  fibreOrderDirty = true;
   try { materialise(op, opts || {}); }
   catch (e) { Store.ops.pop(); delete Store.seen[op.i]; return false; }
   if (op.t < Store.bounds.t0) Store.bounds.t0 = op.t;
@@ -403,6 +444,7 @@ function removeOp(id, by) {
 }
 
 function rebuild() {
+  fibreOrderDirty = true;
   Store.threads = []; Store.notes = []; Store.knots = new Map();
   aggDirty = true; aggCache = null; aggLevel = -1; openKnot = null; weaveDirty = true; wearDirty = true;
   Store.bounds = { t0: Infinity, t1: 0 };
@@ -800,6 +842,7 @@ function drawPlaces() {
    THE WEAVE — threads, knots, common ground
    ============================================================ */
 var timeCursor = Infinity;   /* unweave cursor */
+var LAST_VISIT = 0, SESSION_T0 = Date.now();
 var openKnot = null;
 
 function threadWidth() { return clamp(1.0 + (V.z - 10) * 0.42, 1.1, 4.6); }
@@ -869,7 +912,7 @@ function ribbon(n, width, off) {
   ctx.closePath();
 }
 
-var plainWeave = false, laid = null, press = 1, placeCrowd = 0, reveal = 1;
+var plainWeave = false, laid = null, press = 1, placeCrowd = 0, reveal = 1, lastCool = 0;
 function drawThread(th, alpha, width, dim) {
   var ws = worldSize();
   var count = th.pts.length / 2;
@@ -910,7 +953,7 @@ function drawThread(th, alpha, width, dim) {
   ctx.globalAlpha = alpha * (dim ? 0.16 : 1);
   ctx.fillStyle = th.c;
   var mk = th.m || "solid";
-  if (mk === "ply") {
+  if (mk === "ply" && width > 2.3) {
     var sep = Math.max(1.5, width * 0.58);
     ribbon(n, width * 0.46, sep); ctx.fill();
     ribbon(n, width * 0.46, -sep); ctx.fill();
@@ -1058,7 +1101,10 @@ function drawWeave(now) {
        wear of the ground under it, so many thin threads down one street fuse into
        a single thick warp band instead of all of them fading away. */
     var fuse = 1 + Math.log2(1 + (th.wear || 1)) * 0.20;
-    var w = base * (0.74 + 0.38 * age) * (0.5 + 0.5 * pr) * fuse * (th.a === ME ? 1.12 : 1);
+    /* a thread laid today has no wear behind it yet, and must not therefore read
+       as a thinner, flatter mark than the corridors it walks through */
+    var w = base * (0.74 + 0.38 * age) * (0.5 + 0.5 * pr) * Math.max(fuse, 1 + recent * 0.55)
+      * (th.a === ME ? 1.12 : 1);
     if (dimOthers && !dim) w *= 1.25;
     drawThread(th, a, w, dim);
   }
@@ -1066,6 +1112,11 @@ function drawWeave(now) {
   interlace();
   /* while a ground is drawing itself back in, its knots wait for their threads */
   reveal = (pending + settled) > 0 ? settled / (pending + settled) : 1;
+  /* freshness fades on the live pass; the cloth underneath is only repainted
+     now and then, so a new meeting costs a blit rather than a whole fabric */
+  var anyFresh = false;
+  for (var fk = 0; fk < renderedKnots.length; fk++) if (renderedKnots[fk].fresh > 0.02) { anyFresh = true; break; }
+  if (anyFresh && nowMs - lastCool > 2500) { lastCool = nowMs; weaveDirty = true; }
 
   /* knots gather as you pull back: at a distance the weave is fabric, not beads */
   buildKnotClusters();
@@ -1173,10 +1224,29 @@ function buildKnotClusters() {
     vis.push(a);
   }
   /* only ever as many knots as the screen can hold without becoming beads */
-  /* the strongest place in a neighbourhood speaks for it, so the weave shows
-     peaks rather than a lattice of equal beads */
+  /* The strongest place in a neighbourhood speaks for it, so the weave shows
+     peaks rather than a lattice of equal beads. But weight is the history of a
+     place, and a meeting that happened a minute ago has no history yet — on a
+     ground a year old it would be outranked by everything and never drawn. So
+     some of the room is kept for what has just changed, whatever it weighs. */
   var cap = clamp(Math.round((W * H) / 17000), 14, 44);
-  vis.sort(function (p, q) { return q.w - p.w; });
+  var nowT = Date.now();
+  for (var fi = 0; fi < vis.length; fi++) {
+    var vf = vis[fi];
+    vf.fresh = Math.max(
+      clamp(1 - (nowT - vf.grew) / (25 * 60000), 0, 1),        /* the last half hour */
+      /* what changed while you were away, but only while you are still arriving */
+      (LAST_VISIT && vf.grew > LAST_VISIT && (nowT - SESSION_T0) < 45000) ? 0.55 : 0
+    );
+  }
+  var freshOnes = vis.filter(function (v) { return v.fresh > 0.02; })
+    .sort(function (p, q) { return q.grew - p.grew; })
+    .slice(0, Math.max(4, Math.round(cap * 0.4)));
+  var freshSet = new Set(freshOnes);
+  vis.sort(function (p, q) {
+    if (freshSet.has(p) !== freshSet.has(q)) return freshSet.has(p) ? -1 : 1;
+    return q.w - p.w;
+  });
   var kept = [];
   for (var v = 0; v < vis.length && kept.length < cap; v++) {
     var a2 = vis[v];
@@ -1186,15 +1256,17 @@ function buildKnotClusters() {
       var bx = (kept[u].x - V.x) * ws + W / 2, by = (kept[u].y - V.y) * ws + H / 2;
       var kr = knotRadius(kept[u].w);
       var d2 = Math.hypot(ax - bx, ay - by);
-      if (d2 < Math.max(34, (ar + kr) * 1.05)) { ok = false; break; }
-      /* a much stronger place nearby speaks for its own surroundings */
-      if (kept[u].w >= a2.w * 3 && d2 < kr * 2.6) { ok = false; break; }
+      var mine2 = a2.fresh > 0.02;
+      if (d2 < Math.max(mine2 ? 18 : 34, (ar + kr) * (mine2 ? 0.6 : 1.05))) { ok = false; break; }
+      /* a much stronger place nearby speaks for its own surroundings —
+         unless something just happened here, which speaks for itself */
+      if (!mine2 && kept[u].w >= a2.w * 3 && d2 < kr * 2.6) { ok = false; break; }
     }
     if (ok) kept.push(a2);
   }
   /* on an empty ground the very first crossing must be seen; on a full one it
      would only be litter, so the faintest stage steps back once the weave is busy */
-  if (kept.length > 12) kept = kept.filter(function (a3) { return knotStage(a3.w, a3.au) >= 1; });
+  if (kept.length > 12) kept = kept.filter(function (a3) { return knotStage(a3.w, a3.au) >= 1 || a3.fresh > 0.02; });
   /* A run of equal knots down one stretch is a corridor wearing evenly, not a
      row of separate places. Where several of the same strength sit in a line,
      the strongest speaks for them. */
@@ -1213,7 +1285,7 @@ function buildKnotClusters() {
         if (o2.w > kk.w || (o2.w === kk.w && o2.key < kk.key)) beaten = true;
       }
     }
-    if (peers2 >= 2 && beaten) continue;
+    if (peers2 >= 2 && beaten && !(kk.fresh > 0.02)) continue;
     peaks.push(kk);
   }
   peaks.sort(function (p, q) { return p.w - q.w; });
@@ -1251,9 +1323,10 @@ function drawKnot(kn, now) {
   if (sx < -80 || sx > W + 80 || sy < -80 || sy > H + 80) return;
   var w = kn.w, st = knotStage(w, kn.au);
   var r = knotRadius(w);
-  var fresh = clamp(1 - (Date.now() - kn.grew) / 2600, 0, 1);
+  var justHappened = kn.fresh || 0;
   var isOpen = openKnot === kn;
-  var HM = ((openKnot && !isOpen) ? 0.2 : 1) * clamp(1 / (0.45 + 0.55 * press), 1, 1.7) * reveal;
+  var HM = ((openKnot && !isOpen) ? 0.2 : 1) * clamp(1 / (0.45 + 0.55 * press), 1, 1.7) * reveal
+    * (1 + (kn.fresh || 0) * 0.55);
   var many = kn.au > 1;
   var accent = many ? "#bf4526" : "#2f7d84";
 
@@ -1360,12 +1433,8 @@ function drawKnot(kn, now) {
   }
 
   /* a knot that just tightened sends out one pulse */
-  if (fresh > 0) {
-    ctx.globalAlpha = (fresh * 0.5) * HM;
-    ctx.strokeStyle = accent; ctx.lineWidth = 1.1;
-    ctx.beginPath(); ctx.arc(0, 0, r + (1 - fresh) * 34, 0, TAU); ctx.stroke();
-    dirty = true; weaveDirty = true;
-  }
+  /* the pulse and the just-happened halo are drawn live, over the cloth, so a
+     new meeting can breathe without repainting the whole fabric behind it */
   if (isOpen) {
     ctx.globalAlpha = (0.42) * HM;
     ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 1;
@@ -1495,6 +1564,37 @@ function drawLive(now) {
     ctx.restore();
     dirty = true;
   });
+}
+
+/* what has just happened, drawn over the cloth every frame */
+function drawFreshMarks(now) {
+  if (!renderedKnots.length) return;
+  var ws = worldSize(), t = Date.now();
+  ctx.save();
+  for (var i = 0; i < renderedKnots.length; i++) {
+    var kn = renderedKnots[i];
+    var f = kn.fresh || 0;
+    if (f <= 0.02) continue;
+    var sx = (kn.x - V.x) * ws + W / 2, sy = (kn.y - V.y) * ws + H / 2;
+    if (sx < -60 || sx > W + 60 || sy < -60 || sy > H + 60) continue;
+    var r = knotRadius(kn.w);
+    var accent = kn.au > 1 ? "#bf4526" : "#2f7d84";
+    /* the standing halo: a new meeting among old heavy ones */
+    ctx.globalAlpha = f * 0.34;
+    ctx.strokeStyle = accent; ctx.lineWidth = 0.9;
+    ctx.setLineDash([1.6, 3]);
+    ctx.beginPath(); ctx.arc(sx, sy, r + 6 + Math.sin(now / 900 + i) * 0.8, 0, TAU); ctx.stroke();
+    ctx.setLineDash([]);
+    /* and one ring outward at the moment it tightened */
+    var pulse = clamp(1 - (t - kn.grew) / 2600, 0, 1);
+    if (pulse > 0) {
+      ctx.globalAlpha = pulse * 0.5;
+      ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.arc(sx, sy, r + (1 - pulse) * 34, 0, TAU); ctx.stroke();
+    }
+    dirty = true;
+  }
+  ctx.restore();
 }
 
 /* ---------- presence ---------- */
@@ -1766,6 +1866,7 @@ function frame(now) {
   }
 
   drawWarp();
+  drawFreshMarks(now);
   drawLive(now);
   drawPresence(now);
   drawDemo(now);
@@ -2012,7 +2113,7 @@ function settleThread(mercPts) {
   }
   var op = { i: opId(), a: ME, t: Date.now(), k: "t", d: { p: packed } };
   addOp(op); saveLocal(); publish([op]);
-  lastMine = op.i; showUndo(); syncPips();
+  lastMine = op.i; showUndo(); syncPips(); refreshMyFibre();
   dirty = true;
 }
 
@@ -2062,7 +2163,7 @@ function closeSay(commit) {
       d: { ll: [Math.round(unMercY(sayAt.y) * 1e5), Math.round(unMercX(sayAt.x) * 1e5)], x: text.slice(0, 140) }
     };
     addOp(op); saveLocal(); publish([op]);
-    lastMine = op.i; showUndo(); syncPips();
+    lastMine = op.i; showUndo(); syncPips(); refreshMyFibre();
   }
   sayAt = null; sayIn.blur(); dirty = true;
 }
@@ -2394,7 +2495,7 @@ function handleMsgInner(msg) {
       if (op.k === "x") { if (removeOp(op.d.r, op.a)) added++; continue; }
       if (addOp(op, { animate: true })) added++;
     }
-    if (added) { saveLocal(); syncPips(); dirty = true; }
+    if (added) { saveLocal(); syncPips(); refreshMyFibre(); }
   }
   if (msg.hello || msg.helloBack) {
     /* someone arrived: send them what they are missing, and say what we hold
@@ -2604,6 +2705,7 @@ function bootGround() {
 
   /* restore the ground */
   var lastVisit = parseInt(readLS(LS_VISIT, "0"), 10) || 0;
+  LAST_VISIT = lastVisit;
   var saved = loadLocal();
   var sortedSaved = saved.slice().sort(function (a, b) { return (a.t || 0) - (b.t || 0); });
   var fresh = 0;
@@ -2614,6 +2716,7 @@ function bootGround() {
   writeLS(LS_VISIT, String(Date.now()));
 
   /* frame first, everything else after */
+  refreshMyFibre();
   setTrace(false);
   refreshPeopleGlyph();
   syncPips();

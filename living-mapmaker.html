@@ -95,8 +95,14 @@
     pointer-events:auto;
   }
   #key.show{display:grid}
-  #keyInner{display:grid;justify-items:center;gap:16px;padding:24px;max-width:92vw}
-  #qr{width:min(62vw,262px);height:min(62vw,262px);position:static;image-rendering:pixelated}
+  #keyInner{
+    display:grid;justify-items:center;gap:14px;padding:20px;max-width:92vw;max-height:100dvh;
+    overflow:auto;align-content:center;
+  }
+  #qr{
+    width:min(62vw,52dvh,262px);height:min(62vw,52dvh,262px);
+    position:static;image-rendering:pixelated;flex:0 0 auto;
+  }
   #keyUrl{
     font:italic 13px/1.5 Georgia,"Times New Roman",serif;letter-spacing:.01em;
     color:var(--ink-soft);text-align:center;max-width:30ch;
@@ -249,6 +255,20 @@ function colorOf(author) { return fibreOf(author).c; }
 var MY_FIBRE = fibreOf(ME);
 var MY_COLOR = MY_FIBRE.c;
 
+/* The person keeps one identity, so their fibre is theirs everywhere. Each open
+   client gets its own, so two tabs on one device are two clients that can weave
+   together without ever minting the same mark twice. */
+var SITE = (function () {
+  var r = "";
+  try {
+    var buf = new Uint8Array(5);
+    if (window.crypto && crypto.getRandomValues) crypto.getRandomValues(buf);
+    else for (var k = 0; k < buf.length; k++) buf[k] = (Math.random() * 256) | 0;
+    for (var i = 0; i < buf.length; i++) r += buf[i].toString(36);
+  } catch (e) { r = Math.random().toString(36).slice(2); }
+  return (ME + r).replace(/[^a-z0-9]/g, "").slice(0, 14) || ("s" + Math.random().toString(36).slice(2, 8));
+})();
+
 /* ---------- ground id (which place we are weaving) ---------- */
 function readGroundId() {
   var h = (location.hash || "").replace(/^#/, "");
@@ -276,17 +296,44 @@ var Store = {
   emit: function (kind) { for (var i = 0; i < this.listeners.length; i++) this.listeners[i](kind); }
 };
 
-function opId() { return ME + "." + (++Store.seq).toString(36); }
+function opId() { return SITE + "." + (++Store.seq).toString(36); }
+
+function num(v) { return typeof v === "number" && isFinite(v); }
+function validOp(op) {
+  if (!op || typeof op !== "object") return false;
+  if (typeof op.i !== "string" || !/^[A-Za-z0-9_.-]{3,48}$/.test(op.i)) return false;
+  if (typeof op.a !== "string" || !op.a.length || op.a.length > 32) return false;
+  if (!num(op.t) || op.t < 0) return false;
+  var d = op.d;
+  if (op.k === "t") {
+    if (!d || !Array.isArray(d.p) || d.p.length < 4 || d.p.length % 2 || d.p.length > 20000) return false;
+    for (var i = 0; i < d.p.length; i++) {
+      if (!num(d.p[i])) return false;
+      if (i % 2 === 0) { if (d.p[i] < -9000000 || d.p[i] > 9000000) return false; }
+      else if (d.p[i] < -18100000 || d.p[i] > 18100000) return false;
+    }
+    return true;
+  }
+  if (op.k === "n") {
+    if (!d || !Array.isArray(d.ll) || d.ll.length !== 2 || !num(d.ll[0]) || !num(d.ll[1])) return false;
+    if (typeof d.x !== "string") return false;
+    return true;
+  }
+  if (op.k === "x") return !!(d && typeof d.r === "string");
+  return false;
+}
 
 function addOp(op, opts) {
   if (!op || !op.i || Store.seen[op.i]) return false;
+  if (!validOp(op)) return false;
   Store.seen[op.i] = 1;
   Store.ops.push(op);
-  if (op.a === ME) {
+  if (op.i.indexOf(SITE + ".") === 0) {
     var n = parseInt((op.i.split(".")[1] || "0"), 36);
     if (n > Store.seq) Store.seq = n;
   }
-  materialise(op, opts || {});
+  try { materialise(op, opts || {}); }
+  catch (e) { Store.ops.pop(); delete Store.seen[op.i]; return false; }
   if (op.t < Store.bounds.t0) Store.bounds.t0 = op.t;
   if (op.t > Store.bounds.t1) Store.bounds.t1 = op.t;
   return true;
@@ -340,7 +387,7 @@ function rebuild() {
   Store.bounds = { t0: Infinity, t1: 0 };
   var ops = Store.ops.slice().sort(function (a, b) { return a.t - b.t; });
   for (var i = 0; i < ops.length; i++) {
-    materialise(ops[i], {});
+    try { materialise(ops[i], {}); } catch (e) { continue; }
     if (ops[i].t < Store.bounds.t0) Store.bounds.t0 = ops[i].t;
     if (ops[i].t > Store.bounds.t1) Store.bounds.t1 = ops[i].t;
   }
@@ -437,7 +484,7 @@ var MAX_OPS = 4000;
 function loadLocal() {
   var raw = readLS(LS_KEY, "");
   if (!raw) return [];
-  try { var a = JSON.parse(raw); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+  try { var a = JSON.parse(raw); return Array.isArray(a) ? a.filter(validOp) : []; } catch (e) { return []; }
 }
 var saveTimer = 0;
 function saveLocal() {
@@ -445,10 +492,12 @@ function saveLocal() {
   saveTimer = setTimeout(function () {
     var ops = Store.ops;
     if (ops.length > MAX_OPS) ops = ops.slice(ops.length - MAX_OPS);
-    try { localStorage.setItem(LS_KEY, JSON.stringify(ops)); }
-    catch (e) {
-      try { localStorage.setItem(LS_KEY, JSON.stringify(ops.slice(Math.floor(ops.length / 2)))); } catch (e2) { }
+    var keep = ops.length;
+    for (var attempt = 0; attempt < 9; attempt++) {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(ops.slice(ops.length - keep))); return; }
+      catch (e) { keep = Math.floor(keep * 0.8); if (keep < 8) break; }
     }
+    try { localStorage.removeItem(LS_KEY); } catch (e3) { }
   }, 350);
 }
 
@@ -1591,7 +1640,7 @@ var travelled = 0;
 stage.addEventListener("pointerdown", function (e) {
   if (keyOpen) return;
   travelled = 0;
-  stage.setPointerCapture && stage.setPointerCapture(e.pointerId);
+  try { if (stage.setPointerCapture) stage.setPointerCapture(e.pointerId); } catch (er) { }
   var p0 = ptOf(e);
   pointers.set(e.pointerId, p0);
   pointerDown = true;
@@ -2080,8 +2129,10 @@ function drawQR(canvas, text) {
 var net = { state: "local", mqtt: null, bc: null, brokers: [], tried: 0 };
 
 function encodeMsg(o) { return JSON.stringify(o); }
-function handleMsg(msg) {
-  if (!msg || msg.from === ME || msg.g !== GID) return;
+function handleMsg(raw) { try { handleMsgInner(raw); } catch (e) { /* one bad message is one bad message */ } }
+function handleMsgInner(msg) {
+  if (!msg || typeof msg !== "object" || msg.from === SITE || msg.g !== GID) return;
+  if (msg.ops && !Array.isArray(msg.ops)) return;
   if (msg.ops) {
     var added = 0;
     for (var i = 0; i < msg.ops.length; i++) {
@@ -2096,24 +2147,26 @@ function handleMsg(msg) {
        so they can send us what we are missing */
     var have = msg.have || {};
     var missing = Store.ops.filter(function (o) {
-      var n = parseInt((o.i.split(".")[1] || "0"), 36);
-      return !(have[o.a] >= n);
+      var parts = o.i.split(".");
+      return !(have[parts[0]] >= parseInt(parts[1] || "0", 36));
     });
     if (missing.length) publishChunked(missing.slice(-1200));
-    if (msg.hello) setTimeout(function () { send({ g: GID, from: ME, helloBack: 1, have: haveVector() }); }, 60 + Math.random() * 260);
+    if (msg.hello) setTimeout(function () { send({ g: GID, from: SITE, helloBack: 1, have: haveVector() }); }, 60 + Math.random() * 260);
   }
   if (msg.pres) {
-    var p = peers.get(msg.from) || {};
+    var who = msg.pres.a || msg.from;
+    var p = peers.get(who) || {};
     p.c = msg.pres.c; p.x = msg.pres.x; p.y = msg.pres.y; p.ts = performance.now();
-    peers.set(msg.from, p);
+    peers.set(who, p);
     refreshPeopleGlyph(); syncPips(); dirty = true;
   }
   if (msg.live) {
-    var lp = livePeers.get(msg.from) || { pts: [], c: colorOf(msg.from) };
+    var who2 = msg.live.a || msg.from;
+    var lp = livePeers.get(who2) || { pts: [], c: colorOf(who2) };
     var conv = [];
     for (var j = 0; j + 1 < msg.live.p.length; j += 2) conv.push(mercX(msg.live.p[j + 1] / 1e5), mercY(msg.live.p[j] / 1e5));
     lp.pts = conv; lp.ts = performance.now();
-    livePeers.set(msg.from, lp);
+    livePeers.set(who2, lp);
     dirty = true;
   }
 }
@@ -2121,12 +2174,13 @@ function handleMsg(msg) {
 function haveVector() {
   var have = {};
   Store.ops.forEach(function (o) {
-    var n = parseInt((o.i.split(".")[1] || "0"), 36);
-    if (!(have[o.a] >= n)) have[o.a] = n;
+    var parts = o.i.split(".");
+    var n = parseInt(parts[1] || "0", 36);
+    if (!(have[parts[0]] >= n)) have[parts[0]] = n;
   });
   return have;
 }
-function publish(ops) { send({ g: GID, from: ME, ops: ops }); }
+function publish(ops) { send({ g: GID, from: SITE, ops: ops }); }
 function publishChunked(ops) {
   for (var i = 0; i < ops.length; i += 40) {
     (function (slice, k) {
@@ -2247,7 +2301,7 @@ function connectNet() {
     function (s) { try { handleMsg(JSON.parse(s)); } catch (e) { } },
     function () {
       net.state = "open";
-      send({ g: GID, from: ME, hello: 1, have: haveVector() });
+      send({ g: GID, from: SITE, hello: 1, have: haveVector() });
       sendPresence();
     },
     function () { net.state = "local"; net.mqtt = null; setTimeout(connectNet, 600); }
@@ -2255,7 +2309,7 @@ function connectNet() {
 }
 
 function sendPresence() {
-  send({ g: GID, from: ME, pres: { c: MY_COLOR, x: V.x, y: V.y } });
+  send({ g: GID, from: SITE, pres: { a: ME, c: MY_COLOR, x: V.x, y: V.y } });
 }
 setInterval(function () { if (net.mqtt && net.mqtt.ready) sendPresence(); }, 4000);
 
@@ -2270,7 +2324,7 @@ function pushLive() {
     for (var i = 0; i < drawingPts.length; i += 2 * step) {
       p.push(Math.round(unMercY(drawingPts[i + 1]) * 1e5), Math.round(unMercX(drawingPts[i]) * 1e5));
     }
-    send({ g: GID, from: ME, live: { p: p } });
+    send({ g: GID, from: SITE, live: { a: ME, p: p } });
   }, 130);
 }
 
@@ -2284,6 +2338,12 @@ document.addEventListener("visibilitychange", function () {
    BOOT
    ============================================================ */
 function boot() {
+  /* the loop starts first; nothing below it may ever stop the ground appearing */
+  requestAnimationFrame(frame);
+  try { bootGround(); } catch (e) { dirty = true; }
+}
+
+function bootGround() {
   resize();
   window.addEventListener("resize", resize);
   if (window.visualViewport) window.visualViewport.addEventListener("resize", resize);
@@ -2304,11 +2364,16 @@ function boot() {
   refreshPeopleGlyph();
   syncPips();
   dirty = true;
-  requestAnimationFrame(frame);
 
-  /* if the ground is empty and we are far from it, sit over the reference city */
+  /* say hello to any other client on this device straight away */
+  try { send({ g: GID, from: SITE, hello: 1, have: haveVector() }); } catch (e) { }
   setTimeout(function () { try { connectNet(); } catch (e) { } }, 700);
 }
+
+/* moving to another ground is moving to another place */
+window.addEventListener("hashchange", function () {
+  if (readGroundId() !== GID) location.reload();
+});
 
 window.addEventListener("keydown", function (e) {
   if (e.key === "z" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); if (lastMine) undoBtn.click(); }

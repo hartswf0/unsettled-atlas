@@ -396,7 +396,7 @@ function removeOp(id, by) {
 
 function rebuild() {
   Store.threads = []; Store.notes = []; Store.knots = new Map();
-  aggDirty = true; aggCache = null; aggLevel = -1; openKnot = null; weaveDirty = true;
+  aggDirty = true; aggCache = null; aggLevel = -1; openKnot = null; weaveDirty = true; wearDirty = true;
   Store.bounds = { t0: Infinity, t1: 0 };
   var ops = Store.ops.slice().sort(function (a, b) { return a.t - b.t; });
   for (var i = 0; i < ops.length; i++) {
@@ -419,22 +419,36 @@ var KEY_SPAN = 1 << BASE_Z;
 
 function packCell(cx, cy) { return cx * KEY_SPAN + cy; }
 
-/* the set of places a thread passes through, walked at half a cell so nothing is skipped */
+/* The places a thread passes through, walked at half a cell so nothing is skipped,
+   and the bearing on which it crossed each one. Bearing is what tells a meeting
+   from a shared corridor, and unlike anything positional it does not move when
+   the trace wobbles. Folded to 180 degrees, in four bins: a direction, not a heading. */
 function threadCells(pts) {
-  var seen = new Set(), out = [];
+  if (pts.length < 4) return [];
   var step = BASE_CELL * 0.5;
-  function mark(x, y) {
-    var cx = Math.floor(x / BASE_CELL), cy = Math.floor(y / BASE_CELL);
-    var k = packCell(cx, cy);
-    if (!seen.has(k)) { seen.add(k); out.push(k); }
-  }
-  if (pts.length < 2) return out;
-  mark(pts[0], pts[1]);
+  var wx = [], wy = [];
+  wx.push(pts[0]); wy.push(pts[1]);
   for (var i = 0; i + 3 < pts.length; i += 2) {
     var x1 = pts[i], y1 = pts[i + 1], x2 = pts[i + 2], y2 = pts[i + 3];
     var d = Math.hypot(x2 - x1, y2 - y1);
     var n = Math.min(400, Math.max(1, Math.ceil(d / step)));
-    for (var j = 1; j <= n; j++) mark(x1 + (x2 - x1) * j / n, y1 + (y2 - y1) * j / n);
+    for (var j = 1; j <= n; j++) { wx.push(x1 + (x2 - x1) * j / n); wy.push(y1 + (y2 - y1) * j / n); }
+  }
+  var seen = new Map(), out = [];
+  var WIN = 5;                                  /* the bearing is read over ~160 m, not one cell */
+  for (var q = 0; q < wx.length; q++) {
+    var cx = Math.floor(wx[q] / BASE_CELL), cy = Math.floor(wy[q] / BASE_CELL);
+    var k = packCell(cx, cy);
+    if (seen.has(k)) continue;
+    var a = Math.max(0, q - WIN), b = Math.min(wx.length - 1, q + WIN);
+    var dx = wx[b] - wx[a], dy = wy[b] - wy[a];
+    if (Math.abs(dx) < 1e-12 && Math.abs(dy) < 1e-12) { dx = wx[wx.length - 1] - wx[0]; dy = wy[wy.length - 1] - wy[0]; }
+    var ang = Math.atan2(dy, dx);
+    if (ang < 0) ang += Math.PI;
+    if (ang >= Math.PI) ang -= Math.PI;
+    var bin = Math.min(3, Math.floor(ang / (Math.PI / 4)));
+    seen.set(k, 1);
+    out.push(k, bin);
   }
   return out;
 }
@@ -443,21 +457,22 @@ function threadCells(pts) {
 function weaveThread(th) {
   th.cells = threadCells(th.pts);
   var bucket = Math.floor(th.t / 36e5);            /* an hour apart is a return */
-  for (var i = 0; i < th.cells.length; i++) {
-    var k = th.cells[i];
+  for (var i = 0; i < th.cells.length; i += 2) {
+    var k = th.cells[i], bin = th.cells[i + 1];
     var kn = Store.knots.get(k);
     if (!kn) {
       var cx = Math.floor(k / KEY_SPAN), cy = k - cx * KEY_SPAN;
       kn = {
         key: k, cx: cx, cy: cy,
         x: (cx + 0.5) * BASE_CELL, y: (cy + 0.5) * BASE_CELL,
-        eid: [], ea: [], eb: [], et: [],
+        eid: [], ea: [], eb: [], et: [], bins: new Set(),
         t0: Infinity, t1: 0, grew: 0
       };
       Store.knots.set(k, kn);
     }
     if (kn.eid.indexOf(th.id) < 0) {
       kn.eid.push(th.id); kn.ea.push(th.a); kn.eb.push(bucket); kn.et.push(th.t);
+      kn.bins.add(bin);
     }
     if (th.t < kn.t0) kn.t0 = th.t;
     if (th.t > kn.t1) kn.t1 = th.t;
@@ -465,6 +480,7 @@ function weaveThread(th) {
   }
   aggDirty = true;
   weaveDirty = true;
+  wearDirty = true;
 }
 
 /* co  = how many threads have come through this place
@@ -980,6 +996,7 @@ function surface(L, si, px, py) {
 }
 
 function drawWeave(now) {
+  buildAggregate();
   var ws = worldSize();
   var base = threadWidth();
   var dimOthers = !!openKnot;
@@ -1013,7 +1030,7 @@ function drawWeave(now) {
       ? (th.t - Store.bounds.t0) / (Store.bounds.t1 - Store.bounds.t0 || 1) : 1;
     var a = 0.52 + 0.42 * age;
     var dim = dimOthers && live.indexOf(th.id) < 0;
-    var w = base * (0.78 + 0.42 * age);
+    var w = base * (0.74 + 0.38 * age) * (1 + Math.log2(1 + (th.wear || 1)) * 0.13);
     if (dimOthers && !dim) w *= 1.25;
     drawThread(th, a, w, dim);
   }
@@ -1033,7 +1050,22 @@ function drawWeave(now) {
    about 20 px across, so a knot always means "this much happened around here",
    and its rank on the ladder never changes just because you zoomed. */
 var renderedKnots = [];
-var aggDirty = true, aggLevel = -1, aggCache = null, aggCut = Infinity;
+var aggDirty = true, aggLevel = -1, aggCache = null, aggCut = Infinity, wearDirty = true;
+
+/* how worn is the ground each thread runs through — only recomputed when the
+   ground itself changes, never merely because you zoomed */
+function computeWear() {
+  var wear = new Map();
+  Store.knots.forEach(function (kn) {
+    var n = kn.eid.length;
+    for (var i = 0; i < n; i++) {
+      var cur = wear.get(kn.eid[i]);
+      if (cur === undefined || n > cur) wear.set(kn.eid[i], n);
+    }
+  });
+  for (var wi = 0; wi < Store.threads.length; wi++) Store.threads[wi].wear = wear.get(Store.threads[wi].id) || 1;
+  wearDirty = false;
+}
 
 function levelForZoom() { return clamp(Math.round(V.z) + 6, 12, BASE_Z); }
 
@@ -1049,7 +1081,7 @@ function buildAggregate() {
     var k = cx * span + cy;
     var a = out.get(k);
     if (!a) {
-      a = { key: k, sx: 0, sy: 0, np: 0, threads: new Set(), authors: new Set(), visits: new Set(), t0: Infinity, t1: 0, grew: 0 };
+      a = { key: k, sx: 0, sy: 0, np: 0, threads: new Set(), authors: new Set(), visits: new Set(), bins: new Set(), t0: Infinity, t1: 0, grew: 0 };
       out.set(k, a);
     }
     var here = 0;
@@ -1061,6 +1093,7 @@ function buildAggregate() {
       if (kn.et[i] > a.t1) a.t1 = kn.et[i];
     }
     if (!here) return;
+    kn.bins.forEach(function (bb) { a.bins.add(bb); });
     a.sx += kn.x * here; a.sy += kn.y * here; a.np += here;
     if (kn.grew > a.grew) a.grew = kn.grew;
   });
@@ -1072,8 +1105,12 @@ function buildAggregate() {
     a.ret = Math.max(0, a.visits.size - a.au);
     a.w = weighPlace(a.co, a.au, a.ret);
     a.threadList = Array.from(a.threads);
-    if (a.co >= 2) list.push(a);
+    /* threads have to meet at an angle. Running along together is a worn
+       corridor, however many feet have worn it — the corridor thickens instead. */
+    if (a.co >= 2 && a.bins.size >= 2) list.push(a);
   });
+
+  if (wearDirty) computeWear();
   aggCache = list; aggLevel = L; aggDirty = false;
   return list;
 }

@@ -295,7 +295,18 @@ function materialise(op, opts) {
       pts[i + 1] = mercY(raw[i] / 1e5);
     }
     var fb = fibreOf(op.a);
-    var th = { id: op.i, a: op.a, t: op.t, c: fb.c, m: fb.m, pts: pts, drawn: opts.animate ? 0 : 1 };
+    var bx0 = Infinity, by0 = Infinity, bx1 = -Infinity, by1 = -Infinity;
+    for (var b = 0; b < pts.length; b += 2) {
+      if (pts[b] < bx0) bx0 = pts[b];
+      if (pts[b] > bx1) bx1 = pts[b];
+      if (pts[b + 1] < by0) by0 = pts[b + 1];
+      if (pts[b + 1] > by1) by1 = pts[b + 1];
+    }
+    var th = {
+      id: op.i, a: op.a, t: op.t, c: fb.c, m: fb.m, pts: pts,
+      bx0: bx0, by0: by0, bx1: bx1, by1: by1,
+      drawn: opts.animate ? 0 : 1
+    };
     Store.threads.push(th);
     Store.threadsDirty = true;
     if (opts.animate) { th.drawn = -(opts.stagger || 0); th.rate = 0.016; }
@@ -320,7 +331,7 @@ function removeOp(id) {
 
 function rebuild() {
   Store.threads = []; Store.notes = []; Store.knots = new Map();
-  aggDirty = true; aggCache = null; aggLevel = -1; openKnot = null;
+  aggDirty = true; aggCache = null; aggLevel = -1; openKnot = null; weaveDirty = true;
   Store.bounds = { t0: Infinity, t1: 0 };
   var ops = Store.ops.slice().sort(function (a, b) { return a.t - b.t; });
   for (var i = 0; i < ops.length; i++) {
@@ -389,6 +400,7 @@ function weaveThread(th) {
     kn.grew = Math.max(kn.grew, th.t);
   }
   aggDirty = true;
+  weaveDirty = true;
 }
 
 /* co  = how many threads have come through this place
@@ -462,6 +474,7 @@ function resize() {
   cv.height = Math.max(1, Math.round(H * DPR));
   cv.style.width = W + "px"; cv.style.height = H + "px";
   paperTex = null;
+  weaveDirty = true;
   dirty = true;
 }
 
@@ -486,7 +499,7 @@ var Tiles = {
     img.onload = function () {
       self.pending--; e.ok = true; self.fails = 0;
       if (!self.anyOk) { self.anyOk = true; var at = document.getElementById("attrib"); if (at) at.style.display = "block"; }
-      dirty = true;
+      weaveDirty = true; dirty = true;
     };
     img.onerror = function () {
       self.pending--; e.bad = true; self.fails++;
@@ -533,7 +546,8 @@ function drawTiles() {
 /* ============================================================
    PAPER
    ============================================================ */
-var paperTex = null;
+var paperTex = null, paperCanvas = null;
+function paperTile() { if (!paperCanvas) paperCanvas = makePaper(); return paperCanvas; }
 function makePaper() {
   var s = 180, c = document.createElement("canvas");
   c.width = s; c.height = s;
@@ -544,7 +558,7 @@ function makePaper() {
     im.data[i] = v; im.data[i + 1] = v - 3; im.data[i + 2] = v - 12; im.data[i + 3] = 26;
   }
   g.putImageData(im, 0, 0);
-  return ctx.createPattern(c, "repeat");
+  return c;
 }
 
 /* ============================================================
@@ -696,6 +710,7 @@ function ribbon(n, width, off) {
   ctx.closePath();
 }
 
+var plainWeave = false;
 function drawThread(th, alpha, width, dim) {
   var ws = worldSize();
   var count = th.pts.length / 2;
@@ -709,7 +724,7 @@ function drawThread(th, alpha, width, dim) {
 
   /* the gap that lets one thread pass over another instead of blotting it —
      threads are laid oldest first, so the weave has a real over and under */
-  if (!dim && width > 1.3) {
+  if (!dim && width > 1.3 && !plainWeave) {
     ctx.globalAlpha = alpha * 0.82;
     ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = width + 1.7;
     ctx.beginPath();
@@ -718,11 +733,13 @@ function drawThread(th, alpha, width, dim) {
   }
 
   /* the fibre haze around the thread */
-  ctx.globalAlpha = alpha * (dim ? 0.04 : 0.10);
-  ctx.strokeStyle = th.c; ctx.lineWidth = width * 2.2;
-  ctx.beginPath();
-  for (i = 0; i < n; i++) { if (i === 0) ctx.moveTo(_tx[i], _ty[i]); else ctx.lineTo(_tx[i], _ty[i]); }
-  ctx.stroke();
+  if (!plainWeave) {
+    ctx.globalAlpha = alpha * (dim ? 0.04 : 0.10);
+    ctx.strokeStyle = th.c; ctx.lineWidth = width * 2.2;
+    ctx.beginPath();
+    for (i = 0; i < n; i++) { if (i === 0) ctx.moveTo(_tx[i], _ty[i]); else ctx.lineTo(_tx[i], _ty[i]); }
+    ctx.stroke();
+  }
 
   /* the thread itself, in its own make */
   ctx.globalAlpha = alpha * (dim ? 0.16 : 1);
@@ -765,11 +782,24 @@ function drawWeave(now) {
     Store.threads.sort(function (p, q) { return p.t - q.t; });
     Store.threadsDirty = false;
   }
+  var m = LAYER_PAD;
+  var vx0 = fromScreenX(-m), vx1 = fromScreenX(W + m);
+  var vy0 = fromScreenY(-m), vy1 = fromScreenY(H + m);
+  var count = 0;
+  for (var c0 = 0; c0 < Store.threads.length; c0++) {
+    var tc = Store.threads[c0];
+    if (tc.t > timeCursor) continue;
+    if (tc.bx1 < vx0 || tc.bx0 > vx1 || tc.by1 < vy0 || tc.by0 > vy1) continue;
+    count++;
+  }
+  plainWeave = count > 420;   /* a very full ground drops the casing and the haze */
   for (var i = 0; i < Store.threads.length; i++) {
     var th = Store.threads[i];
     if (th.t > timeCursor) continue;
-    if (th.drawn < 1) { th.drawn = Math.min(1, th.drawn + (th.rate || 0.02)); dirty = true; }
-    if (th.drawn < 0) { th.drawn = Math.min(0, th.drawn + 0.02); dirty = true; continue; }
+    if (th.drawn < 1) { th.drawn = Math.min(1, th.drawn + (th.rate || 0.02)); dirty = true; weaveDirty = true; }
+    if (th.drawn < 0) { th.drawn = Math.min(0, th.drawn + 0.02); dirty = true; weaveDirty = true; continue; }
+    /* nothing offscreen is projected at all */
+    if (th.bx1 < vx0 || th.bx0 > vx1 || th.by1 < vy0 || th.by0 > vy1) continue;
     var age = Store.bounds.t1 > Store.bounds.t0
       ? (th.t - Store.bounds.t0) / (Store.bounds.t1 - Store.bounds.t0 || 1) : 1;
     var a = 0.52 + 0.42 * age;
@@ -864,10 +894,13 @@ function buildKnotClusters() {
     var ar = knotRadius(a2.w), ok = true;
     for (var u = 0; u < kept.length; u++) {
       var bx = (kept[u].x - V.x) * ws + W / 2, by = (kept[u].y - V.y) * ws + H / 2;
-      if (Math.hypot(ax - bx, ay - by) < Math.max(26, (ar + knotRadius(kept[u].w)) * 0.95)) { ok = false; break; }
+      if (Math.hypot(ax - bx, ay - by) < Math.max(34, (ar + knotRadius(kept[u].w)) * 1.05)) { ok = false; break; }
     }
     if (ok) kept.push(a2);
   }
+  /* on an empty ground the very first crossing must be seen; on a full one it
+     would only be litter, so the faintest stage steps back once the weave is busy */
+  if (kept.length > 12) kept = kept.filter(function (a3) { return knotStage(a3.w) >= 1; });
   kept.sort(function (p, q) { return p.w - q.w; });
   renderedKnots = kept;
   if (openKnot && renderedKnots.indexOf(openKnot) < 0) {
@@ -974,7 +1007,7 @@ function drawKnot(kn, now, base) {
     ctx.globalAlpha = fresh * 0.5;
     ctx.strokeStyle = accent; ctx.lineWidth = 1.1;
     ctx.beginPath(); ctx.arc(0, 0, r + (1 - fresh) * 34, 0, TAU); ctx.stroke();
-    dirty = true;
+    dirty = true; weaveDirty = true;
   }
   if (isOpen) {
     ctx.globalAlpha = 0.5;
@@ -994,7 +1027,7 @@ function drawNotes(now) {
   for (var i = 0; i < Store.notes.length; i++) {
     var n = Store.notes[i];
     if (n.t > timeCursor) continue;
-    if (n.drawn < 1) { n.drawn = Math.min(1, n.drawn + 0.05); dirty = true; }
+    if (n.drawn < 1) { n.drawn = Math.min(1, n.drawn + 0.05); dirty = true; weaveDirty = true; }
     var sx = (n.x - V.x) * ws + W / 2, sy = (n.y - V.y) * ws + H / 2;
     if (sx < -140 || sx > W + 140 || sy < -30 || sy > H + 30) continue;
     var reach = BASE_CELL * (1 << (BASE_Z - levelForZoom())) * 1.6;
@@ -1120,7 +1153,9 @@ function drawWarp() {
    the crossing tightens into a knot. Then it lets go. It is never written down. */
 var demoOff = false;
 function drawDemo(now) {
+  /* the ground stops explaining itself the moment anything real is happening on it */
   if (demoOff || Store.threads.length || Store.notes.length || drawingPts) return;
+  if (livePeers.size || peers.size) return;
   var T = 7200, u = (now % T) / T;
   var bx = W / 2, by = H - 54 - safeBottom();
   var reach = Math.min(W * 0.34, 150);
@@ -1199,27 +1234,67 @@ function drawEra() {
 }
 
 /* ============================================================
-   FRAME
+   FRAME — the ground and the weave are drawn into a padded layer and
+   carried while you travel; only what is alive is drawn every frame.
    ============================================================ */
 var dirty = true;
+var LAYER_PAD = 120;
+var layer = document.createElement("canvas");
+var lctx = layer.getContext("2d");
+var lTag = null;
+var weaveDirty = true;
+var mainCtx = ctx;
+
+function renderLayer(now) {
+  var pad = LAYER_PAD;
+  var cw = Math.round((W + pad * 2) * DPR), ch = Math.round((H + pad * 2) * DPR);
+  if (layer.width !== cw || layer.height !== ch) { layer.width = cw; layer.height = ch; }
+  var prev = ctx;
+  ctx = lctx;
+  ctx.setTransform(DPR, 0, 0, DPR, pad * DPR, pad * DPR);
+  ctx.clearRect(-pad, -pad, W + pad * 2, H + pad * 2);
+  ctx.fillStyle = "#efeadd";
+  ctx.fillRect(-pad, -pad, W + pad * 2, H + pad * 2);
+  drawTiles();
+  if (!paperTex) paperTex = mainCtx.createPattern(paperTile(), "repeat");
+  if (paperTex) { ctx.save(); ctx.fillStyle = paperTex; ctx.fillRect(-pad, -pad, W + pad * 2, H + pad * 2); ctx.restore(); }
+  drawInk();
+  drawWeave(now);
+  ctx = prev;
+  lTag = { x: V.x, y: V.y, z: V.z, pad: pad, w: W, h: H };
+  weaveDirty = false;
+}
+
 function frame(now) {
   requestAnimationFrame(frame);
   stepMotion(now);
   if (!dirty) return;
   dirty = false;
 
+  buildKnotClusters();
+
+  var ws = worldSize();
+  var needs = weaveDirty || !lTag || lTag.w !== W || lTag.h !== H;
+  if (!needs && lTag.z === V.z) {
+    var dx = (lTag.x - V.x) * ws, dy = (lTag.y - V.y) * ws;
+    if (Math.abs(dx) > LAYER_PAD - 4 || Math.abs(dy) > LAYER_PAD - 4) needs = true;
+  } else if (!needs && !pinch && !pointerDown) {
+    needs = true;   /* a settled zoom deserves a clean redraw */
+  }
+  if (needs) renderLayer(now);
+
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   ctx.fillStyle = "#efeadd";
   ctx.fillRect(0, 0, W, H);
+  if (lTag) {
+    var sc = Math.pow(2, V.z - lTag.z);
+    var lw = lTag.w + lTag.pad * 2, lh = lTag.h + lTag.pad * 2;
+    var dstX = (-lTag.pad - W / 2) * sc + (lTag.x - V.x) * ws + W / 2;
+    var dstY = (-lTag.pad - H / 2) * sc + (lTag.y - V.y) * ws + H / 2;
+    ctx.drawImage(layer, dstX, dstY, lw * sc, lh * sc);
+  }
 
-  drawTiles();
-
-  if (!paperTex) paperTex = makePaper();
-  if (paperTex) { ctx.save(); ctx.fillStyle = paperTex; ctx.fillRect(0, 0, W, H); ctx.restore(); }
-
-  drawInk();
   drawWarp();
-  drawWeave(now);
   drawLive(now);
   drawPresence(now);
   drawDemo(now);
@@ -1260,8 +1335,8 @@ function stepMotion(now) {
     clampView(); dirty = true;
   }
   var targetWarp = traceMode ? 1 : 0;
-  if (Math.abs(warp - targetWarp) > 0.005) { warp += (targetWarp - warp) * 0.14; dirty = true; }
-  else if (warp !== targetWarp) { warp = targetWarp; dirty = true; }
+  if (Math.abs(warp - targetWarp) > 0.005) { warp += (targetWarp - warp) * 0.14; dirty = true; weaveDirty = true; }
+  else if (warp !== targetWarp) { warp = targetWarp; dirty = true; weaveDirty = true; }
 
   /* unweaving: hold to run the fabric backwards, release and it reweaves */
   if (Store.bounds.t1 > 0) {
@@ -1270,11 +1345,11 @@ function stepMotion(now) {
       if (timeCursor === Infinity) timeCursor = Store.bounds.t1 + 1;
       timeCursor -= span * (dt / 1000) * 0.30;      /* about three seconds to the beginning */
       if (timeCursor < Store.bounds.t0 - 1) timeCursor = Store.bounds.t0 - 1;
-      dirty = true;
+      dirty = true; weaveDirty = true;
     } else if (timeCursor !== Infinity) {
       timeCursor += span * (dt / 1000) * 0.45;      /* and a little over two back to now */
       if (timeCursor >= Store.bounds.t1) { timeCursor = Infinity; }
-      dirty = true;
+      dirty = true; weaveDirty = true;
     }
   }
 }
@@ -1456,7 +1531,7 @@ function tapAt(sx, sy) {
     if (d < reach) { var score = (reach - d) + kn.w * 0.3; if (score > bestScore) { bestScore = score; best = kn; } }
   }
   openKnot = (best && best !== openKnot) ? best : null;
-  dirty = true;
+  weaveDirty = true; dirty = true;
 }
 
 /* ---------- leaving a thread ---------- */

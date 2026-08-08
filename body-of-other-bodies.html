@@ -1,0 +1,1967 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#08090a">
+<meta name="description" content="Body of Other Bodies — a browser instrument in which your tracked body is rendered as a population of small tracked bodies.">
+<title>Body of Other Bodies</title>
+<style>
+  :root{
+    --ground:#08090a;
+    --bone:#e7dcc4;
+    --bone-dim:#8e8878;
+    --cool:#63b7d6;
+    --ink:#cfc7b4;
+    --muted:#7c7768;
+    --line:#26282a;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:#08090a;color:#cfc7b4;overscroll-behavior:none}
+  body{
+    font-family:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+    -webkit-font-smoothing:antialiased;
+    -webkit-tap-highlight-color:transparent;
+    overflow:hidden;
+    touch-action:none;
+  }
+  #stage{position:fixed;inset:0;overflow:hidden;background:#08090a}
+  #cam{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;left:-10px;top:-10px}
+  #field{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+
+  .lbl{font-size:10px;letter-spacing:.18em;text-transform:uppercase;font-weight:600}
+
+  /* ---------- title / rest ---------- */
+  #rest{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;gap:34px;
+    padding:max(24px,env(safe-area-inset-top)) 24px max(24px,env(safe-area-inset-bottom));
+    background:#08090a;z-index:40;text-align:center
+  }
+  #rest h1{
+    margin:0;font-family:ui-monospace,Menlo,monospace;font-weight:500;
+    font-size:clamp(20px,5.4vw,34px);letter-spacing:.30em;line-height:1.5;
+    color:#e7dcc4;text-transform:uppercase;max-width:14ch
+  }
+  #rest .sub{margin:0;color:#7c7768;max-width:34ch;line-height:1.9}
+  #enter{
+    appearance:none;background:transparent;color:#e7dcc4;border:1px solid #55503f;
+    padding:16px 30px;border-radius:0;cursor:pointer;font:inherit;
+    font-size:11px;letter-spacing:.28em;text-transform:uppercase;
+    transition:background-color .16s ease,color .16s ease,border-color .16s ease
+  }
+  #enter:hover,#enter:focus-visible{background:#e7dcc4;color:#08090a;border-color:#e7dcc4}
+  #enter[disabled]{opacity:.45;cursor:progress}
+  #rest .fine{margin:0;color:#4d4a41;font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+
+  /* ---------- fault ---------- */
+  #fault{
+    position:absolute;inset:0;z-index:60;display:none;flex-direction:column;
+    align-items:center;justify-content:center;gap:22px;padding:32px 26px;
+    background:#08090a;text-align:center
+  }
+  #fault.on{display:flex}
+  #fault .code{color:#63b7d6}
+  #fault p{margin:0;max-width:38ch;color:#9a9486;line-height:1.85;font-size:13px}
+  #fault .hint{color:#6c675b;font-size:11px;line-height:1.9;max-width:40ch}
+  .btnrow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .tbtn{
+    appearance:none;background:transparent;color:#cfc7b4;border:1px solid #3a382f;
+    padding:12px 20px;cursor:pointer;font:inherit;font-size:10px;letter-spacing:.22em;
+    text-transform:uppercase
+  }
+  .tbtn:hover,.tbtn:focus-visible{background:#cfc7b4;color:#08090a;border-color:#cfc7b4}
+
+  /* ---------- controls ---------- */
+  #dock{
+    position:absolute;left:0;right:0;bottom:0;z-index:30;
+    display:flex;justify-content:center;gap:6px;
+    padding:12px max(12px,env(safe-area-inset-left))
+            max(14px,calc(env(safe-area-inset-bottom) + 10px))
+            max(12px,env(safe-area-inset-right));
+    opacity:0;transform:translateY(10px);pointer-events:none;
+    transition:opacity .28s ease,transform .28s ease
+  }
+  #dock.on{opacity:1;transform:none;pointer-events:auto}
+  .ctl{
+    appearance:none;background:rgba(8,9,10,.62);border:1px solid #2c2e2f;color:#b6ae9c;
+    width:52px;height:52px;display:grid;place-items:center;cursor:pointer;padding:0;
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)
+  }
+  .ctl:hover,.ctl:focus-visible{color:#08090a;background:#e7dcc4;border-color:#e7dcc4}
+  .ctl[aria-pressed="true"]{color:#63b7d6;border-color:#3c5f6e}
+  .ctl svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.35;
+    stroke-linecap:round;stroke-linejoin:round}
+  .ctl .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+
+  /* ---------- status whisper ---------- */
+  #whisper{
+    position:absolute;left:0;right:0;top:50%;transform:translateY(-50%);
+    z-index:20;text-align:center;color:#5d5a51;pointer-events:none;
+    opacity:0;transition:opacity .6s ease
+  }
+  #whisper.on{opacity:1}
+
+  /* ---------- info ---------- */
+  #info{
+    position:absolute;inset:0;z-index:50;display:none;
+    background:rgba(6,7,8,.94);
+    padding:max(20px,env(safe-area-inset-top)) 20px max(20px,env(safe-area-inset-bottom));
+    overflow:auto;-webkit-overflow-scrolling:touch
+  }
+  #info.on{display:block}
+  #info .wrap{max-width:560px;margin:0 auto;padding:14px 0 60px}
+  #info h2{margin:0 0 6px;font-size:12px;letter-spacing:.26em;text-transform:uppercase;color:#e7dcc4;font-weight:600}
+  #info .rule{height:1px;background:#23262a;margin:16px 0}
+  #info dl{margin:0;display:grid;grid-template-columns:minmax(96px,auto) 1fr;gap:10px 16px}
+  #info dt{color:#63b7d6;font-size:10px;letter-spacing:.16em;text-transform:uppercase;padding-top:2px}
+  #info dd{margin:0;color:#948d7e;font-size:12px;line-height:1.75}
+  #info p{color:#948d7e;font-size:12px;line-height:1.8;margin:0 0 12px}
+  #info .cycle{color:#6f6a5d;font-size:10px;letter-spacing:.14em;text-transform:uppercase;line-height:2.1}
+  #closeinfo{position:sticky;top:0;float:right;margin:0 0 8px 12px}
+
+  #devbadge{
+    position:absolute;left:10px;top:max(10px,env(safe-area-inset-top));z-index:45;
+    display:none;color:#08090a;background:#c8452c;padding:5px 9px;font-size:9px;
+    letter-spacing:.2em;text-transform:uppercase
+  }
+  #devbadge.on{display:block}
+
+  @media (prefers-reduced-motion:reduce){
+    #dock,#enter,.ctl,#whisper{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<div id="stage">
+  <video id="cam" playsinline muted autoplay></video>
+  <canvas id="field"></canvas>
+
+  <p id="whisper" class="lbl">No body in frame</p>
+
+  <div id="devbadge">Dev inject — not camera tracking</div>
+
+  <div id="dock" role="group" aria-label="Instrument controls">
+    <button class="ctl" id="c-flip" type="button" aria-label="Switch camera">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><path d="M9.5 13.5a2.5 2.5 0 0 1 4.6-1.4"/><path d="M14.5 13.5a2.5 2.5 0 0 1-4.6 1.4"/><path d="M14.1 10.6v1.5h-1.5"/><path d="M9.9 16.4v-1.5h1.5"/></svg>
+    </button>
+    <button class="ctl" id="c-cam" type="button" aria-label="Camera visibility">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-6 10-6 10 6 10 6-3.6 6-10 6S2 12 2 12z"/><circle cx="12" cy="12" r="2.6"/></svg>
+    </button>
+    <button class="ctl" id="c-mem" type="button" aria-label="Ghost murmur" aria-pressed="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="8" cy="7" r="2.1"/><path d="M8 9.4v5M5.7 11.2h4.6M8 14.4l-1.6 3.4M8 14.4l1.6 3.4"/><circle cx="16" cy="7" r="2.1" stroke-dasharray="1.6 1.7"/><path d="M16 9.4v5M13.7 11.2h4.6M16 14.4l-1.6 3.4M16 14.4l1.6 3.4" stroke-dasharray="1.6 1.7"/></svg>
+    </button>
+    <button class="ctl" id="c-reset" type="button" aria-label="Reset population and session memory">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.6-5.9"/><path d="M20 4v4.4h-4.4"/></svg>
+    </button>
+    <button class="ctl" id="c-info" type="button" aria-label="About this instrument">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6"/><path d="M12 7.6v.9"/></svg>
+    </button>
+  </div>
+
+  <div id="info" role="dialog" aria-modal="true" aria-label="About Body of Other Bodies">
+    <div class="wrap">
+      <button class="tbtn" id="closeinfo" type="button">Close</button>
+      <h2>Body of Other Bodies</h2>
+      <p>Your body is detected by the camera and rendered as a population. Every small figure is
+      an individual with its own scale, lag, mobility, preferred distance from neighbours and
+      memory. None of them is you. Together they are.</p>
+      <div class="rule"></div>
+      <p class="cycle">World<sub>t</sub> + Body<sub>t</sub> &nbsp;→&nbsp; Encounter &nbsp;→&nbsp; World<sub>t+1</sub> + Body<sub>t+1</sub></p>
+      <p class="cycle">Corporeal → embed → population → relation → aggregation → composite body</p>
+      <div class="rule"></div>
+      <dl>
+        <dt>Privacy</dt><dd>Camera frames are processed entirely inside this page. Nothing is
+          uploaded, recorded or stored. There is no account and no server. Close the tab and the
+          population is gone.</dd>
+        <dt>Space</dt><dd>Body space — the camera's own coordinate field. Not geographic, not SLAM.</dd>
+        <dt>Murmur</dt><dd>Recent organisations of the population stay faintly present where the
+          body has moved away from them. Stand still and they converge into you and disappear.</dd>
+        <dt>Confidence</dt><dd>Where the model is unsure of you, the population loosens, drifts and
+          detaches. Occlude a limb and watch its inhabitants hesitate, then remember, then dissolve.</dd>
+        <dt>Habitude</dt><dd>The session remembers where movement has already been, and organises
+          more tightly there. It remembers movement only. It infers nothing about you.</dd>
+        <dt>Hold</dt><dd>Press and hold on any small body to see its own history and its current
+          relations. Release to let it go.</dd>
+      </dl>
+      <div class="rule"></div>
+      <dl>
+        <dt>Controls</dt><dd>Tap or click the field to reveal them. Camera switch · camera
+          visibility · murmur · reset · this panel.</dd>
+        <dt>Keys</dt><dd>C camera visibility · M murmur · F flip · R reset · I info · Esc close.</dd>
+      </dl>
+      <div class="rule"></div>
+      <p style="color:#5d5a51">Unsettled Atlas — an experimental browser instrument.
+        <a href="index.html" style="color:#63b7d6">Back to the index</a></p>
+    </div>
+  </div>
+
+  <div id="fault">
+    <p class="lbl code" id="fault-code">Camera unavailable</p>
+    <p id="fault-msg"></p>
+    <p class="hint" id="fault-hint"></p>
+    <div class="btnrow">
+      <button class="tbtn" id="fault-retry" type="button">Try again</button>
+      <button class="tbtn" id="fault-info" type="button">What this needs</button>
+    </div>
+  </div>
+
+  <div id="rest">
+    <h1>Body of<br>Other Bodies</h1>
+    <p class="sub lbl" id="rest-sub">A camera. A body. A population that agrees to be it.</p>
+    <button id="enter" type="button">Enter body</button>
+    <p class="fine" id="rest-fine">Camera stays in this page</p>
+  </div>
+</div>
+
+<script type="module">
+/* ============================================================================
+   BODY OF OTHER BODIES
+   Real camera → real pose inference → a population of small articulated bodies
+   that negotiates, remembers, doubts and inhabits the posture it is given.
+   ========================================================================== */
+
+const Q = new URLSearchParams(location.search);
+const DEV = Q.get('dev') === '1';
+
+/* ---------------------------------------------------------------- constants */
+const LIB_BASES = [
+  Q.get('lib'),
+  'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@1.0.1',
+  'https://unpkg.com/@mediapipe/tasks-vision@1.0.1',
+].filter(Boolean);
+
+const MODEL_URL = Q.get('model') ||
+  'https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task';
+
+// BlazePose 33-point indices we rely on
+const NOSE=0, L_EAR=7, R_EAR=8, L_SHO=11, R_SHO=12, L_ELB=13, R_ELB=14,
+      L_WRI=15, R_WRI=16, L_HIP=23, R_HIP=24, L_KNE=25, R_KNE=26,
+      L_ANK=27, R_ANK=28;
+
+// territories
+const T_HEAD=0, T_NECK=1, T_LSHO=2, T_RSHO=3, T_CHEST=4, T_CORE=5, T_PELV=6,
+      T_LUARM=7, T_LFARM=8, T_RUARM=9, T_RFARM=10,
+      T_LTHI=11, T_LSHIN=12, T_RTHI=13, T_RSHIN=14;
+const NT = 15;
+
+const TERR_NAME = ['head','neck','left shoulder','right shoulder','chest','core','pelvis',
+  'left upper arm','left forearm','right upper arm','right forearm',
+  'left thigh','left shin','right thigh','right shin'];
+
+// kind: 0 torso-frame, 1 bone, 2 ball, 3 head
+const TERR = [
+  {k:3, w:6.0},                                             // head
+  {k:2, w:2.0},                                             // neck (ball on neck base)
+  {k:2, w:3.0}, {k:2, w:3.0},                               // shoulders
+  {k:0, lo:0.60, hi:1.12, w:11.0},                          // chest
+  {k:0, lo:0.28, hi:0.60, w:9.0},                           // core
+  {k:0, lo:-0.22, hi:0.28, w:7.5},                          // pelvis
+  {k:1, a:L_SHO, b:L_ELB, wf:0.160, w:7.0},                 // L upper arm
+  {k:1, a:L_ELB, b:L_WRI, wf:0.135, w:7.0},                 // L forearm
+  {k:1, a:R_SHO, b:R_ELB, wf:0.160, w:7.0},                 // R upper arm
+  {k:1, a:R_ELB, b:R_WRI, wf:0.135, w:7.0},                 // R forearm
+  {k:1, a:L_HIP, b:L_KNE, wf:0.225, w:11.0},                // L thigh
+  {k:1, a:L_KNE, b:L_ANK, wf:0.165, w:9.0},                 // L shin
+  {k:1, a:R_HIP, b:R_KNE, wf:0.225, w:11.0},                // R thigh
+  {k:1, a:R_KNE, b:R_ANK, wf:0.165, w:9.0},                 // R shin
+];
+
+// landmarks whose visibility feeds each territory's confidence
+const TERR_LM = [
+  [NOSE,L_EAR,R_EAR], [L_SHO,R_SHO,NOSE], [L_SHO], [R_SHO],
+  [L_SHO,R_SHO], [L_SHO,R_SHO,L_HIP,R_HIP], [L_HIP,R_HIP],
+  [L_SHO,L_ELB], [L_ELB,L_WRI], [R_SHO,R_ELB], [R_ELB,R_WRI],
+  [L_HIP,L_KNE], [L_KNE,L_ANK], [R_HIP,R_KNE], [R_KNE,R_ANK],
+];
+
+/* population sizing tiers */
+const MOBILE = /Android|iPhone|iPad|iPod|Mobile|Silk/i.test(navigator.userAgent) ||
+               (navigator.maxTouchPoints > 1 && Math.min(screen.width, screen.height) < 820);
+const MAX_POP   = MOBILE ? 300 : 620;
+const START_POP = MOBILE ? 165 : 380;
+const MIN_POP   = 80;
+
+/* habitude grid, in torso-length units around the pelvis */
+const HB_COLS=26, HB_ROWS=26, HB_X=2.6, HB_Y0=-1.9, HB_Y1=2.3;
+
+/* ghost murmur */
+const GHOST_SLOTS = 7;      // ring depth
+const GHOST_EVERY = 4;      // frames between snapshots
+
+/* ---------------------------------------------------------------- utilities */
+const clamp = (v,a,b)=> v<a?a:(v>b?b:v);
+const lerp  = (a,b,t)=> a + (b-a)*t;
+const TAU = Math.PI*2;
+
+/* deterministic per-id hash → [0,1) */
+function hash1(n, salt){
+  let h = (n*374761393 + salt*668265263) >>> 0;
+  h = (h ^ (h >>> 13)) >>> 0;
+  h = Math.imul(h, 1274126177) >>> 0;
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+
+/* one-euro-ish adaptive smoothing for landmark streams */
+function smoothTo(cur, tgt, dt, speed){
+  const tau = clamp(0.085 - speed*0.65, 0.018, 0.085);
+  return cur + (tgt - cur) * (1 - Math.exp(-dt/tau));
+}
+
+/* ------------------------------------------------------------------ palette */
+const PAL = {
+  bone:  [231, 220, 196],
+  warm:  [214, 189, 145],
+  cool:  [ 99, 183, 214],
+  ghost: [124, 168, 196],
+};
+
+/* =========================================================================
+   CONSTITUENT
+   ======================================================================= */
+class Small {
+  constructor(id, terr){
+    this.id = id;
+    this.terr = terr;
+
+    // persistent parametric address inside its territory
+    const t = TERR[terr];
+    if (t.k === 0){                       // torso frame: u along, v across
+      this.u = hash1(id,1);
+      this.v = (hash1(id,2)*2-1);
+      this.v = Math.sign(this.v)*Math.pow(Math.abs(this.v),0.72); // fuller at edges
+    } else if (t.k === 1){                // bone: u along, v across
+      this.u = hash1(id,1);
+      this.v = (hash1(id,2)*2-1);
+      this.v = Math.sign(this.v)*Math.pow(Math.abs(this.v),0.62);
+    } else {                              // ball / head: polar
+      this.u = Math.sqrt(hash1(id,1));
+      this.v = hash1(id,2);
+    }
+    this.d = hash1(id,3)*2-1;             // depth address → scale + alpha
+
+    // persistent individuality
+    this.sc      = 0.80 + hash1(id,11)*0.52;          // body size
+    this.bias    = (hash1(id,12)*2-1)*0.34;           // orientation bias
+    this.stiff   = 0.42 + hash1(id,13)*0.92;          // how eagerly it arrives
+    this.mob     = 0.35 + hash1(id,14)*1.25;          // restlessness
+    this.sep     = 0.52 + hash1(id,15)*0.72;          // preferred neighbour distance
+    this.memDur  = 0.55 + hash1(id,16)*1.9;           // how long it holds its own past
+    this.phase   = hash1(id,17)*TAU;                  // private clock
+    this.gait    = 0.55 + hash1(id,18)*1.5;           // private tempo
+    this.mirror  = hash1(id,19) < 0.5 ? 1 : -1;       // handedness
+    this.pull    = 0.55 + hash1(id,20)*1.0;           // susceptibility to neighbours
+    this.armRest = (hash1(id,21)*2-1)*0.5;            // resting arm carriage
+    this.legRest = 0.55 + hash1(id,22)*0.7;           // stance width
+
+    // dynamics
+    this.x = 0; this.y = 0; this.vx = 0; this.vy = 0;
+    this.ang = -Math.PI/2; this.angV = 0;
+    this.tx = 0; this.ty = 0; this.hasT = false;
+    this.hx = 0; this.hy = 0;                          // slow home (memory pull)
+    this.ten = 0;                                      // strain
+    this.sup = 0;                                      // support / presence 0..1
+    this.nvx = 0; this.nvy = 0;                        // direction of strongest relation
+    this.nrel = 0;                                     // strength of that relation
+    this.lend = 0; this.lendTo = -1; this.lendTerr = 0;// exchange between populations
+    this.bridge = -1;                                  // reaching across a boundary
+    this.fam = 0;                                      // familiarity where it stands
+    this.born = false;
+  }
+}
+
+/* =========================================================================
+   BODY  — one tracked person, one population
+   ======================================================================= */
+class Body {
+  constructor(index){
+    this.index = index;
+    this.pop = [];
+    this.G = null;              // resolved geometry, screen px
+    this.conf = new Float32Array(NT).fill(0);
+    this.support = new Float32Array(NT).fill(0);
+    this.lastSeg = new Float32Array(NT*5); // frozen geometry per territory
+    this.hasLast = new Uint8Array(NT);
+    this.raw = null;            // latest raw landmarks
+    this.newRaw = false;
+    this.prevL = 0; this.prevHx = 0; this.prevHy = 0; this.prevT = 0;
+    this.jump = 0;              // disagreement between successive detections
+    this.sm = null;             // smoothed landmarks (screen px + z + vis)
+    this.seen = 0;              // presence 0..1
+    this.lastSeenT = -1e9;
+    this.hb = new Float32Array(HB_COLS*HB_ROWS); // habitude
+    this.hbTotal = 0;
+    this.hbCursor = 0;
+    this.ghost = [];            // ring of Float32Array(n*3)
+    this.ghostAge = [];
+    this.ghostI = 0;
+    this.frame = 0;
+    this.buildPopulation();
+  }
+
+  /* weighted interleave so that ANY prefix of the array is proportional */
+  buildPopulation(){
+    const acc = new Float32Array(NT);
+    const wsum = TERR.reduce((s,t)=>s+t.w,0);
+    for (let i=0;i<MAX_POP;i++){
+      let best=0, bv=-1;
+      for (let t=0;t<NT;t++){
+        acc[t] += TERR[t].w/wsum;
+        if (acc[t] > bv){ bv = acc[t]; best = t; }
+      }
+      acc[best] -= 1;
+      this.pop.push(new Small(i, best));
+    }
+  }
+
+  resetMemory(){
+    this.hb.fill(0); this.hbTotal = 0;
+    this.ghost.length = 0; this.ghostAge.length = 0; this.ghostI = 0;
+    for (const c of this.pop){ c.born=false; c.ten=0; c.sup=0; c.fam=0;
+      c.lend=0; c.lendTo=-1; c.vx=0; c.vy=0; }
+  }
+}
+
+/* =========================================================================
+   INSTRUMENT
+   ======================================================================= */
+const video  = document.getElementById('cam');
+const canvas = document.getElementById('field');
+const ctx    = canvas.getContext('2d', { alpha:false, desynchronized:true });
+
+const ui = {
+  rest: document.getElementById('rest'),
+  restSub: document.getElementById('rest-sub'),
+  restFine: document.getElementById('rest-fine'),
+  enter: document.getElementById('enter'),
+  fault: document.getElementById('fault'),
+  faultCode: document.getElementById('fault-code'),
+  faultMsg: document.getElementById('fault-msg'),
+  faultHint: document.getElementById('fault-hint'),
+  dock: document.getElementById('dock'),
+  info: document.getElementById('info'),
+  whisper: document.getElementById('whisper'),
+  devbadge: document.getElementById('devbadge'),
+};
+
+const S = {
+  phase: 'rest',            // rest | ready | working | fault
+  stream: null,
+  facing: 'user',
+  mirror: true,
+  camView: 1,               // 0 hidden, 1 dim, 2 present
+  memory: true,
+  landmarker: null,
+  libBase: null,
+  wasmBase: null,
+  dpr: 1,
+  w: 0, h: 0,
+  vw: 0, vh: 0,
+  cover: {s:1, ox:0, oy:0},
+  bodies: [],
+  numPoses: MOBILE ? 1 : 2,
+  active: START_POP,
+  lastInfer: 0,
+  inferMs: 0,
+  inferTries: 0,
+  inferFails: 0,
+  minInferMs: MOBILE ? 42 : 24,
+  lastFrameTime: 0,
+  fps: 60, fpsAcc: 0, fpsN: 0, adaptT: 0,
+  t: 0,
+  ghostDrawn: 0,
+  relOn: 1,
+  habOn: 1,
+  running: false,
+  raf: 0,
+  dockTimer: 0,
+  injected: null,           // dev harness only
+  injectUntil: 0,
+  hold: null,
+  detectCount: 0,
+  loadingModel: null,
+  camGen: 0,
+};
+
+/* ------------------------------------------------------------------ layout */
+function resize(){
+  const rect = document.getElementById('stage').getBoundingClientRect();
+  const dprCap = MOBILE ? 2 : 2;
+  S.dpr = Math.min(window.devicePixelRatio || 1, dprCap);
+  S.w = Math.max(1, Math.round(rect.width));
+  S.h = Math.max(1, Math.round(rect.height));
+  canvas.width  = Math.round(S.w * S.dpr);
+  canvas.height = Math.round(S.h * S.dpr);
+  canvas.style.width  = S.w + 'px';
+  canvas.style.height = S.h + 'px';
+  ctx.setTransform(S.dpr,0,0,S.dpr,0,0);
+  computeCover();
+}
+function computeCover(){
+  S.vw = video.videoWidth || 0;
+  S.vh = video.videoHeight || 0;
+  if (!S.vw || !S.vh){ S.cover = {s:1, ox:0, oy:0}; return; }
+  const s = Math.max(S.w/S.vw, S.h/S.vh);
+  S.cover = { s, ox:(S.w - S.vw*s)/2, oy:(S.h - S.vh*s)/2 };
+}
+/* normalized landmark → screen px */
+function mapX(nx){ const x = S.mirror ? (1-nx) : nx; return x*S.vw*S.cover.s + S.cover.ox; }
+function mapY(ny){ return ny*S.vh*S.cover.s + S.cover.oy; }
+
+let resizeTimer = 0;
+function onResize(){
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(()=>{ resize(); }, 60);
+  resize();
+}
+window.addEventListener('resize', onResize, {passive:true});
+window.addEventListener('orientationchange', ()=> setTimeout(onResize, 260), {passive:true});
+if (window.visualViewport) window.visualViewport.addEventListener('resize', onResize, {passive:true});
+
+/* -------------------------------------------------------------- model load */
+async function loadLibrary(){
+  let lastErr = null;
+  for (const base of LIB_BASES){
+    try {
+      const mod = await import(/* @vite-ignore */ `${base}/vision_bundle.mjs`);
+      S.libBase = base;
+      S.wasmBase = `${base}/wasm`;
+      return mod;
+    } catch (e){ lastErr = e; }
+  }
+  throw lastErr || new Error('no library source reachable');
+}
+
+function withTimeout(p, ms, what){
+  return Promise.race([p, new Promise((_,rej)=>
+    setTimeout(()=>rej(new Error(what + ' timed out')), ms))]);
+}
+
+/* Fetch the model ourselves rather than handing the task a URL: a 404 or a
+   truncated file otherwise produces a landmarker that resolves happily and
+   then never detects anything, which reads to the user as a dead screen. */
+async function fetchModel(url){
+  const res = await fetch(url, {cache:'force-cache'});
+  if (!res.ok) throw new Error('model http ' + res.status);
+  const buf = new Uint8Array(await res.arrayBuffer());
+  if (buf.byteLength < 200000) throw new Error('model file is ' + buf.byteLength + ' bytes');
+  return buf;
+}
+
+async function loadModel(){
+  if (S.landmarker) return S.landmarker;
+  if (S.loadingModel) return S.loadingModel;
+  S.loadingModel = (async ()=>{
+    const vision = await loadLibrary();
+    const [fileset, modelBuf] = await Promise.all([
+      vision.FilesetResolver.forVisionTasks(S.wasmBase),
+      withTimeout(fetchModel(MODEL_URL), 45000, 'model download'),
+    ]);
+    const mk = (delegate)=> vision.PoseLandmarker.createFromOptions(fileset, {
+      baseOptions: { modelAssetBuffer: modelBuf.slice(), delegate },
+      runningMode: 'VIDEO',
+      numPoses: S.numPoses,
+      minPoseDetectionConfidence: 0.45,
+      minPosePresenceConfidence: 0.45,
+      minTrackingConfidence: 0.45,
+      outputSegmentationMasks: false,
+    });
+    const forced = Q.get('delegate');
+    let lm;
+    if (forced === 'cpu' || forced === 'gpu'){
+      lm = await withTimeout(mk(forced.toUpperCase()), 30000, 'model load');
+    } else {
+      try { lm = await withTimeout(mk('GPU'), 30000, 'model load'); }
+      catch(e){ lm = await withTimeout(mk('CPU'), 30000, 'model load'); }
+    }
+    S.landmarker = lm;
+    return lm;
+  })();
+  try { return await S.loadingModel; }
+  catch(e){ S.loadingModel = null; throw e; }
+}
+
+/* prefetch while the title is up — entering should be immediate */
+loadModel().then(()=>{
+  if (S.phase === 'rest'){ ui.restFine.textContent = 'Camera stays in this page · model ready'; }
+}).catch(()=>{ /* surfaced on enter */ });
+
+/* ------------------------------------------------------------------ camera */
+async function startCamera(facing){
+  stopCamera();
+  const gen = ++S.camGen;
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia){
+    throw Object.assign(new Error('unsupported'), {kind:'unsupported'});
+  }
+  const want = {
+    audio:false,
+    video:{
+      // ask for resolution but never for an aspect ratio: the device keeps its
+      // own orientation and the cover transform handles whatever comes back
+      facingMode: facing === 'environment' ? {ideal:'environment'} : {ideal:'user'},
+      width:  {ideal: 960},
+      frameRate:{ideal:30, max:60},
+    }
+  };
+  let stream;
+  try { stream = await navigator.mediaDevices.getUserMedia(want); }
+  catch(e){
+    if (e && (e.name==='OverconstrainedError' || e.name==='NotFoundError')){
+      stream = await navigator.mediaDevices.getUserMedia({audio:false, video:true});
+    } else throw e;
+  }
+  if (gen !== S.camGen){ stream.getTracks().forEach(t=>t.stop()); return; }
+  S.stream = stream;
+  S.facing = facing;
+  const track = stream.getVideoTracks()[0];
+  const settings = track.getSettings ? track.getSettings() : {};
+  const facingReal = settings.facingMode || facing;
+  S.mirror = facingReal !== 'environment';
+  track.addEventListener('ended', ()=>{
+    if (S.phase === 'working') fault('camera-lost');
+  });
+  video.srcObject = stream;
+  await video.play().catch(()=>{});
+  await waitForVideo();
+  computeCover();
+}
+function waitForVideo(){
+  return new Promise((res)=>{
+    if (video.videoWidth) return res();
+    const on = ()=>{ video.removeEventListener('loadedmetadata', on); res(); };
+    video.addEventListener('loadedmetadata', on);
+    setTimeout(res, 3500);
+  });
+}
+function stopCamera(){
+  if (S.stream){ S.stream.getTracks().forEach(t=>t.stop()); S.stream = null; }
+  try { video.srcObject = null; } catch(_){}
+}
+
+async function listCameras(){
+  try {
+    const d = await navigator.mediaDevices.enumerateDevices();
+    return d.filter(x=>x.kind==='videoinput');
+  } catch(_){ return []; }
+}
+
+/* ------------------------------------------------------------------- fault */
+const FAULTS = {
+  'denied': ['Camera blocked',
+    'This instrument has no body without one. The browser refused access to the camera.',
+    'Open the padlock or camera icon in the address bar, allow camera for this page, then try again. On iOS, Settings → Safari → Camera.'],
+  'none': ['No camera found',
+    'No video input is attached to this device.',
+    'Connect a webcam, or open this page on a phone.'],
+  'insecure': ['Needs a secure page',
+    'Browsers only hand over the camera over https, or from localhost.',
+    'Serve this file over https, or run it from http://localhost.'],
+  'unsupported': ['Browser cannot do this',
+    'This browser does not expose getUserMedia to the page.',
+    'Try a current Chrome, Edge, Firefox or Safari.'],
+  'model': ['Model did not load',
+    'The pose model or its runtime could not be fetched, so nothing can be detected.',
+    'Check the network and reload. The runtime comes from a CDN; you can self-host it and pass ?lib=<base>&model=<url>.'],
+  'camera-lost': ['Camera went away',
+    'The video track ended — the device was unplugged, taken by another app, or revoked.',
+    'Press try again to re-acquire it.'],
+  'busy': ['Camera in use',
+    'Another application or tab is holding the camera.',
+    'Close the other one and try again.'],
+  'unknown': ['Camera could not start',
+    'The browser would not hand over a camera, and did not say why.',
+    'Check that camera access is allowed for this page, that no other app is holding the camera, then press try again.'],
+  'blind': ['Nothing is being detected',
+    'The camera is running but the pose model returned nothing at all, so there is no body to inhabit.',
+    'This usually means the model or its runtime failed to initialise. Reload the page; if it persists you can self-host the runtime and pass ?lib=<base>&model=<url>.'],
+};
+function fault(kind, detail){
+  const f = FAULTS[kind] || FAULTS.unknown;
+  ui.faultCode.textContent = f[0];
+  ui.faultMsg.textContent  = detail ? `${f[1]} (${detail})` : f[1];
+  ui.faultHint.textContent = f[2];
+  ui.fault.classList.add('on');
+  ui.rest.style.display = 'none';
+  S.phase = 'fault';
+  S.running = false;
+  cancelAnimationFrame(S.raf);
+}
+/* browsers do not agree on which DOMException a refusal produces, so ask the
+   permission itself before settling on a message */
+async function classifyAsync(e){
+  const kind = classify(e);
+  if (kind === 'unknown' || kind === 'unsupported' || kind === 'none' || kind === 'busy'){
+    try {
+      const st = await navigator.permissions.query({name:'camera'});
+      if (st && st.state === 'denied') return 'denied';
+    } catch(_){}
+  }
+  return kind;
+}
+function classify(e){
+  if (!window.isSecureContext) return 'insecure';
+  if (!e) return 'unknown';
+  if (e.kind === 'unsupported') return 'unsupported';
+  switch(e.name){
+    case 'NotAllowedError': case 'SecurityError': return 'denied';
+    case 'NotFoundError': case 'OverconstrainedError': return 'none';
+    case 'NotReadableError': case 'AbortError': return 'busy';
+    case 'NotSupportedError': case 'TypeError': return 'unsupported';
+    default: return 'unknown';
+  }
+}
+
+/* -------------------------------------------------------------------- enter */
+async function enter(){
+  ui.enter.disabled = true;
+  ui.restFine.textContent = 'Loading the model…';
+  try {
+    await loadModel();
+  } catch(e){
+    ui.enter.disabled = false;
+    fault('model', (e && e.message) ? String(e.message).slice(0,70) : '');
+    return;
+  }
+  ui.restFine.textContent = 'Asking for the camera…';
+  try {
+    await startCamera(S.facing);
+  } catch(e){
+    ui.enter.disabled = false;
+    fault(await classifyAsync(e), e && e.name);
+    return;
+  }
+  ui.fault.classList.remove('on');
+  ui.rest.style.display = 'none';
+  S.phase = 'working';
+  resize();
+  if (!S.bodies.length){
+    for (let i=0;i<Math.max(1,S.numPoses);i++) S.bodies.push(new Body(i));
+  }
+  startLoop();
+  revealDock(3600);
+}
+ui.enter.addEventListener('click', enter);
+document.getElementById('fault-retry').addEventListener('click', ()=>{
+  ui.fault.classList.remove('on');
+  if (S.phase === 'fault' && S.landmarker && S.bodies.length){
+    // already had a session: just re-acquire the camera
+    startCamera(S.facing).then(()=>{ S.phase='working'; startLoop(); })
+      .catch(async e=> fault(await classifyAsync(e), e && e.name));
+  } else {
+    ui.rest.style.display = 'flex';
+    ui.enter.disabled = false;
+    ui.restFine.textContent = 'Camera stays in this page';
+    S.phase = 'rest';
+  }
+});
+document.getElementById('fault-info').addEventListener('click', ()=> openInfo());
+
+/* ------------------------------------------------------------------ the run */
+function startLoop(){
+  if (S.running) return;
+  S.running = true;
+  S.lastFrameTime = performance.now();
+  S.raf = requestAnimationFrame(tick);
+}
+function stopLoop(){
+  S.running = false;
+  cancelAnimationFrame(S.raf);
+}
+document.addEventListener('visibilitychange', ()=>{
+  if (document.hidden){ stopLoop(); }
+  else if (S.phase === 'working'){
+    // the track may have died while backgrounded
+    const tr = S.stream && S.stream.getVideoTracks()[0];
+    if (!tr || tr.readyState === 'ended'){
+      startCamera(S.facing).then(()=>startLoop())
+        .catch(async e=>fault(await classifyAsync(e), e && e.name));
+    } else {
+      video.play().catch(()=>{});
+      S.lastFrameTime = performance.now();
+      startLoop();
+    }
+  }
+});
+
+let lastVideoTime = -1;
+function tick(now){
+  if (!S.running) return;
+  S.raf = requestAnimationFrame(tick);
+
+  let dt = (now - S.lastFrameTime)/1000;
+  S.lastFrameTime = now;
+  if (!(dt > 0)) dt = 1/60;
+  dt = Math.min(dt, 0.05);
+  S.t += dt;
+
+  // fps + adaptive population
+  S.fpsAcc += 1/dt; S.fpsN++;
+  if (now - S.adaptT > 900){
+    S.fps = S.fpsAcc / Math.max(1,S.fpsN);
+    S.fpsAcc = 0; S.fpsN = 0; S.adaptT = now;
+    adaptPopulation();
+  }
+
+  // ---- real inference ------------------------------------------------
+  const injecting = S.injected && S.t*1000 < S.injectUntil;
+  if (injecting){
+    applyPoses(S.injected, now);
+    ui.devbadge.classList.add('on');
+  } else {
+    if (S.injected){ S.injected = null; ui.devbadge.classList.remove('on'); }
+    if (S.landmarker && video.readyState >= 2 && video.videoWidth){
+      // detection frequency is separated from render frequency: never let
+      // inference eat more than about a third of the wall clock
+      const gap = Math.max(S.minInferMs, S.inferMs*2.1);
+      if (video.currentTime !== lastVideoTime && now - S.lastInfer >= gap){
+        lastVideoTime = video.currentTime;
+        S.lastInfer = now;
+        if (!S.vw || S.vw !== video.videoWidth || S.vh !== video.videoHeight) computeCover();
+        try {
+          const t0 = performance.now();
+          const r = S.landmarker.detectForVideo(video, now);
+          S.inferMs = S.inferMs ? lerp(S.inferMs, performance.now()-t0, 0.25)
+                                : (performance.now()-t0);
+          if (r && r.landmarks && r.landmarks.length) S.detectCount++;
+          S.inferTries++;
+          S.inferFails = 0;
+          applyPoses(r && r.landmarks ? r.landmarks : [], now);
+        } catch(err){
+          // a dropped frame must never kill the loop, but a stream of them is
+          // a broken instrument and has to say so
+          S.inferTries++; S.inferFails++;
+          if (S.inferFails > 40) fault('blind', String(err && err.message).slice(0,60));
+        }
+      }
+    }
+  }
+
+  update(dt);
+  render(dt);
+}
+
+function adaptPopulation(){
+  if (S.fps < 26 && S.active > MIN_POP){
+    S.active = Math.max(MIN_POP, Math.round(S.active*0.86));
+  } else if (S.fps > 54 && S.active < MAX_POP){
+    S.active = Math.min(MAX_POP, Math.round(S.active*1.07)+4);
+  }
+}
+
+/* ------------------------------------------------- landmarks → bodies (id) */
+function applyPoses(poseList, now){
+  // one person detected twice is one person: drop a second pose that stands
+  // where the first one already is
+  if (poseList.length > 1){
+    const keep = [];
+    for (const lm of poseList){
+      if (!lm || lm.length < 29){ continue; }
+      const hx = (lm[L_HIP].x + lm[R_HIP].x)/2, hy = (lm[L_HIP].y + lm[R_HIP].y)/2;
+      const sy = (lm[L_SHO].y + lm[R_SHO].y)/2, sx = (lm[L_SHO].x + lm[R_SHO].x)/2;
+      const len = Math.hypot(sx-hx, sy-hy) || 1e-3;
+      let dup = false;
+      for (const k of keep){ if (Math.hypot(k.hx-hx, k.hy-hy) < Math.max(len, k.len)*0.75) dup = true; }
+      if (!dup) keep.push({lm, hx, hy, len});
+    }
+    poseList = keep.map(k=>k.lm);
+  }
+  const n = Math.min(poseList.length, S.bodies.length);
+  const used = new Set();
+  // assign each detected pose to the nearest existing body (stable identity)
+  const assign = new Array(S.bodies.length).fill(null);
+  for (let i=0;i<n;i++){
+    const lm = poseList[i];
+    if (!lm || lm.length < 29) continue;
+    const cx = (lm[L_HIP].x + lm[R_HIP].x)/2;
+    let best=-1, bd=1e9;
+    for (let b=0;b<S.bodies.length;b++){
+      if (used.has(b)) continue;
+      const B = S.bodies[b];
+      if (!B.sm || B.seen < 0.05){ if (bd>1e8){ best=b; bd=1e8-1; } continue; }
+      const px = (B.raw[L_HIP].x + B.raw[R_HIP].x)/2;
+      const d = Math.abs(px-cx);
+      if (d < bd){ bd = d; best = b; }
+    }
+    if (best>=0){ assign[best] = lm; used.add(best); }
+  }
+  for (let b=0;b<S.bodies.length;b++){
+    const B = S.bodies[b];
+    if (assign[b]){ B.raw = assign[b]; B.lastSeenT = now; B.newRaw = true; }
+  }
+}
+
+/* ------------------------------------------------------------ per-frame sim */
+function update(dt){
+  for (const B of S.bodies) updateBody(B, dt);
+  if (S.bodies.length > 1){ exchange(S.bodies[0], S.bodies[1], dt);
+                            exchange(S.bodies[1], S.bodies[0], dt); }
+}
+
+function ensureSmoothed(B){
+  if (!B.raw) return false;
+  const n = B.raw.length;
+  if (!B.sm || B.sm.length !== n){
+    B.sm = new Array(n);
+    for (let i=0;i<n;i++) B.sm[i] = {x:mapX(B.raw[i].x), y:mapY(B.raw[i].y), z:B.raw[i].z||0,
+                                     c:1, jx:0, jy:0};
+  }
+  return true;
+}
+
+function updateBody(B, dt){
+  B.frame++;
+  // presence is judged against the actual inference cadence, never against a
+  // fixed window: a slow device must not read as a body that keeps vanishing
+  const gap = Math.max(S.minInferMs, S.inferMs*2.1);
+  const window_ = Math.max(420, gap*2.4);
+  if (B.newRaw){
+    B.newRaw = false;
+    const r = B.raw, tnow = performance.now();
+    const hx = (r[L_HIP].x + r[R_HIP].x)/2, hy = (r[L_HIP].y + r[R_HIP].y)/2;
+    const sx = (r[L_SHO].x + r[R_SHO].x)/2, sy = (r[L_SHO].y + r[R_SHO].y)/2;
+    const nl = Math.hypot(sx-hx, sy-hy) || 1e-3;
+    if (B.prevL){
+      // rates, not raw deltas: moving fast is not the same as teleporting
+      const dtd = clamp((tnow - B.prevT)/1000, 0.02, 0.5);
+      const scaleRate = Math.abs(Math.log(nl/B.prevL))/dtd;
+      const shiftRate = Math.hypot(hx-B.prevHx, hy-B.prevHy)/nl/dtd;
+      const j = Math.max((scaleRate-2.4)/7, (shiftRate-4.5)/9);
+      B.jump = clamp(Math.max(B.jump*0.5, j), 0, 1);
+    }
+    B.prevL = nl; B.prevHx = hx; B.prevHy = hy; B.prevT = tnow;
+  }
+  B.jump = Math.max(0, B.jump - dt*1.2);
+  const fresh = (performance.now() - B.lastSeenT) < window_;
+  B.seen = clamp(B.seen + (fresh ? dt*5 : -dt*1.5), 0, 1);
+
+  // landmarks are smoothed toward the latest detection EVERY render frame —
+  // this is the interpolation between inference updates
+  if (ensureSmoothed(B) && B.raw){
+    const sm = B.sm, raw = B.raw;
+    for (let i=0;i<sm.length;i++){
+      const tx = mapX(raw[i].x), ty = mapY(raw[i].y);
+      const sp = Math.hypot(tx-sm[i].x, ty-sm[i].y) / Math.max(1,S.h) / Math.max(dt,1e-3);
+      sm[i].jx = lerp(sm[i].jx, Math.abs(tx-sm[i].x), 0.2);
+      sm[i].jy = lerp(sm[i].jy, Math.abs(ty-sm[i].y), 0.2);
+      sm[i].x = smoothTo(sm[i].x, tx, dt, sp);
+      sm[i].y = smoothTo(sm[i].y, ty, dt, sp);
+      sm[i].z = lerp(sm[i].z, raw[i].z||0, 0.25);
+
+      // confidence: model visibility when offered, otherwise a real proxy
+      let vis = raw[i].visibility;
+      if (vis === undefined || vis === null || Number.isNaN(vis)) vis = raw[i].presence;
+      if (vis === undefined || vis === null || Number.isNaN(vis)){
+        const jit = (sm[i].jx + sm[i].jy) / Math.max(24, S.h*0.03);
+        vis = clamp(1 - jit*0.9, 0.15, 1);
+      }
+      // being outside the frame is itself uncertainty
+      const nx = raw[i].x, ny = raw[i].y;
+      const out = Math.max(0, -nx, nx-1, -ny, ny-1);
+      vis *= clamp(1 - out*3.2, 0, 1);
+      sm[i].c = lerp(sm[i].c, clamp(vis,0,1), 0.22);
+    }
+  }
+
+  const G = resolveGeometry(B, dt);
+  B.G = G;
+  if (!G && B.seen <= 0.001) { /* nothing yet */ }
+
+  simulate(B, G, dt);
+  murmurSnapshot(B);
+}
+
+/* ------------------------------------------- geometry of the territories */
+function resolveGeometry(B, dt){
+  const sm = B.sm;
+  if (!sm) return null;
+  const need = [L_SHO,R_SHO,L_HIP,R_HIP];
+  for (const i of need) if (!sm[i]) return null;
+
+  const shoX = (sm[L_SHO].x + sm[R_SHO].x)/2, shoY = (sm[L_SHO].y + sm[R_SHO].y)/2;
+  const hipX = (sm[L_HIP].x + sm[R_HIP].x)/2, hipY = (sm[L_HIP].y + sm[R_HIP].y)/2;
+  let ux = shoX-hipX, uy = shoY-hipY;
+  const L = Math.hypot(ux,uy) || 1;
+  ux/=L; uy/=L;
+  const rx = -uy, ry = ux;
+
+  const shoHalf = Math.hypot(sm[L_SHO].x-sm[R_SHO].x, sm[L_SHO].y-sm[R_SHO].y)/2;
+  const hipHalf = Math.hypot(sm[L_HIP].x-sm[R_HIP].x, sm[L_HIP].y-sm[R_HIP].y)/2;
+
+  // head
+  let hcx, hcy, hr;
+  if (sm[L_EAR] && sm[R_EAR]){
+    hcx = (sm[L_EAR].x + sm[R_EAR].x)/2; hcy = (sm[L_EAR].y + sm[R_EAR].y)/2;
+    hr = Math.max(Math.hypot(sm[L_EAR].x-sm[R_EAR].x, sm[L_EAR].y-sm[R_EAR].y)*0.66, L*0.20);
+  } else {
+    hcx = shoX + ux*L*0.34; hcy = shoY + uy*L*0.34; hr = L*0.22;
+  }
+  let hux = hcx - shoX, huy = hcy - shoY;
+  const hl = Math.hypot(hux,huy) || 1; hux/=hl; huy/=hl;
+
+  const G = {
+    L, ux, uy, rx, ry, hipX, hipY, shoX, shoY, shoHalf, hipHalf,
+    head:{ x:hcx, y:hcy, rx:hr*0.98, ry:hr*1.18, ux:hux, uy:huy },
+    neck:{ x:lerp(shoX,hcx,0.42), y:lerp(shoY,hcy,0.42), r:L*0.11, ux:hux, uy:huy },
+    bones: new Array(NT).fill(null),
+    balls: new Array(NT).fill(null),
+    torsoAng: Math.atan2(uy,ux),
+  };
+
+  G.balls[T_NECK] = G.neck;
+  G.balls[T_LSHO] = { x:sm[L_SHO].x, y:sm[L_SHO].y, r:Math.max(shoHalf*0.58, L*0.11), ux, uy };
+  G.balls[T_RSHO] = { x:sm[R_SHO].x, y:sm[R_SHO].y, r:Math.max(shoHalf*0.58, L*0.11), ux, uy };
+
+  for (let t=0;t<NT;t++){
+    const d = TERR[t];
+    if (d.k !== 1) continue;
+    const a = sm[d.a], b = sm[d.b];
+    if (!a || !b) continue;
+    let ax=a.x, ay=a.y, bx=b.x, by=b.y;
+    let dx=bx-ax, dy=by-ay;
+    let len = Math.hypot(dx,dy);
+    if (len < 1e-3){ dx = ux*1e-3; dy = uy*1e-3; len = 1e-3; }
+    const axn = dx/len, ayn = dy/len;
+    // figure "up" leans with the limb but never fully inverts: local coherence
+    // that stays readable as a population of upright people
+    let sx = axn, sy = ayn;
+    if (sx*ux + sy*uy < 0){ sx = -sx; sy = -sy; }
+    const bux = sx*0.72 + ux*0.28, buy = sy*0.72 + uy*0.28;
+    const bl = Math.hypot(bux,buy)||1;
+    G.bones[t] = {
+      ax, ay, bx, by, dx:axn, dy:ayn, len,
+      w: L*d.wf,
+      ux: bux/bl, uy: buy/bl,
+      z: ((a.z||0)+(b.z||0))/2,
+    };
+  }
+
+  // confidence per territory, from the landmarks that define it
+  for (let t=0;t<NT;t++){
+    let c = 0, n = 0;
+    for (const i of TERR_LM[t]){ if (sm[i]){ c += sm[i].c; n++; } }
+    c = n ? c/n : 0;
+    c *= B.seen;
+    c *= (1 - B.jump*0.6);         // a body that leaps is a body in doubt
+    B.conf[t] = lerp(B.conf[t], c, 0.18);
+    // support: memory holds a lost region up briefly, then lets it dissolve
+    const alive = B.conf[t] > 0.42;
+    B.support[t] = clamp(B.support[t] + (alive ? dt*1.5 : -dt*0.72), 0.02, 1);
+    if (alive) freezeSeg(B, t, G);
+  }
+  return G;
+}
+
+/* frozen last-known geometry, so a lost limb is remembered before it dissolves */
+function freezeSeg(B, t, G){
+  const o = t*5, d = TERR[t];
+  if (d.k === 1 && G.bones[t]){
+    const b = G.bones[t];
+    B.lastSeg[o]=b.ax; B.lastSeg[o+1]=b.ay; B.lastSeg[o+2]=b.bx; B.lastSeg[o+3]=b.by; B.lastSeg[o+4]=b.w;
+  } else if (d.k === 2 && G.balls[t]){
+    const b = G.balls[t];
+    B.lastSeg[o]=b.x; B.lastSeg[o+1]=b.y; B.lastSeg[o+2]=b.ux; B.lastSeg[o+3]=b.uy; B.lastSeg[o+4]=b.r;
+  } else if (d.k === 3){
+    B.lastSeg[o]=G.head.x; B.lastSeg[o+1]=G.head.y; B.lastSeg[o+2]=G.head.ux;
+    B.lastSeg[o+3]=G.head.uy; B.lastSeg[o+4]=G.head.rx;
+  }
+  B.hasLast[t] = 1;
+}
+
+/* -------------------------------------------------- target for a small body */
+const TMP = {x:0,y:0,ux:0,uy:0,ok:false};
+function targetFor(c, B, G, loosen){
+  const t = c.terr, d = TERR[t];
+  TMP.ok = false;
+  const conf = B.conf[t];
+  const slack = 1 + loosen*1.05;
+
+  if (d.k === 0){                                     // torso frame
+    if (!G) return TMP;
+    const uu = lerp(d.lo, d.hi, c.u);
+    const hw = lerp(G.hipHalf, G.shoHalf, clamp(uu,0,1)) * 1.30;
+    const along = G.L*uu;
+    TMP.x = G.hipX + G.ux*along + G.rx*hw*c.v*slack;
+    TMP.y = G.hipY + G.uy*along + G.ry*hw*c.v*slack;
+    TMP.ux = G.ux; TMP.uy = G.uy;
+    TMP.ok = true;
+  } else if (d.k === 1){                              // bone
+    const b = G && G.bones[t];
+    if (b && conf > 0.16){
+      const px = -b.dy, py = b.dx;
+      TMP.x = b.ax + b.dx*b.len*c.u + px*b.w*c.v*slack;
+      TMP.y = b.ay + b.dy*b.len*c.u + py*b.w*c.v*slack;
+      TMP.ux = b.ux; TMP.uy = b.uy;
+      TMP.ok = true;
+    } else if (B.hasLast[t]){                          // remembered limb
+      const o = t*5;
+      const ax=B.lastSeg[o], ay=B.lastSeg[o+1], bx=B.lastSeg[o+2], by=B.lastSeg[o+3], w=B.lastSeg[o+4];
+      let dx=bx-ax, dy=by-ay; const len=Math.hypot(dx,dy)||1; dx/=len; dy/=len;
+      const px=-dy, py=dx;
+      TMP.x = ax + dx*len*c.u + px*w*c.v*slack*1.5;
+      TMP.y = ay + dy*len*c.u + py*w*c.v*slack*1.5;
+      TMP.ux = -dy; TMP.uy = dx;
+      TMP.ok = true;
+    }
+  } else if (d.k === 2){                              // ball
+    const b = G && G.balls[t];
+    if (b){
+      const th = c.v*TAU, r = c.u*b.r*slack;
+      TMP.x = b.x + Math.cos(th)*r; TMP.y = b.y + Math.sin(th)*r;
+      TMP.ux = b.ux; TMP.uy = b.uy;
+      TMP.ok = true;
+    }
+  } else {                                            // head
+    if (G){
+      const h = G.head;
+      const th = c.v*TAU;
+      const lx = Math.cos(th)*c.u*h.rx*slack, ly = Math.sin(th)*c.u*h.ry*slack;
+      const px = -h.uy, py = h.ux;
+      TMP.x = h.x + px*lx + h.ux*ly;
+      TMP.y = h.y + py*lx + h.uy*ly;
+      TMP.ux = h.ux; TMP.uy = h.uy;
+      TMP.ok = true;
+    }
+  }
+  return TMP;
+}
+
+/* -------------------------------------------------------------- habitude */
+function habCell(B, G, x, y){
+  if (!G) return -1;
+  const dx = x-G.hipX, dy = y-G.hipY;
+  const by = (dx*G.ux + dy*G.uy)/G.L;
+  const bx = (dx*G.rx + dy*G.ry)/G.L;
+  const col = Math.floor((bx + HB_X) / (2*HB_X) * HB_COLS);
+  const row = Math.floor((by - HB_Y0) / (HB_Y1-HB_Y0) * HB_ROWS);
+  if (col<0||col>=HB_COLS||row<0||row>=HB_ROWS) return -1;
+  return row*HB_COLS + col;
+}
+/* familiarity is dwell time, not relative share: a place the body has spent
+   time in is familiar; a place it has never been is not, however long the
+   session has run. HB_K is roughly the dwell needed to feel half at home. */
+const HB_W = 4.0, HB_K = 0.10;
+function familiarity(B, i){
+  if (i < 0) return 0;
+  const v = B.hb[i];
+  return v > 0 ? v/(v + HB_K) : 0;
+}
+
+/* ---------------------------------------------------------------- dynamics */
+const GRID = { size:0, cols:0, rows:0, head:null, next:null };
+function buildGrid(B, n, cell){
+  const cols = Math.max(1, Math.ceil(S.w/cell)), rows = Math.max(1, Math.ceil(S.h/cell));
+  if (!GRID.head || GRID.head.length !== cols*rows) GRID.head = new Int32Array(cols*rows);
+  if (!GRID.next || GRID.next.length < n) GRID.next = new Int32Array(MAX_POP);
+  GRID.head.fill(-1);
+  GRID.cols = cols; GRID.rows = rows; GRID.size = cell;
+  for (let i=0;i<n;i++){
+    const c = B.pop[i];
+    if (!c.born) continue;
+    const cx = clamp(Math.floor(c.x/cell),0,cols-1), cy = clamp(Math.floor(c.y/cell),0,rows-1);
+    const k = cy*cols+cx;
+    GRID.next[i] = GRID.head[k];
+    GRID.head[k] = i;
+  }
+}
+
+function simulate(B, G, dt){
+  const n = Math.min(S.active, B.pop.length);
+  const figH = G ? clamp(G.L*0.145, 9, 54) : 16;
+  const cell = Math.max(10, figH*1.35);
+  buildGrid(B, n, cell);
+
+  const reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const idleAmp = reduced ? 0.25 : 1;
+
+  // habitude sampling: a rotating slice each frame
+  const sampleStride = 6;
+  const sampleOff = (B.hbCursor++) % sampleStride;
+
+  // slow decay of session memory keeps it a memory, not an archive
+  if ((B.frame & 31) === 0){
+    const k = Math.exp(-(dt*32)/150);
+    for (let i=0;i<B.hb.length;i++) B.hb[i] *= k;
+    B.hbTotal *= k;
+  }
+
+  for (let i=0;i<n;i++){
+    const c = B.pop[i];
+    const terr = c.terr;
+    const conf = B.conf[terr];
+    const sup  = B.support[terr];
+    c.sup = lerp(c.sup, Math.min(sup, B.seen>0.02?1:0) , 0.14);
+
+    const unc = clamp((0.92 - conf)/0.66, 0, 1);
+    const loosen = unc*2.2 + (1-B.seen)*1.1;
+    let tgt;
+    if (c.lend > 0 && c.lendTo >= 0 && S.bodies[c.lendTo]){
+      const O = S.bodies[c.lendTo];
+      const saveT = c.terr;
+      c.terr = c.lendTerr;
+      tgt = targetFor(c, O, O.G, loosen);
+      c.terr = saveT;
+      c.lend -= dt;
+      if (c.lend <= 0){ c.lend = 0; c.lendTo = -1; }
+    } else {
+      tgt = targetFor(c, B, G, loosen);
+    }
+
+    if (tgt.ok){
+      c.tx = tgt.x; c.ty = tgt.y; c.hasT = true;
+      if (!c.born){
+        // arrival: the population gathers from the edges of its territory
+        const a = hash1(c.id,31)*TAU, r = figH*(3 + hash1(c.id,32)*10);
+        c.x = tgt.x + Math.cos(a)*r; c.y = tgt.y + Math.sin(a)*r;
+        c.hx = c.x; c.hy = c.y;
+        c.ang = Math.atan2(tgt.uy, tgt.ux);
+        c.born = true;
+      }
+    }
+    if (!c.born){ continue; }
+
+    // ---- familiarity of the place it is being asked to stand ---------------
+    const hi = habCell(B, G, c.tx, c.ty);
+    if (hi >= 0 && (i % sampleStride) === sampleOff && conf > 0.35 && B.seen > 0.5){
+      // weighted so the whole population contributes one body-second per second,
+      // independent of how many constituents are currently alive
+      const w = dt * sampleStride / Math.max(1,n) * HB_W;
+      B.hb[hi] += w;
+      B.hbTotal += w;
+    }
+    const fam = familiarity(B, hi) * S.habOn;
+    c.fam = lerp(c.fam, fam, 0.08);
+
+    // ---- attraction to its anatomical address ------------------------------
+    let fx = 0, fy = 0;
+    if (c.hasT){
+      // familiar ground is arrived at faster and held more tightly
+      const k = 26 * c.stiff * (0.34 + 0.66*conf) * (0.58 + 1.05*c.fam);
+      fx += (c.tx - c.x) * k;
+      fy += (c.ty - c.y) * k;
+    }
+
+    // ---- relation with neighbours -----------------------------------------
+    let cohX=0, cohY=0, aliX=0, aliY=0, sepX=0, sepY=0, cnt=0, kin=0;
+    let bestD = 1e9, bnx=0, bny=0;
+    const R = figH * (0.85 + c.sep*0.9);
+    const cx0 = clamp(Math.floor(c.x/cell),0,GRID.cols-1);
+    const cy0 = clamp(Math.floor(c.y/cell),0,GRID.rows-1);
+    for (let gy=cy0-1; gy<=cy0+1; gy++){
+      if (gy<0||gy>=GRID.rows) continue;
+      for (let gx=cx0-1; gx<=cx0+1; gx++){
+        if (gx<0||gx>=GRID.cols) continue;
+        let j = GRID.head[gy*GRID.cols+gx];
+        let guard = 0;
+        while (j !== -1 && guard++ < 24){
+          if (j !== i){
+            const o = B.pop[j];
+            const dx = o.x-c.x, dy = o.y-c.y;
+            const d2 = dx*dx+dy*dy;
+            if (d2 < R*R && d2 > 1e-6){
+              const d = Math.sqrt(d2);
+              cnt++;
+              // cohesion only holds within a territory, so a forearm's
+              // inhabitants are not slowly swallowed by the torso crowd;
+              // separation and alignment cross the borders
+              if (o.terr === c.terr){ cohX += dx; cohY += dy; kin++; }
+              aliX += o.vx; aliY += o.vy;
+              const push = (1 - d/R);
+              sepX -= dx/d * push; sepY -= dy/d * push;
+              if (d < bestD){ bestD = d; bnx = dx/d; bny = dy/d; }
+            }
+          }
+          j = GRID.next[j];
+        }
+      }
+    }
+    if (cnt){
+      const inv = 1/cnt, rel = S.relOn;
+      if (kin){ const ki = rel/kin; fx += cohX*ki*2.1*c.pull; fy += cohY*ki*2.1*c.pull; }
+      fx += sepX*58*(0.6+c.sep)*rel;  fy += sepY*58*(0.6+c.sep)*rel;
+      fx += (aliX*inv - c.vx)*1.5*c.pull*rel; fy += (aliY*inv - c.vy)*1.5*c.pull*rel;
+      c.nvx = bnx; c.nvy = bny;
+      c.nrel = clamp(1 - bestD/R, 0, 1);
+    } else {
+      c.nrel *= 0.9;
+    }
+
+    // ---- memory pull toward where it has been ------------------------------
+    const memW = (0.6 + (1-conf)*2.4 + c.fam*0.7) * (1/c.memDur);
+    fx += (c.hx - c.x) * memW;
+    fy += (c.hy - c.y) * memW;
+
+    // ---- uncertainty becomes motion ---------------------------------------
+    if (unc > 0.02){
+      const ph = c.phase, tt = S.t;
+      const nx = Math.sin(tt*1.6 + ph) * 0.62 + Math.sin(tt*0.83 + ph*2.3) * 0.38;
+      const ny = Math.cos(tt*1.31 + ph*1.7) * 0.62 + Math.cos(tt*0.61 + ph*3.1) * 0.38;
+      const amp = unc * figH * 16 * c.mob * idleAmp * (1 - c.fam*0.55);
+      fx += nx*amp; fy += ny*amp;
+      // where the model loses hold, individuals begin to let go one by one:
+      // the more doubt, the more of them stop being held by the anatomy
+      if (hash1(c.id, 41) < unc*0.75){
+        fx *= 0.12; fy *= 0.12;
+        fx += nx*figH*11*c.mob; fy += ny*figH*11*c.mob;
+      }
+    }
+    // living idle even at full confidence — nobody stands perfectly still
+    {
+      const ph = c.phase;
+      const settle = 1 - c.fam*0.55;
+      fx += Math.sin(S.t*c.gait*1.9 + ph)*figH*1.9*c.mob*idleAmp*settle;
+      fy += Math.cos(S.t*c.gait*1.7 + ph*1.3)*figH*1.9*c.mob*idleAmp*settle;
+    }
+
+    // ---- when the body is gone, the population loosens and lets go ---------
+    if (B.seen < 0.5){
+      const gone = 1 - B.seen;
+      fx *= (1-gone*0.75); fy *= (1-gone*0.75);
+      fx += (c.x - c.hx)*gone*1.6; fy += (c.y - c.hy)*gone*1.6;
+    }
+
+    // ---- integrate ---------------------------------------------------------
+    const damp = Math.exp(-dt * (7.2 + c.fam*5.5 + conf*2.2));
+    c.vx = (c.vx + fx*dt) * damp;
+    c.vy = (c.vy + fy*dt) * damp;
+    const vmax = figH*26 * (0.6+c.mob*0.7);
+    const sp = Math.hypot(c.vx,c.vy);
+    if (sp > vmax){ c.vx = c.vx/sp*vmax; c.vy = c.vy/sp*vmax; }
+    c.x += c.vx*dt; c.y += c.vy*dt;
+
+    // ---- boundary pressure: stay approximately inside the body -------------
+    if (c.hasT){
+      const dx = c.x-c.tx, dy = c.y-c.ty;
+      const d = Math.hypot(dx,dy);
+      const lim = figH * (0.85 + loosen*2.4);
+      if (d > lim){
+        const k = (d-lim)/d * 0.55;
+        c.x -= dx*k; c.y -= dy*k;
+        c.vx *= 0.7; c.vy *= 0.7;
+      }
+    }
+
+    // ---- slow home: this individual's own accumulated position -------------
+    const hk = 1 - Math.exp(-dt/(1.1*c.memDur));
+    c.hx += (c.x - c.hx)*hk;
+    c.hy += (c.y - c.hy)*hk;
+
+    // ---- orientation: local anatomy + bias + strain + neighbours -----------
+    // its "up" comes from the anatomy it belongs to, plus its own persistent bias
+    let want = (tgt.ok && (tgt.ux || tgt.uy)) ? Math.atan2(tgt.uy, tgt.ux) : c.ang;
+    want += c.bias;
+    // strain tilts the individual against where it is being dragged
+    const dragA = Math.atan2(c.vy, c.vx);
+    const strain = clamp(sp/(figH*9), 0, 1);
+    let dAng = ((want - c.ang + Math.PI*3) % TAU) - Math.PI;
+    c.angV = lerp(c.angV, dAng*(7 + c.stiff*8), 0.35);
+    c.ang += c.angV*dt;
+    c.ang += Math.sin(dragA - c.ang)*strain*dt*2.4;
+
+    // ---- strain --------------------------------------------------------
+    const miss = c.hasT ? Math.hypot(c.tx-c.x, c.ty-c.y)/(figH*1.9) : 0;
+    const ten = clamp(miss*0.75 + strain*0.5 + unc*0.6 + c.nrel*0.18, 0, 1);
+    c.ten = lerp(c.ten, ten, 0.16);
+  }
+
+  // individuals beyond the adaptive count sleep, keeping their identity
+  for (let i=n;i<B.pop.length;i++) B.pop[i].born = false;
+}
+
+/* --------------------------------------- two populations meeting at a border */
+function exchange(A, B, dt){
+  if (!A.G || !B.G || A.seen < 0.5 || B.seen < 0.5) return;
+  // two populations in the same frame are already in each other's field; the
+  // encounter does not wait for them to physically overlap, which this pose
+  // model cannot hold two poses through anyway
+  const reach = Math.min(A.G.L, B.G.L)*2.4;
+  const nA = Math.min(S.active, A.pop.length), nB = Math.min(S.active, B.pop.length);
+  let lentA = 0;
+  for (let i=0;i<nA;i++) if (A.pop[i].lend>0) lentA++;
+  const capA = Math.round(nA*0.08);
+  const step = 4;
+  const off = A.frame % step;
+  for (let i=off;i<nA;i+=step){
+    const a = A.pop[i];
+    if (!a.born) continue;
+    let bestD = reach, bj = -1;
+    for (let j=(B.frame%step);j<nB;j+=step){
+      const b = B.pop[j];
+      if (!b.born) continue;
+      const d = Math.hypot(b.x-a.x, b.y-a.y);
+      if (d < bestD){ bestD = d; bj = j; }
+    }
+    if (bj < 0) continue;
+    const rel = clamp(1-bestD/reach,0,1)*0.9;
+    if (rel > a.nrel){                       // reach toward the other population
+      a.nrel = rel;
+      a.nvx = (B.pop[bj].x - a.x)/bestD;
+      a.nvy = (B.pop[bj].y - a.y)/bestD;
+      a.bridge = bj;
+    } else if (a.bridge !== undefined && rel < 0.15) a.bridge = -1;
+    // a rule, not a merge: a member may cross for a bounded time and must return
+    if (a.lend === 0 && lentA < capA && bestD < reach*0.62 &&
+        a.ten < 0.75 && hash1(a.id, (A.frame|0)) < 0.05){
+      a.lend = 1.6 + hash1(a.id,77)*3.4;
+      a.lendTo = B.index;
+      a.lendTerr = B.pop[bj].terr;
+      lentA++;
+    }
+  }
+}
+
+/* ------------------------------------------------------------ ghost murmur */
+function murmurSnapshot(B){
+  if (!S.memory) return;
+  if (B.frame % GHOST_EVERY) return;
+  const n = B.pop.length;
+  let buf;
+  if (B.ghost.length < GHOST_SLOTS){
+    buf = new Float32Array(n*3);
+    B.ghost.push(buf); B.ghostAge.push(0);
+    B.ghostI = B.ghost.length-1;
+  } else {
+    B.ghostI = (B.ghostI+1) % GHOST_SLOTS;
+    buf = B.ghost[B.ghostI];
+  }
+  for (let i=0;i<n;i++){
+    const c = B.pop[i];
+    buf[i*3] = c.born ? c.x : NaN;
+    buf[i*3+1] = c.y;
+    buf[i*3+2] = c.ang;
+  }
+  for (let k=0;k<B.ghostAge.length;k++) B.ghostAge[k]++;
+  B.ghostAge[B.ghostI] = 0;
+}
+
+/* =========================================================================
+   RENDER
+   ======================================================================= */
+/* batched stroke buffers: one pass per (colour, alpha) bucket */
+const ALPHA_LEVELS = 6;
+const COLORS = 3;
+const NBUCKET = ALPHA_LEVELS*COLORS;
+const limbBuf = [], limbN = [], headBuf = [], headN = [];
+for (let i=0;i<NBUCKET;i++){
+  limbBuf.push(new Float32Array(4096)); limbN.push(0);
+  headBuf.push(new Float32Array(1024)); headN.push(0);
+}
+function seg(bucket, x1,y1,x2,y2){
+  const b = limbBuf[bucket]; const n = limbN[bucket];
+  if (n+4 > b.length){
+    const nb = new Float32Array(b.length*2); nb.set(b); limbBuf[bucket] = nb;
+    return seg(bucket,x1,y1,x2,y2);
+  }
+  b[n]=x1; b[n+1]=y1; b[n+2]=x2; b[n+3]=y2; limbN[bucket]=n+4;
+}
+function dot(bucket, x,y){
+  const b = headBuf[bucket]; const n = headN[bucket];
+  if (n+2 > b.length){
+    const nb = new Float32Array(b.length*2); nb.set(b); headBuf[bucket] = nb;
+    return dot(bucket,x,y);
+  }
+  b[n]=x; b[n+1]=y; headN[bucket]=n+2;
+}
+function clearBuckets(){ for (let i=0;i<NBUCKET;i++){ limbN[i]=0; headN[i]=0; } }
+
+/* draw one small body into the batch */
+function drawSmall(x, y, ang, h, colorClass, alpha, ten, nvx, nvy, nrel, phase, gait, mirror, armRest, legRest, articulate){
+  if (alpha <= 0.012 || h < 2.2) return;
+  const al = Math.min(ALPHA_LEVELS-1, Math.max(0, Math.round(alpha*(ALPHA_LEVELS-1))));
+  const bk = colorClass*ALPHA_LEVELS + al;
+
+  const ux = Math.cos(ang), uy = Math.sin(ang);      // "up" of this individual
+  const rx = -uy, ry = ux;
+
+  const hipX = x - ux*h*0.02, hipY = y - uy*h*0.02;
+  const shoX = hipX + ux*h*0.30, shoY = hipY + uy*h*0.30;
+  const hdX  = shoX + ux*h*0.20, hdY  = shoY + uy*h*0.20;
+
+  seg(bk, hipX, hipY, shoX, shoY);                   // spine
+  dot(bk, hdX, hdY);                                 // head
+
+  const t = S.t;
+  // arms: private tempo, strain, and a reach toward whoever is nearest
+  const sway = articulate ? Math.sin(t*gait*1.7 + phase)*0.18 : 0;
+  let aL = -0.62 + armRest*0.42 + sway + ten*0.55;
+  let aR =  0.62 + armRest*0.42 - sway - ten*0.55;
+  const upArm = h*0.175, foreArm = h*0.16;
+
+  // reach: one arm turns toward the strongest current relation
+  let reachAng = null;
+  if (nrel > 0.32){
+    const world = Math.atan2(nvy, nvx);
+    let rel = ((world - ang + Math.PI*3) % TAU) - Math.PI;   // relative to own up
+    reachAng = rel;
+  }
+
+  for (let s=0;s<2;s++){
+    const side = s===0 ? -1 : 1;
+    let a = s===0 ? aL : aR;
+    if (reachAng !== null && Math.sign(reachAng) === side*mirror){
+      a = lerp(a, reachAng, clamp(nrel*0.85,0,0.8));
+    }
+    // shoulder joint
+    const sxp = shoX + rx*h*0.075*side, syp = shoY + ry*h*0.075*side;
+    // build in the individual's local frame: lx along its right, ly along its up
+    const l1x = Math.sin(a)*side*upArm, l1y = -Math.cos(a)*upArm;
+    const ex = sxp + rx*l1x + ux*l1y, ey = syp + ry*l1x + uy*l1y;
+    const a2 = a + side*(0.72 + ten*0.55 + (articulate?Math.sin(t*gait*2.1 + phase*1.7)*0.16:0));
+    const l2x = Math.sin(a2)*side*foreArm, l2y = -Math.cos(a2)*foreArm;
+    const hx2 = ex + rx*l2x + ux*l2y, hy2 = ey + ry*l2x + uy*l2y;
+    seg(bk, sxp, syp, ex, ey);
+    seg(bk, ex, ey, hx2, hy2);
+  }
+
+  // legs
+  const gaitSw = articulate ? Math.sin(t*gait*1.35 + phase*0.7)*0.12 : 0;
+  for (let s=0;s<2;s++){
+    const side = s===0 ? -1 : 1;
+    const spread = (0.20*legRest + (s===0?gaitSw:-gaitSw)) * side;
+    const lx = spread*h*1.0, ly = -h*0.44;
+    seg(bk, hipX, hipY, hipX + rx*lx + ux*ly, hipY + ry*lx + uy*ly);
+  }
+}
+
+function paintBuckets(){
+  for (let cclass=0; cclass<COLORS; cclass++){
+    const col = cclass===0 ? PAL.bone : (cclass===1 ? PAL.cool : PAL.ghost);
+    for (let al=0; al<ALPHA_LEVELS; al++){
+      const bk = cclass*ALPHA_LEVELS + al;
+      const a = (al/(ALPHA_LEVELS-1));
+      if (a <= 0) continue;
+      const n = limbN[bk];
+      if (n){
+        ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${a.toFixed(3)})`;
+        ctx.beginPath();
+        const b = limbBuf[bk];
+        for (let i=0;i<n;i+=4){ ctx.moveTo(b[i],b[i+1]); ctx.lineTo(b[i+2],b[i+3]); }
+        ctx.stroke();
+      }
+    }
+  }
+}
+function paintHeads(headSize){
+  ctx.lineCap = 'round';
+  for (let cclass=0; cclass<COLORS; cclass++){
+    const col = cclass===0 ? PAL.bone : (cclass===1 ? PAL.cool : PAL.ghost);
+    for (let al=0; al<ALPHA_LEVELS; al++){
+      const bk = cclass*ALPHA_LEVELS + al;
+      const n = headN[bk];
+      if (!n) continue;
+      const a = (al/(ALPHA_LEVELS-1));
+      ctx.strokeStyle = `rgba(${col[0]},${col[1]},${col[2]},${a.toFixed(3)})`;
+      ctx.lineWidth = headSize;
+      ctx.beginPath();
+      const b = headBuf[bk];
+      for (let i=0;i<n;i+=2){ ctx.moveTo(b[i],b[i+1]); ctx.lineTo(b[i]+0.01,b[i+1]); }
+      ctx.stroke();
+    }
+  }
+}
+
+function render(dt){
+  ctx.setTransform(S.dpr,0,0,S.dpr,0,0);
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#08090a';
+  ctx.fillRect(0,0,S.w,S.h);
+
+  // camera underneath, dimmed
+  if (S.camView > 0 && video.videoWidth){
+    const a = S.camView === 1 ? 0.15 : 0.36;
+    ctx.save();
+    ctx.globalAlpha = a;
+    if (S.mirror){ ctx.translate(S.w,0); ctx.scale(-1,1); }
+    const cx = S.mirror ? (S.w - (S.vw*S.cover.s + S.cover.ox)) : S.cover.ox;
+    ctx.drawImage(video, cx, S.cover.oy, S.vw*S.cover.s, S.vh*S.cover.s);
+    ctx.restore();
+    ctx.globalAlpha = 1;
+  }
+
+  S.ghostDrawn = 0;
+  let anyBody = false;
+  for (const B of S.bodies){
+    if (!B.G && B.seen <= 0.02) continue;
+    anyBody = anyBody || B.seen > 0.15;
+    renderBody(B, dt);
+  }
+
+  // no-body whisper
+  const show = S.phase==='working' && !anyBody;
+  ui.whisper.classList.toggle('on', show);
+
+  if (S.bodies.length > 1) renderBridges();
+
+  if (S.hold && S.hold.c) renderHold();
+
+  if (DEV) renderDev();
+}
+
+/* where two populations meet, the individuals nearest the boundary hold on
+   to one another */
+function renderBridges(){
+  const A = S.bodies[0], O = S.bodies[1];
+  if (!A.G || !O.G || A.seen < 0.4 || O.seen < 0.4) return;
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = `rgba(${PAL.cool[0]},${PAL.cool[1]},${PAL.cool[2]},0.20)`;
+  ctx.beginPath();
+  let drawn = 0;
+  for (const [X, Y] of [[A,O],[O,A]]){
+    const n = Math.min(S.active, X.pop.length);
+    for (let i=0;i<n && drawn<90;i++){
+      const c = X.pop[i];
+      if (!c.born || c.bridge === undefined || c.bridge < 0) continue;
+      const o = Y.pop[c.bridge];
+      if (!o || !o.born) continue;
+      ctx.moveTo(c.x, c.y); ctx.lineTo(o.x, o.y);
+      drawn++;
+    }
+  }
+  ctx.stroke();
+}
+
+function renderBody(B, dt){
+  const G = B.G;
+  const figH = G ? clamp(G.L*0.145, 9, 54) : 16;
+  const n = Math.min(S.active, B.pop.length);
+
+  // ---- ghost murmur: previous organisations, only where they differ -------
+  // drawn as its own pass, thinner and cooler, so residue reads as an earlier
+  // population rather than as a smear of the present one
+  clearBuckets();
+  if (S.memory && B.ghost.length){
+    const stride = MOBILE ? 5 : 4;
+    let drawn = 0;
+    const cap = MOBILE ? 260 : 520;
+    for (let k=0;k<B.ghost.length && drawn<cap;k++){
+      const idx = (B.ghostI - k + B.ghost.length*2) % B.ghost.length;
+      const buf = B.ghost[idx];
+      const age = k;
+      const fade = Math.pow(1 - (age+1)/(B.ghost.length+1), 1.25);
+      if (fade <= 0.02) continue;
+      const phaseOff = age % stride;
+      for (let i=phaseOff;i<n && drawn<cap;i+=stride){
+        const gx = buf[i*3];
+        if (Number.isNaN(gx)) continue;
+        const c = B.pop[i];
+        if (!c.born) continue;
+        const gy = buf[i*3+1], ga = buf[i*3+2];
+        const d = Math.hypot(gx-c.x, gy-c.y);
+        const sepT = figH*0.42;
+        if (d < sepT) continue;                    // stillness → residue vanishes
+        const rise = clamp((d - sepT)/(figH*2.0), 0, 1) *
+                     clamp(1 - (d - figH*6)/(figH*6), 0, 1);
+        if (rise <= 0.02) continue;                // a jump is not a memory
+        const a = 0.30 * fade * rise * (0.55 + c.fam*0.7) * B.seen;
+        drawSmall(gx, gy, ga, figH*c.sc*0.92, 2, a, 0, 0,0,0, c.phase, c.gait, c.mirror,
+                  c.armRest, c.legRest, false);
+        drawn++; S.ghostDrawn++;
+      }
+    }
+    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    ctx.lineWidth = Math.max(0.7, figH*0.052);
+    paintBuckets();
+    paintHeads(Math.max(1.3, figH*0.15));
+  }
+
+  clearBuckets();
+
+  // ---- present population -------------------------------------------------
+  for (let i=0;i<n;i++){
+    const c = B.pop[i];
+    if (!c.born) continue;
+    const conf = B.conf[c.terr];
+    const h = figH * c.sc * (1 + c.d*0.16);
+    const unc = clamp((0.92 - conf)/0.66, 0, 1);
+    // colour: bone when the body is sure of itself, cool where it is not
+    const coolness = clamp(unc*1.15 + c.ten*0.45 + (c.lend>0?0.6:0), 0, 1);
+    const cclass = coolness > 0.5 ? 1 : 0;
+    let a = (0.55 + 0.45*(1 - Math.abs(c.d))) * c.sup;
+    a *= (0.30 + 0.70*(1-unc));
+    a *= clamp(B.seen*1.15, 0, 1);
+    a *= (0.85 + c.fam*0.25);
+    drawSmall(c.x, c.y, c.ang, h, cclass, clamp(a,0,1), c.ten, c.nvx, c.nvy, c.nrel,
+              c.phase, c.gait, c.mirror, c.armRest, c.legRest, true);
+  }
+
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.lineWidth = Math.max(1.0, figH*0.085);
+  paintBuckets();
+  paintHeads(Math.max(2.0, figH*0.235));
+
+  // ---- relation made visible: bridges between close individuals -----------
+  if (figH > 7){
+    ctx.lineWidth = Math.max(0.5, figH*0.028);
+    ctx.strokeStyle = `rgba(${PAL.warm[0]},${PAL.warm[1]},${PAL.warm[2]},0.16)`;
+    ctx.beginPath();
+    let links = 0;
+    const cap = MOBILE ? 130 : 260;
+    for (let i=0;i<n && links<cap;i+=2){
+      const c = B.pop[i];
+      if (!c.born || c.nrel < 0.55) continue;
+      ctx.moveTo(c.x, c.y);
+      ctx.lineTo(c.x + c.nvx*figH*0.55, c.y + c.nvy*figH*0.55);
+      links++;
+    }
+    ctx.stroke();
+  }
+}
+
+/* ---------------------------------------------------- press-and-hold inspect */
+function renderHold(){
+  const H = S.hold;
+  const B = H.body, c = H.c;
+  if (!c || !c.born) return;
+  const G = B.G;
+  const figH = G ? clamp(G.L*0.145, 9, 54) : 16;
+
+  // its own past
+  ctx.strokeStyle = `rgba(${PAL.cool[0]},${PAL.cool[1]},${PAL.cool[2]},0.55)`;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  let started = false;
+  for (let k=0;k<B.ghost.length;k++){
+    const idx = (B.ghostI - k + B.ghost.length*2) % B.ghost.length;
+    const buf = B.ghost[idx];
+    const gx = buf[c.id*3], gy = buf[c.id*3+1];
+    if (Number.isNaN(gx)) continue;
+    if (!started){ ctx.moveTo(gx,gy); started = true; } else ctx.lineTo(gx,gy);
+  }
+  if (started){ ctx.lineTo(c.x,c.y); ctx.stroke(); }
+
+  // its relations
+  const n = Math.min(S.active, B.pop.length);
+  const R = figH*2.4;
+  ctx.strokeStyle = `rgba(${PAL.cool[0]},${PAL.cool[1]},${PAL.cool[2]},0.30)`;
+  ctx.beginPath();
+  for (let i=0;i<n;i++){
+    const o = B.pop[i];
+    if (!o.born || o === c) continue;
+    const d = Math.hypot(o.x-c.x, o.y-c.y);
+    if (d < R){ ctx.moveTo(c.x,c.y); ctx.lineTo(o.x,o.y); }
+  }
+  ctx.stroke();
+
+  // its territory kin
+  ctx.fillStyle = `rgba(${PAL.cool[0]},${PAL.cool[1]},${PAL.cool[2]},0.20)`;
+  for (let i=0;i<n;i++){
+    const o = B.pop[i];
+    if (!o.born || o.terr !== c.terr) continue;
+    ctx.fillRect(o.x-1, o.y-1, 2, 2);
+  }
+
+  // the individual itself
+  clearBuckets();
+  drawSmall(c.x, c.y, c.ang, figH*c.sc*1.5, 1, 1, c.ten, c.nvx, c.nvy, c.nrel,
+            c.phase, c.gait, c.mirror, c.armRest, c.legRest, true);
+  ctx.lineWidth = Math.max(1.1, figH*0.075);
+  paintBuckets();
+  paintHeads(Math.max(2.2, figH*0.28));
+
+  ctx.strokeStyle = `rgba(${PAL.cool[0]},${PAL.cool[1]},${PAL.cool[2]},0.7)`;
+  ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.arc(c.x, c.y, figH*1.5, 0, TAU);
+  ctx.stroke();
+
+  // one transient line of text, on demand only
+  ctx.font = '10px ui-monospace,Menlo,monospace';
+  ctx.fillStyle = 'rgba(207,199,180,0.85)';
+  ctx.textAlign = 'center';
+  const label = `${TERR_NAME[c.terr]} · lag ${(1/c.stiff).toFixed(2)} · scale ${c.sc.toFixed(2)}` +
+                (c.lend>0 ? ' · lent' : '');
+  ctx.fillText(label.toUpperCase(), clamp(c.x, 90, S.w-90), c.y - figH*2.2);
+  ctx.textAlign = 'start';
+}
+
+function renderDev(){
+  if (Q.get('skel') === '1'){
+    for (const B of S.bodies){
+      const G = B.G; if (!G || !B.sm) continue;
+      ctx.lineWidth = 2;
+      for (let t=0;t<NT;t++){
+        const b = G.bones[t]; if (!b) continue;
+        ctx.strokeStyle = `hsla(${t*24},80%,60%,0.9)`;
+        ctx.beginPath(); ctx.moveTo(b.ax,b.ay); ctx.lineTo(b.bx,b.by); ctx.stroke();
+        // territory envelope
+        const px=-b.dy, py=b.dx;
+        ctx.strokeStyle = `hsla(${t*24},80%,60%,0.35)`;
+        ctx.beginPath();
+        ctx.moveTo(b.ax+px*b.w, b.ay+py*b.w); ctx.lineTo(b.bx+px*b.w, b.by+py*b.w);
+        ctx.lineTo(b.bx-px*b.w, b.by-py*b.w); ctx.lineTo(b.ax-px*b.w, b.ay-py*b.w);
+        ctx.closePath(); ctx.stroke();
+      }
+      ctx.strokeStyle='rgba(255,255,255,0.8)';
+      ctx.beginPath();
+      ctx.moveTo(G.hipX,G.hipY); ctx.lineTo(G.shoX,G.shoY); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(G.head.x,G.head.y,G.head.rx,G.head.ry,
+        Math.atan2(G.head.uy,G.head.ux)-Math.PI/2,0,TAU); ctx.stroke();
+      // torso quad
+      ctx.strokeStyle='rgba(255,255,255,0.45)';
+      ctx.beginPath();
+      for (const [uu,sgn] of [[-0.22,1],[1.12,1],[1.12,-1],[-0.22,-1]]){
+        const hw = lerp(G.hipHalf,G.shoHalf,clamp(uu,0,1))*1.30;
+        const x = G.hipX + G.ux*G.L*uu + G.rx*hw*sgn, y = G.hipY + G.uy*G.L*uu + G.ry*hw*sgn;
+        ctx.lineTo(x,y);
+      }
+      ctx.closePath(); ctx.stroke();
+      ctx.fillStyle='rgba(255,60,60,0.95)';
+      for (let i=0;i<33;i++){ if(!B.sm[i]) continue;
+        ctx.fillRect(B.sm[i].x-2,B.sm[i].y-2,4,4); }
+    }
+  }
+  ctx.font = '10px ui-monospace,monospace';
+  ctx.fillStyle = 'rgba(120,200,230,0.85)';
+  const B = S.bodies[0];
+  ctx.fillText(`fps ${S.fps.toFixed(0)} pop ${S.active} seen ${B?B.seen.toFixed(2):'-'} ` +
+               `L ${B&&B.G?B.G.L.toFixed(0):'-'} det ${S.detectCount}`, 10, S.h-10);
+}
+
+/* =========================================================================
+   INTERACTION
+   ======================================================================= */
+function revealDock(ms){
+  ui.dock.classList.add('on');
+  clearTimeout(S.dockTimer);
+  S.dockTimer = setTimeout(()=> ui.dock.classList.remove('on'), ms || 4200);
+}
+
+let holdTimer = 0, downPt = null;
+canvas.addEventListener('pointerdown', (e)=>{
+  if (S.phase !== 'working') return;
+  canvas.setPointerCapture && canvas.setPointerCapture(e.pointerId);
+  downPt = {x:e.clientX, y:e.clientY, t:performance.now(), moved:false};
+  clearTimeout(holdTimer);
+  holdTimer = setTimeout(()=>{
+    if (!downPt || downPt.moved) return;
+    const hit = pickSmall(downPt.x, downPt.y);
+    if (hit) S.hold = hit;
+  }, 220);
+});
+canvas.addEventListener('pointermove', (e)=>{
+  if (!downPt) return;
+  if (Math.hypot(e.clientX-downPt.x, e.clientY-downPt.y) > 12) downPt.moved = true;
+  if (S.hold){
+    const hit = pickSmall(e.clientX, e.clientY);
+    if (hit) S.hold = hit;
+  }
+});
+function endPointer(){
+  clearTimeout(holdTimer);
+  if (downPt && !downPt.moved && !S.hold && performance.now()-downPt.t < 260){
+    revealDock();
+  }
+  S.hold = null;
+  downPt = null;
+}
+canvas.addEventListener('pointerup', endPointer);
+canvas.addEventListener('pointercancel', endPointer);
+canvas.addEventListener('pointerleave', endPointer);
+canvas.addEventListener('contextmenu', e=>e.preventDefault());
+
+function pickSmall(cx, cy){
+  const rect = canvas.getBoundingClientRect();
+  const x = cx - rect.left, y = cy - rect.top;
+  let best = null, bd = 1e9;
+  for (const B of S.bodies){
+    const n = Math.min(S.active, B.pop.length);
+    for (let i=0;i<n;i++){
+      const c = B.pop[i];
+      if (!c.born) continue;
+      const d = Math.hypot(c.x-x, c.y-y);
+      if (d < bd){ bd = d; best = {body:B, c}; }
+    }
+  }
+  return (best && bd < 48) ? best : null;
+}
+
+/* controls */
+document.getElementById('c-flip').addEventListener('click', async ()=>{
+  revealDock();
+  const cams = await listCameras();
+  if (cams.length < 2 && S.facing === 'user' && !MOBILE){
+    // single webcam: nothing to flip to, so flip the mirror instead
+    S.mirror = !S.mirror;
+    return;
+  }
+  const next = S.facing === 'user' ? 'environment' : 'user';
+  try { await startCamera(next); resize(); }
+  catch(e){ try { await startCamera(S.facing); }
+            catch(_){ fault(await classifyAsync(e), e && e.name); } }
+});
+document.getElementById('c-cam').addEventListener('click', (e)=>{
+  revealDock();
+  S.camView = (S.camView+1) % 3;
+  e.currentTarget.setAttribute('aria-pressed', String(S.camView>0));
+});
+document.getElementById('c-mem').addEventListener('click', (e)=>{
+  revealDock();
+  S.memory = !S.memory;
+  e.currentTarget.setAttribute('aria-pressed', String(S.memory));
+  if (!S.memory) for (const B of S.bodies){ B.ghost.length=0; B.ghostAge.length=0; B.ghostI=0; }
+});
+document.getElementById('c-reset').addEventListener('click', ()=>{
+  revealDock();
+  for (const B of S.bodies) B.resetMemory();
+  S.active = START_POP;
+});
+document.getElementById('c-info').addEventListener('click', ()=> openInfo());
+document.getElementById('closeinfo').addEventListener('click', ()=> closeInfo());
+function openInfo(){ ui.info.classList.add('on'); document.getElementById('closeinfo').focus(); }
+function closeInfo(){ ui.info.classList.remove('on'); }
+
+window.addEventListener('keydown', (e)=>{
+  if (e.key === 'Escape'){ closeInfo(); return; }
+  if (S.phase !== 'working') return;
+  const k = e.key.toLowerCase();
+  if (k === 'c') document.getElementById('c-cam').click();
+  else if (k === 'm') document.getElementById('c-mem').click();
+  else if (k === 'f') document.getElementById('c-flip').click();
+  else if (k === 'r') document.getElementById('c-reset').click();
+  else if (k === 'i') openInfo();
+});
+
+/* =========================================================================
+   DEV HARNESS — gauntlet testing only. Never active without ?dev=1, and
+   always announced on screen so injected poses can never pass as tracking.
+   ======================================================================= */
+if (DEV){
+  window.BOB = {
+    get state(){ return S; },
+    get bodies(){ return S.bodies; },
+    /* landmarks: array of poses, each an array of {x,y,z,visibility} normalized */
+    inject(poses, holdMs){
+      S.injected = poses;
+      S.injectUntil = S.t*1000 + (holdMs||200);
+      if (!S.vw){ S.vw = 720; S.vh = 1280; computeCover(); }
+      applyPoses(poses, performance.now());
+    },
+    setPop(n){ S.active = clamp(n|0, 10, MAX_POP); },
+    setRelation(on){ S.relOn = on ? 1 : 0; },
+    setHabit(on){ S.habOn = on ? 1 : 0; },
+    reset(){ for (const B of S.bodies) B.resetMemory(); },
+    stats(){
+      const B = S.bodies[0];
+      if (!B) return null;
+      const n = Math.min(S.active, B.pop.length);
+      const out = [];
+      for (let i=0;i<n;i++){ const c=B.pop[i];
+        out.push({id:c.id,terr:c.terr,x:c.x,y:c.y,ang:c.ang,sc:c.sc,ten:c.ten,fam:c.fam,
+                  born:c.born,sup:c.sup}); }
+      return {fps:S.fps, active:S.active, seen:B.seen, L:B.G?B.G.L:0,
+              conf:Array.from(B.conf), support:Array.from(B.support), pop:out,
+              habTotal:B.hbTotal};
+    },
+    async boot(){ await enter(); },
+  };
+}
+
+/* boot */
+resize();
+if (!window.isSecureContext){
+  ui.restSub.textContent = 'This page needs https or localhost to reach a camera.';
+}
+</script>
+</body>
+</html>

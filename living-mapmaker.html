@@ -188,7 +188,15 @@ var FIBRES = [
   { c: "#6aa9ad", m: "ply", warm: 0 },     /* pale teal       */
   { c: "#d5795d", m: "ply", warm: 1 },     /* pale vermillion */
   { c: "#7a2f4e", m: "solid", warm: 1 },   /* madder          */
-  { c: "#0f6f70", m: "bead", warm: 0 }     /* verdigris       */
+  { c: "#0f6f70", m: "bead", warm: 0 },    /* verdigris       */
+  { c: "#3f959b", m: "dash", warm: 0 },    /* light teal      */
+  { c: "#a4432c", m: "solid", warm: 1 },   /* brick           */
+  { c: "#1d7f83", m: "ply", warm: 0 },     /* deep verdigris  */
+  { c: "#c86a3f", m: "bead", warm: 1 },    /* tile            */
+  { c: "#54263c", m: "dash", warm: 1 },    /* deep madder     */
+  { c: "#8fc0c2", m: "solid", warm: 0 },   /* pale verdigris  */
+  { c: "#e08a6e", m: "dash", warm: 1 },    /* faded vermilion */
+  { c: "#0b555c", m: "solid", warm: 0 }    /* ink teal        */
 ];
 var STROKE_MIN_PX = 7;             /* travel before a drag becomes a thread */
 var HOLD_MS = 520;                 /* long-press to say something into place */
@@ -856,7 +864,7 @@ function ribbon(n, width, off) {
   ctx.closePath();
 }
 
-var plainWeave = false, laid = null;
+var plainWeave = false, laid = null, press = 1;
 function drawThread(th, alpha, width, dim) {
   var ws = worldSize();
   var count = th.pts.length / 2;
@@ -997,6 +1005,7 @@ function surface(L, si, px, py) {
 
 function drawWeave(now) {
   buildAggregate();
+  var nowMs = Date.now();
   var ws = worldSize();
   var base = threadWidth();
   var dimOthers = !!openKnot;
@@ -1018,6 +1027,10 @@ function drawWeave(now) {
     count++;
   }
   plainWeave = count > 420;   /* a very full ground drops the casing and the haze */
+  /* The more that has been woven here, the less any single strand insists on
+     itself. A busy ground settles toward a low field the city still reads
+     through; only the newest threads and the knots keep their ink. */
+  press = clamp(1 - Math.log2(1 + count / 36) * 0.20, 0.24, 1);
   laid = plainWeave ? null : groundLaid.slice(0, 190);
   for (var i = 0; i < Store.threads.length; i++) {
     var th = Store.threads[i];
@@ -1028,9 +1041,11 @@ function drawWeave(now) {
     if (th.bx1 < vx0 || th.bx0 > vx1 || th.by1 < vy0 || th.by0 > vy1) continue;
     var age = Store.bounds.t1 > Store.bounds.t0
       ? (th.t - Store.bounds.t0) / (Store.bounds.t1 - Store.bounds.t0 || 1) : 1;
-    var a = 0.52 + 0.42 * age;
+    var recent = clamp(1 - (nowMs - th.t) / (3 * 864e5), 0, 1);   /* three days keep their ink */
+    var pr = press + (1 - press) * recent * 0.8;
+    var a = (0.52 + 0.42 * age) * pr;
     var dim = dimOthers && live.indexOf(th.id) < 0;
-    var w = base * (0.74 + 0.38 * age) * (1 + Math.log2(1 + (th.wear || 1)) * 0.13);
+    var w = base * (0.74 + 0.38 * age) * (0.5 + 0.5 * pr);
     if (dimOthers && !dim) w *= 1.25;
     drawThread(th, a, w, dim);
   }
@@ -1154,8 +1169,29 @@ function buildKnotClusters() {
   /* on an empty ground the very first crossing must be seen; on a full one it
      would only be litter, so the faintest stage steps back once the weave is busy */
   if (kept.length > 12) kept = kept.filter(function (a3) { return knotStage(a3.w, a3.au) >= 1; });
-  kept.sort(function (p, q) { return p.w - q.w; });
-  renderedKnots = kept;
+  /* A run of equal knots down one stretch is a corridor wearing evenly, not a
+     row of separate places. Where several of the same strength sit in a line,
+     the strongest speaks for them. */
+  var peaks = [];
+  for (var ki = 0; ki < kept.length; ki++) {
+    var kk = kept[ki];
+    var kx = (kk.x - V.x) * ws + W / 2, ky = (kk.y - V.y) * ws + H / 2;
+    var reach3 = Math.max(58, knotRadius(kk.w) * 3.4), peers2 = 0, beaten = false;
+    for (var kj = 0; kj < kept.length; kj++) {
+      if (kj === ki) continue;
+      var o2 = kept[kj];
+      var ox2 = (o2.x - V.x) * ws + W / 2, oy2 = (o2.y - V.y) * ws + H / 2;
+      if (Math.hypot(kx - ox2, ky - oy2) > reach3) continue;
+      if (Math.abs(o2.w - kk.w) <= kk.w * 0.3) {
+        peers2++;
+        if (o2.w > kk.w || (o2.w === kk.w && o2.key < kk.key)) beaten = true;
+      }
+    }
+    if (peers2 >= 2 && beaten) continue;
+    peaks.push(kk);
+  }
+  peaks.sort(function (p, q) { return p.w - q.w; });
+  renderedKnots = peaks;
   if (openKnot && renderedKnots.indexOf(openKnot) < 0) {
     var found = null, bd = 1e9;
     for (var j = 0; j < renderedKnots.length; j++) {
@@ -1191,7 +1227,7 @@ function drawKnot(kn, now) {
   var r = knotRadius(w);
   var fresh = clamp(1 - (Date.now() - kn.grew) / 2600, 0, 1);
   var isOpen = openKnot === kn;
-  var HM = (openKnot && !isOpen) ? 0.2 : 1;
+  var HM = ((openKnot && !isOpen) ? 0.2 : 1) * clamp(1 / (0.45 + 0.55 * press), 1, 1.7);
   var many = kn.au > 1;
   var accent = many ? "#bf4526" : "#2f7d84";
 
@@ -1251,13 +1287,13 @@ function drawKnot(kn, now) {
   /* 3+ · the ends of the threads that hold it */
   if (st >= 3 && r > 6) {
     ctx.globalAlpha = (0.4) * HM; ctx.strokeStyle = "rgba(29,32,29,.75)"; ctx.lineWidth = 0.6;
-    var spokes = clamp(kn.au * 3, 3, 21);
+    var spokes = clamp(kn.au * 2, 3, 14);
     var off = (Math.abs(kn.x) * 977) % 1;
     ctx.beginPath();
     for (var sp = 0; sp < spokes; sp++) {
       var ang = (sp / spokes) * TAU + off;
       ctx.moveTo(Math.cos(ang) * r * 1.02, Math.sin(ang) * r * 1.02);
-      ctx.lineTo(Math.cos(ang) * r * 1.28, Math.sin(ang) * r * 1.28);
+      ctx.lineTo(Math.cos(ang) * r * 1.20, Math.sin(ang) * r * 1.20);
     }
     ctx.stroke();
   }
@@ -1602,6 +1638,8 @@ function drawEra() {
   ctx.font = '600 10px -apple-system,system-ui,"Helvetica Neue",sans-serif';
   var lw3 = ctx.measureText(label).width + (label.length - 1) * 2.2;
   var tx3 = (W - lw3) / 2, ty3 = 18 + safeTop();
+  ctx.globalAlpha = 0.82; ctx.fillStyle = PAPER;
+  ctx.fillRect(tx3 - 10, ty3 - 6, lw3 + 20, 20);
   for (var ci2 = 0; ci2 < label.length; ci2++) {
     var ch2 = label.charAt(ci2);
     ctx.globalAlpha = 0.85; ctx.strokeStyle = "rgba(241,236,224,.9)"; ctx.lineWidth = 3.4; ctx.lineJoin = "round";

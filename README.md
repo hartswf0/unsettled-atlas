@@ -24,6 +24,14 @@ Six laws govern both. Source anchor is not target. The compiler owns geometry, a
 
 Atlanta is the reference build; New Orleans tests what generalises. See soft-cadastre/SYSTEM.md.
 
+Common Ground · Living Mapmaker
+
+A living map woven by the people who move through a place. You leave a thread on a real city; where threads meet at an angle the place ties itself off into a knot; returning thickens it, and common ground is not something you can make alone. The map is the interface — one control on a cold ground, no menus, no legends, no copy.
+
+Atlanta's geometry is compiled from the Soft Cadastre basemap into the file itself, so the ground draws on the first frame with no network at all. OpenStreetMap raster tiles fade in underneath when there is one, and nothing depends on them. Several phones join one ground by link or QR: BroadcastChannel between clients on a device, and MQTT over WebSocket across them, racing public brokers, with `?broker=` for a ground that would rather name its own. If none of it answers, the weave still works and still persists.
+
+Built as a gauntlet loop: each piece was given a builder and a separate critic in fresh context, and the critics drove the running artifact on phone-sized screens rather than reading about it. See living-mapmaker.html.
+
 Data: OpenStreetMap Notes, © OpenStreetMap contributors, ODbL 1.0.
 
 Created independently by Watson Hartsoe in connection with the Spatial Scholarship Field School 2026: “Spatial Technologies in the Normal City.” It is not owned, endorsed, or maintained by the Field School or Georgia Tech.

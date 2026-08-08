@@ -468,6 +468,7 @@ const S = {
   w: 0, h: 0,
   vw: 0, vh: 0,
   cover: {s:1, ox:0, oy:0},
+  framed: null,
   bodies: [],
   // two people is opt-in (?people=2): with two poses requested, a single fast
   // moving person is sometimes reported twice, and the phantom takes half the
@@ -522,6 +523,51 @@ function computeCover(){
   if (!S.vw || !S.vh){ S.cover = {s:1, ox:0, oy:0}; return; }
   const s = Math.max(S.w/S.vw, S.h/S.vh);
   S.cover = { s, ox:(S.w - S.vw*s)/2, oy:(S.h - S.vh*s)/2 };
+  S.framed = null;
+}
+
+/* The framing the body actually gets. Starts at cover; opens toward contain
+   only as far as it must for the tracked body to be inside the viewport, and
+   follows the body's own centre rather than the video's. */
+function updateFraming(dt){
+  if (!S.vw || !S.vh) return;
+  const sCover = Math.max(S.w/S.vw, S.h/S.vh);
+  const sContain = Math.min(S.w/S.vw, S.h/S.vh);
+  let wantS = sCover, cx = 0.5, cy = 0.5;
+
+  let x0=1, x1=0, y0=1, y1=0, any=false;
+  for (const B of S.bodies){
+    if (!B.raw || B.seen < 0.35) continue;
+    for (let i=0;i<=28;i++){
+      const p = B.raw[i];
+      if (!p || !Number.isFinite(p.x) || !Number.isFinite(p.y)) continue;
+      if ((p.visibility !== undefined) && p.visibility < 0.35) continue;
+      if (p.x<x0) x0=p.x; if (p.x>x1) x1=p.x;
+      if (p.y<y0) y0=p.y; if (p.y>y1) y1=p.y;
+      any = true;
+    }
+  }
+  if (any && x1>x0 && y1>y0){
+    const pad = 1.22;                       // room for the crowd around the bones
+    const bw = (x1-x0)*S.vw*pad, bh = (y1-y0)*S.vh*pad;
+    const fit = Math.min(S.w/bw, S.h/bh);
+    wantS = clamp(Math.min(sCover, fit), sContain, sCover);
+    cx = (x0+x1)/2; cy = (y0+y1)/2;
+    if (S.mirror) cx = 1 - cx;
+  }
+
+  const k = 1 - Math.exp(-dt/0.45);         // no lurching between framings
+  const cur = S.framed || {s:sCover, cx:0.5, cy:0.5};
+  cur.s  += (wantS - cur.s)*k;
+  cur.cx += (cx - cur.cx)*k;
+  cur.cy += (cy - cur.cy)*k;
+  S.framed = cur;
+
+  const vwS = S.vw*cur.s, vhS = S.vh*cur.s;
+  let ox = S.w/2 - cur.cx*vwS, oy = S.h/2 - cur.cy*vhS;
+  ox = vwS >= S.w ? clamp(ox, S.w - vwS, 0) : (S.w - vwS)/2;
+  oy = vhS >= S.h ? clamp(oy, S.h - vhS, 0) : (S.h - vhS)/2;
+  S.cover = { s: cur.s, ox, oy };
 }
 /* normalized landmark → screen px */
 function mapX(nx){ const x = S.mirror ? (1-nx) : nx; return x*S.vw*S.cover.s + S.cover.ox; }
@@ -756,6 +802,10 @@ async function enter(){
   ui.fault.classList.remove('on');
   ui.rest.style.display = 'none';
   S.phase = 'working';
+  listCameras().then(cams=>{
+    if (cams.length < 2 && !MOBILE)
+      document.getElementById('c-flip').setAttribute('aria-label', 'Mirror the view');
+  }).catch(()=>{});
   resize();
   if (!S.bodies.length){
     for (let i=0;i<Math.max(1,S.numPoses);i++) S.bodies.push(new Body(i));
@@ -939,6 +989,7 @@ function applyPoses(poseList, now){
 
 /* ------------------------------------------------------------ per-frame sim */
 function update(dt){
+  updateFraming(dt);
   let present = 0;
   for (const B of S.bodies) if (B.seen > 0.05) present++;
   S.presentBodies = Math.max(1, present);
@@ -1303,10 +1354,14 @@ function simulate(B, G, dt){
     const hi = habCell(B, G, c.tx, c.ty);
     if (hi >= 0 && (i % sampleStride) === sampleOff && conf > 0.35 && B.seen > 0.5){
       // weighted so the whole population contributes one body-second per second,
-      // independent of how many constituents are currently alive
-      const w = dt * sampleStride / Math.max(1,n) * HB_W;
-      B.hb[hi] += w;
-      B.hbTotal += w;
+      // independent of how many are alive — and weighted by how much the body
+      // is moving, so that holding a pose does not make the session familiar
+      const move = clamp(Math.hypot(c.tx-c.ptx, c.ty-c.pty)/dt/(figH*2.2), 0, 1);
+      if (move > 0.04){
+        const w = dt * sampleStride / Math.max(1,n) * HB_W * move;
+        B.hb[hi] += w;
+        B.hbTotal += w;
+      }
     }
     const fam = familiarity(B, hi) * S.habOn;
     c.fam = lerp(c.fam, fam, 0.08);
@@ -1386,7 +1441,7 @@ function simulate(B, G, dt){
       const ph = c.phase, tt = S.t;
       const nx = Math.sin(tt*1.6 + ph) * 0.62 + Math.sin(tt*0.83 + ph*2.3) * 0.38;
       const ny = Math.cos(tt*1.31 + ph*1.7) * 0.62 + Math.cos(tt*0.61 + ph*3.1) * 0.38;
-      const amp = unc * figH * 16 * c.mob * idleAmp * (1 - c.fam*0.55);
+      const amp = unc * figH * 16 * c.mob * idleAmp * (1 - c.fam*0.75);
       fx += nx*amp; fy += ny*amp;
       // where the model loses hold, individuals begin to let go one by one:
       // the more doubt, the more of them stop being held by the anatomy
@@ -1398,7 +1453,7 @@ function simulate(B, G, dt){
     // living idle even at full confidence — nobody stands perfectly still
     {
       const ph = c.phase;
-      const settle = 1 - c.fam*0.55;
+      const settle = 1 - c.fam*0.78;
       fx += Math.sin(S.t*c.gait*1.9 + ph)*figH*1.9*c.mob*idleAmp*settle;
       fy += Math.cos(S.t*c.gait*1.7 + ph*1.3)*figH*1.9*c.mob*idleAmp*settle;
     }
@@ -1423,7 +1478,8 @@ function simulate(B, G, dt){
     if (c.hasT){
       const dx = c.x-c.tx, dy = c.y-c.ty;
       const d = Math.hypot(dx,dy);
-      const lim = figH * (0.85 + Math.min(loosen, 1.25)*1.7);
+      const lim = figH * (0.55 + c.mob*0.75 + c.sep*0.45 +
+                          Math.min(loosen, 1.25)*1.7) * (1 - c.fam*0.42);
       if (d > lim){
         const k = (d-lim)/d * 0.55;
         c.x -= dx*k; c.y -= dy*k;

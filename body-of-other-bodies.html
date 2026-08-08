@@ -466,6 +466,9 @@ const S = {
   inferMs: 0,
   inferTries: 0,
   inferFails: 0,
+  delegate: '',
+  remake: null,
+  swapping: false,
   minInferMs: MOBILE ? 42 : 24,
   lastFrameTime: 0,
   fps: 60, fpsAcc: 0, fpsN: 0, adaptT: 0,
@@ -568,12 +571,14 @@ async function loadModel(){
       outputSegmentationMasks: false,
     });
     const forced = Q.get('delegate');
+    S.remake = mk;                    // kept so a slow delegate can be swapped out
     let lm;
     if (forced === 'cpu' || forced === 'gpu'){
       lm = await withTimeout(mk(forced.toUpperCase()), 30000, 'model load');
+      S.delegate = forced.toUpperCase();
     } else {
-      try { lm = await withTimeout(mk('GPU'), 30000, 'model load'); }
-      catch(e){ lm = await withTimeout(mk('CPU'), 30000, 'model load'); }
+      try { lm = await withTimeout(mk('GPU'), 30000, 'model load'); S.delegate = 'GPU'; }
+      catch(e){ lm = await withTimeout(mk('CPU'), 30000, 'model load'); S.delegate = 'CPU'; }
     }
     S.landmarker = lm;
     return lm;
@@ -801,6 +806,7 @@ function tick(now){
     S.fps = S.fpsAcc / Math.max(1,S.fpsN);
     S.fpsAcc = 0; S.fpsN = 0; S.adaptT = now;
     adaptPopulation();
+    watchDelegate();
   }
 
   // ---- real inference ------------------------------------------------
@@ -839,6 +845,23 @@ function tick(now){
 
   update(dt);
   render(dt);
+}
+
+/* A GPU delegate that loads but runs in software is far worse than the CPU
+   one, and it fails silently — it just makes the body arrive late. Watch the
+   first inferences and move to CPU if the accelerated path is not accelerating. */
+function watchDelegate(){
+  if (S.delegate !== 'GPU' || S.swapping || Q.get('delegate')) return;
+  if (S.inferTries < 2 || S.inferMs < 130) return;
+  if (S.inferTries < 6 && S.inferMs < 400) return;   // marginal cases get more samples
+  S.swapping = true;
+  S.remake('CPU').then(lm => {
+    const old = S.landmarker;
+    S.landmarker = lm;
+    S.delegate = 'CPU';
+    S.inferMs = 0;
+    try { old && old.close && old.close(); } catch(_){}
+  }).catch(()=>{}).finally(()=>{ S.swapping = false; });
 }
 
 function adaptPopulation(){
@@ -1767,11 +1790,15 @@ function renderHold(){
 
   // one transient line of text, on demand only
   ctx.font = '10px ui-monospace,Menlo,monospace';
-  ctx.fillStyle = 'rgba(207,199,180,0.85)';
   ctx.textAlign = 'center';
-  const label = `${TERR_NAME[c.terr]} · lag ${(1/c.stiff).toFixed(2)} · scale ${c.sc.toFixed(2)}` +
-                (c.lend>0 ? ' · lent' : '');
-  ctx.fillText(label.toUpperCase(), clamp(c.x, 90, S.w-90), c.y - figH*2.2);
+  const label = (`${TERR_NAME[c.terr]} · lag ${(1/c.stiff).toFixed(2)} · scale ${c.sc.toFixed(2)}` +
+                (c.lend>0 ? ' · lent' : '')).toUpperCase();
+  const lx = clamp(c.x, 96, S.w-96), ly = c.y - figH*2.4;
+  const lw = ctx.measureText(label).width;
+  ctx.fillStyle = 'rgba(8,9,10,0.82)';
+  ctx.fillRect(lx-lw/2-7, ly-11, lw+14, 16);
+  ctx.fillStyle = 'rgba(214,226,232,0.95)';
+  ctx.fillText(label, lx, ly);
   ctx.textAlign = 'start';
 }
 

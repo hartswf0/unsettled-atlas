@@ -1,0 +1,1793 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#efeadd">
+<meta name="description" content="Common Ground: a living map woven by the people who move through a place.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Common Ground · Living Mapmaker</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23efeadd'/%3E%3Cpath d='M4 20c6 0 6-10 12-10s6 10 12 10' fill='none' stroke='%23bf4526' stroke-width='2.4'/%3E%3Ccircle cx='16' cy='15' r='3.2' fill='none' stroke='%231d201d' stroke-width='1.6'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --paper:#efeadd;
+    --paper-lit:#f6f2e8;
+    --ink:#1d201d;
+    --ink-soft:rgba(29,32,29,.55);
+    --signal:#bf4526;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--paper);color:var(--ink)}
+  body{
+    font-family:Georgia,"Times New Roman",serif;
+    overscroll-behavior:none;
+    touch-action:none;
+    -webkit-user-select:none;user-select:none;
+  }
+  #stage{position:fixed;inset:0;touch-action:none}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #hud{position:fixed;inset:0;pointer-events:none;z-index:5}
+
+  .pip{
+    position:absolute;pointer-events:auto;display:grid;place-items:center;
+    background:var(--paper-lit);border-radius:50%;
+    box-shadow:0 1px 0 rgba(29,32,29,.30),0 6px 18px rgba(29,32,29,.13);
+    transition:transform .16s cubic-bezier(.2,.8,.3,1),opacity .22s ease;
+    cursor:pointer;
+  }
+  .pip svg{display:block;overflow:visible}
+  .pip:active{transform:scale(.94)}
+
+  #thread{
+    width:72px;height:72px;left:50%;transform:translateX(-50%);
+    bottom:calc(22px + env(safe-area-inset-bottom));
+  }
+  #thread:active{transform:translateX(-50%) scale(.94)}
+  #thread .ring{fill:none;stroke:var(--ink);stroke-width:1.4;opacity:.85}
+  #thread.on .ring{stroke:var(--paper-lit);stroke-width:1.8;opacity:.9}
+  #thread .glyph{fill:none;stroke:var(--ink);stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+  #thread .knob{fill:var(--ink);stroke:none}
+
+  #people{width:46px;height:46px;right:calc(16px + env(safe-area-inset-right));bottom:calc(35px + env(safe-area-inset-bottom))}
+  #back{
+    width:46px;height:46px;left:calc(16px + env(safe-area-inset-left));bottom:calc(35px + env(safe-area-inset-bottom));
+    opacity:0;pointer-events:none;
+  }
+  #back.show{opacity:1;pointer-events:auto}
+  #undo{
+    width:38px;height:38px;left:50%;
+    bottom:calc(30px + env(safe-area-inset-bottom));
+    transform:translateX(-92px);opacity:0;pointer-events:none;
+  }
+  #undo.show{opacity:1;pointer-events:auto}
+  #undo:active{transform:translateX(-92px) scale(.92)}
+
+  /* place-anchored word input */
+  #say{
+    position:absolute;display:none;pointer-events:auto;z-index:7;
+    transform:translate(-2px,-50%);
+  }
+  #say input{
+    font:italic 17px/1.2 Georgia,"Times New Roman",serif;
+    color:var(--ink);background:transparent;border:0;border-bottom:1.5px solid var(--ink);
+    outline:none;padding:2px 2px 4px;width:min(58vw,230px);caret-color:var(--signal);
+  }
+  #say input::placeholder{color:rgba(29,32,29,.32);font-style:italic}
+  #mic{
+    display:none;position:absolute;right:-30px;top:-2px;width:24px;height:24px;
+    border-radius:50%;background:var(--paper-lit);box-shadow:0 1px 0 rgba(29,32,29,.3);
+    place-items:center;cursor:pointer
+  }
+  #mic.on{background:var(--signal)}
+  #mic.avail{display:grid}
+
+  /* the ground key (share) */
+  #key{
+    position:fixed;inset:0;z-index:9;display:none;place-items:center;
+    background:rgba(239,234,221,.90);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);
+    pointer-events:auto;
+  }
+  #key.show{display:grid}
+  #keyInner{display:grid;justify-items:center;gap:16px;padding:24px;max-width:92vw}
+  #qr{width:min(62vw,262px);height:min(62vw,262px);position:static;image-rendering:pixelated}
+  #keyUrl{
+    font:11px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;letter-spacing:.02em;
+    color:var(--ink-soft);word-break:break-all;text-align:center;max-width:34ch;
+  }
+  #keyNote{font:italic 14px/1.4 Georgia,serif;color:var(--ink-soft);text-align:center;max-width:26ch}
+
+  #attrib{
+    position:fixed;left:50%;transform:translateX(-50%);
+    bottom:calc(3px + env(safe-area-inset-bottom));
+    font:9px/1 -apple-system,system-ui,sans-serif;letter-spacing:.06em;
+    color:rgba(29,32,29,.30);pointer-events:none;z-index:6;white-space:nowrap;
+  }
+  @media (prefers-reduced-motion:reduce){.pip{transition:none}}
+</style>
+</head>
+<body>
+<div id="stage">
+  <canvas id="cv"></canvas>
+</div>
+
+<div id="hud">
+  <div id="say"><input id="sayIn" type="text" autocomplete="off" autocorrect="off" spellcheck="false" placeholder="…"><div id="mic"><svg width="11" height="14" viewBox="0 0 11 14"><path d="M5.5 1.2a2 2 0 0 1 2 2v3.4a2 2 0 1 1-4 0V3.2a2 2 0 0 1 2-2Zm-4 5.6a4 4 0 0 0 8 0M5.5 10.8v2" fill="none" stroke="#1d201d" stroke-width="1.3" stroke-linecap="round"/></svg></div></div>
+
+  <div class="pip" id="back" role="button" aria-label="Unweave">
+    <svg width="24" height="24" viewBox="0 0 24 24">
+      <path id="backGlyph" d="M17.5 12a5.5 5.5 0 1 1-2.6-4.67" fill="none" stroke="#1d201d" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M15.2 4.4 15.3 7.9 11.9 7.6" fill="none" stroke="#1d201d" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div class="pip" id="undo" role="button" aria-label="Unpick last thread">
+    <svg width="20" height="20" viewBox="0 0 24 24">
+      <path d="M6.6 9.4H14a4.6 4.6 0 0 1 0 9.2h-3" fill="none" stroke="#1d201d" stroke-width="1.6" stroke-linecap="round"/>
+      <path d="M9.6 6 6.2 9.4l3.4 3.4" fill="none" stroke="#1d201d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+
+  <div class="pip" id="thread" role="button" aria-label="Leave a thread">
+    <svg width="72" height="72" viewBox="0 0 72 72">
+      <circle class="ring" cx="36" cy="36" r="27.5"/>
+      <path class="glyph" id="threadGlyph" d="M21 44c5.5 0 5.5-16 11-16s5.5 16 11 16 5.5-16 8-16"/>
+      <circle class="knob" id="threadKnob" cx="21" cy="44" r="2.6"/>
+    </svg>
+  </div>
+
+  <div class="pip" id="people" role="button" aria-label="Who is on this ground">
+    <svg width="30" height="30" viewBox="0 0 30 30" id="peopleGlyph"></svg>
+  </div>
+</div>
+
+<div id="key"><div id="keyInner">
+  <canvas id="qr"></canvas>
+  <div id="keyUrl"></div>
+  <div id="keyNote"></div>
+</div></div>
+
+<div id="attrib">© OpenStreetMap contributors · ODbL</div>
+
+<script id="ground-data" type="application/json">{"bbox":[-84.55,33.62,-84.2,33.9],"layers":{"boundary":"tk`cOiqzlE`M?o@zq@}k@@NqKiY@kBaSbBiJkHGuD~AvAxAwCjAcAfGgA`l@uAZdB~C}@bDzDHuGxS\\lf@pFAkAgQjy@gAmCfSnAxS`GxHiGcBFbH`B\\aBnNvLKTnWsLJx@loAa}@VBlm@e|@PKbw@hPnHlClMiCRPpEqPp@JpLaXF[zE}Ni@qUtCEsEoy@dKbBojAczAb@Bgp@wa@gAM}`BeZ}ECcImc@NTa_@qaBPg[oImg@tFo@}m@wg@OTv[c_@P@zEuy@UlAvNisA~@V`^fGFNpbAiJDA`OpAzFzOvBRvVaaCd@DrXoO~n@WfZhKxU~NqB`Bl`@ouHtAj~@Ok~@NuD}zEj@qsF}xBvVhKeM`Rcq@|^qYF~Dts@]f@l}@lCKm~CsMtShJzFhI|CvO~B?kh@ysDz_@I`@~OgId]hMFwC|ChBv@oBdE|CCAfk@qSjFo_@fS~QtI_GmmCbC?imEbt@l^uBd@rD~MEcFz@BbBfI_@C_C|KKGoBrRMI{Bh@zBh}@s@GhGqFClEtHnJsC?wLzn@SEgGqNqB_@_XaCrDoOKEgJhb@_DmeEuUQrWyFvMxGK}FhOjBj@sApD~ApLd~CsbDmSkAe@h~@uJ?eCbGhNhMeE?AoC}g@HcCiFkH?GqFqhA`If@lLxhJyfEkHO\\pPaMtDwg@LmE|CrByCi`@}A|AxE}ElBqAkFcJ??~h@nGnDcOBd@vEwBuDIlU{H?CkJ_WFErJoRl@oC|G_L??dGsFm@jmE_oBe@cfCwaA?r@jL[cBaWeC}AeAfGgFuIqKsQgA`DgLiFiBoM`h@yN|@GyQmRbCjErMWpT`D[tBjCzPwHfExBkIQmRxMeDiEuHlF{J`AwEgEhAqCfNlDj@mSlIYiEeWoOtA{FdDeQA?vD{QVhHV@~OqN`BiI}CyOtPdBfHbItFzq@x@pB~GcPbHrPpG`@_C_EgAdHyCl@fHsB|AfCxAfVxGfQp@lVcO_BwEhAeHtJcAzA{Mz^_]mAqEnI|AnA_DlBZAzIlTjZ{D?xAdJ_LdC?fCzLq@dN_ICcGxDAvAjXvDpAy@fC`CBAgCd@fC`F@s@cFtEGOcqA}Bf@|BCuAo`NjmQlQcNRcEkDsFhC}IkEPbJyg@BoDePgFnCh@vKmR@w@mCsGnCeeBX\\kXuJDEcQyNoHaHfDUbX}B`C_F_@?fKyKL@vE}t@?IqC`CTdJgHp@wAqDkAjDeFrYyWqC_BiXdOgTxRLdPqyBnAAoFgHmEmLDqIdPeO~@AgEm[LnCaEeC?AqH{GiHy`@cAj`SneAq\\iY{QqJqCcLp`Hv}Keb@wJ_jA_eAcQkHc`@z@ka@fOgJcGiCyQj_@k~@b@oLiKym@~H_S{@wG_b@sb@?cLbIqMNqGc]of@brGneKu@pA{d@qZhcAdv@w[e]znAhpA_`@gWcQ{Yb`BzoF^ev@mEA{Oc[a]{]nt@^Wsi@cq@a_@vBy@~l@v|DBxOpz@SNh]d~@UIbh@vEJxKjKfHExChEaQvJLvJuLBl@`d@mt@f@_IzBlAbZ{HtEv@xImAz@s@qFW|GoMAM|Em@uNaUNy@lImQdS{CcOm\\gRx@i_@qCoMePt@Xro@wUBpAn`@oApMmGCk@{EmYGNlTbXuG~_@Uh@~d@eDoBmHfChAtBbHwAbBvALrSxf@a@OwBxWOqH{Tyg@bAaAoMve@mBk@qLbVI~EfHpBeByAg@|@wCnV@MkVd@~HnF?EcIfRaAoAwd@`DgARyJf@~Ilo@qKt`@|FyF|^tu@EaiXzqNLql@rN}GiGsHli@]ElGxH@yz@pw@ny@Mh@av@CbDo_Hwbj@","water":"~edaOc~tmE_C_ByNjKxRkH|dffbOc~flEuCvLlBhE{J~DlGrIg@`C}DtHeE`BuFjMqMzHZfEvFbCWjAeKpAwD`GiEBsA|ExCnEc@dF||{pbOyhwmE{F_EmFxHwITmAhDjHbC|J}AaE{DrD_ErCfB~AkA|dh}bOu}emEyBYaDtGpCz@nCkEdI{BkIN|ln|bOubwlEdJVw@uIdCaEqEcGhAyFpFS_BaAdC}EcB}BeLvHSnHgIrBI`C`M{CpAxAgFrS|rluaOykymEjGkFnDh@nAiBsFsCwG~L|n}sbOo~qlEdSiC\\yBiJ{ErA|FmK`F|f_acOu`lmEiD_M{Im@i@hBdDhDhKxE|z~xbOodmlESfCfWzL`Ek@uVuP_E\\|pqwbOk|mmEhIx@~BdDfCgBmNqFgMAbJzB|ff~bOgdplEhJyKuFl@iAeDuGfMjFhA|b|~bOqbtlEdG_AxEuFiJoAiTtIlEzCdJkB|ndzaOivumEcCcAcFbEaOPwA|C{FaBaAbHhKaAdDcDvC`CvNaC~@kG||hebOuxfmEpE\\jK}FvB{DwCwE_FS_DrB~@pCyDbBcA|G|ta`cOwaxlEvDmHtBuPeHj@GvX|flybOodrmEyFJ{EtEuCs@lJlPvHkAeEgHjCgJ|hr_cOofwlE|QaOEwEwHcA{DhA]|BzDdAsGvIPvD|xweaOscwmEHsAePeIOpEzFpFnHi@|njfaOazrmElGq@cA}KjDiFgI_HuCnHjEnLcBxF|`hwaO_zymEJ}BsBcA}IfAuCyAa@pLaVn@lKdH`FcCbDlBjQ}O|rxwbOeygmEjCk@uOyJhKdL|x__cOg_xlEgFzEjHcCnOl@`BoCuBkBqFZmCuDq@bEmCjA||fnbOwtomEkDpDgDe@nBbC_@xDpFbA~CmFpHS|A}D}DsC_JdA|~tlaOidrmEYvApF_ElNqCm@wBlF{Ax@gCsQtBiC`FqHdDnAvA|rsraO{uhmEClCyKdDiB|DfVAwAoB`GAuHiDsAsE|l_tbO{pjlErL}Gz@kGkHzDFlGsDKWjB|xc{bOklrlExIfG~Cc@@}EuGoIcDAaAjI|~tfbOetfmEwA_K}JaCoEjDzDvEcLtD[zGhReA~HmG|~evbOaejmErEnFxBe@uQcT_@zCfH|H|n`~`OakmlEvKoOhAuOkCsDoMoC_BgC\\wCzFsBx@mC{AeIsKaG_A}FgHw@aDge@cPpLdGwQ_OsEeBqDvIeEvAqFwN_IvK_BwF{LoHyCrHjEvDhIIrAiJd@I`BrNvH_MtL|RnI{G~KFxEfCGhLuLfDve@rGh@j@|EfM`IdAxH}H|EBzElKhCzGjG}AjO}EhDkC|I|lnpaO_`}lE|BiBwBh@`@_B`DiAsCoBcGJgAiIkEf@^vWzGAdDeD|voabOmmulEcDMcClCjK~Dq@kE`H{CsIf@|fu~`OugvmEq@yQsFZ~B`NzCUHpB|d}`aOgiplEpCpEbK~@kDfG`EdArCeC~DF{EwGqKeBcDuCmBp@|lpoaOybolErD~DXjJ`JbA_IcC|@gLmHcA|ptjaOmaqlEjEe@iPsHYrBvJdF|`nraOmomlEwM~JF|GzCnBm@yG`JsN|dk}`Oo{fmEpN_@~@_DoPw@iEfDfEnA|hmaaOqlimEj@}@sKcO~@~NzBhBjDg@|rbtaOe{|lEeFWoPcJxB{@zSvL|xb`bOafnnEqd@vPqI|IsDdKbClb@bLfh@tFlGtWtAvJfICjHmIzP`AdPnm@|m@zq@v`@z\\``@vuA`pAlpAhm@df@dM|Oha@ff@tZdGdIt@xRya@ho@nKz_@mMv\\nBpEzJzFvBxFqJlPtCxKFzNbYzOpYlYm@jI`BtEpNvMhHfNP~EqJxQAvH~c@bg@}Hz[j@jNvHxUUnQs`@bbArE~LlIdGpE?bg@gQtYtA~\\rUnY~UnIrLzXzRjh@lKjt@zq@pNzXdn@tf@tiCpkAxj@xeA~q@rXdw@fc@zvBzcBrRfCpLdOlVdf@EpGfLvXzEzA~Q_B|bzibOo{dmEwEZm@rCfIjAjArG|GCdVyGaCaFo_@O|fj_cOcwolEuN`\\wAqL{D|Bb@wCqCaAaWxWmT`AyJqD_CwEiKdFrDoHiAoD_FyBfI_AZmEnHqC`DoKtEnAjBxJ{KjIzAhFxCJlDhGZqD`CNfJ}KqB}G|Eh@xGoOKlHuAYnAvIzCsEdI|AlA}AfD^f@vE~ETvEuHnBC|zo}`OwxwmEtAcFhHzAjDbG~B_BnDnBs@hFqCjAuAqG[fDmFeIuHQ|p_abOa}vmE~I~KlAtLq@gL{JmL|p~taOomqlEoKxAmRcBagA|OyK}CkRyPgGj@yCcCcGdBcbBaFkp@}IgaAxMcG_LwRg@cSkHyIi@yS`XgIfF{Et@{IyEoAfO{LnCyQgAyO`IXrCxIbCjIfMyFjEsA}EsC{@oLlBkArDpElH|ONl@jEeRjBaRbRqErKThGiKHkFgHsI}Bgh@bHyKgK_Fm@eC`Cj@~OkCdB_Qz@iQkGyMhBzAvRuFdG{KpAgGaMo`@|LoBtDj@`GxInQaD`HyFy@iG{J{OeEok@{E_Dj@_@dGhJtLiNhMwCcB}EoO}QeByIxIeLRaA~JeKrJiWiHeEaI_Xd_@~LnKiChJxFjGgSjIat@lGg@gIyE_DuFwMx@sIeKScKiGoCdAgRdi@wM@y_@tM}NaHsP^~AhHrL`HnBnIw@jEmSxG{X}Dg\\j@wD|YsY|GAlHuExD_XxDuBpJ}O~HzHjIiGnOyX~BqLtHgOrT}ChT{KJyNfFcE|KwNbBgH`Hqd@zPyZ`f@aKlAmJpKf@vAjJU`OzD^jFsG~HrItAbXoAbCtDyQv]aS|BaOcDqE|IaJ`GDxLjJaBhRtAnCp@M|Bya@~V{ChHkM~AmInL~@tUbc@b[aFbM|jzkbOa`xmEuA|ErBrExd@zXnKfM|tembOkzzlEiJq@mJxIdKmJwDcBhOhD","motorway":"pgtbOypclEh@iTqB}MiIeLsLaGcMqB}T}@ag@Hsg@lBiLiByG{DiR}YmD}KOyJtF{b@iAsJ{DyHmt@uu@im@qY}r@ak@{`@_Sip@kSeIaGyCoFs]wzAsHmFsg@sJsEmCyBiDw@eFf@aF`NmVaUh[cFzL_@vX{E|k@Rfe@gNnj@wAxMCjNjAbLv`@j~AvC|P{HjuAiHpd@|hauaO}}nlEcHhPmAxH|Arl@cA`JmDxKuG|JujCziCsD`HoCdKaHvt@|jrjaOsp|mEk{Bt}AqKnM}ExN}@rK_@`cAsQfsAk@rRnJfvAvFpRzKhUxBfK`B~]SnPyRt{CgLli@yKps@wCtGiEzEmo@ta@uJhMmF~Py@rnA}JrxApDncAhEpRr^xj@xPl_@z\\|[nj@|v@pLtInKjD`NxAfeBWz[xBxPpD~}Bts@zJ`FpvAj`AzM`HpxFniBlOvMnw@phAd\\n`@lHlEx[zL|]~ZfKnCtKXzh@eJrTgA`Sr@hVnDlZ|I|s@h`@d|@na@|fq{aOel|mExWhj@jCzJC|`CdCpJxNhRjCjH~EhnA{AdKaN|XkGnG{XxOiIrNmAz]zD`h@aAbOsCpOFfH`Rr]fUfSlPbHdu@rTtu@hg@ne@fUxDlGj@tJwAxFoIbNoAjIIuOpAaHpCgDlPsI`JoNzE}DnHyBfh@_Gte@qM~U}KtNeN`JuQlIiVbKkq@`I_^`[a|@`AuKe@eWpEyXj@oThJq^|t@m~@zRi_@nz@c|@tz@aiAjh@m\\|LmK|`goaOuydlEjHgw@jC{JjEiI|kCakC`FoIxEkScBym@lHm^MqK|td{aOmbsmErJbC~ElJtJpKlTrDbH~GxFjLd_@jR}^mSgEkJmIqIqKiAiHwBySkXi[aCsYkHcQmJiXf@gOiDcOoVcKgVy`@wk@oHwFkg@cWyOqPqPkJkUa^yE_Fsk@sa@_c@kb@|zf|aOctkmEcVs_@}IqGcIgBgXyBcMuC_Y_LmU_Ou{Aah@ij@aUqNiC_l@kDqOeFgI{IgPk]eFmH{o@wg@uQa^gLoL}b@g^id@uWsF_FyfAowAedDweB|jjdaOwu|mEtyCd`BnhAlyAnf@lYvm@fh@xW`e@|p@ni@`Vle@fG~FdN|E|n@zDzKxBdk@lU~zAng@rVnO~YpLjObDpa@hEhK~GfIvPqN_a@pCw]uDef@v@q[|B}H~EyG`ZyPzGwHbMcWpAqMaFcmAsCwHyNgR}B_JBaaCqCgKab@k|@mGiY|fp{aOimcmEuBfVeCrFAzB`DaJd@cJdBoFOaDafAGgPsCo[oBwQjFm]a@gSrBaQlG}I|Agk@hAcCgBiF}KwPy@yHmDms@s|@u`ConAe[m]kZ}VwOwIyWcIwc@kFuLmDksG}iCcOcBuzAmAyZvC|xoibOuhelEoz@{`@sn@w]o^aLuWsDyQe@aTlAmf@xI_MQoKkCeGyDeVkUs\\iM{IgGqXm\\gz@ukAoN{LsKuEikFibBsMyGkyAibAiKyE{{Bsr@oQsDm\\oBwdBRaKgAaMyDiLaIgi@yu@e`@w_@oSoc@kYub@oCaHkBaLqDeeAxJixA`@skAlEqP~G_LdM}J~c@{XxJiMfLet@xLuk@vIivAm@i`@tGiZ`AyKQuXyA_TwB{H_NeYmDwO}IutATuNbRguAVm{@x@uSjEqN~JsMbpB}vA|h_acOmfcmE_k@hHqnCte@mUh@_qBeG{VhA_ShF{_@tS}MfE{yAvN}KpEsS~NkNbF}s@tMyICkZ_DyLh@qIdC}QdLiLnEwNjBoXLaNzAat@bYiL`Cq{@jByM[qLyBsg@yQoXsBoWp@kZvHwQx@qtCC{Ny@_b@qGeQqAujAr@wOfDgJfFqt@bv@yApFChFbHdg@y@xHoElI{JtGajAla@kbArAqe@nMaXhB{~@eAwqBmUwb@a@ebGd`@oWpF}z@xY|lcrbOeb}mEuGzN}IhL}HzG{c@fX{GzGke@lr@mnAjqA_R~]yr@d{@mD~HkFxUcAhYyDlS\\pYeAnKyZp{@qJ~b@_Hvf@yKn]sHnOeGpHmKvHyOjHaPbGsThFgn@lHgGdCgD`DuUpd@wGvXoApaAcDv\\l@bYs@bEcEvEmYrNkW|TgGdHcEpKo@|StAlGtC~ErSlPhUjIbMhInKlIrChFt@nHhAr}@zFnXnBvWzBxFzQxXbI|UfLbQfMze@rAh]zCjZy@fGsElI|hh{aOqjbmEIhLdF`Ivq@zT~UxC~c@oA|thdbOavbmE\\aB_@rBcP]wVsFc{AN]aFqHOTrFxHA|ngtbOkadlEu@_N}DcJyH_HsKaEmb@iCo^Fym@pBeJqA_IaEiSkZqDuKUgLhFic@iAaJkEiImq@{r@qIwFa[kMwKmGy^a\\{PuLu^sQcv@wV}E_FgCwFsYwrAmBmE_JiFqj@_K}EgC{BuCiAmG|@wF|Ua\\dCaHyCs]o@wV}AsKuJo]gMyRcJoWeT_^yB}X{F{WaAyr@yBgU_EoGuOwKmGsDyRyGwRmOkEcHaBqJv@eTfDkJhc@{^~TaLpF}I\\{]zCs[CwgA|`ccbO{eelEzC}Q|BkY|Dk`A_A}Imb@cgBoAuZ`B_P|Mwi@Sad@|Emm@j@gYrC{HjZ{b@~B{F|nolbOab|mErn@jf@jj@tUxj@lZrOhLlGpId}AdfFf@dPqGj`AlAzNjHlN|a@f`@lUfe@j@rLoBxJat@~gA_D~KU|JjApIdD|Hfe@|m@fFxNXvw@yMlq@_AdPRhOtBlNzWn_AjUjkA|BxTdAv[@jd@eAzNgC`KqRzd@qDlWl@rUdL`l@R`b@e@ln@iLn|Aa@bsBaApNyCnOsInT_T|[}G|OoC`NuFvr@sArEoFpFmFhBuGh@iq@eGaa@Fkc@bCkN?|~zbbOkttlEhYf@x_@nGb\\Ufc@eFdWElZfAlXaC`_@IbXsH|Is@zIv@tO`FdMzA|t@_HlOtAhSpGfI~@l\\}Cfl@dAnb@MdOpDhv@pg@bLbAzgAP}kATiHiAoGwCwn@kc@cNaD{pAy@}TzCoH@_\\{I_MiAkv@|GgMcBoQqFuF]qIh@eOfFaIjAeb@XuT|Bq[mAwXH}[pEqKZ_UC_^}FeRc@|b{~aOgv`mEqi@m@iFs@az@wX_FgIJmLc]kBkUoF_F?|@~o@Odi@Bej@|l`|`OqbvlEtbAk\\dSiDhcGq`@d^b@prBnUr}@jAdX_Bjh@aNrw@[rHs@piAka@tI}FfEcIt@_HaHmg@rAuMpFqHjo@{n@`KeFvMuCplAw@fPjAva@pGxRdArvCJnKm@vXaI`Ws@x[zBdh@|Q|KlB|L\\j{@eB~JkB|t@qYnNaBbZStLaBxK}D~R}LnIeCpNg@hY|CrIBfq@_MpM{DjWkQ~KgEtkAkLf`A{]fNgD~WuAbmBtFlWWfQkBjbCwc@lf@gG|hvwaOusnlE`CmX`O}Uj[{x@pD}MpAmLn@{m@}AgpJ|d_|aOsclmEnGxLfPrMtN~Fbs@jSty@ji@fc@hT`ExGx@rIwIn\\mAfL|~zzaOwsamEgRgXaPkFyHW[kW|pyzaOogmmEfQpQ|QvYbRpPjYlMt_@|I~VlRhWrJjYnTf`@vOfExHg@jEkE|BiJR|vbacOg~olEsFlKk|AljAuGpCis@hAie@zN_Vr@{z@rLyLcAk[_K_IcAaJf@|b{{`OqlomEh_BrAbSjDtrGjjCjJpBnn@pG~W`KpDzC|FfKtOdM`]n_@|rjabOmvgmErKInEuCYuF{E{Fa]kM}\\}VgUkIaVuQud@iL_U{KkPqNeQeX{SwT|ppabOmehmEoEiDp@e@|CnErImIlCyTpDgO}@}LmGkT`@yIcDaJmHkGgGyJiGk\\Kug@iZ_ZqLmZoIsIjC`B|t_ebO}pcmEnBvE_D~ChBuBDoC{I{KjByPCcs@~AoTU}LiBfd@Npk@oGhMl@|ChChC|by_bOcecmEeg@^g`@mHy[jByF]fHP|jbtbOkkelE`HoDdDyGbGos@pDwObF_LtXad@vDoKvDqSt@oNX_qBpKusAjAikAaAsRmK_g@o@mPlC{X~T}j@lCuNf@qJo@qv@wC{\\gUckAq\\ijAuB{NC}KjA}KhK_YbE}SOov@cG_Qye@un@qCaI}@gIj@uL`DsJds@ofAnBeI?cI_CuJcRy]wa@{_@yHgN{AyPvGadAyAoQ{oA_fEyKyZmJaLoKoHaj@cZec@yPyNuI}c@g^sTiI|jnccOq{qlEsw@dL{I`DqEpHwAx_@oCtHydBlpAyHvAim@f@_c@`NqWz@ey@jLiKk@i^wKiQ]||twaOetnlEdAgRvAgGfOcUz^abAvBePj@ec@|x{dbOwgimEBdOCoO|vgobOojelE`SoCdZiAhw@Pb_@hD|~h_bOmjpmEiN_CcOoG|zgdbOoubmEgS_@}MuE|d~dbOeecmEqS`K|j|dbOscgmEK_j@@pH|~{dbOsnhmEA}G|hasbOkpelEnUvC|~}qbOys|mEoJxLqSnReSpGaOrK|ns_bOy_pmEjB`F|th}bOyhelExq@qDdXtA|`k|aOckcmEkFcAmQA|`t_cOsjelEaXqAck@vC","primary":"n{yaOsielEzRi_@bMkh@hk@krA|Tgs@||}lbOwfjlEj~@uZhv@w@vm@gMvo@k@bc@aEzImB|VqMzJsBcc@rR_HvA}c@`Eio@f@wp@nM_t@n@w_Az\\|zqpbOyxglErInGylBuvAgG{GsBoMoCsi@aw@mtC|@}^jD`H`AxRbFvXsCnI|zgdbOoubmE\\hWsKvSR`cAlA~EtMlT|PhS{@`K{@|{BhAhaFkBh]`DjXR|qApKrWa}@~b@s`@vHwRpNoX~w@OtMzKtNVhGgCxFk[p[mCz^}DhW|hvwaOusnlE_z@vpBsi@pe@_dArxA_JfRaNza@|f|~bOah|mEi|@x`D}EpKkqCnxCyc@f\\bt@b^xLvBpMOhLkCv`@kShk@}Ct]oOpdAxB`MaAbk@yXpMcNpLqG|bv`cOq`kmE{u@eCiLvA{QdHkWjSa[~QsLfDgVlC_ZvMqZ~IkS|PmW~JcYnBqInBeKvFkLhNx_@~HlGxCxn@tm@bRb^~K|Lvf@lWfeAp^vo@|\\r}@jt@||rpaOoremE~McKbB_G_Gi^b@qWpYc^dCeK}BaVqR{i@sPu\\YiF`A{BlJeGfNqj@`GqM~@{Jx[c_AhC_XQwOoHySaG_HoCgPs{AyqA_JaK_lAghCaHqI}XcT|`_taOm_cmE_[vXiJbBgO^aCrDwBxK|J@`C}@Z_Co]uBcbDsw@e`AmDg^aEy~@rPkXzPcIpKcUia@kOcK}b@qPyd@ap@wr@yw@{NuKkKiDok@yJut@}Aoh@|D|ne|`Oy~qlEtRkQ`AwDCkTzZso@`TeUnT_GxOoJbI_C|rdkaO{oimEeLwKyCqQ_Zq_@qHgPgOgLsNgR}~@cYaLuFyMyLgQ}JoPgNq]uRoLyKoRsWac@eXgUgHq`@}@gi@iJuDeVwBwDsT}EmPmHmIuF_SsVob@eO|bt{aO_ommEoZ|FeDsCcNwDaPH}FqAueAu}@a[mR_wB}iB`vBdjBr^dU|x`fbOuh{lEfEbG_IwNeAo`@{EqNuLcIgYaHwf@wa@oJ}CsJBgd@nSEjA_yEjAe_@wEidJpB}l@o@}S{BuXyGiz@ya@cTiMaoAkfAo@lVkHjLaJzD}d@fJe\\jYclBz}@sEdI{Gbf@sFlIkGrE{g@rLe|@dB|j}_aOckvlEgGkc@wGqM{B_UpA~ThG|M~H~b@}YnOyT`GyUnW}CrJeSn_@}@rG^fOmE|G|~ydbO_{emEo_AHg[gBm]@Co{@lAmB~Bs@b@|@`@uArGwC|`gfbOq`{lEhP~Tn_@b\\bHtK~DzK~Lvp@nKbeAxF?|j|`bOm}bmEBhH~G\\pA~RzOzO|n|`cOoy~lEo`Akv@sn@g\\}hAq`@id@sV}IkJsSi`@ms@wp@_c@gKcMhOyXnJ_IzFzGyFdOgEzLqG|n|pbOipglEtj@~a@lMxE~`DzNlOrCtJlE|vgebOiicmEaEEpyAKn]tGwFEwNoEmJy@|~}dbOqg}lEr@mL`HbEEnC|nbibO_|tlEz@vMbGC|thbcO_~rmEyKxFkOrOaj@`XkLfAoeAwBq]nOik@zCs`@dSoLlCuKZcM}Aqv@e_@_H~ErHuF|dwvbOg{pmEg]hZeCfIyH`p@aH`NuJvH|n`ubOctmmEiH~G|b|qbOq{ymEiW`X_[nRo^|FqV~L}E|LxA`U}@pIcYv]tRgU~D}Hf@uHaBeUtEoL~WwMb^cGt]iUb^y^}GvI|ffabOo}gmEp@r~@|l`kaOurimEmGcH|dxzaOsgmmEcTmHcSU|th|`OygomE`E_WIeaBmA}GyCeD|l`}aOwzklEeM|_@|zeacOeevlEsSnKaRpPuK|WsT|NeMP}PkGqHu@gt@vBkj@dK}^pOib@nDgJW|txeaOqknmExRtL~k@pQ|dhkbOk_rlEiBqFgWw^}`@mUkCiF}@yG|jm_bOkgpmEcEcR`CyIvL}MnCoGnB}PgAsYCxB|t`raOonflEpEuM|eAm{Ajl@ci@ve@unA`NkVpBkH|nh_aOatxlEgPK_]uCqHmEi_@u_@mT{I|x{dbOahimEoA}kEpBiJ~GuFnIsBjd@h@zKwAty@mf@jGwIpJwp@|Xaa@bEcDxKoCj`AiE~HmB`FiD|vzhbOeacmEtLInY~B~^_BnYaLxRiDnOkKvBUnl@l@z`@mCrXlG|RfCbFQhd@gOv]iSzVeEtKwK|jxcbOikelEbAkNi@sJlAtFaAdS|rs{`OmthmErM`Aze@aEtv@jBbq@lMfPvJjo@hs@jPtRpYbc@|a@`P`LdI|lhraOqepmEjGkP|daebOaepmExF_D`HgAnb@p@bIu@|s@aa@|pyzaOogmmEzYqG|~`bbOi}emEea@Q|dx_bOmtymEH`BiBya@hAw^uCkJmJuM|x~_bOiismEk@wGiIwMqByUdDq[E_d@{@qL{DeL@kZjBuLfFwK^sF|~nibOijsmE{AbM|pu`bOqmglEtPyPrD_Hm@iGmKeM?yLdAsGbJkRfFyThEgH|`_tbO}d|mE_y@r}@|xt`bOge~lE{X?|fg|`OafzlEzKnGta@fa@dJtBrf@nB|z}jaOe{~lEq[mP|jpiaOaw_mE_RwJ}jAwaA|bi}`Oui|mEiEtH}ZbM|lcxaOsvnmEmXkU|luxaOwfnmEcI_H|fb|`Oyp{mEf^qNzDsF|d_caOaq_mEu`@~Q|ppraOwpsmEgK_J","secondary":"b|naO}ahlE{k@j@y_@rTl_@oUzs@QjWoBvt@vPxX~P|jhebOa}dlE]mMwFeOlJmt@gFqLkXcDaG_DiDqG|MnL~c@fDfWfOsDpHfY`M||pbbO}zilEAnOlm@oDwMc^zAiGxPoCxM{QpgAch@xsAMlVtP|tewaOgvmlEuCfNlChKza@vj@~rA~mAxIvY|nzlbOe`lmEgp@fTn^eJrcA_f@|DgFdRol@|H{IxoA{[`Vm@~XoFbRiUn_@kW`JoOzZnGlG`MzI|G|dz`cOoocmE{]Hg\\uIuL{Hcg@kh@{lAol@ue@is@qEgPoJyGeG_M{PkN_b@eh@qI_QuLac@uKuP?}FnQ`CfVsEf_@xB`XqOlXaE~NuXsO`XeX|D_YvO}]aC{WnEqd@oG|z}zbO{xomEwPpI|padcOkmmmEkv@y]cn@cSaX{Qge@kSmHkJ{CuY|nzwbOykwmEiNrF~]oL|_@{SlVKpElBfKlRpNjC~To@fLrDgKwCcV^sNeCaPwUkn@c@co@iRyxB`@npByAtO~AfO~F|p{|bOc_wmEkRmG|npnbOah|mErW`Zv[`RzUpHvGvLv[nJm\\}I_GkLkVsHo\\yRyS}V|rivbO_s_mEyRjGxb@oNd_@sU~R_QhVw\\rKiJbL_FtRi@xH{Bze@k\\b`CcnApPqM~SsF|bdvbO_rfmEwj@kn@oL}XiSoJoXmb@_LgHgFo@pBuRhCwFneAuy@|p{obO}kxmE`AzRye@`MeQsGmNgZ|~ulbOqb|mEaH`B}RsG|h~obOq|wmEJhCt^s@`R}HsFdCdOvUlBj\\pJfQf@lNeEOdF[WuKcJmPoAyT|zzubOa{{mE|[pPlYtG~hBj@i|ATmQkAcWgHio@{\\|rr{bOsj|mEkUdj@n_Es@|jglaOqkhmErHf\\fj@jo@pNjHzJ~KbAl`@aRb@_AlVkSdB}CrQqg@xZwZtb@iy@bc@y[|d@gJtR_XvNuQlF_JdUcqC`DrW]|xoiaOceulEbAw@cv@h|@qm@`^sHvHhHiI~j@i\\zJgJ{IoAsWxBwOmIqCe[dFm]o@_fA|lvqaOq{ymE`GgJcP|UgMxEebCVeQbMmb@~JkQdMp[rd@|eAhr@~PlR|Tra@ro@bh@j\\xl@pP`Gfy@`Hh|@~\\xd@lMmK`FaOqKodA{`@uo@aFoZwGoIeIaV{e@}r@ok@{Vec@}j@ef@ok@}]kZu^~EwCoPxGuE@eM{JoYeDkLqM}PwDkQuJtPnK|PpDdKzLt[jEnKhJ|FLbIuD|xmyaOo{|lEwhDlBuQ_CkkCxBsPjCkb@l@|@wCmCnGnAwB}`FhDV`u@eDrS`FzbA|reraOs_bmEbBzEaOu@w_@wI|AnC|luraOeocmE{UnEmVt@uTuPk]HWmIqEaC{F@LjMgj@Day@qDHsF}NaSeHeR`AaQwBg\\~BqRzMyMxIyS|~|saOqwfmE@kCEtOcn@yTcr@`Lab@kDiZyKePoCmu@vJii@uJcxAt@siAzYel@hU}k@A_OcEjIvB|nkraOs|ymEsQjVsBlIEt_CnBtKvJtP|d{qaOc`xlEw_@rC~CoE`MBtLyD|lzpaOo{wlE{IjZcXxWum@fCoz@_@}]xCme@KoInN|C}C|~kyaOomcmECyFcYc\\qZgh@cMa\\cf@jM|v}`bO_l_mEzQtTnFaC{PmUod@`XuTTqa@gDwt@yNms@cJwi@g\\sO}E}iAkJum@rLiR?}r@iZiXgC|didaOor`mEaTiAiViOa@gH}gA?a\\fF}Rh@se@iGic@V}MbC|zknaOe|bmEBr{@}GvQbEfe@H`ZqVhs@|f{daOie|mEcLhZ{oAbZkZ~`@gYvNeJ`^qBl\\}FhNjOpdAoKnc@c_@{KaJk@cIlB|zykaOqscmEbDgIyRyHw^md@gKiEoZgDoD{CYi]}IeUlDmJfImG~R}|@xEyEnSgEmWvH|nteaOsgymEvOmd@pAyl@iN_@qYuP|vguaOahwmEt@sEmE_p@uKgNu@iEbGoYgC~I|bsnaOejmmEzBXsRkCkZz@oRqC{K_OiPkJoUcHmTwPs`@~NcIdYKnReKvI|``vaO_j|mELfG{Ubg@oQrJm^zHmMnPmNzF|nw{`OufwlEpL?bm@xJvRcHlFcV~\\}A|xjgaOaicmEyq@yLoFjB||wpaOeebmEk`@oIoB}L?wYwMA|vh`aOi~xmEyXyZif@uVeA{C|@_Q_Yka@|`ngaOgcrmEgVdN|PoKj`@aOxFaTrEsEnIc@~TpDz^F``@cFpHlDpFjKtHta@dGzHvn@vNbr@j[|wAxHr}@fn@p[vL}[tDaaApa@mGdN_FfExSn@lGbHrHjCfRh@j[_HjQo@lTXrN|DbBeSyBu[{KqP}PyFzZ_W|jyuaOo`nmE|a@_[jWmEpFmDzHyLbJm_@bVaVjDgK|a@_IbRuOX_\\M|ZfFsClJoQ|f__aOax{lE|@zaArFnRIrL||h~`OcurmEaK\\eUlNg]d@|~vnaOkimmExc@~LfNhKnh@R~OtMcYz]gkAh@u[tL}F\\gc@yLuLk@ev@fN|j|iaOcpulEab@tc@|la{aO}plmEjSe@kSd@iu@xQoO|Auk@|PgH[ePaHoBlEr@eB|hvkbO_gplEqMLsOiF{EuLuCgBsY[}F{AfbA_]|_@qErShC~I}AmIfAsSmC_d@tF}pAxd@cHd]bBdTbJlJAnUpF`MVjVeoAf@oRyPb\\iNnBkPaEkpJfAsB|rc`bOq}bmEtBxFV|o@yK@PzVsIUaUuG||c}aOki}lEAcAvAbtDz[E`a@oRbZcEt_@iXnN~EtOqFk@e[sCmMrFkTs@qjA`]E||o~aOqd~lEE_Ctk@A`^{J{JeL_BfA||qhbOigvmEOuc@gGwHoEyMnAsLbIoLbA{]~Uw\\gDiHiRcNxDyS|tpcbOyp_mEcPb@a_@fPsD_Fp^kNhf@`C`SK`EwCv|@APvvAfDA|ro`bOua_mEgRuQq^Lp^MQoW|l_qbOu|_mEiF?cEzFi@pOnn@wL~_@gAxUbA`]~PzGCdHsCaA\\|vtjbOsj_mEuLwCxv@hOBzFpHwDuHcAhcAfFjq@oNbZ`B|flyaOg|bmEzkEq@bA`x@sTbDmh@B_Ay~@{Zw{Ay@wa@xAwRzHgK|v@`y@z@lGnWI`Ar\\iuAA|hbcbOuoamE`ZfBsj@sFw~@RkAyPzCH|ffabOyp_mEpEyB{b@@|XxZkFfCtA|GNvd@~h@I|xwbbOue~lEqNFcO}SjFaCnPfTzq@|W|i@jLpE|G~AzIvm@z@hpAwErKjBfRxb@bTxTzdAjn@nH~Abt@mG`[dHth@nGta@wBz|@fAr_@_Ele@iL|d@[xb@aFjc@yNdOqJvNsDvQoMzUaIvd@oFf[xFbd@cAbZtC|zlybOuhbmEbLi_@|dckbOafumEbArGkFqOe[uLy]hEgOwPmo@_GqFeEkIkAiDaHyFsDm@wFcKuGeCgKmF}EaIcAwCyKoI_KcH_@cIwGaKi@uMwHga@kKqDmDmAmMuBqCcWD{EwBoFgNqKuBeIb@|bh}aOislmEhBKgJiBmAs^zDo[Ewb@xd@ahA_RiQuc@kGfIA~YjFlRzQrXqJxYmW|`w}aOssjmEcP[aQdQqdAm\\uJsSyFgUlAgTrE{O||xabOinamEF`Hc[D`@x[`OrWtJdI_VtKjNlRoI@|`|dbOerxlEtqBj@pj@`Str@~Pj_@xDjkA~^rbArSz[QhVlDrmAxx@iG~He@pGwSDuMwCmk@mCwm@FwqAfLoXxS|lt{aOapmmE|g@iAgh@jB|~hibOqbqlEqYqHmdGrAwx@fBwZ_FeSrGeKoOyGy_@`@yKn}@_gAvQwIdI}J|KiS`YcaA|dbzaOmmcmEh@zf@bRdSt_@vPzcABLtm@mKhYgGvFfGwF|twtbOa_slErLfSj_@^hN|KbTl@zIpEvMA|z|`bO}_mmEmy@LiW`IoXVnCzJoOpIyFe@rBsQqYIbLCjKoC_Dbf@h@pVeExKpD}Ki@uVnAkN|tfbbO{n`mEeC|C~Sq\\vBiUtHoVfSiP|VoIlVk[nHaRlBqKX}f@xSa]tCyJy@sVsMmWnD~H|j_fbO_oimEcD{PG_RjNaUhCwTrFyGkFwP|DwWyDsQ`Tw^hE_Tfj@sRpIwZqEqF|ff~aOwd|lE|wAo@jH{BhHtBxKA|dqqbOebglE[|@XaElDDzDzDk@ze@eErL|bxpbOu|_mEpG}o@jiAkC`R~Gf\\mQfNyPjJzCjO@r[{EtPpEdUuCfKkFd[u@|hgyaOwlqmExFoNr_@cG`Q_OpGqBzKkS|`i`bOs}emEkFNb\\W|ds`bOe}dmEtJIi`@o@bDjy@pa@?@jF|j}cbOmlamE|yAIHxu@`_@KfW~Fbu@a@|z}`bO}ngmE_GvKlJzChH{@~UbDng@QxR`IfEw@lIeJlMtA|lghbOmfcmE|EuGMeMpBuHdRySe@gImIcM~AcVtm@ylAdUofAhGiI|jm_bOkgpmErUiHh]gRtQcAh\\z@lU_Gr]aAbPgIvWkHhj@iJrb@qBte@~K|`}abOkh|lEO{`@bK?|dyfbO_i}lERpZ|t~`bOye}lEtAh{B|dlzaOag`mEpF|C|}@nMbiAI|by_bOcecmEiC}j@sDeRgGyIoCcM|py`bOs}emEfDJ@v^lG@Nm_@|pfbbOoqtlEcP{K}[uGge@eU{BmO|`}abOagylElDcBpX@oY\\ZnkAlDtE|X`NlApUbx@yC|x|abO}b|lEBgBp{@a@tQtApPgIrYG|jhabOwq~lEfGqCjL|OfIA^|}@vo@g@`PvAtQyH|lkpbOucklEE`_@hFrNj@dk@iLxFgMpSuIbEueA{CbeAtDdJ}DpK}QdN}H`AfKiAfC|lykbOa{qlEuOvD|xhrbO_ujmEcEtdA}G~i@~NpZDfn@gPtWcBxe@eRlUu@|T}w@XyNiGcJfFePDkRkF{JjFqLMkHoCcJbD_aDVu@gwB|nifaOwielErHcF|LuTpH}E|Je@rYpEwYwDsKl@_\\r`@|zaubOwcrmEnN^ua@i@kUvBoH_CmD_GpEzFlGlBfUyBfR`@|x`wbO}bqmEsIqGyGkMyY{GcKnQ{]bVcN`Q|fkubOkenmEvSfD|feabOsdcmE`Ayw@jhCM||{abOcx}lEl@jHdC{Eq@aL_AuAwJ@tHdL|hh{aOqjbmEpWjGnXnQrvBwB`JjM_TFZfo@qKD|`}saO}{fmED{HKpYnRxBnMsAvKmKAmKdAgDlEuBTuI|dyabOgeamEpO@fG|D|lk}aOuslmEdD_@eOrAoB{e@zDgYDoc@|Sci@|`znaOmxcmEGuL`IUJ}E|EwIvf@_Y|fmubOodumEnFaQiIjX~@qFiDM_T`OuPzByJiAki@gUfBjNgAwO`m@xW|pylbOudmlEmRjB}`Br@_@fHqeAKghAnh@}KvPqQrCkAtH|zfjaOs_vlEzCiOeBqSfAgLnYug@rXus@pm@q~@|zc}aOok}lEIa^jCeC||}~aO_{`mEv\\bE|xkuaO}bfmEbFW}Az@wTgF{Ip@oQwB|b~saOopgmE[tIbBaPxO{RhOmI~X_CtJmGtRyTbHtFfC~IgM~\\]vQfC|KvIhM|tvfaOcsqmEsj@Ojp@`@`WdPpLpMz\\hBrNjFtLtLbLvR|lrhaO_rgmEgx@}k@au@yJaKoEut@ciAaHuFkMwCkLKygAbGiQ_@gQmEo{@{d@qb@oD|hagaOegymEq\\Sr\\K|j|`bOm}bmE]iu@lBwH|vgtbOw~lmElMaL|p_rbOcc|mEmPfP{_@fQiJxLw@`FtRjQjo@~[uD~LcLpH|jvmbOgnxmE~MtYrNrGvg@aMn_@s@pJ_D|d{qbOciflE^lNyDfM|zzvaOmwimE_IkQxAuIuEgL~A_J|hu|`OclrlEtz@|J~d@dXpPdE~OBbj@qIkSky@_O{Qs@aMuLsc@oSm^|jswaOobomEqTtE|`}dbOczfmE{LuAcJtJeIp@sSeIwb@DiSyCqMF|`k|aO}kelEri@{JrYlFbYI`WdD|d}abOed`mEkOpNtTiT|fambOa_elEdLgDn@aKcGiEqUyAqDaDw@kFdFgXzHcG~J{A|xskbOkvhmE`OiWbOaG|OeMhOcBlTeW~EmKf]gZ|vhxaOicpmEqGgSgPqNyAs]vBsa@jHqV|rd{aOsqsmEUyeArCuK{CsZSiS`BoIcHiPwLgMaIoc@v@yHqGkJrC{QYiLbDcN|r{_bOwkelEyOeCcZBcXgF_m@vK|rf}aOkvwlE_SvEiWtMqh@b`@mKvB}SN|r|ibOur|lE|CeHl|@iz@|v_}aO}zklE|c@uv@rA{NwAcXeFkV{Ocb@eLoM|vcfaOygymE_Q`@oLvK{E`A_c@}JgXnBiL~G_H`JuPdEgv@eD|b}cbOkqhlEdAq]lqAB|rjfbOaoilEcjACaBxR|`keaOssqmEa~@mNao@cV}]cIeg@}A|b`eaOic|mE`d@pVnAmM|pg`bOsebmE`GJiHaaBkDqGVgLeEN|bkebOcqglEpWhKaFtC_S?|ljubOe}tmE{A~SpJjn@w@`Uz@}H|br|aOmyrmE}S~KjSeMeJiNiL_B|xx{aOqmsmE|MxBjJdO|l|baO}}emE}_@[eVpEe|@wFcb@F}RdCso@wA|vbyaOkj|mEmOrXgJtFis@dPii@U|zx}aOksjmEzRrFhDzKkWpi@oOnTgGoScBuOl@mM}GuN}BS|xrybO}{ylEaLvD}_@|Dql@xA|nmrbOmztmEjIlOxHjGlAlRxFhIqClL~@bI|`drbOijumEiJd@{o@uE|j}_aOckvlEpSt^vKzc@|fbrbOcwymEhGtN}DlJde@jA||l~bOw_{mEapB^yG~MkQdRqJpa@_IlRhRcr@pIkL|dkwbOedwmEek@hZ|HsF|bxubOm~umEpA_D}DzK|xrbbOwsamEgYE|tlqbOakymE~XvObXT|||abOef|lEhKIBfMeEdM|nscbO}hjlE|IvXc]tDe_Aa@|dymbOaqlmEjVuO`Rmh@|l}jbOgrjmEaPhv@mm@flAyCbQ|zu`bOebgmEkOdZ|rbfaOw`rlEsInFoX`F_Le@cSgFoYPe]xMat@jI{SaDkh@{Ykq@qG|`|bbOcjylE`_AO|nffbOmpglEbKfBfHvLbQbJ|~idaOojelE}WoEsJnE|lnlaO}jglEeVnOwH`BwKE}Z_HiIZoKrDqQtMgIfB|~_ebOu|elEdG~OTnH|f`abOokilEto@x@|fobaOmpqlEfTqI~WKj[rGrP}A||{aaOah|lEmiAdA|jdoaO{ubmEdQdE|`hjbOefllEcRgOmOC|brxbOivwmEfRcJ||eqaO{jymEsIrA}iBI|pambOciglEoOlKwDzWjFtHtSbAjG~CjAzIqGrG|necaO}kelErJyDfXpE|hmebOaemlEdReJ","rail":"t_taOmvilEaLbFgTpA||bmbO}mjlEcG}C_H~@oDvRh@eMzK{UbBqb@sq@wcCtApD|nnlbOq{hlEeAq`@|tlmbOmdjlEqQyRVwS|refbOs{dmEpCwR{L}HlR`E~TmAiIfDsr@xo@yPnW}a@xHeL~IcHxi@q@j_AfJvXhL~Mdq@fS|KxHpE|L`Dfh@pUj\\xg@lg@~Tn`AbNp|AbJ~Ld]dRdXnb@mKlkAsQvQonBhc@ceBzy@c\\pGaOlHwJnLsHvZfAru@aBfJav@zbAcRzE_u@LizB|e@|lxobOoanmEbFsF`\\eDjFlAzAdHyJpJA|EjgAj}@|lnaaOusbmExaBsEdtA{OjXgHx[gWzXaCzr@`Ljs@nRl{Ae@xStKzLvZ`JdHnv@lJdo@jYjVr@rq@_MpbAnIrTlGjg@~ZrmBr[aCi@|rd{aOqf}mEti@lpAE~`ClWbg@|EhkAaAdMaOvZea@bXoIvOr@v_@rPpQyKaJoD}JjIgb@wEgPwq@a\\_Ygc@qn@yTwXqp@wd@go@{u@o`@{ZaV{u@eWdE`B|tf~aOy{~lEujBwZwf@yZaVqGscA_Iin@dMeWq@mo@kY{u@wJkJoHuMw[sT}JwvAjAgNeCrZvA|tdpaOcgzmEjTzNcf@i^i~@cYea@uU|z|fbOqtemEnHuIiRok@_~@_b@qp@yv@uQ_MgMmCsr@uAo|@sT_kApGq]vOun@pGef@`Pyu@|Lu`@nk@ua@jMq}AhCoLoEeDwJ|Fxj@de@h_A|Idk@]pn@pN|L|p_taO}rqlEd_@?d^cErThFbJqD|dduaO_tqlEad@r@|rxkaOk||mEjp@vb@|nzkaOi{|mEdi@~\\|j}taOmtmlExUHfE|E|h_oaOs`{mE}l@gR_}@uj@|fhmaOc{{mEmb@yX|vflaO{s|mEd_@fV|f}naOua{mEwl@qStj@nR|~bmaOy~{mEse@qZ|dfmaO}{{mEyo@ga@||{kaOex|mEpbAnj@|zbnaOqk{mEeS{Gwz@oi@|fauaOqjrlEGpMoEkFsV_D|`hmaOiz{mEep@_b@|fwiaOeqdmEfW?bg@tSe_@yKjTfG|x{eaOcbpmErd@hOnVb@|~_x`OqikmEhVgI|p@_n@xh@qLd^dCd{@ne@hSxEtiBsEjRxJfu@diAbaAzP|t@`i@lKvVbAts@tFfKzKlGz}F~vAtj@fE~w@v[fS?bl@_MldA`IrSnFnk@|\\~mCfc@d\\eCbp@o_@jMoBrHbDrLtY|d}xaOcz`mEl]tMiXuL{aAoJ}P\\}i@tLgP}@_PmG|vm`aOglrmEjnElwA|b@nA|tcbaOkwqmEdn@bT|~f~`Ow_smEwj@_KzeCvd@p}DvrAfj@XlK`CpxAlaBxyC|nA|MlPzE`e@||_dbO{c|lEwqAhsAsp@|QcYd_@|~jkbOojplEkEqSZyb@}Xia@m[mPkHwIkPkaBkRcz@m{@wbA}E}n@aKsHqa@_Eod@aOgt@}_AmUgTq@goAmGoh@pI{yA[ez@kIuM_r@gd@ul@q}@uNuq@y^cY|xaibO}ucmEsC~_@eTrYoHtf@wKjNy`Cp@q`@fDgjAfj@m\\o@_ZyF|juqaOejymEno@jTpYdU~u@l`@`e@zn@vYvq@bp@~U|Wfb@dq@~[xEdOkIh[nBhPnm@|f@fOrq@|k@h}@py@zl@tCvLSzr@qIvyAjGrh@l@~nA~UxTlt@``Arc@nNfa@xDxJvG|Fnp@tP~U|a@v^bHlOnQpx@`P`_BfHpInYpNlZ`c@Mfb@pElT|ng|bOqk}mEkXjc@_Y~q@aSfSkOhe@maAlh@kRnCs^_FmZnDwT_Js_@Oga@iLw|@|S{NtTDdKlb@fe@^`\\pSr\\nj@nV~HfIbBtNsFnSyMjMes@dUo\\va@mOfy@nC`ZoCbPyUfa@_t@fz@eM~GwX`Au`@fKqG`IkIbe@_MrKccA`JeLuAsHuH|A`D|~sobOoommE_A|KrCtV{C~OsSf^sh@dp@_XtSci@nEcU|IiEfHuHdc@qJ|J}u@vGkw@~Q_H`Pm]x[yPtWc`@hHwKdGiE~JwEpa@qTxh@qIjF|dbqbOsximEeaA_Age@`RmRxR|t_dbOkc|lEke@pq@yr@df@|fxnbOqvimEgr@vj@|xambOqshmEe{@zb@qCxF~DmMz^mRrTyDnd@c_@|fskaOk_}mEjz@fi@tbA|[`a@xZroAtg@d^|Wls@h_@hc@zm@`Xjp@jp@dVlXjb@ps@z_@`D`MiG~XtA~MlbAly@fFhNfCza@tb@zo@bqCflBjgAhd@|hclbO}phmExX{Bd]oV|^wPzh@j@}c@oAq`@vPil@rl@iqA`x@anAlMj~@eFpQ{D|fAms@bg@eVf^q\\|`wmbO_nhmE{^rJ|j_nbOejimE_UzQsI~N|tuabOcrllE}@xL_K`KiB`J~N`Kc@jI|fpabOidklEyJmEhBoLgDvId@zY||inbO_oimEec@`b@|r}kbOwmhmE~Wo@hIqF||fmbOkjhmEtLcEfXmW|thmbO{ohmEtX}YrZ{Nv}@x@|lukbOedgmEd_@uK|\\qR~WiVrKwStKcGlgCdClOeFfKaP|dzhbOw~emEjh@oHh`B{aAzj@uf@||ogbOixemEgS`Gsr@vo@mRvX_c@xHsLdOcErd@[x}@xRtb@he@rW~@nIoEzL_cBlbBmr@fSoRpUkOr\\cl@dU_PtXkf@rc@}zA`l@zzAil@pe@wb@rQgZdj@kSfPs]pRqUlr@iS`cBibBrDeUqJ{IsTaImK}KuLo[V{Y|nzpbOevmmEYhGbbAdr@lL|Qd[tG`CxQ|z|kbOkmgmE|p@{Z|~d`bO}dmlExk@rWnAbE|vmmbOgkhmEpVoPvIsN|trnbOcoimEcJlPyQtPgaAxc@hXuN|volbOukhmEgk@tZ|bq~aOcgkmEvYx`@bxA`aA|bylbO_khmEqw@td@|btgbO_vhmE{LhG}LhZiIh@|hplbOmvlmEif@lOyiA~w@iTnk@{n@|x@nFh[|dufbOspgmEnm@{j@lUei@|fd~aOgz~lEvb@rHt]aBm\\vA}h@kJ|l|bbO_{_mE_@xRvLl\\nO~Mjk@lO~KzHtE~L`Ddh@nUj\\zg@ng@vTb_AjNz}A`J|Ld]dR~Vb_@hAzJ}Cpj@~QxXbd@n~AnFdw@hF~MfeDxbCplDrRpRrF|VdQ|zuibOghfmEqB{DiFi@gKvJ|bmpbOeyglEfEtGJ`w@|lb}aOed_mE_eA{K}LwEgGoJ`V~LbrAbR|`k}aOoc_mEiiAwKoUyL|lbdbOaaimEf_@l[vl@jTvFvLv@}Kjl@io@zRgi@vKoK|tukbOs}slEMdIqIzNAtNyDhLb@fT|xmmaOopcmEkPd@ei@cMx^~H|frkaOm}cmEmt@wPaS_@uOhEiVlTkOhFqxAhQ_dAfE|xj~aOwz~lEd[`Gv\\^tbAqh@zg@iFpqDnAtmAtKbeAnSphAuTnVImVNeeAvTisAkU|`skaOc_}mEjz@di@`cA`\\p_@~Y~rAzi@pYzTxu@z`@nb@rl@|Xtq@rq@~V`Wla@rs@z_@~C|LiG~XtAbN`bA~x@hFnMjCvb@xb@dp@dpCpkB~bAfc@|zd{aOsf}mEvi@npAE|`ClWbg@|EjkAoA|NsNhY_`@`WeJfO|@v`@rNvP|xyjbOschmEyLpMeTzb@qC|g@g\\pd@uFhc@wAt[vFvEnShCxGnI}E|\\lCrI|IpDx_AjJf|@`RzNo@v`AiTbbBGxNjBfZvNhfAjFlJ~Gji@`_AP`i@~^dVHxr@fGv]lP|^W~kBeDnMo_@r_@wBnJdU~b@dJnj@~]|VlEdJyMbwBrs@dlAxK`]qRnfB|dauaOgzgmEcSbEcmAjB|x~iaOigalEloB_iA~h@q_A|r@qg@t_Aq_@zJeMtLu[zw@cf@|]up@Eg\\sG}b@zB__@wIkULqJ|RaQf`@_i@v]w\\|OqH|rskaO}}cmEkq@kP|zbkaOwcdmEe_@mJ|zcjaOaodmExX~GeXcH|x{kaOgycmEad@wK|belaOwucmEip@aP|lzuaOw}`mEo\\jE{[sI|lupbOeu_mEbo@\\|bdkbOsu_mEkdAqIyz@Y|pqlaOug|mEda@vU~}@|Xp[zWz^xO|xvyaO_rrmEnHhO~RtJ|hllbOu{ilE?tEMuQtK}UtCaf@io@a~B|z{lbO}lklEaA|QzIvL|pnibOs~emE~RyDfh@m[vo@aTrl@kc@tKyW|T_G|fcrbO_wimEo~AcAgL~GkI~R{YtWo]fRgf@vN}f@vZyuAlLnuAyKrf@qZvf@cOp^_SlXgVhLqTtLqGpaCxChNoBpKiJlh@}}@fdA_T~h@wf@~e@mSz{@eo@vRwGlf@`Bpw@vYrtBnjAp_BxV|todbOoq}lEvVjGxJxH~D|K~Cjh@pUj\\nf@~d@|VffAhJtjAq@rRlKdLpe@hT|PbWnArQ||ogbOqdnlEtrA{YpLkGhGsLnKy}@yAiOqQcXuk@sb@cGem@||y`bOu__mEeUdKi_@ZolAkVwx@gKai@w[}PgFogA_Jsj@pLaRb@ow@_[cZqC||t_bO{}imEuZa[bElK|ht`aOwjrmEum@qK||bgbOea`mEvN{AhH}H|Hyg@pTgZ`DkY|pbacOwr|lEmc@_@iVeNwMp@|j`gbOm}gmE|LeOhJ}D||zfbOuvgmEfQqUhMmF|`clbOwqgmE~PqJhGaOp]i\\j^qPlQU|jzgbOeshmEyd@db@|jpfbOopgmEhHg@tb@oc@|tchbOo|hmEud@dh@pPsN|xygbOkshmEm`@n`@|bxfbOopgmEn_@a`@|vgtbOafjmEcOzOwTV|luybOqazlEvRaYqA{VpEoG||@mTps@aBrb@sSxh@mOpp@qy@r@aJoFwH|~{dcO}y}lEsw@so@yoAmz@ehAci@vdAlf@pf@b]|xr{bOgj|lEj[qGfc@a@|fq{bOoi|lEb[gHxb@i@|ru|bOst|lE|`@\\tNaC|zl|bOgq|lEjl@_Awm@bA|hf|bOep|lEbo@oB|ti|bO_q|lEzj@s@||r_cOygamEtQwB|KpD|py|bOonflEzGmJfS~CwEna@|tq|bOmrelEvHya@|fsnbO}}glEo@{Zo`@qe@bYhY|`lnbOqdimEuTxVsUlOcy@j[|raubOggkmEbOcF|PwWxTcF|f{qbOowimEzm@|AnOwCvr@}gAvdAiTlh@mf@bcAgg@t`@u\\pUkG~a@|Brw@vYrtBnjAl_BxV||lkbOocgmEbd@{Mp]oRfXiVxLuV|zypbOwximE{y@c@sIvGaJ`TuXfVu\\vQ_f@jN|jgmbOkshmEbYsV|vfmbOarhmE`XcW|h}mbOiiimEyUtT|n}mbOeiimEuWvY|rimbOmohmEfb@e`@|lcnbOcjimEsWlV|xanbO}jimEeXnU|bjmbO{rhmEfW}V|jhnbO}mimEs\\nZ|hinbOcnimEw\\h[|pgmbOkshmExZmW|~hmbOiphmEvZ_Z|xnnbOwqimEab@~^|limbOmqhmEvUmW|vjmbOsphmEj_@y]|ximbOmqhmE~[kZ|xcnbOwkimE_YbX|hcnbOgjimEcXzV|nmmbOqphmExd@qa@|bqnbOcnimEcc@t^|~lnbOopimEe`@b^|pjmbOonhmE|i@_e@|`unbOktimEyg@vc@|zvnbOsuimEsh@pd@|trnbO{simEce@ha@|pkmbO{mhmExe@ga@|ltnbOksimEce@fc@|jsnbOarimEud@`a@|vpnbO{nimEcb@`^|xnnbOqqimE{c@z`@|nlmbOkqhmEfi@kc@|dlmbOgohmEzd@e`@|zpnbOurimEud@`a@|fmmbOqphmEld@ua@||jmbOwnhmElh@ud@|pnmbOaohmEp`@w\\|fnmbOknhmEd]oX|vmnbOqiimEy^~Y|`onbOckimEaZnY}G|A|fjnbOkcimEaZzU|dinbOsaimEmZdU||gnbOo_imEmW`S|`lmbOakhmExG{AhT_T|jombOykhmElWgS|pmmbOalhmEf^cZ||lnbOugimE_]tY||kmbOukhmErG}AtU_U|nmmbOglhmE`\\aW|`ombO{lhmEx[aX|frmbOojhmE}|@ba@|xnkbOsdgmEz`@iL~^iStWwU~FaO|vtkbOwggmEh]gK~Z_Q|WuUdEiJ|xpkbOuegmEt]}Jz^}RxXsVbFeM|bmnbOgfimEy\\v^_ZpPs\\dK|fonbOwiimEyE~KuWnUk_@lSs[bJ|nblaOiv|mEhk@p_@vbAj\\tQpN|rakbOufgmEtr@}`@|x~jbO_cgmEh{@yh@|jbkbOclgmErq@q_@|fyqbOqwimEmzAwEic@tSgc@rc@|p_}aOcd_mEg}@wJgUsK|pl}aOac_mEh{@nPxb@gD|t_mbOqghmE~TwDd]qb@|vybbOkzklEvSgDtQoI|`}cbOqgllEud@|L|foabO_jjlE~GsVpMuNdi@uNraBcx@rRmF}E~@|bw~aOgyelExVoDdVyQuj@hW|rd`bOepflEeg@xU|bpabO}vhlEqCnTmd@zn@|dc`bOgoflE}a@dT|xb`bOwnflEi_@|R|na`bOinflEq^pQ|t|_bOalflE{[pP|da`bO}mflEg^dR|z~_bOamflEe\\vP|rc`bO}nflEc`@tS|`b`bOimflEg\\hQ|hb`bOwmflEc]vQ|laabOoeelEsEiHg@}OwLoGpAoQxLmIp{@V||snbOgohlEIyJiFiLsP_O|zxmbOwyilEjUf[|`lnbOccilE}TgV|njnbOgeilEqWkX|d`ibOeztlEzEnY`U`O|dy~aOaxjmE{Xo`@b@dI_KzC|dp~aOoekmEgJ{Eqf@xC|~o~aO_dkmEiQiFk]jE|pvtaOkejlEcp@z`@gJhY{JfMa|@h]cTxP|dtcbO_x{lEqu@zy@|~_bbOw_zlEgU|RiM~C|~ncbOym{lEab@hd@|hibbOahzlEba@oa@|zocbOso{lEeWl\\uMhJ|nfbbOuezlEjQoM|Wu^|vfbbOgezlEjQyMjVc\\|vrcbOyu{lEue@lj@||pcbO_s{lEc[t_@|lvbbOyszlEtXy\\|zncbOyo{lEuZ~]|hrbbO_pzlEvZq]|~lcbO{l{lEm\\j^|ptbbOwmzlE|TuV|dlcbO}g{lE_UdX|~rbbOylzlErWyY|fmcbOgj{lEk[x]|lmbbOkizlE`^c_@|bncbOal{lEe^x`@|lrgbOmxemEqUjGsr@vo@mRvXm^zFeL|GgErLuCt^Kxh@|fdcbOwq~lEjMvQ|QdI||cobOsjhlE}AkP_[wV|ngjbOafslE_[uOmGuJ|rdjbOuhslEaVcLoHgJ|bfjbOigslEkYsNeHgL|`ijbOudslEi^eRkG_O|hjjbOocslEg^{QkHuN|rjjbOaaslEic@aVyE}Q|zljbOw`slE_c@mUwGkR|nhjbOccslEs`@iTsEiT|njjbOabslEy`@}SqGsP|rkjbOibslE{b@wUqFwU|pnjbOs_slE}f@sWwEsT|dmjbO}`slEud@}ViFeR|zfjbO}bslEk`@gTeEsP|lhjbOebslEu_@gSmGgQ|nrbbOey`mEvHsPhD_^nGoMzj@mNj|@mhAtr@aO|l@oDdLqDxLyUvDmZtMqJ|nilbOqzgmE{jAts@ocAlI|delbO_xgmEyeAbq@g}@rH|bvgaOypomEbJgBZsGmDaCiNI|jb_bOqq~lEag@yK|z|}aOi}~lEpn@nKf[wB|xa~aOg{~lEzh@zI|r{yaOmk`mElAr@oZoNqu@iH|x`qbOojglEskBavA||qobOwohlExg@v_@|l{vbOiwelEdi@zDxa@lV|~|maOmm{mE{aAak@|xfnaOqk{mE{FkDDmW|hqmaO_u{mEzf@dP|`nkbOeshmEi[tNoVvf@|`glbOaygmE{fA`r@ie@fF|~albOmtgmEc_Ahm@u_@lF|jcibOu~emE|^}Fd|@qk@|zblbOsugmEe`Ahn@oa@pF|n`lbOatgmEk_Abm@ac@dF|dsibOu_fmEnOoEhm@w_@eDhB|ppnbOqiimE{EjL}XnVy]lRmd@vM{r@z`@||rjbOaqfmE`YwObp@mT`ZoRhUgW|`qnbOagimEmFpK}YxVuxA~n@|tvjbOctfmEbUgMrg@iOj\\gRpW}UvFaQ|jrnbOkmimEqFtOeZvWkvAlm@|xyjbO{vfmEnz@i[fZwPzXuV|EuM|rumbOulhmEcz@j`@||ombOmihmEep@pZ|p`gbOqugmExSuW|v_hbOuwhmE}S~W|xagbOuvgmE|SwW|~wgbOsphmE{SxW|jdgbO}xgmEzSwW|pzgbO{rhmE}SvW|zfgbOg{gmE|SwW|d}gbOeuhmE_TxW|nigbOo}gmE|S{W|xwhbOiajmEeMv\\sXf_@|zrgbOsfhmExVa]zIoV||vhbOk_jmEuJfY}Xt_@|zvhbOu_jmE_Mz[qZ|`@|`lgbOy_hmEp[eb@fLaZ|~iw`OstsmEbLfJzJtBncCqGvRnA|d}lbOgthmEma@vC||{lbOashmEg_@fC|hcnbOwlimEp\\wM|rbobO{{imEq`@`O|h_nbOakimEfd@eP|~fobOs|imEmK`Au\\nO|zzmbOciimEd_@_QpLm@|niobOa}imEmMv@y`@|Q|jkobOc}imEmOn@k_@~P|niobOi}imEoMl@a^dP|tujbOgvhmEk`@ncAsRxK|bepbOu|imE`}@nD|l`nbOmqimEcb@f[s\\dC|~~mbOgnimEce@l]aXbA|vg|bOkk}mE_Xvb@eYhr@{RzR_Iz[eIbLkh@|Yy`@rN}c@qEy\\lD{SyIaNG|vyobOodnmEbDwCdZ}C|HhA|jzobOoenmE|^qF|vvpbOgzimEeb@qA|~`dbOu_cmEaNrB{GvFkGvZ|x`hbOa`fmEoSO_CuL|ju~aOmakmEv\\ha@|hq_bOi`jmE_Zg^|hw~aOw}jmE`Wb[|nm_bO{bjmEeT}W||tvbOqmlmEpVmEvPkJ|x`kaOmddmEo_@yI|fggbOqanlElgBgc@|HaM~Isu@|rejbOqcslEq\\uPkGcHSwH|t~hbOsetlERzFdIrIlXxL|jajbOkfslEwUcKeKgP|f_ibOsltlEaGxDak@s@|z_jbOs_slEs^_L|thibOu~rlEj^i@xGhB||bkbOcngmEhn@{\\||`caOgjqmEnRdJuBxN|lc}aOed_mE|c@nJ|pspbO_hflEtEpGhSH|llibO{z`mEeBxNxHdJzbAnKv{@hRjOYnfAcUrbBJrUvI|dtybOcwylEk@fTfF|Z||xybOaixlEwEeZh@yN|nq_cOo{|lEtJfCfRoE|znzbOehulEuArz@yPpU||tpbOopumEq\\u`@|rlwbOy_hmEcX_ZsN}VwB{M|`nvbOacimEvUh^|luvbOemlmEbWkEhQuK|z}ibOuagmEjWoa@lZaL|h_jbOkcgmEbTq_@zZ_M|~_jbOodgmErSc^xZ_M|p~ibOacgmEpTm`@tYuL|p_jbOudgmEjRc^vZuM|zdraOkpgmE{Tp@wEfL|fgbbO}{~lEqPoPsQrH"},"places":[["Smyrna","city",-8451475,3388389],["Atlanta","city",-8438982,3375447],["Decatur","town",-8429607,3377376],["College Park","town",-8444937,3365344],["Doraville","town",-8428326,3389816],["Scottdale","town",-8426409,3378983],["East Point","town",-8443937,3367955],["Belvedere Park","town",-8426731,3375485],["Chamblee","town",-8429883,3389218],["Brookhaven","town",-8434020,3385844],["Clarkston","town",-8423964,3380955],["Forest Park","town",-8436909,3362205],["Vinings","town",-8446437,3386483],["Panthersville","town",-8427187,3370733],["Tucker","town",-8422007,3385327],["Candler-McAfee","town",-8428341,3373192],["Gresham Park","suburb",-8431437,3370344],["Cooks Crossing","suburb",-8447437,3362678],["Red Oak","suburb",-8449854,3362483],["Buckhead","suburb",-8437956,3383981],["Thomasville","suburb",-8434965,3369733],["Sunrise","suburb",-8452187,3362289],["Druid Hills","suburb",-8433604,3378038],["Ben Hill","suburb",-8451132,3369066],["Granada","suburb",-8453132,3364428],["Bankhead","suburb",-8442555,3377188],["Old Fourth Ward","suburb",-8437176,3376411],["Lindbergh","suburb",-8436741,3382112],["Cumberland","suburb",-8446071,3389734],["Weather Wood","neighbourhood",-8429774,3367881],["Rolling Meadows","neighbourhood",-8427048,3362039],["Forrest Park","neighbourhood",-8442576,3370650],["Elmwood","neighbourhood",-8443909,3366594],["Creek Cove","neighbourhood",-8424687,3363316],["Oakdale","neighbourhood",-8449771,3381872],["Eastland Heights","neighbourhood",-8432992,3371900],["Pebblebrook Estates","neighbourhood",-8452743,3382066],["Orchard Knob","neighbourhood",-8437854,3367539],["Kirkwood","neighbourhood",-8432315,3375243],["North DeKalb","neighbourhood",-8427298,3381010],["Adams Park","neighbourhood",-8445687,3371205],["Tolliver Heights","neighbourhood",-8428214,3366677],["Conley Downs","neighbourhood",-8426326,3367261],["Chelsea Heights","neighbourhood",-8431715,3378344],["Harry Pooles Mobile Home Park","neighbourhood",-8425103,3363844],["East Lake Highlands","neighbourhood",-8429853,3375038],["Ash Manor","neighbourhood",-8427909,3363983],["Queens Lake Estates","neighbourhood",-8454299,3379038],["Pinecrest Hills","neighbourhood",-8435469,3364654],["Mountain View Plaza","neighbourhood",-8436326,3363761],["Benton Harbor","neighbourhood",-8420936,3368344],["Fairfield Glen","neighbourhood",-8422770,3362094],["Cherry Ridge","neighbourhood",-8424242,3368150],["Briar Glen","neighbourhood",-8425270,3368483],["Oakhurst","neighbourhood",-8430336,3376087],["Oak View Homes","neighbourhood",-8434492,3363844],["Blue Creek","neighbourhood",-8429965,3366519],["Ellen","neighbourhood",-8444243,3380066],["Rovena Acres","neighbourhood",-8427881,3368171],["Emory Estates","neighbourhood",-8431437,3379038],["Gilbert Gardens","neighbourhood",-8438076,3365039],["Center Hill","neighbourhood",-8447337,3377527],["West End","neighbourhood",-8441632,3373816],["Ingleside","neighbourhood",-8426576,3378149],["East Atlanta Village","neighbourhood",-8434555,3374020],["Cabbagetown","neighbourhood",-8436659,3374816],["Elizabeth Park","neighbourhood",-8434409,3364261],["Capitol View","neighbourhood",-8441326,3371677],["River Hills","neighbourhood",-8428665,3367725],["Del Pines","neighbourhood",-8421659,3363622]]}</script>
+<script>
+"use strict";
+/* ============================================================
+   COMMON GROUND · LIVING MAPMAKER
+   A living map woven by the people who move through a place.
+   Single file. No build. Nothing required to render.
+   ============================================================ */
+
+/* ---------- constants ---------- */
+var TAU = Math.PI * 2;
+var COLORS = [
+  "#bf4526", /* vermillion */
+  "#2f7d84", /* teal */
+  "#3a5a8c", /* indigo */
+  "#a8762a", /* ochre */
+  "#6b5b95", /* violet */
+  "#3f6b46", /* moss */
+  "#9c3f6d", /* plum */
+  "#2b6f9c"  /* lake */
+];
+var KNOT_CELL_Z = 20;              /* merc cell for knot merging (~19 m) */
+var STROKE_MIN_PX = 7;             /* travel before a drag becomes a thread */
+var HOLD_MS = 520;                 /* long-press to say something into place */
+
+/* ---------- math / geo ---------- */
+function clamp(v, a, b) { return v < a ? a : v > b ? b : v; }
+function mercX(lng) { return (lng + 180) / 360; }
+function mercY(lat) {
+  var s = Math.sin(clamp(lat, -85.05, 85.05) * Math.PI / 180);
+  return 0.5 - Math.log((1 + s) / (1 - s)) / (4 * Math.PI);
+}
+function unMercX(x) { return x * 360 - 180; }
+function unMercY(y) { return 180 / Math.PI * Math.atan(Math.sinh(Math.PI * (1 - 2 * y))); }
+function lerp(a, b, t) { return a + (b - a) * t; }
+function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
+
+/* deterministic hash -> [0,1) ; used for ink wobble, never for geography */
+function hash01(n) { var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+
+/* ---------- polyline decode (Google polyline, 1e5) ---------- */
+function decodePolylines(str) {
+  var out = [], i = 0, n = str.length;
+  while (i < n) {
+    var lat = 0, lng = 0, pts = [];
+    while (i < n && str[i] !== "|") {
+      var shift = 0, result = 0, b;
+      do { b = str.charCodeAt(i++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+      lng += (result & 1) ? ~(result >> 1) : (result >> 1);
+      shift = 0; result = 0;
+      do { b = str.charCodeAt(i++) - 63; result |= (b & 0x1f) << shift; shift += 5; } while (b >= 0x20);
+      lat += (result & 1) ? ~(result >> 1) : (result >> 1);
+      pts.push(mercX(lng / 1e5), mercY(lat / 1e5));
+    }
+    i++;
+    if (pts.length >= 4) out.push(Float64Array.from(pts));
+  }
+  return out;
+}
+
+/* ---------- the ground (real geometry, always present) ---------- */
+var GROUND = { bbox: [-84.55, 33.62, -84.2, 33.9], layers: {}, places: [] };
+try {
+  var gd = document.getElementById("ground-data").textContent;
+  if (gd && gd.charAt(0) === "{") GROUND = JSON.parse(gd);
+} catch (e) { /* ground stays empty; the paper still holds */ }
+
+var INK = {};
+for (var lk in GROUND.layers) { try { INK[lk] = decodePolylines(GROUND.layers[lk]); } catch (e) { INK[lk] = []; } }
+var PLACES = (GROUND.places || []).map(function (p) {
+  return { name: p[0], kind: p[1], x: mercX(p[2] / 1e5), y: mercY(p[3] / 1e5) };
+});
+
+/* ---------- identity ---------- */
+function readLS(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } }
+function writeLS(k, v) { try { localStorage.setItem(k, v); } catch (e) { } }
+
+var ME = readLS("cg.me", "");
+if (!/^[a-z0-9]{6,10}$/.test(ME)) {
+  ME = Math.random().toString(36).slice(2, 8);
+  writeLS("cg.me", ME);
+}
+function colorOf(author) {
+  var h = 0;
+  for (var i = 0; i < author.length; i++) h = (h * 31 + author.charCodeAt(i)) >>> 0;
+  return COLORS[h % COLORS.length];
+}
+var MY_COLOR = colorOf(ME);
+
+/* ---------- ground id (which place we are weaving) ---------- */
+function readGroundId() {
+  var h = (location.hash || "").replace(/^#/, "");
+  var m = /(?:^|&)g=([A-Za-z0-9_-]{1,24})/.exec(h);
+  if (m) return m[1];
+  var q = new URLSearchParams(location.search).get("g");
+  if (q && /^[A-Za-z0-9_-]{1,24}$/.test(q)) return q;
+  return "atlanta";
+}
+var GID = readGroundId();
+
+/* ============================================================
+   STORE — append-only ops. The whole history of the ground.
+   ============================================================ */
+var Store = {
+  ops: [],
+  seen: Object.create(null),
+  seq: 0,
+  threads: [],          /* {id,a,t,c,pts:Float64Array(merc pairs),drawn:0..1} */
+  notes: [],            /* {id,a,t,c,x,y,text} */
+  knots: new Map(),      /* cellKey -> knot */
+  bounds: { t0: Infinity, t1: 0 },
+  listeners: [],
+  onChange: function (f) { this.listeners.push(f); },
+  emit: function (kind) { for (var i = 0; i < this.listeners.length; i++) this.listeners[i](kind); }
+};
+
+function opId() { return ME + "." + (++Store.seq).toString(36); }
+
+function addOp(op, opts) {
+  if (!op || !op.i || Store.seen[op.i]) return false;
+  Store.seen[op.i] = 1;
+  Store.ops.push(op);
+  if (op.a === ME) {
+    var n = parseInt((op.i.split(".")[1] || "0"), 36);
+    if (n > Store.seq) Store.seq = n;
+  }
+  materialise(op, opts || {});
+  if (op.t < Store.bounds.t0) Store.bounds.t0 = op.t;
+  if (op.t > Store.bounds.t1) Store.bounds.t1 = op.t;
+  return true;
+}
+
+function materialise(op, opts) {
+  if (op.k === "t") {
+    var raw = op.d.p, pts = new Float64Array(raw.length);
+    for (var i = 0; i < raw.length; i += 2) {
+      pts[i] = mercX(raw[i + 1] / 1e5);
+      pts[i + 1] = mercY(raw[i] / 1e5);
+    }
+    var th = { id: op.i, a: op.a, t: op.t, c: colorOf(op.a), pts: pts, drawn: opts.animate ? 0 : 1 };
+    Store.threads.push(th);
+    weaveThread(th);
+  } else if (op.k === "n") {
+    Store.notes.push({
+      id: op.i, a: op.a, t: op.t, c: colorOf(op.a),
+      x: mercX(op.d.ll[1] / 1e5), y: mercY(op.d.ll[0] / 1e5),
+      text: String(op.d.x || "").slice(0, 140), drawn: opts.animate ? 0 : 1
+    });
+  }
+}
+
+function removeOp(id) {
+  var idx = -1;
+  for (var i = Store.ops.length - 1; i >= 0; i--) if (Store.ops[i].i === id) { idx = i; break; }
+  if (idx < 0) return;
+  Store.ops.splice(idx, 1);
+  delete Store.seen[id];
+  rebuild();
+}
+
+function rebuild() {
+  Store.threads = []; Store.notes = []; Store.knots = new Map();
+  Store.bounds = { t0: Infinity, t1: 0 };
+  var ops = Store.ops.slice().sort(function (a, b) { return a.t - b.t; });
+  for (var i = 0; i < ops.length; i++) {
+    materialise(ops[i], {});
+    if (ops[i].t < Store.bounds.t0) Store.bounds.t0 = ops[i].t;
+    if (ops[i].t > Store.bounds.t1) Store.bounds.t1 = ops[i].t;
+  }
+}
+
+/* ---------- weaving: crossings become knots, return thickens them ---------- */
+var CELL = 1 / Math.pow(2, KNOT_CELL_Z);
+function cellKey(x, y) { return ((x / CELL) | 0) + ":" + ((y / CELL) | 0); }
+
+var segGrid = new Map();  /* cellKey -> [ {x1,y1,x2,y2,a,t} ] */
+function gridPut(seg) {
+  var k = cellKey((seg.x1 + seg.x2) / 2, (seg.y1 + seg.y2) / 2);
+  var arr = segGrid.get(k); if (!arr) { arr = []; segGrid.set(k, arr); }
+  arr.push(seg);
+}
+function gridNear(x, y, out) {
+  var cx = (x / CELL) | 0, cy = (y / CELL) | 0;
+  for (var i = -1; i <= 1; i++) for (var j = -1; j <= 1; j++) {
+    var arr = segGrid.get((cx + i) + ":" + (cy + j));
+    if (arr) for (var n = 0; n < arr.length; n++) out.push(arr[n]);
+  }
+  return out;
+}
+
+function segX(a, b) {
+  var d = (a.x2 - a.x1) * (b.y2 - b.y1) - (a.y2 - a.y1) * (b.x2 - b.x1);
+  if (Math.abs(d) < 1e-18) return null;
+  var t = ((b.x1 - a.x1) * (b.y2 - b.y1) - (b.y1 - a.y1) * (b.x2 - b.x1)) / d;
+  var u = ((b.x1 - a.x1) * (a.y2 - a.y1) - (b.y1 - a.y1) * (a.x2 - a.x1)) / d;
+  if (t < 0 || t > 1 || u < 0 || u > 1) return null;
+  return [a.x1 + t * (a.x2 - a.x1), a.y1 + t * (a.y2 - a.y1)];
+}
+
+function knotAt(x, y) {
+  var k = cellKey(x, y), kn = Store.knots.get(k);
+  if (!kn) {
+    kn = { key: k, x: x, y: y, n: 0, authors: new Set(), threads: [], ret: 0, retSeen: new Set(), t0: Infinity, t1: 0, grew: 0 };
+    Store.knots.set(k, kn);
+  }
+  return kn;
+}
+
+function weaveThread(th) {
+  var pts = th.pts, segs = [];
+  for (var i = 0; i + 3 < pts.length; i += 2) {
+    segs.push({ x1: pts[i], y1: pts[i + 1], x2: pts[i + 2], y2: pts[i + 3], a: th.a, t: th.t, id: th.id });
+  }
+  /* crossings against everything already woven */
+  var cand = [];
+  for (var s = 0; s < segs.length; s++) {
+    cand.length = 0;
+    gridNear((segs[s].x1 + segs[s].x2) / 2, (segs[s].y1 + segs[s].y2) / 2, cand);
+    for (var c = 0; c < cand.length; c++) {
+      var other = cand[c];
+      if (other.id === th.id) continue;
+      var p = segX(segs[s], other);
+      if (!p) continue;
+      var kn = knotAt(p[0], p[1]);
+      kn.n++;
+      kn.authors.add(th.a); kn.authors.add(other.a);
+      if (kn.threads.indexOf(th.id) < 0) kn.threads.push(th.id);
+      if (kn.threads.indexOf(other.id) < 0) kn.threads.push(other.id);
+      kn.t0 = Math.min(kn.t0, other.t, th.t);
+      kn.t1 = Math.max(kn.t1, th.t);
+      kn.grew = th.t;
+    }
+  }
+  /* return: passing through a knot again, on a later visit, thickens it */
+  var day = Math.floor(th.t / 36e5); /* an hour apart counts as a return */
+  for (var q = 0; q + 1 < pts.length; q += 2) {
+    var kk = cellKey(pts[q], pts[q + 1]);
+    var known = Store.knots.get(kk);
+    if (!known) continue;
+    var tag = th.a + "|" + day;
+    if (!known.retSeen.has(tag)) { known.retSeen.add(tag); known.ret++; known.grew = th.t; known.t1 = Math.max(known.t1, th.t); }
+  }
+  for (var g = 0; g < segs.length; g++) gridPut(segs[g]);
+}
+
+function knotWeight(kn) { return kn.n + kn.authors.size * 2 + kn.ret * 2; }
+
+function syncPips() {
+  var has = Store.ops.length > 0;
+  var b = document.getElementById("back");
+  if (b) b.classList.toggle("show", has);
+}
+
+/* ---------- persistence ---------- */
+var LS_KEY = "cg.ops." + GID;
+var LS_VISIT = "cg.visit." + GID;
+var MAX_OPS = 4000;
+
+function loadLocal() {
+  var raw = readLS(LS_KEY, "");
+  if (!raw) return [];
+  try { var a = JSON.parse(raw); return Array.isArray(a) ? a : []; } catch (e) { return []; }
+}
+var saveTimer = 0;
+function saveLocal() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(function () {
+    var ops = Store.ops;
+    if (ops.length > MAX_OPS) ops = ops.slice(ops.length - MAX_OPS);
+    try { localStorage.setItem(LS_KEY, JSON.stringify(ops)); }
+    catch (e) {
+      try { localStorage.setItem(LS_KEY, JSON.stringify(ops.slice(Math.floor(ops.length / 2)))); } catch (e2) { }
+    }
+  }, 350);
+}
+
+/* ============================================================
+   VIEW
+   ============================================================ */
+var V = { x: mercX(-84.3880), y: mercY(33.7490), z: 12.4 };
+var W = 0, H = 0, DPR = 1;
+var cv = document.getElementById("cv");
+var ctx = cv.getContext("2d", { alpha: false });
+
+function worldSize() { return 256 * Math.pow(2, V.z); }
+function toScreenX(mx) { return (mx - V.x) * worldSize() + W / 2; }
+function toScreenY(my) { return (my - V.y) * worldSize() + H / 2; }
+function fromScreenX(sx) { return (sx - W / 2) / worldSize() + V.x; }
+function fromScreenY(sy) { return (sy - H / 2) / worldSize() + V.y; }
+
+var SAFE_B = 0;
+function safeBottom() { return SAFE_B; }
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2.5);
+  try {
+    var probe = document.createElement("div");
+    probe.style.cssText = "position:fixed;bottom:0;height:env(safe-area-inset-bottom);width:1px;";
+    document.body.appendChild(probe);
+    SAFE_B = probe.getBoundingClientRect().height || 0;
+    probe.remove();
+  } catch (e) { SAFE_B = 0; }
+  W = window.innerWidth; H = window.innerHeight;
+  cv.width = Math.max(1, Math.round(W * DPR));
+  cv.height = Math.max(1, Math.round(H * DPR));
+  cv.style.width = W + "px"; cv.style.height = H + "px";
+  paperTex = null;
+  dirty = true;
+}
+
+/* ============================================================
+   TILES — optional depth. Never required.
+   ============================================================ */
+var Tiles = {
+  cache: new Map(), fails: 0, off: false, pending: 0, anyOk: false,
+  hosts: ["a", "b", "c"],
+  key: function (z, x, y) { return z + "/" + x + "/" + y; },
+  get: function (z, x, y) {
+    var k = this.key(z, x, y);
+    var e = this.cache.get(k);
+    if (e) return e;
+    if (this.off || this.pending > 6) return null;
+    var img = new Image();
+    e = { img: img, ok: false, bad: false, born: performance.now() };
+    this.cache.set(k, e);
+    this.pending++;
+    var self = this;
+    img.crossOrigin = "anonymous";
+    img.onload = function () { self.pending--; e.ok = true; self.fails = 0; self.anyOk = true; dirty = true; };
+    img.onerror = function () {
+      self.pending--; e.bad = true; self.fails++;
+      if (self.fails >= 4 && !self.anyOk) self.off = true;
+      if (self.fails >= 12) self.off = true;
+      dirty = true;
+    };
+    img.src = "https://" + this.hosts[(x + y) % 3] + ".tile.openstreetmap.org/" + z + "/" + x + "/" + y + ".png";
+    if (this.cache.size > 320) {
+      var it = this.cache.keys();
+      for (var i = 0; i < 80; i++) { var kk = it.next().value; if (kk !== k) this.cache.delete(kk); }
+    }
+    return e;
+  }
+};
+
+function drawTiles() {
+  if (Tiles.off) return;
+  if (navigator.onLine === false) return;
+  var tz = clamp(Math.round(V.z), 3, 19);
+  var scale = worldSize() / (256 * Math.pow(2, tz));
+  var tsize = 256 * scale;
+  var n = Math.pow(2, tz);
+  var left = fromScreenX(0) * n, right = fromScreenX(W) * n;
+  var top = fromScreenY(0) * n, bot = fromScreenY(H) * n;
+  var x0 = Math.floor(left), x1 = Math.floor(right), y0 = Math.floor(top), y1 = Math.floor(bot);
+  if ((x1 - x0 + 1) * (y1 - y0 + 1) > 90) return;
+  ctx.save();
+  try { ctx.filter = "grayscale(1) contrast(.62) brightness(1.16)"; } catch (e) { }
+  ctx.globalAlpha = 0.42;
+  for (var ty = y0; ty <= y1; ty++) {
+    if (ty < 0 || ty >= n) continue;
+    for (var tx = x0; tx <= x1; tx++) {
+      var wx = ((tx % n) + n) % n;
+      var e = Tiles.get(tz, wx, ty);
+      if (!e || !e.ok) continue;
+      var sx = toScreenX(tx / n), sy = toScreenY(ty / n);
+      ctx.drawImage(e.img, sx, sy, tsize + 1, tsize + 1);
+    }
+  }
+  ctx.restore();
+}
+
+/* ============================================================
+   PAPER
+   ============================================================ */
+var paperTex = null;
+function makePaper() {
+  var s = 180, c = document.createElement("canvas");
+  c.width = s; c.height = s;
+  var g = c.getContext("2d");
+  var im = g.createImageData(s, s);
+  for (var i = 0; i < im.data.length; i += 4) {
+    var v = 236 + ((hash01(i) * 22) | 0);
+    im.data[i] = v; im.data[i + 1] = v - 3; im.data[i + 2] = v - 12; im.data[i + 3] = 26;
+  }
+  g.putImageData(im, 0, 0);
+  return ctx.createPattern(c, "repeat");
+}
+
+/* ============================================================
+   INK GROUND
+   ============================================================ */
+var INK_STYLE = {
+  water: { col: "#8ab0b6", w: [0.9, 4.2], a: 0.60, dash: null },
+  rail: { col: "#6f746f", w: [0.34, 0.85], a: 0.26, dash: [1.5, 3.4] },
+  secondary: { col: "#565c56", w: [0.32, 1.05], a: 0.30, dash: null },
+  primary: { col: "#3f453f", w: [0.5, 1.7], a: 0.42, dash: null },
+  motorway: { col: "#323833", w: [0.85, 2.8], a: 0.56, dash: null, casing: true },
+  boundary: { col: "#9a9083", w: [0.6, 1.2], a: 0.34, dash: [5, 4] }
+};
+var INK_ORDER = ["water", "rail", "secondary", "primary", "motorway", "boundary"];
+
+function pathLayer(lines, ws) {
+  ctx.beginPath();
+  for (var i = 0; i < lines.length; i++) {
+    var p = lines[i], started = false, lastX = 0, lastY = 0;
+    for (var j = 0; j < p.length; j += 2) {
+      var sx = (p[j] - V.x) * ws + W / 2, sy = (p[j + 1] - V.y) * ws + H / 2;
+      if (started && Math.abs(sx - lastX) < 0.7 && Math.abs(sy - lastY) < 0.7) continue;
+      if (!started) { ctx.moveTo(sx, sy); started = true; } else ctx.lineTo(sx, sy);
+      lastX = sx; lastY = sy;
+    }
+  }
+}
+
+function drawInk() {
+  var ws = worldSize();
+  var zt = clamp((V.z - 9) / 8, 0, 1);
+  var thin = Tiles.off ? 1 : 0.62;        /* when tiles carry detail, ink steps back */
+  var lift = 1 - warp * 0.22;             /* the paper lifts while a thread can be left */
+  for (var li = 0; li < INK_ORDER.length; li++) {
+    var name = INK_ORDER[li], lines = INK[name];
+    if (!lines || !lines.length) continue;
+    var st = INK_STYLE[name];
+    if (name === "rail" && V.z < 10.5) continue;
+    if (name === "secondary" && V.z < 10.2) continue;
+    var lw = lerp(st.w[0], st.w[1], zt) * thin;
+    ctx.save();
+    ctx.lineCap = "round"; ctx.lineJoin = "round";
+    if (st.casing && V.z > 11) {
+      /* an engraved road: paper cut either side of the line */
+      ctx.strokeStyle = "#f3efe5"; ctx.globalAlpha = 0.75 * lift;
+      ctx.lineWidth = lw + 2.2;
+      pathLayer(lines, ws); ctx.stroke();
+    }
+    ctx.strokeStyle = st.col;
+    ctx.globalAlpha = st.a * lift * (name === "boundary" ? clamp(1.4 - zt, .25, 1) : 1);
+    ctx.lineWidth = lw;
+    if (st.dash) ctx.setLineDash([st.dash[0] * (1 + zt), st.dash[1] * (1 + zt)]);
+    pathLayer(lines, ws);
+    ctx.stroke();
+    ctx.restore();
+  }
+  drawPlaces();
+}
+
+function drawPlaces() {
+  if (V.z < 10.4 || !PLACES.length) return;
+  var ws = worldSize();
+  var show = V.z < 12 ? ["city", "town"] : V.z < 13.5 ? ["city", "town", "suburb"] : null;
+  ctx.save();
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.lineWidth = 3; ctx.lineJoin = "round";
+  var drawn = [];
+  for (var i = 0; i < PLACES.length; i++) {
+    var p = PLACES[i];
+    if (show && show.indexOf(p.kind) < 0) continue;
+    var sx = (p.x - V.x) * ws + W / 2, sy = (p.y - V.y) * ws + H / 2;
+    if (sx < -60 || sx > W + 60 || sy < -20 || sy > H + 20) continue;
+    var clash = false;
+    for (var d = 0; d < drawn.length; d++) {
+      if (Math.abs(drawn[d][0] - sx) < 76 && Math.abs(drawn[d][1] - sy) < 20) { clash = true; break; }
+    }
+    if (clash) continue;
+    drawn.push([sx, sy]);
+    var big = p.kind === "city";
+    ctx.font = (big ? "italic 13px " : "italic 10.5px ") + 'Georgia,"Times New Roman",serif';
+    ctx.globalAlpha = 0.85 * (1 - warp * 0.4);
+    ctx.strokeStyle = "rgba(239,234,221,.85)";
+    ctx.strokeText(p.name, sx, sy);
+    ctx.globalAlpha = (big ? 0.60 : 0.40) * (1 - warp * 0.4);
+    ctx.fillStyle = "#1d201d";
+    ctx.fillText(p.name, sx, sy);
+  }
+  ctx.restore();
+}
+
+/* ============================================================
+   THE WEAVE — threads, knots, common ground
+   ============================================================ */
+var timeCursor = Infinity;   /* unweave cursor */
+var openKnot = null;
+
+function threadWidth() { return clamp(1.1 + (V.z - 10) * 0.5, 1.2, 5.6); }
+
+/* a thread is a spun ribbon: thick in the middle of the gesture, tapering at both ends */
+var _tx = [], _ty = [];
+function threadScreen(th, upto, ws) {
+  var pts = th.pts, n = 0;
+  var seedBase = (th.id.charCodeAt(0) + th.id.charCodeAt(th.id.length - 1)) * 7;
+  _tx.length = 0; _ty.length = 0;
+  var lastX = -1e9, lastY = -1e9;
+  for (var i = 0; i < upto; i++) {
+    var jx = (hash01(seedBase + i * 2) - 0.5) * 0.5;
+    var jy = (hash01(seedBase + i * 2 + 1) - 0.5) * 0.5;
+    var sx = (pts[i * 2] - V.x) * ws + W / 2 + jx;
+    var sy = (pts[i * 2 + 1] - V.y) * ws + H / 2 + jy;
+    if (n > 0 && Math.abs(sx - lastX) < 0.5 && Math.abs(sy - lastY) < 0.5 && i !== upto - 1) continue;
+    _tx.push(sx); _ty.push(sy); lastX = sx; lastY = sy; n++;
+  }
+  return n;
+}
+
+function ribbon(n, width) {
+  /* offset outline, so the stroke can breathe along its length */
+  ctx.beginPath();
+  var i, nx, ny, len, hw;
+  for (i = 0; i < n; i++) {
+    var t = n < 2 ? 1 : i / (n - 1);
+    hw = width * (0.34 + 0.66 * Math.sin(Math.PI * Math.pow(t, 0.72))) * 0.5 + 0.18;
+    var ax = _tx[Math.min(i + 1, n - 1)] - _tx[Math.max(i - 1, 0)];
+    var ay = _ty[Math.min(i + 1, n - 1)] - _ty[Math.max(i - 1, 0)];
+    len = Math.hypot(ax, ay) || 1;
+    nx = -ay / len * hw; ny = ax / len * hw;
+    if (i === 0) ctx.moveTo(_tx[i] + nx, _ty[i] + ny); else ctx.lineTo(_tx[i] + nx, _ty[i] + ny);
+  }
+  for (i = n - 1; i >= 0; i--) {
+    var t2 = n < 2 ? 1 : i / (n - 1);
+    hw = width * (0.34 + 0.66 * Math.sin(Math.PI * Math.pow(t2, 0.72))) * 0.5 + 0.18;
+    var bx = _tx[Math.min(i + 1, n - 1)] - _tx[Math.max(i - 1, 0)];
+    var by = _ty[Math.min(i + 1, n - 1)] - _ty[Math.max(i - 1, 0)];
+    len = Math.hypot(bx, by) || 1;
+    nx = -by / len * hw; ny = bx / len * hw;
+    ctx.lineTo(_tx[i] - nx, _ty[i] - ny);
+  }
+  ctx.closePath();
+}
+
+function drawThread(th, alpha, width, dim) {
+  var ws = worldSize();
+  var count = th.pts.length / 2;
+  var upto = th.drawn >= 1 ? count : Math.max(2, Math.floor(count * th.drawn));
+  if (upto < 2) return;
+  var n = threadScreen(th, upto, ws);
+  if (n < 2) return;
+  ctx.save();
+  /* the fibre around the thread */
+  ctx.globalAlpha = alpha * (dim ? 0.04 : 0.09);
+  ctx.strokeStyle = th.c; ctx.lineWidth = width * 2.4;
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.beginPath();
+  for (var i = 0; i < n; i++) { if (i === 0) ctx.moveTo(_tx[i], _ty[i]); else ctx.lineTo(_tx[i], _ty[i]); }
+  ctx.stroke();
+  /* the thread itself */
+  ctx.globalAlpha = alpha * (dim ? 0.16 : 1);
+  ctx.fillStyle = th.c;
+  ribbon(n, width);
+  ctx.fill();
+  ctx.restore();
+}
+
+function drawWeave(now) {
+  var ws = worldSize();
+  var base = threadWidth();
+  var dimOthers = !!openKnot;
+  var live = openKnot ? openKnot.threads : null;
+
+  /* threads */
+  for (var i = 0; i < Store.threads.length; i++) {
+    var th = Store.threads[i];
+    if (th.t > timeCursor) continue;
+    if (th.drawn < 1) { th.drawn = Math.min(1, th.drawn + 0.028); dirty = true; }
+    var age = Store.bounds.t1 > Store.bounds.t0
+      ? (th.t - Store.bounds.t0) / (Store.bounds.t1 - Store.bounds.t0 || 1) : 1;
+    var a = 0.52 + 0.42 * age;
+    var dim = dimOthers && live.indexOf(th.id) < 0;
+    var w = base * (0.78 + 0.42 * age);
+    if (dimOthers && !dim) w *= 1.25;
+    drawThread(th, a, w, dim);
+  }
+
+  /* knots gather as you pull back: at a distance the weave is fabric, not beads */
+  buildKnotClusters();
+  for (var k = 0; k < renderedKnots.length; k++) drawKnot(renderedKnots[k], now, base);
+
+  /* words in place */
+  drawNotes(now);
+}
+
+/* ---- screen-space gathering: near knots become one knot ---- */
+var renderedKnots = [];
+function minWeightForZoom() { return clamp(2 + Math.max(0, 14.8 - V.z) * 3.4, 2, 44); }
+
+function buildKnotClusters() {
+  var ws = worldSize(), cell = clamp(17 + (14.5 - V.z) * 4, 17, 34);
+  var buckets = new Map();
+  var wMin = minWeightForZoom();
+  Store.knots.forEach(function (kn) {
+    if (kn.t0 > timeCursor) return;
+    var sx = (kn.x - V.x) * ws + W / 2, sy = (kn.y - V.y) * ws + H / 2;
+    if (sx < -70 || sx > W + 70 || sy < -70 || sy > H + 70) return;
+    var key = ((sx / cell) | 0) + ":" + ((sy / cell) | 0);
+    var b = buckets.get(key);
+    if (!b) {
+      b = { x: 0, y: 0, sw: 0, n: 0, ret: 0, authors: new Set(), threads: [], grew: 0, t0: Infinity, members: 0 };
+      buckets.set(key, b);
+    }
+    var w = knotWeight(kn);
+    b.x += kn.x * w; b.y += kn.y * w; b.sw += w; b.members++;
+    b.n += kn.n; b.ret += kn.ret;
+    kn.authors.forEach(function (a) { b.authors.add(a); });
+    for (var i = 0; i < kn.threads.length; i++) if (b.threads.indexOf(kn.threads[i]) < 0) b.threads.push(kn.threads[i]);
+    if (kn.grew > b.grew) b.grew = kn.grew;
+    if (kn.t0 < b.t0) b.t0 = kn.t0;
+  });
+  renderedKnots.length = 0;
+  buckets.forEach(function (b) {
+    if (!b.sw) return;
+    b.x /= b.sw; b.y /= b.sw;
+    b.w = b.n + b.authors.size * 2 + b.ret * 2;
+    if (b.n < 2 && b.ret < 1) return;
+    if (b.w < wMin) return;
+    renderedKnots.push(b);
+  });
+  renderedKnots.sort(function (a, b) { return a.w - b.w; });
+  if (renderedKnots.length > 140) renderedKnots = renderedKnots.slice(renderedKnots.length - 140);
+  /* keep an open knot open even if it drops below the threshold */
+  if (openKnot && renderedKnots.indexOf(openKnot) < 0) {
+    var found = null, bd = 1e9;
+    for (var i = 0; i < renderedKnots.length; i++) {
+      var d = Math.hypot(renderedKnots[i].x - openKnot.x, renderedKnots[i].y - openKnot.y);
+      if (d < bd) { bd = d; found = renderedKnots[i]; }
+    }
+    openKnot = (found && bd < CELL * 6) ? found : null;
+  }
+}
+
+function drawKnot(kn, now, base) {
+  var ws = worldSize();
+  var sx = (kn.x - V.x) * ws + W / 2, sy = (kn.y - V.y) * ws + H / 2;
+  if (sx < -80 || sx > W + 80 || sy < -80 || sy > H + 80) return;
+  var w = kn.w;
+  var r = clamp(2.8 + Math.sqrt(w) * (1.45 + clamp(V.z - 11, 0, 6) * 0.20), 2.8, 42);
+  var fresh = clamp(1 - (Date.now() - kn.grew) / 2600, 0, 1);
+  var isOpen = openKnot === kn;
+  var many = kn.authors.size > 1;
+
+  ctx.save();
+  ctx.translate(sx, sy);
+
+  /* common ground: a woven field where many have crossed and returned */
+  if (w >= minWeightForZoom() * 3.4 && w >= 14) {
+    var fr = r * 2.4;
+    var g = ctx.createRadialGradient(0, 0, r * 0.3, 0, 0, fr);
+    g.addColorStop(0, "rgba(47,125,132,.11)");
+    g.addColorStop(1, "rgba(47,125,132,0)");
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(0, 0, fr, 0, TAU); ctx.fill();
+    ctx.save();
+    ctx.rotate(Math.PI / 4);
+    ctx.globalAlpha = 0.30;
+    ctx.strokeStyle = "#2f7d84"; ctx.lineWidth = 0.65;
+    var step = Math.max(2.6, r / 3.4);
+    ctx.beginPath();
+    for (var q = -r; q <= r; q += step) {
+      var h = Math.sqrt(Math.max(0, r * r - q * q));
+      ctx.moveTo(q, -h); ctx.lineTo(q, h);
+      ctx.moveTo(-h, q); ctx.lineTo(h, q);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /* a knot sits on a small clearing so the threads read under it */
+  if (r > 6) {
+    ctx.globalAlpha = 0.16;
+    ctx.fillStyle = "#f3efe5";
+    ctx.beginPath(); ctx.arc(0, 0, r * 0.8, 0, TAU); ctx.fill();
+  }
+
+  /* rings — one for each order of crossing */
+  var rings = clamp(1 + Math.floor(w / (minWeightForZoom() * 1.7)), 1, 3);
+  for (var i = 0; i < rings; i++) {
+    var rr = r * (0.42 + 0.58 * ((i + 1) / rings));
+    ctx.beginPath();
+    ctx.arc(0, 0, rr, 0, TAU);
+    var outer = i === rings - 1;
+    ctx.strokeStyle = (outer && w >= minWeightForZoom() * 2) ? (many ? "#bf4526" : "#2f7d84") : "rgba(29,32,29,.7)";
+    ctx.globalAlpha = (0.30 + 0.44 * ((i + 1) / rings)) * (isOpen ? 1 : 0.9);
+    ctx.lineWidth = 0.7 + (outer ? 0.4 : 0);
+    ctx.stroke();
+  }
+
+  /* ticks appear once a knot has held several returns */
+  if (w >= minWeightForZoom() * 2.2 && r > 7) {
+    ctx.globalAlpha = 0.36; ctx.strokeStyle = "rgba(29,32,29,.75)"; ctx.lineWidth = 0.6;
+    var spokes = clamp(kn.authors.size * 2 + kn.ret, 4, 16);
+    var off = (Math.abs(kn.x) * 977) % 1;
+    ctx.beginPath();
+    for (var s = 0; s < spokes; s++) {
+      var ang = (s / spokes) * TAU + off;
+      ctx.moveTo(Math.cos(ang) * r * 1.02, Math.sin(ang) * r * 1.02);
+      ctx.lineTo(Math.cos(ang) * r * 1.26, Math.sin(ang) * r * 1.26);
+    }
+    ctx.stroke();
+  }
+
+  /* the eye of the knot */
+  ctx.globalAlpha = 0.88;
+  ctx.fillStyle = (w >= minWeightForZoom() * 3.4 && w >= 14) ? "#bf4526" : "#1d201d";
+  ctx.beginPath(); ctx.arc(0, 0, clamp(r * 0.2, 0.9, 3.4), 0, TAU); ctx.fill();
+
+  /* a knot that just tightened sends out one pulse */
+  if (fresh > 0) {
+    ctx.globalAlpha = fresh * 0.5;
+    ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 1.1;
+    ctx.beginPath(); ctx.arc(0, 0, r + (1 - fresh) * 34, 0, TAU); ctx.stroke();
+    dirty = true;
+  }
+  if (isOpen) {
+    ctx.globalAlpha = 0.5;
+    ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 1;
+    ctx.setLineDash([2, 3]);
+    ctx.beginPath(); ctx.arc(0, 0, r + 9 + Math.sin(now / 420) * 1.6, 0, TAU); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+function drawNotes(now) {
+  var ws = worldSize();
+  if (!openKnot && V.z < 13.8) return;
+  ctx.save();
+  ctx.textBaseline = "middle";
+  var placed = [];
+  for (var i = 0; i < Store.notes.length; i++) {
+    var n = Store.notes[i];
+    if (n.t > timeCursor) continue;
+    if (n.drawn < 1) { n.drawn = Math.min(1, n.drawn + 0.05); dirty = true; }
+    var sx = (n.x - V.x) * ws + W / 2, sy = (n.y - V.y) * ws + H / 2;
+    if (sx < -140 || sx > W + 140 || sy < -30 || sy > H + 30) continue;
+    var near = openKnot ? Math.hypot(n.x - openKnot.x, n.y - openKnot.y) < CELL * 8 : false;
+    if (openKnot && !near) continue;
+    var clash = false;
+    for (var q = 0; q < placed.length; q++) {
+      if (Math.abs(placed[q][0] - sx) < 150 && Math.abs(placed[q][1] - sy) < 22) { clash = true; break; }
+    }
+    if (clash) continue;
+    placed.push([sx, sy]);
+    var a = n.drawn;
+    ctx.globalAlpha = a;
+    /* the tick that pins the word to the ground */
+    ctx.strokeStyle = n.c; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx, sy - 13); ctx.stroke();
+    ctx.beginPath(); ctx.arc(sx, sy, 2.1, 0, TAU); ctx.fillStyle = n.c; ctx.fill();
+    ctx.font = 'italic 12.5px Georgia,"Times New Roman",serif';
+    ctx.textAlign = "left";
+    var tw = ctx.measureText(n.text).width;
+    var tx = sx + 6 > W - tw - 8 ? sx - 6 - tw : sx + 6;
+    ctx.globalAlpha = a * 0.85;
+    ctx.strokeStyle = "rgba(239,234,221,.9)"; ctx.lineWidth = 3; ctx.lineJoin = "round";
+    ctx.strokeText(n.text, tx, sy - 16);
+    ctx.globalAlpha = a;
+    ctx.fillStyle = "#1d201d";
+    ctx.fillText(n.text, tx, sy - 16);
+  }
+  ctx.restore();
+}
+
+/* ---------- live strokes (mine in progress, and other people's) ---------- */
+var drawingPts = null;      /* Float64Array-ish array of merc pairs */
+var livePeers = new Map();  /* author -> {pts:[], c, ts} */
+
+function drawLive(now) {
+  var ws = worldSize();
+  if (drawingPts && drawingPts.length >= 4) {
+    ctx.save();
+    ctx.strokeStyle = MY_COLOR; ctx.globalAlpha = 0.95;
+    ctx.lineWidth = threadWidth() * 1.05; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath();
+    for (var i = 0; i < drawingPts.length; i += 2) {
+      var sx = (drawingPts[i] - V.x) * ws + W / 2, sy = (drawingPts[i + 1] - V.y) * ws + H / 2;
+      if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+    /* the needle */
+    var lx = (drawingPts[drawingPts.length - 2] - V.x) * ws + W / 2;
+    var ly = (drawingPts[drawingPts.length - 1] - V.y) * ws + H / 2;
+    ctx.globalAlpha = 0.5; ctx.beginPath(); ctx.arc(lx, ly, 5 + Math.sin(now / 160) * 1.2, 0, TAU);
+    ctx.strokeStyle = MY_COLOR; ctx.lineWidth = 1; ctx.stroke();
+    ctx.restore();
+  }
+  livePeers.forEach(function (lp, a) {
+    if (now - lp.ts > 6000) { livePeers.delete(a); return; }
+    if (lp.pts.length < 4) return;
+    ctx.save();
+    ctx.strokeStyle = lp.c; ctx.globalAlpha = 0.8;
+    ctx.lineWidth = threadWidth(); ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    for (var i = 0; i < lp.pts.length; i += 2) {
+      var sx = (lp.pts[i] - V.x) * ws + W / 2, sy = (lp.pts[i + 1] - V.y) * ws + H / 2;
+      if (i === 0) ctx.moveTo(sx, sy); else ctx.lineTo(sx, sy);
+    }
+    ctx.stroke();
+    ctx.restore();
+    dirty = true;
+  });
+}
+
+/* ---------- presence ---------- */
+var peers = new Map(); /* author -> {c, x, y, ts} */
+function drawPresence(now) {
+  var ws = worldSize();
+  peers.forEach(function (p, a) {
+    if (now - p.ts > 14000) { peers.delete(a); refreshPeopleGlyph(); return; }
+    if (p.x == null) return;
+    var sx = (p.x - V.x) * ws + W / 2, sy = (p.y - V.y) * ws + H / 2;
+    if (sx < -40 || sx > W + 40 || sy < -40 || sy > H + 40) return;
+    var pulse = 0.5 + 0.5 * Math.sin(now / 900 + a.charCodeAt(0));
+    ctx.save();
+    ctx.globalAlpha = 0.16 + pulse * 0.1;
+    var g = ctx.createRadialGradient(sx, sy, 0, sx, sy, 34);
+    g.addColorStop(0, p.c); g.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, 34, 0, TAU); ctx.fill();
+    ctx.globalAlpha = 0.6; ctx.fillStyle = p.c;
+    ctx.beginPath(); ctx.arc(sx, sy, 2.6, 0, TAU); ctx.fill();
+    ctx.restore();
+    dirty = true;
+  });
+}
+
+/* ---------- the loom warp (only while a thread can be left) ---------- */
+var warp = 0;
+function drawWarp() {
+  if (warp <= 0.01) return;
+  ctx.save();
+  /* warp threads strung down the paper — the ground is on the loom */
+  var gap = 7;
+  ctx.strokeStyle = "#1d201d"; ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  for (var x = 0; x < W; x += gap) {
+    var a = 0.055 + 0.045 * hash01(x);
+    ctx.globalAlpha = warp * a;
+    ctx.beginPath(); ctx.moveTo(x + 0.5, 0); ctx.lineTo(x + 0.5, H); ctx.stroke();
+  }
+  /* the tensioned edge of the cloth */
+  ctx.globalAlpha = warp;
+  var top = ctx.createLinearGradient(0, 0, 0, 26);
+  top.addColorStop(0, "rgba(29,32,29,.13)"); top.addColorStop(1, "rgba(29,32,29,0)");
+  ctx.fillStyle = top; ctx.fillRect(0, 0, W, 26);
+  var bot = ctx.createLinearGradient(0, H, 0, H - 26);
+  bot.addColorStop(0, "rgba(29,32,29,.13)"); bot.addColorStop(1, "rgba(29,32,29,0)");
+  ctx.fillStyle = bot; ctx.fillRect(0, H - 26, W, 26);
+  ctx.restore();
+}
+
+/* ---------- first gesture: the ground shows you what it wants ---------- */
+var ghostT = 0;
+function drawGhost(now) {
+  if (Store.threads.length || Store.notes.length || drawingPts) return;
+  ghostT = (now % 5600) / 5600;
+  /* the gesture rises out of the thread button and lays itself across the ground */
+  var bx = W / 2, by = H - 58 - safeBottom();
+  var span = Math.min(W * 0.66, 300);
+  var t = clamp((ghostT - 0.10) / 0.52, 0, 1);
+  var fade = ghostT < 0.10 ? ghostT / 0.10 : ghostT > 0.76 ? clamp((1 - ghostT) / 0.24, 0, 1) : 1;
+  var N = 64;
+  function gp(u) {
+    /* leaves the button, arcs up and over */
+    var x = bx + (u - 0.5) * span * 2 * Math.min(1, u * 3.2 + 0.12);
+    var lift = Math.sin(Math.pow(u, 0.62) * Math.PI) ;
+    var y = by - lift * (H * 0.34) - u * H * 0.10;
+    return [x, y];
+  }
+  ctx.save();
+  var n = Math.max(2, Math.floor(t * N));
+  ctx.globalAlpha = fade * 0.5;
+  ctx.strokeStyle = MY_COLOR;
+  ctx.lineWidth = 2.4; ctx.lineCap = "round"; ctx.lineJoin = "round";
+  ctx.setLineDash([1.5, 6]);
+  ctx.beginPath();
+  for (var i = 0; i < n; i++) { var p = gp(i / (N - 1)); if (i === 0) ctx.moveTo(p[0], p[1]); else ctx.lineTo(p[0], p[1]); }
+  ctx.stroke();
+  if (t > 0.02 && t < 1) {
+    var h = gp((n - 1) / (N - 1));
+    ctx.setLineDash([]); ctx.globalAlpha = fade * 0.85;
+    ctx.beginPath(); ctx.arc(h[0], h[1], 4.2, 0, TAU); ctx.fillStyle = MY_COLOR; ctx.fill();
+    ctx.globalAlpha = fade * 0.3;
+    ctx.beginPath(); ctx.arc(h[0], h[1], 9 + Math.sin(now / 180) * 2, 0, TAU);
+    ctx.strokeStyle = MY_COLOR; ctx.lineWidth = 1; ctx.stroke();
+  }
+  ctx.restore();
+  dirty = true;
+}
+
+/* ============================================================
+   FRAME
+   ============================================================ */
+var dirty = true;
+function frame(now) {
+  requestAnimationFrame(frame);
+  stepMotion(now);
+  if (!dirty) return;
+  dirty = false;
+
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.fillStyle = "#efeadd";
+  ctx.fillRect(0, 0, W, H);
+
+  drawTiles();
+
+  if (!paperTex) paperTex = makePaper();
+  if (paperTex) { ctx.save(); ctx.fillStyle = paperTex; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+
+  drawInk();
+  drawWarp();
+  drawWeave(now);
+  drawLive(now);
+  drawPresence(now);
+  drawGhost(now);
+}
+
+/* ---------- motion: inertia, zoom easing, unweaving ---------- */
+var vel = { x: 0, y: 0 }, lastMotion = 0;
+var unweave = { held: false, rate: 0 };
+
+function stepMotion(now) {
+  var dt = Math.min(50, now - (lastMotion || now)); lastMotion = now;
+  if (!pointerDown && (Math.abs(vel.x) > 1e-9 || Math.abs(vel.y) > 1e-9)) {
+    V.x -= vel.x; V.y -= vel.y;
+    vel.x *= 0.90; vel.y *= 0.90;
+    if (Math.abs(vel.x) < 1e-9) vel.x = 0;
+    if (Math.abs(vel.y) < 1e-9) vel.y = 0;
+    clampView(); dirty = true;
+  }
+  var targetWarp = traceMode ? 1 : 0;
+  if (Math.abs(warp - targetWarp) > 0.005) { warp += (targetWarp - warp) * 0.14; dirty = true; }
+  else if (warp !== targetWarp) { warp = targetWarp; dirty = true; }
+
+  /* unweaving: hold to run the fabric backwards, release and it reweaves */
+  if (Store.bounds.t1 > 0) {
+    var span = Math.max(60000, Store.bounds.t1 - Store.bounds.t0);
+    if (unweave.held) {
+      if (timeCursor === Infinity) timeCursor = Store.bounds.t1 + 1;
+      unweave.rate = Math.min(unweave.rate + dt * 0.004, 3.2);
+      timeCursor -= span * (dt / 1000) * 0.55 * unweave.rate;
+      if (timeCursor < Store.bounds.t0 - 1) timeCursor = Store.bounds.t0 - 1;
+      dirty = true;
+    } else if (timeCursor !== Infinity) {
+      unweave.rate = 0;
+      timeCursor += span * (dt / 1000) * 0.9;
+      if (timeCursor >= Store.bounds.t1) { timeCursor = Infinity; }
+      dirty = true;
+    }
+  }
+}
+
+function clampView() {
+  V.y = clamp(V.y, 0.02, 0.98);
+  V.x = ((V.x % 1) + 1) % 1;
+}
+
+/* ============================================================
+   INPUT — the map is the interface
+   ============================================================ */
+var traceMode = false;
+var pointers = new Map();
+var pointerDown = false;
+var pinch = null;
+var stroke = null;
+var holdTimer = 0, holdCandidate = null;
+var lastTapTime = 0;
+
+var stage = document.getElementById("stage");
+
+function ptOf(e) { return { x: e.clientX, y: e.clientY, t: performance.now() }; }
+
+var travelled = 0;
+stage.addEventListener("pointerdown", function (e) {
+  if (keyOpen) return;
+  travelled = 0;
+  stage.setPointerCapture && stage.setPointerCapture(e.pointerId);
+  pointers.set(e.pointerId, ptOf(e));
+  pointerDown = true;
+  vel.x = 0; vel.y = 0;
+
+  if (pointers.size === 2) {
+    /* two fingers always travel — cancel any nascent thread */
+    if (stroke) { stroke = null; drawingPts = null; dirty = true; }
+    var it = pointers.values(), a = it.next().value, b = it.next().value;
+    pinch = {
+      d: Math.hypot(a.x - b.x, a.y - b.y),
+      mx: (a.x + b.x) / 2, my: (a.y + b.y) / 2, z: V.z,
+      wx: fromScreenX((a.x + b.x) / 2), wy: fromScreenY((a.y + b.y) / 2)
+    };
+    clearTimeout(holdTimer);
+    return;
+  }
+  if (pointers.size > 2) return;
+
+  var p = ptOf(e);
+  holdCandidate = { x: p.x, y: p.y };
+  clearTimeout(holdTimer);
+  holdTimer = setTimeout(function () {
+    if (!holdCandidate || pointers.size !== 1) return;
+    var wx = fromScreenX(holdCandidate.x), wy = fromScreenY(holdCandidate.y);
+    stroke = null; drawingPts = null;
+    pointers.clear(); pointerDown = false;
+    openSay(holdCandidate.x, holdCandidate.y, wx, wy);
+  }, HOLD_MS);
+
+  if (traceMode) {
+    stroke = { pts: [fromScreenX(p.x), fromScreenY(p.y)], sx: p.x, sy: p.y, moved: 0, t0: Date.now(), last: p };
+    drawingPts = stroke.pts;
+  } else {
+    stroke = null;
+  }
+  dirty = true;
+}, { passive: false });
+
+stage.addEventListener("pointermove", function (e) {
+  if (!pointers.has(e.pointerId)) return;
+  var prev = pointers.get(e.pointerId);
+  var p = ptOf(e);
+  pointers.set(e.pointerId, p);
+
+  if (holdCandidate && Math.hypot(p.x - holdCandidate.x, p.y - holdCandidate.y) > 9) {
+    clearTimeout(holdTimer); holdCandidate = null;
+  }
+
+  if (pointers.size >= 2 && pinch) {
+    var it = pointers.values(), a = it.next().value, b = it.next().value;
+    var d = Math.hypot(a.x - b.x, a.y - b.y);
+    var mx = (a.x + b.x) / 2, my = (a.y + b.y) / 2;
+    if (pinch.d > 4) {
+      V.z = clamp(pinch.z + Math.log2(d / pinch.d), 3.2, 19);
+    }
+    /* keep the world point under the pinch centre pinned */
+    V.x = pinch.wx - (mx - W / 2) / worldSize();
+    V.y = pinch.wy - (my - H / 2) / worldSize();
+    clampView(); dirty = true;
+    return;
+  }
+
+  if (stroke) {
+    stroke.moved += Math.hypot(p.x - prev.x, p.y - prev.y);
+    var wx = fromScreenX(p.x), wy = fromScreenY(p.y);
+    var n = stroke.pts.length;
+    var dx = (wx - stroke.pts[n - 2]) * worldSize(), dy = (wy - stroke.pts[n - 1]) * worldSize();
+    if (dx * dx + dy * dy > 4) { stroke.pts.push(wx, wy); pushLive(); }
+    dirty = true;
+    e.preventDefault();
+    return;
+  }
+
+  /* travel */
+  travelled += Math.hypot(p.x - prev.x, p.y - prev.y);
+  var ws = worldSize();
+  var ddx = (p.x - prev.x) / ws, ddy = (p.y - prev.y) / ws;
+  V.x -= ddx; V.y -= ddy;
+  vel.x = ddx * 0.85; vel.y = ddy * 0.85;
+  clampView(); dirty = true;
+}, { passive: false });
+
+function endPointer(e) {
+  clearTimeout(holdTimer); holdCandidate = null;
+  var had = pointers.has(e.pointerId);
+  pointers.delete(e.pointerId);
+  if (pointers.size < 2) pinch = null;
+  if (pointers.size === 0) pointerDown = false;
+  if (!had) return;
+
+  if (stroke) {
+    var s = stroke; stroke = null;
+    if (s.moved >= STROKE_MIN_PX && s.pts.length >= 4) {
+      settleThread(s.pts);
+      drawingPts = null;
+    } else {
+      drawingPts = null;
+      tapAt(s.sx, s.sy);
+    }
+    dirty = true;
+    return;
+  }
+  if (pointers.size === 0 && e.type === "pointerup" && travelled < STROKE_MIN_PX) {
+    /* a still tap while travelling: open a knot if one is there */
+    tapAt(e.clientX, e.clientY);
+  }
+  dirty = true;
+}
+stage.addEventListener("pointerup", endPointer);
+stage.addEventListener("pointercancel", endPointer);
+stage.addEventListener("pointerleave", function (e) { if (!stroke && pointers.size <= 1) endPointer(e); });
+
+stage.addEventListener("wheel", function (e) {
+  e.preventDefault();
+  var wx = fromScreenX(e.clientX), wy = fromScreenY(e.clientY);
+  V.z = clamp(V.z - e.deltaY * 0.0022 * (e.deltaMode === 1 ? 16 : 1), 3.2, 19);
+  V.x = wx - (e.clientX - W / 2) / worldSize();
+  V.y = wy - (e.clientY - H / 2) / worldSize();
+  clampView(); dirty = true;
+}, { passive: false });
+
+function tapAt(sx, sy) {
+  var ws = worldSize();
+  var best = null, bestScore = -1;
+  for (var i = 0; i < renderedKnots.length; i++) {
+    var kn = renderedKnots[i];
+    var d = Math.hypot((kn.x - V.x) * ws + W / 2 - sx, (kn.y - V.y) * ws + H / 2 - sy);
+    var r = clamp(2.8 + Math.sqrt(kn.w) * (1.45 + clamp(V.z - 11, 0, 6) * 0.20), 2.8, 42);
+    var reach = Math.max(26, r + 14);
+    if (d < reach) { var score = (reach - d) + kn.w * 0.3; if (score > bestScore) { bestScore = score; best = kn; } }
+  }
+  openKnot = (best && best !== openKnot) ? best : null;
+  dirty = true;
+}
+
+/* ---------- leaving a thread ---------- */
+function settleThread(mercPts) {
+  var packed = [];
+  for (var i = 0; i < mercPts.length; i += 2) {
+    packed.push(Math.round(unMercY(mercPts[i + 1]) * 1e5), Math.round(unMercX(mercPts[i]) * 1e5));
+  }
+  var op = { i: opId(), a: ME, t: Date.now(), k: "t", d: { p: packed } };
+  addOp(op); saveLocal(); publish([op]);
+  lastMine = op.i; showUndo(); syncPips();
+  Store.emit("thread");
+  dirty = true;
+}
+
+/* ---------- saying something into place ---------- */
+var say = document.getElementById("say");
+var sayIn = document.getElementById("sayIn");
+var micBtn = document.getElementById("mic");
+var sayAt = null, recog = null;
+
+function openSay(sx, sy, wx, wy) {
+  sayAt = { x: wx, y: wy };
+  say.style.display = "block";
+  say.style.left = clamp(sx, 14, W - 250) + "px";
+  say.style.top = clamp(sy - 26, 40, H - 120) + "px";
+  sayIn.value = "";
+  setTimeout(function () { try { sayIn.focus(); } catch (e) { } }, 10);
+  if (window.SpeechRecognition || window.webkitSpeechRecognition) micBtn.classList.add("avail");
+}
+function closeSay(commit) {
+  if (recog) { try { recog.stop(); } catch (e) { } recog = null; micBtn.classList.remove("on"); }
+  var text = sayIn.value.trim();
+  say.style.display = "none";
+  if (commit && text && sayAt) {
+    var op = {
+      i: opId(), a: ME, t: Date.now(), k: "n",
+      d: { ll: [Math.round(unMercY(sayAt.y) * 1e5), Math.round(unMercX(sayAt.x) * 1e5)], x: text.slice(0, 140) }
+    };
+    addOp(op); saveLocal(); publish([op]);
+    lastMine = op.i; showUndo(); syncPips();
+  }
+  sayAt = null; sayIn.blur(); dirty = true;
+}
+sayIn.addEventListener("keydown", function (e) {
+  if (e.key === "Enter") { e.preventDefault(); closeSay(true); }
+  else if (e.key === "Escape") { closeSay(false); }
+});
+sayIn.addEventListener("blur", function () { setTimeout(function () { if (say.style.display === "block") closeSay(true); }, 120); });
+micBtn.addEventListener("click", function (e) {
+  e.stopPropagation();
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  if (recog) { try { recog.stop(); } catch (er) { } recog = null; micBtn.classList.remove("on"); return; }
+  try {
+    recog = new SR();
+    recog.interimResults = true; recog.continuous = false; recog.lang = navigator.language || "en-US";
+    micBtn.classList.add("on");
+    recog.onresult = function (ev) {
+      var s = "";
+      for (var i = 0; i < ev.results.length; i++) s += ev.results[i][0].transcript;
+      sayIn.value = s.trim().slice(0, 140);
+    };
+    recog.onend = function () { recog = null; micBtn.classList.remove("on"); };
+    recog.onerror = function () { recog = null; micBtn.classList.remove("on"); };
+    recog.start();
+  } catch (er) { recog = null; micBtn.classList.remove("on"); }
+});
+
+/* ============================================================
+   CONTROLS
+   ============================================================ */
+var threadBtn = document.getElementById("thread");
+var peopleBtn = document.getElementById("people");
+var backBtn = document.getElementById("back");
+var undoBtn = document.getElementById("undo");
+var threadGlyph = document.getElementById("threadGlyph");
+var threadKnob = document.getElementById("threadKnob");
+
+function setTrace(on) {
+  traceMode = on;
+  threadBtn.classList.toggle("on", on);
+  threadBtn.style.background = on ? MY_COLOR : "";
+  threadGlyph.style.stroke = on ? "#f6f2e8" : "#1d201d";
+  threadKnob.style.fill = on ? "#f6f2e8" : "#1d201d";
+  dirty = true;
+}
+threadBtn.addEventListener("click", function () { setTrace(!traceMode); if (openKnot) { openKnot = null; } });
+threadBtn.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+
+var undoTimer = 0, lastMine = null;
+function showUndo() {
+  undoBtn.classList.add("show");
+  clearTimeout(undoTimer);
+  undoTimer = setTimeout(function () { undoBtn.classList.remove("show"); lastMine = null; }, 7000);
+}
+undoBtn.addEventListener("click", function (e) {
+  e.stopPropagation();
+  if (!lastMine) return;
+  var id = lastMine;
+  removeOp(id); saveLocal(); publish([{ i: "x." + id, a: ME, t: Date.now(), k: "x", d: { r: id } }]);
+  lastMine = null; undoBtn.classList.remove("show"); syncPips(); dirty = true;
+});
+undoBtn.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+
+/* unweave: hold */
+["pointerdown"].forEach(function (ev) {
+  backBtn.addEventListener(ev, function (e) { e.stopPropagation(); unweave.held = true; dirty = true; });
+});
+["pointerup", "pointercancel", "pointerleave"].forEach(function (ev) {
+  backBtn.addEventListener(ev, function (e) { e.stopPropagation(); unweave.held = false; });
+});
+window.addEventListener("pointerup", function () { unweave.held = false; });
+
+/* people */
+function refreshPeopleGlyph() {
+  var g = document.getElementById("peopleGlyph");
+  var list = [MY_COLOR];
+  peers.forEach(function (p) { if (list.length < 6) list.push(p.c); });
+  var s = "";
+  if (list.length === 1) {
+    s = '<circle cx="15" cy="15" r="3.6" fill="' + MY_COLOR + '"/>' +
+      '<circle cx="15" cy="15" r="9" fill="none" stroke="rgba(29,32,29,.35)" stroke-width="1" stroke-dasharray="2 3"/>';
+  } else {
+    var r = 8.4;
+    for (var i = 0; i < list.length; i++) {
+      var a = -Math.PI / 2 + (i / list.length) * TAU;
+      s += '<circle cx="' + (15 + Math.cos(a) * r).toFixed(1) + '" cy="' + (15 + Math.sin(a) * r).toFixed(1) +
+        '" r="3.1" fill="' + list[i] + '"/>';
+    }
+    s += '<circle cx="15" cy="15" r="1.5" fill="rgba(29,32,29,.5)"/>';
+  }
+  g.innerHTML = s;
+}
+peopleBtn.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
+peopleBtn.addEventListener("click", function () { openKey(); });
+
+/* ============================================================
+   THE GROUND KEY — a link and a woven square
+   ============================================================ */
+var keyEl = document.getElementById("key");
+var keyOpen = false;
+function joinUrl() {
+  return location.origin + location.pathname + "#g=" + GID;
+}
+function openKey() {
+  keyOpen = true;
+  keyEl.classList.add("show");
+  document.getElementById("keyUrl").textContent = joinUrl();
+  var n = peers.size;
+  document.getElementById("keyNote").textContent =
+    net.state === "open"
+      ? (n === 0 ? "this ground is open. no one else is here yet." : (n === 1 ? "one other person is on this ground." : n + " others are on this ground."))
+      : "this ground is yours alone right now. share it and it will try to find the others.";
+  try { drawQR(document.getElementById("qr"), joinUrl()); } catch (e) { }
+}
+keyEl.addEventListener("click", function () { keyOpen = false; keyEl.classList.remove("show"); });
+document.getElementById("keyUrl").addEventListener("click", function (e) {
+  e.stopPropagation();
+  try { navigator.clipboard.writeText(joinUrl()); this.textContent = "copied"; var self = this;
+    setTimeout(function () { self.textContent = joinUrl(); }, 1200); } catch (er) { }
+});
+
+/* ---------- QR (byte mode, level M, versions 1-10) ---------- */
+var QR = (function () {
+  var EXP = new Uint8Array(512), LOG = new Uint8Array(256);
+  (function () { var x = 1; for (var i = 0; i < 255; i++) { EXP[i] = x; LOG[x] = i; x <<= 1; if (x & 0x100) x ^= 0x11d; } for (var j = 255; j < 512; j++) EXP[j] = EXP[j - 255]; })();
+  function mul(a, b) { return (a && b) ? EXP[LOG[a] + LOG[b]] : 0; }
+  function gen(n) { var g = [1]; for (var i = 0; i < n; i++) { var ng = new Array(g.length + 1).fill(0); for (var j = 0; j < g.length; j++) { ng[j] ^= mul(g[j], EXP[i]); ng[j + 1] ^= g[j]; } g = ng; } return g; }
+  function ecc(data, n) { var g = gen(n), r = new Uint8Array(data.length + n); r.set(data); for (var i = 0; i < data.length; i++) { var c = r[i]; if (c) for (var j = 0; j <= n; j++) r[i + j] ^= mul(g[j], c); } return r.subarray(data.length); }
+  var RS = { 1: [10, [[1, 16]]], 2: [16, [[1, 28]]], 3: [26, [[1, 44]]], 4: [18, [[2, 32]]], 5: [24, [[2, 43]]], 6: [16, [[4, 27]]], 7: [18, [[4, 31]]], 8: [22, [[2, 38], [2, 39]]], 9: [22, [[3, 36], [2, 37]]], 10: [26, [[4, 43], [1, 44]]] };
+  var ALIGN = { 1: [], 2: [6, 18], 3: [6, 22], 4: [6, 26], 5: [6, 30], 6: [6, 34], 7: [6, 22, 38], 8: [6, 24, 42], 9: [6, 26, 46], 10: [6, 28, 50] };
+  function bitlen(v) { var n = 0; while (v) { n++; v >>>= 1; } return n; }
+  function fmtBits(mask) { var d = (0 << 3) | mask; var r = d << 10; while (bitlen(r) >= 11) r ^= 0b10100110111 << (bitlen(r) - 11); return ((d << 10) | r) ^ 0b101010000010010; }
+  function verBits(v) { var r = v << 12; while (bitlen(r) >= 13) r ^= 0b1111100100101 << (bitlen(r) - 13); return (v << 12) | r; }
+
+  return function (text) {
+    var bytes = [];
+    for (var i = 0; i < text.length; i++) {
+      var c = text.charCodeAt(i);
+      if (c < 128) bytes.push(c);
+      else if (c < 2048) bytes.push(192 | (c >> 6), 128 | (c & 63));
+      else bytes.push(224 | (c >> 12), 128 | ((c >> 6) & 63), 128 | (c & 63));
+    }
+    var ver = 0;
+    for (var v = 1; v <= 10; v++) {
+      var total = RS[v][1].reduce(function (a, g) { return a + g[0] * g[1]; }, 0);
+      if (bytes.length + (v < 10 ? 2 : 3) <= total) { ver = v; break; }
+    }
+    if (!ver) return null;
+    var ecn = RS[ver][0], groups = RS[ver][1];
+    var totalData = groups.reduce(function (a, g) { return a + g[0] * g[1]; }, 0);
+
+    /* bitstream */
+    var bits = [];
+    function put(val, n) { for (var i = n - 1; i >= 0; i--) bits.push((val >> i) & 1); }
+    put(4, 4);
+    put(bytes.length, ver < 10 ? 8 : 16);
+    for (var b = 0; b < bytes.length; b++) put(bytes[b], 8);
+    var cap = totalData * 8;
+    for (var t = 0; t < 4 && bits.length < cap; t++) bits.push(0);
+    while (bits.length % 8) bits.push(0);
+    var cw = [];
+    for (var i2 = 0; i2 < bits.length; i2 += 8) { var byte = 0; for (var k = 0; k < 8; k++) byte = (byte << 1) | bits[i2 + k]; cw.push(byte); }
+    var pad = [0xEC, 0x11], pi = 0;
+    while (cw.length < totalData) cw.push(pad[pi++ % 2]);
+
+    /* blocks */
+    var dblocks = [], eblocks = [], pos = 0;
+    for (var gi = 0; gi < groups.length; gi++) {
+      for (var bi = 0; bi < groups[gi][0]; bi++) {
+        var d = Uint8Array.from(cw.slice(pos, pos + groups[gi][1])); pos += groups[gi][1];
+        dblocks.push(d); eblocks.push(ecc(d, ecn));
+      }
+    }
+    var final = [];
+    var maxD = Math.max.apply(null, dblocks.map(function (d) { return d.length; }));
+    for (var c2 = 0; c2 < maxD; c2++) for (var bl = 0; bl < dblocks.length; bl++) if (c2 < dblocks[bl].length) final.push(dblocks[bl][c2]);
+    for (var c3 = 0; c3 < ecn; c3++) for (var bl2 = 0; bl2 < eblocks.length; bl2++) final.push(eblocks[bl2][c3]);
+
+    /* matrix */
+    var size = 17 + 4 * ver;
+    var m = [], fn = [];
+    for (var r = 0; r < size; r++) { m.push(new Uint8Array(size)); fn.push(new Uint8Array(size)); }
+    function setF(r, c, v) { if (r < 0 || c < 0 || r >= size || c >= size) return; m[r][c] = v; fn[r][c] = 1; }
+    function finder(r0, c0) {
+      for (var r = -1; r <= 7; r++) for (var c = -1; c <= 7; c++) {
+        var rr = r0 + r, cc = c0 + c;
+        if (rr < 0 || cc < 0 || rr >= size || cc >= size) continue;
+        var on = (r >= 0 && r <= 6 && (c === 0 || c === 6)) || (c >= 0 && c <= 6 && (r === 0 || r === 6)) || (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+        setF(rr, cc, on ? 1 : 0);
+      }
+    }
+    finder(0, 0); finder(0, size - 7); finder(size - 7, 0);
+    for (var i3 = 8; i3 < size - 8; i3++) { setF(6, i3, i3 % 2 === 0 ? 1 : 0); setF(i3, 6, i3 % 2 === 0 ? 1 : 0); }
+    var ac = ALIGN[ver];
+    for (var a1 = 0; a1 < ac.length; a1++) for (var a2 = 0; a2 < ac.length; a2++) {
+      var ar = ac[a1], acol = ac[a2];
+      if ((ar <= 7 && acol <= 7) || (ar <= 7 && acol >= size - 8) || (ar >= size - 8 && acol <= 7)) continue;
+      for (var r2 = -2; r2 <= 2; r2++) for (var c4 = -2; c4 <= 2; c4++) {
+        setF(ar + r2, acol + c4, (Math.max(Math.abs(r2), Math.abs(c4)) !== 1) ? 1 : 0);
+      }
+    }
+    setF(size - 8, 8, 1);
+    /* reserve format */
+    for (var i4 = 0; i4 < 9; i4++) { if (i4 !== 6) { setF(8, i4, 0); setF(i4, 8, 0); } }
+    for (var i5 = 0; i5 < 8; i5++) { setF(8, size - 1 - i5, 0); setF(size - 1 - i5, 8, 0); }
+    if (ver >= 7) {
+      var vb = verBits(ver);
+      for (var i6 = 0; i6 < 18; i6++) {
+        var bit = (vb >> i6) & 1;
+        setF(Math.floor(i6 / 3), size - 11 + (i6 % 3), bit);
+        setF(size - 11 + (i6 % 3), Math.floor(i6 / 3), bit);
+      }
+    }
+    /* data zigzag */
+    var bi2 = 0, up = true;
+    var dataBits = [];
+    for (var f = 0; f < final.length; f++) for (var k2 = 7; k2 >= 0; k2--) dataBits.push((final[f] >> k2) & 1);
+    for (var col = size - 1; col > 0; col -= 2) {
+      if (col === 6) col--;
+      for (var rowi = 0; rowi < size; rowi++) {
+        var row = up ? size - 1 - rowi : rowi;
+        for (var s2 = 0; s2 < 2; s2++) {
+          var cc2 = col - s2;
+          if (fn[row][cc2]) continue;
+          m[row][cc2] = bi2 < dataBits.length ? dataBits[bi2] : 0;
+          bi2++;
+        }
+      }
+      up = !up;
+    }
+    /* masks */
+    function maskFn(k, r, c) {
+      switch (k) {
+        case 0: return (r + c) % 2 === 0;
+        case 1: return r % 2 === 0;
+        case 2: return c % 3 === 0;
+        case 3: return (r + c) % 3 === 0;
+        case 4: return (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0;
+        case 5: return ((r * c) % 2) + ((r * c) % 3) === 0;
+        case 6: return (((r * c) % 2) + ((r * c) % 3)) % 2 === 0;
+        default: return (((r + c) % 2) + ((r * c) % 3)) % 2 === 0;
+      }
+    }
+    function penalty(mm) {
+      var p = 0, r, c, run, i;
+      for (r = 0; r < size; r++) { run = 1; for (c = 1; c < size; c++) { if (mm[r][c] === mm[r][c - 1]) { run++; if (run === 5) p += 3; else if (run > 5) p++; } else run = 1; } }
+      for (c = 0; c < size; c++) { run = 1; for (r = 1; r < size; r++) { if (mm[r][c] === mm[r - 1][c]) { run++; if (run === 5) p += 3; else if (run > 5) p++; } else run = 1; } }
+      for (r = 0; r < size - 1; r++) for (c = 0; c < size - 1; c++) { var s3 = mm[r][c] + mm[r][c + 1] + mm[r + 1][c] + mm[r + 1][c + 1]; if (s3 === 0 || s3 === 4) p += 3; }
+      var dark = 0; for (r = 0; r < size; r++) for (c = 0; c < size; c++) dark += mm[r][c];
+      p += Math.floor(Math.abs(dark * 100 / (size * size) - 50) / 5) * 10;
+      return p;
+    }
+    var best = null, bestP = Infinity, bestMask = 0;
+    for (var mk = 0; mk < 8; mk++) {
+      var mm = m.map(function (row) { return Uint8Array.from(row); });
+      for (var r3 = 0; r3 < size; r3++) for (var c5 = 0; c5 < size; c5++) if (!fn[r3][c5] && maskFn(mk, r3, c5)) mm[r3][c5] ^= 1;
+      var fb = fmtBits(mk);
+      for (var i7 = 0; i7 < 15; i7++) {
+        var bit2 = (fb >> i7) & 1;
+        if (i7 < 6) mm[8][i7] = bit2;
+        else if (i7 === 6) mm[8][7] = bit2;
+        else if (i7 === 7) mm[8][8] = bit2;
+        else if (i7 === 8) mm[7][8] = bit2;
+        else mm[14 - i7][8] = bit2;
+        if (i7 < 8) mm[8][size - 1 - i7] = bit2;
+        else mm[size - 15 + i7][8] = bit2;
+      }
+      mm[size - 8][8] = 1;
+      var pp = penalty(mm);
+      if (pp < bestP) { bestP = pp; best = mm; bestMask = mk; }
+    }
+    return best;
+  };
+})();
+
+function drawQR(canvas, text) {
+  var m = QR(text);
+  if (!m) return;
+  var n = m.length, quiet = 3, total = n + quiet * 2;
+  var css = canvas.clientWidth || 240;
+  var dpr = Math.min(window.devicePixelRatio || 1, 3);
+  canvas.width = Math.round(css * dpr); canvas.height = Math.round(css * dpr);
+  var g = canvas.getContext("2d");
+  var s = canvas.width / total;
+  g.fillStyle = "#f6f2e8"; g.fillRect(0, 0, canvas.width, canvas.height);
+  for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
+    if (!m[r][c]) continue;
+    var inFinder = (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
+    g.fillStyle = inFinder ? "#bf4526" : "#1d201d";
+    g.fillRect(Math.round((c + quiet) * s), Math.round((r + quiet) * s), Math.ceil(s), Math.ceil(s));
+  }
+}
+
+/* ============================================================
+   NETWORK — the ground tries to find the others. Never required.
+   ============================================================ */
+var net = { state: "local", mqtt: null, bc: null, brokers: [], tried: 0 };
+
+function encodeMsg(o) { return JSON.stringify(o); }
+function handleMsg(msg) {
+  if (!msg || msg.from === ME || msg.g !== GID) return;
+  if (msg.ops) {
+    var added = 0;
+    for (var i = 0; i < msg.ops.length; i++) {
+      var op = msg.ops[i];
+      if (op.k === "x") { removeOp(op.d.r); added++; continue; }
+      if (addOp(op, { animate: true })) added++;
+    }
+    if (added) { saveLocal(); syncPips(); dirty = true; }
+  }
+  if (msg.hello) {
+    /* someone arrived: send them what they are missing */
+    var have = msg.have || {};
+    var missing = Store.ops.filter(function (o) {
+      var n = parseInt((o.i.split(".")[1] || "0"), 36);
+      return !(have[o.a] >= n);
+    });
+    if (missing.length) publish(missing.slice(-800), true);
+  }
+  if (msg.pres) {
+    var p = peers.get(msg.from) || {};
+    p.c = msg.pres.c; p.x = msg.pres.x; p.y = msg.pres.y; p.ts = performance.now();
+    peers.set(msg.from, p);
+    refreshPeopleGlyph(); dirty = true;
+  }
+  if (msg.live) {
+    var lp = livePeers.get(msg.from) || { pts: [], c: colorOf(msg.from) };
+    var conv = [];
+    for (var j = 0; j + 1 < msg.live.p.length; j += 2) conv.push(mercX(msg.live.p[j + 1] / 1e5), mercY(msg.live.p[j] / 1e5));
+    lp.pts = conv; lp.ts = performance.now();
+    livePeers.set(msg.from, lp);
+    dirty = true;
+  }
+}
+
+function publish(ops, isReply) {
+  var msg = { g: GID, from: ME, ops: ops };
+  send(msg);
+}
+function send(msg) {
+  var s = encodeMsg(msg);
+  try { if (net.bc) net.bc.postMessage(s); } catch (e) { }
+  try { if (net.mqtt && net.mqtt.ready) net.mqtt.publish(s); } catch (e) { }
+}
+
+/* same device, other tabs — always available */
+try {
+  net.bc = new BroadcastChannel("cg." + GID);
+  net.bc.onmessage = function (e) { try { handleMsg(JSON.parse(e.data)); } catch (er) { } };
+} catch (e) { net.bc = null; }
+
+/* ---------- minimal MQTT 3.1.1 over WebSocket ---------- */
+function MqttClient(url, topic, onMsg, onOpen, onFail) {
+  var ws, ready = false, pingTimer = 0, self = this;
+  var cid = "cg" + ME + Math.random().toString(36).slice(2, 7);
+  function enc(str) { return new TextEncoder().encode(str); }
+  function rem(len) { var out = []; do { var d = len % 128; len = Math.floor(len / 128); if (len > 0) d |= 128; out.push(d); } while (len > 0); return out; }
+  function pack(type, flags, payload) {
+    var head = [(type << 4) | flags].concat(rem(payload.length));
+    var buf = new Uint8Array(head.length + payload.length);
+    buf.set(head, 0); buf.set(payload, head.length);
+    return buf;
+  }
+  function strBuf(s) { var b = enc(s); var o = new Uint8Array(b.length + 2); o[0] = b.length >> 8; o[1] = b.length & 255; o.set(b, 2); return o; }
+  function cat() { var parts = [].slice.call(arguments); var n = parts.reduce(function (a, p) { return a + p.length; }, 0); var o = new Uint8Array(n), off = 0; for (var i = 0; i < parts.length; i++) { o.set(parts[i], off); off += parts[i].length; } return o; }
+
+  try { ws = new WebSocket(url, ["mqtt"]); } catch (e) { onFail && onFail(); return; }
+  ws.binaryType = "arraybuffer";
+  var failed = false;
+  var guard = setTimeout(function () { if (!ready) { failed = true; try { ws.close(); } catch (e) { } onFail && onFail(); } }, 7000);
+
+  ws.onopen = function () {
+    var vh = cat(strBuf("MQTT"), new Uint8Array([4, 0x02, 0, 30]));
+    ws.send(pack(1, 0, cat(vh, strBuf(cid))));
+  };
+  ws.onerror = function () { if (!failed) { failed = true; clearTimeout(guard); onFail && onFail(); } };
+  ws.onclose = function () { ready = false; self.ready = false; if (!failed) { failed = true; clearTimeout(guard); onFail && onFail(); } };
+  ws.onmessage = function (ev) {
+    var d = new Uint8Array(ev.data);
+    var i = 0;
+    while (i < d.length) {
+      var type = d[i] >> 4, mult = 1, len = 0, j = i + 1, byte;
+      do { byte = d[j++]; len += (byte & 127) * mult; mult *= 128; } while (byte & 128 && j < d.length);
+      var body = d.subarray(j, j + len);
+      if (type === 2) { /* CONNACK */
+        if (body[1] === 0) {
+          ready = true; self.ready = true; clearTimeout(guard);
+          ws.send(pack(8, 2, cat(new Uint8Array([0, 1]), strBuf(topic), new Uint8Array([0]))));
+          pingTimer = setInterval(function () { try { ws.send(new Uint8Array([0xC0, 0])); } catch (e) { } }, 20000);
+          onOpen && onOpen();
+        } else { failed = true; clearTimeout(guard); onFail && onFail(); }
+      } else if (type === 3) { /* PUBLISH */
+        var tl = (body[0] << 8) | body[1];
+        var payload = body.subarray(2 + tl);
+        try { onMsg(new TextDecoder().decode(payload)); } catch (e) { }
+      }
+      i = j + len;
+    }
+  };
+  this.ready = false;
+  this.publish = function (str) {
+    if (!ready) return;
+    try { ws.send(pack(3, 0, cat(strBuf(topic), enc(str)))); } catch (e) { }
+  };
+  this.close = function () { clearInterval(pingTimer); try { ws.close(); } catch (e) { } };
+}
+
+var BROKERS = [
+  "wss://broker.emqx.io:8084/mqtt",
+  "wss://test.mosquitto.org:8081/mqtt",
+  "wss://broker.hivemq.com:8884/mqtt"
+];
+function connectNet() {
+  if (net.tried >= BROKERS.length || net.state === "open") return;
+  var url = BROKERS[net.tried++];
+  var topic = "unsettled-atlas/commonground/" + GID;
+  net.mqtt = new MqttClient(url, topic,
+    function (s) { try { handleMsg(JSON.parse(s)); } catch (e) { } },
+    function () {
+      net.state = "open";
+      var have = {};
+      Store.ops.forEach(function (o) {
+        var n = parseInt((o.i.split(".")[1] || "0"), 36);
+        if (!(have[o.a] >= n)) have[o.a] = n;
+      });
+      send({ g: GID, from: ME, hello: 1, have: have });
+      sendPresence();
+    },
+    function () { net.state = "local"; net.mqtt = null; setTimeout(connectNet, 600); }
+  );
+}
+
+function sendPresence() {
+  send({ g: GID, from: ME, pres: { c: MY_COLOR, x: V.x, y: V.y } });
+}
+setInterval(function () { if (net.mqtt && net.mqtt.ready) sendPresence(); }, 4000);
+
+var liveTimer = 0;
+function pushLive() {
+  if (liveTimer) return;
+  liveTimer = setTimeout(function () {
+    liveTimer = 0;
+    if (!drawingPts || drawingPts.length < 4) return;
+    var p = [];
+    var step = Math.max(1, Math.floor(drawingPts.length / 2 / 60));
+    for (var i = 0; i < drawingPts.length; i += 2 * step) {
+      p.push(Math.round(unMercY(drawingPts[i + 1]) * 1e5), Math.round(unMercX(drawingPts[i]) * 1e5));
+    }
+    send({ g: GID, from: ME, live: { p: p } });
+  }, 130);
+}
+
+/* reconnect when the device comes back */
+window.addEventListener("online", function () { if (net.state !== "open") { net.tried = 0; connectNet(); } });
+document.addEventListener("visibilitychange", function () {
+  if (!document.hidden && net.state !== "open") { net.tried = 0; connectNet(); }
+});
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+function boot() {
+  resize();
+  window.addEventListener("resize", resize);
+  if (window.visualViewport) window.visualViewport.addEventListener("resize", resize);
+
+  /* restore the ground */
+  var lastVisit = parseInt(readLS(LS_VISIT, "0"), 10) || 0;
+  var saved = loadLocal();
+  var sortedSaved = saved.slice().sort(function (a, b) { return (a.t || 0) - (b.t || 0); });
+  for (var i = 0; i < sortedSaved.length; i++) {
+    var op = sortedSaved[i];
+    addOp(op, { animate: lastVisit > 0 && op.t > lastVisit });
+  }
+  writeLS(LS_VISIT, String(Date.now()));
+
+  /* frame first, everything else after */
+  setTrace(false);
+  refreshPeopleGlyph();
+  syncPips();
+  dirty = true;
+  requestAnimationFrame(frame);
+
+  /* if the ground is empty and we are far from it, sit over the reference city */
+  setTimeout(function () { try { connectNet(); } catch (e) { } }, 700);
+}
+
+window.addEventListener("keydown", function (e) {
+  if (e.key === "z" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); if (lastMine) undoBtn.click(); }
+  if (e.key === "Escape") { openKnot = null; keyOpen = false; keyEl.classList.remove("show"); dirty = true; }
+});
+
+window.addEventListener("error", function () { /* never let a stray error blank the ground */ });
+
+boot();
+</script>
+</body>
+</html>

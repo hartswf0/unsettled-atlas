@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<meta name="theme-color" content="#efeadd">
+<meta name="theme-color" content=PAPER>
 <meta name="description" content="Common Ground: a living map woven by the people who move through a place.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Common Ground · Living Mapmaker</title>
@@ -44,6 +44,7 @@
   }
   #thread:active{transform:translateX(-50%) scale(.94)}
   #thread.beat{animation:beat 1.5s ease-in-out infinite}
+  #thread.beat:active{animation:none;transform:translateX(-50%) scale(.94)}
   @keyframes beat{0%,100%{transform:translateX(-50%) scale(1)}45%{transform:translateX(-50%) scale(1.07)}}
   @media (prefers-reduced-motion:reduce){#thread.beat{animation:none}}
   #thread .ring{fill:none;stroke:var(--ink);stroke-width:1.4;opacity:.85}
@@ -62,12 +63,12 @@
   }
   #back.show{opacity:1;pointer-events:auto}
   #undo{
-    width:38px;height:38px;left:50%;
-    bottom:calc(30px + env(safe-area-inset-bottom));
-    transform:translateX(-92px);opacity:0;pointer-events:none;
+    width:46px;height:46px;left:50%;
+    bottom:calc(35px + env(safe-area-inset-bottom));
+    transform:translateX(-96px);opacity:0;pointer-events:none;
   }
   #undo.show{opacity:1;pointer-events:auto}
-  #undo:active{transform:translateX(-92px) scale(.92)}
+  #undo:active{transform:translateX(-96px) scale(.94)}
 
   /* place-anchored word input */
   #say{
@@ -80,6 +81,8 @@
     outline:none;padding:2px 2px 4px;width:min(58vw,230px);caret-color:var(--signal);
   }
   #say input::placeholder{color:rgba(29,32,29,.32);font-style:italic}
+  #say.flip{transform:translate(calc(-100% + 2px),-50%)}
+  #say.flip #mic{right:auto;left:-30px}
   #mic{
     display:none;position:absolute;right:-30px;top:-2px;width:24px;height:24px;
     border-radius:50%;background:var(--paper-lit);box-shadow:0 1px 0 rgba(29,32,29,.3);
@@ -135,9 +138,10 @@
   </div>
 
   <div class="pip" id="undo" role="button" aria-label="Unpick last thread">
-    <svg width="20" height="20" viewBox="0 0 24 24">
-      <path d="M6.6 9.4H14a4.6 4.6 0 0 1 0 9.2h-3" fill="none" stroke="#1d201d" stroke-width="1.6" stroke-linecap="round"/>
-      <path d="M9.6 6 6.2 9.4l3.4 3.4" fill="none" stroke="#1d201d" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true">
+      <path d="M3.4 16.6c3.4 0 3.4-7.2 6.8-7.2 1.6 0 2.3 1.6 3 3.2" fill="none" stroke="#1d201d" stroke-width="1.7" stroke-linecap="round"/>
+      <path d="M15.8 15.6c.7 1.5 1.4 3 3 3 3.4 0 3.4-7.2 3.8-7.2" fill="none" stroke="#1d201d" stroke-width="1.7" stroke-linecap="round" stroke-dasharray="2.6 3"/>
+      <path d="M11.6 9.6l3.2 7.4M14.8 9.6l-3.2 7.4" fill="none" stroke="#bf4526" stroke-width="1.5" stroke-linecap="round"/>
     </svg>
   </div>
 
@@ -173,6 +177,7 @@
 
 /* ---------- constants ---------- */
 var TAU = Math.PI * 2;
+var PAPER = "#efeadd", PAPER_LIT = "#f2eee3";
 /* Authorship lives inside the two accents of the ground: teal, vermillion, graphite.
    People are told apart by value and by the make of the fibre, never by a new hue. */
 var FIBRES = [
@@ -182,10 +187,9 @@ var FIBRES = [
   { c: "#8a2e16", m: "dash", warm: 1 },    /* deep vermillion */
   { c: "#6aa9ad", m: "ply", warm: 0 },     /* pale teal       */
   { c: "#d5795d", m: "ply", warm: 1 },     /* pale vermillion */
-  { c: "#41473f", m: "solid", warm: 1 },   /* graphite        */
-  { c: "#8b8f85", m: "bead", warm: 0 }     /* pale graphite   */
+  { c: "#7a2f4e", m: "solid", warm: 1 },   /* madder          */
+  { c: "#0f6f70", m: "bead", warm: 0 }     /* verdigris       */
 ];
-var KNOT_CELL_Z = 20;              /* merc cell for knot merging (~19 m) */
 var STROKE_MIN_PX = 7;             /* travel before a drag becomes a thread */
 var HOLD_MS = 520;                 /* long-press to say something into place */
 
@@ -199,7 +203,6 @@ function mercY(lat) {
 function unMercX(x) { return x * 360 - 180; }
 function unMercY(y) { return 180 / Math.PI * Math.atan(Math.sinh(Math.PI * (1 - 2 * y))); }
 function lerp(a, b, t) { return a + (b - a) * t; }
-function easeOut(t) { return 1 - Math.pow(1 - t, 3); }
 
 /* deterministic hash -> [0,1) ; used for ink wobble, never for geography */
 function hash01(n) { var x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
@@ -290,10 +293,7 @@ var Store = {
   threads: [],          /* {id,a,t,c,pts:Float64Array(merc pairs),drawn:0..1} */
   notes: [],            /* {id,a,t,c,x,y,text} */
   knots: new Map(),      /* cellKey -> knot */
-  bounds: { t0: Infinity, t1: 0 },
-  listeners: [],
-  onChange: function (f) { this.listeners.push(f); },
-  emit: function (kind) { for (var i = 0; i < this.listeners.length; i++) this.listeners[i](kind); }
+  bounds: { t0: Infinity, t1: 0 }
 };
 
 function opId() { return SITE + "." + (++Store.seq).toString(36); }
@@ -325,6 +325,7 @@ function validOp(op) {
 
 function addOp(op, opts) {
   if (!op || !op.i || Store.seen[op.i]) return false;
+  if (tombs.has(op.i)) return false;
   if (!validOp(op)) return false;
   Store.seen[op.i] = 1;
   Store.ops.push(op);
@@ -372,13 +373,25 @@ function materialise(op, opts) {
   }
 }
 
-function removeOp(id) {
+/* Unpicking is remembered, so a thread you took back does not come home again
+   the next time a peer tells you everything it holds. */
+var tombs = (function () {
+  try { var a = JSON.parse(readLS("cg.gone." + readGroundId(), "[]")); return new Set(Array.isArray(a) ? a : []); }
+  catch (e) { return new Set(); }
+})();
+function saveTombs() {
+  try { writeLS("cg.gone." + GID, JSON.stringify(Array.from(tombs).slice(-600))); } catch (e) { }
+}
+function removeOp(id, by) {
   var idx = -1;
   for (var i = Store.ops.length - 1; i >= 0; i--) if (Store.ops[i].i === id) { idx = i; break; }
-  if (idx < 0) return;
+  if (idx < 0) { if (by) { tombs.add(id); saveTombs(); } return false; }
+  if (by && Store.ops[idx].a !== by) return false;      /* only your own marks are yours to take back */
   Store.ops.splice(idx, 1);
   delete Store.seen[id];
+  tombs.add(id); saveTombs();
   rebuild();
+  return true;
 }
 
 function rebuild() {
@@ -402,7 +415,6 @@ function rebuild() {
 
 var BASE_Z = 20;                                  /* the finest place we hold */
 var BASE_CELL = 1 / Math.pow(2, BASE_Z);          /* ~32 m on the ground here */
-var CELL = BASE_CELL;                             /* used for note/knot proximity */
 var KEY_SPAN = 1 << BASE_Z;
 
 function packCell(cx, cy) { return cx * KEY_SPAN + cy; }
@@ -473,7 +485,7 @@ function syncPips() {
   var b = document.getElementById("back");
   if (b) b.classList.toggle("show", has);
   var pe = document.getElementById("people");
-  if (pe) pe.classList.toggle("show", has || peers.size > 0);
+  if (pe) pe.classList.toggle("show", has || peers.size > 0 || demoOff);
 }
 
 /* ---------- persistence ---------- */
@@ -699,7 +711,7 @@ function drawInk() {
       if (st.make === "dash" && lw > 0.9) {
         ctx.save();
         ctx.globalAlpha = st.a * lift * 0.9;
-        ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = lw * 0.62;
+        ctx.strokeStyle = PAPER_LIT; ctx.lineWidth = lw * 0.62;
         ctx.setLineDash([lw * 0.8, lw * 2.4]);
         ctx.beginPath();
         for (var q = 0; q < n; q++) { if (q === 0) ctx.moveTo(_tx[q], _ty[q]); else ctx.lineTo(_tx[q], _ty[q]); }
@@ -747,7 +759,7 @@ function drawPlaces() {
     for (var ci = 0; ci < label.length; ci++) {
       var ch = label.charAt(ci);
       ctx.globalAlpha = 0.8 * (1 - warp * 0.5);
-      ctx.strokeStyle = "rgba(239,234,221,.9)"; ctx.strokeText(ch, tx0, sy);
+      ctx.strokeStyle = "rgba(241,236,224,.9)"; ctx.strokeText(ch, tx0, sy);
       ctx.globalAlpha = alpha; ctx.fillStyle = "#1d201d"; ctx.fillText(ch, tx0, sy);
       tx0 += ctx.measureText(ch).width + 1.6;
     }
@@ -850,7 +862,7 @@ function drawThread(th, alpha, width, dim) {
      threads are laid oldest first, so the weave has a real over and under */
   if (!dim && width > 1.3 && !plainWeave) {
     ctx.globalAlpha = alpha * 0.82;
-    ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = width + 1.7;
+    ctx.strokeStyle = PAPER_LIT; ctx.lineWidth = width + 1.7;
     ctx.beginPath();
     for (i = 0; i < n; i++) { if (i === 0) ctx.moveTo(_tx[i], _ty[i]); else ctx.lineTo(_tx[i], _ty[i]); }
     ctx.stroke();
@@ -870,25 +882,30 @@ function drawThread(th, alpha, width, dim) {
   ctx.fillStyle = th.c;
   var mk = th.m || "solid";
   if (mk === "ply") {
-    var sep = Math.max(0.75, width * 0.42);
-    ribbon(n, width * 0.52, sep); ctx.fill();
-    ribbon(n, width * 0.52, -sep); ctx.fill();
+    var sep = Math.max(1.5, width * 0.58);
+    ribbon(n, width * 0.46, sep); ctx.fill();
+    ribbon(n, width * 0.46, -sep); ctx.fill();
   } else {
     ribbon(n, width); ctx.fill();
     if (mk === "dash" && width > 1.4) {
       /* stitches: the paper shows through the thread at intervals */
       ctx.globalAlpha = alpha * (dim ? 0.12 : 0.62);
-      ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = width * 0.5;
+      ctx.strokeStyle = PAPER_LIT; ctx.lineWidth = width * 0.5;
       ctx.setLineDash([width * 0.7, width * 2.6]);
       ctx.beginPath();
       for (i = 0; i < n; i++) { if (i === 0) ctx.moveTo(_tx[i], _ty[i]); else ctx.lineTo(_tx[i], _ty[i]); }
       ctx.stroke();
       ctx.setLineDash([]);
-    } else if (mk === "bead") {
-      ctx.globalAlpha = alpha * (dim ? 0.16 : 1);
-      var every = Math.max(3, Math.round(14 / Math.max(1, width)));
+    } else if (mk === "bead" && width > 1.2) {
+      /* beads read because the paper shows around them */
+      var every = Math.max(4, Math.round(22 / Math.max(1, width)));
       for (i = 0; i < n; i += every) {
-        ctx.beginPath(); ctx.arc(_tx[i], _ty[i], width * 0.78, 0, TAU); ctx.fill();
+        ctx.globalAlpha = alpha * (dim ? 0.1 : 0.85);
+        ctx.fillStyle = PAPER_LIT;
+        ctx.beginPath(); ctx.arc(_tx[i], _ty[i], width * 0.98, 0, TAU); ctx.fill();
+        ctx.globalAlpha = alpha * (dim ? 0.16 : 1);
+        ctx.fillStyle = th.c;
+        ctx.beginPath(); ctx.arc(_tx[i], _ty[i], width * 0.62, 0, TAU); ctx.fill();
       }
     }
   }
@@ -912,7 +929,6 @@ function interlace() {
       arr.push(t * 100000 + i);
     }
   }
-  var prev = ctx;
   for (var t2 = laid.length - 1; t2 > 0 && fixups < MAX; t2--) {
     var Lb = laid[t2];
     for (var j = 0; j + 1 < Lb.n && fixups < MAX; j++) {
@@ -935,7 +951,6 @@ function interlace() {
       }
     }
   }
-  ctx = prev;
   laid = null;
 }
 
@@ -958,7 +973,7 @@ function surface(L, si, px, py) {
   ctx.beginPath();
   for (var i = i0; i <= i1; i++) { if (i === i0) ctx.moveTo(L.x[i], L.y[i]); else ctx.lineTo(L.x[i], L.y[i]); }
   ctx.globalAlpha = L.a * 0.8;
-  ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = L.w + 1.7; ctx.stroke();
+  ctx.strokeStyle = PAPER_LIT; ctx.lineWidth = L.w + 1.7; ctx.stroke();
   ctx.globalAlpha = L.a;
   ctx.strokeStyle = L.th.c; ctx.lineWidth = L.w * 0.92; ctx.stroke();
   ctx.restore();
@@ -1007,7 +1022,7 @@ function drawWeave(now) {
 
   /* knots gather as you pull back: at a distance the weave is fabric, not beads */
   buildKnotClusters();
-  for (var k = 0; k < renderedKnots.length; k++) drawKnot(renderedKnots[k], now, base);
+  for (var k = 0; k < renderedKnots.length; k++) drawKnot(renderedKnots[k], now);
 
   /* words in place */
   drawNotes(now);
@@ -1110,7 +1125,10 @@ function buildKnotClusters() {
       var d = Math.hypot(renderedKnots[j].x - openKnot.x, renderedKnots[j].y - openKnot.y);
       if (d < bd) { bd = d; found = renderedKnots[j]; }
     }
-    openKnot = (found && bd < BASE_CELL * (1 << (BASE_Z - levelForZoom())) * 2) ? found : null;
+    var reach2 = BASE_CELL * (1 << (BASE_Z - levelForZoom())) * 2;
+    if (found && bd < reach2) openKnot = found;
+    else if (all.indexOf(openKnot) >= 0) renderedKnots.push(openKnot);   /* stays open while you travel */
+    else openKnot = null;
   }
 }
 
@@ -1125,10 +1143,10 @@ function threadById(id) {
 }
 
 function knotRadius(w) {
-  return clamp(2.4 + Math.pow(w, 0.46) * (2.0 + clamp(V.z - 11, 0, 6) * 0.34), 2.4, 34);
+  return clamp(2.4 + Math.pow(w, 0.46) * (2.0 + clamp(V.z - 11, 0, 6) * 0.34), 2.4, 54);
 }
 
-function drawKnot(kn, now, base) {
+function drawKnot(kn, now) {
   var ws = worldSize();
   var sx = (kn.x - V.x) * ws + W / 2, sy = (kn.y - V.y) * ws + H / 2;
   if (sx < -80 || sx > W + 80 || sy < -80 || sy > H + 80) return;
@@ -1156,7 +1174,7 @@ function drawKnot(kn, now, base) {
     ctx.globalAlpha = (0.42) * HM;
     ctx.strokeStyle = "#2f7d84"; ctx.lineWidth = 0.8;
     /* the cloth is squared off here: warp one way, weft the other */
-    var half = r * 1.15, step = Math.max(2.4, half / 4.2);
+    var half = r * 1.15, step = Math.max(2.2, half / clamp(3.2 + Math.log2(1 + kn.au) * 1.6, 3.2, 9));
     ctx.beginPath();
     for (var q = -half; q <= half + 0.01; q += step) {
       var h = half - Math.abs(q);              /* a diamond, not a disc */
@@ -1176,7 +1194,7 @@ function drawKnot(kn, now, base) {
   /* the threads read under the knot */
   if (r > 6) {
     ctx.globalAlpha = (0.13) * HM;
-    ctx.fillStyle = "#f3efe5";
+    ctx.fillStyle = PAPER_LIT;
     ctx.beginPath(); ctx.arc(0, 0, r * 0.78, 0, TAU); ctx.fill();
   }
 
@@ -1239,7 +1257,7 @@ function drawKnot(kn, now, base) {
       var ang2 = -Math.PI / 2 + (b2 / hands.length) * TAU;
       ctx.globalAlpha = (0.95) * HM; ctx.fillStyle = hands[b2];
       ctx.beginPath(); ctx.arc(Math.cos(ang2) * hr, Math.sin(ang2) * hr, 2.9, 0, TAU); ctx.fill();
-      ctx.globalAlpha = (0.5) * HM; ctx.strokeStyle = "#f3efe5"; ctx.lineWidth = 0.8; ctx.stroke();
+      ctx.globalAlpha = (0.5) * HM; ctx.strokeStyle = PAPER_LIT; ctx.lineWidth = 0.8; ctx.stroke();
     }
     /* and one arc for every time somebody came back */
     var arcs = Math.min(kn.ret, 12);
@@ -1256,7 +1274,22 @@ function drawKnot(kn, now, base) {
 
 function drawNotes(now) {
   var ws = worldSize();
-  if (!openKnot && V.z < 13.8) return;
+  if (!openKnot && V.z < 13.8) {
+    /* too far out to read, but the place a word was left is still marked */
+    ctx.save();
+    for (var m = 0; m < Store.notes.length; m++) {
+      var nn = Store.notes[m];
+      if (nn.t > timeCursor) continue;
+      var mx2 = (nn.x - V.x) * ws + W / 2, my2 = (nn.y - V.y) * ws + H / 2;
+      if (mx2 < -8 || mx2 > W + 8 || my2 < -8 || my2 > H + 8) continue;
+      ctx.globalAlpha = 0.55; ctx.strokeStyle = nn.c; ctx.lineWidth = 1.1;
+      ctx.beginPath(); ctx.moveTo(mx2, my2); ctx.lineTo(mx2, my2 - 7); ctx.stroke();
+      ctx.globalAlpha = 0.75; ctx.fillStyle = nn.c;
+      ctx.beginPath(); ctx.arc(mx2, my2, 1.6, 0, TAU); ctx.fill();
+    }
+    ctx.restore();
+    return;
+  }
   ctx.save();
   ctx.textBaseline = "middle";
   var placed = [];
@@ -1287,7 +1320,7 @@ function drawNotes(now) {
     var tx = sx + 6 + tw > W - 8 ? sx - 6 - tw : sx + 6;
     if (tx < 8 || tx + tw > W - 8) continue;
     ctx.globalAlpha = a * 0.85;
-    ctx.strokeStyle = "rgba(239,234,221,.9)"; ctx.lineWidth = 3; ctx.lineJoin = "round";
+    ctx.strokeStyle = "rgba(241,236,224,.9)"; ctx.lineWidth = 3; ctx.lineJoin = "round";
     ctx.strokeText(n.text, tx, sy - 16);
     ctx.globalAlpha = a;
     ctx.fillStyle = "#1d201d";
@@ -1352,8 +1385,9 @@ function drawPresence(now) {
     var g = ctx.createRadialGradient(sx, sy, 0, sx, sy, 34);
     g.addColorStop(0, p.c); g.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, 34, 0, TAU); ctx.fill();
-    ctx.globalAlpha = 0.6; ctx.fillStyle = p.c;
-    ctx.beginPath(); ctx.arc(sx, sy, 2.6, 0, TAU); ctx.fill();
+    ctx.globalAlpha = 0.5; ctx.strokeStyle = p.c; ctx.lineWidth = 1.1;
+    ctx.setLineDash([2.2, 3.2]);
+    ctx.beginPath(); ctx.arc(sx, sy, 8 + pulse * 2.5, 0, TAU); ctx.stroke();
     ctx.restore();
     dirty = true;
   });
@@ -1388,7 +1422,7 @@ function drawWarp() {
    No words, no arrow, no coach mark. The ground simply does the thing once,
    in the same fibre you will be given: a thread is laid, another crosses it,
    the crossing tightens into a knot. Then it lets go. It is never written down. */
-var demoOff = false, demoPulse = 0, demoGeom = null;
+var demoOff = readLS("cg.taught", "") === "1", demoPulse = 0, demoGeom = null;
 
 /* two paths that genuinely meet; the meeting point is found, never assumed */
 function buildDemoGeom() {
@@ -1434,8 +1468,10 @@ function buildDemoGeom() {
 
 function drawDemo(now) {
   /* the ground stops explaining itself the moment anything real is happening on it */
-  if (demoOff || Store.threads.length || Store.notes.length || drawingPts) return;
-  if (livePeers.size || peers.size) return;
+  if (demoOff || Store.threads.length || Store.notes.length || drawingPts || livePeers.size || peers.size) {
+    if (demoPulse) { demoPulse = 0; threadBtn.classList.remove("beat"); }
+    return;
+  }
   if (!demoGeom || demoGeom.w !== W || demoGeom.h !== H) demoGeom = buildDemoGeom();
   var G = demoGeom;
 
@@ -1467,7 +1503,7 @@ function drawDemo(now) {
     _seed = seed;
     ctx.beginPath();
     for (var j = 0; j < n; j++) { if (j === 0) ctx.moveTo(_tx[j], _ty[j]); else ctx.lineTo(_tx[j], _ty[j]); }
-    ctx.globalAlpha = out * 0.78; ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = wid + 1.7;
+    ctx.globalAlpha = out * 0.78; ctx.strokeStyle = PAPER_LIT; ctx.lineWidth = wid + 1.7;
     ctx.lineCap = "round"; ctx.lineJoin = "round"; ctx.stroke();
     ctx.globalAlpha = out * 0.10; ctx.strokeStyle = col; ctx.lineWidth = wid * 2.2; ctx.stroke();
     ctx.globalAlpha = out * 0.9; ctx.fillStyle = col;
@@ -1485,7 +1521,7 @@ function drawDemo(now) {
     ctx.beginPath(); ctx.arc(G.ix, G.iy, 9, 0, TAU); ctx.clip();
     ctx.beginPath();
     for (var q3 = 0; q3 < _tx.length; q3++) { if (q3 === 0) ctx.moveTo(_tx[q3], _ty[q3]); else ctx.lineTo(_tx[q3], _ty[q3]); }
-    ctx.globalAlpha = out * 0.78; ctx.strokeStyle = "#f1ece0"; ctx.lineWidth = 3.2 + 1.7; ctx.stroke();
+    ctx.globalAlpha = out * 0.78; ctx.strokeStyle = PAPER_LIT; ctx.lineWidth = 3.2 + 1.7; ctx.stroke();
     ctx.globalAlpha = out * 0.9; ctx.strokeStyle = MY_COLOR; ctx.lineWidth = 3.0; ctx.stroke();
     ctx.restore();
   }
@@ -1523,14 +1559,19 @@ var MON = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct",
 function drawEra() {
   if (timeCursor === Infinity || !isFinite(Store.bounds.t1) || !Store.bounds.t1) return;
   var d = new Date(clamp(timeCursor, Store.bounds.t0, Store.bounds.t1));
-  var label = d.getDate() + " " + MON[d.getMonth()];
+  var label = (d.getDate() + " " + MON[d.getMonth()]).toUpperCase();
   ctx.save();
-  ctx.textAlign = "center"; ctx.textBaseline = "top";
-  ctx.font = 'italic 15px Georgia,"Times New Roman",serif';
-  ctx.globalAlpha = 0.9; ctx.strokeStyle = "rgba(239,234,221,.9)"; ctx.lineWidth = 4; ctx.lineJoin = "round";
-  ctx.strokeText(label, W / 2, 16 + safeTop());
-  ctx.globalAlpha = 0.62; ctx.fillStyle = "#1d201d";
-  ctx.fillText(label, W / 2, 16 + safeTop());
+  ctx.textAlign = "left"; ctx.textBaseline = "top";
+  ctx.font = '600 10px -apple-system,system-ui,"Helvetica Neue",sans-serif';
+  var lw3 = ctx.measureText(label).width + (label.length - 1) * 2.2;
+  var tx3 = (W - lw3) / 2, ty3 = 18 + safeTop();
+  for (var ci2 = 0; ci2 < label.length; ci2++) {
+    var ch2 = label.charAt(ci2);
+    ctx.globalAlpha = 0.85; ctx.strokeStyle = "rgba(241,236,224,.9)"; ctx.lineWidth = 3.4; ctx.lineJoin = "round";
+    ctx.strokeText(ch2, tx3, ty3);
+    ctx.globalAlpha = 0.5; ctx.fillStyle = "#1d201d"; ctx.fillText(ch2, tx3, ty3);
+    tx3 += ctx.measureText(ch2).width + 2.2;
+  }
   ctx.restore();
 }
 
@@ -1555,7 +1596,7 @@ function renderLayer(now) {
   ctx = lctx;
   ctx.setTransform(DPR, 0, 0, DPR, pad * DPR, pad * DPR);
   ctx.clearRect(-pad, -pad, W + pad * 2, H + pad * 2);
-  ctx.fillStyle = "#efeadd";
+  ctx.fillStyle = PAPER;
   ctx.fillRect(-pad, -pad, W + pad * 2, H + pad * 2);
   drawTiles();
   if (!paperTex) paperTex = mainCtx.createPattern(paperTile(), "repeat");
@@ -1585,7 +1626,7 @@ function frame(now) {
   if (needs) renderLayer(now);
 
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
-  ctx.fillStyle = "#efeadd";
+  ctx.fillStyle = PAPER;
   ctx.fillRect(0, 0, W, H);
   if (lTag) {
     var sc = Math.pow(2, V.z - lTag.z);
@@ -1683,7 +1724,6 @@ var pointerDown = false;
 var pinch = null;
 var stroke = null;
 var holdTimer = 0, holdCandidate = null;
-var lastTapTime = 0;
 
 var stage = document.getElementById("stage");
 
@@ -1844,7 +1884,6 @@ function settleThread(mercPts) {
   var op = { i: opId(), a: ME, t: Date.now(), k: "t", d: { p: packed } };
   addOp(op); saveLocal(); publish([op]);
   lastMine = op.i; showUndo(); syncPips();
-  Store.emit("thread");
   dirty = true;
 }
 
@@ -1854,16 +1893,37 @@ var sayIn = document.getElementById("sayIn");
 var micBtn = document.getElementById("mic");
 var sayAt = null, recog = null;
 
+var sayReady = false, sayOpened = 0;
 function openSay(sx, sy, wx, wy) {
   sayAt = { x: wx, y: wy };
+  sayReady = false;
+  sayOpened = performance.now();
   say.style.display = "block";
-  say.style.left = clamp(sx, 14, W - 250) + "px";
-  say.style.top = clamp(sy - 26, 40, H - 120) + "px";
+  var nearRight = sx > W - 170;
+  say.classList.toggle("flip", nearRight);
+  say.style.left = clamp(sx, 40, W - 40) + "px";
+  say.style.top = clamp(sy - 26, 44, H - 130) + "px";
   sayIn.value = "";
-  setTimeout(function () { try { sayIn.focus(); } catch (e) { } }, 10);
   if (window.SpeechRecognition || window.webkitSpeechRecognition) micBtn.classList.add("avail");
+
+  /* The finger that opened this is still on the glass. Focusing now means the
+     keyboard steals it and the lift blurs it straight back out. Wait for the lift. */
+  function arm() {
+    window.removeEventListener("pointerup", arm, true);
+    window.removeEventListener("touchend", arm, true);
+    clearTimeout(armFallback);
+    setTimeout(function () {
+      if (!sayAt) return;
+      sayReady = true;
+      try { sayIn.focus(); } catch (e) { }
+    }, 30);
+  }
+  var armFallback = setTimeout(arm, 700);
+  window.addEventListener("pointerup", arm, true);
+  window.addEventListener("touchend", arm, true);
 }
 function closeSay(commit) {
+  sayReady = false;
   if (recog) { try { recog.stop(); } catch (e) { } recog = null; micBtn.classList.remove("on"); }
   var text = sayIn.value.trim();
   say.style.display = "none";
@@ -1881,7 +1941,12 @@ sayIn.addEventListener("keydown", function (e) {
   if (e.key === "Enter") { e.preventDefault(); closeSay(true); }
   else if (e.key === "Escape") { closeSay(false); }
 });
-sayIn.addEventListener("blur", function () { setTimeout(function () { if (say.style.display === "block") closeSay(true); }, 120); });
+sayIn.addEventListener("blur", function () {
+  setTimeout(function () {
+    if (!sayReady || performance.now() - sayOpened < 700) return;   /* not a real dismissal */
+    if (say.style.display === "block") closeSay(true);
+  }, 140);
+});
 micBtn.addEventListener("click", function (e) {
   e.stopPropagation();
   var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1922,7 +1987,7 @@ function setTrace(on) {
 }
 threadBtn.addEventListener("click", function () {
   setTrace(!traceMode);
-  if (traceMode) { demoOff = true; threadBtn.classList.remove("beat"); }
+  if (traceMode) { demoOff = true; demoPulse = 0; writeLS("cg.taught", "1"); threadBtn.classList.remove("beat"); syncPips(); }
   if (openKnot) { openKnot = null; }
 });
 threadBtn.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
@@ -1931,13 +1996,13 @@ var undoTimer = 0, lastMine = null;
 function showUndo() {
   undoBtn.classList.add("show");
   clearTimeout(undoTimer);
-  undoTimer = setTimeout(function () { undoBtn.classList.remove("show"); lastMine = null; }, 7000);
+  undoTimer = setTimeout(function () { undoBtn.classList.remove("show"); lastMine = null; }, 30000);
 }
 undoBtn.addEventListener("click", function (e) {
   e.stopPropagation();
   if (!lastMine) return;
   var id = lastMine;
-  removeOp(id); saveLocal(); publish([{ i: "x." + id, a: ME, t: Date.now(), k: "x", d: { r: id } }]);
+  removeOp(id, ME); saveLocal(); publish([{ i: SITE + ".x" + id, a: ME, t: Date.now(), k: "x", d: { r: id } }]);
   lastMine = null; undoBtn.classList.remove("show"); syncPips(); dirty = true;
 });
 undoBtn.addEventListener("pointerdown", function (e) { e.stopPropagation(); });
@@ -1989,10 +2054,15 @@ function openKey() {
   document.getElementById("keyUrl").textContent = joinUrl();
   var here = [MY_COLOR];
   peers.forEach(function (pp) { if (here.length < 9) here.push(pp.c); });
-  document.getElementById("keyNote").innerHTML = here.map(function (c, i) {
-    return '<span style="display:inline-block;width:11px;height:11px;border-radius:50%;margin:0 4px;background:' + c +
-      ';opacity:' + (i === 0 ? 1 : .8) + '"></span>';
-  }).join("");
+  var dots = here.map(function (c) {
+    return '<span style="display:inline-block;width:11px;height:11px;border-radius:50%;margin:0 5px;background:' + c + '"></span>';
+  });
+  /* room for the others, drawn as room */
+  while (dots.length < 3) {
+    dots.push('<span style="display:inline-block;width:11px;height:11px;border-radius:50%;margin:0 5px;' +
+      'box-shadow:inset 0 0 0 1px rgba(29,32,29,.32)"></span>');
+  }
+  document.getElementById("keyNote").innerHTML = dots.join("");
   try { drawQR(document.getElementById("qr"), joinUrl()); } catch (e) { }
 }
 keyEl.addEventListener("click", function () { keyOpen = false; keyEl.classList.remove("show"); });
@@ -2133,7 +2203,7 @@ var QR = (function () {
       p += Math.floor(Math.abs(dark * 100 / (size * size) - 50) / 5) * 10;
       return p;
     }
-    var best = null, bestP = Infinity, bestMask = 0;
+    var best = null, bestP = Infinity;
     for (var mk = 0; mk < 8; mk++) {
       var mm = m.map(function (row) { return Uint8Array.from(row); });
       for (var r3 = 0; r3 < size; r3++) for (var c5 = 0; c5 < size; c5++) if (!fn[r3][c5] && maskFn(mk, r3, c5)) mm[r3][c5] ^= 1;
@@ -2152,7 +2222,7 @@ var QR = (function () {
       }
       mm[size - 8][8] = 1;
       var pp = penalty(mm);
-      if (pp < bestP) { bestP = pp; best = mm; bestMask = mk; }
+      if (pp < bestP) { bestP = pp; best = mm; }
     }
     return best;
   };
@@ -2167,19 +2237,21 @@ function drawQR(canvas, text) {
   canvas.width = Math.round(css * dpr); canvas.height = Math.round(css * dpr);
   var g = canvas.getContext("2d");
   var s = canvas.width / total;
-  g.fillStyle = "#f6f2e8"; g.fillRect(0, 0, canvas.width, canvas.height);
+  g.fillStyle = PAPER; g.fillRect(0, 0, canvas.width, canvas.height);
+  /* Solid modules, no gaps. A gap of even a twentieth of a module is enough to
+     make a strict decoder refuse the square, and this square has to scan. */
   for (var r = 0; r < n; r++) for (var c = 0; c < n; c++) {
     if (!m[r][c]) continue;
     var inFinder = (r < 7 && c < 7) || (r < 7 && c >= n - 7) || (r >= n - 7 && c < 7);
     g.fillStyle = inFinder ? "#bf4526" : "#1d201d";
-    g.fillRect(Math.round((c + quiet) * s), Math.round((r + quiet) * s), Math.ceil(s), Math.ceil(s));
+    g.fillRect(Math.floor((c + quiet) * s), Math.floor((r + quiet) * s), Math.ceil(s) + 1, Math.ceil(s) + 1);
   }
 }
 
 /* ============================================================
    NETWORK — the ground tries to find the others. Never required.
    ============================================================ */
-var net = { state: "local", mqtt: null, bc: null, brokers: [], tried: 0 };
+var net = { state: "local", mqtt: null, bc: null, tried: 0 };
 
 function encodeMsg(o) { return JSON.stringify(o); }
 function handleMsg(raw) { try { handleMsgInner(raw); } catch (e) { /* one bad message is one bad message */ } }
@@ -2190,7 +2262,7 @@ function handleMsgInner(msg) {
     var added = 0;
     for (var i = 0; i < msg.ops.length; i++) {
       var op = msg.ops[i];
-      if (op.k === "x") { removeOp(op.d.r); added++; continue; }
+      if (op.k === "x") { if (removeOp(op.d.r, op.a)) added++; continue; }
       if (addOp(op, { animate: true })) added++;
     }
     if (added) { saveLocal(); syncPips(); dirty = true; }
@@ -2417,6 +2489,13 @@ function bootGround() {
   refreshPeopleGlyph();
   syncPips();
   dirty = true;
+
+  /* a mark you made a moment ago can still be taken back after a reload */
+  for (var m = Store.ops.length - 1; m >= 0; m--) {
+    if (Store.ops[m].a !== ME) continue;
+    if (Date.now() - Store.ops[m].t < 3 * 60000) { lastMine = Store.ops[m].i; showUndo(); }
+    break;
+  }
 
   /* say hello to any other client on this device straight away */
   try { send({ g: GID, from: SITE, hello: 1, have: haveVector() }); } catch (e) { }

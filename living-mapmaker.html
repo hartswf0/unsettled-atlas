@@ -190,9 +190,9 @@ var FIBRES = [
   { c: "#7a2f4e", m: "solid", warm: 1 },   /* madder          */
   { c: "#0f6f70", m: "bead", warm: 0 },    /* verdigris       */
   { c: "#3f959b", m: "dash", warm: 0 },    /* light teal      */
-  { c: "#a4432c", m: "solid", warm: 1 },   /* brick           */
+  { c: "#9c3520", m: "solid", warm: 1 },   /* brick           */
   { c: "#1d7f83", m: "ply", warm: 0 },     /* deep verdigris  */
-  { c: "#c86a3f", m: "bead", warm: 1 },    /* tile            */
+  { c: "#d99a55", m: "ply", warm: 1 },     /* ochre thread    */
   { c: "#54263c", m: "dash", warm: 1 },    /* deep madder     */
   { c: "#8fc0c2", m: "solid", warm: 0 },   /* pale verdigris  */
   { c: "#e08a6e", m: "dash", warm: 1 },    /* faded vermilion */
@@ -756,6 +756,10 @@ function drawInk() {
 
 function drawPlaces() {
   if (V.z < 10.4 || !PLACES.length) return;
+  /* Names are for a ground nobody has woven yet. As the weave arrives it becomes
+     the thing worth reading, and the machine's labels get out of its way. */
+  var nameFade = 1 - clamp((placeCrowd - 3) / 22, 0, 1);
+  if (nameFade <= 0.02) return;
   var ws = worldSize();
   var show = V.z < 12 ? ["city", "town"] : V.z < 13.5 ? ["city", "town", "suburb"] : null;
   ctx.save();
@@ -778,11 +782,11 @@ function drawPlaces() {
     var label = p.name.toUpperCase();
     var lw2 = ctx.measureText(label).width + (label.length - 1) * 1.6;
     if (sx - lw2 / 2 < 6 || sx + lw2 / 2 > W - 6) continue;   /* never clipped mid-word */
-    var tx0 = sx - lw2 / 2, alpha = (big ? 0.42 : 0.28) * (1 - warp * 0.5);
+    var tx0 = sx - lw2 / 2, alpha = (big ? 0.42 : 0.28) * (1 - warp * 0.5) * nameFade;
     ctx.textAlign = "left";
     for (var ci = 0; ci < label.length; ci++) {
       var ch = label.charAt(ci);
-      ctx.globalAlpha = 0.8 * (1 - warp * 0.5);
+      ctx.globalAlpha = 0.8 * (1 - warp * 0.5) * nameFade;
       ctx.strokeStyle = "rgba(241,236,224,.9)"; ctx.strokeText(ch, tx0, sy);
       ctx.globalAlpha = alpha; ctx.fillStyle = "#1d201d"; ctx.fillText(ch, tx0, sy);
       tx0 += ctx.measureText(ch).width + 1.6;
@@ -816,7 +820,8 @@ function threadScreen(th, upto, ws) {
     _tx.push(sx); _ty.push(sy); lastX = sx; lastY = sy; n++;
   }
   /* one smoothing pass, so a fast gesture reads as fibre and not as a polyline */
-  if (n > 3) {
+  var passes = V.z >= 15 ? 2 : 1;
+  for (var sp = 0; sp < passes && n > 3; sp++) {
     var ox = _tx.slice(0, n), oy = _ty.slice(0, n);
     for (var q = 1; q < n - 1; q++) {
       _tx[q] = ox[q] * 0.5 + ox[q - 1] * 0.25 + ox[q + 1] * 0.25;
@@ -864,7 +869,7 @@ function ribbon(n, width, off) {
   ctx.closePath();
 }
 
-var plainWeave = false, laid = null, press = 1;
+var plainWeave = false, laid = null, press = 1, placeCrowd = 0, reveal = 1;
 function drawThread(th, alpha, width, dim) {
   var ws = worldSize();
   var count = th.pts.length / 2;
@@ -1006,6 +1011,7 @@ function surface(L, si, px, py) {
 function drawWeave(now) {
   buildAggregate();
   var nowMs = Date.now();
+  var pending = 0, settled = 0;
   var ws = worldSize();
   var base = threadWidth();
   var dimOthers = !!openKnot;
@@ -1030,13 +1036,15 @@ function drawWeave(now) {
   /* The more that has been woven here, the less any single strand insists on
      itself. A busy ground settles toward a low field the city still reads
      through; only the newest threads and the knots keep their ink. */
-  press = clamp(1 - Math.log2(1 + count / 36) * 0.20, 0.24, 1);
+  press = clamp(1 - Math.log2(1 + count / 36) * 0.17, 0.34, 1);
+  placeCrowd = count;
   laid = plainWeave ? null : groundLaid.slice(0, 190);
   for (var i = 0; i < Store.threads.length; i++) {
     var th = Store.threads[i];
     if (th.t > timeCursor) continue;
-    if (th.drawn < 1) { th.drawn = Math.min(1, th.drawn + (th.rate || 0.02)); dirty = true; weaveDirty = true; }
+    if (th.drawn < 1) { th.drawn = Math.min(1, th.drawn + (th.rate || 0.02)); dirty = true; weaveDirty = true; pending++; }
     if (th.drawn < 0) { th.drawn = Math.min(0, th.drawn + 0.02); dirty = true; weaveDirty = true; continue; }
+    settled++;
     /* nothing offscreen is projected at all */
     if (th.bx1 < vx0 || th.bx0 > vx1 || th.by1 < vy0 || th.by0 > vy1) continue;
     var age = Store.bounds.t1 > Store.bounds.t0
@@ -1044,13 +1052,20 @@ function drawWeave(now) {
     var recent = clamp(1 - (nowMs - th.t) / (3 * 864e5), 0, 1);   /* three days keep their ink */
     var pr = press + (1 - press) * recent * 0.8;
     var a = (0.52 + 0.42 * age) * pr;
+    if (th.a === ME) a = Math.min(1, a * 1.3 + 0.08);   /* your own hand always reads */
     var dim = dimOthers && live.indexOf(th.id) < 0;
-    var w = base * (0.74 + 0.38 * age) * (0.5 + 0.5 * pr);
+    /* Density redistributes ink rather than deleting it: a strand grows with the
+       wear of the ground under it, so many thin threads down one street fuse into
+       a single thick warp band instead of all of them fading away. */
+    var fuse = 1 + Math.log2(1 + (th.wear || 1)) * 0.20;
+    var w = base * (0.74 + 0.38 * age) * (0.5 + 0.5 * pr) * fuse * (th.a === ME ? 1.12 : 1);
     if (dimOthers && !dim) w *= 1.25;
     drawThread(th, a, w, dim);
   }
 
   interlace();
+  /* while a ground is drawing itself back in, its knots wait for their threads */
+  reveal = (pending + settled) > 0 ? settled / (pending + settled) : 1;
 
   /* knots gather as you pull back: at a distance the weave is fabric, not beads */
   buildKnotClusters();
@@ -1125,15 +1140,26 @@ function buildAggregate() {
     if (a.co >= 2 && a.bins.size >= 2) list.push(a);
   });
 
+  aggTopW = 1;
+  for (var tw = 0; tw < list.length; tw++) if (list[tw].w > aggTopW) aggTopW = list[tw].w;
   if (wearDirty) computeWear();
   aggCache = list; aggLevel = L; aggDirty = false;
   return list;
 }
 
-/* the ladder, read off the place's own history — never off the zoom */
+/* The ladder reads off the place's own history — never off the zoom — but it is
+   also read against the strongest place on this ground, so however many years a
+   city is woven for there are only ever two or three landmarks, and the whole
+   progression from a first crossing to common ground stays legible forever. */
+var aggTopW = 1;
 function knotStage(w, au) {
-  var st = w < 8 ? 0 : w < 17 ? 1 : w < 34 ? 2 : w < 68 ? 3 : 4;
-  return Math.min(st, maxStageFor(au || 1));
+  var abs = w < 8 ? 0 : w < 17 ? 1 : w < 34 ? 2 : w < 68 ? 3 : 4;
+  var rel = 1;
+  if (aggTopW > 40) {
+    var q = w / aggTopW;
+    rel = q >= 0.62 ? 4 : q >= 0.34 ? 3 : q >= 0.15 ? 2 : q >= 0.05 ? 1 : 0;
+  } else rel = 4;
+  return Math.min(abs, rel, maxStageFor(au || 1));
 }
 
 function buildKnotClusters() {
@@ -1149,7 +1175,7 @@ function buildKnotClusters() {
   /* only ever as many knots as the screen can hold without becoming beads */
   /* the strongest place in a neighbourhood speaks for it, so the weave shows
      peaks rather than a lattice of equal beads */
-  var cap = clamp(Math.round((W * H) / 13000), 18, 64);
+  var cap = clamp(Math.round((W * H) / 17000), 14, 44);
   vis.sort(function (p, q) { return q.w - p.w; });
   var kept = [];
   for (var v = 0; v < vis.length && kept.length < cap; v++) {
@@ -1227,56 +1253,65 @@ function drawKnot(kn, now) {
   var r = knotRadius(w);
   var fresh = clamp(1 - (Date.now() - kn.grew) / 2600, 0, 1);
   var isOpen = openKnot === kn;
-  var HM = ((openKnot && !isOpen) ? 0.2 : 1) * clamp(1 / (0.45 + 0.55 * press), 1, 1.7);
+  var HM = ((openKnot && !isOpen) ? 0.2 : 1) * clamp(1 / (0.45 + 0.55 * press), 1, 1.7) * reveal;
   var many = kn.au > 1;
   var accent = many ? "#bf4526" : "#2f7d84";
 
   ctx.save();
   ctx.translate(sx, sy);
 
-  /* 4 · COMMON GROUND — a woven field where many have come, and come back.
-     The ladder does not stop here. Past the threshold the cloth keeps squaring
-     off: the field spreads, the warp closes up, and a second diamond is thrown
-     around the first, so the strongest place on a city is plainly the strongest. */
+  /* 4 · COMMON GROUND.
+     Not a hatch stamped on the map. The field is made of the threads themselves:
+     as many strands as have come through, laid on the bearings actually recorded
+     here, interlaced over and under, fading to nothing at the edges so the place
+     radiates instead of ending at a border. */
   if (st >= 4) {
     var over = clamp(Math.log2(w / 68), 0, 3.2);
-    var fr = r * (2.2 + over * 0.85);
-    var g = ctx.createRadialGradient(0, 0, r * 0.3, 0, 0, fr);
-    g.addColorStop(0, "rgba(47,125,132," + (0.11 + over * 0.045).toFixed(3) + ")");
-    g.addColorStop(1, "rgba(47,125,132,0)");
-    ctx.globalAlpha = HM;
-    ctx.fillStyle = g;
-    ctx.beginPath(); ctx.arc(0, 0, fr, 0, TAU); ctx.fill();
-    ctx.save();
-    /* warp one way, weft the other, and the cloth cut on the diamond —
-       drawn straight, so the mark reads as a square knot and not a box */
-    var half = r * (1.12 + over * 0.30);
-    var divisions = clamp(3.4 + Math.log2(1 + kn.au) * 1.5 + over * 2.6, 3.4, 16);
-    ctx.globalAlpha = (0.36 + over * 0.05) * HM;
-    ctx.strokeStyle = "#2f7d84"; ctx.lineWidth = 0.75;
-    var step = Math.max(1.9, half / divisions);
-    ctx.beginPath();
-    for (var q = -half; q <= half + 0.01; q += step) {
-      var h = half - Math.abs(q);              /* a diamond, not a disc */
-      if (h <= 0) continue;
-      ctx.moveTo(q, -h); ctx.lineTo(q, h);
-      ctx.moveTo(-h, q); ctx.lineTo(h, q);
+    var R = r * (1.45 + over * 0.42);
+    var bins = kn.binList || (kn.binList = Array.from(kn.bins || [0, 2]));
+    var hands = kn.handList;
+    if (!hands) {
+      hands = []; var seenH = {};
+      for (var hh = 0; hh < kn.threadList.length && hands.length < 8; hh++) {
+        var th2 = threadById(kn.threadList[hh]);
+        if (!th2 || seenH[th2.a]) continue;
+        seenH[th2.a] = 1; hands.push(th2.c);
+      }
+      if (!hands.length) hands = ["#2f7d84"];
+      kn.handList = hands;
     }
-    ctx.stroke();
-    ctx.globalAlpha = (0.42) * HM;
-    ctx.strokeStyle = "#bf4526"; ctx.lineWidth = 0.9 + over * 0.18;
-    ctx.beginPath();
-    ctx.moveTo(-half, 0); ctx.lineTo(0, -half); ctx.lineTo(half, 0); ctx.lineTo(0, half); ctx.closePath();
-    ctx.stroke();
-    if (over >= 0.9) {
-      var outer = half * (1.22 + (over - 0.9) * 0.16);
-      ctx.globalAlpha = (0.20 + (over - 0.9) * 0.10) * HM;
-      ctx.lineWidth = 0.8;
-      ctx.beginPath();
-      ctx.moveTo(-outer, 0); ctx.lineTo(0, -outer); ctx.lineTo(outer, 0); ctx.lineTo(0, outer); ctx.closePath();
-      ctx.stroke();
+    var strands = clamp(Math.round(kn.co * 0.85), 7, 30);
+    var seedK = Math.abs(Math.round(kn.x * 1e6)) % 99991;
+    ctx.lineCap = "round";
+    for (var si = 0; si < strands; si++) {
+      var bin = bins[si % bins.length];
+      var ang2 = (bin + 0.5) * (Math.PI / 4) + (hash01(seedK + si * 7) - 0.5) * 0.55;
+      var spread = ((si % 2 ? 1 : -1) * Math.floor(si / 2 + 1) / (strands / 2 + 1)) * R * 0.92;
+      spread += (hash01(seedK + si * 13 + 3) - 0.5) * R * 0.12;
+      var ux = Math.cos(ang2), uy = Math.sin(ang2);
+      var px = -uy * spread, py = ux * spread;
+      var reachS = Math.sqrt(Math.max(1, R * R - spread * spread));
+      var col = hands[si % hands.length];
+      var sw = threadWidth() * (0.7 + 0.5 * hash01(seedK + si * 31));
+      var caseIt = (si % 2 === 0);
+      var STEPS = 9;
+      for (var g2 = 0; g2 < STEPS; g2++) {
+        var t0 = -1 + (2 * g2) / STEPS, t1 = -1 + (2 * (g2 + 1)) / STEPS;
+        var mid = (t0 + t1) / 2;
+        var fall = Math.pow(Math.max(0, 1 - Math.abs(mid)), 0.75) * Math.pow(Math.max(0, 1 - Math.abs(spread) / R), 0.55);
+        if (fall <= 0.02) continue;
+        var ax2 = px + ux * reachS * t0, ay2 = py + uy * reachS * t0;
+        var bx3 = px + ux * reachS * t1, by3 = py + uy * reachS * t1;
+        if (caseIt) {
+          ctx.globalAlpha = fall * 0.5 * HM;
+          ctx.strokeStyle = PAPER_LIT; ctx.lineWidth = sw + 1.6;
+          ctx.beginPath(); ctx.moveTo(ax2, ay2); ctx.lineTo(bx3, by3); ctx.stroke();
+        }
+        ctx.globalAlpha = fall * (0.42 + over * 0.06) * HM;
+        ctx.strokeStyle = col; ctx.lineWidth = sw;
+        ctx.beginPath(); ctx.moveTo(ax2, ay2); ctx.lineTo(bx3, by3); ctx.stroke();
+      }
     }
-    ctx.restore();
   }
 
   /* the threads read under the knot */
@@ -1288,8 +1323,11 @@ function drawKnot(kn, now) {
 
   /* 0 · FIRST CROSSING — barely there. 1-3 · the knot tightens, ring by ring. */
   var rings = st === 0 ? 1 : clamp(1 + Math.floor(Math.log2(1 + kn.ret + kn.co / 2)), 1, 3);
+  /* how worn against how shared: a place one person keeps returning to draws
+     tight, close rings; a place many people cross draws them open */
+  var openness = clamp(0.30 + kn.au / (kn.au + kn.ret + 1) * 0.55, 0.30, 0.85);
   for (var i = 0; i < rings; i++) {
-    var rr = r * (rings === 1 ? 1 : (0.44 + 0.56 * ((i + 1) / rings)));
+    var rr = r * (rings === 1 ? 1 : ((1 - openness) + openness * ((i + 1) / rings)));
     ctx.beginPath();
     ctx.arc(0, 0, rr, 0, TAU);
     var outer = i === rings - 1;
@@ -1300,7 +1338,7 @@ function drawKnot(kn, now) {
   }
 
   /* 3+ · the ends of the threads that hold it */
-  if (st >= 3 && r > 6) {
+  if (st >= 2 && r > 5) {
     ctx.globalAlpha = (0.4) * HM; ctx.strokeStyle = "rgba(29,32,29,.75)"; ctx.lineWidth = 0.6;
     var spokes = clamp(kn.au * 2, 3, 14);
     var off = (Math.abs(kn.x) * 977) % 1;

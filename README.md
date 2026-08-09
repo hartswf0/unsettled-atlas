@@ -24,6 +24,16 @@ Six laws govern both. Source anchor is not target. The compiler owns geometry, a
 
 Atlanta is the reference build; New Orleans tests what generalises. See soft-cadastre/SYSTEM.md.
 
+Icosa World
+
+A world map should not be a flat picture of a sphere. Icosa World is a planetary instrument built on the triangle rather than the image: twenty triangles describe the Earth at the first scale, every triangle subdivides into four, and the same structure holds a continent, a city, a block, or a point beneath a finger. The projection is disposable and the topology remains, so the same object folds from a Dymaxion-like net into an icosahedral globe without becoming a different thing.
+
+Places do not merely sit beside one another. They pull, resist and transmit, so the world carries two geometries at once: surface geometry answers where is it, and relational geometry answers what holds it in relation to everything else.
+
+The icosahedron's orientation and the eleven cuts that open the map are not transcribed from Fuller. They are solved from his criteria against coastline data — no vertex on land, cut where there is no land. See ICOSA-WORLD.md.
+
+Data: Natural Earth 110m, public domain.
+
 Data: OpenStreetMap Notes, © OpenStreetMap contributors, ODbL 1.0.
 
 Created independently by Watson Hartsoe in connection with the Spatial Scholarship Field School 2026: “Spatial Technologies in the Normal City.” It is not owned, endorsed, or maintained by the Field School or Georgia Tech.

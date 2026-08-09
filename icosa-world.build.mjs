@@ -1,0 +1,554 @@
+#!/usr/bin/env node
+// ICOSA WORLD · world compiler
+//
+// The program owns no coordinates of its own. This script derives every
+// constant that icosa-world.html depends on and writes them to
+// icosa-world.data.js. Nothing in the map is hand-placed.
+//
+// What is derived here, and why it is derived rather than cited:
+//
+//   1. The icosahedron itself (12 vertices, 30 edges, 20 faces) from the
+//      golden-ratio construction.
+//   2. Its orientation on the Earth. Fuller chose an orientation whose
+//      twelve vertices fall in water, so that no vertex punctures a
+//      landmass. Rather than copy his published table we restate the
+//      criterion and solve it: search SO(3) for the rotation that
+//      maximises the minimum distance from any vertex to any land.
+//   3. The unfolding tree. A net is a spanning tree of the face adjacency
+//      graph; the eleven edges left out of the tree are the cuts. Fuller's
+//      criterion again: cut where there is no land. We weight each of the
+//      thirty edges by how much land its arc crosses and take a maximum
+//      spanning tree, so the cuts land in ocean.
+//   4. Land, lakes, rivers and cities, simplified and quantised.
+//
+// Source geometry: Natural Earth 110m (public domain), fetched on demand
+// and cached under .cache/. Run:  node icosa-world.build.mjs
+//
+// Everything downstream of this file is topology. See ICOSA-WORLD.md.
+
+import { writeFileSync, readFileSync, existsSync, mkdirSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const HERE = dirname(fileURLToPath(import.meta.url));
+const CACHE = join(HERE, '.cache');
+const OUT = join(HERE, 'icosa-world.data.js');
+
+const NE = 'https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/';
+const SOURCES = {
+  land: 'ne_110m_land.geojson',
+  lakes: 'ne_110m_lakes.geojson',
+  rivers: 'ne_110m_rivers_lake_centerlines.geojson',
+  places: 'ne_110m_populated_places_simple.geojson',
+};
+
+const D2R = Math.PI / 180, R2D = 180 / Math.PI;
+const EARTH_R = 6371.0088; // km, mean radius
+
+/* ---------------------------------------------------------------- fetch -- */
+
+async function source(key) {
+  if (!existsSync(CACHE)) mkdirSync(CACHE, { recursive: true });
+  const file = join(CACHE, SOURCES[key]);
+  if (!existsSync(file)) {
+    const url = NE + SOURCES[key];
+    process.stderr.write(`fetch ${url}\n`);
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`${url} → ${res.status}`);
+    writeFileSync(file, await res.text());
+  }
+  return JSON.parse(readFileSync(file, 'utf8'));
+}
+
+/* ------------------------------------------------------------- vectors -- */
+
+const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+const mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+const cross = (a, b) => [
+  a[1] * b[2] - a[2] * b[1],
+  a[2] * b[0] - a[0] * b[2],
+  a[0] * b[1] - a[1] * b[0],
+];
+const len = (a) => Math.hypot(a[0], a[1], a[2]);
+const norm = (a) => { const l = len(a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+
+function toVec(lon, lat) {
+  const p = lat * D2R, l = lon * D2R;
+  return [Math.cos(p) * Math.cos(l), Math.cos(p) * Math.sin(l), Math.sin(p)];
+}
+function toLonLat(v) {
+  return [Math.atan2(v[1], v[0]) * R2D, Math.asin(Math.max(-1, Math.min(1, v[2]))) * R2D];
+}
+const arcKm = (a, b) =>
+  EARTH_R * Math.acos(Math.max(-1, Math.min(1, dot(a, b))));
+
+function quatToMat(q) {
+  const [x, y, z, w] = q;
+  return [
+    [1 - 2 * (y * y + z * z), 2 * (x * y - z * w), 2 * (x * z + y * w)],
+    [2 * (x * y + z * w), 1 - 2 * (x * x + z * z), 2 * (y * z - x * w)],
+    [2 * (x * z - y * w), 2 * (y * z + x * w), 1 - 2 * (x * x + y * y)],
+  ];
+}
+const applyMat = (m, v) => [dot(m[0], v), dot(m[1], v), dot(m[2], v)];
+
+function randomQuat(rnd) {
+  // Shoemake: uniform over SO(3)
+  const u1 = rnd(), u2 = rnd(), u3 = rnd();
+  const s1 = Math.sqrt(1 - u1), s2 = Math.sqrt(u1);
+  return [
+    s1 * Math.sin(2 * Math.PI * u2), s1 * Math.cos(2 * Math.PI * u2),
+    s2 * Math.sin(2 * Math.PI * u3), s2 * Math.cos(2 * Math.PI * u3),
+  ];
+}
+function quatMul(a, b) {
+  return [
+    a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1],
+    a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0],
+    a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3],
+    a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2],
+  ];
+}
+function smallQuat(rnd, angle) {
+  const axis = norm([rnd() - 0.5, rnd() - 0.5, rnd() - 0.5]);
+  const h = angle / 2, s = Math.sin(h);
+  return [axis[0] * s, axis[1] * s, axis[2] * s, Math.cos(h)];
+}
+// deterministic rng — the build must be reproducible
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+/* -------------------------------------------------------- icosahedron -- */
+
+function icosahedron() {
+  const phi = (1 + Math.sqrt(5)) / 2;
+  const raw = [];
+  for (const s1 of [-1, 1]) for (const s2 of [-1, 1]) {
+    raw.push([0, s1, s2 * phi], [s1, s2 * phi, 0], [s2 * phi, 0, s1]);
+  }
+  const V = raw.map(norm);
+
+  // edges: the twelve vertices have five nearest neighbours each
+  let minD = Infinity;
+  for (let i = 0; i < 12; i++) for (let j = i + 1; j < 12; j++) {
+    minD = Math.min(minD, len(sub(V[i], V[j])));
+  }
+  const isEdge = (i, j) => len(sub(V[i], V[j])) < minD * 1.1;
+  const edges = [];
+  for (let i = 0; i < 12; i++) for (let j = i + 1; j < 12; j++) if (isEdge(i, j)) edges.push([i, j]);
+
+  // faces: triangles in the edge graph, wound counter-clockwise from outside
+  const faces = [];
+  for (let i = 0; i < 12; i++) for (let j = i + 1; j < 12; j++) for (let k = j + 1; k < 12; k++) {
+    if (!isEdge(i, j) || !isEdge(j, k) || !isEdge(i, k)) continue;
+    const tri = [i, j, k];
+    const n = cross(sub(V[j], V[i]), sub(V[k], V[i]));
+    if (dot(n, add(add(V[i], V[j]), V[k])) < 0) tri.reverse();
+    faces.push(tri);
+  }
+  if (V.length !== 12 || edges.length !== 30 || faces.length !== 20) {
+    throw new Error(`degenerate icosahedron ${V.length}/${edges.length}/${faces.length}`);
+  }
+  return { V, edges, faces };
+}
+
+/* ------------------------------------------------------------ landmask -- */
+
+// 2° cell grid, even-odd point-in-polygon in plate carrée. Natural Earth
+// geometry is authored for plate carrée, so a planar test is the correct
+// one here — including Antarctica, whose ring closes along lat -90.
+function buildLandMask(land, step = 2) {
+  const rings = [];
+  for (const f of land.features) {
+    const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+    for (const poly of polys) for (const ring of poly) rings.push(ring);
+  }
+  const inside = (lon, lat) => {
+    let hit = false;
+    for (const ring of rings) {
+      for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        const [xi, yi] = ring[i], [xj, yj] = ring[j];
+        if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) hit = !hit;
+      }
+    }
+    return hit;
+  };
+  const cells = [];
+  for (let lat = -90 + step / 2; lat < 90; lat += step) {
+    for (let lon = -180 + step / 2; lon < 180; lon += step) {
+      if (inside(lon, lat)) cells.push(toVec(lon, lat));
+    }
+  }
+  return { cells, step, inside };
+}
+
+// distance from a point to the nearest land, in km, floored at the mask
+// resolution — good to a couple of hundred km, which is the scale the
+// orientation question is asked at.
+function clearanceKm(v, mask) {
+  let best = Infinity;
+  for (const c of mask.cells) {
+    const d = dot(v, c);
+    if (d > best) best = d;
+  }
+  return EARTH_R * Math.acos(Math.max(-1, Math.min(1, best)));
+}
+function clearanceOf(v, mask) {
+  let bestDot = -1;
+  for (const c of mask.cells) { const d = dot(v, c); if (d > bestDot) bestDot = d; }
+  const km = EARTH_R * Math.acos(Math.max(-1, Math.min(1, bestDot)));
+  const [lon, lat] = toLonLat(v);
+  return mask.inside(lon, lat) ? -km : km;
+}
+
+/* -------------------------------------------- orientation on the Earth -- */
+
+function solveOrientation(V, mask) {
+  const score = (m) => {
+    let worst = Infinity;
+    for (const v of V) {
+      const c = clearanceOf(applyMat(m, v), mask);
+      if (c < worst) worst = c;
+      if (worst < -1) break; // a vertex on land is already disqualifying
+    }
+    return worst;
+  };
+  const rnd = mulberry32(20260808);
+  let bestQ = [0, 0, 0, 1], bestS = score(quatToMat(bestQ));
+  for (let i = 0; i < 4000; i++) {
+    const q = randomQuat(rnd), s = score(quatToMat(q));
+    if (s > bestS) { bestS = s; bestQ = q; }
+  }
+  for (let angle = 0.35; angle > 0.0004; angle *= 0.86) {
+    for (let i = 0; i < 220; i++) {
+      const q = quatMul(smallQuat(rnd, angle * (0.3 + rnd())), bestQ);
+      const s = score(quatToMat(q));
+      if (s > bestS) { bestS = s; bestQ = q; }
+    }
+  }
+  return { quat: bestQ, mat: quatToMat(bestQ), minClearanceKm: bestS };
+}
+
+/* --------------------------------------------------- the unfolding net -- */
+
+function faceAdjacency(faces) {
+  const key = (a, b) => (a < b ? `${a}:${b}` : `${b}:${a}`);
+  const byEdge = new Map();
+  faces.forEach((f, i) => {
+    for (let e = 0; e < 3; e++) {
+      const k = key(f[e], f[(e + 1) % 3]);
+      if (!byEdge.has(k)) byEdge.set(k, []);
+      byEdge.get(k).push({ face: i, edge: e, v: [f[e], f[(e + 1) % 3]] });
+    }
+  });
+  const links = [];
+  const adj = faces.map(() => [null, null, null]);
+  for (const [, pair] of byEdge) {
+    if (pair.length !== 2) throw new Error('non-manifold icosahedron');
+    const [a, b] = pair;
+    const id = links.length;
+    links.push({ id, a: a.face, b: b.face, ea: a.edge, eb: b.edge, v: a.v });
+    adj[a.face][a.edge] = { face: b.face, edge: b.edge, link: id };
+    adj[b.face][b.edge] = { face: a.face, edge: a.edge, link: id };
+  }
+  return { links, adj };
+}
+
+// how much land an edge's arc crosses, sampled along the great circle
+function edgeLandCost(V, link, mask) {
+  const a = V[link.v[0]], b = V[link.v[1]];
+  let hits = 0;
+  const N = 24;
+  for (let i = 0; i <= N; i++) {
+    const t = i / N;
+    const p = norm(add(mul(a, 1 - t), mul(b, t)));
+    const [lon, lat] = toLonLat(p);
+    if (mask.inside(lon, lat)) hits++;
+  }
+  return hits / (N + 1);
+}
+
+// unfold onto the plane: each face is the same equilateral triangle,
+// reflected across the hinge it shares with its parent
+const SQ3 = Math.sqrt(3);
+function layoutNet(faces, adj, root, parentOf, hingeOf) {
+  const base = [[0, 0], [1, 0], [0.5, SQ3 / 2]];
+  const pos = new Array(faces.length).fill(null);
+  pos[root] = base.map((p) => [...p]);
+  const order = [root];
+  const queue = [root];
+  while (queue.length) {
+    const f = queue.shift();
+    for (let e = 0; e < 3; e++) {
+      const nb = adj[f][e].face;
+      if (parentOf[nb] !== f || pos[nb]) continue;
+      // reflect the far corner of f across the shared edge
+      const A = pos[f][e], B = pos[f][(e + 1) % 3], C = pos[f][(e + 2) % 3];
+      const dx = B[0] - A[0], dy = B[1] - A[1];
+      const dd = dx * dx + dy * dy;
+      const t = ((C[0] - A[0]) * dx + (C[1] - A[1]) * dy) / dd;
+      const px = A[0] + t * dx, py = A[1] + t * dy;
+      const C2 = [2 * px - C[0], 2 * py - C[1]];
+      // neighbour's shared edge runs the other way
+      const eb = adj[f][e].edge;
+      const p = [null, null, null];
+      p[eb] = B; p[(eb + 1) % 3] = A; p[(eb + 2) % 3] = C2;
+      pos[nb] = p;
+      order.push(nb);
+      queue.push(nb);
+    }
+  }
+  return { pos, order };
+}
+
+function netOverlaps(pos) {
+  const seen = new Set();
+  for (const p of pos) {
+    if (!p) return true;
+    const cx = (p[0][0] + p[1][0] + p[2][0]) / 3;
+    const cy = (p[0][1] + p[1][1] + p[2][1]) / 3;
+    const k = `${Math.round(cx * 1e4)}:${Math.round(cy * 1e4)}`;
+    if (seen.has(k)) return true;
+    seen.add(k);
+  }
+  return false;
+}
+
+function solveNet(V, faces, links, adj, mask) {
+  const cost = links.map((l) => edgeLandCost(V, l, mask));
+  const rnd = mulberry32(410);
+  let best = null;
+
+  const attempt = (jitter, root) => {
+    // maximum spanning tree on land cost: keep land-crossing edges joined,
+    // leave the ocean ones to be cut
+    const idx = links.map((l, i) => i)
+      .sort((a, b) => (cost[b] + jitter[b]) - (cost[a] + jitter[a]));
+    const parent = new Array(faces.length).fill(-1);
+    const find = (x) => { while (parent[x] >= 0) x = parent[x]; return x; };
+    const tree = [];
+    for (const i of idx) {
+      const ra = find(links[i].a), rb = find(links[i].b);
+      if (ra === rb) continue;
+      parent[ra] = rb;
+      tree.push(i);
+      if (tree.length === faces.length - 1) break;
+    }
+    const inTree = new Set(tree);
+    // root the tree
+    const nbrs = faces.map(() => []);
+    for (const i of tree) { nbrs[links[i].a].push(links[i].b); nbrs[links[i].b].push(links[i].a); }
+    const parentOf = new Array(faces.length).fill(-1);
+    const hingeOf = new Array(faces.length).fill(-1);
+    const seen = new Set([root]);
+    const q = [root];
+    while (q.length) {
+      const f = q.shift();
+      for (let e = 0; e < 3; e++) {
+        const nb = adj[f][e];
+        if (!inTree.has(nb.link) || seen.has(nb.face)) continue;
+        seen.add(nb.face);
+        parentOf[nb.face] = f;
+        hingeOf[nb.face] = nb.edge; // edge index on the child
+        q.push(nb.face);
+      }
+    }
+    if (seen.size !== faces.length) return null;
+    const { pos, order } = layoutNet(faces, adj, root, parentOf, hingeOf);
+    if (netOverlaps(pos)) return null;
+    const cut = links.map((l, i) => i).filter((i) => !inTree.has(i));
+    const cutLand = cut.reduce((s, i) => s + cost[i], 0);
+    // compactness: a net that sprawls is harder to hold on a phone
+    const xs = pos.flat().map((p) => p[0]), ys = pos.flat().map((p) => p[1]);
+    const w = Math.max(...xs) - Math.min(...xs), h = Math.max(...ys) - Math.min(...ys);
+    return { root, parentOf, hingeOf, pos, order, tree, cut, cutLand, w, h };
+  };
+
+  for (let root = 0; root < faces.length; root++) {
+    for (let trial = 0; trial < 40; trial++) {
+      const jitter = links.map(() => (trial === 0 ? 0 : (rnd() - 0.5) * 0.14));
+      const r = attempt(jitter, root);
+      if (!r) continue;
+      // primary: cut no land. secondary: stay compact.
+      r.score = -r.cutLand * 100 - Math.max(r.w / r.h, r.h / r.w);
+      if (!best || r.score > best.score) best = r;
+    }
+  }
+  if (!best) throw new Error('no non-overlapping net found');
+  best.cost = cost;
+  return best;
+}
+
+/* ------------------------------------------------------ line geometry -- */
+
+function simplify(points, tol) {
+  if (points.length < 3) return points;
+  const keep = new Uint8Array(points.length);
+  keep[0] = keep[points.length - 1] = 1;
+  const stack = [[0, points.length - 1]];
+  while (stack.length) {
+    const [i, j] = stack.pop();
+    let far = -1, fd = tol;
+    const [ax, ay] = points[i], [bx, by] = points[j];
+    const dx = bx - ax, dy = by - ay, dd = dx * dx + dy * dy;
+    for (let k = i + 1; k < j; k++) {
+      const [px, py] = points[k];
+      let t = dd ? ((px - ax) * dx + (py - ay) * dy) / dd : 0;
+      t = Math.max(0, Math.min(1, t));
+      const d = Math.hypot(px - (ax + t * dx), py - (ay + t * dy));
+      if (d > fd) { fd = d; far = k; }
+    }
+    if (far > 0) { keep[far] = 1; stack.push([i, far], [far, j]); }
+  }
+  return points.filter((_, i) => keep[i]);
+}
+
+const ringArea = (r) => {
+  let a = 0;
+  for (let i = 0, j = r.length - 1; i < r.length; j = i++) {
+    a += r[j][0] * r[i][1] - r[i][0] * r[j][1];
+  }
+  return Math.abs(a / 2);
+};
+
+// quantise to 1/100° and delta-encode; the decoder is six lines
+function encodeLines(lines, q = 100) {
+  return lines.map((pts) => {
+    const out = [];
+    let px = 0, py = 0;
+    for (const [lon, lat] of pts) {
+      const x = Math.round(lon * q), y = Math.round(lat * q);
+      out.push(x - px, y - py);
+      px = x; py = y;
+    }
+    return out.join(',');
+  }).join(';');
+}
+
+/* ------------------------------------------------------------- compile -- */
+
+const t0 = Date.now();
+const [land, lakes, rivers, places] = await Promise.all(
+  ['land', 'lakes', 'rivers', 'places'].map(source)
+);
+
+process.stderr.write('landmask…\n');
+const mask = buildLandMask(land, 2);
+
+process.stderr.write('icosahedron…\n');
+const { V: V0, edges, faces } = icosahedron();
+
+process.stderr.write('orientation…\n');
+const orient = solveOrientation(V0, mask);
+const V = V0.map((v) => norm(applyMat(orient.mat, v)));
+const vertexLonLat = V.map(toLonLat);
+const vertexClearance = V.map((v) => Math.round(clearanceOf(v, mask)));
+
+process.stderr.write('net…\n');
+const { links, adj } = faceAdjacency(faces);
+const net = solveNet(V, faces, links, adj, mask);
+
+process.stderr.write('geometry…\n');
+const landRings = [];
+for (const f of land.features) {
+  const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+  for (const poly of polys) for (const ring of poly) {
+    const s = simplify(ring, 0.055);
+    if (s.length > 3 && ringArea(s) > 0.25) landRings.push(s);
+  }
+}
+const lakeRings = [];
+for (const f of lakes.features) {
+  const polys = f.geometry.type === 'Polygon' ? [f.geometry.coordinates] : f.geometry.coordinates;
+  for (const poly of polys) for (const ring of poly) {
+    const s = simplify(ring, 0.06);
+    if (s.length > 3 && ringArea(s) > 1.2) lakeRings.push(s);
+  }
+}
+const riverLines = [], riverIndex = [];
+for (const f of rivers.features) {
+  const g = f.geometry;
+  const parts = g.type === 'LineString' ? [g.coordinates] : g.coordinates;
+  const first = riverLines.length;
+  for (const part of parts) {
+    const s = simplify(part, 0.035);
+    if (s.length > 1) riverLines.push(s);
+  }
+  if (riverLines.length > first) {
+    riverIndex.push({ name: f.properties.name_en || f.properties.name, from: first, to: riverLines.length });
+  }
+}
+
+const cityList = places.features
+  .map((f) => ({
+    name: f.properties.name,
+    country: f.properties.adm0name,
+    lon: +f.properties.longitude.toFixed(4),
+    lat: +f.properties.latitude.toFixed(4),
+    pop: f.properties.pop_max | 0,
+    cap: f.properties.adm0cap ? 1 : 0,
+  }))
+  .sort((a, b) => b.pop - a.pop);
+
+const payload = {
+  meta: {
+    built: 'icosa-world.build.mjs',
+    sources: 'Natural Earth 110m (public domain) — land, lakes, rivers, populated places',
+    note: 'Every constant below is derived, not transcribed. See ICOSA-WORLD.md.',
+    landPoints: landRings.reduce((s, r) => s + r.length, 0),
+    riverPoints: riverLines.reduce((s, r) => s + r.length, 0),
+  },
+  ico: {
+    // vertices in Earth-fixed coordinates: x through (0°N,0°E), z through the pole
+    vertices: V.map((v) => v.map((c) => +c.toFixed(9))),
+    faces,
+    edges: links.map((l) => [l.a, l.b, l.ea, l.eb, l.v[0], l.v[1]]),
+    vertexLonLat: vertexLonLat.map(([lon, lat]) => [+lon.toFixed(4), +lat.toFixed(4)]),
+    vertexClearanceKm: vertexClearance,
+    minClearanceKm: Math.round(orient.minClearanceKm),
+    quat: orient.quat.map((c) => +c.toFixed(9)),
+  },
+  net: {
+    root: net.root,
+    parent: net.parentOf,
+    hinge: net.hingeOf,
+    order: net.order,
+    layout: net.pos.map((p) => p.map(([x, y]) => [+x.toFixed(6), +y.toFixed(6)])),
+    cuts: net.cut.map((i) => [links[i].a, links[i].b]),
+    cutLand: +net.cutLand.toFixed(4),
+    edgeLandCost: net.cost.map((c) => +c.toFixed(3)),
+  },
+  land: encodeLines(landRings),
+  lakes: encodeLines(lakeRings),
+  rivers: encodeLines(riverLines),
+  riverIndex,
+  cities: cityList,
+};
+
+const js = `/* ICOSA WORLD · compiled world data
+   Generated by icosa-world.build.mjs — do not edit by hand.
+   Source geometry: Natural Earth 110m, public domain.
+   Icosahedron orientation and unfolding net are solved, not transcribed. */
+window.ICOSA_WORLD_DATA = ${JSON.stringify(payload)};
+`;
+writeFileSync(OUT, js);
+
+process.stderr.write(
+  `\nwrote ${OUT} (${(js.length / 1024).toFixed(0)} KB) in ${((Date.now() - t0) / 1000).toFixed(1)}s\n` +
+  `  min vertex clearance : ${Math.round(orient.minClearanceKm)} km\n` +
+  `  vertex clearances    : ${vertexClearance.join(', ')}\n` +
+  `  net root face        : ${net.root}\n` +
+  `  land crossed by cuts : ${net.cutLand.toFixed(3)} (0 = every cut falls in water)\n` +
+  `  net extent           : ${net.w.toFixed(2)} × ${net.h.toFixed(2)} edge lengths\n` +
+  `  land / river points  : ${payload.meta.landPoints} / ${payload.meta.riverPoints}\n` +
+  `  cities               : ${cityList.length}\n`
+);

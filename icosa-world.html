@@ -105,8 +105,10 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 }
 #panel.open{display:block}
 #panel h2{
-  font-size:11px;letter-spacing:.2em;font-weight:700;margin-bottom:10px;
-  display:flex;justify-content:space-between;align-items:center
+  position:sticky;top:0;z-index:2;background:var(--ground);
+  font-size:11px;letter-spacing:.2em;font-weight:700;
+  margin:-14px 0 10px;padding:14px 0 10px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px
 }
 #panel h2 button{
   font:inherit;font-size:10px;letter-spacing:.14em;font-weight:700;
@@ -161,6 +163,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   <div class="plate" id="cellplate">
     <div id="cellid">—</div>
     <div class="dim" id="cellextent">—</div>
+    <div class="dim" id="cellcouncil">—</div>
   </div>
   <div class="plate" id="scaleplate">
     <div><b id="scalename">EARTH</b></div>
@@ -722,22 +725,29 @@ var PHENOMENA = DATA.riverIndex.map(function (r, i) {
  *  is read off the geometry rather than set by a button.                *
  * ==================================================================== */
 
-var SCALES = [                 // the edge length at which each level begins
-  { n: 'EARTH',         min: 2500 },
-  { n: 'CONTINENTAL',   min: 700 },
-  { n: 'REGIONAL',      min: 150 },
-  { n: 'METROPOLITAN',  min: 20 },
-  { n: 'NEIGHBOURHOOD', min: 4 },
-  { n: 'BLOCK',         min: 0.8 },
-  { n: 'BUILDING',      min: 0.06 },
-  { n: 'ROOM',          min: 0.012 },
-  { n: 'OBJECT',        min: 0.003 },
-  { n: 'EVENT',         min: 0 }
-];
+// The scale ladder is compiled, not written here: each rung carries the
+// edge length at which it begins and the solid whose council that much
+// ground is entitled to seat.
+var LADDER = DATA.council.ladder;
+var SCALES = LADDER.map(function (l) { return { n: l.scale, min: l.minKm, solid: l.solid }; });
+var SEATED = DATA.council.seated;
 var SOURCE_KM = 6;             // below this the coastline source has nothing
 function scaleOf(km) {
   for (var i = 0; i < SCALES.length; i++) if (km >= SCALES[i].min) return i;
   return SCALES.length - 1;
+}
+// A council is chosen by how much world the cell holds, never by how many
+// people happen to be available. Below the tetrahedron there is no solid,
+// and the honest answer is that you are not in a council, you are talking.
+function councilFor(km) {
+  var name = SCALES[scaleOf(km)].solid;
+  if (!name || !SEATED[name]) return null;
+  var seat = SEATED[name];
+  var stat = null;
+  for (var i = 0; i < DATA.council.family.length; i++) {
+    if (DATA.council.family[i].name === name) stat = DATA.council.family[i];
+  }
+  return { name: name, seat: seat, stat: stat };
 }
 function kmLabel(km) {
   if (km >= 1000) return Math.round(km) + ' km';
@@ -1214,6 +1224,7 @@ function render() {
 
 var elCellId = document.getElementById('cellid');
 var elCellExtent = document.getElementById('cellextent');
+var elCellCouncil = document.getElementById('cellcouncil');
 var elScaleName = document.getElementById('scalename');
 var elFoldState = document.getElementById('foldstate');
 var elLadder = document.getElementById('ladder');
@@ -1237,6 +1248,10 @@ function updateReadouts() {
   elCellId.textContent = cellId(c);
   elCellExtent.textContent = kmLabel(km) + ' edge · depth ' + c.depth +
     (km < SOURCE_KM ? ' · past the source' : '');
+  var council = councilFor(km);
+  elCellCouncil.textContent = council
+    ? 'council · ' + council.name + ' ' + council.stat.people + '/' + council.stat.topics
+    : 'below the smallest solid';
   elScaleName.textContent = SCALES[si].n;
   elFoldState.textContent = view.fold < 0.02 ? 'unfolded · net'
     : view.fold > 0.98 ? 'folded · icosahedron'
@@ -1274,6 +1289,8 @@ function availableActions(cell) {
   if (rels.length) acts.push({ k: 'pull', t: 'PULL', s: rels.length + ' relation' + (rels.length > 1 ? 's' : '') });
   var ph = phenomenaIn(cell);
   if (ph.length) acts.push({ k: 'trace', t: 'TRACE', s: ph[0].name });
+  var council = councilFor(cellEdgeKm(cell));
+  if (council) acts.push({ k: 'council', t: 'COUNCIL', s: council.name });
   if (SEAMS.length) acts.push({ k: 'press', t: 'PRESS', s: 'what resists' });
   return acts;
 }
@@ -1366,12 +1383,14 @@ function doAction(kind, cell) {
   } else if (kind === 'trace') {
     var ph = phenomenaIn(cell);
     startTrace(ph[0]);
+  } else if (kind === 'council') {
+    openCouncil(cell);
   } else if (kind === 'press') {
     pressing = !pressing;
     openSeams();
   }
   hideActions();
-  updateActionsFor(selection);
+  if (!elPanel.classList.contains('open')) updateActionsFor(selection);
   wake();
 }
 function updateActionsFor(cell) {
@@ -1554,8 +1573,10 @@ window.addEventListener('keydown', function (e) {
 
 function closePanel() { elPanel.classList.remove('open'); }
 function panel(title, body) {
+  hideActions();
   elPanel.innerHTML = '<h2>' + title + '<button id="pclose">CLOSE</button></h2>' + body;
   elPanel.classList.add('open');
+  elPanel.scrollTop = 0;
   document.getElementById('pclose').onclick = closePanel;
 }
 function openRelations() {
@@ -1622,6 +1643,59 @@ function openTrace() {
     };
   });
 }
+function openCouncil(cell) {
+  var km = cellEdgeKm(cell);
+  var c = councilFor(km);
+  if (!c) {
+    panel('COUNCIL',
+      '<p>This cell is <b>' + kmLabel(km) + '</b> on a side. There is no solid below the ' +
+      'tetrahedron, so there is no council here — six people over four topics is the smallest ' +
+      'structure that can seat member and critic roles at all. Ascend until the ground is ' +
+      'large enough to be argued about.</p>');
+    return;
+  }
+  var seat = c.seat, reg = seat.registers;
+  // for the planetary council the topics have addresses, and every one of
+  // them is at sea — a consequence of solving for no vertex on land
+  var placed = c.name === 'icosahedron' ? DATA.ico.vertexLonLat : null;
+  var rows = seat.members.map(function (m, t) {
+    var kinds = m.map(function (i) { return seat.struts[i].register; }).sort();
+    var where = placed
+      ? ' <span style="opacity:.6">' + placed[t][1].toFixed(1) + '°, ' + placed[t][0].toFixed(1) + '°</span>'
+      : '';
+    return '<div class="row"><b>TOPIC ' + t + where + '</b><span>' + kinds.join(' · ') + '</span></div>';
+  }).join('');
+  panel('COUNCIL · ' + c.name.toUpperCase(),
+    '<p>The same solid, used twice. Above, the icosahedron holds the Earth. Here it holds a ' +
+    'conversation: <b>' + c.stat.people + ' struts</b> are ' + c.stat.people + ' seats, ' +
+    '<b>' + c.stat.topics + ' vertices</b> are ' + c.stat.topics + ' topics, and everyone sits in two ' +
+    'rooms at once. Every pair of topics shares ' + c.stat.leastShared + ' people or more' +
+    (c.stat.closure ? ', so no two topics can drift apart' : '') +
+    '; nothing is more than ' + c.stat.diameter + ' rooms from anything.</p>' +
+    '<p><b>' + cellId(cell) + '</b> is ' + kmLabel(km) + ' on a side, which is what entitles it to ' +
+    'this solid and no larger. A council is sized by how much world the cell holds, never by ' +
+    'how many people are available.</p>' +
+    '<p>The seats are <b>registers of description, not people</b>. Nothing here simulates a ' +
+    'resident: synthesising testimony and attaching it to a real place is the laundering this ' +
+    'apparatus exists to expose. Each seat is critiqued by the register incommensurable with ' +
+    'its own — coordinate answered by body, record answered by absence — and ' +
+    (reg && reg.roomsFullyMixed === c.stat.topics
+      ? 'every one of the ' + c.stat.topics + ' rooms hears every kind at once, so no room can be all data or all anecdote.'
+      : reg.roomsFullyMixed + ' of ' + c.stat.topics + ' rooms hear a full mix.') + '</p>' +
+    rows +
+    '<div class="kbd" style="margin-top:10px">' +
+    DATA.council.registers.map(function (r) {
+      return '<b>' + r.id + '</b> ↔ ' + r.opposite + '<br>may ' + r.may + '<br>may not ' + r.mayNot;
+    }).join('<br><br>') + '</div>' +
+    (placed ? '<p style="margin-top:10px">Every one of those twelve topics is at sea. That is not a ' +
+      'choice about agendas — it falls out of solving for no vertex on land, the closest being ' +
+      DATA.ico.minClearanceKm + ' km offshore. The planetary agenda sits in international waters, ' +
+      'where no jurisdiction can claim it.</p>' : '') +
+    '<p style="margin-top:12px">No council has yet been convened in this cell. When one is, it ' +
+    'will speak only from a compiled dossier of cited sources, and whatever it says will stay ' +
+    'bound to this cell rather than being handed upward.</p>');
+}
+
 function openHelp() {
   var c = focusCell();
   panel('ICOSA WORLD',
@@ -1765,9 +1839,9 @@ function verify() {
     return [r * Math.cos(t), r * Math.sin(t), z];
   }
   var out = [], ok = true;
-  function claim(n, text, pass, detail) {
+  function claim(kind, n, text, pass, detail) {
     ok = ok && pass;
-    out.push({ n: n, text: text, pass: pass, detail: detail });
+    out.push({ kind: kind, n: n, text: text, pass: pass, detail: detail });
   }
 
   // 1 — exactly one face holds any given point
@@ -1780,7 +1854,7 @@ function verify() {
     }
     if (hits === 1) one++; else other++;
   }
-  claim(1, 'one point, one face', other === 0, one + '/4000 points, ' + other + ' ambiguous');
+  claim('INVARIANT', 1, 'one point, one face', other === 0, one + '/4000 points, ' + other + ' ambiguous');
 
   // 2 — subdivision never destroys the parent
   var held = 0, lost = 0, orphan = 0;
@@ -1790,7 +1864,7 @@ function verify() {
     if (cellContains(c, p2)) held++; else lost++;
     if (!cellContains(makeCell(c.f, c.path.slice(0, d - 1)), p2)) orphan++;
   }
-  claim(2, 'the cell holds its point, and so does its parent',
+  claim('INVARIANT', 2, 'the cell holds its point, and so does its parent',
     lost === 0 && orphan === 0, held + '/1200 to depth 18, ' + orphan + ' orphaned');
 
   // 3 & 4 — neighbours stay neighbours across scale and across seams,
@@ -1813,18 +1887,58 @@ function verify() {
       if (gap > worstGap) { worstGap = gap; edgeKm = cellEdgeKm(c3); }
     }
   }
-  claim(3, 'neighbours are mutual and share two corners',
+  claim('INVARIANT', 3, 'neighbours are mutual and share two corners',
     broken === 0 && shares === mutual, mutual + ' relations, ' + broken + ' broken');
-  claim(4, 'a seam is a step, not an event',
+  claim('INVARIANT', 4, 'a seam is a step, not an event',
     worstGap < 0.8, 'widest neighbour gap ' + worstGap.toFixed(3) + ' of a cell edge');
 
+  // the council rests on the same solid, so it answers the same way
+  var fam = DATA.council.family;
+  var ico = null, bigger = [];
+  for (var f = 0; f < fam.length; f++) {
+    if (fam[f].name === 'icosahedron') ico = fam[f];
+    else if (fam[f].closure && ico && fam[f].people > ico.people) bigger.push(fam[f].name);
+  }
+  claim('COUNCIL', 1, 'a council cannot be scaled by subdividing the world',
+    DATA.council.geodesic.every(function (g) { return g.degrees[5] === 12; }),
+    'five-valent topics at frequency ' + DATA.council.geodesic.map(function (g) { return g.frequency; }).join('/') +
+    ': ' + DATA.council.geodesic.map(function (g) { return g.degrees[5]; }).join(', ') + ' — twelve, forever');
+  claim('COUNCIL', 2, 'the icosahedron is the closure ceiling',
+    ico.closure && bigger.length === 0,
+    ico.covered + ' topic pairs covered; nothing larger keeps closure');
+  var seatOk = true, mixOk = true, detail = [];
+  for (var name in SEATED) {
+    var st = SEATED[name], r = st.registers, stat = null;
+    for (var g2 = 0; g2 < fam.length; g2++) if (fam[g2].name === name) stat = fam[g2];
+    for (var t2 = 0; t2 < st.struts.length; t2++) {
+      var mine = st.struts[t2].register, opp = null;
+      for (var q2 = 0; q2 < DATA.council.registers.length; q2++) {
+        if (DATA.council.registers[q2].id === mine) opp = DATA.council.registers[q2].opposite;
+      }
+      var crit = st.struts[t2].critiques;
+      var found = false;
+      for (var u2 = 0; u2 < st.struts.length; u2++) {
+        var o = st.struts[u2];
+        if (o.topics[0] === crit[0] && o.topics[1] === crit[1] && o.register === opp) found = true;
+      }
+      if (!found) seatOk = false;
+    }
+    if (r.roomsFullyMixed !== stat.topics) mixOk = false;
+    detail.push(name + ' ' + r.roomsFullyMixed + '/' + stat.topics);
+  }
+  claim('COUNCIL', 3, 'every seat is critiqued by its opposed register', seatOk,
+    Object.keys(SEATED).length + ' solids seated');
+  claim('COUNCIL', 4, 'no room is all one kind of description', mixOk,
+    'rooms hearing a full mix: ' + detail.join(', '));
+
   var html = out.map(function (c) {
-    return '<div class="row"><b>' + (c.pass ? '✓' : '✗') + ' INVARIANT ' + c.n + ' · ' +
+    return '<div class="row"><b>' + (c.pass ? '✓' : '✗') + ' ' + c.kind + ' ' + c.n + ' · ' +
       c.text + '</b><span>' + c.detail + '</span></div>';
   }).join('');
   panel('VERIFICATION',
     '<p>The invariants are claims about the structure, so they are checked here against ' +
-    'random points on the sphere rather than asserted. Reload without <b>?verify</b> to return ' +
+    'random points on the sphere rather than asserted. The council claims are checked against ' +
+    'the compiled solid. Reload without <b>?verify</b> to return ' +
     'to the world.</p>' + html +
     '<p style="margin-top:10px">' + (ok ? 'All invariants hold in this build.'
       : 'An invariant failed. The world is lying to you.') + '</p>');

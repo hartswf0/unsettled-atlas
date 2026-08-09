@@ -248,6 +248,15 @@ against random points on the sphere:
 | 3 | neighbours are mutual and share two corners | 2700 relations, 0 broken |
 | 4 | a seam is a step, not an event | widest neighbour gap 0.690 of a cell edge |
 
+and the council claims, checked against the compiled solid:
+
+| | | |
+|---|---|---|
+| 1 | a council cannot be scaled by subdividing the world | five-valent topics at frequency 1/2/4/8: 12, 12, 12, 12 |
+| 2 | the icosahedron is the closure ceiling | 66/66 topic pairs covered; nothing larger keeps closure |
+| 3 | every seat is critiqued by its opposed register | 4 solids seated |
+| 4 | no room is all one kind of description | tetrahedron 4/4, octahedron 6/6, cube 8/8, icosahedron 12/12 |
+
 Invariant 3 is the one worth watching, because the neighbour of a cell at
 the edge of a root face lives on another face, in another part of the net,
 at another orientation, and the test does not care: it asks the sphere.
@@ -257,6 +266,165 @@ neighbour's centre would be further away than a cell is wide.
 Invariants 5, 6 and 7 are not arithmetic and are not claimed to be:
 adaptive detail, one-finger operation and never being lost are properties
 of the interface, and the way to check them is to use it on a phone.
+
+---
+
+## Councils
+
+The same solid, used twice. Above, the icosahedron holds the Earth: twenty
+faces of ground, twelve vertices in the sea. Stafford Beer's Team Syntegrity
+spends the same object on discourse — the thirty edges are thirty people,
+the twelve vertices are twelve topics, everyone sits in exactly two rooms,
+and the geometry rather than a chairperson guarantees that what is said
+comes back. `icosa-world.data.js` had shipped the thirty struts since the
+first build and never read them. This is the other half of the solid.
+
+### You cannot scale a council by subdividing the world
+
+The obvious way to give a bigger cell a bigger council is to subdivide. It
+does not work, and the reason is not practical:
+
+```
+frequency 1:   12 topics,   30 people,  degrees 12×5
+frequency 2:   42 topics,  120 people,  degrees 12×5,  30×6
+frequency 4:  162 topics,  480 people,  degrees 12×5, 150×6
+frequency 8:  642 topics, 1920 people,  degrees 12×5, 630×6
+```
+
+Twelve fives, forever. Every geodesic subdivision of an icosahedron has
+exactly twelve five-valent vertices and all the rest six-valent, at any
+frequency — Euler's formula, the same fact that puts twelve pentagons on a
+football. For a map this is nothing; a vertex is a junction. For a council
+it is fatal, because topic size *is* vertex degree: twelve people would sit,
+permanently and structurally, in smaller rooms than everybody else, and the
+whole claim of the method is that no seat is a better seat.
+
+Subdivide to change scale. Change solid to change headcount. Never confuse
+the two recursions.
+
+### The icosahedron is the ceiling, not a choice
+
+Every candidate solid was built and asked the same questions. `closure` is
+the share of topic pairs sharing at least one person once member and critic
+seats are both counted — the property that makes reverberation a guarantee
+rather than a hope.
+
+| solid | people | topics | per topic | closure | diameter |
+|---|---:|---:|---:|---:|---:|
+| tetrahedron | 6 | 4 | 3 | 6/6 | 1 |
+| octahedron | 12 | 6 | 4 | 15/15 | 2 |
+| cube | 12 | 8 | 3 | 28/28 | 3 |
+| cuboctahedron | 24 | 12 | 4 | 54/66 | 3 |
+| **icosahedron** | **30** | **12** | **5** | **66/66** | **3** |
+| dodecahedron | 30 | 20 | 3 | 70/190 | 5 |
+| rhombicuboctahedron | 48 | 24 | 4 | 108/276 | 5 |
+| icosidodecahedron | 60 | 30 | 4 | 135/435 | 5 |
+
+Every one of them admits critic seats — each strut has an exact antipodal
+partner and all four of its topics stay distinct, which is true even of the
+tetrahedron, whose *vertices* are not centrally symmetric although its edge
+midpoints are.
+
+But closure dies above thirty. The icosahedron is the largest solid in the
+family where every pair of topics still shares a person. Bigger solids do
+not host bigger syntegrations; they host sparser ones. They buy headcount
+and pay for it in reverberation, and the build fails if that ceiling ever
+moves.
+
+### The ladder
+
+So a council is chosen by how much world a cell holds, not by how many
+people are available:
+
+| cell edge | scale | solid | people | topics |
+|---|---|---|---:|---:|
+| ≥ 2500 km | EARTH | icosahedron | 30 | 12 |
+| ≥ 700 km | CONTINENTAL | icosahedron | 30 | 12 |
+| ≥ 150 km | REGIONAL | cube | 12 | 8 |
+| ≥ 20 km | METROPOLITAN | octahedron | 12 | 6 |
+| ≥ 4 km | NEIGHBOURHOOD | octahedron | 12 | 6 |
+| ≥ 0.8 km | BLOCK | tetrahedron | 6 | 4 |
+| below | BUILDING and down | — | — | — |
+
+Bounded at the top by closure and at the bottom by the tetrahedron: six
+people over four topics is the smallest structure that can seat member and
+critic roles at all. Below it the readout says `below the smallest solid`
+and `COUNCIL` disappears from the actions, the same way every other
+operation appears only where it is possible.
+
+The consequence is the interesting part. A planetary problem is not handled
+by growing the solid — it is handled by **tiling the sphere with small
+councils and letting the map's own adjacency carry the resonance between
+them**. Cells already know their three neighbours, their parent and their
+four children, and invariant 3 guarantees that adjacency survives a change
+of scale. Beer got closure inside one solid. The map supplies closure
+*between* solids, which is exactly the implementation gap the method is
+criticised for: the output of a council is bound to a cell and stays there,
+rather than being handed upward to a hierarchy that rejects it.
+
+### Registers, not people
+
+The seats are ways of describing a place. Nothing here simulates a
+resident, and that is a rule rather than a limitation: synthesising
+testimony and attaching it to a real place is precisely the laundering this
+apparatus exists to expose.
+
+| register | may | may never |
+|---|---|---|
+| `COORDINATE` ↔ `BODY` | report what the measured record contains, with its source | say anything the record does not contain |
+| `BODY` ↔ `COORDINATE` | derive the bodily consequence of a cited fact, marked as a derivation | invent testimony, or speak in the first person for anyone |
+| `RECORD` ↔ `ABSENCE` | speak only with a citation, and stay silent otherwise | assert anything uncited |
+| `ABSENCE` ↔ `RECORD` | name the schema slots with no entries for this cell | explain why they are empty |
+| `CATEGORY` ↔ `RECURSION` | name the classification in force and who authored it | say the classification is correct |
+| `RECURSION` ↔ `CATEGORY` | point to a description that has already returned as environment | predict |
+
+Two of those are computations rather than voices, which is what keeps them
+honest: `ABSENCE` reports schema slots the compiler finds empty, and `BODY`
+performs its derivation from a citation and is tagged as derived.
+
+The registers are then seated on the solid so that the geometry enforces the
+epistemology instead of a facilitator. Every strut is critiqued by its
+antipodal strut, and the antipodal strut carries the *opposed* register —
+coordinate answered by body, record answered by absence. At the same time
+every room hears as many different registers as it has seats. Both
+constraints hold simultaneously and exactly, on all four seated solids:
+tetrahedron 4/4, octahedron 6/6, cube 8/8, icosahedron 12/12, with the six
+registers balanced at five struts each on the icosahedron.
+
+What that buys is not decoration. **A room cannot be all data or all
+anecdote, because the seating chart forbids it.**
+
+And the twelve planetary topics have addresses — all of them at sea, the
+closest 267 km offshore. That is not a decision about agendas; it falls out
+of solving for no vertex on land. The planetary agenda sits in
+international waters, where no jurisdiction can claim it.
+
+### Not yet built
+
+No council has been convened. The compiler derives the structure; it does
+not fill it. Two things come next, in this order, because the order is the
+safeguard:
+
+1. **A dossier per cell** — heritage and historic sites with coordinates and
+   source ids, plus a computed absence table of the schema slots with no
+   entries. The dossier is what makes a council not-fabrication, so it must
+   exist before anything is allowed to speak.
+2. **The council itself**, compiled offline and committed as an artifact
+   with its model, version, date and dossier hash on its face — never served
+   live from a page, never holding a key.
+
+Under one rule, which is the framework's own *Translational AI* used as an
+engineering constraint rather than a slogan: **no model may assert ground
+truth.** A model may only translate between registers of description that
+already exist in the dossier. Every utterance carries its citations or is
+rendered visibly as unsourced, in the same voice the map already uses when
+the coastline runs out.
+
+The atlas states the risk plainly because the risk is ours: if synthetic
+deliberation about a real triangle is read as an account of a real
+neighbourhood, the grid arrives as description and returns as environment.
+So a council is a declared fixture, dated and bound to its cell — and this
+place, like the others, alters what it measures.
 
 ---
 

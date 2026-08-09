@@ -434,6 +434,291 @@ function encodeLines(lines, q = 100) {
   }).join(';');
 }
 
+/* ------------------------------------------------------------ councils -- */
+//
+// The same solid, used twice. The map spends the icosahedron on space: 20
+// faces of Earth, 12 vertices in the sea. A syntegration spends it on
+// discourse: the 30 edges are 30 people, the 12 vertices are 12 topics,
+// every person sits in exactly two rooms, and the geometry rather than a
+// chairperson guarantees that everything said reverberates.
+//
+// Two findings this block derives rather than assumes, because the design
+// stands on both:
+//
+//   1. A council cannot be scaled by subdividing the world. Every geodesic
+//      subdivision of an icosahedron has exactly twelve five-valent
+//      vertices and all the rest six-valent, at any frequency, forever —
+//      Euler's formula, the same fact that puts twelve pentagons on a
+//      football. Topic size IS vertex degree, so a subdivided council would
+//      permanently seat twelve people in smaller rooms than everybody else.
+//      Change solid; never change frequency.
+//
+//   2. The icosahedron is the largest solid in this family in which every
+//      pair of topics still shares a person. Above it, closure stops being
+//      a property of the object and becomes a statistic. Larger solids buy
+//      headcount and pay for it in reverberation.
+//
+// It also assigns a register of description to every strut, so that the
+// solid enforces the epistemology instead of the facilitator: each strut is
+// critiqued by the register incommensurable with its own, and no room is
+// ever all one kind of description. "Data versus anecdote" becomes
+// structurally unavailable.
+
+// Registers are ways of describing a place, not people. Nothing here
+// simulates a resident: synthesising testimony and attaching it to a real
+// place is the laundering this whole apparatus exists to expose.
+const REGISTERS = [
+  { id: 'COORDINATE', opposite: 'BODY',
+    may: 'report what the administrative and measured record contains, with its source',
+    mayNot: 'say anything the record does not contain' },
+  { id: 'BODY', opposite: 'COORDINATE',
+    may: 'derive the bodily consequence of a cited fact, marked as a derivation',
+    mayNot: 'invent testimony or speak in the first person for anyone' },
+  { id: 'RECORD', opposite: 'ABSENCE',
+    may: 'speak only with a citation, and stay silent otherwise',
+    mayNot: 'assert anything uncited' },
+  { id: 'ABSENCE', opposite: 'RECORD',
+    may: 'name the schema slots that have no entries for this cell',
+    mayNot: 'explain why they are empty' },
+  { id: 'CATEGORY', opposite: 'RECURSION',
+    may: 'name the classification in force here and who authored it',
+    mayNot: 'say the classification is correct' },
+  { id: 'RECURSION', opposite: 'CATEGORY',
+    may: 'point to a description in the record that has already returned as environment',
+    mayNot: 'predict' },
+];
+const OPPOSED = [['COORDINATE', 'BODY'], ['RECORD', 'ABSENCE'], ['CATEGORY', 'RECURSION']];
+
+function solidFamily() {
+  const P = (1 + Math.sqrt(5)) / 2;
+  const cyc = (v) => [[v[0], v[1], v[2]], [v[1], v[2], v[0]], [v[2], v[0], v[1]]];
+  const spread = (base, sx, sy, sz, doCyc) => {
+    const out = [];
+    for (const s0 of (sx ? [-1, 1] : [1])) for (const s1 of (sy ? [-1, 1] : [1])) for (const s2 of (sz ? [-1, 1] : [1])) {
+      const v = [base[0] * s0, base[1] * s1, base[2] * s2];
+      for (const c of (doCyc ? cyc(v) : [v])) out.push(c);
+    }
+    return out;
+  };
+  const dedupe = (vs) => {
+    const m = new Map();
+    for (const v of vs) m.set(v.map((x) => x.toFixed(9)).join(','), norm(v));
+    return [...m.values()];
+  };
+  return {
+    tetrahedron: dedupe([[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]]),
+    octahedron: dedupe(spread([1, 0, 0], 1, 0, 0, true)),
+    cube: dedupe(spread([1, 1, 1], 1, 1, 1, false)),
+    cuboctahedron: dedupe(spread([1, 1, 0], 1, 1, 0, true)),
+    icosahedron: dedupe(spread([0, 1, P], 0, 1, 1, true)),
+    dodecahedron: dedupe([...spread([1, 1, 1], 1, 1, 1, false), ...spread([0, 1 / P, P], 0, 1, 1, true)]),
+    rhombicuboctahedron: dedupe(spread([1, 1, 1 + Math.SQRT2], 1, 1, 1, true)),
+    icosidodecahedron: dedupe([...spread([0, 0, P], 0, 0, 1, true),
+                               ...spread([0.5, P / 2, P * P / 2], 1, 1, 1, true)]),
+  };
+}
+
+// A council needs: equal-sized topics, and an antipodal partner for every
+// strut so that critic seats exist and are the furthest seats away.
+function analyseCouncil(name, V, edgesIn) {
+  let minD = Infinity;
+  for (let i = 0; i < V.length; i++) for (let j = i + 1; j < V.length; j++) {
+    minD = Math.min(minD, len(sub(V[i], V[j])));
+  }
+  const E = edgesIn || (() => {
+    const out = [];
+    for (let i = 0; i < V.length; i++) for (let j = i + 1; j < V.length; j++) {
+      if (len(sub(V[i], V[j])) < minD * 1.02) out.push([i, j]);
+    }
+    return out;
+  })();
+
+  const members = V.map(() => []);
+  E.forEach((e, i) => { members[e[0]].push(i); members[e[1]].push(i); });
+  const sizes = [...new Set(members.map((m) => m.length))];
+
+  // the critic seat: the strut diametrically opposite this one
+  const mid = (e) => mul(add(V[e[0]], V[e[1]]), 0.5);
+  const partner = E.map((e, i) => {
+    const m = mid(e);
+    let best = -1, bd = Infinity;
+    E.forEach((f, j) => {
+      if (i === j) return;
+      const d = len(add(m, mid(f)));
+      if (d < bd) { bd = d; best = j; }
+    });
+    return bd < 1e-9 ? best : -1;
+  });
+  const paired = partner.every((p) => p >= 0);
+  const critics = E.map((e, i) => (partner[i] >= 0 ? E[partner[i]] : null));
+  const fourDistinct = E.every((e, i) => critics[i] && new Set([...e, ...critics[i]]).size === 4);
+
+  // closure: does every pair of topics share at least one person?
+  const touch = E.map((e, i) => new Set(critics[i] ? [...e, ...critics[i]] : e));
+  let pairs = 0, covered = 0, least = Infinity;
+  for (let a = 0; a < V.length; a++) for (let b = a + 1; b < V.length; b++) {
+    pairs++;
+    let c = 0;
+    touch.forEach((t) => { if (t.has(a) && t.has(b)) c++; });
+    if (c > 0) covered++;
+    least = Math.min(least, c);
+  }
+  // how many rooms apart can two topics be
+  const adj = V.map(() => []);
+  E.forEach(([a, b]) => { adj[a].push(b); adj[b].push(a); });
+  let diameter = 0;
+  for (let s = 0; s < V.length; s++) {
+    const d = new Array(V.length).fill(-1); d[s] = 0;
+    const q = [s];
+    while (q.length) { const u = q.shift(); for (const v of adj[u]) if (d[v] < 0) { d[v] = d[u] + 1; q.push(v); } }
+    d.forEach((x) => { if (x > diameter) diameter = x; });
+  }
+  return {
+    name, people: E.length, topics: V.length,
+    perTopic: sizes.length === 1 ? sizes[0] : sizes.sort((a, b) => a - b),
+    equalTopics: sizes.length === 1,
+    criticSeats: paired && fourDistinct,
+    closure: covered === pairs, covered, pairs, leastShared: least === Infinity ? 0 : least,
+    diameter, edges: E, critics, partner, members,
+  };
+}
+
+// Seat the registers so the geometry does the arguing: opposites face each
+// other across the solid, and every room hears as many different kinds of
+// description as it has seats.
+function assignRegisters(c, seed) {
+  if (!c.criticSeats) return null;
+  const pairs = [];
+  const seen = new Set();
+  c.partner.forEach((p, i) => { if (seen.has(i)) return; seen.add(i); seen.add(p); pairs.push([i, p]); });
+  const build = (choice) => {
+    const a = new Array(c.people);
+    pairs.forEach(([x, y], k) => {
+      const [p, o] = choice[k];
+      a[x] = OPPOSED[p][o]; a[y] = OPPOSED[p][1 - o];
+    });
+    return a;
+  };
+  const want = Math.min(c.equalTopics ? c.perTopic : Math.min(...c.perTopic), REGISTERS.length);
+  const score = (a) => {
+    let full = 0, worst = 99;
+    for (const m of c.members) {
+      const k = new Set(m.map((i) => a[i])).size;
+      if (k >= want) full++;
+      worst = Math.min(worst, k);
+    }
+    return [full, worst];
+  };
+  const rnd = mulberry32(seed);
+  let best = null;
+  for (let restart = 0; restart < 3000 && (!best || best.full < c.topics); restart++) {
+    const choice = pairs.map(() => [Math.floor(rnd() * 3), rnd() < 0.5 ? 0 : 1]);
+    let cur = build(choice), [full, worst] = score(cur);
+    for (let step = 0; step < 2500 && full < c.topics; step++) {
+      const k = Math.floor(rnd() * pairs.length);
+      const old = choice[k].slice();
+      choice[k] = [Math.floor(rnd() * 3), rnd() < 0.5 ? 0 : 1];
+      const cand = build(choice), [f2, w2] = score(cand);
+      if (f2 > full || (f2 === full && w2 > worst)) { cur = cand; full = f2; worst = w2; }
+      else choice[k] = old;
+    }
+    if (!best || full > best.full) best = { full, worst, seats: cur };
+  }
+  const opposedOk = c.partner.every((p, i) =>
+    OPPOSED.some((o) => (o[0] === best.seats[i] && o[1] === best.seats[p]) ||
+                        (o[1] === best.seats[i] && o[0] === best.seats[p])));
+  const tally = {};
+  best.seats.forEach((r) => { tally[r] = (tally[r] || 0) + 1; });
+  return {
+    seats: best.seats, wanted: want, roomsFullyMixed: best.full, fewestKinds: best.worst,
+    opposedAcross: opposedOk, perRegister: tally,
+  };
+}
+
+// Finding 1, checked rather than recited: twelve fives at every frequency.
+function subdivisionDegeneracy(V0, F0, steps) {
+  let V = V0.map((v) => [...v]), F = F0.map((f) => [...f]);
+  const out = [];
+  for (let s = 0; s <= steps; s++) {
+    const deg = new Map();
+    const key = (i) => V[i].map((x) => x.toFixed(7)).join(',');
+    const link = (a, b) => {
+      for (const [p, q] of [[a, b], [b, a]]) {
+        const k = key(p);
+        if (!deg.has(k)) deg.set(k, new Set());
+        deg.get(k).add(key(q));
+      }
+    };
+    for (const f of F) { link(f[0], f[1]); link(f[1], f[2]); link(f[0], f[2]); }
+    const hist = {};
+    for (const set of deg.values()) hist[set.size] = (hist[set.size] || 0) + 1;
+    let people = 0;
+    for (const set of deg.values()) people += set.size;
+    out.push({ frequency: Math.pow(2, s), topics: deg.size, people: people / 2, degrees: hist });
+    if (s === steps) break;
+    const idx = new Map(V.map((v, i) => [v.map((x) => x.toFixed(7)).join(','), i]));
+    const nf = [];
+    const midx = (a, b) => {
+      const m = norm(mul(add(V[a], V[b]), 0.5));
+      const k = m.map((x) => x.toFixed(7)).join(',');
+      if (!idx.has(k)) { idx.set(k, V.length); V.push(m); }
+      return idx.get(k);
+    };
+    for (const [a, b, c] of F) {
+      const ab = midx(a, b), bc = midx(b, c), ca = midx(c, a);
+      nf.push([a, ab, ca], [ab, b, bc], [ca, bc, c], [ab, bc, ca]);
+    }
+    F = nf;
+  }
+  return out;
+}
+
+// Which council a piece of ground is entitled to. Not by headcount available
+// — by how much world the cell holds. Below the tetrahedron there is no
+// solid, and the honest answer is that you are not in a council, you are
+// talking.
+const LADDER = [
+  { scale: 'EARTH',         minKm: 2500,  solid: 'icosahedron' },
+  { scale: 'CONTINENTAL',   minKm: 700,   solid: 'icosahedron' },
+  { scale: 'REGIONAL',      minKm: 150,   solid: 'cube' },
+  { scale: 'METROPOLITAN',  minKm: 20,    solid: 'octahedron' },
+  { scale: 'NEIGHBOURHOOD', minKm: 4,     solid: 'octahedron' },
+  { scale: 'BLOCK',         minKm: 0.8,   solid: 'tetrahedron' },
+  { scale: 'BUILDING',      minKm: 0.06,  solid: null },
+  { scale: 'ROOM',          minKm: 0.012, solid: null },
+  { scale: 'OBJECT',        minKm: 0.003, solid: null },
+  { scale: 'EVENT',         minKm: 0,     solid: null },
+];
+
+function buildCouncils(icoV, icoFaces, links) {
+  const family = solidFamily();
+  const seated = new Set(LADDER.map((l) => l.solid).filter(Boolean));
+  const all = [], detail = {};
+  let seed = 7;
+  for (const [name, V] of Object.entries(family)) {
+    // the icosahedron reuses the map's own edge numbering, so strut i here
+    // is ico.edges[i] there and the two halves of the solid stay addressable
+    const c = analyseCouncil(name, V, name === 'icosahedron' ? links.map((l) => l.v) : null);
+    all.push({
+      name: c.name, people: c.people, topics: c.topics, perTopic: c.perTopic,
+      equalTopics: c.equalTopics, criticSeats: c.criticSeats,
+      closure: c.closure, covered: c.covered + '/' + c.pairs,
+      leastShared: c.leastShared, diameter: c.diameter,
+    });
+    if (!seated.has(name)) continue;
+    const reg = assignRegisters(c, seed += 101);
+    detail[name] = {
+      vertices: V.map((v) => v.map((x) => +x.toFixed(9))),
+      struts: c.edges.map((e, i) => ({
+        topics: e, critiques: c.critics[i], register: reg ? reg.seats[i] : null,
+      })),
+      members: c.members,
+      registers: reg,
+    };
+  }
+  return { family: all, seated: detail };
+}
+
 /* ------------------------------------------------------------- compile -- */
 
 const t0 = Date.now();
@@ -456,6 +741,31 @@ const vertexClearance = V.map((v) => Math.round(clearanceOf(v, mask)));
 process.stderr.write('net…\n');
 const { links, adj } = faceAdjacency(faces);
 const net = solveNet(V, faces, links, adj, mask);
+
+process.stderr.write('councils…\n');
+const councils = buildCouncils(V, faces, links);
+const geodesic = subdivisionDegeneracy(V, faces, 3);
+
+// The two findings are load-bearing, so the build fails if they stop holding.
+{
+  const ico = councils.family.find((c) => c.name === 'icosahedron');
+  const seat = councils.seated.icosahedron.registers;
+  if (!ico.closure) throw new Error('the icosahedron lost closure');
+  if (!ico.criticSeats) throw new Error('a strut has no opposite, so critic seats vanish');
+  if (!seat.opposedAcross) throw new Error('a strut is not critiqued by its opposed register');
+  if (seat.roomsFullyMixed !== ico.topics) {
+    throw new Error(`only ${seat.roomsFullyMixed}/${ico.topics} rooms hear every kind of description`);
+  }
+  for (const g of geodesic) {
+    if (g.degrees[5] !== 12) {
+      throw new Error(`frequency ${g.frequency} has ${g.degrees[5]} five-valent topics, not twelve`);
+    }
+  }
+  const bigger = councils.family.filter((c) => c.people > ico.people && c.closure);
+  if (bigger.length) {
+    throw new Error(`the closure ceiling moved: ${bigger.map((c) => c.name).join(', ')}`);
+  }
+}
 
 process.stderr.write('geometry…\n');
 const landRings = [];
@@ -527,6 +837,15 @@ const payload = {
     cutLand: +net.cutLand.toFixed(4),
     edgeLandCost: net.cost.map((c) => +c.toFixed(3)),
   },
+  council: {
+    note: 'The same solid used twice: for space above, for discourse here. '
+        + 'Registers are ways of describing a place, never simulated people.',
+    registers: REGISTERS,
+    ladder: LADDER,
+    family: councils.family,
+    seated: councils.seated,
+    geodesic,
+  },
   land: encodeLines(landRings),
   lakes: encodeLines(lakeRings),
   rivers: encodeLines(riverLines),
@@ -550,5 +869,13 @@ process.stderr.write(
   `  land crossed by cuts : ${net.cutLand.toFixed(3)} (0 = every cut falls in water)\n` +
   `  net extent           : ${net.w.toFixed(2)} × ${net.h.toFixed(2)} edge lengths\n` +
   `  land / river points  : ${payload.meta.landPoints} / ${payload.meta.riverPoints}\n` +
-  `  cities               : ${cityList.length}\n`
+  `  cities               : ${cityList.length}\n` +
+  `\n  councils\n` +
+  councils.family.map((c) =>
+    `    ${c.name.padEnd(21)} ${String(c.people).padStart(3)} people, ${String(c.topics).padStart(2)} topics, `
+    + `${String(c.perTopic).padStart(2)} per topic, closure ${c.covered.padStart(9)}`
+    + `${c.closure ? ' ✓' : ''}`).join('\n') + '\n' +
+  `    seated: ${Object.keys(councils.seated).join(', ')}\n` +
+  `    icosahedron rooms hearing every register: ${councils.seated.icosahedron.registers.roomsFullyMixed}/12\n` +
+  `    subdivision keeps five-valent topics at: ${geodesic.map((g) => g.degrees[5]).join(', ')} (twelve, forever)\n`
 );

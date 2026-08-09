@@ -32,6 +32,10 @@ Places do not merely sit beside one another. They pull, resist and transmit, so 
 
 The icosahedron's orientation and the eleven cuts that open the map are not transcribed from Fuller. They are solved from his criteria against coastline data — no vertex on land, cut where there is no land. See ICOSA-WORLD.md.
 
+The solid is used twice. Above, the icosahedron holds the Earth. Turned toward discourse it is Stafford Beer's Team Syntegrity — thirty edges are thirty people, twelve vertices are twelve topics, everyone sits in two rooms, and closure is a property of the object rather than a promise about the chair. The compiler derives which solids can seat such a council, and proves two things the design rests on: a council cannot be scaled by subdividing the world, because every geodesic subdivision keeps exactly twelve five-valent vertices forever; and the icosahedron is the largest solid in which every pair of topics still shares a person. So a cell is entitled to a council by how much ground it holds — icosahedron at continental scale, octahedron at metropolitan, tetrahedron at block scale, and nothing at all below that.
+
+The seats are registers of description, not people. Nothing simulates a resident.
+
 Data: Natural Earth 110m, public domain.
 
 Data: OpenStreetMap Notes, © OpenStreetMap contributors, ODbL 1.0.

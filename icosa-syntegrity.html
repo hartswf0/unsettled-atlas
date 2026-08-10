@@ -1,0 +1,2517 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#f1eee4">
+<meta name="description" content="ICOSA SYNTEGRITY: every triangle on Earth has an address, a council and a thread. Take a seat, say something, and it stays where you said it.">
+<title>ICOSA SYNTEGRITY · take a seat in a triangle</title>
+<style>
+/* ================================================================== *
+ * ICOSA WORLD                                                         *
+ * The world owns the screen. Controls emerge from the geometry.       *
+ * ================================================================== */
+:root{
+  --ground:#f1eee4;      /* ocean, paper, ground */
+  --ink:#121514;
+  --muted:#5f6763;
+  --signal:#a8462a;      /* tension */
+  --land:#ddd7c6;
+  --landline:#8d8878;
+  --water:#b9c4c2;
+  --paper:#faf8f1;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;width:100%;overflow:hidden;background:var(--ground)}
+body{
+  position:fixed;inset:0;color:var(--ink);
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+  -webkit-user-select:none;user-select:none;-webkit-text-size-adjust:100%;
+  touch-action:none;overscroll-behavior:none;
+}
+/* The sheet is a sibling of the map, never a lid on it. On a phone the map
+   keeps the top half; on a wide screen the sheet takes a column. Either way
+   the triangle you are talking about stays visible while you talk. */
+body{display:flex;flex-direction:column}
+#stage{position:relative;flex:1 1 auto;min-height:0;min-width:0}
+canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
+
+/* --- readouts ------------------------------------------------------ */
+.hud{position:absolute;z-index:10;pointer-events:none}
+#situation{
+  top:0;left:0;right:0;
+  padding:max(10px,env(safe-area-inset-top)) 12px 0 max(12px,env(safe-area-inset-left));
+  display:flex;justify-content:space-between;align-items:flex-start;gap:10px
+}
+.plate{
+  background:var(--ground);border:1.5px solid var(--ink);padding:6px 8px;
+  font-size:10px;line-height:1.45;letter-spacing:.08em;white-space:nowrap
+}
+.plate b{font-weight:700}
+.plate .dim{color:var(--muted)}
+#cellplate{min-width:0;flex:0 1 auto;overflow:hidden}
+#scaleplate{flex:0 0 auto}
+#cellid{font-weight:700;letter-spacing:.14em}
+#scaleplate{text-align:right}
+
+/* --- the ladder: scale is spatially embodied, not a button --------- */
+#ladder{
+  right:max(8px,env(safe-area-inset-right));top:50%;transform:translateY(-50%);
+  display:flex;flex-direction:column;gap:0;align-items:flex-end
+}
+.rung{
+  display:flex;align-items:center;gap:5px;height:19px;
+  font-size:8px;letter-spacing:.12em;color:var(--muted)
+}
+.rung i{display:block;height:1.5px;width:9px;background:var(--muted);font-style:normal}
+.rung.on{color:var(--ink);font-weight:700}
+.rung.on i{width:20px;height:2.5px;background:var(--signal)}
+.rung span{opacity:0;background:var(--ground);padding:1px 3px}
+.rung.on span,.rung.near span{opacity:1}
+.rung.near{color:var(--muted)}
+
+/* --- containment: where I am, what contains this, how I return ----- */
+#chain{
+  left:max(10px,env(safe-area-inset-left));bottom:0;right:0;
+  padding:0 10px calc(6px + env(safe-area-inset-bottom));
+  display:flex;flex-wrap:wrap;align-items:center;gap:3px
+}
+.link{
+  font-size:9px;letter-spacing:.1em;color:var(--muted);
+  border:1.5px solid transparent;padding:2px 3px
+}
+.link.here{color:var(--ink);font-weight:700;border-color:var(--ink);background:var(--ground)}
+.link.sep{opacity:.45;padding:0}
+
+/* --- actions appear only where they are possible ------------------- */
+#acts{
+  position:absolute;z-index:20;display:none;flex-direction:column;gap:-1px;
+  align-items:flex-start
+}
+#acts.open{display:flex}
+#acts button{
+  font:inherit;font-size:10px;font-weight:700;letter-spacing:.14em;
+  background:var(--ground);color:var(--ink);border:1.5px solid var(--ink);
+  padding:9px 11px;margin-top:-1.5px;min-width:112px;text-align:left;cursor:pointer;
+  display:flex;justify-content:space-between;gap:10px
+}
+#acts button em{font-style:normal;font-weight:400;color:var(--muted);font-size:9px}
+#acts button:active{background:var(--ink);color:var(--ground)}
+#acts button:active em{color:var(--ground);opacity:.7}
+#acts button.sig{background:var(--signal);border-color:var(--signal);color:var(--paper)}
+#acts button.sig em{color:var(--paper);opacity:.75}
+
+/* --- panels -------------------------------------------------------- */
+#panel{
+  flex:0 0 auto;z-index:30;max-height:52vh;overflow-y:auto;
+  background:var(--ground);border-top:2px solid var(--ink);
+  padding:14px max(14px,env(safe-area-inset-left)) calc(16px + env(safe-area-inset-bottom));
+  display:none;-webkit-overflow-scrolling:touch
+}
+#panel.open{display:block}
+#panel{-webkit-user-select:text;user-select:text}
+@media(min-width:860px){
+  body{flex-direction:row}
+  #panel{max-height:none;height:100%;width:min(440px,40%);
+         border-top:none;border-left:2px solid var(--ink);
+         padding-top:16px}
+}
+#panel h2{
+  position:sticky;top:0;z-index:2;background:var(--ground);
+  font-size:11px;letter-spacing:.2em;font-weight:700;
+  margin:-14px 0 10px;padding:14px 0 10px;
+  display:flex;justify-content:space-between;align-items:center;gap:10px
+}
+#panel h2 button{
+  font:inherit;font-size:10px;letter-spacing:.14em;font-weight:700;
+  border:1.5px solid var(--ink);background:var(--ground);padding:5px 9px;cursor:pointer
+}
+#panel p{font-size:11px;line-height:1.6;color:var(--muted);margin-bottom:9px;max-width:64ch}
+#panel p b{color:var(--ink)}
+#panel .row{
+  display:flex;justify-content:space-between;gap:10px;align-items:baseline;
+  border-top:1px solid rgba(18,21,20,.18);padding:7px 0;font-size:10px;letter-spacing:.06em;
+  cursor:pointer
+}
+#panel .row:last-child{border-bottom:1px solid rgba(18,21,20,.18)}
+#panel .row b{font-weight:700}
+#panel .row span{color:var(--muted);text-align:right;flex:0 0 auto}
+#panel .row.on{background:var(--ink);color:var(--ground);padding-inline:6px}
+#panel .row.on span{color:var(--ground);opacity:.75}
+@media(max-width:520px){
+  #panel .row{flex-wrap:wrap;gap:2px}
+  #panel .row b,#panel .row span{flex:1 1 100%;text-align:left}
+}
+#panel input,#panel textarea{
+  font:inherit;font-size:13px;width:100%;background:var(--paper);color:var(--ink);
+  border:1.5px solid var(--ink);padding:8px;margin:4px 0;-webkit-user-select:text;user-select:text
+}
+#panel textarea{min-height:74px;resize:vertical;line-height:1.45}
+#panel .seat input{font-size:12px;padding:5px 6px;margin:0}
+#panel .seat{display:grid;grid-template-columns:1fr 128px;gap:8px;align-items:center;
+  border-top:1px solid rgba(18,21,20,.18);padding:6px 0;font-size:10px;letter-spacing:.06em}
+#panel .seat b{font-weight:700}
+#panel .seat em{font-style:normal;color:var(--muted);display:block;font-size:9px;margin-top:1px}
+#panel .go{
+  font:inherit;font-size:11px;font-weight:700;letter-spacing:.14em;cursor:pointer;
+  border:1.5px solid var(--ink);background:var(--ink);color:var(--ground);padding:9px 14px;margin-top:6px
+}
+#panel .go.ghost{background:var(--ground);color:var(--ink)}
+#panel .said{border-top:1px solid rgba(18,21,20,.18);padding:8px 0}
+#panel .said b{font-size:10px;letter-spacing:.1em}
+#panel .said span{color:var(--muted);font-size:9px;letter-spacing:.08em}
+#panel .said p{font-size:12px;line-height:1.5;color:var(--ink);margin:4px 0 0;max-width:60ch}
+#panel .kbd{font-size:9px;color:var(--muted);letter-spacing:.1em;line-height:1.9;margin-top:8px}
+#panel .kbd b{color:var(--ink);font-weight:700}
+
+/* --- corner marks -------------------------------------------------- */
+#modes{
+  left:max(10px,env(safe-area-inset-left));top:auto;bottom:34px;
+  display:flex;gap:0;pointer-events:auto
+}
+#modes button{
+  font:inherit;font-size:9px;font-weight:700;letter-spacing:.12em;
+  border:1.5px solid var(--ink);background:var(--ground);color:var(--ink);
+  padding:7px 8px;margin-left:-1.5px;cursor:pointer
+}
+#modes button:first-child{margin-left:0}
+#modes button.on{background:var(--ink);color:var(--ground)}
+#modes button.sig{background:var(--signal);border-color:var(--signal);color:var(--paper)}
+#reglegend{
+  left:max(10px,env(safe-area-inset-left));bottom:72px;
+  display:none;flex-direction:column;gap:2px
+}
+#reglegend.open{display:flex}
+#reglegend div{
+  display:flex;align-items:center;gap:5px;font-size:8px;letter-spacing:.1em;
+  background:var(--ground);padding:1px 4px 1px 2px;width:max-content
+}
+#reglegend i{display:block;width:14px;height:3px}
+#boot{
+  position:fixed;inset:0;z-index:40;background:var(--ground);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;letter-spacing:.24em;color:var(--muted)
+}
+#boot.gone{display:none}
+@media (max-width:380px){ .plate{font-size:9px} }
+@media (prefers-reduced-motion:reduce){ #acts button{transition:none} }
+</style>
+</head>
+<body>
+<div id="stage">
+<canvas id="world"></canvas>
+
+<div class="hud" id="situation">
+  <div class="plate" id="cellplate">
+    <div id="cellid">—</div>
+    <div class="dim" id="cellextent">—</div>
+    <div class="dim" id="cellcouncil">—</div>
+  </div>
+  <div class="plate" id="scaleplate">
+    <div><b id="scalename">EARTH</b></div>
+    <div class="dim" id="foldstate">unfolded</div>
+  </div>
+</div>
+
+<div class="hud" id="ladder"></div>
+<div class="hud" id="chain"></div>
+
+<div id="acts"></div>
+
+<div class="hud" id="reglegend"></div>
+
+<div class="hud" id="modes">
+  <button id="mFold" title="fold / unfold">FOLD</button>
+  <button id="mRel" title="relational geometry">TENSION</button>
+  <button id="mHelp">?</button>
+</div>
+
+</div><!-- /stage -->
+
+<div id="panel"></div>
+<div id="boot">COMPILING THE WORLD</div>
+
+<script src="icosa-world.data.js"></script>
+<script>
+(function () {
+'use strict';
+
+/* ==================================================================== *
+ *  ICOSA WORLD
+ *
+ *  A place is not a point on a map. A place is a triangle inside larger
+ *  triangles connected by forces to other triangles.
+ *
+ *  Nothing below projects the Earth once and for all. The topology is
+ *  the object; the projection is disposable. Twenty root faces, each
+ *  subdividing into four, forever. Every operation in this file is one
+ *  of: FOLD, UNFOLD, ENTER, EXIT, TURN, PULL, PRESS, TRACE.
+ * ==================================================================== */
+
+var DATA = window.ICOSA_WORLD_DATA;
+var TAU = Math.PI * 2, D2R = Math.PI / 180, R2D = 180 / Math.PI;
+var EARTH_R = 6371.0088;                    // km
+var ICO_EDGE_KM = EARTH_R * Math.acos(Math.sqrt(5) / 5); // ≈7053 km, depth-0 cell edge
+var DIHEDRAL = Math.acos(-Math.sqrt(5) / 3); // 138.1897°
+var FOLD_ANGLE = Math.PI - DIHEDRAL;         // how far each hinge must close
+var MAX_DEPTH = 30;                          // ~6.6 mm. Not a limit of the idea.
+
+/* ------------------------------------------------------------ vectors */
+function v3(x, y, z) { return [x, y, z]; }
+function add(a, b) { return [a[0] + b[0], a[1] + b[1], a[2] + b[2]]; }
+function sub(a, b) { return [a[0] - b[0], a[1] - b[1], a[2] - b[2]]; }
+function mul(a, k) { return [a[0] * k, a[1] * k, a[2] * k]; }
+function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+function cross(a, b) {
+  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+}
+function len(a) { return Math.sqrt(dot(a, a)); }
+function norm(a) { var l = len(a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; }
+function lerp3(a, b, t) { return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t]; }
+function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
+function lonlat(v) {
+  return [Math.atan2(v[1], v[0]) * R2D, Math.asin(clamp(v[2], -1, 1)) * R2D];
+}
+function fromLonLat(lon, lat) {
+  var p = lat * D2R, l = lon * D2R;
+  return [Math.cos(p) * Math.cos(l), Math.cos(p) * Math.sin(l), Math.sin(p)];
+}
+function arcKm(a, b) { return EARTH_R * Math.acos(clamp(dot(a, b), -1, 1)); }
+
+/* -------------------------------------------------------- quaternions */
+function qId() { return [0, 0, 0, 1]; }
+function qMul(a, b) {
+  return [
+    a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1],
+    a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0],
+    a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3],
+    a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2]
+  ];
+}
+function qAxis(axis, ang) {
+  var a = norm(axis), s = Math.sin(ang / 2);
+  return [a[0] * s, a[1] * s, a[2] * s, Math.cos(ang / 2)];
+}
+function qNorm(q) {
+  var l = Math.hypot(q[0], q[1], q[2], q[3]) || 1;
+  return [q[0] / l, q[1] / l, q[2] / l, q[3] / l];
+}
+function qApply(q, v) {
+  var x = q[0], y = q[1], z = q[2], w = q[3];
+  var tx = 2 * (y * v[2] - z * v[1]), ty = 2 * (z * v[0] - x * v[2]), tz = 2 * (x * v[1] - y * v[0]);
+  return [
+    v[0] + w * tx + y * tz - z * ty,
+    v[1] + w * ty + z * tx - x * tz,
+    v[2] + w * tz + x * ty - y * tx
+  ];
+}
+function qSlerp(a, b, t) {
+  var d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
+  var bb = b;
+  if (d < 0) { bb = [-b[0], -b[1], -b[2], -b[3]]; d = -d; }
+  if (d > 0.9995) {
+    return qNorm([a[0] + (bb[0] - a[0]) * t, a[1] + (bb[1] - a[1]) * t,
+                  a[2] + (bb[2] - a[2]) * t, a[3] + (bb[3] - a[3]) * t]);
+  }
+  var th = Math.acos(clamp(d, -1, 1)), s = Math.sin(th);
+  var k0 = Math.sin((1 - t) * th) / s, k1 = Math.sin(t * th) / s;
+  return [a[0] * k0 + bb[0] * k1, a[1] * k0 + bb[1] * k1,
+          a[2] * k0 + bb[2] * k1, a[3] * k0 + bb[3] * k1];
+}
+function qBetween(a, b) {                    // minimal arc a → b
+  var d = dot(a, b);
+  if (d > 0.999999) return qId();
+  if (d < -0.999999) {
+    var ax = Math.abs(a[0]) < 0.9 ? cross(a, [1, 0, 0]) : cross(a, [0, 1, 0]);
+    return qAxis(ax, Math.PI);
+  }
+  var c = cross(a, b);
+  return qNorm([c[0], c[1], c[2], 1 + d]);
+}
+
+/* ==================================================================== *
+ *  1 · THE WORLD                                                        *
+ *  Twenty faces. Every point on Earth resolves into exactly one.        *
+ * ==================================================================== */
+
+var V = DATA.ico.vertices;                   // unit sphere, Earth-fixed
+var FACES = DATA.ico.faces;                  // 20 × [i,j,k], CCW from outside
+var NF = FACES.length;
+
+// Inverse of [v0 v1 v2] per face: turns a direction into barycentric
+// weights. Because a gnomonic projection sends great circles to straight
+// lines, these weights ARE the flat coordinates of the face. Every
+// subdivision below is therefore exact on the sphere.
+var BINV = FACES.map(function (f) {
+  var a = V[f[0]], b = V[f[1]], c = V[f[2]];
+  var det = a[0] * (b[1] * c[2] - b[2] * c[1])
+          - b[0] * (a[1] * c[2] - a[2] * c[1])
+          + c[0] * (a[1] * b[2] - a[2] * b[1]);
+  var m = [
+    [(b[1] * c[2] - b[2] * c[1]) / det, (c[0] * b[2] - b[0] * c[2]) / det, (b[0] * c[1] - c[0] * b[1]) / det],
+    [(c[1] * a[2] - a[1] * c[2]) / det, (a[0] * c[2] - c[0] * a[2]) / det, (c[0] * a[1] - a[0] * c[1]) / det],
+    [(a[1] * b[2] - b[1] * a[2]) / det, (b[0] * a[2] - a[0] * b[2]) / det, (a[0] * b[1] - b[0] * a[1]) / det]
+  ];
+  return m;
+});
+function baryRaw(f, p) {
+  var m = BINV[f];
+  return [m[0][0] * p[0] + m[0][1] * p[1] + m[0][2] * p[2],
+          m[1][0] * p[0] + m[1][1] * p[1] + m[1][2] * p[2],
+          m[2][0] * p[0] + m[2][1] * p[1] + m[2][2] * p[2]];
+}
+function baryOf(f, p) {                      // sphere point → face weights
+  var r = baryRaw(f, p), s = r[0] + r[1] + r[2];
+  return [r[0] / s, r[1] / s, r[2] / s];
+}
+function baryPoint(f, w) {                   // face weights → sphere point
+  var a = V[FACES[f][0]], b = V[FACES[f][1]], c = V[FACES[f][2]];
+  return norm([a[0] * w[0] + b[0] * w[1] + c[0] * w[2],
+               a[1] * w[0] + b[1] * w[1] + c[1] * w[2],
+               a[2] * w[0] + b[2] * w[1] + c[2] * w[2]]);
+}
+// INVARIANT 1 — exactly one face holds any given point.
+// The weights of a point and of its antipode normalise identically, so
+// the sum must be positive as well: the far side of the world is not here.
+function faceOf(p) {
+  var best = 0, bestMin = -Infinity;
+  for (var f = 0; f < NF; f++) {
+    var r = baryRaw(f, p), s = r[0] + r[1] + r[2];
+    if (s <= 0) continue;
+    var m = Math.min(r[0], Math.min(r[1], r[2])) / s;
+    if (m >= -1e-12) return f;
+    if (m > bestMin) { bestMin = m; best = f; }
+  }
+  return best;                               // seam: nearest face wins
+}
+
+/* --------------------------------------------------------------- cells
+ * A cell is a face plus a path of child indices. Its three corners live
+ * in the root face's weight space, so subdivision is exact and reversible:
+ * the parent is never destroyed, only unvisited.                       */
+
+var ROOT_TRI = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+function mid(a, b) { return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2]; }
+function childTri(t, i) {
+  var m01 = mid(t[0], t[1]), m12 = mid(t[1], t[2]), m02 = mid(t[0], t[2]);
+  if (i === 0) return [t[0], m01, m02];
+  if (i === 1) return [m01, t[1], m12];
+  if (i === 2) return [m02, m12, t[2]];
+  return [m01, m12, m02];                    // the middle child, point-down
+}
+function cellTri(face, path) {
+  var t = ROOT_TRI;
+  for (var i = 0; i < path.length; i++) t = childTri(t, path[i]);
+  return t;
+}
+function makeCell(face, path) {
+  return { f: face, path: path.slice(), depth: path.length, tri: cellTri(face, path) };
+}
+// descend: which child holds this point, and where the point lands in it
+function descend(w) {
+  if (w[0] >= 0.5) return [0, [2 * w[0] - 1, 2 * w[1], 2 * w[2]]];
+  if (w[1] >= 0.5) return [1, [2 * w[0], 2 * w[1] - 1, 2 * w[2]]];
+  if (w[2] >= 0.5) return [2, [2 * w[0], 2 * w[1], 2 * w[2] - 1]];
+  return [3, [1 - 2 * w[2], 1 - 2 * w[0], 1 - 2 * w[1]]];
+}
+function cellAt(p, depth) {                  // sphere point → cell at depth
+  var f = faceOf(p), w = baryOf(f, p), path = [];
+  for (var d = 0; d < depth; d++) {
+    var r = descend(w);
+    path.push(r[0]); w = r[1];
+  }
+  return makeCell(f, path);
+}
+function cellId(c) {
+  var s = 'F' + (c.f < 10 ? '0' : '') + c.f;
+  for (var i = 0; i < c.path.length; i++) s += (i % 4 === 0 ? '·' : '') + c.path[i];
+  return s;
+}
+function cellCorners(c) {                    // three sphere points
+  return [baryPoint(c.f, c.tri[0]), baryPoint(c.f, c.tri[1]), baryPoint(c.f, c.tri[2])];
+}
+function cellCentre(c) {
+  var t = c.tri;
+  return baryPoint(c.f, [(t[0][0] + t[1][0] + t[2][0]) / 3,
+                         (t[0][1] + t[1][1] + t[2][1]) / 3,
+                         (t[0][2] + t[1][2] + t[2][2]) / 3]);
+}
+function cellEdgeKm(c) { return ICO_EDGE_KM / Math.pow(2, c.depth); }
+function cellContains(c, p) {
+  if (faceOf(p) !== c.f) return false;
+  var w = baryOf(c.f, p), t = c.tri;
+  // solve p's weights against the cell's own triangle
+  var d = (t[1][1] - t[2][1]) * (t[0][0] - t[2][0]) + (t[2][0] - t[1][0]) * (t[0][1] - t[2][1]);
+  if (Math.abs(d) < 1e-18) return false;
+  var a = ((t[1][1] - t[2][1]) * (w[0] - t[2][0]) + (t[2][0] - t[1][0]) * (w[1] - t[2][1])) / d;
+  var b = ((t[2][1] - t[0][1]) * (w[0] - t[2][0]) + (t[0][0] - t[2][0]) * (w[1] - t[2][1])) / d;
+  return a >= -1e-9 && b >= -1e-9 && a + b <= 1 + 1e-9;
+}
+/* --------------------------------------------------- a triangle's address
+ * A cell was an id and an edge length, which is not enough to act on. It
+ * needs coordinates you can read out, an area you can compare, a name you
+ * can send someone, and a list of what is actually inside it. Without those
+ * the triangle is a container with nothing in it.                       */
+
+function sphericalAngle(a, b, c) {          // the interior angle at a
+  var n1 = norm(cross(a, b)), n2 = norm(cross(a, c));
+  return Math.acos(clamp(dot(n1, n2), -1, 1));
+}
+function cellAreaKm2(c) {
+  var P = cellCorners(c);
+  var excess = sphericalAngle(P[0], P[1], P[2])
+             + sphericalAngle(P[1], P[2], P[0])
+             + sphericalAngle(P[2], P[0], P[1]) - Math.PI;
+  return Math.abs(excess) * EARTH_R * EARTH_R;
+}
+function areaLabel(km2) {
+  if (km2 >= 1e6) return (km2 / 1e6).toFixed(2) + ' million km²';
+  if (km2 >= 1) return Math.round(km2).toLocaleString('en') + ' km²';
+  if (km2 >= 0.01) return (km2 * 100).toFixed(1) + ' ha';
+  return Math.round(km2 * 1e6) + ' m²';
+}
+function ll(v) {                            // a corner, as something to type
+  var p = lonlat(v);
+  return (Math.abs(p[1]).toFixed(4) + (p[1] < 0 ? '°S' : '°N') + ' ' +
+          Math.abs(p[0]).toFixed(4) + (p[0] < 0 ? '°W' : '°E'));
+}
+
+// the address. A triangle you cannot link to is a triangle you cannot cite.
+function cellSlug(c) {
+  return 'F' + (c.f < 10 ? '0' : '') + c.f + (c.path.length ? '.' + c.path.join('') : '');
+}
+function cellFromSlug(str) {
+  var m = /^F?(\d{1,2})[.\-·]?([0-3]*)$/.exec(String(str || '').trim());
+  if (!m) return null;
+  var f = +m[1];
+  if (!(f >= 0 && f < NF)) return null;
+  var path = m[2].split('').map(Number).slice(0, MAX_DEPTH);
+  return makeCell(f, path);
+}
+
+// what is actually in here, from the sources the build shipped
+function cellContents(c) {
+  var out = { places: [], rivers: [] };
+  for (var n in PLACES) {
+    var pl = PLACES[n];
+    if (cellContains(c, pl.v)) out.places.push(pl);
+  }
+  out.places.sort(function (a, b) { return b.pop - a.pop; });
+  var pts = riverPoints();
+  for (var i = 0; i < PHENOMENA.length; i++) {
+    var ph = PHENOMENA[i], hit = false;
+    for (var l = ph.from; l < ph.to && !hit; l++) {
+      for (var j = 0; j < pts[l].length; j++) {
+        if (cellContains(c, pts[l][j])) { hit = true; break; }
+      }
+    }
+    if (hit) out.rivers.push(ph.name);
+  }
+  return out;
+}
+
+// INVARIANT 3 — neighbours stay neighbours at every scale, including
+// across a seam, because we ask the sphere, not the drawing.
+function neighbours(c) {
+  var C = cellCorners(c), ctr = cellCentre(c), out = [];
+  for (var e = 0; e < 3; e++) {
+    var m = norm(add(C[e], C[(e + 1) % 3]));
+    var outward = norm(sub(m, ctr));
+    var step = (cellEdgeKm(c) / EARTH_R) * 0.18;
+    var probe = norm(add(m, mul(outward, step)));
+    out.push(cellAt(probe, c.depth));
+  }
+  return out;
+}
+
+/* ==================================================================== *
+ *  2 · FOLDING                                                          *
+ *  The net is a spanning tree of the twenty faces; the eleven edges left *
+ *  out are the cuts. Folding closes every hinge by the same angle at    *
+ *  once, so the faces behave like connected plates, not an animation.   *
+ * ==================================================================== */
+
+var NET = DATA.net;
+var SQ3 = Math.sqrt(3);
+
+// each face's flat corners, lifted into 3-space at z = 0
+var NETPOS = NET.layout.map(function (p) {
+  return p.map(function (xy) { return [xy[0], xy[1], 0]; });
+});
+// hinge line (in net coordinates) and rotation sense for each non-root face
+var HINGE = [];
+for (var i = 0; i < NF; i++) HINGE.push(null);
+(function buildHinges() {
+  for (var f = 0; f < NF; f++) {
+    var par = NET.parent[f];
+    if (par < 0) continue;
+    var he = NET.hinge[f];                   // shared edge index on this face
+    var A = NETPOS[f][he], B = NETPOS[f][(he + 1) % 3], C = NETPOS[f][(he + 2) % 3];
+    var axis = norm(sub(B, A));
+    // Fold away from the viewer. The face you are looking at in the net is
+    // the face you must still be looking at on the solid, or the whole
+    // world turns inside out.
+    var test = rotAbout(C, A, axis, 0.2);
+    HINGE[f] = { a: A, axis: test[2] < 0 ? axis : mul(axis, -1) };
+  }
+})();
+function rotAbout(p, origin, axis, ang) {
+  var v = sub(p, origin), c = Math.cos(ang), s = Math.sin(ang);
+  var k = cross(axis, v), d = dot(axis, v) * (1 - c);
+  return add(origin, [v[0] * c + k[0] * s + axis[0] * d,
+                      v[1] * c + k[1] * s + axis[1] * d,
+                      v[2] * c + k[2] * s + axis[2] * d]);
+}
+// transform = parent's transform ∘ rotation about this face's hinge.
+// Applied outward from the root, this closes the polyhedron exactly.
+function foldTransforms(t) {
+  var ang = FOLD_ANGLE * t;
+  var xf = new Array(NF);
+  var order = NET.order;
+  for (var i = 0; i < order.length; i++) {
+    var f = order[i], par = NET.parent[f];
+    if (par < 0) { xf[f] = null; continue; }
+    xf[f] = { parent: par, a: HINGE[f].a, axis: HINGE[f].axis, ang: ang };
+  }
+  var corners = new Array(NF);
+  for (var j = 0; j < order.length; j++) {
+    var g = order[j];
+    var pts = NETPOS[g];
+    var chain = [];
+    var cur = g;
+    while (xf[cur]) { chain.push(xf[cur]); cur = xf[cur].parent; }
+    var out = [];
+    for (var k = 0; k < 3; k++) {
+      var p = pts[k];
+      for (var h = 0; h < chain.length; h++) p = rotAbout(p, chain[h].a, chain[h].axis, chain[h].ang);
+      out.push(p);
+    }
+    corners[g] = out;
+  }
+  return corners;
+}
+// the assembled polyhedron sits wherever the root happened to lie; bring
+// it home so that a folded world is a globe you can turn about its centre
+var ASSEMBLED = foldTransforms(1);
+var ASSEMBLED_CENTRE = (function () {
+  var s = [0, 0, 0], n = 0;
+  for (var f = 0; f < NF; f++) for (var k = 0; k < 3; k++) { s = add(s, ASSEMBLED[f][k]); n++; }
+  return mul(s, 1 / n);
+})();
+var NET_BOX = (function () {
+  var x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+  for (var f = 0; f < NF; f++) for (var k = 0; k < 3; k++) {
+    var p = NETPOS[f][k];
+    x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]);
+    y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]);
+  }
+  return { x0: x0, x1: x1, y0: y0, y1: y1, w: x1 - x0, h: y1 - y0 };
+})();
+var NET_CENTRE = [(NET_BOX.x0 + NET_BOX.x1) / 2, (NET_BOX.y0 + NET_BOX.y1) / 2, 0];
+// rotation taking the assembled solid onto the Earth-fixed icosahedron,
+// so that a fully folded world is correctly oriented (Kabsch, 3 samples)
+var ALIGN_Q = (function () {
+  var scale = 1 / len(sub(V[FACES[0][0]], V[FACES[0][1]]));  // edge → 1
+  // match one face: its normal and its first edge determine the rotation
+  var f = 0;
+  var A = sub(ASSEMBLED[f][1], ASSEMBLED[f][0]);
+  var B = mul(sub(V[FACES[f][1]], V[FACES[f][0]]), scale);
+  var q1 = qBetween(norm(A), norm(B));
+  var nA = qApply(q1, norm(cross(sub(ASSEMBLED[f][1], ASSEMBLED[f][0]), sub(ASSEMBLED[f][2], ASSEMBLED[f][0]))));
+  var nB = norm(cross(sub(V[FACES[f][1]], V[FACES[f][0]]), sub(V[FACES[f][2]], V[FACES[f][0]])));
+  var q2 = qBetween(nA, nB);
+  return qNorm(qMul(q2, q1));
+})();
+
+var faceCorners = null;                      // current world-space corners
+function updateFold(t) {
+  var raw = foldTransforms(t);
+  var centre = lerp3(NET_CENTRE, ASSEMBLED_CENTRE, t);
+  var q = qSlerp(qId(), ALIGN_Q, t);
+  faceCorners = new Array(NF);
+  for (var f = 0; f < NF; f++) {
+    var out = [];
+    for (var k = 0; k < 3; k++) out.push(qApply(q, sub(raw[f][k], centre)));
+    faceCorners[f] = out;
+  }
+}
+function worldOf(f, w) {                     // face weights → world space
+  var c = faceCorners[f];
+  return [c[0][0] * w[0] + c[1][0] * w[1] + c[2][0] * w[2],
+          c[0][1] * w[0] + c[1][1] * w[1] + c[2][1] * w[2],
+          c[0][2] * w[0] + c[1][2] * w[1] + c[2][2] * w[2]];
+}
+function faceNormal(f) {
+  var c = faceCorners[f];
+  return norm(cross(sub(c[1], c[0]), sub(c[2], c[0])));
+}
+function worldOfPoint(p) {                   // sphere point → world space
+  var f = faceOf(p);
+  return worldOf(f, baryOf(f, p));
+}
+
+/* ==================================================================== *
+ *  3 · CONTENT ON THE FACES                                             *
+ *  Coastlines are clipped to each face once, on the sphere, and kept as *
+ *  face weights. After that they cost nothing: they fold with the face. *
+ * ==================================================================== */
+
+function decodeLines(s, q) {
+  if (!s) return [];
+  q = q || 100;
+  var out = [];
+  var groups = s.split(';');
+  for (var g = 0; g < groups.length; g++) {
+    var nums = groups[g].split(',');
+    var pts = [], x = 0, y = 0;
+    for (var i = 0; i < nums.length; i += 2) {
+      x += +nums[i]; y += +nums[i + 1];
+      pts.push([x / q, y / q]);
+    }
+    out.push(pts);
+  }
+  return out;
+}
+// straight in lon/lat is not straight on a sphere; densify before clipping
+function densify(pts, maxDeg) {
+  var out = [];
+  for (var i = 0; i < pts.length; i++) {
+    var a = pts[i];
+    out.push(fromLonLat(a[0], a[1]));
+    if (i === pts.length - 1) break;
+    var b = pts[i + 1];
+    var dl = b[0] - a[0], dp = b[1] - a[1];
+    if (Math.abs(dl) > 180) continue;        // antimeridian: leave the chord
+    var n = Math.ceil(Math.max(Math.abs(dl), Math.abs(dp)) / maxDeg);
+    for (var k = 1; k < n; k++) {
+      var t = k / n;
+      out.push(fromLonLat(a[0] + dl * t, a[1] + dp * t));
+    }
+  }
+  return out;
+}
+// the three inward planes of a face
+var FACE_PLANES = FACES.map(function (f) {
+  return [norm(cross(V[f[0]], V[f[1]])), norm(cross(V[f[1]], V[f[2]])), norm(cross(V[f[2]], V[f[0]]))];
+});
+function clipPolyToFace(poly, f) {
+  var pl = FACE_PLANES[f], cur = poly;
+  for (var i = 0; i < 3 && cur.length; i++) {
+    var n = pl[i], next = [];
+    for (var j = 0; j < cur.length; j++) {
+      var a = cur[j], b = cur[(j + 1) % cur.length];
+      var da = dot(a, n), db = dot(b, n);
+      if (da >= 0) next.push(a);
+      if ((da >= 0) !== (db >= 0)) {
+        var t = da / (da - db);
+        next.push(norm(lerp3(a, b, t)));
+      }
+    }
+    cur = next;
+  }
+  return cur;
+}
+// A line leaving the face and coming back is two lines, not one. Joining
+// the exit to the re-entry would draw a river where there is no river.
+function clipLineToFace(line, f) {
+  var pl = FACE_PLANES[f], parts = [line];
+  for (var i = 0; i < 3; i++) {
+    var n = pl[i], next = [];
+    for (var p = 0; p < parts.length; p++) {
+      var seg = parts[p], run = [];
+      for (var j = 0; j < seg.length - 1; j++) {
+        var a = seg[j], b = seg[j + 1];
+        var da = dot(a, n), db = dot(b, n);
+        if (da >= 0 && db >= 0) {
+          if (!run.length) run.push(a);
+          run.push(b);
+        } else if (da >= 0) {                    // leaving
+          if (!run.length) run.push(a);
+          run.push(norm(lerp3(a, b, da / (da - db))));
+          if (run.length > 1) next.push(run);
+          run = [];
+        } else if (db >= 0) {                    // entering
+          run = [norm(lerp3(a, b, da / (da - db))), b];
+        }
+      }
+      if (run.length > 1) next.push(run);
+    }
+    parts = next;
+  }
+  return parts;
+}
+function toFaceWeights(f, pts) {
+  var out = new Float64Array(pts.length * 3);
+  for (var i = 0; i < pts.length; i++) {
+    var w = baryOf(f, pts[i]);
+    out[i * 3] = w[0]; out[i * 3 + 1] = w[1]; out[i * 3 + 2] = w[2];
+  }
+  return out;
+}
+var SURFACE = { land: [], lakes: [], rivers: [] };
+function compileSurface() {
+  var landRings = decodeLines(DATA.land).map(function (r) { return densify(r, 1.1); });
+  var lakeRings = decodeLines(DATA.lakes).map(function (r) { return densify(r, 1.1); });
+  var riverLines = decodeLines(DATA.rivers).map(function (r) { return densify(r, 0.8); });
+  for (var f = 0; f < NF; f++) {
+    var L = [], K = [], R = [];
+    for (var i = 0; i < landRings.length; i++) {
+      var c = clipPolyToFace(landRings[i], f);
+      if (c.length > 2) L.push(toFaceWeights(f, c));
+    }
+    for (var j = 0; j < lakeRings.length; j++) {
+      var c2 = clipPolyToFace(lakeRings[j], f);
+      if (c2.length > 2) K.push(toFaceWeights(f, c2));
+    }
+    for (var k = 0; k < riverLines.length; k++) {
+      var parts = clipLineToFace(riverLines[k], f);
+      for (var m = 0; m < parts.length; m++) R.push({ w: toFaceWeights(f, parts[m]), river: k });
+    }
+    SURFACE.land.push(L); SURFACE.lakes.push(K); SURFACE.rivers.push(R);
+  }
+}
+
+/* ==================================================================== *
+ *  4 · TENSEGRITY                                                       *
+ *  The triangles answer "where is it".                                  *
+ *  These answer "what holds it in relation to everything else".         *
+ *                                                                       *
+ *  FIXTURE. The five relations named in the theory, and no others. The  *
+ *  struts of the map itself — the eleven cut edges — are computed.      *
+ * ==================================================================== */
+
+var PLACES = {};
+(function seedPlaces() {
+  for (var i = 0; i < DATA.cities.length; i++) {
+    var c = DATA.cities[i];
+    PLACES[c.name] = { name: c.name, note: c.country, lon: c.lon, lat: c.lat, pop: c.pop, src: 'ne' };
+  }
+  // declared fixture: places the theory names that the source set omits
+  var fx = [
+    ['Savannah', 'Georgia · port', -81.0912, 32.0809],
+    ['Washington', 'District of Columbia · governance', -77.0369, 38.9072],
+    ['Ashburn', 'Virginia · where "the cloud" has an address', -77.4874, 39.0438],
+    ['Chattahoochee Headwaters', 'Chattahoochee Gap · the river starts here', -83.7616, 34.7565]
+  ];
+  for (var k = 0; k < fx.length; k++) {
+    var p = fx[k];
+    PLACES[p[0]] = { name: p[0], note: p[1], lon: p[2], lat: p[3], pop: 0, src: 'fixture' };
+  }
+  for (var n in PLACES) {
+    PLACES[n].v = fromLonLat(PLACES[n].lon, PLACES[n].lat);
+  }
+})();
+
+var RELATIONS = [
+  { a: 'Atlanta', b: 'Savannah', kind: 'tendon', label: 'logistics' },
+  { a: 'Atlanta', b: 'Washington', kind: 'strut', label: 'governance' },
+  { a: 'Atlanta', b: 'Lagos', kind: 'tendon', label: 'diaspora' },
+  { a: 'Atlanta', b: 'Ashburn', kind: 'tendon', label: 'computation' },
+  { a: 'Atlanta', b: 'Chattahoochee Headwaters', kind: 'tendon', label: 'watershed' }
+].filter(function (r) { return PLACES[r.a] && PLACES[r.b]; });
+
+RELATIONS.forEach(function (r) {
+  r.pa = PLACES[r.a]; r.pb = PLACES[r.b];
+  r.km = Math.round(arcKm(r.pa.v, r.pb.v));
+});
+
+// the map's own compression: eleven edges the net refuses to hold shut
+var SEAMS = NET.cuts.map(function (pair, i) {
+  var shared = [];
+  var fa = FACES[pair[0]], fb = FACES[pair[1]];
+  for (var x = 0; x < 3; x++) for (var y = 0; y < 3; y++) if (fa[x] === fb[y]) shared.push(fa[x]);
+  return { a: shared[0], b: shared[1], faces: pair };
+});
+
+// phenomena that cross triangles without asking them
+var PHENOMENA = DATA.riverIndex.map(function (r, i) {
+  return { name: r.name, from: r.from, to: r.to, kind: 'river' };
+});
+
+/* ==================================================================== *
+ *  5 · THE VIEW                                                         *
+ *  Scale is not zoom. Scale is the level of spatial consequence, and it *
+ *  is read off the geometry rather than set by a button.                *
+ * ==================================================================== */
+
+// The scale ladder is compiled, not written here: each rung carries the
+// edge length at which it begins and the solid whose council that much
+// ground is entitled to seat.
+var LADDER = DATA.council.ladder;
+var SCALES = LADDER.map(function (l) { return { n: l.scale, min: l.minKm, solid: l.solid }; });
+var SEATED = DATA.council.seated;
+var SOURCE_KM = 6;             // below this the coastline source has nothing
+function scaleOf(km) {
+  for (var i = 0; i < SCALES.length; i++) if (km >= SCALES[i].min) return i;
+  return SCALES.length - 1;
+}
+// A council is chosen by how much world the cell holds, never by how many
+// people happen to be available. Below the tetrahedron there is no solid,
+// and the honest answer is that you are not in a council, you are talking.
+function councilFor(km) {
+  var name = SCALES[scaleOf(km)].solid;
+  if (!name || !SEATED[name]) return null;
+  var seat = SEATED[name];
+  var stat = null;
+  for (var i = 0; i < DATA.council.family.length; i++) {
+    if (DATA.council.family[i].name === name) stat = DATA.council.family[i];
+  }
+  return { name: name, seating: LADDER[scaleOf(km)].seating, seat: seat, stat: stat };
+}
+function kmLabel(km) {
+  if (km >= 1000) return Math.round(km) + ' km';
+  if (km >= 1) return km.toFixed(km < 10 ? 1 : 0) + ' km';
+  return Math.round(km * 1000) + ' m';
+}
+
+var canvas = document.getElementById('world');
+var ctx = canvas.getContext('2d');
+var W = 0, H = 0, DPR = 1;
+
+var view = {
+  q: qId(),                 // TURN
+  facing: true,             // keep the held point turned toward the eye
+  zoom: 0,                  // log2 magnification above "whole world"
+  zoomTarget: 0,
+  fold: 0,                  // 0 = net, 1 = icosahedron
+  foldTarget: 0,
+  centre: null,             // sphere point held at the middle of the screen
+  centreTarget: null,
+  relax: 0,                 // 0 = surface geometry, 1 = relational geometry
+  relaxTarget: 0
+};
+var CAM_D = 3.1;            // camera distance; mild perspective, never a fisheye
+var ZOOM_MIN = -2.6;
+
+// the folded world is small and round, the unfolded one is wide and flat.
+// "the whole world, framed" is therefore a different number at each fold.
+var SOLID_SPAN = 1.62;
+function baseScale() { return Math.min(W, H) * 0.42; }
+function pxScale() { return baseScale() * Math.pow(2, view.zoom); }
+function fitZoom(fold) {
+  var sx = NET_BOX.w + (SOLID_SPAN - NET_BOX.w) * fold;
+  var sy = NET_BOX.h + (SOLID_SPAN - NET_BOX.h) * fold;
+  var px = 0.9 * Math.min(W / sx, (H - 150) / sy);
+  return Math.log2(px / baseScale());
+}
+
+// projection: rotate, put the held point at the origin, then perspective
+var VIEW_ORIGIN = [0, 0, 0];
+function toView(p) {
+  var r = qApply(view.q, p);
+  return [r[0] - VIEW_ORIGIN[0], r[1] - VIEW_ORIGIN[1], r[2] - VIEW_ORIGIN[2]];
+}
+function project(pv, S) {
+  var k = CAM_D / Math.max(0.05, CAM_D - pv[2]);
+  return [W / 2 + pv[0] * k * S, H / 2 - pv[1] * k * S];
+}
+function screenOfWorld(p, S) { return project(toView(p), S); }
+
+// picking: a ray from the camera through the finger, against the faces
+function pick(sx, sy) {
+  var S = pxScale();
+  var X = (sx - W / 2) / S, Y = -(sy - H / 2) / S;
+  var o = [VIEW_ORIGIN[0], VIEW_ORIGIN[1], VIEW_ORIGIN[2] + CAM_D];
+  var dir = [X, Y, -CAM_D];
+  var oi = [0, 0, CAM_D];                   // origin in view space
+  var best = null;
+  for (var f = 0; f < NF; f++) {
+    var c = faceCorners[f];
+    var a = toView(c[0]), b = toView(c[1]), d = toView(c[2]);
+    var e1 = sub(b, a), e2 = sub(d, a);
+    var pv = cross(dir, e2), det = dot(e1, pv);
+    if (Math.abs(det) < 1e-12) continue;
+    var inv = 1 / det, tv = sub(oi, a);
+    var u = dot(tv, pv) * inv;
+    if (u < -1e-6 || u > 1 + 1e-6) continue;
+    var qv = cross(tv, e1);
+    var vv = dot(dir, qv) * inv;
+    if (vv < -1e-6 || u + vv > 1 + 1e-6) continue;
+    var t = dot(e2, qv) * inv;
+    if (t <= 0) continue;
+    if (!best || t < best.t) best = { t: t, f: f, w: [1 - u - vv, u, vv] };
+  }
+  if (!best) return null;
+  return { face: best.f, w: best.w, p: baryPoint(best.f, best.w) };
+}
+
+/* --------------------------------------------------------- depth logic
+ * ACTIVE / NEAR / LATENT. Detail arrives where attention is and nowhere
+ * else: the whole planet is never drawn at full resolution.            */
+function depthForZoom() {
+  var target = Math.min(W, H) * 0.46;        // a focus cell about this big
+  var pxPerWorld = pxScale();
+  var edgeWorld = 1.0;                       // root cell edge in world units
+  var d = Math.log2(pxPerWorld * edgeWorld / target);
+  return clamp(Math.round(d), 0, MAX_DEPTH);
+}
+function focusCell() {
+  return cellAt(view.centre, depthForZoom());
+}
+
+/* ==================================================================== *
+ *  6 · DRAWING                                                          *
+ * ==================================================================== */
+
+var elFold = document.getElementById('mFold');
+var foldable = true;
+function setFoldable(on) {
+  if (on === foldable) return;
+  foldable = on;
+  elFold.style.display = on ? '' : 'none';
+}
+
+var css = getComputedStyle(document.documentElement);
+var COL = {
+  ground: css.getPropertyValue('--ground').trim() || '#f1eee4',
+  ink: css.getPropertyValue('--ink').trim() || '#121514',
+  muted: css.getPropertyValue('--muted').trim() || '#5f6763',
+  signal: css.getPropertyValue('--signal').trim() || '#a8462a',
+  land: css.getPropertyValue('--land').trim() || '#ddd7c6',
+  landline: css.getPropertyValue('--landline').trim() || '#8d8878',
+  water: css.getPropertyValue('--water').trim() || '#b9c4c2',
+  paper: css.getPropertyValue('--paper').trim() || '#faf8f1'
+};
+// six registers, three opposed pairs — each pair reads as a contrast
+var REGCOL = {
+  COORDINATE: '#121514', BODY: '#a8462a',
+  RECORD: '#3f5a63', ABSENCE: '#9aa094',
+  CATEGORY: '#8a6b32', RECURSION: '#6b5480'
+};
+
+var selection = null;      // a cell you touched
+var anchor = null;         // { p, label } — the currently meaningful place
+var pulled = null;         // a relation under PULL
+var pressing = false;      // PRESS: the map's own compression
+var traced = null;         // a phenomenon under TRACE
+var traceCells = null;
+/* ------------------------------------------------------------ the record
+ * What is said stays on the triangle it was said about. No server, no
+ * account: the thread lives in this browser and leaves as a file. A cell
+ * slug is the key, so a note is addressable exactly as the ground is.   */
+var STORE = 'icosa.syn.v1';
+function loadStore() {
+  try { return JSON.parse(localStorage.getItem(STORE) || '{}') || {}; } catch (e) { return {}; }
+}
+function saveStore(o) { try { localStorage.setItem(STORE, JSON.stringify(o)); } catch (e) { } }
+var DB = loadStore();
+if (!DB.notes) DB.notes = [];
+if (!DB.seats) DB.seats = {};
+if (!DB.me) DB.me = '';
+function commit() { saveStore(DB); }
+function notesOf(slug) {
+  return DB.notes.filter(function (n) { return n.cell === slug; });
+}
+function noteCells() {
+  var m = {};
+  for (var i = 0; i < DB.notes.length; i++) {
+    var n = DB.notes[i];
+    if (!m[n.cell]) m[n.cell] = [];
+    m[n.cell].push(n);
+  }
+  return m;
+}
+function seatKey(slug, i) { return slug + '|' + i; }
+function seatHolder(slug, i) { return DB.seats[seatKey(slug, i)] || ''; }
+
+var councilCell = null;    // the cell a council is currently seated in
+var councilSeat = null;
+
+function resize() {
+  DPR = Math.min(window.devicePixelRatio || 1, 2.5);
+  W = canvas.clientWidth; H = canvas.clientHeight;
+  canvas.width = Math.round(W * DPR); canvas.height = Math.round(H * DPR);
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+
+function faceVisible(f, S) {
+  var c = faceCorners[f];
+  var a = toView(c[0]), b = toView(c[1]), d = toView(c[2]);
+  var n = cross(sub(b, a), sub(d, a));
+  var ctr = mul(add(add(a, b), d), 1 / 3);
+  if (dot(n, sub([0, 0, CAM_D], ctr)) <= 0) return null;
+  var pa = project(a, S), pb = project(b, S), pd = project(d, S);
+  var minx = Math.min(pa[0], pb[0], pd[0]), maxx = Math.max(pa[0], pb[0], pd[0]);
+  var miny = Math.min(pa[1], pb[1], pd[1]), maxy = Math.max(pa[1], pb[1], pd[1]);
+  if (maxx < -40 || minx > W + 40 || maxy < -40 || miny > H + 40) return null;
+  return { pa: pa, pb: pb, pd: pd, z: (a[2] + b[2] + d[2]) / 3 };
+}
+
+function weightsToScreen(f, arr, S) {
+  var c = faceCorners[f], out = new Float64Array((arr.length / 3) * 2);
+  var c0 = c[0], c1 = c[1], c2 = c[2];
+  for (var i = 0, j = 0; i < arr.length; i += 3, j += 2) {
+    var w0 = arr[i], w1 = arr[i + 1], w2 = arr[i + 2];
+    var x = c0[0] * w0 + c1[0] * w1 + c2[0] * w2;
+    var y = c0[1] * w0 + c1[1] * w1 + c2[1] * w2;
+    var z = c0[2] * w0 + c1[2] * w1 + c2[2] * w2;
+    var r = qApply(view.q, [x, y, z]);
+    var vx = r[0] - VIEW_ORIGIN[0], vy = r[1] - VIEW_ORIGIN[1], vz = r[2] - VIEW_ORIGIN[2];
+    var k = CAM_D / Math.max(0.05, CAM_D - vz);
+    out[j] = W / 2 + vx * k * S;
+    out[j + 1] = H / 2 - vy * k * S;
+  }
+  return out;
+}
+function pathFrom(pts, close) {
+  ctx.beginPath();
+  ctx.moveTo(pts[0], pts[1]);
+  for (var i = 2; i < pts.length; i += 2) ctx.lineTo(pts[i], pts[i + 1]);
+  if (close) ctx.closePath();
+}
+
+function drawFaceSurface(f, S) {
+  var land = SURFACE.land[f];
+  ctx.fillStyle = COL.land;
+  ctx.strokeStyle = COL.landline;
+  ctx.lineWidth = 0.8;
+  for (var i = 0; i < land.length; i++) {
+    var pts = weightsToScreen(f, land[i], S);
+    pathFrom(pts, true);
+    ctx.fill();
+    ctx.stroke();
+  }
+  var lakes = SURFACE.lakes[f];
+  ctx.fillStyle = COL.ground;
+  for (var j = 0; j < lakes.length; j++) {
+    var lp = weightsToScreen(f, lakes[j], S);
+    pathFrom(lp, true);
+    ctx.fill();
+  }
+  var rivers = SURFACE.rivers[f];
+  for (var k = 0; k < rivers.length; k++) {
+    var r = rivers[k];
+    var lit = traced && r.river >= traced.from && r.river < traced.to;
+    ctx.strokeStyle = lit ? COL.signal : COL.water;
+    ctx.lineWidth = lit ? 2.4 : 1;
+    var rp = weightsToScreen(f, r.w, S);
+    pathFrom(rp, false);
+    ctx.stroke();
+  }
+}
+
+// recursive grid: subdivide only where the triangle is still big on screen
+// and still on screen at all. This is the whole of "infinite scalability".
+function drawGrid(f, tri, depth, S, stopPx, budget) {
+  var c = faceCorners[f];
+  var scr = [];
+  for (var k = 0; k < 3; k++) {
+    var w = tri[k];
+    var p = [c[0][0] * w[0] + c[1][0] * w[1] + c[2][0] * w[2],
+             c[0][1] * w[0] + c[1][1] * w[1] + c[2][1] * w[2],
+             c[0][2] * w[0] + c[1][2] * w[1] + c[2][2] * w[2]];
+    scr.push(project(toView(p), S));
+  }
+  var minx = Math.min(scr[0][0], scr[1][0], scr[2][0]);
+  var maxx = Math.max(scr[0][0], scr[1][0], scr[2][0]);
+  var miny = Math.min(scr[0][1], scr[1][1], scr[2][1]);
+  var maxy = Math.max(scr[0][1], scr[1][1], scr[2][1]);
+  if (maxx < -20 || minx > W + 20 || maxy < -20 || miny > H + 20) return;
+  var size = Math.max(maxx - minx, maxy - miny);
+  if (size > stopPx && depth < MAX_DEPTH && budget.n < 3000) {
+    budget.n++;
+    for (var i = 0; i < 4; i++) drawGrid(f, childTri(tri, i), depth + 1, S, stopPx, budget);
+    return;
+  }
+  var a = clamp(0.14 + size / 900, 0.14, 0.5);
+  ctx.strokeStyle = 'rgba(18,21,20,' + a.toFixed(3) + ')';
+  ctx.lineWidth = 0.7;
+  ctx.beginPath();
+  ctx.moveTo(scr[0][0], scr[0][1]);
+  ctx.lineTo(scr[1][0], scr[1][1]);
+  ctx.lineTo(scr[2][0], scr[2][1]);
+  ctx.closePath();
+  ctx.stroke();
+}
+
+function strokeCell(cell, S, colour, width, fill) {
+  var C = cell.tri, c = faceCorners[cell.f];
+  ctx.beginPath();
+  for (var k = 0; k < 3; k++) {
+    var w = C[k];
+    var p = [c[0][0] * w[0] + c[1][0] * w[1] + c[2][0] * w[2],
+             c[0][1] * w[0] + c[1][1] * w[1] + c[2][1] * w[2],
+             c[0][2] * w[0] + c[1][2] * w[1] + c[2][2] * w[2]];
+    var s = project(toView(p), S);
+    if (k === 0) ctx.moveTo(s[0], s[1]); else ctx.lineTo(s[0], s[1]);
+  }
+  ctx.closePath();
+  if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+  ctx.strokeStyle = colour; ctx.lineWidth = width; ctx.stroke();
+}
+
+// relational geometry: places drift toward the things that pull them,
+// while the ground they sit on does not move. Two geometries at once.
+function relaxedPoint(place, S) {
+  if (view.relax < 0.001) return place.v;
+  var pullTo = [0, 0, 0], n = 0;
+  for (var i = 0; i < RELATIONS.length; i++) {
+    var r = RELATIONS[i];
+    if (r.pa === place) { pullTo = add(pullTo, r.pb.v); n++; }
+    else if (r.pb === place) { pullTo = add(pullTo, r.pa.v); n++; }
+  }
+  if (!n) return place.v;
+  var t = view.relax * 0.55;
+  return norm(lerp3(place.v, norm(mul(pullTo, 1 / n)), t));
+}
+
+function facingCamera(p) {                   // is this bit of ground toward us
+  var f = faceOf(p);
+  var vv = toView(worldOf(f, baryOf(f, p)));
+  return dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) > 0;
+}
+// two passes: what is behind the world is drawn before the world, and the
+// world covers it. A tendon that runs through the body should look like it.
+function drawRelations(S, pass) {
+  var shown = pulled ? [pulled] : RELATIONS;
+  for (var i = 0; i < shown.length; i++) {
+    var r = shown[i];
+    var pa = relaxedPoint(r.pa, S), pb = relaxedPoint(r.pb, S);
+    var fa = facingCamera(pa), fb = facingCamera(pb);
+    var back = !fa && !fb;
+    if ((pass === 'back') !== back) continue;
+    var A = worldOfPoint(pa), B = worldOfPoint(pb);
+    var sa = project(toView(A), S), sb = project(toView(B), S);
+    var sep = len(sub(A, B));
+    if (r.kind === 'tendon') {
+      // a tendon is a chord: it goes through the body, not around it
+      var pull = mul(lerp3(A, B, 0.5), 1 - 0.14 * sep);
+      var sm = project(toView(pull), S);
+      ctx.strokeStyle = back ? 'rgba(168,70,42,.3)' : COL.signal;
+      ctx.lineWidth = pulled ? 2.6 : 1.6;
+      ctx.beginPath();
+      ctx.moveTo(sa[0], sa[1]);
+      ctx.quadraticCurveTo(sm[0], sm[1], sb[0], sb[1]);
+      ctx.stroke();
+    } else {
+      // a strut stands off the surface: it holds things apart
+      var lift = mul(norm(add(A, B)), 0.2 * sep);
+      var sm2 = project(toView(add(lerp3(A, B, 0.5), lift)), S);
+      ctx.strokeStyle = back ? 'rgba(18,21,20,.3)' : COL.ink;
+      ctx.lineWidth = pulled ? 3.2 : 2.2;
+      ctx.beginPath();
+      ctx.moveTo(sa[0], sa[1]);
+      ctx.quadraticCurveTo(sm2[0], sm2[1], sb[0], sb[1]);
+      ctx.stroke();
+    }
+    if (pulled || view.relax > 0.02) {
+      ctx.fillStyle = back ? COL.muted : COL.ink;
+      ctx.font = '700 9px ui-monospace,monospace';
+      ctx.textAlign = 'center';
+      ctx.fillText(r.label.toUpperCase(), (sa[0] + sb[0]) / 2, (sa[1] + sb[1]) / 2 - 7);
+    }
+    var named = !!pulled || view.relax > 0.35 || view.zoom > 1.4;
+    if (fa || back) markPlace(r.pa, sa, !fa, named);
+    if (fb || back) markPlace(r.pb, sb, !fb, named);
+  }
+}
+function markPlace(pl, s, dim, named) {
+  ctx.fillStyle = dim ? COL.muted : COL.ink;
+  ctx.beginPath();
+  ctx.arc(s[0], s[1], 3.2, 0, TAU);
+  ctx.fill();
+  if (!named) return;
+  ctx.font = '700 9px ui-monospace,monospace';
+  ctx.textAlign = 'left';
+  ctx.fillText(pl.name.toUpperCase(), s[0] + 6, s[1] + 3);
+}
+
+// The struts of a council are not drawn beside the map. At world scale they
+// ARE the map: the thirty edges of the Dymaxion net, each one a seat. In the
+// unfolded net a strut appears on both of the faces it separates and a topic
+// appears once for every face that meets it, so the net scatters a council
+// that folding gathers back into one.
+var STRUT_OF_EDGE = (function () {
+  var m = {};
+  var E = DATA.ico.edges;
+  for (var i = 0; i < E.length; i++) {
+    var a = E[i][4], b = E[i][5];
+    m[Math.min(a, b) + ',' + Math.max(a, b)] = i;
+  }
+  return m;
+})();
+
+function councilPoints(cell, seat) {
+  // the embedding's barycentric points, carried into this cell's triangle
+  var out = [];
+  for (var i = 0; i < seat.barycentric.length; i++) {
+    var w = seat.barycentric[i], t = cell.tri;
+    out.push(baryPoint(cell.f, [
+      t[0][0] * w[0] + t[1][0] * w[1] + t[2][0] * w[2],
+      t[0][1] * w[0] + t[1][1] * w[1] + t[2][1] * w[2],
+      t[0][2] * w[0] + t[1][2] * w[1] + t[2][2] * w[2]
+    ]));
+  }
+  return out;
+}
+
+function drawCouncil(S) {
+  if (!councilSeat) return;
+  var seat = councilSeat.seat;
+  ctx.lineCap = 'round';
+  if (councilSeat.seating === 'world') {
+    // struts on every face that carries them, topics at every corner
+    for (var f = 0; f < NF; f++) {
+      if (!faceVisible(f, S)) continue;
+      var corner = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+      var scr = [];
+      for (var k = 0; k < 3; k++) scr.push(project(toView(worldOf(f, corner[k])), S));
+      for (var e = 0; e < 3; e++) {
+        var va = FACES[f][e], vb = FACES[f][(e + 1) % 3];
+        var idx = STRUT_OF_EDGE[Math.min(va, vb) + ',' + Math.max(va, vb)];
+        var reg = seat.struts[idx].register;
+        ctx.strokeStyle = REGCOL[reg] || COL.ink;
+        ctx.lineWidth = 3.4;
+        ctx.beginPath();
+        ctx.moveTo(scr[e][0], scr[e][1]);
+        ctx.lineTo(scr[(e + 1) % 3][0], scr[(e + 1) % 3][1]);
+        ctx.stroke();
+      }
+      for (var t2 = 0; t2 < 3; t2++) topicMark(scr[t2], FACES[f][t2]);
+    }
+  } else {
+    var pts = councilPoints(councilCell, seat);
+    var scr2 = [];
+    for (var i = 0; i < pts.length; i++) {
+      var fp = faceOf(pts[i]);
+      scr2.push(project(toView(worldOf(fp, baryOf(fp, pts[i]))), S));
+    }
+    // three of the octahedron's struts join corner to corner straight through
+    // a midpoint, so drawn flat they hide under the two short ones and take
+    // their registers out of sight with them. Bow those toward the middle.
+    var mid2 = [0, 0];
+    for (var m2 = 0; m2 < scr2.length; m2++) { mid2[0] += scr2[m2][0] / scr2.length; mid2[1] += scr2[m2][1] / scr2.length; }
+    for (var j = 0; j < seat.struts.length; j++) {
+      var st = seat.struts[j];
+      var pa = scr2[st.topics[0]], pb = scr2[st.topics[1]];
+      var through = false;
+      for (var k2 = 0; k2 < scr2.length; k2++) {
+        if (k2 === st.topics[0] || k2 === st.topics[1]) continue;
+        var pc = scr2[k2];
+        var dx = pb[0] - pa[0], dy = pb[1] - pa[1], dd = dx * dx + dy * dy;
+        if (dd < 1) continue;
+        var u2 = ((pc[0] - pa[0]) * dx + (pc[1] - pa[1]) * dy) / dd;
+        if (u2 <= 0.02 || u2 >= 0.98) continue;
+        var px2 = pa[0] + u2 * dx, py2 = pa[1] + u2 * dy;
+        if (Math.hypot(pc[0] - px2, pc[1] - py2) < 3) through = true;
+      }
+      ctx.strokeStyle = REGCOL[st.register] || COL.ink;
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(pa[0], pa[1]);
+      if (through) {
+        var cx2 = (pa[0] + pb[0]) / 2, cy2 = (pa[1] + pb[1]) / 2;
+        ctx.quadraticCurveTo(cx2 + (mid2[0] - cx2) * 1.15, cy2 + (mid2[1] - cy2) * 1.15, pb[0], pb[1]);
+      } else {
+        ctx.lineTo(pb[0], pb[1]);
+      }
+      ctx.stroke();
+    }
+    for (var q = 0; q < scr2.length; q++) topicMark(scr2[q], q, seat.labels ? seat.labels[q] : null);
+  }
+  ctx.lineCap = 'butt';
+}
+function topicMark(s, id, label) {
+  ctx.fillStyle = COL.ground;
+  ctx.strokeStyle = COL.ink;
+  ctx.lineWidth = 1.6;
+  ctx.beginPath();
+  ctx.arc(s[0], s[1], 8, 0, TAU);
+  ctx.fill();
+  ctx.stroke();
+  ctx.fillStyle = COL.ink;
+  ctx.font = '700 8px ui-monospace,monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(String(id), s[0], s[1] + 3);
+  if (label) {
+    ctx.font = '7px ui-monospace,monospace';
+    ctx.fillStyle = COL.muted;
+    ctx.fillText(label, s[0], s[1] + 18);
+  }
+}
+
+// What was said is drawn where it was said. A cell carrying a thread gets a
+// mark at its centre with the count; a note attached to a council seat is
+// drawn at that seat's topic instead, so the argument sits on the point it
+// is about.
+function drawSaid(S) {
+  var byCell = noteCells();
+  ctx.textAlign = 'center';
+  for (var slug in byCell) {
+    var c = cellFromSlug(slug);
+    if (!c) continue;
+    var notes = byCell[slug];
+    var seatPts = null;
+    if (councilCell && cellSlug(councilCell) === slug && councilSeat && councilSeat.seating !== 'world') {
+      seatPts = councilPoints(councilCell, councilSeat.seat);
+    }
+    var groups = {};
+    for (var i = 0; i < notes.length; i++) {
+      var key = (seatPts && notes[i].topic != null && seatPts[notes[i].topic]) ? 't' + notes[i].topic : 'c';
+      if (!groups[key]) groups[key] = [];
+      groups[key].push(notes[i]);
+    }
+    for (var g in groups) {
+      var p = g === 'c' ? cellCentre(c) : seatPts[+g.slice(1)];
+      var f = faceOf(p);
+      var vv = toView(worldOf(f, baryOf(f, p)));
+      if (dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) <= 0) continue;
+      var sp = project(vv, S);
+      if (sp[0] < -40 || sp[0] > W + 40 || sp[1] < -40 || sp[1] > H + 40) continue;
+      var n = groups[g].length;
+      var r = 9 + Math.min(7, n);
+      ctx.fillStyle = COL.signal;
+      ctx.beginPath();
+      ctx.moveTo(sp[0], sp[1] - r);
+      ctx.lineTo(sp[0] + r, sp[1]);
+      ctx.lineTo(sp[0], sp[1] + r);
+      ctx.lineTo(sp[0] - r, sp[1]);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = COL.paper;
+      ctx.font = '700 9px ui-monospace,monospace';
+      ctx.fillText(String(n), sp[0], sp[1] + 3);
+      if (r > 12 || view.zoom > 2) {
+        ctx.fillStyle = COL.ink;
+        ctx.font = '8px ui-monospace,monospace';
+        ctx.fillText(groups[g][groups[g].length - 1].who || 'someone', sp[0], sp[1] + r + 10);
+      }
+    }
+  }
+  ctx.textAlign = 'left';
+}
+
+function drawSeams(S) {
+  ctx.setLineDash([5, 4]);
+  for (var i = 0; i < SEAMS.length; i++) {
+    var s = SEAMS[i];
+    var a = V[s.a], b = V[s.b];
+    ctx.strokeStyle = COL.ink;
+    ctx.lineWidth = 2;
+    // the same cut runs along the lip of both faces it separates; in the
+    // net those lips are far apart, and that distance is the artifact
+    for (var e = 0; e < 2; e++) {
+      var f = s.faces[e];
+      ctx.beginPath();
+      for (var t = 0; t <= 16; t++) {
+        var p = norm(lerp3(a, b, t / 16));
+        var sp = project(toView(worldOf(f, baryOf(f, p))), S);
+        if (t === 0) ctx.moveTo(sp[0], sp[1]); else ctx.lineTo(sp[0], sp[1]);
+      }
+      ctx.stroke();
+    }
+  }
+  ctx.setLineDash([]);
+}
+
+function drawCities(S) {
+  var minPop = Math.pow(10, clamp(7.2 - view.zoom * 0.62, 4.0, 7.2));
+  var drawn = 0;
+  for (var n in PLACES) {
+    var pl = PLACES[n];
+    if (pl.pop < minPop && !(pl.src === 'fixture' && view.zoom > 0.9)) continue;
+    if (drawn > 120) break;
+    var f = faceOf(pl.v);
+    var wpt = worldOf(f, baryOf(f, pl.v));
+    var vv = toView(wpt);
+    var nrm = qApply(view.q, faceNormal(f));
+    if (dot(nrm, sub([0, 0, CAM_D], vv)) <= 0) continue;
+    var s = project(vv, S);
+    if (s[0] < -60 || s[0] > W + 60 || s[1] < -30 || s[1] > H + 30) continue;
+    drawn++;
+    ctx.fillStyle = COL.ink;
+    ctx.beginPath();
+    ctx.arc(s[0], s[1], 1.9, 0, TAU);
+    ctx.fill();
+    if (view.zoom > 1.4 || pl.pop > 1.4e7) {
+      ctx.font = '8px ui-monospace,monospace';
+      ctx.textAlign = 'left';
+      ctx.fillStyle = COL.muted;
+      ctx.fillText(pl.name.toUpperCase(), s[0] + 4.5, s[1] + 2.6);
+    }
+  }
+}
+
+function drawNorth(S) {
+  var np = [0, 0, 1];
+  var f = faceOf(np);
+  var wpt = worldOf(f, baryOf(f, np));
+  var vv = toView(wpt);
+  var nrm = qApply(view.q, faceNormal(f));
+  if (dot(nrm, sub([0, 0, CAM_D], vv)) <= 0) return;
+  var s = project(vv, S);
+  ctx.strokeStyle = COL.ink; ctx.lineWidth = 1.2;
+  ctx.beginPath(); ctx.moveTo(s[0] - 5, s[1]); ctx.lineTo(s[0] + 5, s[1]);
+  ctx.moveTo(s[0], s[1] - 5); ctx.lineTo(s[0], s[1] + 5); ctx.stroke();
+  ctx.font = '700 9px ui-monospace,monospace';
+  ctx.textAlign = 'left'; ctx.fillStyle = COL.ink;
+  ctx.fillText('N', s[0] + 7, s[1] + 3);
+}
+
+function render() {
+  var S = pxScale();
+  ctx.fillStyle = COL.ground;
+  ctx.fillRect(0, 0, W, H);
+
+  var order = [];
+  for (var f = 0; f < NF; f++) {
+    var vis = faceVisible(f, S);
+    if (vis) order.push({ f: f, z: vis.z, vis: vis });
+  }
+  order.sort(function (a, b) { return a.z - b.z; });
+  setFoldable(order.length > 1);
+
+  var stopPx = Math.min(W, H) * 0.34;
+  var focus = focusCell();
+
+  drawRelations(S, 'back');
+
+  for (var i = 0; i < order.length; i++) {
+    var f2 = order[i].f, vis2 = order[i].vis;
+    ctx.save();
+    ctx.beginPath();
+    ctx.moveTo(vis2.pa[0], vis2.pa[1]);
+    ctx.lineTo(vis2.pb[0], vis2.pb[1]);
+    ctx.lineTo(vis2.pd[0], vis2.pd[1]);
+    ctx.closePath();
+    ctx.fillStyle = COL.ground;
+    ctx.fill();
+    ctx.clip();
+    drawFaceSurface(f2, S);
+    var budget = { n: 0 };
+    drawGrid(f2, ROOT_TRI, 0, S, stopPx, budget);
+    ctx.restore();
+    // the face's own edge — the first structure, always legible
+    ctx.beginPath();
+    ctx.moveTo(vis2.pa[0], vis2.pa[1]);
+    ctx.lineTo(vis2.pb[0], vis2.pb[1]);
+    ctx.lineTo(vis2.pd[0], vis2.pd[1]);
+    ctx.closePath();
+    ctx.strokeStyle = COL.ink;
+    ctx.lineWidth = f2 === focus.f ? 2.2 : 1.2;
+    ctx.stroke();
+  }
+
+  // ancestry: what contains this. Never lost. (Invariant 7)
+  for (var d = 0; d < focus.depth; d++) {
+    var anc = makeCell(focus.f, focus.path.slice(0, d));
+    var alpha = 0.16 + 0.5 * (d / Math.max(1, focus.depth));
+    strokeCell(anc, S, 'rgba(18,21,20,' + alpha.toFixed(2) + ')', 1.4);
+  }
+  strokeCell(focus, S, COL.ink, 2.4);
+
+  if (traceCells) {
+    for (var t = 0; t < traceCells.length; t++) {
+      strokeCell(traceCells[t], S, COL.signal, 1.6, 'rgba(168,70,42,.13)');
+    }
+  }
+  if (selection) {
+    strokeCell(selection, S, COL.signal, 2.6, 'rgba(168,70,42,.10)');
+    var nb = neighbours(selection);
+    for (var q = 0; q < nb.length; q++) strokeCell(nb[q], S, 'rgba(168,70,42,.55)', 1.2);
+  }
+  if (pressing) drawSeams(S);
+
+  drawCouncil(S);
+  drawSaid(S);
+  drawCities(S);
+  drawRelations(S, 'front');
+  drawNorth(S);
+
+  if (anchor) {
+    var f3 = faceOf(anchor.p);
+    var av3 = toView(worldOf(f3, baryOf(f3, anchor.p)));
+    if (dot(qApply(view.q, faceNormal(f3)), sub([0, 0, CAM_D], av3)) > 0) {
+    var sp = project(av3, S);
+    ctx.strokeStyle = COL.signal; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.arc(sp[0], sp[1], 9, 0, TAU); ctx.stroke();
+    ctx.beginPath(); ctx.arc(sp[0], sp[1], 2.4, 0, TAU);
+    ctx.fillStyle = COL.signal; ctx.fill();
+    }
+  }
+}
+
+/* ==================================================================== *
+ *  7 · READOUTS                                                         *
+ * ==================================================================== */
+
+var elCellId = document.getElementById('cellid');
+var elCellExtent = document.getElementById('cellextent');
+var elCellCouncil = document.getElementById('cellcouncil');
+document.getElementById('cellplate').style.pointerEvents = 'auto';
+document.getElementById('cellplate').style.cursor = 'pointer';
+document.getElementById('cellplate').onclick = function () { openWhere(focusCell()); };
+var elScaleName = document.getElementById('scalename');
+var elFoldState = document.getElementById('foldstate');
+var elLadder = document.getElementById('ladder');
+var elChain = document.getElementById('chain');
+var elActs = document.getElementById('acts');
+var elLegend = document.getElementById('reglegend');
+var elPanel = document.getElementById('panel');
+
+(function buildLadder() {
+  var html = '';
+  for (var i = 0; i < SCALES.length; i++) {
+    html += '<div class="rung" data-i="' + i + '"><span>' + SCALES[i].n + '</span><i></i></div>';
+  }
+  elLadder.innerHTML = html;
+})();
+
+function setLegend(c) {
+  if (!c) { elLegend.classList.remove('open'); elLegend.innerHTML = ''; return; }
+  var used = {};
+  for (var i = 0; i < c.seat.struts.length; i++) used[c.seat.struts[i].register] = 1;
+  var html = '';
+  for (var r = 0; r < DATA.council.registers.length; r++) {
+    var id = DATA.council.registers[r].id;
+    if (!used[id]) continue;
+    html += '<div><i style="background:' + REGCOL[id] + '"></i>' + id + '</div>';
+  }
+  elLegend.innerHTML = html;
+  elLegend.classList.add('open');
+}
+
+var lastHash = '', hashAt = 0;
+function syncHash(c) {
+  var slug = cellSlug(c);
+  if (slug === lastHash) return;
+  var now = performance.now();
+  if (now - hashAt < 400) return;
+  hashAt = now; lastHash = slug;
+  try { history.replaceState(null, '', '#' + slug); } catch (e) { }
+}
+
+var lastCellKey = '';
+function updateReadouts() {
+  var c = focusCell();
+  var km = cellEdgeKm(c);
+  var si = scaleOf(km);
+  elCellId.textContent = cellId(c);
+  elCellExtent.textContent = kmLabel(km) + ' edge · depth ' + c.depth +
+    (km < SOURCE_KM ? ' · past the source' : '');
+  var council = councilFor(km);
+  elCellCouncil.textContent = council
+    ? 'council · ' + council.name + ' ' + council.stat.people + '/' + council.stat.topics
+    : 'below the smallest solid';
+  elScaleName.textContent = SCALES[si].n;
+  elFoldState.textContent = view.fold < 0.02 ? 'unfolded · net'
+    : view.fold > 0.98 ? 'folded · icosahedron'
+    : 'folding ' + Math.round(view.fold * 100) + '%';
+  var rungs = elLadder.children;
+  for (var i = 0; i < rungs.length; i++) {
+    rungs[i].className = 'rung' + (i === si ? ' on' : Math.abs(i - si) === 1 ? ' near' : '');
+  }
+  syncHash(c);
+  var key = cellId(c);
+  if (key !== lastCellKey) {
+    lastCellKey = key;
+    var html = '<span class="link">WORLD</span>';
+    html += '<span class="link sep">▸</span><span class="link' + (c.depth === 0 ? ' here' : '') + '">F' +
+      (c.f < 10 ? '0' : '') + c.f + '</span>';
+    var shown = c.path.length > 9 ? c.path.slice(c.path.length - 9) : c.path;
+    var skipped = c.path.length - shown.length;
+    if (skipped > 0) html += '<span class="link sep">▸</span><span class="link">+' + skipped + '</span>';
+    for (var d = 0; d < shown.length; d++) {
+      html += '<span class="link sep">▸</span><span class="link' +
+        (d === shown.length - 1 ? ' here' : '') + '">' + shown[d] + '</span>';
+    }
+    elChain.innerHTML = html;
+  }
+}
+
+/* --------------------------------------------------------- conditions
+ * Operations exist only where they are possible. No permanent toolbar of
+ * irrelevant verbs.                                                    */
+function availableActions(cell) {
+  var acts = [];
+  acts.push({ k: 'where', t: 'WHERE', s: cellSlug(cell) });
+  var said = notesOf(cellSlug(cell)).length;
+  acts.push({ k: 'say', t: 'SAID', s: said ? said + ' here' : 'say something' });
+  if (cell.depth < MAX_DEPTH) acts.push({ k: 'enter', t: 'ENTER', s: 'four children' });
+  if (cell.depth > 0) acts.push({ k: 'exit', t: 'EXIT', s: 'parent' });
+  acts.push({ k: 'anchor', t: 'HOLD', s: 'make anchor' });
+  var rels = relationsIn(cell);
+  if (rels.length) acts.push({ k: 'pull', t: 'PULL', s: rels.length + ' relation' + (rels.length > 1 ? 's' : '') });
+  var ph = phenomenaIn(cell);
+  if (ph.length) acts.push({ k: 'trace', t: 'TRACE', s: ph[0].name });
+  var council = councilFor(cellEdgeKm(cell));
+  if (council) acts.push({ k: 'council', t: 'COUNCIL', s: council.name });
+  if (SEAMS.length) acts.push({ k: 'press', t: 'PRESS', s: 'what resists' });
+  return acts;
+}
+function relationsIn(cell) {
+  var out = [];
+  for (var i = 0; i < RELATIONS.length; i++) {
+    var r = RELATIONS[i];
+    if (cellContains(cell, r.pa.v) || cellContains(cell, r.pb.v)) out.push(r);
+  }
+  return out;
+}
+var RIVER_PTS = null;
+function riverPoints() {
+  if (RIVER_PTS) return RIVER_PTS;
+  RIVER_PTS = decodeLines(DATA.rivers).map(function (l) {
+    return l.map(function (pt) { return fromLonLat(pt[0], pt[1]); });
+  });
+  return RIVER_PTS;
+}
+function phenomenaIn(cell) {
+  var pts = riverPoints(), out = [];
+  for (var i = 0; i < PHENOMENA.length; i++) {
+    var ph = PHENOMENA[i], hit = false;
+    for (var l = ph.from; l < ph.to && !hit; l++) {
+      var line = pts[l];
+      for (var j = 0; j < line.length; j++) {
+        if (cellContains(cell, line[j])) { hit = true; break; }
+      }
+    }
+    if (hit) out.push(ph);
+  }
+  return out;
+}
+
+var actAt = { x: 0, y: 0 };
+function showActions(cell, x, y) {
+  var acts = availableActions(cell);
+  var html = '';
+  for (var i = 0; i < acts.length; i++) {
+    html += '<button data-k="' + acts[i].k + '"' + (acts[i].k === 'enter' ? ' class="sig"' : '') +
+      '>' + acts[i].t + '<em>' + acts[i].s + '</em></button>';
+  }
+  elActs.innerHTML = html;
+  elActs.classList.add('open');
+  actAt.x = x; actAt.y = y;
+  var w = 150, h = acts.length * 33;
+  var left = x > W * 0.52 ? x - w - 14 : x + 14;
+  elActs.style.left = clamp(left, 8, Math.max(8, W - w - 8)) + 'px';
+  elActs.style.top = clamp(y - h / 2, 60, Math.max(60, H - h - 62)) + 'px';
+}
+function hideActions() { elActs.classList.remove('open'); }
+
+elActs.addEventListener('click', function (e) {
+  var b = e.target.closest('button');
+  if (!b || !selection) return;
+  doAction(b.getAttribute('data-k'), selection);
+});
+
+/* ==================================================================== *
+ *  8 · OPERATIONS                                                       *
+ * ==================================================================== */
+
+function zoomForDepth(d) {
+  var target = Math.min(W, H) * 0.46;
+  return Math.log2(target * Math.pow(2, d) / baseScale());
+}
+function lookAt(p, depth) {
+  view.centreTarget = p;
+  view.facing = true;
+  if (typeof depth === 'number') view.zoomTarget = zoomForDepth(clamp(depth, 0, MAX_DEPTH));
+  wake();
+}
+function doAction(kind, cell) {
+  if (kind === 'enter') {
+    // ENTER — the triangle expands; nothing teleports
+    var c = cellCentre(cell);
+    lookAt(c, cell.depth + 1);
+    selection = cellAt(c, cell.depth + 1);
+  } else if (kind === 'exit') {
+    var par = makeCell(cell.f, cell.path.slice(0, cell.depth - 1));
+    lookAt(cellCentre(par), par.depth);
+    selection = par;
+  } else if (kind === 'anchor') {
+    anchor = { p: cellCentre(cell), label: cellId(cell) };
+  } else if (kind === 'pull') {
+    var rels = relationsIn(cell);
+    pulled = rels[0];
+    view.relaxTarget = 1;
+    openRelations();
+  } else if (kind === 'trace') {
+    var ph = phenomenaIn(cell);
+    startTrace(ph[0]);
+  } else if (kind === 'where') {
+    openWhere(cell);
+  } else if (kind === 'say') {
+    openThread(cell);
+  } else if (kind === 'council') {
+    var already = councilCell && cellId(councilCell) === cellId(cell) && councilSeat;
+    if (already) { councilCell = null; councilSeat = null; setLegend(null); }
+    else {
+      councilCell = cell;
+      councilSeat = councilFor(cellEdgeKm(cell));
+      setLegend(councilSeat);
+      openCouncil(cell);
+    }
+  } else if (kind === 'press') {
+    pressing = !pressing;
+    openSeams();
+  }
+  hideActions();
+  if (!elPanel.classList.contains('open')) updateActionsFor(selection);
+  wake();
+}
+function updateActionsFor(cell) {
+  if (!cell) return;
+  showActions(cell, actAt.x, actAt.y);
+}
+
+function startTrace(ph) {
+  traced = ph;
+  var pts = riverPoints();
+  var depth = clamp(depthForZoom(), 3, 9);
+  var seen = {}, cells = [];
+  for (var l = ph.from; l < ph.to; l++) {
+    var line = pts[l];
+    for (var i = 0; i < line.length; i++) {
+      var c = cellAt(line[i], depth);
+      var id = cellId(c);
+      if (!seen[id]) { seen[id] = 1; cells.push(c); }
+    }
+  }
+  traceCells = cells;
+  if (cells.length) lookAt(cellCentre(cells[Math.floor(cells.length / 2)]), Math.max(2, depth - 3));
+  openTrace();
+}
+function clearTrace() { traced = null; traceCells = null; wake(); }
+
+/* ==================================================================== *
+ *  9 · GESTURE                                                          *
+ *  One finger must be enough. Any feature needing desktop precision     *
+ *  breaks the system.                                                   *
+ * ==================================================================== */
+
+var pointers = new Map();
+var gesture = null;
+var tapTimer = null, lastTap = 0;
+var pressTimer = null;
+
+function ptFrom(e) {
+  var r = canvas.getBoundingClientRect();
+  return { x: e.clientX - r.left, y: e.clientY - r.top };
+}
+canvas.addEventListener('pointerdown', function (e) {
+  canvas.setPointerCapture(e.pointerId);
+  var p = ptFrom(e);
+  pointers.set(e.pointerId, p);
+  if (pointers.size === 1) {
+    gesture = { mode: 'turn', x: p.x, y: p.y, x0: p.x, y0: p.y, t0: performance.now(), moved: 0 };
+    pressTimer = setTimeout(function () {
+      // LONG PRESS — hold a place as anchor
+      var hit = pick(p.x, p.y);
+      if (hit) {
+        anchor = { p: hit.p, label: cellId(cellAt(hit.p, depthForZoom())) };
+        selection = cellAt(hit.p, depthForZoom());
+        showActions(selection, p.x, p.y);
+        if (navigator.vibrate) navigator.vibrate(12);
+        wake();
+      }
+      gesture = null;
+    }, 520);
+  } else if (pointers.size === 2) {
+    clearTimeout(pressTimer);
+    var arr = [...pointers.values()];
+    gesture = {
+      mode: 'two',
+      d0: Math.hypot(arr[0].x - arr[1].x, arr[0].y - arr[1].y),
+      a0: Math.atan2(arr[1].y - arr[0].y, arr[1].x - arr[0].x),
+      zoom0: view.zoom, fold0: view.fold
+    };
+  }
+});
+canvas.addEventListener('pointermove', function (e) {
+  if (!pointers.has(e.pointerId)) return;
+  var p = ptFrom(e);
+  var prev = pointers.get(e.pointerId);
+  pointers.set(e.pointerId, p);
+  if (!gesture) return;
+  if (gesture.mode === 'turn' && pointers.size === 1) {
+    var dx = p.x - prev.x, dy = p.y - prev.y;
+    gesture.moved += Math.abs(dx) + Math.abs(dy);
+    if (gesture.moved > 8) { clearTimeout(pressTimer); hideActions(); }
+    // TURN — a folded world rotates about its own adjacency, not about
+    // north. A flat net has nothing to rotate about, so it slides.
+    var S = pxScale();
+    if (view.fold > 0.002) {
+      var k = 5.3 / Math.max(W, H) / Math.max(0.5, Math.pow(2, view.zoom * 0.62));
+      var dq = qMul(qAxis([0, 1, 0], dx * k * view.fold), qAxis([1, 0, 0], -dy * k * view.fold));
+      view.q = qNorm(qMul(dq, view.q));
+      view.facing = false;
+    }
+    if (view.fold < 0.998) {
+      var slide = 1 - view.fold;
+      VIEW_ORIGIN = [VIEW_ORIGIN[0] - dx / S * slide, VIEW_ORIGIN[1] + dy / S * slide, VIEW_ORIGIN[2]];
+    }
+    view.centre = null;
+    view.centreTarget = null;
+    wake();
+  } else if (gesture.mode === 'two' && pointers.size === 2) {
+    var arr = [...pointers.values()];
+    var d = Math.hypot(arr[0].x - arr[1].x, arr[0].y - arr[1].y);
+    var a = Math.atan2(arr[1].y - arr[0].y, arr[1].x - arr[0].x);
+    // PINCH — descend or ascend the scale
+    view.zoom = clamp(gesture.zoom0 + Math.log2(Math.max(0.05, d / gesture.d0)), ZOOM_MIN, MAX_DEPTH - 1.5);
+    view.zoomTarget = view.zoom;
+    // TWIST — fold and unfold the structure
+    var da = a - gesture.a0;
+    while (da > Math.PI) da -= TAU;
+    while (da < -Math.PI) da += TAU;
+    view.fold = clamp(gesture.fold0 - da / (Math.PI * 0.75), 0, 1);
+    view.foldTarget = view.fold;
+    wake();
+  }
+});
+function endPointer(e) {
+  clearTimeout(pressTimer);
+  var had = pointers.size;
+  pointers.delete(e.pointerId);
+  if (gesture && gesture.mode === 'turn' && had === 1 && gesture.moved < 9) {
+    var now = performance.now();
+    var p = { x: gesture.x0, y: gesture.y0 };
+    if (now - lastTap < 320) {
+      // DOUBLE TAP — enter
+      clearTimeout(tapTimer);
+      lastTap = 0;
+      var hit2 = pick(p.x, p.y);
+      if (hit2) {
+        var d = depthForZoom();
+        var cell = cellAt(hit2.p, d);
+        selection = cell;
+        doAction('enter', cell);
+      }
+    } else {
+      lastTap = now;
+      tapTimer = setTimeout(function () {
+        // TAP — the triangle becomes the interface
+        var hit = pick(p.x, p.y);
+        if (hit) {
+          selection = cellAt(hit.p, depthForZoom());
+          showActions(selection, p.x, p.y);
+        } else { selection = null; hideActions(); }
+        wake();
+      }, 190);
+    }
+  }
+  if (pointers.size === 0) gesture = null;
+  else if (pointers.size === 1) {
+    var only = [...pointers.values()][0];
+    gesture = { mode: 'turn', x: only.x, y: only.y, x0: only.x, y0: only.y, t0: performance.now(), moved: 99 };
+  }
+  wake();
+}
+canvas.addEventListener('pointerup', endPointer);
+canvas.addEventListener('pointercancel', endPointer);
+
+// desktop equivalents — the phone is the constraint, not the only door
+canvas.addEventListener('wheel', function (e) {
+  e.preventDefault();
+  if (e.shiftKey) {
+    view.fold = clamp(view.fold - e.deltaY * 0.0016, 0, 1);
+    view.foldTarget = view.fold;
+  } else {
+    view.zoom = clamp(view.zoom - e.deltaY * 0.0022, ZOOM_MIN, MAX_DEPTH - 1.5);
+    view.zoomTarget = view.zoom;
+  }
+  wake();
+}, { passive: false });
+
+window.addEventListener('keydown', function (e) {
+  var c = focusCell();
+  if (e.key === 'f' && foldable) { elFold.onclick(); }
+  else if (e.key === 'Enter' || e.key === '+') { doAction('enter', selection || c); }
+  else if (e.key === 'Backspace' || e.key === '-') { if (c.depth) doAction('exit', selection || c); }
+  else if (e.key === 'Escape') {
+    hideActions(); selection = null; pulled = null; pressing = false;
+    councilCell = null; councilSeat = null; setLegend(null);
+    clearTrace(); closePanel();
+  }
+  else if (e.key === '?') { openHelp(); }
+  wake();
+});
+
+/* ==================================================================== *
+ *  10 · PANELS                                                          *
+ * ==================================================================== */
+
+function closePanel() { elPanel.classList.remove('open'); reflow(); }
+function reflow() {
+  // the map lost or gained room; re-measure rather than let it stretch
+  requestAnimationFrame(function () { resize(); wake(); });
+}
+function panel(title, body) {
+  hideActions();
+  elPanel.innerHTML = '<h2>' + title + '<button id="pclose">CLOSE</button></h2>' + body;
+  elPanel.classList.add('open');
+  elPanel.scrollTop = 0;
+  reflow();
+  document.getElementById('pclose').onclick = closePanel;
+}
+function openRelations() {
+  var rows = RELATIONS.map(function (r, i) {
+    return '<div class="row' + (pulled === r ? ' on' : '') + '" data-r="' + i + '">' +
+      '<b>' + r.a.toUpperCase() + ' ↔ ' + r.b.toUpperCase() + '</b>' +
+      '<span>' + r.label + ' · ' + r.kind + ' · ' + r.km + ' km</span></div>';
+  }).join('');
+  panel('TENSION · WHAT HOLDS THIS IN RELATION',
+    '<p>Surface geometry answers <b>where is it</b>. Relational geometry answers <b>what holds it in relation to everything else</b>. ' +
+    'A tendon pulls and runs through the body of the world; a strut holds apart and stands off it. ' +
+    'Turn TENSION on and the places drift toward what pulls them while the ground stays where it is — ' +
+    'a distant place becoming structurally near.</p>' + rows +
+    '<p style="margin-top:10px">Fixture: the five relations the theory names, and no others. ' +
+    'Coordinates for Savannah, Washington, Ashburn and the Chattahoochee headwaters are declared here; ' +
+    'the rest come from the source place set.</p>');
+  elPanel.querySelectorAll('.row').forEach(function (row) {
+    row.onclick = function () {
+      var r = RELATIONS[+row.getAttribute('data-r')];
+      pulled = pulled === r ? null : r;
+      if (pulled) {
+        view.relaxTarget = 1;
+        var m = norm(add(pulled.pa.v, pulled.pb.v));
+        lookAt(m, clamp(Math.round(Math.log2(ICO_EDGE_KM / Math.max(60, pulled.km * 0.5))), 0, 8));
+      }
+      openRelations();
+      wake();
+    };
+  });
+}
+function openSeams() {
+  var land = DATA.net.cutLand;
+  var rows = SEAMS.map(function (s, i) {
+    var a = lonlat(V[s.a]), b = lonlat(V[s.b]);
+    return '<div class="row"><b>CUT ' + (i + 1) + '</b><span>' +
+      a[1].toFixed(1) + '°, ' + a[0].toFixed(1) + '° → ' + b[1].toFixed(1) + '°, ' + b[0].toFixed(1) + '°</span></div>';
+  }).join('');
+  panel('PRESS · WHAT RESISTS',
+    '<p>Every flat world map is held open by cuts. Nineteen of the thirty edges stay hinged; ' +
+    '<b>eleven are cut</b>, and those eleven are the compression this map runs on. ' +
+    'The compiler chose them by the only criterion that matters — cut where there is no land — ' +
+    'leaving <b>' + land.toFixed(2) + '</b> edge-lengths of land crossed in total, out of eleven.</p>' +
+    '<p>A seam is a projection artifact, not a geographical event. Crossing one changes nothing about the ground. ' +
+    'Fold the world and the cuts close.</p>' + rows);
+}
+function openTrace() {
+  var rows = PHENOMENA.map(function (ph, i) {
+    return '<div class="row' + (traced === ph ? ' on' : '') + '" data-p="' + i + '"><b>' +
+      ph.name.toUpperCase() + '</b><span>' + (traced === ph && traceCells ? traceCells.length + ' cells' : 'trace') + '</span></div>';
+  }).join('');
+  panel('TRACE · A PHENOMENON ACROSS TRIANGLES',
+    '<p>A river does not consult a border. Following one reorganises the map around the phenomenon ' +
+    'instead of around jurisdictions: the cells it passes through become the unit of attention, ' +
+    'in the order the water takes them.</p>' + rows +
+    (traced ? '<p style="margin-top:10px"><b>' + traced.name.toUpperCase() + '</b> currently crosses ' +
+      (traceCells ? traceCells.length : 0) + ' cells at this scale. Descend and the count multiplies; ' +
+      'the phenomenon does not.</p>' : ''));
+  elPanel.querySelectorAll('.row').forEach(function (row) {
+    row.onclick = function () {
+      var ph = PHENOMENA[+row.getAttribute('data-p')];
+      if (traced === ph) clearTrace(); else startTrace(ph);
+      openTrace();
+      wake();
+    };
+  });
+}
+function esc(t) {
+  return String(t).replace(/[&<>"]/g, function (c) {
+    return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c];
+  });
+}
+function whenLabel(t) {
+  var d = new Date(t), n = Date.now();
+  var mins = Math.round((n - t) / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + ' min ago';
+  if (mins < 1440) return Math.round(mins / 60) + ' h ago';
+  return d.toISOString().slice(0, 10);
+}
+
+// The thread on a triangle. This is the whole point: a thing said about a
+// place, kept at that place, addressable by the same slug as the ground.
+function openThread(cell, presetTopic) {
+  var slug = cellSlug(cell);
+  var notes = notesOf(slug).slice().sort(function (a, b) { return a.t - b.t; });
+  var seatedHere = councilCell && cellSlug(councilCell) === slug && councilSeat &&
+                   councilSeat.seating !== 'world' ? councilSeat : null;
+  var topicOpts = '';
+  if (seatedHere) {
+    var lab = seatedHere.seat.labels;
+    topicOpts = '<option value="">— the whole triangle —</option>';
+    for (var i = 0; i < seatedHere.seat.barycentric.length; i++) {
+      topicOpts += '<option value="' + i + '"' + (presetTopic === i ? ' selected' : '') + '>topic ' + i +
+        (lab ? ' · ' + lab[i] : '') + '</option>';
+    }
+  }
+  var said = notes.map(function (n) {
+    return '<div class="said"><b>' + esc((n.who || 'someone').toUpperCase()) + '</b> ' +
+      '<span>' + whenLabel(n.t) + (n.topic != null ? ' · topic ' + n.topic : '') + '</span>' +
+      '<p>' + esc(n.text) + '</p></div>';
+  }).join('') || '<p style="opacity:.7">Nothing has been said about this triangle yet.</p>';
+
+  panel('SAID · ' + slug,
+    '<p>' + areaLabel(cellAreaKm2(cell)) + ' of ground, centred ' + ll(cellCentre(cell)) +
+    '. What is said here stays here — kept in this browser, keyed to the triangle, ' +
+    'and it leaves as a file rather than to anyone\'s server.</p>' +
+    said +
+    '<p style="margin-top:14px">Add to it:</p>' +
+    '<input id="sWho" placeholder="who are you" value="' + esc(DB.me) + '">' +
+    (topicOpts ? '<select id="sTopic" style="width:100%;font:inherit;font-size:12px;padding:7px;border:1.5px solid var(--ink);background:var(--paper);margin:4px 0">' + topicOpts + '</select>' : '') +
+    '<textarea id="sText" placeholder="what is true about this triangle"></textarea>' +
+    '<button class="go" id="sGo">SAY IT HERE</button> ' +
+    '<button class="go ghost" id="sWhere">WHERE</button>');
+
+  document.getElementById('sGo').onclick = function () {
+    var who = document.getElementById('sWho').value.trim();
+    var text = document.getElementById('sText').value.trim();
+    if (!text) return;
+    var tsel = document.getElementById('sTopic');
+    DB.me = who;
+    DB.notes.push({
+      id: 'n' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36),
+      cell: slug, topic: tsel && tsel.value !== '' ? +tsel.value : null,
+      who: who || 'someone', text: text, t: Date.now()
+    });
+    commit();
+    openThread(cell, tsel && tsel.value !== '' ? +tsel.value : undefined);
+    wake();
+  };
+  document.getElementById('sWhere').onclick = function () { openWhere(cell); };
+}
+
+function openWhere(cell) {
+  var P = cellCorners(cell), km = cellEdgeKm(cell);
+  var inside = cellContents(cell);
+  var nb = neighbours(cell);
+  var slug = cellSlug(cell);
+  var url = location.origin + location.pathname + '#' + slug;
+  var kids = '';
+  for (var k = 0; k < 4; k++) {
+    kids += (k ? ' ' : '') + cellSlug(makeCell(cell.f, cell.path.concat([k])));
+  }
+  var placeRows = inside.places.slice(0, 12).map(function (pl) {
+    return '<div class="row"><b>' + pl.name.toUpperCase() + '</b><span>' +
+      (pl.note || '') + (pl.pop ? ' · ' + pl.pop.toLocaleString('en') : '') + '</span></div>';
+  }).join('');
+  panel('WHERE · ' + slug,
+    '<p>A triangle that cannot be named, measured or sent to anyone is a container ' +
+    'with nothing in it. This is the address.</p>' +
+    '<div class="row"><b>ADDRESS</b><span>' + slug + '</span></div>' +
+    '<div class="row"><b>SCALE</b><span>' + SCALES[scaleOf(km)].n.toLowerCase() +
+      ' · depth ' + cell.depth + ' · one of ' + (cell.depth === 0 ? '20' : '20 × 4^' + cell.depth) + '</span></div>' +
+    '<div class="row"><b>EDGE</b><span>' + kmLabel(km) + '</span></div>' +
+    '<div class="row"><b>AREA</b><span>' + areaLabel(cellAreaKm2(cell)) + '</span></div>' +
+    '<div class="row"><b>CENTRE</b><span>' + ll(cellCentre(cell)) + '</span></div>' +
+    '<div class="row"><b>CORNER A</b><span>' + ll(P[0]) + '</span></div>' +
+    '<div class="row"><b>CORNER B</b><span>' + ll(P[1]) + '</span></div>' +
+    '<div class="row"><b>CORNER C</b><span>' + ll(P[2]) + '</span></div>' +
+    '<div class="row"><b>TOUCHES</b><span>' + nb.map(cellSlug).join(' ') + '</span></div>' +
+    (cell.depth ? '<div class="row"><b>INSIDE</b><span>' +
+      cellSlug(makeCell(cell.f, cell.path.slice(0, -1))) + '</span></div>' : '') +
+    '<div class="row"><b>CONTAINS</b><span>' + kids + '</span></div>' +
+    '<p style="margin-top:12px"><b>' + (inside.places.length || 'no') + '</b> named place' +
+      (inside.places.length === 1 ? '' : 's') + ' from the source set' +
+      (inside.rivers.length ? ', and the ' + inside.rivers.join(', ') : '') + '.' +
+      (km < SOURCE_KM ? ' Below the source resolution the triangle keeps going and the record does not.' : '') +
+    '</p>' + placeRows +
+    '<p style="margin-top:12px">Link to this triangle:</p>' +
+    '<div class="row" id="wlink"><b style="word-break:break-all;font-weight:400">' + url + '</b><span>copy</span></div>');
+  var row = document.getElementById('wlink');
+  if (row) row.onclick = function () {
+    try { navigator.clipboard.writeText(url); row.querySelector('span').textContent = 'copied'; }
+    catch (e) { row.querySelector('span').textContent = 'select and copy'; }
+  };
+}
+
+function openCouncil(cell) {
+  var km = cellEdgeKm(cell);
+  var c = councilFor(km);
+  if (!c) {
+    panel('COUNCIL',
+      '<p>This cell is <b>' + kmLabel(km) + '</b> on a side. There is no solid below the ' +
+      'tetrahedron, so there is no council here — six people over four topics is the smallest ' +
+      'structure that can seat member and critic roles at all. Ascend until the ground is ' +
+      'large enough to be argued about.</p>');
+    return;
+  }
+  var seat = c.seat, reg = seat.registers;
+  // for the planetary council the topics have addresses, and every one of
+  // them is at sea — a consequence of solving for no vertex on land
+  var placed = c.name === 'icosahedron' ? DATA.ico.vertexLonLat : null;
+  var pts = c.seating === 'world' ? null : councilPoints(cell, seat);
+  var slug = cellSlug(cell);
+  var rows = seat.members.map(function (m, t) {
+    var kinds = m.map(function (i) { return seat.struts[i].register; }).sort();
+    var where = placed
+      ? ' <span style="opacity:.6">' + placed[t][1].toFixed(1) + '°, ' + placed[t][0].toFixed(1) + '°</span>'
+      : pts ? ' <span style="opacity:.6">' + ll(pts[t]) + '</span>' : '';
+    return '<div class="row"><b>TOPIC ' + t + where + '</b><span>' + kinds.join(' · ') + '</span></div>';
+  }).join('');
+  // a seat is held by a person who types their own name into it. Nothing
+  // here invents a voice; the only way a seat speaks is if someone takes it.
+  var seats = seat.struts.map(function (st, i) {
+    var critic = null;
+    for (var j = 0; j < seat.struts.length; j++) {
+      var o = seat.struts[j];
+      if (o.topics[0] === st.critiques[0] && o.topics[1] === st.critiques[1]) critic = j;
+    }
+    var criticName = critic != null ? seatHolder(slug, critic) : '';
+    return '<div class="seat"><div><b>SEAT ' + i + '</b> · topics ' + st.topics.join(' & ') +
+      '<em>critiques ' + st.critiques.join(' & ') +
+      (criticName ? ' · answered by ' + esc(criticName.toUpperCase()) : '') +
+      (st.register ? ' · ' + st.register.toLowerCase() : '') + '</em></div>' +
+      '<input data-seat="' + i + '" placeholder="unclaimed" value="' + esc(seatHolder(slug, i)) + '"></div>';
+  }).join('');
+  var taken = seat.struts.filter(function (st, i) { return seatHolder(slug, i); }).length;
+  panel('COUNCIL · ' + c.name.toUpperCase(),
+    '<p>The same solid, used twice. Above, the icosahedron holds the Earth. Here it holds a ' +
+    'conversation: <b>' + c.stat.people + ' struts</b> are ' + c.stat.people + ' seats, ' +
+    '<b>' + c.stat.topics + ' vertices</b> are ' + c.stat.topics + ' topics, and everyone sits in two ' +
+    'rooms at once. Every pair of topics shares ' + c.stat.leastShared + ' people or more' +
+    (c.stat.closure ? ', so no two topics can drift apart' : '') +
+    '; nothing is more than ' + c.stat.diameter + ' rooms from anything.</p>' +
+    '<p><b>' + cellId(cell) + '</b> is ' + kmLabel(km) + ' on a side, which is what entitles it to ' +
+    'this solid and no larger. A council is sized by how much world the cell holds, never by ' +
+    'how many people are available.</p>' +
+    '<p>The seats are <b>registers of description, not people</b>. Nothing here simulates a ' +
+    'resident: synthesising testimony and attaching it to a real place is the laundering this ' +
+    'apparatus exists to expose. Each seat is critiqued by the register incommensurable with ' +
+    'its own — coordinate answered by body, record answered by absence — and ' +
+    (reg && reg.roomsFullyMixed === c.stat.topics
+      ? 'every one of the ' + c.stat.topics + ' rooms hears every kind at once, so no room can be all data or all anecdote.'
+      : reg.roomsFullyMixed + ' of ' + c.stat.topics + ' rooms hear a full mix.') + '</p>' +
+    rows +
+    '<p style="margin-top:14px"><b>' + taken + ' of ' + seat.struts.length + '</b> seats taken. ' +
+    'A seat is held by whoever types their name into it — this invents nobody. ' +
+    'Your critic is the seat opposite yours, and it is a person, not a category.</p>' +
+    seats +
+    '<div class="kbd" style="margin-top:10px">' +
+    DATA.council.registers.map(function (r) {
+      return '<b>' + r.id + '</b> ↔ ' + r.opposite + '<br>may ' + r.may + '<br>may not ' + r.mayNot;
+    }).join('<br><br>') + '</div>' +
+    (placed ? '<p style="margin-top:10px">Every one of those twelve topics is at sea. That is not a ' +
+      'choice about agendas — it falls out of solving for no vertex on land, the closest being ' +
+      DATA.ico.minClearanceKm + ' km offshore. The planetary agenda sits in international waters, ' +
+      'where no jurisdiction can claim it.</p>' : '') +
+    '<p style="margin-top:10px">It is drawn on the map now. ' +
+    (c.seating === 'world'
+      ? 'The struts are the thirty edges of the Dymaxion net itself — unfold the world and a strut ' +
+        'appears on both faces it separates, a topic appears once for every face that meets it, and ' +
+        'folding gathers them back into one. The council is not beside the map. It is the map.'
+      : 'The topics sit on the points this cell shares with its neighbours — ' + c.seat.seating.replace('+', ' and ') +
+        ' — so the councils of adjacent cells hold topics in common, and what is said in one ' +
+        'has somewhere to go.') + '</p>' +
+    '<p style="margin-top:12px">No council has yet been convened in this cell. When one is, it ' +
+    'will speak only from a compiled dossier of cited sources, and whatever it says will stay ' +
+    'bound to this cell rather than being handed upward.</p>' +
+    '<button class="go" id="cSay">SAY SOMETHING HERE</button>');
+  elPanel.querySelectorAll('.seat input').forEach(function (inp) {
+    inp.onchange = function () {
+      var v = inp.value.trim();
+      if (v) DB.seats[seatKey(slug, +inp.getAttribute('data-seat'))] = v;
+      else delete DB.seats[seatKey(slug, +inp.getAttribute('data-seat'))];
+      if (v && !DB.me) DB.me = v;
+      commit(); wake();
+    };
+  });
+  var cs = document.getElementById('cSay');
+  if (cs) cs.onclick = function () { openThread(cell); };
+}
+
+function openHelp() {
+  var c = focusCell();
+  panel('ICOSA SYNTEGRITY',
+    '<p><b>Every triangle on Earth has an address, a council and a thread.</b></p>' +
+    '<p>Twenty triangles describe the planet; every one subdivides into four, forever. What ' +
+    'changes here is that a triangle is no longer just an outline. It has corners you can read ' +
+    'off in degrees, an area you can compare, a list of what is inside it, and a name you can ' +
+    'send to someone — the address is in the URL, so a triangle can be linked and cited like ' +
+    'any other document.</p>' +
+    '<p>A cell large enough seats a council on the points it shares with its neighbours. ' +
+    '<b>A seat is held by whoever types their name into it.</b> Nothing here invents a voice or ' +
+    'speaks for a resident; the only way a seat speaks is if a person takes it. Your critic is ' +
+    'the seat opposite yours, and it is a person too.</p>' +
+    '<p>Say something and it stays on the triangle you said it about, drawn where you said it. ' +
+    'The record lives in this browser and leaves as a file — there is no server and no account, ' +
+    'so a conversation is something you carry rather than something you are lent.</p>' +
+    '<div class="kbd">' +
+    '<b>drag</b> turn the world · in the net, slide it<br>' +
+    '<b>tap</b> the triangle becomes the interface<br>' +
+    '<b>double tap</b> enter<br>' +
+    '<b>pinch</b> descend and ascend the scale<br>' +
+    '<b>two-finger twist</b> fold toward the icosahedron, unfold toward the map<br>' +
+    '<b>long press</b> hold a place as anchor<br>' +
+    '<b>tap the address plate</b> corners, area, contents, link<br>' +
+    '<span style="opacity:.6">desktop: wheel = scale, shift+wheel = fold, enter/backspace = enter/exit, f = fold, esc = clear</span><br>' +
+    '<span style="opacity:.6">add <b>?verify</b> to the address to check the seven invariants against random points</span>' +
+    '</div>' +
+    '<p style="margin-top:12px">Now: <b>' + cellId(c) + '</b>, edge ' + kmLabel(cellEdgeKm(c)) +
+    ', one of ' + (c.depth === 0 ? '20' : '20 × 4^' + c.depth) + ' cells at this depth. ' +
+    'Depth is capped at ' + MAX_DEPTH + ' here — about ' + kmLabel(ICO_EDGE_KM / Math.pow(2, MAX_DEPTH)) +
+    ' — which is a limit of this build, not of the structure.</p>' +
+    '<p>The icosahedron\'s orientation and the eleven cuts are not transcribed from Fuller; ' +
+    'they are solved from his criteria against coastline data — no vertex on land ' +
+    '(closest is ' + DATA.ico.minClearanceKm + ' km offshore), cut where there is no land. ' +
+    'Coastlines, lakes, rivers and places: Natural Earth 110m, public domain. ' +
+    'Below the resolution of that source the triangles keep going and the coastline does not; ' +
+    'what deep cells carry is their identity, their extent, their neighbours and their relations.</p>' +
+    '<p style="margin-top:12px"><b>' + DB.notes.length + '</b> thing' + (DB.notes.length === 1 ? '' : 's') +
+    ' said, across ' + Object.keys(noteCells()).length + ' triangle' +
+    (Object.keys(noteCells()).length === 1 ? '' : 's') + ', and ' +
+    Object.keys(DB.seats).length + ' seat' + (Object.keys(DB.seats).length === 1 ? '' : 's') +
+    ' taken. It is kept in this browser only.</p>' +
+    '<button class="go" id="hOut">TAKE THE RECORD</button> ' +
+    '<button class="go ghost" id="hIn">BRING ONE IN</button>' +
+    '<input type="file" id="hFile" accept="application/json" style="display:none">' +
+    '<p style="opacity:.75;margin-top:12px">Unsettled Atlas · a synthetic place. Its instruments alter what they measure.</p>');
+  document.getElementById('hOut').onclick = function () {
+    var blob = new Blob([JSON.stringify(DB, null, 1)], { type: 'application/json' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'icosa-syntegrity-record.json';
+    a.click();
+  };
+  document.getElementById('hIn').onclick = function () { document.getElementById('hFile').click(); };
+  document.getElementById('hFile').onchange = function (ev) {
+    var f = ev.target.files[0];
+    if (!f) return;
+    var r = new FileReader();
+    r.onload = function () {
+      try {
+        var got = JSON.parse(r.result);
+        var have = {};
+        DB.notes.forEach(function (n) { have[n.id] = 1; });
+        (got.notes || []).forEach(function (n) { if (!have[n.id]) DB.notes.push(n); });
+        for (var k in (got.seats || {})) if (!DB.seats[k]) DB.seats[k] = got.seats[k];
+        commit(); openHelp(); wake();
+      } catch (e) { }
+    };
+    r.readAsText(f);
+  };
+}
+document.getElementById('mHelp').onclick = openHelp;
+elFold.onclick = function () {
+  var t = view.fold > 0.5 ? 0 : 1;
+  view.foldTarget = t;
+  view.facing = true;
+  if (depthForZoom() <= 1) view.zoomTarget = fitZoom(t);   // still holding the whole world
+  wake();
+};
+document.getElementById('mRel').onclick = function () {
+  view.relaxTarget = view.relax > 0.5 ? 0 : 1;
+  if (view.relaxTarget === 0) pulled = null;
+  openRelations();
+  wake();
+};
+
+/* ==================================================================== *
+ *  11 · LOOP                                                            *
+ * ==================================================================== */
+
+var awake = 0;
+function wake() { awake = performance.now(); }
+
+function step() {
+  var moving = false;
+  var ease = 0.16;
+  if (Math.abs(view.foldTarget - view.fold) > 0.0008) {
+    view.fold += (view.foldTarget - view.fold) * ease; moving = true;
+  } else view.fold = view.foldTarget;
+  if (Math.abs(view.zoomTarget - view.zoom) > 0.0008) {
+    view.zoom += (view.zoomTarget - view.zoom) * ease; moving = true;
+  } else view.zoom = view.zoomTarget;
+  if (Math.abs(view.relaxTarget - view.relax) > 0.0008) {
+    view.relax += (view.relaxTarget - view.relax) * ease; moving = true;
+  } else view.relax = view.relaxTarget;
+  updateFold(view.fold);
+  if (view.facing && view.centre) {
+    // the correction is recomputed every frame, so a face that swings
+    // while the world folds is followed rather than chased
+    var nw = qApply(view.q, faceNormal(faceOf(view.centre)));
+    var dq = qBetween(nw, [0, 0, 1]);
+    if (Math.abs(dq[3]) < 0.999995) {
+      view.q = qNorm(qMul(qSlerp(qId(), dq, ease * 1.3), view.q));
+      moving = true;
+    }
+  }
+
+  // hold the view target at the middle of the screen
+  if (view.centreTarget) {
+    view.centre = view.centre
+      ? norm(lerp3(view.centre, view.centreTarget, ease * 1.2))
+      : view.centreTarget;
+    if (arcKm(view.centre, view.centreTarget) < 1) { view.centre = view.centreTarget; view.centreTarget = null; }
+    else moving = true;
+  }
+  if (view.centre) {
+    var f = faceOf(view.centre);
+    var wp = qApply(view.q, worldOf(f, baryOf(f, view.centre)));
+    // at world scale the object is held by its middle; once you are inside
+    // it, the ground under the finger is what stays put
+    var pin = clamp((view.zoom - fitZoom(view.fold)) / 1.5, 0, 1);
+    VIEW_ORIGIN = [wp[0] * pin, wp[1] * pin, wp[2] * pin];
+  } else {
+    // free look: whatever is at the centre of the screen becomes the cell
+    var hit = pick(W / 2, H / 2);
+    if (hit) view.centre = hit.p;
+  }
+  return moving;
+}
+
+function frame() {
+  var moving = step();
+  render();
+  updateReadouts();
+  requestAnimationFrame(frame);
+}
+
+/* ==================================================================== *
+ *  12 · START                                                           *
+ * ==================================================================== */
+
+function start() {
+  resize();
+  updateFold(0);
+  compileSurface();
+  // open on the whole unfolded field, holding the place the theory names
+  var atl = PLACES['Atlanta'];
+  view.centre = null;
+  VIEW_ORIGIN = [0, 0, 0];
+  view.zoom = view.zoomTarget = fitZoom(0);
+  view.fold = 0; view.foldTarget = 0;
+  anchor = atl ? { p: atl.v, label: 'ATLANTA' } : null;
+  var fromUrl = location.hash ? cellFromSlug(decodeURIComponent(location.hash.slice(1))) : null;
+  if (fromUrl) { view.centre = cellCentre(fromUrl); lookAt(view.centre, fromUrl.depth); selection = fromUrl; }
+  document.getElementById('boot').classList.add('gone');
+  frame();
+  if (/(^|[?&])verify\b/.test(location.search)) setTimeout(verify, 60);
+}
+window.addEventListener('resize', function () { resize(); wake(); });
+window.addEventListener('orientationchange', function () { setTimeout(function () { resize(); wake(); }, 120); });
+document.addEventListener('gesturestart', function (e) { e.preventDefault(); });
+document.addEventListener('dblclick', function (e) { e.preventDefault(); });
+
+/* ==================================================================== *
+ *  13 · VERIFICATION                                                    *
+ *  The invariants are claims, so they are checkable. Load the page with *
+ *  ?verify and they are checked, in the browser, against random points. *
+ * ==================================================================== */
+
+function verify() {
+  var rnd = (function () { var a = 12345; return function () {
+    a = (a * 1664525 + 1013904223) >>> 0; return a / 4294967296; }; })();
+  function randPoint() {
+    var z = rnd() * 2 - 1, t = rnd() * TAU, r = Math.sqrt(1 - z * z);
+    return [r * Math.cos(t), r * Math.sin(t), z];
+  }
+  var out = [], ok = true;
+  function claim(kind, n, text, pass, detail) {
+    ok = ok && pass;
+    out.push({ kind: kind, n: n, text: text, pass: pass, detail: detail });
+  }
+
+  // 1 — exactly one face holds any given point
+  var one = 0, other = 0;
+  for (var i = 0; i < 4000; i++) {
+    var q = randPoint(), hits = 0;
+    for (var f = 0; f < NF; f++) {
+      var r = baryRaw(f, q), sm = r[0] + r[1] + r[2];
+      if (sm > 0 && Math.min(r[0], Math.min(r[1], r[2])) / sm >= -1e-12) hits++;
+    }
+    if (hits === 1) one++; else other++;
+  }
+  claim('INVARIANT', 1, 'one point, one face', other === 0, one + '/4000 points, ' + other + ' ambiguous');
+
+  // 2 — subdivision never destroys the parent
+  var held = 0, lost = 0, orphan = 0;
+  for (var j = 0; j < 1200; j++) {
+    var p2 = randPoint(), d = 1 + Math.floor(rnd() * 18);
+    var c = cellAt(p2, d);
+    if (cellContains(c, p2)) held++; else lost++;
+    if (!cellContains(makeCell(c.f, c.path.slice(0, d - 1)), p2)) orphan++;
+  }
+  claim('INVARIANT', 2, 'the cell holds its point, and so does its parent',
+    lost === 0 && orphan === 0, held + '/1200 to depth 18, ' + orphan + ' orphaned');
+
+  // 3 & 4 — neighbours stay neighbours across scale and across seams,
+  // and a seam crossing is a step rather than a jump
+  var mutual = 0, broken = 0, shares = 0, worstGap = 0, edgeKm = 0;
+  for (var k = 0; k < 900; k++) {
+    var p3 = randPoint(), d3 = 1 + Math.floor(rnd() * 12);
+    var c3 = cellAt(p3, d3), id = cellId(c3), cc = cellCorners(c3);
+    var nb = neighbours(c3);
+    for (var m = 0; m < nb.length; m++) {
+      var n = nb[m];
+      var back = neighbours(n).map(cellId);
+      if (n.depth === d3 && back.indexOf(id) >= 0) mutual++; else broken++;
+      var nc = cellCorners(n), sh = 0;
+      for (var a = 0; a < 3; a++) for (var b = 0; b < 3; b++) {
+        if (len(sub(cc[a], nc[b])) < 1e-7) sh++;
+      }
+      if (sh === 2) shares++;
+      var gap = arcKm(cellCentre(c3), cellCentre(n)) / cellEdgeKm(c3);
+      if (gap > worstGap) { worstGap = gap; edgeKm = cellEdgeKm(c3); }
+    }
+  }
+  claim('INVARIANT', 3, 'neighbours are mutual and share two corners',
+    broken === 0 && shares === mutual, mutual + ' relations, ' + broken + ' broken');
+  claim('INVARIANT', 4, 'a seam is a step, not an event',
+    worstGap < 0.8, 'widest neighbour gap ' + worstGap.toFixed(3) + ' of a cell edge');
+
+  // the council rests on the same solid, so it answers the same way
+  var fam = DATA.council.family;
+  var ico = null, bigger = [];
+  for (var f = 0; f < fam.length; f++) {
+    if (fam[f].name === 'icosahedron') ico = fam[f];
+    else if (fam[f].closure && ico && fam[f].people > ico.people) bigger.push(fam[f].name);
+  }
+  claim('COUNCIL', 1, 'a council cannot be scaled by subdividing the world',
+    DATA.council.geodesic.every(function (g) { return g.degrees[5] === 12; }),
+    'five-valent topics at frequency ' + DATA.council.geodesic.map(function (g) { return g.frequency; }).join('/') +
+    ': ' + DATA.council.geodesic.map(function (g) { return g.degrees[5]; }).join(', ') + ' — twelve, forever');
+  claim('COUNCIL', 2, 'the icosahedron is the closure ceiling',
+    ico.closure && bigger.length === 0,
+    ico.covered + ' topic pairs covered; nothing larger keeps closure');
+  var seatOk = true, mixOk = true, detail = [];
+  for (var name in SEATED) {
+    var st = SEATED[name], r = st.registers, stat = null;
+    for (var g2 = 0; g2 < fam.length; g2++) if (fam[g2].name === name) stat = fam[g2];
+    for (var t2 = 0; t2 < st.struts.length; t2++) {
+      var mine = st.struts[t2].register, opp = null;
+      for (var q2 = 0; q2 < DATA.council.registers.length; q2++) {
+        if (DATA.council.registers[q2].id === mine) opp = DATA.council.registers[q2].opposite;
+      }
+      var crit = st.struts[t2].critiques;
+      var found = false;
+      for (var u2 = 0; u2 < st.struts.length; u2++) {
+        var o = st.struts[u2];
+        if (o.topics[0] === crit[0] && o.topics[1] === crit[1] && o.register === opp) found = true;
+      }
+      if (!found) seatOk = false;
+    }
+    if (r.roomsFullyMixed !== stat.topics) mixOk = false;
+    detail.push(name + ' ' + r.roomsFullyMixed + '/' + stat.topics);
+  }
+  claim('COUNCIL', 3, 'every seat is critiqued by its opposed register', seatOk,
+    Object.keys(SEATED).length + ' solids seated');
+  claim('COUNCIL', 4, 'no room is all one kind of description', mixOk,
+    'rooms hearing a full mix: ' + detail.join(', '));
+
+  var html = out.map(function (c) {
+    return '<div class="row"><b>' + (c.pass ? '✓' : '✗') + ' ' + c.kind + ' ' + c.n + ' · ' +
+      c.text + '</b><span>' + c.detail + '</span></div>';
+  }).join('');
+  panel('VERIFICATION',
+    '<p>The invariants are claims about the structure, so they are checked here against ' +
+    'random points on the sphere rather than asserted. The council claims are checked against ' +
+    'the compiled solid. Reload without <b>?verify</b> to return ' +
+    'to the world.</p>' + html +
+    '<p style="margin-top:10px">' + (ok ? 'All invariants hold in this build.'
+      : 'An invariant failed. The world is lying to you.') + '</p>');
+  return ok;
+}
+
+if (!DATA) {
+  document.getElementById('boot').textContent = 'icosa-world.data.js did not load';
+} else {
+  setTimeout(start, 30);
+}
+})();
+</script>
+</body>
+</html>

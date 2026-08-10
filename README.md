@@ -98,6 +98,12 @@ A council is not a diagram beside the world. At planetary scale it is the world:
 
 The seats are registers of description, not people. Nothing simulates a resident.
 
+Icosa Syntegrity
+
+Icosa World is a good map and an empty one: a cell had an id and an edge length and nothing else, which is why its council read as arbitrary and why nothing could be sent to anyone. Icosa Syntegrity is the fork where that is fixed. A triangle has corners in degrees, an area, a list of what is inside it, and an address that lives in the URL, so it can be linked and cited and returned to. The sheet sits beside the map instead of over it. A council seat is held by whoever types their name into it, and your critic is the seat opposite yours — a person, not a category. What is said stays on the triangle it was said about, drawn there, kept in the browser, and carried out as a file.
+
+Below about six kilometres the source runs out and the triangles do not. That gap is the next thing worth closing. See ICOSA-SYNTEGRITY.md.
+
 Data: Natural Earth 110m, public domain.
 
 Data: OpenStreetMap Notes, © OpenStreetMap contributors, ODbL 1.0.

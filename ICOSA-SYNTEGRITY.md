@@ -276,6 +276,47 @@ ground itself on OpenStreetMap.
 Leaving here goes to somebody else's record, which is the point: it is a
 link and not a claim of ours.
 
+## Read it where it is
+
+Opening a mark used to raise a sheet — a full-height panel that covered the
+map, listed everything, and offered a link that took you off the page
+entirely. On a phone that is 1,685 px of content behind a 343 px window,
+and the ground you were asking about is gone before you have read a word.
+
+**Wikipedia cannot be framed.** `en.wikipedia.org` sends `X-Frame-Options`,
+so an iframe renders blank and no amount of arranging fixes it. But its REST
+summary endpoint answers cross-origin, so the extract is fetched and drawn
+here, in our own type, in a card **beside the dot**:
+
+```
+https://en.wikipedia.org/api/rest_v1/page/summary/<title>
+```
+
+The card is 280 px wide and covers about a third of a phone screen instead
+of all of it. It carries the first paragraph, the population, the
+coordinates, the triangle as a tappable address, and three ways out — the
+article, the ground on OpenStreetMap, and `SAY HERE`, which drops you into
+the thread for that triangle without leaving.
+
+**The card belongs to the point, not to the screen.** It is placed beside
+the mark, and a leader runs from the mark to the card's edge, so which dot
+is being read is not a matter of inference. Pan and the card travels with
+the ground under it. Turn the point onto the far side of the world, or off
+the edge, and the card goes rather than sitting there next to nothing.
+
+Two details that are easy to get wrong and were:
+
+- On a narrow screen there is often no room either side of the mark. The
+  first version fell back to centring the card on the dot — covering the one
+  thing the card was about. It now goes under the mark, or over it, and the
+  mark stays visible in every case.
+- The opening anchor is already drawn as a signal-coloured ring of exactly
+  this size. Two different things looking the same is a lie, so the card's
+  subject is a filled disc on a cleared halo instead.
+
+Summaries are cached in the record, so a place read once reads instantly
+after that, and reads at all with no network.
+
 ## What it still does not do
 
 Being plain about this, because the gap is the interesting part.
@@ -313,6 +354,8 @@ Being plain about this, because the gap is the interesting part.
 Everything from `icosa-world`, plus:
 
 - **tap the address plate** — corners, area, contents, and the link
+- **tap a mark on the map** — the card, beside the dot: what it is, what is
+  written about it, and the way out to the article or the ground
 - **WHERE** — the same, from the action ring
 - **SAID** — the thread on this triangle, what has climbed to it from
   below, and the field to add to it. Tick *a concern* and choose the scale

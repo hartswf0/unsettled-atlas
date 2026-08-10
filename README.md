@@ -112,6 +112,8 @@ The coastline is tiled: the 10m shore, lakes, built-up areas and major roads are
 
 The links live on the map rather than beside it. A looked-up article is drawn where it actually is, as a real anchor with a live href and every affordance of being a link, and every painted mark is askable — tapping a city opens it with its province, population, coordinates, the triangle it sits in, and outbound links to Wikipedia and OpenStreetMap. Canvas text can be none of those things.
 
+And it is read where it is. Wikipedia cannot be framed — en.wikipedia.org sends X-Frame-Options, so an iframe renders blank — but its summary endpoint answers cross-origin, so the article's first paragraph is drawn in a card beside the dot rather than raising a full-height sheet and then throwing you off the page. The card belongs to the point and not to the screen: a leader runs from the mark to the card, panning carries it along with the ground, and taking the point off the world closes it. On a phone it covers about a third of the screen where the sheet covered all of it.
+
 The compiled gazetteer stops at about a village. Below roughly five kilometres a triangle divides the ground without telling you more about it, and the panel says so rather than pretending. See ICOSA-SYNTEGRITY.md.
 
 Data: Natural Earth 110m, public domain.

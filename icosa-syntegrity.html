@@ -194,6 +194,39 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #links a:hover,#links a:focus{background:var(--signal);color:var(--paper)}
 #links a i{display:block;width:5px;height:5px;background:var(--signal);border-radius:50%;flex:0 0 auto}
 #links a:hover i,#links a:focus i{background:var(--paper)}
+/* A card in context, beside the dot it belongs to. Wikipedia cannot be put
+   in an iframe — en.wikipedia.org sends X-Frame-Options, so a frame renders
+   blank — so the summary is fetched and drawn here instead. Which is better
+   anyway: it matches the map, and it never navigates away. */
+#card{
+  position:absolute;z-index:12;display:none;width:min(280px,72vw);
+  background:var(--ground);border:1.5px solid var(--ink);
+  box-shadow:4px 4px 0 rgba(18,21,20,.13);
+  max-height:min(46vh,340px);overflow-y:auto;touch-action:pan-y
+}
+#card.open{display:block}
+#card .top{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:8px;
+  padding:8px 9px 6px;border-bottom:1.5px solid var(--ink);position:sticky;top:0;background:var(--ground)
+}
+#card .top b{font-size:11px;letter-spacing:.1em;line-height:1.35}
+#card .top em{font-style:normal;display:block;font-size:8px;letter-spacing:.14em;color:var(--muted);margin-top:2px}
+#card .x{
+  font:inherit;font-size:11px;font-weight:700;border:1.5px solid var(--ink);background:var(--ground);
+  color:var(--ink);padding:2px 6px;cursor:pointer;flex:0 0 auto
+}
+#card .body{padding:8px 9px 10px}
+#card .body p{font-size:11px;line-height:1.5;color:var(--ink);margin:0 0 7px}
+#card .body .fact{display:flex;justify-content:space-between;gap:8px;font-size:9px;letter-spacing:.07em;
+  color:var(--muted);border-top:1px solid rgba(18,21,20,.16);padding:4px 0}
+#card .body .fact b{color:var(--ink);font-weight:700}
+#card img{width:100%;height:auto;display:block;margin:0 0 7px;border:1px solid var(--ink)}
+#card .go{
+  font:inherit;font-size:9px;font-weight:700;letter-spacing:.12em;display:inline-block;
+  border:1.5px solid var(--ink);background:var(--ground);color:var(--ink);
+  padding:6px 8px;margin:6px 4px 0 0;cursor:pointer;text-decoration:none
+}
+#card .go.sig{background:var(--ink);color:var(--ground)}
 #reglegend{
   left:max(10px,env(safe-area-inset-left));bottom:72px;
   display:none;flex-direction:column;gap:2px
@@ -218,6 +251,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 <div id="stage">
 <canvas id="world"></canvas>
 <div id="links"></div>
+<div id="card"></div>
 
 <div class="hud" id="situation">
   <div class="plate" id="cellplate">
@@ -1873,7 +1907,7 @@ function syncLinks(S) {
       if (dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) <= 0) continue;
       var sp = project(vv, S);
       if (sp[0] < 4 || sp[0] > W - 4 || sp[1] < 4 || sp[1] > H - 4) continue;
-      want[it.pageid] = { x: sp[0], y: sp[1], title: it.title };
+      want[it.pageid] = { x: sp[0], y: sp[1], title: it.title, v: v };
     }
   }
   for (var id in linkPool) {
@@ -1901,11 +1935,22 @@ function syncLinks(S) {
       a.rel = 'noopener';
       a.innerHTML = '<i></i>';
       a.appendChild(document.createTextNode(want[id2].title));
+      (function (t, href) {
+        a.onclick = function (ev) {
+          if (ev.metaKey || ev.ctrlKey || ev.shiftKey) return;   // let the browser have it
+          ev.preventDefault();
+          var r = a.getBoundingClientRect(), st = document.getElementById('stage').getBoundingClientRect();
+          openCard({ title: t, kind: 'article', v: a.__v, url: href },
+                   r.left - st.left + r.width / 2, r.top - st.top);
+          wake();
+        };
+      })(want[id2].title, a.href);
       elLinks.appendChild(a);
       linkPool[id2] = a;
     }
     a.style.left = want[id2].x + 'px';
     a.style.top = want[id2].y + 'px';
+    a.__v = want[id2].v;
   }
 }
 
@@ -2174,6 +2219,7 @@ function render() {
   drawSaid(S);
   drawGround(S);
   syncLinks(S);
+  trackCard(S);
   drawRelations(S, 'front');
   drawNorth(S);
 
@@ -2554,7 +2600,18 @@ function endPointer(e) {
       tapTimer = setTimeout(function () {
         // TAP — the triangle becomes the interface
         var onMap = hitAt(p.x, p.y);
-        if (onMap && !painting) { openThing(onMap); wake(); return; }
+        if (onMap && !painting) {
+          var set = onMap.p.set, ix = onMap.p.i;
+          openCard({
+            title: set.name[ix], kind: onMap.kind, v: set.v[ix],
+            where: onMap.kind === 'place'
+              ? [GAZ.adm1[GAZ.places.a1[ix]], GAZ.adm0[GAZ.places.a0[ix]]].filter(Boolean).join(', ') : '',
+            pop: onMap.kind === 'place' ? GAZ.places.pop[ix] : 0
+          }, onMap.x, onMap.y);
+          wake();
+          return;
+        }
+        closeCard();
         var hit = pick(p.x, p.y);
         if (hit && painting) {
           var pk = cellSlug(cellAt(hit.p, depthForZoom()));
@@ -3021,6 +3078,125 @@ function openCarry(cell, seatIdx) {
       msg.textContent = 'drafted — it is not sent until you send it';
     });
   };
+}
+
+/* -------------------------------------------------------------- the card
+ * Opening a place used to mean a full sheet of list, or leaving the site
+ * for Wikipedia. Both are wrong: the first buries the map on a phone — 1685
+ * pixels of panel behind a 343 pixel window — and the second throws away
+ * the context you were looking at.
+ *
+ * Wikipedia cannot be framed: en.wikipedia.org sends X-Frame-Options, so an
+ * iframe renders blank. Its REST summary endpoint answers cross-origin
+ * though, so the extract is fetched and drawn here, in our own type, beside
+ * the dot. The link out stays for when you do want the whole article.     */
+var elCard = null, cardFor = null, cardAt = null;
+function closeCard() {
+  if (elCard) elCard.classList.remove('open');
+  cardFor = null; cardAt = null;
+}
+// Beside the mark, never on top of it. On a phone there is often no room
+// either side, and the old fallback centred the card on the dot — covering
+// the one thing the card is about. So the last resort is under it, or over
+// it, and the mark stays visible in every case.
+function placeCard(sx, sy) {
+  var w = elCard.offsetWidth || 260, h = elCard.offsetHeight || 180;
+  var x, y;
+  if (sx + 16 + w <= W - 8) { x = sx + 16; y = sy - h / 2; }
+  else if (sx - 16 - w >= 8) { x = sx - w - 16; y = sy - h / 2; }
+  else {
+    x = sx - w / 2;
+    y = (sy + 18 + h <= H - 8) ? sy + 18 : sy - h - 18;
+  }
+  elCard.style.left = Math.round(clamp(x, 8, Math.max(8, W - w - 8))) + 'px';
+  elCard.style.top = Math.round(clamp(y, 8, Math.max(8, H - h - 8))) + 'px';
+}
+// The card is about a point on the ground, so it belongs to the point and
+// not to the screen. Pan and it follows; turn the point onto the far side of
+// the world, or off the edge, and it goes away rather than lying about what
+// it is next to.
+function trackCard(S) {
+  if (!cardFor || !elCard || !cardFor.v) return;
+  var f = faceOf(cardFor.v);
+  var vv = toView(worldOf(f, baryOf(f, cardFor.v)));
+  if (dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) <= 0) return closeCard();
+  var sp = project(vv, S);
+  if (sp[0] < -24 || sp[0] > W + 24 || sp[1] < -24 || sp[1] > H + 24) return closeCard();
+  if (!cardAt || Math.abs(cardAt[0] - sp[0]) > 0.5 || Math.abs(cardAt[1] - sp[1]) > 0.5) {
+    cardAt = sp; placeCard(sp[0], sp[1]);
+  }
+  // A leader from the mark to the card, so which dot is being read is not a
+  // matter of inference. The anchor ring is already a signal circle of this
+  // size, so the subject gets a filled disc on a cleared halo instead —
+  // two different things must not look the same.
+  var cx = clamp(sp[0], elCard.offsetLeft, elCard.offsetLeft + elCard.offsetWidth);
+  var cy = clamp(sp[1], elCard.offsetTop, elCard.offsetTop + elCard.offsetHeight);
+  ctx.beginPath(); ctx.moveTo(sp[0], sp[1]); ctx.lineTo(cx, cy);
+  ctx.strokeStyle = COL.signal; ctx.lineWidth = 1.4; ctx.stroke();
+  ctx.beginPath(); ctx.arc(sp[0], sp[1], 6.5, 0, TAU);
+  ctx.fillStyle = COL.ground; ctx.fill();
+  ctx.strokeStyle = COL.signal; ctx.lineWidth = 1.4; ctx.stroke();
+  ctx.beginPath(); ctx.arc(sp[0], sp[1], 3.4, 0, TAU);
+  ctx.fillStyle = COL.signal; ctx.fill();
+}
+function summaryOf(title, cb) {
+  if (!DB.summaries) DB.summaries = {};
+  if (DB.summaries[title]) return cb(null, DB.summaries[title]);
+  fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title), { credentials: 'omit' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (j) {
+      var got = { title: j.title, extract: j.extract || '', type: j.type || '',
+                  thumb: j.thumbnail && j.thumbnail.source, url: j.content_urls &&
+                  j.content_urls.desktop && j.content_urls.desktop.page };
+      DB.summaries[title] = got; commit();
+      cb(null, got);
+    })
+    .catch(function (e) { cb(String(e.message || e)); });
+}
+function openCard(o, sx, sy) {
+  if (!elCard) elCard = document.getElementById('card');
+  cardFor = o;
+  var cell = cellAt(o.v, depthForZoom());
+  var out = o.url || 'https://en.wikipedia.org/w/index.php?search=' + encodeURIComponent(o.title);
+  var osm = 'https://www.openstreetmap.org/?mlat=' + lonlat(o.v)[1].toFixed(5) +
+            '&mlon=' + lonlat(o.v)[0].toFixed(5) + '#map=15/' +
+            lonlat(o.v)[1].toFixed(5) + '/' + lonlat(o.v)[0].toFixed(5);
+  elCard.innerHTML =
+    '<div class="top"><div><b>' + esc(o.title) + '</b><em>' + esc(o.kind) +
+      (o.where ? ' · ' + esc(o.where) : '') + '</em></div><button class="x" id="cX">✕</button></div>' +
+    '<div class="body" id="cBody"><p style="opacity:.6">reading…</p>' +
+    (o.pop ? '<div class="fact"><b>PEOPLE</b><span>' + o.pop.toLocaleString('en') + '</span></div>' : '') +
+    '<div class="fact"><b>AT</b><span>' + ll(o.v) + '</span></div>' +
+    '<div class="fact" id="cCell"><b>TRIANGLE</b><span>' + cellSlug(cell) + ' · ' +
+      kmLabel(cellEdgeKm(cell)) + '</span></div>' +
+    '<a class="go sig" href="' + out + '" target="_blank" rel="noopener">READ IT</a>' +
+    '<a class="go" href="' + osm + '" target="_blank" rel="noopener">THE GROUND</a>' +
+    '<button class="go" id="cSay">SAY HERE</button></div>';
+  elCard.classList.add('open');
+  cardAt = null;
+  placeCard(sx, sy);
+  document.getElementById('cX').onclick = closeCard;
+  document.getElementById('cCell').style.cursor = 'pointer';
+  document.getElementById('cCell').onclick = function () {
+    closeCard(); selection = cell; lookAt(cellCentre(cell), cell.depth); wake();
+  };
+  document.getElementById('cSay').onclick = function () { closeCard(); openThread(cell); };
+  summaryOf(o.title, function (err, got) {
+    var body = document.getElementById('cBody');
+    if (!body || cardFor !== o) return;
+    var first = body.querySelector('p');
+    if (err) { first.textContent = 'No summary reached — the network refused it, or there is no article by that name.'; return; }
+    if (got.type === 'disambiguation') { first.textContent = 'That name belongs to several places. The link opens the list.'; return; }
+    first.textContent = got.extract || 'The article has no summary.';
+    if (got.thumb) {
+      var img = document.createElement('img');
+      img.src = got.thumb; img.alt = '';
+      body.insertBefore(img, first);
+    }
+    cardAt = null;                 // the card grew; let the tracker re-seat it
+    placeCard(sx, sy);
+    wake();
+  });
 }
 
 // what is under the finger, with links that are links

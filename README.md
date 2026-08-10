@@ -123,3 +123,11 @@ Site: https://hartswf0.github.io/unsettled-atlas/
 License
 
 Software is released under the MIT License.
+
+Worldtext
+
+An address-first world language, kept in worldtext/ and ready to be split into its own repository. Faces were already addressable — @F/09/3/2 is a path down the subdivision — but edges and vertices were not, and that is the trap: two faces share an edge, so naming it from each side invents two names for one thing and every claim attached to it splits in half.
+
+So a vertex is addressed by integer barycentric position inside a base face, @V/07/3.2.3, reduced while every coordinate is even and canonicalised to the smallest face that can see it. An edge is its two vertices in canonical order, so EDGE(A,B) and EDGE(B,A) are one string. Euler's formula checks the whole scheme at once: at every depth each edge is named by exactly two faces, E = 3F/2, and V − E + F = 2.
+
+The payoff is that assigning a person to an edge hands them their situation with no role machinery at all — two endpoint convergences and two adjacent faces, straight out of the geometry. See worldtext/README.md.

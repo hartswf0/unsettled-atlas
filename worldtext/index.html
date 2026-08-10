@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f1eee4">
+<title>WORLDTEXT · the world graph made speakable</title>
+<style>
+:root{--ground:#f1eee4;--ink:#121514;--muted:#5f6763;--signal:#a8462a;--paper:#faf8f1}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;background:var(--ground);color:var(--ink)}
+body{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;display:flex;flex-direction:column;
+  padding:max(12px,env(safe-area-inset-top)) 12px calc(12px + env(safe-area-inset-bottom))}
+header{border-bottom:2px solid var(--ink);padding-bottom:8px;margin-bottom:10px;flex:0 0 auto}
+h1{font-size:12px;letter-spacing:.24em;font-weight:700}
+header p{font-size:10px;letter-spacing:.06em;color:var(--muted);margin-top:5px;max-width:70ch;line-height:1.5}
+#out{flex:1 1 auto;overflow-y:auto;font-size:12px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.echo{color:var(--ink);font-weight:700;margin-top:10px}
+.res{color:var(--muted)}
+.err{color:var(--signal)}
+form{flex:0 0 auto;display:flex;gap:0;margin-top:10px;border:1.5px solid var(--ink)}
+input{flex:1;font:inherit;font-size:16px;padding:10px;border:0;background:var(--paper);color:var(--ink);outline:none}
+button{font:inherit;font-size:11px;font-weight:700;letter-spacing:.14em;border:0;border-left:1.5px solid var(--ink);
+  background:var(--ink);color:var(--ground);padding:10px 14px;cursor:pointer}
+.hint{font-size:10px;color:var(--muted);letter-spacing:.06em;margin-top:8px;line-height:1.7}
+.hint b{color:var(--ink)}
+</style>
+</head>
+<body>
+<header>
+  <h1>WORLDTEXT</h1>
+  <p>Every face, edge and vertex of the recursive Earth has one canonical address, derived rather
+  than assigned. A sentence is <b>@THING relation @THING</b> or <b>operation @THING</b>. Nothing has to be
+  registered before it can be spoken about.</p>
+</header>
+<div id="out"></div>
+<form id="f"><input id="i" autocomplete="off" autocapitalize="off" spellcheck="false"
+  placeholder="? @F/09   ·   split @F/09   ·   @F/09/0 -water-> @F/09/3"><button>SAY</button></form>
+<div class="hint">
+<b>@E</b> earth · <b>@F/09/3</b> face · <b>@V/07/3.2.3</b> vertex · <b>@X/a|b</b> edge · <b>@P/name</b> person ·
+<b>@F/09:e2</b> local alias<br>
+<b>open split follow meet trace inspect</b> · <b>? @thing</b> · <b>? children|edges|corners|touches|tetrad @F/09</b> ·
+<b>:=</b> set · <b>-water-&gt;</b> flow · <b>=&gt;</b> consequence
+</div>
+<script type="module">
+import { kernel } from './address.mjs';
+import { worldtext } from './worldtext.mjs';
+await import('./icosa.data.js');
+const D = window.ICOSA_WORLD_DATA;
+const W = worldtext(kernel(D.ico.vertices, D.ico.faces));
+const out = document.getElementById('out');
+function say(cls, text) {
+  const d = document.createElement('div');
+  d.className = cls; d.textContent = text; out.appendChild(d); out.scrollTop = out.scrollHeight;
+}
+function show(v) {
+  if (v == null) return '';
+  if (typeof v === 'string') return v;
+  if (Array.isArray(v)) return v.map(show).join('\n');
+  return Object.entries(v).filter(([, x]) => x !== undefined &&
+      !(Array.isArray(x) && !x.length) && !(x && typeof x === 'object' && !Array.isArray(x) && !Object.keys(x).length))
+    .map(([k, x]) => k.toUpperCase().padEnd(11) + (Array.isArray(x) ? x.map(show).join('\n           ')
+      : typeof x === 'object' ? JSON.stringify(x) : x)).join('\n');
+}
+document.getElementById('f').onsubmit = (e) => {
+  e.preventDefault();
+  const el = document.getElementById('i'), line = el.value.trim();
+  if (!line) return;
+  el.value = '';
+  say('echo', '> ' + line);
+  for (const r of W.run(line)) {
+    if (r.error) say('err', '  ' + r.error);
+    else say('res', show(r.result).split('\n').map(s => '  ' + s).join('\n'));
+  }
+};
+const OPENING = [
+  '@F/09 place "Nile Basin"',
+  '@F/09 issue "Upstream electricity and downstream water security are coupled."',
+  'split @F/09',
+  '@F/09/0 -water-> @F/09/3',
+  '? @F/09'
+];
+say('res', 'A worked opening. Type your own underneath.');
+for (const line of OPENING) {
+  say('echo', '> ' + line);
+  for (const r of W.run(line)) {
+    if (r.error) say('err', '  ' + r.error);
+    else say('res', show(r.result).split('\n').map(s => '  ' + s).join('\n'));
+  }
+}
+</script>
+</body>
+</html>

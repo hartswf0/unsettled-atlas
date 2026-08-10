@@ -55,6 +55,15 @@ A living map woven by the people who move through a place. You leave a thread on
 Atlanta's geometry is compiled from the Soft Cadastre basemap into the file itself, so the ground draws on the first frame with no network at all. OpenStreetMap raster tiles fade in underneath when there is one, and nothing depends on them. Several phones join one ground by link or QR: BroadcastChannel between clients on a device, and MQTT over WebSocket across them, racing public brokers, with `?broker=` for a ground that would rather name its own. If none of it answers, the weave still works and still persists.
 
 Built as a gauntlet loop: each piece was given a builder and a separate critic in fresh context, and the critics drove the running artifact on phone-sized screens rather than reading about it. See living-mapmaker.html.
+World Tensegrity
+
+A neighbourhood called Brookside, on one triangular face of a world. You do not play a person or a government. You hold one cable of the place: a pair of its domains, such as WATER and SCHOOL. You can read those two and nothing else, so everything else belongs to somebody's attention and you have to ask.
+
+The ground is simulated, not scripted. Rain falls on a real height field and finds its own way down. Market Road is an embankment with an undersized culvert, so it ponds water across the children's walk to school — and that same pond is what keeps the water off the houses below. Nobody wrote either sentence into the code. Widening the culvert is legible, popular, and moves the flood onto somebody else's doorstep.
+
+The whole world is a fold over an append-only log of what people did, which makes three things true at once: peers stay exactly in step by exchanging actions rather than state, any argument can be settled by re-running history with one action deleted, and the causal map is built only out of readings somebody actually published. A condition nobody watches has no history, and nothing without a history can be argued about.
+
+Six verbs: notice, claim, connect, propose, commit, witness. An intervention must be co-signed by whoever holds the cables it pulls on, and when a cable comes under load with nobody on it, somebody is dragged onto it and stops watching what they were watching. There is no score, no victory, and no language model anywhere in the file.
 
 Data: OpenStreetMap Notes, © OpenStreetMap contributors, ODbL 1.0.
 

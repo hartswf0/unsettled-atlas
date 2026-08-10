@@ -1,0 +1,2453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0d1012">
+<title>WORLD TENSEGRITY · Brookside</title>
+<meta name="description" content="A neighbourhood where geography, cause and conversation continuously rewrite one another. You are not a player above the world. You are an edge between two of its problems.">
+<style>
+:root{
+  --bg:#0d1012; --bg2:#14181b; --panel:#161b1f; --line:#2b3338; --line2:#3d474d;
+  --ink:#e8eef1; --dim:#8b989f; --dimmer:#5d686e;
+  --sig:#5ec8ff; --sig2:#2b9fdd; --warm:#e8a13a; --alert:#ff6b4a; --good:#7ddba6; --earth:#c2a878;
+  --sheet:46svh;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden;background:var(--bg)}
+body{
+  font-family:ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  color:var(--ink);position:fixed;inset:0;-webkit-user-select:none;user-select:none;
+  -webkit-text-size-adjust:100%;overscroll-behavior:none;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+input{font:inherit;color:inherit;background:none;border:0;outline:none;-webkit-user-select:text;user-select:text}
+.lab{font-size:10px;font-weight:700;letter-spacing:.18em;text-transform:uppercase}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+
+/* ---------- frame ---------- */
+#app{display:grid;grid-template-rows:auto minmax(0,1fr) var(--sheet);height:100dvh;height:100svh}
+#bar{
+  display:grid;grid-template-columns:44px 1fr 44px;align-items:center;gap:8px;
+  padding:max(6px,env(safe-area-inset-top)) 10px 6px;
+}
+#bar h1{font-size:11px;font-weight:700;letter-spacing:.34em;text-align:center;color:var(--ink);white-space:nowrap}
+#seatbtn,#weekbtn{
+  width:40px;height:40px;border:1px solid var(--line2);border-radius:50%;
+  display:grid;place-items:center;color:var(--dim);
+}
+#weekbtn{font-size:13px;font-weight:600;color:var(--ink);font-variant-numeric:tabular-nums}
+#weekbtn.storm{border-color:var(--sig);color:var(--sig);box-shadow:0 0 14px -2px var(--sig2)}
+#seatbtn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.2}
+#seatbtn.on{color:var(--sig);border-color:var(--sig)}
+
+/* ---------- stage ---------- */
+#stage{position:relative;min-height:0;overflow:hidden;touch-action:none}
+#world{position:absolute;inset:0;width:100%;height:100%;display:block}
+#overlay{position:absolute;inset:0;pointer-events:none}
+#hint{
+  position:absolute;left:0;right:0;top:6px;text-align:center;color:var(--dimmer);
+  font-size:9px;font-weight:700;letter-spacing:.2em;pointer-events:none;transition:opacity .5s
+}
+#peacecurtain{
+  position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 1.2s;
+  background:radial-gradient(120% 80% at 50% 40%,rgba(125,219,166,.10),transparent 70%);
+}
+body.peace #peacecurtain{opacity:1}
+body.peace #sheet{opacity:.06;pointer-events:none;transition:opacity 1.4s}
+body.peace #bar{opacity:.14;transition:opacity 1.4s}
+body.peace #hint{opacity:0}
+#peaceword{
+  position:absolute;left:0;right:0;bottom:10%;text-align:center;opacity:0;transition:opacity 1.6s;
+  font-size:10px;letter-spacing:.5em;color:var(--good);pointer-events:none
+}
+body.peace #peaceword{opacity:.85}
+
+/* callout — the one rounded object in the world */
+.callout{
+  position:absolute;transform:translate(-50%,-100%);pointer-events:none;
+  background:rgba(13,20,26,.92);border:1px solid var(--sig);border-radius:11px;
+  padding:9px 13px;max-width:min(74vw,290px);color:#dff3ff;font-size:13.5px;line-height:1.28;
+  box-shadow:0 0 26px -6px var(--sig2),0 10px 30px -12px #000;
+}
+.callout.warn{border-color:var(--alert);box-shadow:0 0 26px -6px var(--alert);color:#ffe3da}
+.callout.mute{border-color:var(--line2);box-shadow:none;color:var(--dim);background:rgba(13,16,18,.94)}
+.callout b{color:#fff;font-weight:600}
+
+/* ---------- sheet ---------- */
+#sheet{
+  background:linear-gradient(180deg,var(--bg2),var(--panel));
+  border-top:1px solid var(--line);display:flex;flex-direction:column;
+  min-height:0;height:100%;
+  padding-bottom:max(6px,env(safe-area-inset-bottom));
+}
+#modestrip{display:flex;border-bottom:1px solid var(--line);flex:none}
+.mode{flex:1;padding:10px 4px 9px;color:var(--dimmer);border-bottom:2px solid transparent;
+  font-size:9.5px;font-weight:700;letter-spacing:.16em;text-align:center}
+.mode.on{color:var(--ink);border-bottom-color:var(--sig)}
+.mode b{display:block;font-size:8px;font-weight:600;letter-spacing:.08em;color:var(--dimmer);margin-top:3px;text-transform:none}
+.mode.on b{color:var(--dim)}
+
+#seatline{
+  flex:none;display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line);
+  font-size:11px;color:var(--dim);cursor:pointer
+}
+#seatline .cable{color:var(--sig);font-weight:700;letter-spacing:.08em}
+#seatline .who{color:var(--ink);font-weight:600}
+#seatline .slk{margin-left:auto;color:var(--dim);font-size:10px;letter-spacing:.1em;white-space:nowrap}
+#seatline .slk i{font-style:normal;color:var(--good)}
+
+#body{flex:1 1 auto;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#verbstrip{flex:none;display:flex;gap:0;border-top:1px solid var(--line);background:var(--bg2)}
+.verb{
+  flex:1;padding:9px 2px 8px;text-align:center;color:var(--dimmer);border-right:1px solid var(--line);
+  font-size:8.5px;font-weight:700;letter-spacing:.1em;min-height:44px
+}
+.verb:last-child{border-right:0}
+.verb.on{color:var(--bg);background:var(--sig)}
+.verb.ready{color:var(--sig)}
+.verb[disabled]{opacity:.32}
+.verb i{display:block;font-style:normal;font-size:14px;line-height:1;margin-bottom:4px;font-weight:400}
+
+#sayrow{flex:none;display:flex;align-items:center;gap:8px;padding:8px 10px;border-top:1px solid var(--line)}
+#say{flex:1;font-size:15px;padding:9px 11px;background:#0a0d0f;border:1px solid var(--line2);color:var(--ink)}
+#say::placeholder{color:var(--dimmer)}
+#saygo{width:42px;height:42px;flex:none;border:1px solid var(--sig);color:var(--sig);display:grid;place-items:center;font-size:15px}
+#saygo[disabled]{border-color:var(--line2);color:var(--dimmer)}
+
+/* generic blocks inside #body */
+.blk{padding:10px 12px;border-bottom:1px solid var(--line)}
+.blk h3{font-size:9px;font-weight:700;letter-spacing:.18em;color:var(--dimmer);margin-bottom:7px;text-transform:uppercase}
+.rowi{display:flex;align-items:baseline;gap:8px;padding:5px 0;font-size:12.5px;color:var(--ink);border-bottom:1px solid rgba(255,255,255,.045)}
+.rowi:last-child{border-bottom:0}
+.rowi .k{color:var(--dim);flex:1;min-width:0}
+.rowi .v{font-family:ui-monospace,Menlo,monospace;font-size:12px;font-variant-numeric:tabular-nums}
+.rowi .v.up{color:var(--alert)} .rowi .v.dn{color:var(--good)} .rowi .v.na{color:var(--dimmer)}
+.dom{font-size:8.5px;font-weight:700;letter-spacing:.12em;padding:2px 5px;border:1px solid var(--line2);color:var(--dim)}
+.dom.mine{border-color:var(--sig);color:var(--sig)}
+.act{
+  display:flex;gap:10px;align-items:center;width:100%;text-align:left;padding:9px 12px;
+  border-bottom:1px solid var(--line);min-height:46px
+}
+.act .av{width:30px;height:30px;flex:none;border:1px solid var(--line2);display:grid;place-items:center;
+  font-size:11px;font-weight:700;color:var(--dim);border-radius:50%}
+.act.here .av{border-color:var(--sig);color:var(--sig)}
+.act .nm{font-size:12.5px;font-weight:600}
+.act .sb{font-size:9.5px;color:var(--dimmer);letter-spacing:.06em;margin-top:2px}
+.act .tag{margin-left:auto;font-size:8.5px;font-weight:700;letter-spacing:.1em;padding:3px 6px;border:1px solid var(--line2);color:var(--dim);flex:none}
+.act .tag.sign{border-color:var(--good);color:var(--good)}
+.act .tag.ref{border-color:var(--alert);color:var(--alert)}
+.act .tag.wait{border-color:var(--warm);color:var(--warm)}
+.act .tag.you{border-color:var(--sig);color:var(--sig)}
+
+.btn{display:block;width:100%;padding:12px;border:1px solid var(--line2);color:var(--ink);
+  font-size:10.5px;font-weight:700;letter-spacing:.14em;min-height:46px}
+.btn.pri{border-color:var(--sig);color:var(--sig)}
+.btn.hot{background:var(--sig);color:#06121a;border-color:var(--sig)}
+.btn[disabled]{opacity:.35}
+.btn.warnb{border-color:var(--alert);color:var(--alert)}
+.btnrow{display:flex;gap:8px;padding:10px 12px}
+.btnrow .btn{flex:1}
+
+.chip{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border:1px solid var(--line2);
+  color:var(--dim);font-size:10px;letter-spacing:.08em;margin:0 5px 5px 0}
+.chip.on{border-color:var(--sig);color:var(--sig)}
+.chip.filled{border-color:var(--line2);color:var(--ink)}
+.chip.miss{border-style:dashed;color:var(--warm);border-color:var(--warm)}
+
+.evt{padding:9px 12px;border-bottom:1px solid var(--line);font-size:12.5px;line-height:1.4;color:var(--ink);display:block;width:100%;text-align:left}
+.evt .wk{font-size:9px;font-weight:700;letter-spacing:.14em;color:var(--dimmer);display:block;margin-bottom:3px}
+.evt.big{background:rgba(94,200,255,.06);border-left:2px solid var(--sig)}
+.evt.bad{background:rgba(255,107,74,.07);border-left:2px solid var(--alert)}
+.evt.mem{background:rgba(232,161,58,.07);border-left:2px solid var(--warm)}
+.evt .src{display:block;margin-top:4px;font-size:10px;color:var(--dim)}
+.evt .src u{text-decoration:none;color:var(--sig);border-bottom:1px dotted var(--sig2)}
+
+.note{padding:9px 12px;font-size:11.5px;color:var(--dim);line-height:1.45}
+.note em{color:var(--ink);font-style:normal}
+.err{color:var(--warm)}
+
+#toast{
+  position:fixed;left:50%;transform:translateX(-50%);bottom:calc(var(--sheet) + 14px);z-index:60;
+  background:#0a0f12;border:1px solid var(--sig);color:#dff3ff;padding:9px 14px;font-size:12px;
+  max-width:86vw;text-align:center;opacity:0;transition:opacity .22s;pointer-events:none
+}
+#toast.on{opacity:1}
+#toast.bad{border-color:var(--alert);color:#ffe0d7}
+
+#modal{position:fixed;inset:0;z-index:70;background:rgba(6,9,11,.9);display:none;padding:14px;overflow:auto}
+#modal.on{display:block}
+#modalin{max-width:520px;margin:auto;border:1px solid var(--line2);background:var(--panel)}
+#modalin h2{font-size:11px;font-weight:700;letter-spacing:.2em;padding:14px 14px 10px;border-bottom:1px solid var(--line)}
+
+@media(min-width:900px){
+  #app{grid-template-columns:minmax(0,1fr) 430px;grid-template-rows:auto minmax(0,1fr)}
+  #stage{grid-row:2}
+  #bar{grid-column:1/3}
+  #stage{grid-column:1;grid-row:2}
+  #sheet{grid-column:2;grid-row:2;height:100%;border-top:0;border-left:1px solid var(--line)}
+  #toast{bottom:24px;left:calc(50% - 215px)}
+}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="bar">
+    <button id="seatbtn" title="Your seat"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><ellipse cx="12" cy="12" rx="4" ry="9"/><path d="M3.2 9h17.6M3.2 15h17.6"/></svg></button>
+    <h1>WORLD TENSEGRITY</h1>
+    <button id="weekbtn">0</button>
+  </div>
+
+  <div id="stage">
+    <canvas id="world"></canvas>
+    <div id="overlay"></div>
+    <div id="peacecurtain"></div>
+    <div id="peaceword">THE WORLD IS BREATHING</div>
+    <div id="hint">DRAG TO EXPLORE</div>
+  </div>
+
+  <div id="sheet">
+    <div id="modestrip">
+      <button class="mode on" data-mode="earth">EARTH<b>where things happen</b></button>
+      <button class="mode" data-mode="system">SYSTEM<b>what depends on what</b></button>
+      <button class="mode" data-mode="assembly">ASSEMBLY<b>who needs whom</b></button>
+    </div>
+    <div id="seatline"></div>
+    <div id="body"></div>
+    <div id="sayrow">
+      <input id="say" placeholder="say something about this place" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <button id="saygo">→</button>
+    </div>
+    <div id="verbstrip"></div>
+  </div>
+</div>
+<div id="toast"></div>
+<div id="modal"><div id="modalin"></div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.2/peerjs.min.js"></script>
+<script>
+/* ==========================================================================
+   WORLD TENSEGRITY · BROOKSIDE
+   One neighbourhood. Six domains. Fifteen seats. You hold one edge.
+
+   ARCHITECTURE — the whole world is a fold over an append-only action log:
+        state = runWorld(log, week)
+   Nothing is stored except the log. That makes three things true at once:
+     · multiplayer is exact (peers exchange actions, not state)
+     · replay is free
+     · a counterfactual is just the same fold with one action deleted,
+       which is the only honest way to settle an argument about cause.
+   There is no language model anywhere in this file.
+   ========================================================================== */
+
+/* ------------------------------ 0 · CONSTANTS ---------------------------- */
+const W = 54, H = 34, N = W * H;
+const DOMAINS = ['WATER','LAND','HOUSING','MOVEMENT','SCHOOL','MONEY'];
+const DCOL = {WATER:'#5ec8ff',LAND:'#7ddba6',HOUSING:'#e8a13a',MOVEMENT:'#c89bff',SCHOOL:'#ff9fb4',MONEY:'#ffe08a'};
+const seatId = (a,b)=> [a,b].sort().join('|');
+const SEATS = (()=>{const s=[];for(let i=0;i<6;i++)for(let j=i+1;j<6;j++)s.push(seatId(DOMAINS[i],DOMAINS[j]));return s})();
+
+/* rainfall is a fixed almanac, not a dice roll: surprise must come from
+   the shape of the ground, never from the weather being unknowable. */
+const ALMANAC = {2:16, 5:28, 9:20, 12:52, 16:19, 19:33, 23:25, 27:66, 31:22, 35:41, 39:78, 43:30, 47:58};
+const MAXWEEK = 104;
+function rainAt(wk){
+  const yr = Math.floor((wk-1)/52);
+  const w = ((wk - 1 + yr*6) % 52) + 1;      // the next year is not the same year
+  return ALMANAC[w] || 0;
+}
+
+/* ------------------------------ 1 · GEOMETRY ----------------------------- */
+const APEX = {x:27, y:1.5}, BASE_Y = 32.5, HALF = 25;
+function inside(cx,cy){
+  if (cy < APEX.y || cy > BASE_Y) return false;
+  const t = (cy - APEX.y) / (BASE_Y - APEX.y);
+  return Math.abs(cx - APEX.x) <= t * HALF;
+}
+const CREEK = [[13,4],[16,9],[20,14],[23,19],[26,23],[27.5,26.3],[29,29],[31,31.4],[33.8,32.6]];
+const ROAD  = [[6,29],[16,27.6],[27.5,26.3],[38,26.2],[48,27.2]];
+/* the old rail embankment across the bottom of the world. Brookside sits
+   between two banks of earth, and that is the whole shape of the problem:
+   ease the pressure at one and the other has to take it. */
+const RAIL  = [[5,31.9],[20,31.5],[33.8,31.3],[47,31.7]];
+const FOOT  = [[29,29.0],[29.6,27.8],[29.3,26.4],[27.8,23.6],[26.5,19],[26,13],[26,8]];
+const FOOT2 = [[21.5,28.7],[22.6,27.5],[23.6,26.4],[24.5,22],[25,16],[26,9]];
+
+function segDist(px,py,a,b){
+  const vx=b[0]-a[0], vy=b[1]-a[1], wx=px-a[0], wy=py-a[1];
+  const L=vx*vx+vy*vy; let t = L? (wx*vx+wy*vy)/L : 0; t=Math.max(0,Math.min(1,t));
+  const dx=px-(a[0]+t*vx), dy=py-(a[1]+t*vy); return Math.hypot(dx,dy);
+}
+const inOrchard = (cx,cy)=> cy>13.5 && cy<21.2 && polyDist(cx,cy,CREEK)<4.5;
+function polyDist(px,py,poly){
+  let m=1e9; for(let i=0;i<poly.length-1;i++) m=Math.min(m,segDist(px,py,poly[i],poly[i+1])); return m;
+}
+
+/* ------------------------------ 2 · PLACES ------------------------------- */
+const PLACES = [
+  {id:'school',  name:'HOLLOWAY SCHOOL', x:26, y:7.5,  lead:'right', short:'the school'},
+  {id:'orchard', name:'THE ORCHARD',     x:23,  y:17.5, lead:'left',  short:'the orchard'},
+  {id:'creek',   name:'THE CREEK MOUTH',  x:32.5,y:31.6, lead:'right', short:'the mouth'},
+  {id:'crossing',name:'THE CROSSING',    x:27.8,y:23.6, lead:'right', short:'the crossing'},
+  {id:'culvert', name:'CULVERT NINE',    x:27.5,y:26.3, lead:'right', short:'the culvert'},
+  {id:'road',    name:'MARKET ROAD',     x:38, y:26.2, lead:'right', short:'the road'},
+  {id:'row',     name:'THE ROW',         x:29,  y:28.8, lead:'right', short:'the row'},
+  {id:'flats',   name:'THE FLATS',       x:33.5,y:28.9, lead:'right', short:'the flats'},
+  {id:'wells',   name:'THE WELL FIELD',  x:13,  y:30.4,lead:'left',  short:'the wells'},
+];
+const PL = {}; PLACES.forEach(p=>PL[p.id]=p);
+const ALIAS = {
+  school:['school','holloway','classroom','children','kids'],
+  orchard:['orchard','trees','woods','buffer','floodplain'],
+  creek:['creek','brookside','stream','brook','mouth','downstream'],
+  crossing:['crossing','walk','path','route','sidewalk','doorway'],
+  culvert:['culvert','nine','pipe','drain under'],
+  road:['road','market','street','embankment'],
+  row:['row','houses','homes','doorstep','doorsteps'],
+  flats:['flats','vacant','lot','apartments','field'],
+  wells:['well','wells','pump','bore','supply'],
+};
+
+/* ------------------------------ 3 · ACTORS ------------------------------- */
+/* Each actor holds ONE cable of the tensegrity: a pair of domains.
+   They can read only their two domains, only at the places they stand in.
+   They never form a hypothesis and they never propose. That is the work
+   only a human in the room can do — which is why NPCs cannot replace players. */
+const ACTORS = [
+  {id:'okonjo',   name:'MRS OKONJO',   role:'crossing guard',      seat:['WATER','SCHOOL'],    at:['crossing','school'],  cares:{'water.walk':-1,'school.attend':1}},
+  {id:'delroy',   name:'DELROY',       role:'lives at The Row',    seat:['WATER','HOUSING'],   at:['row','creek'],        cares:{'water.row':-1,'housing.left':-1}},
+  {id:'principal',name:'THE PRINCIPAL',role:'runs the school',     seat:['SCHOOL','MONEY'],    at:['school'],             cares:{'school.enroll':1,'school.attend':1}},
+  {id:'ansa',     name:'ANSA',         role:'keeps the orchard',   seat:['LAND','WATER'],      at:['orchard','creek'],    cares:{'land.orchard':1,'water.table':1}},
+  {id:'engineer', name:'CITY ENGINEER',role:'owns the road',       seat:['MOVEMENT','WATER'],  at:['road','culvert'],     cares:{'movement.road':-1,'water.walk':-1}},
+  {id:'vera',     name:'VERA',         role:'builds at The Flats', seat:['HOUSING','MONEY'],   at:['flats'],              cares:{'housing.units':1,'money.value':1}},
+  {id:'patel',    name:'MR PATEL',     role:'shop on Market Road', seat:['MOVEMENT','MONEY'],  at:['road'],               cares:{'movement.road':-1,'money.rent':-1}},
+  {id:'tash',     name:'TASH',         role:'walks it every day',  seat:['SCHOOL','MOVEMENT'], at:['crossing','row'],     cares:{'movement.walk':-1,'school.attend':1}},
+  {id:'wellboard',name:'THE WELL BOARD',role:'pumps the water',    seat:['WATER','MONEY'],     at:['wells'],              cares:{'water.table':1,'money.value':1}},
+  {id:'nan',      name:'NAN',          role:'has been here longest',seat:['LAND','HOUSING'],   at:['flats','row'],        cares:{'land.orchard':1,'housing.left':-1}},
+];
+const AC = {}; ACTORS.forEach(a=>AC[a.id]=a);
+
+/* ------------------------------ 4 · CONDITIONS --------------------------- */
+/* A condition is a measurable thing standing in a place, belonging to a domain.
+   Nobody can read them all. That is the point. */
+const CONDS = [
+  {id:'water.walk',   dom:'WATER',    place:'crossing', label:'standing water on the school walk', unit:'cm', bad:1, sc:40},
+  {id:'water.row',    dom:'WATER',    place:'row',      label:'water at The Row doorsteps',        unit:'cm', bad:1, sc:22},
+  {id:'water.out',    dom:'WATER',    place:'creek',    label:'water sent out of the world',       unit:'',   bad:1, sc:400},
+  {id:'water.table',  dom:'WATER',    place:'wells',    label:'shallow water table',               unit:'%',  bad:-1, sc:22},
+  {id:'land.orchard', dom:'LAND',     place:'orchard',  label:'orchard health',                    unit:'%',  bad:-1, sc:18},
+  {id:'land.sealed',  dom:'LAND',     place:'flats',    label:'sealed ground',                     unit:'%',  bad:1, sc:22},
+  {id:'housing.units',dom:'HOUSING',  place:'flats',    label:'homes standing',                    unit:'',   bad:-1, sc:55},
+  {id:'housing.left', dom:'HOUSING',  place:'row',      label:'households moved away',             unit:'',   bad:1, sc:10},
+  {id:'money.rent',   dom:'MONEY',    place:'row',      label:'rent at The Row',                   unit:'',   bad:1, sc:22},
+  {id:'money.value',  dom:'MONEY',    place:'flats',    label:'land value at The Flats',           unit:'',   bad:0, sc:35},
+  {id:'movement.walk',dom:'MOVEMENT', place:'crossing', label:'walk time to school',               unit:'min',bad:1, sc:4.5},
+  {id:'movement.road',dom:'MOVEMENT', place:'road',     label:'days Market Road was cut',          unit:'d',  bad:1, sc:3.5},
+  {id:'school.attend',dom:'SCHOOL',   place:'school',   label:'attendance',                        unit:'%',  bad:-1, sc:7},
+  {id:'school.enroll',dom:'SCHOOL',   place:'school',   label:'children enrolled',                 unit:'',   bad:-1, sc:22},
+];
+const CO = {}; CONDS.forEach(c=>CO[c.id]=c);
+
+/* the space of relations the world is even willing to entertain.
+   It is not the truth. It is the set of sentences that can be argued about. */
+const CANDIDATES = [
+  ['water.walk','movement.walk'],['movement.walk','school.attend'],['water.walk','school.attend'],
+  ['water.row','housing.left'],['housing.left','school.enroll'],['money.rent','housing.left'],
+  ['land.sealed','water.walk'],['land.sealed','water.row'],['housing.units','land.sealed'],
+  ['housing.units','money.value'],['money.value','money.rent'],['water.out','water.row'],
+  ['land.orchard','water.walk'],['land.orchard','water.row'],['water.table','land.orchard'],
+  ['land.orchard','water.table'],['housing.units','water.walk'],['movement.road','money.rent'],
+  ['movement.road','school.attend'],['water.walk','money.rent'],['water.row','money.rent'],
+  ['housing.units','school.enroll'],['school.enroll','school.attend'],['money.rent','school.attend'],
+  ['water.row','movement.road'],['land.sealed','water.table'],['housing.units','movement.walk'],
+];
+</script>
+<script>
+/* ============================ 5 · THE GROUND =============================
+   Elevation is authored once. Everything that happens on it is computed.
+   The whole design rests on one authored fact and no authored consequences:
+   Market Road is an embankment with an undersized culvert. It therefore
+   ponds water on the terrace behind it — across the children's walk — AND
+   it holds that same water off the houses below. Nobody wrote either
+   sentence into the code. The water finds them.
+   ======================================================================== */
+const TRI = new Uint8Array(N);
+const E0 = new Float32Array(N);      // elevation, metres
+const V0 = new Float32Array(N);      // vegetation 0..1
+const I0 = new Float32Array(N);      // impervious 0..1
+const RD = new Uint8Array(N);        // road surface
+const FP = new Uint8Array(N);        // footpath
+const idx = (x,y)=> y*W + x;
+
+(function buildGround(){
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const i = idx(x,y), cx = x+0.5, cy = y+0.5;
+    if(!inside(cx,cy)) continue;
+    TRI[i]=1;
+    const t = (BASE_Y - cy) / (BASE_Y - APEX.y);
+    let e = 30 + 44 * Math.pow(Math.max(0,t), 1.9);
+    // the ridge that closes the top of the world
+    e += 9 * Math.exp(-Math.pow(cy-3.0,2)/12);
+    // the terrace: silt the road has been laying down for eighty years
+    const terr = Math.exp(-Math.pow(cy-23.5,2)/17) * 0.82;
+    e = e*(1-terr) + 34.0*terr;
+    // creek: a shallow swale, not a canyon — and on the terrace behind the
+    // road it has almost silted out, so water there spreads instead of running
+    const dc = polyDist(cx,cy,CREEK);
+    // and below the road it is only a ditch through people's gardens, so
+    // anything extra the road lets through spreads sideways onto The Row
+    const shallow = (1 - terr*0.92) * (cy > 27.2 ? 0.42 : 1);
+    e -= (1.9*Math.exp(-dc*dc/1.5) + 1.15*Math.exp(-dc*dc/13)) * shallow;
+    // Market Road embankment — narrow, and taller than the ground it crosses.
+    // It is a dam that nobody calls a dam.
+    const dr = polyDist(cx,cy,ROAD);
+    e += 3.6*Math.exp(-dr*dr/0.9);
+    // the rail bank, with one bridge opening where the creek goes under it
+    const dl = polyDist(cx,cy,RAIL);
+    e += 2.2*Math.exp(-dl*dl/0.8) * (1 - 0.80*Math.exp(-Math.pow(cx-33.8,2)/9));
+    // the school sits on a shelf; The Flats sit in a saucer
+    e += 1.1*Math.exp(-(Math.pow(cx-26,2)+Math.pow(cy-7.5,2))/26);
+    // The Row stands on made ground — a foot and a half of it, which is all
+    // that has ever been between those houses and the creek
+    e += 0.75*Math.exp(-(Math.pow(cx-29,2)+Math.pow(cy-28.8,2))/15);
+    // the two flanks are ridges: Brookside is a catchment, and everything
+    // that falls in it leaves by one mouth at the bottom of the picture
+    const dSide = Math.min(segDist(cx,cy,[27,1.5],[2,32.5]), segDist(cx,cy,[27,1.5],[52,32.5]));
+    if(dSide < 3.4) e += 6.2*Math.pow(1 - dSide/3.4, 1.4);
+    E0[i]=e;
+
+    let veg = 0.18 + 0.34*Math.exp(-dc*dc/26);
+    if(inOrchard(cx,cy)) veg = 0.92;                                // the orchard
+    if(cy < 5.5) veg = 0.62;                                        // ridge woods
+    let imp = 0.06;
+    if(dr < 1.15){ imp = 0.95; RD[i]=1; veg=0.02 }
+    if(Math.hypot(cx-26,cy-7.5) < 2.3){ imp=0.62; veg=0.18 }        // school & yard
+    if(Math.hypot(cx-29,cy-28.8) < 2.9){ imp=0.55; veg=0.22 }       // The Row
+    if(Math.hypot(cx-13,cy-30.4) < 2.2){ imp=0.35; veg=0.25 }       // well field
+    V0[i]=Math.min(1,veg); I0[i]=Math.min(1,imp);
+    if(polyDist(cx,cy,FOOT)<0.95 || polyDist(cx,cy,FOOT2)<0.95) FP[i]=1;
+  }
+})();
+const cellOf = p => idx(Math.round(p.x-0.5), Math.round(p.y-0.5));
+const CULV = idx(27,26), CULVUP = idx(26,24), CULVDN = idx(28,28);
+
+/* ============================ 6 · THE FOLD =============================== */
+const BUILDTIME = {channel:2, berm:2, culvert:3, build:8, plant:1, clear:1, crossing:3, pump:0};
+function blankObs(){ const o={}; CONDS.forEach(c=>o[c.id]=0); return o }
+
+/* Culvert Nine is not a pipe in the code. It is a notch in the embankment,
+   0.4 m deep, and everything the neighbourhood argues about follows from
+   how deep that notch is. */
+const CULVCELLS = [idx(26,26), idx(27,26), idx(28,26)];
+function newTerrain(){
+  const t = {
+    e:Float32Array.from(E0), v:Float32Array.from(V0), i:Float32Array.from(I0),
+    boardwalk:new Uint8Array(N), foot:Uint8Array.from(FP),
+    culvCap:0.85, pump:1.0, units:0, spec:0,
+  };
+  t.e[CULVCELLS[1]] -= 0.4;
+  return t;
+}
+
+/* A channel is a graded cut, not a trench. It falls from where you started
+   to where you finished, and if that is uphill it is not a channel at all —
+   the world will say so rather than quietly digging you a pond. */
+function grade(pts){
+  if(!pts || pts.length<2) return null;
+  const at = p => { const x=Math.max(0,Math.min(W-1,Math.floor(p[0]))), y=Math.max(0,Math.min(H-1,Math.floor(p[1])));
+    const i=idx(x,y); return TRI[i] ? E0[i] : null };
+  let a = at(pts[0]), b = at(pts[pts.length-1]);
+  if(a==null || b==null) return null;
+  let line = pts;
+  if(b > a){ line = pts.slice().reverse(); const t=a; a=b; b=t }
+  return {line, top:a, bot:b, fall:a-b};
+}
+function cutChannel(T, pts){
+  const g = grade(pts); if(!g || g.fall < 0.5) return;
+  const {line, top, fall} = g;
+  let total=0; const seg=[0];
+  for(let k=0;k<line.length-1;k++){ total += Math.hypot(line[k+1][0]-line[k][0], line[k+1][1]-line[k][1]); seg.push(total) }
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const i=idx(x,y); if(!TRI[i]) continue;
+    let best=1e9, bs=0;
+    for(let k=0;k<line.length-1;k++){
+      const d=segDist(x+0.5,y+0.5,line[k],line[k+1]);
+      if(d<best){ best=d;
+        const vx=line[k+1][0]-line[k][0], vy=line[k+1][1]-line[k][1];
+        const L=vx*vx+vy*vy; let t=L?((x+0.5-line[k][0])*vx+(y+0.5-line[k][1])*vy)/L:0;
+        t=Math.max(0,Math.min(1,t));
+        bs = (seg[k] + t*Math.hypot(vx,vy)) / (total||1);
+      }
+    }
+    if(best >= 1.6) continue;
+    const w = 1 - best/1.6;
+    const target = top - fall*bs - 0.75;
+    T.e[i] = T.e[i]*(1-w) + Math.min(T.e[i], target)*w;
+    T.v[i] *= (1-0.45*w);
+  }
+}
+function applyAction(T, a){
+  const pts = a.geom && a.geom.pts;
+  const stamp = (fn, r) => {
+    for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+      const i=idx(x,y); if(!TRI[i]) continue;
+      const d = pts && pts.length>1 ? polyDist(x+0.5,y+0.5,pts)
+              : Math.hypot(x+0.5-a.geom.x, y+0.5-a.geom.y);
+      if(d < r) fn(i, 1 - d/r);
+    }
+  };
+  switch(a.type){
+    case 'channel':  cutChannel(T, pts); break;
+    case 'berm':     stamp((i,w)=>{ T.e[i] += 2.1*w }, 1.5); break;
+    case 'culvert':  T.culvCap = 3.4; CULVCELLS.forEach(c=>{ T.e[c] -= 2.5 }); break;
+    case 'crossing': stamp((i,w)=>{ if(w>0.35){ T.boardwalk[i]=1; T.foot[i]=1 } }, 1.4); break;
+    case 'plant':    stamp((i,w)=>{ T.v[i]=Math.min(1,T.v[i]+1.0*w); T.i[i]*=(1-0.6*w) }, 6.5); break;
+    case 'clear':    stamp((i,w)=>{ T.v[i]*=(1-0.9*w); T.i[i]=Math.min(1,T.i[i]+0.15*w) }, 6.5); break;
+    case 'build':    stamp((i,w)=>{ T.i[i]=Math.min(1,T.i[i]+0.80*w); T.v[i]*=(1-0.8*w) }, 3.0);
+                     T.units += 60; break;
+    case 'pump':     T.pump = a.geom.rate; break;
+  }
+}
+
+/* ---- hydrology: fill-and-spill relaxation over the real height field ---- */
+const NB = [[1,0],[-1,0],[0,1],[0,-1],[1,1],[1,-1],[-1,1],[-1,-1]];
+function route(T, d, peak, passes){
+  const order = []; for(let i=0;i<N;i++) if(TRI[i]) order.push(i);
+  let exported = 0;
+  for(let pass=0; pass<passes; pass++){
+    order.sort((a,b)=> (T.e[b]+d[b]) - (T.e[a]+d[a]));
+    for(const i of order){
+      // rough, planted ground holds a film of water that never runs off:
+      // where you plant changes how much the ground can keep, not just how
+      // much it lets go
+      const held = 0.004 + 0.20*T.v[i]*T.v[i];
+      if(d[i] <= held + 1e-5) continue;
+      const x = i % W, y = (i - x) / W;
+      const hi = T.e[i] + d[i];
+      let best = -1, bh = hi;
+      for(const [dx,dy] of NB){
+        const nx=x+dx, ny=y+dy;
+        if(nx<0||ny<0||nx>=W||ny>=H) continue;
+        const j = idx(nx,ny);
+        if(!TRI[j]){ // edge of the world: it becomes somewhere else's water
+          const q = d[i]*0.22; d[i]-=q; exported+=q; continue;
+        }
+        const hj = T.e[j] + d[j];
+        if(hj < bh){ bh = hj; best = j }
+      }
+      if(best >= 0){
+        const q = Math.min(d[i]-held, (hi - bh) * 0.48);
+        if(q>0){ d[i] -= q; d[best] += q }
+      }
+      if(d[i] > peak[i]) peak[i] = d[i];
+    }
+    // and the pipe itself: a trickle when it is nine inches, a river when it is not
+    if(d[CULVUP] > 0){
+      const head = (T.e[CULVUP]+d[CULVUP]) - (T.e[CULVDN]+d[CULVDN]);
+      if(head > 0){
+        const q = Math.min(d[CULVUP], 0.22*T.culvCap, head*0.6);
+        d[CULVUP]-=q; d[CULVDN]+=q;
+      }
+    }
+  }
+  for(let i=0;i<N;i++) if(d[i]>peak[i]) peak[i]=d[i];
+  return exported;
+}
+
+/* A storm starts from whatever is already lying on the ground. Between
+   storms the pond drains only as fast as Culvert Nine will let it — which
+   is the whole argument of this neighbourhood, and nobody wrote it down. */
+/* The storm falls in six hours, not all at once, and the ground is never
+   allowed to reach equilibrium in between. That is the only reason a
+   bottleneck can matter: a wide culvert does not move more water in total,
+   it moves it SOONER, and sooner is what puts it through somebody's door. */
+function storm(T, rain, standing){
+  const d = Float32Array.from(standing), peak = new Float32Array(N);
+  let infil = 0, cells = 0, exported = 0;
+  const gen = new Float32Array(N);
+  for(let i=0;i<N;i++){
+    if(!TRI[i]) continue; cells++;
+    let c = 0.20 + 0.72*T.i[i] - 0.62*T.v[i];
+    c = Math.max(0.035, Math.min(0.95, c));
+    gen[i] = rain * 0.001 * c * 13.5;
+    infil += rain * 0.001 * (1-c);
+  }
+  const STEPS = 6;
+  for(let st=0; st<STEPS; st++){
+    for(let i=0;i<N;i++) if(TRI[i]) d[i] += gen[i]/STEPS;
+    exported += route(T, d, peak, 11);
+  }
+  exported += route(T, d, peak, 34);        // the recession
+  return {depth:d, peak, exported, infil: cells? infil/cells : 0};
+}
+function settle(T, standing){
+  const d = Float32Array.from(standing), peak = new Float32Array(N);
+  for(let i=0;i<N;i++) if(d[i]>0){ d[i] = Math.max(0, d[i]*0.90 - 0.010) }
+  const exported = route(T, d, peak, 70);
+  return {depth:d, peak, exported};
+}
+
+function routeCost(T, wet){
+  // Dijkstra from the school gate over the ground as it actually is this week
+  const dist = new Float32Array(N).fill(Infinity);
+  const src = cellOf(PL.school);
+  dist[src]=0; const q=[src];
+  while(q.length){
+    let bi=0; for(let k=1;k<q.length;k++) if(dist[q[k]]<dist[q[bi]]) bi=k;
+    const i=q.splice(bi,1)[0];
+    const x=i%W, y=(i-x)/W;
+    for(const [dx,dy] of NB){
+      const nx=x+dx, ny=y+dy; if(nx<0||ny<0||nx>=W||ny>=H) continue;
+      const j=idx(nx,ny); if(!TRI[j]) continue;
+      let c = T.foot[j] ? 0.55 : (RD[j] ? 0.70 : 1.25);
+      c *= (dx&&dy) ? 1.41 : 1;
+      c += 0.55*Math.abs(T.e[j]-T.e[i]);
+      const wd = wet ? wet[j] : 0;
+      if(wd > 0.42 && !T.boardwalk[j]) c += 60;
+      else if(wd > 0.16 && !T.boardwalk[j]) c *= 4.2;
+      const nd = dist[i] + c;
+      if(nd < dist[j] - 1e-6){ dist[j]=nd; q.push(j) }
+    }
+  }
+  return dist;
+}
+
+/* --------------------------- the week itself ---------------------------- */
+function derive(log){
+  const acts = [];
+  for(const e of log){
+    if(e.k!=='propose') continue;
+    const c = log.find(x=>x.k==='commit' && x.pid===e.id);
+    if(c) acts.push(Object.assign({}, e, {committed:c.week}));
+  }
+  return {acts, promises: log.filter(e=>e.k==='promise')};
+}
+
+function runWorld(log, upto){
+  const {acts, promises} = derive(log);
+  const T = newTerrain();
+  const S = {
+    week:0, T, obs:[], events:[], applied:[], slack:3,
+    attend:97, enroll:210, rent:100, left:0, table:0.62, orchard:0.93,
+    floodMemRow:0, baseWalk:null, promises, broken:[], acts,
+    standing:{}, exportTot:0, lastStorm:null, wet:new Float32Array(N),
+  };
+  ACTORS.forEach(a=>S.standing[a.id]=1);
+  const dist0 = routeCost(T,null);
+  S.baseWalk = (dist0[cellOf(PL.row)] + dist0[cellOf(PL.flats)]) * 0.21;
+
+  for(let wk=1; wk<=upto; wk++){
+    S.week = wk;
+    // 1 · things finish being built
+    for(const a of acts){
+      if(wk === a.committed + (BUILDTIME[a.type]||1) && !S.applied.includes(a.id)){
+        applyAction(T, a); S.applied.push(a.id);
+        S.events.push({wk, kind:'built', aid:a.id, by:a.by,
+          text:`${VERB_TEXT[a.type]||a.type} is finished at ${PL[a.place]?PL[a.place].name:'the site'}.`});
+        if(a.type==='build') S.pendingSpec = wk + 6;
+      }
+    }
+    // 2 · weather, and what last week's weather left behind
+    const rain = rainAt(wk);
+    let exported = 0, infil = 0.0009, r;
+    if(rain){ r = storm(T, rain, S.wet); infil = r.infil }
+    else    { r = settle(T, S.wet) }
+    exported = r.exported;
+    S.wet = r.depth;
+    const peak = r.peak;
+    // 3 · groundwater, then the trees that live on it
+    S.table += (infil*3.0) - 0.013*T.pump - 0.005;
+    S.table = Math.max(0.05, Math.min(1, S.table));
+    let orchTarget = Math.min(1, S.table*1.42);
+    let ov=0, on=0;
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){ const i=idx(x,y);
+      if(TRI[i] && inOrchard(x+0.5,y+0.5)){ ov+=T.v[i]; on++ } }
+    const disturbed = on ? (ov/on) : 0.9;
+    S.orchard += ((Math.min(orchTarget, disturbed/0.92) - S.orchard)) * 0.10;
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){ const i=idx(x,y);
+      if(TRI[i] && inOrchard(x+0.5,y+0.5)) T.v[i]=Math.min(T.v[i], 0.06+0.92*S.orchard) }
+    // 4 · how far it is to school this week
+    const dist = routeCost(T, S.wet);
+    const walkRow = dist[cellOf(PL.row)]*0.42, walkFlats = dist[cellOf(PL.flats)]*0.42;
+    const walk = (walkRow + walkFlats)/2;
+    // 5 · the two independent reasons a child does not arrive
+    const wetWalk = Math.max(S.wet[cellOf(PL.crossing)], peak[cellOf(PL.crossing)]*0.55);
+    const walkPen = Math.max(0, walk - S.baseWalk) * 1.55;
+    const rentPen = Math.max(0, (S.rent-100)) * 0.26;
+    const target = 97 - walkPen - rentPen;
+    S.attend += (target - S.attend) * 0.55;
+    // 6 · money, slowly
+    if(S.pendingSpec && wk >= S.pendingSpec){ T.spec += 0.06; }
+    const wetRow = Math.max(S.wet[cellOf(PL.row)], peak[cellOf(PL.row)]*0.55);
+    S.floodMemRow = S.floodMemRow*0.90 + wetRow*2.2;
+    S.rent += ((100*(1 + 0.62*T.spec - 0.20*Math.min(0.6,S.floodMemRow))) - S.rent)*0.30;
+    if(S.rent > 112) S.left += (S.rent-112)*0.055;
+    if(wetRow > 0.10) S.left += (wetRow-0.10)*9;
+    S.enroll += ((210 - S.left*1.25 + T.units*0.22) - S.enroll)*0.22;
+    // 7 · the road itself
+    const roadWet = peak[cellOf(PL.road)] + peak[CULV];
+    const roadDays = roadWet > 0.30 ? Math.min(7, Math.round(roadWet*7)) : 0;
+    S.exportTot += exported;
+    // 8 · slack: the world's room to breathe
+    const stressed = (wetWalk>0.3) || (wetRow>0.3) || (S.attend<88) || (S.orchard<0.6);
+    if(!stressed && wk%6===0) S.slack = Math.min(5, S.slack+1);
+    if(wetRow>0.6 || wetWalk>0.6) S.slack = Math.max(0, S.slack-1);
+    // 9 · write the record
+    const o = blankObs();
+    o['water.walk']=+(wetWalk*100).toFixed(1);
+    o['water.row']=+(wetRow*100).toFixed(1);
+    o['water.out']=+(exported*8).toFixed(1);
+    o['water.table']=+(S.table*100).toFixed(1);
+    o['land.orchard']=+(S.orchard*100).toFixed(1);
+    let seal=0,sn=0;
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=idx(x,y);
+      if(TRI[i]&&Math.hypot(x+0.5-33.8,y+0.5-29.3)<2.8){seal+=T.i[i];sn++}}
+    o['land.sealed']=+((sn?seal/sn:0)*100).toFixed(1);
+    o['housing.units']=T.units;
+    o['housing.left']=+S.left.toFixed(1);
+    o['money.rent']=+S.rent.toFixed(1);
+    o['money.value']=+((100+62*T.spec)).toFixed(1);
+    o['movement.walk']=+walk.toFixed(1);
+    o['movement.road']=roadDays;
+    o['school.attend']=+S.attend.toFixed(1);
+    o['school.enroll']=Math.round(S.enroll);
+    o.week = wk; o.rain = rain;
+    S.obs.push(o);
+    // 10 · promises are checked by the world, not by anyone's memory
+    checkPromises(S, o, wk);
+    // 11 · what the week is worth saying out loud
+    narrate(S, o, wk, rain);
+  }
+  S.slack = Math.max(0, S.slack - log.filter(e=>e.k==='test').length);
+  S.cur = S.obs.length ? S.obs[S.obs.length-1] : blankObs();
+  S.prev = S.obs.length>1 ? S.obs[S.obs.length-2] : S.cur;
+  return S;
+}
+
+const VERB_TEXT = {channel:'The cut channel',berm:'The raised ground',culvert:'The widened culvert',
+  build:'The new housing',plant:'The new planting',clear:'The clearing',crossing:'The raised crossing',pump:'The pumping change'};
+
+function narrate(S,o,wk,rain){
+  const p = S.obs.length>1 ? S.obs[S.obs.length-2] : null;
+  if(rain>=40) S.events.push({wk,kind:'storm',text:`${rain} mm of rain fell on Brookside.`,big:true});
+  else if(rain) S.events.push({wk,kind:'storm',text:`${rain} mm of rain.`});
+  if(o['water.walk']>14 && (!p||p['water.walk']<=14)){
+    const dry = S.T.boardwalk[cellOf(PL.crossing)];
+    S.events.push({wk,kind:'water',place:'crossing',bad:!dry,
+      text:`Water is standing ${Math.round(o['water.walk'])} cm deep across the school walk`
+         + (dry ? ' — the raised crossing is above it.' : '.')});
+  }
+  if(o['water.row']>10 && (!p||p['water.row']<=10))
+    S.events.push({wk,kind:'water',place:'row',bad:true,text:`Water is at the doorsteps of The Row — ${Math.round(o['water.row'])} cm.`});
+  if(o['water.row']>26 && (!p||p['water.row']<=26))
+    S.events.push({wk,kind:'water',place:'row',bad:true,text:`The Row is taking water indoors. ${Math.round(o['water.row'])} cm.`});
+  if(o['water.table']<52 && (!p||p['water.table']>=52))
+    S.events.push({wk,kind:'water',place:'wells',bad:true,text:`The water table has dropped below the orchard's roots.`});
+  if(p && o['school.attend'] < p['school.attend']-2.5)
+    S.events.push({wk,kind:'school',place:'school',text:`Attendance at Holloway fell to ${Math.round(o['school.attend'])}%.`});
+  if(p && o['school.attend'] > p['school.attend']+2.5)
+    S.events.push({wk,kind:'school',place:'school',text:`Attendance recovered to ${Math.round(o['school.attend'])}%.`});
+  if(p && o['land.orchard'] < p['land.orchard']-2)
+    S.events.push({wk,kind:'land',place:'orchard',text:`The orchard is thinning — ${Math.round(o['land.orchard'])}% canopy.`});
+  if(p && o['money.rent'] > p['money.rent']+3)
+    S.events.push({wk,kind:'money',place:'row',text:`Rents at The Row rose to ${Math.round(o['money.rent'])}.`});
+  if(p && Math.floor(o['housing.left']) > Math.floor(p['housing.left']) && Math.floor(o['housing.left'])%3===0)
+    S.events.push({wk,kind:'housing',place:'row',text:`${Math.floor(o['housing.left'])} households have now left The Row.`});
+}
+</script>
+<script>
+/* ======================= 7 · WHAT ANYONE CAN KNOW ========================
+   The world does not hand out a causal graph. The record is assembled
+   from what people have actually said out loud. A condition nobody has
+   published has no history at all — so the SYSTEM map is a social object,
+   not a readout. This is the mechanism that makes another person necessary.
+   ======================================================================== */
+
+const PROMISE_KINDS = {
+  nobuild:  {t:p=>`no building at ${PL[p.place].name}`},
+  keepveg:  {t:p=>`the trees at ${PL[p.place].name} stay`},
+  keepdry:  {t:p=>`water at ${PL[p.place].name} stays under ${p.level} cm`},
+  restore:  {t:p=>`something done at ${PL[p.place].name} by week ${p.due}`},
+};
+const PLACE_WATER = {crossing:'water.walk', row:'water.row', creek:'water.out', wells:'water.table'};
+
+function checkPromises(S, o, wk){
+  for(const pr of S.promises){
+    if(pr.brokenWk) continue;
+    if(wk < pr.week) continue;
+    let broke = false, why = '';
+    if(pr.kind==='nobuild'){
+      const bad = S.acts.find(a=>(a.type==='build'||a.type==='clear') && a.place===pr.place && a.committed>=pr.week);
+      if(bad && wk >= bad.committed){ broke=true; why=`ground was broken at ${PL[pr.place].name}` }
+    } else if(pr.kind==='keepveg'){
+      if(o['land.orchard'] < (pr.baseline||90) - 8 && pr.place==='orchard'){ broke=true; why='the canopy went with it' }
+      const bad = S.acts.find(a=>(a.type==='clear'||a.type==='channel') && a.place===pr.place && a.committed>=pr.week);
+      if(bad && wk >= bad.committed){ broke=true; why=`the ground at ${PL[pr.place].name} was cut` }
+    } else if(pr.kind==='keepdry'){
+      const cid = PLACE_WATER[pr.place]; if(cid && o[cid] > (pr.level||30)){ broke=true; why=`it reached ${Math.round(o[cid])} cm` }
+    } else if(pr.kind==='restore'){
+      const done = S.acts.find(a=>['plant','crossing','berm','channel','culvert'].includes(a.type)
+        && a.place===pr.place && a.committed>=pr.week && a.committed<=(pr.due||wk));
+      if(!done && wk > (pr.due||9999)){ broke=true; why='the week came and went' }
+    }
+    if(broke){
+      pr.brokenWk = wk; S.broken.push(pr);
+      if(pr.toActor) S.standing[pr.toActor] = Math.max(0, (S.standing[pr.toActor]||1) - 1);
+      S.events.push({wk, kind:'promise', place:pr.place, mem:true, promise:pr.id,
+        text:`A promise made in week ${pr.week} is broken — ${PROMISE_KINDS[pr.kind].t(pr)} — ${why}.`});
+    }
+  }
+}
+
+/* --- the shared record: only conditions somebody has published exist ----- */
+function knownConds(G){
+  const m = {};
+  for(const e of G.log) if(e.k==='notice' && e.cond) m[e.cond] = Math.min(m[e.cond]??1e9, e.week);
+  return m;
+}
+function series(S, cid, fromWk){
+  const out=[]; for(const o of S.obs) if(o.week>=fromWk) out.push(o[cid]); return out;
+}
+function corr(a,b){
+  const n = Math.min(a.length,b.length); if(n<4) return {r:0,n};
+  const da=[], db=[];
+  for(let i=1;i<n;i++){ da.push(a[i]-a[i-1]); db.push(b[i]-b[i-1]) }
+  const m = arr=>arr.reduce((s,v)=>s+v,0)/arr.length;
+  const ma=m(da), mb=m(db);
+  let num=0, sa=0, sb=0;
+  for(let i=0;i<da.length;i++){ const x=da[i]-ma, y=db[i]-mb; num+=x*y; sa+=x*x; sb+=y*y }
+  if(sa<1e-9||sb<1e-9) return {r:0,n};
+  return {r: num/Math.sqrt(sa*sb), n:da.length};
+}
+
+/* an edge in the SYSTEM map. Status is epistemic, never ontological. */
+function buildEdges(G, S){
+  const known = knownConds(G);
+  const out = [];
+  for(const [a,b] of CANDIDATES){
+    if(!(a in known) || !(b in known)) continue;
+    const from = Math.max(known[a], known[b]);
+    const {r,n} = corr(series(S,a,from), series(S,b,from));
+    const claims = G.log.filter(e=>e.k==='claim' &&
+      ((e.cause===a&&e.effect===b)||(e.cause===b&&e.effect===a)));
+    const tests = G.tests.filter(t=>t.pair===a+'>'+b || t.pair===b+'>'+a);
+    let status='noticed';
+    if(claims.length) status='hypothesis';
+    const causes = new Set(claims.map(c=>c.cause));
+    if(causes.size>1) status='contested';
+    const rival = G.log.filter(e=>e.k==='claim' && (e.effect===a||e.effect===b));
+    if(claims.length && new Set(rival.filter(x=>x.effect===claims[0].effect).map(x=>x.cause)).size>1) status='contested';
+    if(tests.length) status = tests[tests.length-1].supported ? 'tested' : 'weakened';
+    if(Math.abs(r)<0.30 && !claims.length && !tests.length) status='faint';
+    out.push({a,b,r,n,status,claims,tests});
+  }
+  return out;
+}
+
+/* --- the tensegrity: load on each of the fifteen cables ------------------ */
+function seatLoads(G, S, edges){
+  const L = {}; SEATS.forEach(s=>L[s]=0);
+  for(const e of edges){
+    if(e.status==='faint') continue;
+    const da = CO[e.a].dom, db = CO[e.b].dom;
+    if(da===db) continue;
+    const w = Math.abs(e.r) * (e.status==='tested'?1.4 : e.status==='contested'?1.25 : e.status==='hypothesis'?1.1 : 0.8);
+    L[seatId(da,db)] += w;
+  }
+  // work in progress loads the cables it will pull on
+  for(const a of S.acts){
+    const age = S.week - a.committed;
+    if(age < 0 || age > 14) continue;
+    const doms = ACTION_DOMAINS[a.type] || [];
+    for(let i=0;i<doms.length;i++) for(let j=i+1;j<doms.length;j++)
+      L[seatId(doms[i],doms[j])] += 0.55 * (1 - age/14);
+  }
+  let mx = 0.001; SEATS.forEach(s=>mx=Math.max(mx,L[s]));
+  SEATS.forEach(s=>L[s]=L[s]/mx);
+  return L;
+}
+const ACTION_DOMAINS = {
+  channel:['WATER','LAND','MOVEMENT'], berm:['WATER','LAND'], culvert:['WATER','MOVEMENT'],
+  build:['HOUSING','MONEY','LAND','WATER'], plant:['LAND','WATER'], clear:['LAND','WATER'],
+  crossing:['MOVEMENT','SCHOOL'], pump:['WATER','MONEY'],
+};
+
+/* --- who is sitting where, and who the world drags into the room --------- */
+function seating(G){
+  const holder = {};                                   // seat -> {kind, id, name}
+  for(const a of ACTORS){
+    const s = G.moved[a.id] ? G.moved[a.id] : seatId(a.seat[0], a.seat[1]);
+    holder[s] = {kind:'actor', id:a.id, name:a.name};
+  }
+  for(const pid in G.players){
+    const p = G.players[pid];
+    holder[p.seat] = {kind:'player', id:pid, name:p.name, actor:p.actor};
+  }
+  return holder;
+}
+function seatOf(G, actorId){ return G.moved[actorId] || seatId(AC[actorId].seat[0], AC[actorId].seat[1]) }
+function domainsOfSeat(s){ return s.split('|') }
+
+/* --- reassembly: an unheld cable under load pulls somebody onto it ------- */
+function reassemble(G, S, loads, holder){
+  const empty = SEATS.filter(s=>!holder[s] && loads[s] > 0.52);
+  if(!empty.length) return null;
+  const target = empty.sort((a,b)=>loads[b]-loads[a])[0];
+  const doms = domainsOfSeat(target);
+  // whoever currently sits on the slackest cable and already stands in one of these domains
+  const cands = ACTORS.filter(a=>{
+    if(G.players && Object.values(G.players).some(p=>p.actor===a.id)) return false;
+    const s = seatOf(G,a.id);
+    return domainsOfSeat(s).some(d=>doms.includes(d));
+  }).sort((a,b)=> loads[seatOf(G,a.id)] - loads[seatOf(G,b.id)]);
+  if(!cands.length) return null;
+  return {actor:cands[0].id, from:seatOf(G,cands[0].id), to:target};
+}
+
+/* --- co-signature: the action decides which cables it will pull ---------- */
+/* Folding the world twice is how a preview is honest, and it is not cheap.
+   The log only ever grows, so its length is a sound cache key. */
+const _fold = new Map(), _pd = new Map();
+function foldTo(upto){
+  const k = G.log.length+':'+upto;
+  if(_fold.has(k)) return _fold.get(k);
+  const v = runWorld(G.log, upto);
+  if(_fold.size>24) _fold.clear();
+  _fold.set(k, v); return v;
+}
+function previewDiff(G, act, horizon){
+  horizon = horizon || ((BUILDTIME[act.type]||1) + 13);
+  const upto = Math.min(MAXWEEK, G.week + horizon);
+  const ck = G.log.length+'|'+upto+'|'+(act.id||'')+'|'+act.type+'|'+JSON.stringify(act.geom||{});
+  if(_pd.has(ck)) return _pd.get(ck);
+  const onTable = act.id && G.log.some(e=>e.id===act.id);
+  const base = foldTo(upto);
+  const trial = runWorld(G.log.concat(onTable
+    ? [{k:'commit', pid:act.id, week:G.week, by:act.by, id:'__tryc'}]
+    : [Object.assign({}, act, {k:'propose', id:'__try'}),
+       {k:'commit', pid:'__try', week:G.week, by:act.by, id:'__tryc'}]
+  ), upto);
+  const d = {};
+  for(const c of CONDS){
+    const b = base.obs.length?base.obs[base.obs.length-1][c.id]:0;
+    const t = trial.obs.length?trial.obs[trial.obs.length-1][c.id]:0;
+    let bm=b, tm=t;
+    for(let i=Math.max(0,base.obs.length-horizon); i<base.obs.length; i++){
+      if(Math.abs(base.obs[i][c.id]-b) > Math.abs(bm-b)) bm=base.obs[i][c.id];
+    }
+    for(let i=Math.max(0,trial.obs.length-horizon); i<trial.obs.length; i++){
+      if(Math.abs(trial.obs[i][c.id]-t) > Math.abs(tm-t)) tm=trial.obs[i][c.id];
+    }
+    const scale = c.sc || Math.max(8, Math.abs(b));
+    d[c.id] = {base:b, trial:t, delta:+(t-b).toFixed(2), rel:(t-b)/scale,
+               peak:+(tm-bm).toFixed(2), relPeak:(tm-bm)/scale};
+  }
+  const out = {diff:d, base, trial};
+  if(_pd.size>40) _pd.clear();
+  _pd.set(ck, out);
+  return out;
+}
+function requiredSeats(diff, proposerSeat){
+  const byDom = {}; DOMAINS.forEach(d=>byDom[d]=0);
+  for(const c of CONDS){
+    const r = Math.max(Math.abs(diff[c.id].rel), Math.abs(diff[c.id].relPeak));
+    if(r > byDom[c.dom]) byDom[c.dom] = r;
+  }
+  const need = new Set([proposerSeat]);
+  for(let i=0;i<6;i++) for(let j=i+1;j<6;j++){
+    const a=DOMAINS[i], b=DOMAINS[j];
+    const coupling = Math.min(byDom[a], byDom[b]);
+    if(coupling > 0.14) need.add(seatId(a,b));
+  }
+  return [...need];
+}
+
+/* --- how a person who is not you decides -------------------------------- */
+function actorVerdict(G, S, actorId, diff, proposerId){
+  const a = AC[actorId];
+  const seat = seatOf(G, actorId), doms = domainsOfSeat(seat);
+  let harm = 0, worst = null, worstVal = 0;
+  for(const c of CONDS){
+    if(!doms.includes(c.dom)) continue;
+    if(!a.at.includes(c.place) && !(c.id in a.cares)) continue;
+    const d = diff[c.id];
+    const mv = Math.abs(d.relPeak) > Math.abs(d.rel) ? d.relPeak : d.rel;
+    const signed = mv * (c.bad>0 ? 1 : c.bad<0 ? -1 : 0);      // + means worse for the world
+    const w = (c.id in a.cares) ? 1.6 : 1;
+    const h = signed * w;
+    if(h > harm){ harm = h; worst = c; worstVal = (mv===d.relPeak ? d.peak : d.delta) }
+  }
+  const st = S.standing[actorId] ?? 1;
+  const proms = G.log.filter(e=>e.k==='promise' && e.by===proposerId && e.toActor===actorId
+                              && !S.broken.some(b=>b.id===e.id));
+  // a promise that names the place they are worried about is worth something.
+  // a promise about somewhere else is worth almost nothing.
+  const onPoint = worst && proms.some(e=>e.place===worst.place);
+  let tol = 0.05 + (onPoint ? 0.34 : proms.length ? 0.07 : 0);
+  if(st < 1) tol = -0.02;
+  if(harm > tol && harm > 0.06){
+    let line;
+    if(st<1) line = `You broke your word to me. I am not signing anything of yours.`;
+    else if(worst) line = refusalLine(a, worst, {delta:worstVal});
+    else line = `It costs me more than it gives me.`;
+    return {sign:false, line, worst:worst?worst.id:null};
+  }
+  if(harm > 0.06 && onPoint && worst)
+    return {sign:true, worst:worst.id, conceded:true,
+      line:`It costs me ${fmtDelta(worst,{delta:worstVal})}. I will sign because you gave me your word about ${PL[worst.place].name}. Keep it.`};
+  let gain = 0, bestC=null;
+  for(const c of CONDS){ if(!doms.includes(c.dom)) continue;
+    const g = -diff[c.id].rel * (c.bad>0?1:c.bad<0?-1:0);
+    if(g>gain){ gain=g; bestC=c } }
+  if(harm > 0.06 && worst)
+    return {sign:true, worst:worst.id, line:`${fmtDelta(worst,{delta:worstVal})} on ${CO[worst.id].label}. I can carry that. Go on.`};
+  return {sign:true, line: bestC ? gainLine(a,bestC,diff[bestC.id]) : `It changes nothing I can see. Go ahead.`, worst:null};
+}
+function fmtDelta(c,d){
+  const v = d.delta; const s = v>0?'+':'';
+  return `${s}${Math.abs(v)<1?v.toFixed(2):Math.round(v)}${c.unit}`;
+}
+function refusalLine(a, c, d){
+  const lines = {
+    'water.row':`Then it comes to my door instead — ${fmtDelta(c,d)} on the step.`,
+    'water.walk':`Then the children wade — ${fmtDelta(c,d)} across the walk.`,
+    'water.table':`You are taking the water out from under everything — ${fmtDelta(c,d)}.`,
+    'land.orchard':`The trees pay for that. ${fmtDelta(c,d)} of canopy.`,
+    'movement.road':a.id==='patel'
+      ? `${fmtDelta(c,d)} more days nobody can reach my shop.`
+      : `My road goes under ${fmtDelta(c,d)} more days a year.`,
+    'movement.walk':`That is ${fmtDelta(c,d)} further for a seven-year-old.`,
+    'school.attend':`Attendance ${fmtDelta(c,d)}. I cannot sign that.`,
+    'school.enroll':`I lose ${Math.abs(Math.round(d.delta))} children. That is a classroom.`,
+    'money.rent':`Rents go ${fmtDelta(c,d)}. You are moving people out with a pen.`,
+    'housing.left':`${fmtDelta(c,d)} households gone from The Row.`,
+    'housing.units':`It takes homes off the table.`,
+    'land.sealed':`More ground under concrete — ${fmtDelta(c,d)}.`,
+  };
+  return lines[c.id] || `${c.label} goes ${fmtDelta(c,d)}. No.`;
+}
+function gainLine(a, c, d){
+  return `Good — ${c.label} ${fmtDelta(c,d)}. I will sign.`;
+}
+</script>
+<script>
+/* ========================= 8 · THE THREE GEOMETRIES ======================
+   One triangular face of a world, read three ways. The same drag turns all
+   three, because they are the same thing seen from different questions.
+   ======================================================================== */
+const cvs = document.getElementById('world'), ctx = cvs.getContext('2d');
+const off = document.createElement('canvas'), octx = off.getContext('2d');
+let DPR = 1, VW = 0, VH = 0;
+const cam = {yaw:0, tilt:0.56, scale:9, ox:0, oy:0, vs:0.24};
+
+/* smoothed corner heights so the ground is a surface, not a stack of tiles */
+let CE = null, CEver = -1;
+function cornerHeights(T){
+  const g = new Float32Array((W+1)*(H+1));
+  for(let y=0;y<=H;y++) for(let x=0;x<=W;x++){
+    let s=0,n=0;
+    for(const [dx,dy] of [[0,0],[-1,0],[0,-1],[-1,-1]]){
+      const cx=x+dx, cy=y+dy;
+      if(cx<0||cy<0||cx>=W||cy>=H) continue;
+      const i=idx(cx,cy); if(!TRI[i]) continue;
+      s+=T.e[i]; n++;
+    }
+    g[y*(W+1)+x] = n? s/n : NaN;
+  }
+  // fill the rim so triangle edges have a height to sit on
+  for(let y=0;y<=H;y++) for(let x=0;x<=W;x++){
+    const k=y*(W+1)+x; if(!isNaN(g[k])) continue;
+    let s=0,n=0;
+    for(const [dx,dy] of NB){ const nx=x+dx, ny=y+dy;
+      if(nx<0||ny<0||nx>W||ny>H) continue;
+      const v=g[ny*(W+1)+nx]; if(!isNaN(v)){ s+=v; n++ } }
+    g[k] = n? s/n : 40;
+  }
+  return g;
+}
+const cH = (g,x,y)=> g[y*(W+1)+x];
+
+function proj(gx, gy, e){
+  const dx = gx - 27, dy = gy - 17.2;
+  const c = Math.cos(cam.yaw), s = Math.sin(cam.yaw);
+  const rx = dx*c - dy*s, ry = dx*s + dy*c;
+  return [ cam.ox + rx*cam.scale,
+           cam.oy + ry*cam.scale*cam.tilt - (e-46)*cam.scale*cam.vs,
+           ry ];
+}
+
+/* Fit the model to whatever glass it is behind. A tall screen gets a
+   flatter, more overhead reading; a wide screen gets more of a diorama. */
+function camBounds(){
+  const sample=[];
+  for(let y=0;y<H;y+=2) for(let x=0;x<W;x+=2){ const i=idx(x,y); if(TRI[i]) sample.push([x+0.5,y+0.5,E0[i]]) }
+  sample.push([27,1.4,74],[2.2,32.6,24],[51.8,32.6,24],[27,32.6,24]);
+  const c=Math.cos(cam.yaw), s=Math.sin(cam.yaw);
+  let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9;
+  for(const [gx,gy,e] of sample){
+    const dx=gx-27, dy=gy-17.2;
+    const px = dx*c - dy*s;
+    const py = (dx*s + dy*c)*cam.tilt - (e-46)*cam.vs;
+    if(px<x0)x0=px; if(px>x1)x1=px; if(py<y0)y0=py; if(py>y1)y1=py;
+  }
+  return {x0,x1,y0,y1,w:Math.max(1,x1-x0),h:Math.max(1,y1-y0)};
+}
+function recentre(){
+  const b=camBounds();
+  cam.ox = VW/2 - ((b.x0+b.x1)/2)*cam.scale;
+  cam.oy = VH/2 - ((b.y0+b.y1)/2)*cam.scale;
+}
+function fitCamera(){
+  const portrait = VH > VW*0.92;
+  cam.tilt = Math.max(0.40, Math.min(0.92, VH/(VW*0.98)));
+  cam.vs = portrait ? 0.36 : 0.21;          // a tall frame gets a taller hill
+  const b=camBounds();
+  // let the base corners run off the edge rather than float the model in a void
+  cam.scale = Math.max(3.0, Math.min(VW*(portrait?1.14:0.96)/b.w, VH*0.94/b.h));
+  recentre();
+}
+function resize(){
+  const st = document.getElementById('stage');
+  DPR = Math.min(2, window.devicePixelRatio||1);
+  VW = st.clientWidth; VH = st.clientHeight;
+  cvs.width = VW*DPR; cvs.height = VH*DPR;
+  off.width = VW*DPR; off.height = VH*DPR;
+  octx.setTransform(DPR,0,0,DPR,0,0); ctx.setTransform(DPR,0,0,DPR,0,0);
+  fitCamera();
+}
+window.addEventListener('resize', ()=>{ resize(); draw() });
+/* The sheet lays out after the canvas is first measured, so the stage
+   changes height under us. Without this the whole world renders squashed. */
+if(window.ResizeObserver){
+  let rt=null;
+  new ResizeObserver(()=>{ clearTimeout(rt); rt=setTimeout(()=>{
+    const st=document.getElementById('stage');
+    if(st.clientWidth!==VW || st.clientHeight!==VH){ resize(); if(G.state) draw() }
+  }, 30) }).observe(document.getElementById('stage'));
+}
+
+/* --------------------------- colour of ground --------------------------- */
+function groundColour(T, i, sh){
+  const v = T.v[i], im = T.i[i];
+  let r,g,b;
+  if(im > 0.62){ r=126; g=124; b=118 }                        // sealed
+  else {
+    const gr = [0.15,0.29,0.18], tn = [0.50,0.43,0.29];
+    const m = Math.min(1, v*1.25);
+    r = (tn[0]*(1-m) + gr[0]*m)*255;
+    g = (tn[1]*(1-m) + gr[1]*m)*255;
+    b = (tn[2]*(1-m) + gr[2]*m)*255;
+    if(im>0.2){ const k=(im-0.2)/0.42; r=r*(1-k)+126*k; g=g*(1-k)+124*k; b=b*(1-k)+118*k }
+  }
+  return `rgb(${Math.round(r*sh)},${Math.round(g*sh)},${Math.round(b*sh)})`;
+}
+
+/* ------------------------------ buildings ------------------------------- */
+function buildings(S){
+  const B = [];
+  const add=(x,y,w,d,h,k)=>B.push({x,y,w,d,h,k});
+  add(26,7.0,3.6,2.0,7.5,'civic'); add(24.2,9.0,1.8,1.4,5,'civic');
+  for(let r=0;r<2;r++) for(let c=0;c<4;c++) add(27.3+c*1.55, 27.9+r*1.9, 1.15, 1.0, 4.4,'house');
+  add(37.6,25.2,2.2,1.1,5,'shop'); add(40.4,25.3,1.6,1.0,4.2,'shop');
+  add(15.4,27.7,1.7,1.0,4.4,'shop'); add(12.9,30.1,1.5,1.1,3.4,'works');
+  add(24.5,14.6,1.2,0.9,3,'works');
+  if(S.T.units>0){
+    const n = Math.min(8, Math.round(S.T.units/22));
+    for(let k=0;k<n;k++) add(32.0 + (k%4)*1.7, 27.9 + Math.floor(k/4)*1.9, 1.4, 1.2, 11,'block');
+  }
+  return B;
+}
+function drawBox(c, g, b, lightDir){
+  const e = cH(g, Math.max(0,Math.min(W,Math.round(b.x))), Math.max(0,Math.min(H,Math.round(b.y))));
+  if(isNaN(e)) return;
+  const hw=b.w/2, hd=b.d/2, top=e+b.h*0.95;
+  const corners=[[-hw,-hd],[hw,-hd],[hw,hd],[-hw,hd]];
+  const P=corners.map(([dx,dy])=>proj(b.x+dx,b.y+dy,top));
+  const Q=corners.map(([dx,dy])=>proj(b.x+dx,b.y+dy,e-0.6));
+  const faces=[];
+  for(let k=0;k<4;k++){ const k2=(k+1)%4;
+    faces.push({d:(P[k][2]+P[k2][2])/2, pts:[P[k],P[k2],Q[k2],Q[k]], k}) }
+  faces.sort((a,b)=>a.d-b.d);
+  const wall = b.k==='block' ? [176,180,184] : b.k==='civic' ? [206,194,170] : [190,178,156];
+  for(const f of faces){
+    const sh = f.k===1||f.k===2 ? 0.62 : 0.92;
+    c.beginPath(); c.moveTo(f.pts[0][0],f.pts[0][1]);
+    for(let k=1;k<4;k++) c.lineTo(f.pts[k][0],f.pts[k][1]); c.closePath();
+    c.fillStyle=`rgb(${Math.round(wall[0]*sh)},${Math.round(wall[1]*sh)},${Math.round(wall[2]*sh)})`; c.fill();
+  }
+  c.beginPath(); c.moveTo(P[0][0],P[0][1]);
+  for(let k=1;k<4;k++) c.lineTo(P[k][0],P[k][1]); c.closePath();
+  c.fillStyle = b.k==='block' ? '#3c444a' : '#4a3d31'; c.fill();
+  c.strokeStyle='rgba(0,0,0,.35)'; c.lineWidth=0.6; c.stroke();
+}
+
+/* -------------------------------- trees --------------------------------- */
+function hash(i){ let h=i*374761393; h=(h^(h>>13))*1274126177; return ((h^(h>>16))>>>0)/4294967296 }
+function drawTrees(c, T, g, budget){
+  const list=[];
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const i=idx(x,y); if(!TRI[i]) continue;
+    const v=T.v[i]; if(v<0.42) continue;
+    const n = v>0.75?3:(v>0.55?2:1);
+    for(let k=0;k<n;k++){
+      const hx = hash(i*7+k*131), hy = hash(i*11+k*57);
+      if(hx > v*1.05) continue;
+      const gx=x+hx, gy=y+hy, e=cH(g,x,y);
+      const p=proj(gx,gy,e);
+      list.push({p, r: 1.4+hash(i+k)*1.4, v});
+    }
+  }
+  list.sort((a,b)=>a.p[2]-b.p[2]);
+  const step = list.length>budget ? list.length/budget : 1;
+  for(let q=0;q<list.length;q+=step){
+    const t=list[Math.floor(q)]; if(!t) continue;
+    const s = cam.scale*0.16*t.r;
+    c.fillStyle='rgba(18,30,20,.55)';
+    c.beginPath(); c.ellipse(t.p[0],t.p[1]+s*0.55,s*0.85,s*0.32,0,0,7); c.fill();
+    c.fillStyle = t.v>0.7 ? '#2b4a30' : '#3d5a35';
+    c.beginPath(); c.ellipse(t.p[0],t.p[1]-s*0.5,s*0.72,s*0.92,0,0,7); c.fill();
+    c.fillStyle='rgba(255,255,255,.10)';
+    c.beginPath(); c.ellipse(t.p[0]-s*0.25,t.p[1]-s*0.85,s*0.34,s*0.42,0,0,7); c.fill();
+  }
+}
+
+/* ------------------------------ the earth ------------------------------- */
+function drawEarth(c, S, quality){
+  const T=S.T, g=CE;
+  const order=[];
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){ const i=idx(x,y); if(!TRI[i]) continue;
+    const p=proj(x+0.5,y+0.5,T.e[i]); order.push({i,x,y,d:p[2]}) }
+  order.sort((a,b)=>a.d-b.d);
+
+  // the slab: this is a model of a place, sitting on a table
+  const triPts=[[27,1.4],[2.2,32.6],[51.8,32.6]];
+  const base = 24;
+  c.beginPath();
+  triPts.forEach((p,k)=>{ const q=proj(p[0],p[1],base); k?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]) });
+  c.closePath(); c.fillStyle='#0a0c0d'; c.fill();
+  for(let k=0;k<3;k++){
+    const a=triPts[k], b=triPts[(k+1)%3];
+    const ea=cH(g,Math.round(a[0]),Math.round(Math.min(H,a[1]))), eb=cH(g,Math.round(b[0]),Math.round(Math.min(H,b[1])));
+    const p1=proj(a[0],a[1],isNaN(ea)?40:ea), p2=proj(b[0],b[1],isNaN(eb)?40:eb);
+    const p3=proj(b[0],b[1],base), p4=proj(a[0],a[1],base);
+    c.beginPath(); c.moveTo(p1[0],p1[1]); c.lineTo(p2[0],p2[1]); c.lineTo(p3[0],p3[1]); c.lineTo(p4[0],p4[1]); c.closePath();
+    const grd=c.createLinearGradient(p1[0],p1[1],p4[0],p4[1]);
+    grd.addColorStop(0,'#4a4133'); grd.addColorStop(1,'#181a19');
+    c.fillStyle=grd; c.fill();
+  }
+
+  for(const o of order){
+    const {x,y,i}=o;
+    const h00=cH(g,x,y), h10=cH(g,x+1,y), h11=cH(g,x+1,y+1), h01=cH(g,x,y+1);
+    const nx=(h00+h01)-(h10+h11), ny=(h00+h10)-(h01+h11);
+    let sh = 0.78 + 0.46*(nx*0.55 + ny*0.42);
+    sh = Math.max(0.34, Math.min(1.45, sh));
+    const P=[proj(x,y,h00),proj(x+1,y,h10),proj(x+1,y+1,h11),proj(x,y+1,h01)];
+    c.beginPath(); c.moveTo(P[0][0],P[0][1]);
+    for(let k=1;k<4;k++) c.lineTo(P[k][0],P[k][1]); c.closePath();
+    c.fillStyle = groundColour(T,i,sh); c.fill();
+    c.strokeStyle = c.fillStyle; c.lineWidth = 0.5; c.stroke();
+  }
+
+  // roads read as ribbons, not lines on a chart
+  const ribbon=(poly,wdt,col)=>{
+    c.strokeStyle=col; c.lineWidth=Math.max(1.2,cam.scale*wdt); c.lineJoin='round'; c.lineCap='round';
+    c.beginPath();
+    poly.forEach((p,k)=>{ const xi=Math.max(0,Math.min(W,Math.round(p[0]))), yi=Math.max(0,Math.min(H,Math.round(p[1])));
+      const e=cH(g,xi,yi); const q=proj(p[0],p[1],isNaN(e)?40:e);
+      k?c.lineTo(q[0],q[1]):c.moveTo(q[0],q[1]) });
+    c.stroke();
+  };
+  ribbon(ROAD,0.30,'#7c8388'); ribbon(ROAD,0.16,'#9aa1a5');
+  ribbon(FOOT,0.10,'rgba(210,205,185,.55)'); ribbon(FOOT2,0.10,'rgba(210,205,185,.55)');
+
+  // water: drawn where the ground actually put it
+  const wet=S.wet;
+  for(const o of order){
+    const {x,y,i}=o;
+    const held = 0.004 + 0.20*T.v[i]*T.v[i];
+    const d = (wet[i]||0) - held;  if(d < 0.035) continue;
+    const h00=cH(g,x,y),h10=cH(g,x+1,y),h11=cH(g,x+1,y+1),h01=cH(g,x,y+1);
+    const lift=Math.min(d,1.4);
+    const P=[proj(x,y,h00+lift),proj(x+1,y,h10+lift),proj(x+1,y+1,h11+lift),proj(x,y+1,h01+lift)];
+    c.beginPath(); c.moveTo(P[0][0],P[0][1]);
+    for(let k=1;k<4;k++) c.lineTo(P[k][0],P[k][1]); c.closePath();
+    const k=Math.min(1,d/0.75);
+    const a=0.34+0.52*k;
+    c.fillStyle=`rgba(${Math.round(38+66*k)},${Math.round(126+74*k)},${Math.round(176+66*k)},${a})`;
+    c.fill(); c.strokeStyle=c.fillStyle; c.lineWidth=0.5; c.stroke();
+  }
+
+  drawTrees(c, T, g, quality<1?220:(VW<520?420:820));
+  const B=buildings(S);
+  B.map(b=>({b,d:proj(b.x,b.y,0)[2]})).sort((p,q)=>p.d-q.d).forEach(o=>drawBox(c,g,o.b));
+
+  // where water left the world
+  if(S.exportTot>0.4){
+    const q=proj(34.5,32.5,cH(g,34,32));
+    c.strokeStyle='rgba(94,200,255,.85)'; c.lineWidth=2;
+    c.beginPath(); c.moveTo(q[0],q[1]); c.lineTo(q[0]+6,q[1]+22); c.stroke();
+    c.fillStyle='rgba(94,200,255,.9)';
+    c.beginPath(); c.moveTo(q[0]+6,q[1]+28); c.lineTo(q[0]+1,q[1]+19); c.lineTo(q[0]+11,q[1]+19); c.closePath(); c.fill();
+  }
+}
+
+/* ------------------------- labels with leader lines --------------------- */
+function drawLabels(c){
+  try{ c.letterSpacing='0.16em' }catch(e){}
+  c.font='600 9.5px ui-sans-serif,system-ui,sans-serif';
+  const g=CE;
+  const items = PLACES.map(p=>{
+    const xi=Math.round(p.x), yi=Math.round(p.y);
+    const e=cH(g,xi,yi);
+    const q=proj(p.x,p.y,isNaN(e)?40:e);
+    return {p,q,side:p.lead};
+  }).filter(o=>o.q[0]>-80 && o.q[0]<VW+80);
+  ['left','right'].forEach(side=>{
+    const arr=items.filter(o=>o.side===side).sort((a,b)=>a.q[1]-b.q[1]);
+    const gap = VW<560 ? 19 : 21;
+    let last = 30 - gap;
+    if(arr.length){
+      const need = arr.length*gap;
+      const first = Math.min(Math.max(26, arr[0].q[1]), Math.max(26, VH-9-need));
+      last = first - gap;
+    }
+    arr.forEach(o=>{
+      let ly=Math.min(VH-9, Math.max(o.q[1], last+gap)); last=ly;
+      const lx = side==='left' ? 12 : VW-12;
+      c.strokeStyle='rgba(210,220,225,.30)'; c.lineWidth=1;
+      c.beginPath(); c.moveTo(o.q[0],o.q[1]);
+      const midx = side==='left'? lx+52 : lx-52;
+      c.lineTo(midx, ly); c.lineTo(side==='left'?lx+6:lx-6, ly); c.stroke();
+      c.fillStyle='rgba(226,235,240,.92)';
+      c.beginPath(); c.arc(o.q[0],o.q[1],2.1,0,7); c.fill();
+      c.textAlign = side==='left'?'left':'right';
+      c.textBaseline='middle';
+      c.fillStyle='rgba(215,226,231,.82)';
+      c.fillText(o.p.name, lx, ly-6);
+      o.p._lx = lx; o.p._ly = ly; o.p._sx=o.q[0]; o.p._sy=o.q[1];
+    });
+  });
+  try{ c.letterSpacing='0px' }catch(e){}
+}
+
+/* ------------------------------- SYSTEM --------------------------------- */
+const EDGE_COL = {faint:'rgba(120,132,138,.22)', noticed:'rgba(150,165,172,.55)',
+  hypothesis:'#5ec8ff', contested:'#e8a13a', tested:'#7ddba6', weakened:'rgba(255,107,74,.7)'};
+function drawSystem(c, S, G){
+  c.save(); c.globalAlpha=0.30; drawEarth(c,S,0.5); c.restore();
+  c.fillStyle='rgba(13,16,18,.55)'; c.fillRect(0,0,VW,VH);
+  const g=CE;
+  const known = knownConds(G);
+  const pos={};
+  CONDS.forEach(cd=>{
+    const p=PL[cd.place]; const xi=Math.round(p.x), yi=Math.round(p.y);
+    const e=cH(g,xi,yi); const q=proj(p.x,p.y,isNaN(e)?40:e);
+    const sib = CONDS.filter(z=>z.place===cd.place);
+    const k = sib.indexOf(cd), n = sib.length;
+    const rad = n>1 ? 12 + n*7 : 0;
+    const a = -Math.PI/2 + (k-(n-1)/2)*(n>2?0.72:0.95);
+    pos[cd.id]=[q[0]+Math.cos(a)*rad, q[1]+Math.sin(a)*rad-8];
+    pos[cd.id].k = k;
+  });
+  const edges = G.edges||[];
+  edges.forEach(e=>{
+    const A=pos[e.a], B=pos[e.b]; if(!A||!B) return;
+    const mx=(A[0]+B[0])/2, my=(A[1]+B[1])/2 - Math.hypot(B[0]-A[0],B[1]-A[1])*0.22;
+    c.strokeStyle=EDGE_COL[e.status]||EDGE_COL.faint;
+    c.lineWidth = e.status==='faint'?0.8 : 0.9+Math.abs(e.r)*3.2;
+    if(e.status==='contested'){ c.setLineDash([5,4]) } else c.setLineDash([]);
+    c.beginPath(); c.moveTo(A[0],A[1]); c.quadraticCurveTo(mx,my,B[0],B[1]); c.stroke();
+    c.setLineDash([]);
+  });
+  const ph=(performance.now()%3000)/3000;
+  CONDS.forEach(cd=>{
+    const q=pos[cd.id]; const kn = cd.id in known;
+    if(kn){
+      c.beginPath(); c.arc(q[0],q[1],5,0,7);
+      c.fillStyle = DCOL[cd.dom]; c.fill();
+      c.strokeStyle='rgba(0,0,0,.5)'; c.lineWidth=1; c.stroke();
+    } else {
+      // something is standing here that nobody is watching
+      c.beginPath(); c.arc(q[0],q[1], 4.5+ph*3, 0,7);
+      c.strokeStyle=`rgba(150,166,174,${0.42*(1-ph)})`; c.lineWidth=1; c.stroke();
+      c.beginPath(); c.arc(q[0],q[1],2.6,0,7);
+      c.strokeStyle='rgba(150,166,174,.55)'; c.lineWidth=1.1; c.stroke();
+    }
+  });
+  try{ c.letterSpacing='0.14em' }catch(e){}
+  c.font='600 8.5px ui-sans-serif,system-ui,sans-serif'; c.textAlign='center'; c.textBaseline='middle';
+  CONDS.forEach(cd=>{
+    if(!(cd.id in known)) return;
+    const q=pos[cd.id];
+    const txt = cd.id.split('.')[1].toUpperCase();
+    const dy = (q.k%2) ? 15 : -11;
+    const w = c.measureText(txt).width;
+    c.fillStyle='rgba(10,13,15,.82)';
+    c.fillRect(q[0]-w/2-3, q[1]+dy-6, w+6, 12);
+    c.fillStyle='rgba(226,236,241,.92)';
+    c.fillText(txt, q[0], q[1]+dy);
+  });
+  try{ c.letterSpacing='0px' }catch(e){}
+  const unk = CONDS.length - Object.keys(known).length;
+  c.textAlign='center'; c.font='600 9px ui-sans-serif,system-ui,sans-serif';
+  c.fillStyle='rgba(139,152,159,.75)';
+  c.fillText(unk ? `${unk} CONDITIONS NOBODY HAS PUBLISHED` : 'EVERY CONDITION IS ON THE RECORD', VW/2, VH-14);
+}
+
+/* ------------------------------ ASSEMBLY -------------------------------- */
+function drawAssembly(c, S, G){
+  const R = Math.max(56, Math.min((VW-176)/2, VH*0.34)), cx=VW/2, cy=VH*0.48;
+  const P={};
+  DOMAINS.forEach((d,i)=>{
+    const a = i*(Math.PI/3) + cam.yaw;
+    const z = (i%2? 1 : -1)*0.42;
+    P[d] = [cx + Math.cos(a)*R, cy + Math.sin(a)*R*cam.tilt - z*R*0.46, Math.sin(a)];
+  });
+  const loads=G.loads||{}, holder=G.holder||{};
+  const order = SEATS.slice().sort((a,b)=>(loads[a]||0)-(loads[b]||0));
+  order.forEach(s=>{
+    const [d1,d2]=domainsOfSeat(s); const A=P[d1], B=P[d2];
+    const L = loads[s]||0, hd = holder[s];
+    c.setLineDash(hd?[]:[4,5]);
+    c.lineWidth = 0.8 + L*5.5;
+    c.strokeStyle = !hd && L>0.5 ? `rgba(255,107,74,${0.35+L*0.5})`
+                  : hd ? `rgba(94,200,255,${0.14+L*0.80})` : `rgba(120,132,138,${0.10+L*0.3})`;
+    c.beginPath(); c.moveTo(A[0],A[1]); c.lineTo(B[0],B[1]); c.stroke();
+    c.setLineDash([]);
+    if(hd){
+      const mx=(A[0]+B[0])/2, my=(A[1]+B[1])/2;
+      const you = hd.kind==='player' && hd.id===G.me;
+      c.beginPath(); c.arc(mx,my, you?9:6.5, 0,7);
+      c.fillStyle = you ? '#5ec8ff' : (hd.kind==='player' ? '#e8a13a' : '#1b2226');
+      c.fill();
+      c.strokeStyle = you ? '#bfe9ff' : 'rgba(180,195,202,.65)'; c.lineWidth=1.2; c.stroke();
+      c.font='700 8px ui-sans-serif,system-ui,sans-serif'; c.textAlign='center'; c.textBaseline='middle';
+      c.fillStyle = you ? '#06121a' : 'rgba(210,222,228,.9)';
+      c.fillText(initials(hd.name), mx, my+0.5);
+    } else if(L>0.5){
+      const mx=(A[0]+B[0])/2, my=(A[1]+B[1])/2;
+      c.strokeStyle='rgba(255,107,74,.9)'; c.lineWidth=1.4;
+      c.beginPath(); c.arc(mx,my,7,0,7); c.stroke();
+      c.fillStyle='rgba(255,107,74,.95)'; c.font='700 10px ui-sans-serif,sans-serif';
+      c.textAlign='center'; c.textBaseline='middle'; c.fillText('?', mx, my+0.5);
+    }
+  });
+  DOMAINS.forEach(d=>{
+    const p=P[d];
+    c.beginPath(); c.arc(p[0],p[1],4.5,0,7); c.fillStyle=DCOL[d]; c.fill();
+    c.beginPath(); c.arc(p[0],p[1],9,0,7); c.strokeStyle=DCOL[d]; c.globalAlpha=.35; c.lineWidth=1; c.stroke(); c.globalAlpha=1;
+    try{ c.letterSpacing='0.18em' }catch(e){}
+    c.font='700 9px ui-sans-serif,system-ui,sans-serif'; c.textBaseline='middle';
+    const outward = p[0] < cx ? -1 : 1;
+    c.textAlign = outward<0?'right':'left';
+    c.fillStyle=DCOL[d]; c.fillText(d, p[0]+outward*14, p[1]);
+    try{ c.letterSpacing='0px' }catch(e){}
+  });
+  c.textAlign='center'; c.font='600 9px ui-sans-serif,system-ui,sans-serif';
+  c.fillStyle='rgba(139,152,159,.75)';
+  try{ c.letterSpacing='0.2em' }catch(e){}
+  c.fillText('SIX STRUTS · FIFTEEN CABLES · YOU ARE A CABLE', VW/2, VH-14);
+  try{ c.letterSpacing='0px' }catch(e){}
+}
+function initials(n){ return n.replace(/^(THE|MRS|MR)\s+/,'').split(/\s+/).map(w=>w[0]).join('').slice(0,2) }
+
+/* ------------------------------- compose -------------------------------- */
+function draw(quality){
+  const S = G.state;
+  if(CEver !== G.ver){ CE = cornerHeights(S.T); CEver = G.ver }
+  octx.clearRect(0,0,VW,VH);
+  const bg = octx.createLinearGradient(0,0,0,VH);
+  bg.addColorStop(0,'#0f1417'); bg.addColorStop(1,'#0a0c0d');
+  octx.fillStyle=bg; octx.fillRect(0,0,VW,VH);
+  if(G.mode==='earth'){ drawEarth(octx,S,quality||1); drawLabels(octx) }
+  else if(G.mode==='system'){ drawSystem(octx,S,G) }
+  else { drawAssembly(octx,S,G) }
+  paint();
+}
+function paint(){
+  ctx.clearRect(0,0,VW,VH); ctx.drawImage(off,0,0,VW,VH);
+  drawFocus();
+}
+function drawFocus(){
+  if(G.mode!=='earth' || !G.focus) return;
+  const p = PL[G.focus]; if(!p || p._sx==null) return;
+  const t = (performance.now()%2400)/2400;
+  ctx.save();
+  const R = G.calloutRect;
+  if(R){
+    const ty = R.below ? R.top - 6 : R.bottom + 6;
+    ctx.strokeStyle='rgba(94,200,255,.55)'; ctx.lineWidth=1.3;
+    ctx.beginPath(); ctx.moveTo(p._sx, p._sy);
+    const midY = (p._sy + ty)/2;
+    ctx.lineTo(p._sx, midY); ctx.lineTo(R.x, midY); ctx.lineTo(R.x, ty);
+    ctx.stroke();
+  }
+  for(let k=0;k<3;k++){
+    const tt=(t+k/3)%1;
+    ctx.strokeStyle=`rgba(94,200,255,${0.5*(1-tt)})`;
+    ctx.lineWidth=1.6;
+    ctx.beginPath(); ctx.ellipse(p._sx,p._sy, 5+tt*30, (5+tt*30)*cam.tilt, 0,0,7); ctx.stroke();
+  }
+  ctx.fillStyle='#bfe9ff'; ctx.beginPath(); ctx.arc(p._sx,p._sy,3.4,0,7); ctx.fill();
+  ctx.restore();
+}
+let _sysT=0;
+function loop(){
+  if(G.mode==='earth' && G.focus) paint();
+  else if(G.mode==='system'){ const n=performance.now(); if(n-_sysT>130){ _sysT=n; draw() } }
+  requestAnimationFrame(loop);
+}
+</script>
+<script>
+/* ============================ 9 · THE GAME ==============================
+   Six verbs. Everything else is either the world answering, or a person.
+   ======================================================================== */
+const G = {
+  log:[], me:'me', players:{}, moved:{}, tests:[], seq:0,
+  mode:'earth', verb:'notice', focus:null, ver:0, state:null,
+  edges:[], loads:{}, holder:{}, draft:null, asked:{}, room:null, host:false,
+};
+const $ = s=>document.querySelector(s);
+const esc = t => String(t==null?'':t).replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const el = (t,c,x)=>{ const e=document.createElement(t); if(c) e.className=c; if(x!=null) e.innerHTML=x; return e };
+const uid = ()=> G.me.slice(0,3)+'-'+(G.seq++)+'-'+Math.floor(performance.now()%1e6).toString(36);
+
+function week(){ return G.log.filter(e=>e.k==='witness').length }
+function mySeat(){ return G.players[G.me] ? G.players[G.me].seat : seatId('WATER','SCHOOL') }
+function myDoms(){ return domainsOfSeat(mySeat()) }
+function meActor(){ const p=G.players[G.me]; return p&&p.actor?AC[p.actor]:null }
+function canPublish(cid){ return myDoms().includes(CO[cid].dom) }
+function monitored(){ const m={}; for(const e of G.log) if(e.k==='notice') m[e.cond]=Math.min(m[e.cond]??1e9,e.week); return m }
+
+function recompute(){
+  G.week = week();
+  G.state = runWorld(G.log, G.week);
+  G.edges = buildEdges(G, G.state);
+  G.loads = seatLoads(G, G.state, G.edges);
+  G.holder = seating(G);
+  G.needsMe = needsMe();
+  G.ver++;
+  CEver = -1;
+}
+function push(e){
+  e.id = e.id || uid(); e.by = e.by || G.me; e.week = (e.week==null? week() : e.week);
+  G.log.push(e); net.send({t:'entry', e});
+  afterChange();
+}
+function afterChange(){
+  recompute(); draw(); renderAll();
+}
+
+/* --------------------------- 9a · LANGUAGE ------------------------------
+   Not a chat box, and not a menu wearing a costume. The sentence is parsed
+   into slots the world can actually hold, and the parse is shown to you so
+   you can correct the world's reading of what you said.  ------------------ */
+const ACTWORDS = [
+  ['channel', /\b(channel|ditch|trench|drain(age)?|dig|cut a|swale)\b/],
+  ['culvert', /\b(culvert|pipe|widen|enlarge|bigger)\b/],
+  ['berm',    /\b(berm|levee|raise the ground|embankment|bund|wall of earth)\b/],
+  ['crossing',/\b(crossing|bridge|boardwalk|safer way|cross(ing)? here|raised walk)\b/],
+  ['plant',   /\b(plant|replant|restore|trees|buffer|meadow|wetland|reforest)\b/],
+  ['clear',   /\b(clear|fell|cut down|remove the trees|grub)\b/],
+  ['build',   /\b(build|apartments|housing|homes|units|develop)\b/],
+  ['pump',    /\b(pump|pumping|abstract|draw water)\b/],
+];
+const CONDWORDS = [
+  ['water.walk', /\b(standing water|water.*(walk|crossing|path)|wade|puddle|collects)\b/],
+  ['water.row',  /\b(doorstep|water.*(row|house|home)|flood(ed|ing)? (the )?row)\b/],
+  ['water.table',/\b(water table|groundwater|aquifer|well level)\b/],
+  ['water.out',  /\b(downstream|out of the world|leaves|sent away)\b/],
+  ['land.orchard',/\b(orchard|canopy|trees.*health|woods)\b/],
+  ['land.sealed',/\b(sealed|concrete|paved|hard ?standing|impervious)\b/],
+  ['housing.units',/\b(homes standing|units|apartments built)\b/],
+  ['housing.left',/\b(moved away|left the row|moving out|displaced)\b/],
+  ['money.rent', /\b(rent|rents)\b/],
+  ['money.value',/\b(land value|price|speculat)\b/],
+  ['movement.walk',/\b(walk time|how far|detour|long way)\b/],
+  ['movement.road',/\b(road.*(closed|cut|under)|impassable)\b/],
+  ['school.attend',/\b(attendance|absent|not turning up|empty desks)\b/],
+  ['school.enroll',/\b(enrol|enroll|roll|children on the register)\b/],
+];
+function parse(text){
+  const t = ' ' + text.toLowerCase() + ' ';
+  const r = {text, place:null, act:null, cond:null, cond2:null, promise:null};
+  let best=null, bestAt=1e9;
+  for(const pid in ALIAS) for(const a of ALIAS[pid]){
+    const at = t.indexOf(' '+a);
+    if(at>=0 && at<bestAt){ bestAt=at; best=pid }
+  }
+  r.place = best;
+  for(const [k,re] of ACTWORDS) if(re.test(t)){ r.act=k; break }
+  const cs=[];
+  for(const [k,re] of CONDWORDS) if(re.test(t)) cs.push(k);
+  r.cond = cs[0]||null; r.cond2 = cs[1]||null;
+  // a promise is a conditional commitment with a party, a place and a test
+  const isProm = /\b(we('ll| will)|i('ll| will)|promise|guarantee|as long as|provided|on condition)\b/.test(t);
+  if(isProm){
+    let kind=null, level=20, due=null;
+    if(/\b(no|not|never|won'?t|no more)\b[^.]*\b(build|develop|apartment|hous)/.test(t) ||
+       /\b(nothing (gets )?built|leave it vacant|keep it open)\b/.test(t)) kind='nobuild';
+    else if(/\b(trees?|orchard|buffer|canopy|woods)\b[^.]*\b(stay|remain|untouched|standing|alone)\b/.test(t) ||
+            /\b(not|won'?t|never)\b[^.]*\b(clear|cut|fell|touch)\b/.test(t)) kind='keepveg';
+    else if(/\b(stays?|keep|remain)s?\b[^.]*\b(dry|under|below)\b/.test(t)) {
+      kind='keepdry'; const m=t.match(/(\d{1,3})\s*(cm)?/); if(m) level=Math.max(5,Math.min(90,+m[1]));
+    }
+    else if(/\b(plant|restore|replant|raise|fix|mend|see to|put right|sort)\b/.test(t)) {
+      kind='restore'; const m=t.match(/week\s*(\d{1,2})/); due = m? +m[1] : week()+8 }
+    if(kind) r.promise = {kind, place:r.place, level, due};
+  }
+  return r;
+}
+
+/* --------------------------- 9b · READINGS ------------------------------ */
+function readingsAt(placeId, who){
+  const doms = who ? [ ...domainsOfSeat(seatOf(G,who)) ] : myDoms();
+  const at = who ? AC[who].at : null;
+  return CONDS.filter(c=>c.place===placeId).map(c=>({
+    c, val: G.state.cur[c.id],
+    readable: doms.includes(c.dom) && (!at || at.includes(c.place)),
+    onRecord: c.id in monitored(),
+  }));
+}
+function whoReads(cid){
+  const d = CO[cid].dom;
+  return ACTORS.filter(a=>domainsOfSeat(seatOf(G,a.id)).includes(d) && a.at.includes(CO[cid].place));
+}
+function delta(cid){
+  const a=G.state.cur[cid], b=G.state.prev[cid];
+  return (a==null||b==null)?0:a-b;
+}
+
+/* --------------------------- 9c · CO-SIGNING ---------------------------- */
+function proposerSeatOf(act){
+  const p = G.players[act.by];
+  return p ? p.seat : mySeat();
+}
+function makeDraft(act){
+  const {diff} = previewDiff(G, act);
+  const need = requiredSeats(diff, proposerSeatOf(act));
+  const signed = new Set(G.log.filter(e=>{
+    if(e.k!=='sign' || e.pid!==act.id) return false;
+    const h = G.holder[e.seat];                  // you cannot sign a cable you do not hold
+    return h && h.kind==='player' && h.id===e.by;
+  }).map(e=>e.seat));
+  signed.add(proposerSeatOf(act));                    // proposing is signing
+  const rows = need.map(s=>{
+    const h = G.holder[s];
+    if(!h) return {seat:s, empty:true, ok:false};
+    if(h.kind==='player'){
+      const ok = signed.has(s);
+      return {seat:s, player:true, id:h.id, name:h.name, you:h.id===G.me, ok};
+    }
+    const v = actorVerdict(G, G.state, h.id, diff, act.by);
+    return {seat:s, actor:h.id, name:h.name, verdict:v, ok:v.sign};
+  });
+  return {act, diff, need, rows};
+}
+function draftReady(d){ d = d||G.draft; return !!d && d.rows.every(r=>r.ok) }
+function onTable(){
+  const done = new Set(G.log.filter(e=>e.k==='commit').map(e=>e.pid));
+  const dropped = new Set(G.log.filter(e=>e.k==='drop').map(e=>e.pid));
+  const open = G.log.filter(e=>e.k==='propose' && !done.has(e.id) && !dropped.has(e.id));
+  // nobody gets to bury the table: only the last three from each author stand
+  const per = {};
+  return open.filter(e=>{ per[e.by]=(per[e.by]||0)+1; return true })
+    .filter(e=>{ per[e.by]--; return per[e.by] < 3 });
+}
+function needsMe(){
+  return onTable().some(a=>{
+    if(a.by===G.me) return false;
+    const d = makeDraft(a);
+    return d.rows.some(r=>r.player && r.you && !r.ok);
+  });
+}
+
+/* --------------------------- 9d · RENDERING UI -------------------------- */
+function renderAll(){ renderSeatline(); renderVerbs(); renderBody(); renderCallout(); renderBar() }
+
+function renderBar(){
+  const wb=$('#weekbtn'); wb.textContent = G.week;
+  const rain = rainAt(G.week);
+  wb.classList.toggle('storm', rain>0);
+  wb.title = rain? `${rain} mm fell this week` : 'week';
+  document.body.classList.toggle('peace', isPeace() && !(G.peaceSnooze>G.week));
+}
+/* Peace is not a score and not a win. It is a stretch of weeks in which
+   nothing here is being made to carry more than it can — and it has to have
+   survived a real storm to count. */
+function isPeace(){
+  const S=G.state; if(!S) return false;
+  const r=S.obs.slice(-8); if(r.length<8) return false;
+  if(S.slack<4 || S.broken.length) return false;
+  if(onTable().length) return false;          // nothing is at peace mid-argument
+  if(!r.some(o=>o.rain>=25)) return false;
+  // note what is NOT in this list: standing water. A floodplain under water
+  // is not a crisis. A child who cannot get to school is.
+  return r.every(o=> o['water.row']<12 && o['school.attend']>95.5 && o['movement.walk']<16 &&
+                     o['land.orchard']>72 && o['money.rent']<115 && o['housing.left']<6 &&
+                     o['water.table']>45);
+}
+function renderSeatline(){
+  const s=$('#seatline'); const [a,b]=myDoms(); const me=meActor();
+  const S=G.state;
+  s.innerHTML='';
+  s.appendChild(el('span','', `you hold <span class="cable">${a} ↔ ${b}</span>${me?` · <span class="who">${esc(me.name)}</span>`:''}`));
+  s.appendChild(el('span','slk', `SLACK <i>${'●'.repeat(S.slack)}${'○'.repeat(Math.max(0,5-S.slack))}</i>`));
+  s.onclick = openSeatSheet;
+}
+const VERBS = [
+  ['notice','NOTICE','○'], ['claim','CLAIM','◎'], ['connect','CONNECT','◇'],
+  ['propose','PROPOSE','△'], ['commit','COMMIT','◉'], ['witness','WITNESS','↻'],
+];
+function renderVerbs(){
+  const v=$('#verbstrip'); v.innerHTML='';
+  VERBS.forEach(([k,label,gl])=>{
+    const b=el('button','verb'+(G.verb===k?' on':''), `<i>${gl}</i>${label}`);
+    if(k==='commit'){
+      const t = onTable();
+      if(!t.length) b.setAttribute('disabled','');
+      else if(G.needsMe) b.classList.add('ready');
+    }
+    if(k==='witness' && Object.keys(monitored()).length && !G.log.some(e=>e.k==='witness' && e.by===G.me))
+      b.classList.add('ready');
+    b.onclick=()=>{ G.verb=k; if(k!=='witness') G.mode='earth'; syncMode(); renderAll(); draw() };
+    v.appendChild(b);
+  });
+}
+function syncMode(){ document.querySelectorAll('.mode').forEach(m=>m.classList.toggle('on', m.dataset.mode===G.mode)) }
+
+function renderCallout(){
+  const ov=$('#overlay'); ov.innerHTML=''; G.calloutRect=null;
+  if(G.mode!=='earth' || !G.focus) return;
+  const p=PL[G.focus]; if(p._sx==null) return;
+  const rs = readingsAt(G.focus).filter(r=>r.readable);
+  const un = readingsAt(G.focus).filter(r=>!r.readable);
+  let html, cls='callout';
+  if(rs.length){
+    const r=rs.sort((a,b)=>Math.abs(delta(b.c.id))-Math.abs(delta(a.c.id)))[0];
+    html = `${r.c.label} — <b>${r.val}${r.c.unit}</b>`;
+    const d=delta(r.c.id);
+    if(Math.abs(d)>0.4) html += ` <span style="opacity:.7">(${d>0?'+':''}${d.toFixed(1)} this week)</span>`;
+    if(d>0 && r.c.bad>0) cls+=' warn';
+  } else if(un.length){
+    const who = whoReads(un[0].c.id);
+    html = `you cannot read ${un[0].c.label} here.${who.length?` <b>${who[0].name}</b> can.`:''}`;
+    cls+=' mute';
+  } else { html = p.name; cls+=' mute' }
+  const d=el('div',cls,html); d.id='calloutEl';
+  const cx = Math.max(96, Math.min(VW-96, p._sx));
+  d.style.left = cx+'px';
+  ov.appendChild(d);
+  const hgt = d.offsetHeight || 44;
+  // keep the callout out of the model: high in the empty air above it, or
+  // just below the point when the point itself is already high
+  const below = p._sy < VH*0.42;
+  let top = below ? Math.min(VH-hgt-10, p._sy+38)
+                  : Math.max(20, Math.min(p._sy - hgt - 46, VH*0.30));
+  d.style.top = top+'px';
+  d.style.transform = 'translateX(-50%)';
+  G.calloutRect = {x:cx, top, bottom:top+hgt, below};
+}
+
+/* ------------------------------ panels ---------------------------------- */
+function renderBody(){
+  const B=$('#body'); B.innerHTML='';
+  if(G.mode==='system') return panelSystem(B);
+  if(G.mode==='assembly') return panelRoom(B);
+  ({notice:panelNotice, claim:panelClaim, connect:panelConnect,
+    propose:panelPropose, commit:panelCommit, witness:panelWitness}[G.verb]||panelNotice)(B);
+  $('#say').placeholder = {
+    notice:'say what you can see here',
+    claim:'say what you think caused what',
+    connect:'say what is related to what',
+    propose:'say what should be done here',
+    commit:'promise something to get a signature',
+    witness:'say what you make of this',
+  }[G.verb];
+}
+
+function panelNotice(B){
+  if(!G.focus){ B.appendChild(el('div','note','<em>Touch the ground.</em> Every reading belongs to a place, and you can only read the two domains your cable spans. The rest of the world is held by other people.')); return }
+  const p=PL[G.focus]; const mon=monitored();
+  const blk=el('div','blk'); blk.appendChild(el('h3','',p.name));
+  readingsAt(G.focus).forEach(r=>{
+    const row=el('div','rowi');
+    row.appendChild(el('span','dom'+(myDoms().includes(r.c.dom)?' mine':''), r.c.dom));
+    row.appendChild(el('span','k', r.c.label));
+    if(r.readable || (r.c.id in mon)){
+      const d=delta(r.c.id);
+      const v=el('span','v'+(Math.abs(d)<0.3?'':(d>0===(r.c.bad>0)?' up':' dn')), `${r.val}${r.c.unit}`);
+      row.appendChild(v);
+    } else row.appendChild(el('span','v na','—'));
+    blk.appendChild(row);
+    if(r.readable && !(r.c.id in mon)){
+      const b=el('button','btn pri', `PUT “${r.c.label.toUpperCase()}” ON THE RECORD`);
+      b.style.marginTop='6px';
+      b.onclick=()=>{ push({k:'notice', cond:r.c.id, place:G.focus, text:$('#say').value||''});
+        $('#say').value='';
+        toast('On the record. Nothing moves in Brookside until somebody lets a week pass — that is WITNESS.', 5200) };
+      blk.appendChild(b);
+    }
+  });
+  B.appendChild(blk);
+  const un = readingsAt(G.focus).filter(r=>!r.readable && !(r.c.id in mon));
+  un.forEach(r=>{
+    const w=whoReads(r.c.id);
+    if(!w.length){ B.appendChild(el('div','note',`<em>${r.c.label}</em> — nobody is watching it, and nobody can from where they sit.`)); return }
+    const row=el('button','act');
+    row.appendChild(el('span','av', initials(w[0].name)));
+    const t=el('span',''); t.appendChild(el('div','nm', `ASK ${w[0].name}`));
+    t.appendChild(el('div','sb', `they can read ${r.c.label} — you cannot`));
+    row.appendChild(t);
+    row.onclick=()=>askActor(w[0].id);
+    B.appendChild(row);
+  });
+}
+
+function panelClaim(B){
+  const mon = Object.keys(monitored());
+  if(mon.length<2){ B.appendChild(el('div','note','A claim needs two things on the record. <em>Notice</em> something first, and get somebody else to notice theirs.')); return }
+  const d = G.claimDraft = G.claimDraft || {cause:null, effect:null};
+  const blk=el('div','blk'); blk.appendChild(el('h3','','I think this caused that'));
+  ['cause','effect'].forEach(slot=>{
+    const w=el('div',''); w.appendChild(el('h3','', slot==='cause'?'because of':'this happened'));
+    mon.forEach(cid=>{
+      const c=CO[cid]; const ch=el('button','chip'+(d[slot]===cid?' on':''), c.label);
+      ch.onclick=()=>{ d[slot]=cid; renderBody() }; w.appendChild(ch);
+    });
+    blk.appendChild(w);
+  });
+  B.appendChild(blk);
+  if(d.cause && d.effect && d.cause!==d.effect){
+    const rival = G.log.filter(e=>e.k==='claim' && e.effect===d.effect && e.cause!==d.cause);
+    if(rival.length) B.appendChild(el('div','note',
+      `<em>${esc(nameOf(rival[0].by))}</em> says ${CO[rival[0].cause].label} caused that instead. Recording this makes it a contested reading — and only a counterfactual can settle it.`));
+    const b=el('button','btn hot','RECORD THE CLAIM');
+    b.onclick=()=>{ push({k:'claim', cause:d.cause, effect:d.effect, text:$('#say').value||''});
+      $('#say').value=''; G.claimDraft=null; G.mode='system'; syncMode(); toast('Your claim is on the record and can be tested.') };
+    B.appendChild(b);
+  }
+}
+
+function panelConnect(B){
+  const mon = Object.keys(monitored());
+  if(mon.length<2){ B.appendChild(el('div','note','Nothing can be connected until two things are on the record.')); return }
+  const d = G.connDraft = G.connDraft || {a:null,b:null};
+  const blk=el('div','blk'); blk.appendChild(el('h3','','these two move together'));
+  mon.forEach(cid=>{
+    const c=CO[cid]; const on = d.a===cid||d.b===cid;
+    const ch=el('button','chip'+(on?' on':''), `${c.label}`);
+    ch.onclick=()=>{ if(d.a===cid) d.a=null; else if(d.b===cid) d.b=null; else if(!d.a) d.a=cid; else d.b=cid; renderBody() };
+    blk.appendChild(ch);
+  });
+  B.appendChild(blk);
+  if(d.a&&d.b){
+    const e = (G.edges||[]).find(x=>(x.a===d.a&&x.b===d.b)||(x.a===d.b&&x.b===d.a));
+    B.appendChild(el('div','note', e
+      ? `The record agrees they move together (r = ${e.r.toFixed(2)} over ${e.n} weeks). That is not a cause. Somebody still has to say which way it runs.`
+      : `Nothing in the record links them yet. You can still say it — the world will keep watching.`));
+    const b=el('button','btn pri','CONNECT THEM');
+    b.onclick=()=>{ push({k:'connect', a:d.a, b:d.b, text:$('#say').value||''}); $('#say').value=''; G.connDraft=null; G.mode='system'; syncMode() };
+    B.appendChild(b);
+  }
+}
+
+const ACTIONS = [
+  {k:'channel', n:'CUT A CHANNEL', g:'line', d:'lower a line of ground'},
+  {k:'berm',    n:'RAISE GROUND',  g:'line', d:'a bank of earth'},
+  {k:'culvert', n:'WIDEN CULVERT NINE', g:'point', fixed:'culvert', d:'let the creek through the road'},
+  {k:'crossing',n:'RAISE THE CROSSING', g:'line', d:'a walk that stays above water'},
+  {k:'plant',   n:'PLANT',         g:'point', d:'trees hold water where they stand'},
+  {k:'clear',   n:'CLEAR',         g:'point', d:'take the cover off'},
+  {k:'build',   n:'BUILD HOMES',   g:'point', d:'sixty homes, and everything that follows'},
+  {k:'pump',    n:'CHANGE PUMPING',g:'point', fixed:'wells', d:'more or less water out of the ground'},
+];
+function panelPropose(B){
+  const d = G.propDraft = G.propDraft || {type:null, pts:[], x:null, y:null};
+  const blk=el('div','blk'); blk.appendChild(el('h3','','a possible world'));
+  ACTIONS.forEach(a=>{
+    const ch=el('button','chip'+(d.type===a.k?' on':''), a.n);
+    ch.onclick=()=>{ d.type=a.k; d.pts=[]; d.x=null;
+      if(a.fixed){ d.x=PL[a.fixed].x; d.y=PL[a.fixed].y; d.place=a.fixed }
+      G.drawing = !a.fixed; renderBody(); toast(a.fixed?'Sited. Now preview it.':(a.g==='line'?'Drag a line on the ground.':'Touch the ground to site it.')) };
+    blk.appendChild(ch);
+  });
+  B.appendChild(blk);
+  if(!d.type){ B.appendChild(el('div','note','Or just say it: <em>“cut a drainage channel toward the creek”</em>, <em>“build a safer way for children to cross here”</em>.')); return }
+  const A = ACTIONS.find(a=>a.k===d.type);
+  B.appendChild(el('div','note', A.d + (d.pts.length||d.x!=null ? ' — sited.' : ' — <em class="err">not sited yet.</em>')));
+  if(d.type==='pump'){
+    const r=el('div','btnrow');
+    [0.4,1.0,1.6].forEach(v=>{ const b=el('button','btn'+(d.rate===v?' pri':''), v<1?'LESS':v>1?'MORE':'AS NOW');
+      b.onclick=()=>{ d.rate=v; renderBody() }; r.appendChild(b) });
+    B.appendChild(r);
+  }
+  const sited = d.pts.length>1 || (d.x!=null && (d.type!=='pump' || d.rate!=null));
+  const b=el('button','btn hot','PREVIEW WHAT IT DOES');
+  if(!sited) b.setAttribute('disabled','');
+  b.onclick=()=>{
+    if(onTable().filter(a=>a.by===G.me).length >= 3)
+      return toast('You already have three things on the table. Settle one before adding another.', 4600);
+    if(d.type==='channel'){
+      const g = grade(d.pts);
+      if(!g || g.fall < 0.5) return toast('Water will not run that way. Both ends are at the same height — draw it downhill.', 5200);
+    }
+    const id = uid();
+    push({k:'propose', id, type:d.type,
+      place:d.place|| nearestPlace(d.pts.length?d.pts[0][0]:d.x, d.pts.length?d.pts[0][1]:d.y),
+      geom:{pts:d.pts.length>1?d.pts:null, x:d.x, y:d.y, rate:d.rate}, text:$('#say').value||''});
+    $('#say').value='';
+    G.draftId = id; G.verb='commit'; G.propDraft=null; G.drawing=false;
+    renderAll(); draw();
+    toast('It is on the table. Everyone it touches can see it now.', 4200);
+  };
+  B.appendChild(b);
+}
+function nearestPlace(x,y){ let best=PLACES[0], bd=1e9;
+  PLACES.forEach(p=>{ const d=Math.hypot(p.x-x,p.y-y); if(d<bd){bd=d;best=p} }); return best.id }
+
+function panelCommit(B){
+  const table = onTable();
+  if(!table.length){ B.appendChild(el('div','note','Nothing is on the table. <em>Propose</em> something, or wait — somebody else may put something up.')); return }
+  const cur = table.find(a=>a.id===G.draftId) || table[0];
+  if(table.length>1){
+    const w=el('div','blk'); w.appendChild(el('h3','',`${table.length} things are on the table`));
+    table.forEach(a=>{ const ch=el('button','chip'+(a.id===cur.id?' on':''),
+      `${(ACTIONS.find(x=>x.k===a.type)||{n:a.type}).n} · ${esc(nameOf(a.by))}`);
+      ch.onclick=()=>{ G.draftId=a.id; renderBody() }; w.appendChild(ch) });
+    B.appendChild(w);
+  }
+  const d = G.draft = makeDraft(cur);
+  const A = ACTIONS.find(a=>a.k===cur.type) || {n:cur.type, d:''};
+  const need = d.rows.length, refuse = d.rows.filter(r=>!r.ok).length;
+  B.appendChild(el('div','blk', `<h3>${A.n} · ${PL[cur.place]?PL[cur.place].name:''} · put up by ${nameOf(cur.by)}</h3>`
+    + (cur.text? `<div class="note" style="padding:0 0 6px">“${esc(cur.text)}”</div>`:'')
+    + `<div class="note" style="padding:0">${need} cable${need>1?'s':''} must sign`
+    + (refuse? ` — <em class="err">${refuse} will not, yet</em>` : ' — <em>all of them will</em>') + `.</div>`));
+
+  const blk=el('div','blk'); blk.appendChild(el('h3','','what you can see it doing'));
+  const mon=monitored(); let anyVisible=false;
+  CONDS.forEach(c=>{
+    const v=d.diff[c.id]; if(Math.max(Math.abs(v.rel),Math.abs(v.relPeak))<0.05) return;
+    const vis = myDoms().includes(c.dom) || (c.id in mon);
+    const row=el('div','rowi');
+    row.appendChild(el('span','dom'+(myDoms().includes(c.dom)?' mine':''), c.dom));
+    row.appendChild(el('span','k', c.label));
+    if(vis){ anyVisible=true;
+      const worse = (Math.abs(v.relPeak)>Math.abs(v.rel)?v.peak:v.delta) > 0 === (c.bad>0);
+      row.appendChild(el('span','v'+(worse?' up':' dn'),
+        fmtDelta(c,v) + (Math.abs(v.peak)>Math.abs(v.delta)*1.4 ? ` · worst ${fmtDelta(c,{delta:v.peak})}` : '')));
+    } else row.appendChild(el('span','v na','unknown to you'));
+    blk.appendChild(row);
+  });
+  if(!anyVisible) blk.appendChild(el('div','note','Nothing you can read moves. That does not mean nothing moves.'));
+  B.appendChild(blk);
+
+  B.appendChild(el('div','blk','<h3>it pulls on these cables — they have to sign</h3>'));
+  d.rows.forEach(r=>{
+    const row=el('button','act');
+    row.appendChild(el('span','av', r.empty?'?':initials(r.name)));
+    const t=el('span',''); t.appendChild(el('div','nm', r.empty? 'NOBODY HOLDS THIS CABLE' : r.name + (r.you?' · YOU':'')));
+    t.appendChild(el('div','sb', r.seat.replace('|',' ↔ ')));
+    row.appendChild(t);
+    if(r.empty) row.appendChild(el('span','tag wait','SEAT IT'));
+    else if(r.player) row.appendChild(el('span','tag '+(r.ok?'sign':(r.you?'you':'wait')), r.ok?'SIGNED':(r.you?'SIGN?':'WAITING')));
+    else row.appendChild(el('span','tag '+(r.verdict.sign?'sign':'ref'), r.verdict.sign?'SIGNS':'REFUSES'));
+    row.onclick=()=>{
+      if(r.empty) return seatSomebody(r.seat);
+      if(r.player && r.you && !r.ok){ push({k:'sign', pid:cur.id, seat:r.seat}); return toast('You have signed.') }
+      if(r.actor){ toast(`${r.name}: “${r.verdict.line}”`, 5600);
+        if(!r.verdict.sign) offerPromise(r); }
+      else if(r.player) toast(`${r.name} holds ${r.seat.replace('|',' ↔ ')}. Only they can sign it.`, 4000);
+    };
+    B.appendChild(row);
+  });
+
+  const mine = d.rows.find(r=>r.player && r.you && !r.ok);
+  if(mine){
+    const sb=el('button','btn pri','SIGN IT — '+mine.seat.replace('|',' ↔ '));
+    sb.onclick=()=>{ push({k:'sign', pid:cur.id, seat:mine.seat}); toast('Signed.') };
+    B.appendChild(sb);
+  }
+  const ready=draftReady(d);
+  const c=el('button','btn '+(ready?'hot':''), ready?'COMMIT IT TO THE WORLD':'NOT EVERY CABLE HAS SIGNED');
+  if(!ready) c.setAttribute('disabled','');
+  c.onclick=()=>{
+    push({k:'commit', pid:cur.id});
+    G.draftId=null; G.verb='witness'; renderAll(); draw();
+    toast('Committed. It takes '+(BUILDTIME[cur.type]||1)+' weeks to arrive.', 4200);
+  };
+  B.appendChild(c);
+  if(cur.by===G.me){
+    const x=el('button','btn warnb','TAKE IT OFF THE TABLE');
+    x.onclick=()=>{ push({k:'drop', pid:cur.id}); G.draftId=null; G.verb='propose'; renderAll() };
+    B.appendChild(x);
+  }
+}
+
+function offerPromise(r){
+  const n=el('div','note');
+  n.innerHTML = `<em>${r.name}</em> will not sign. You can change the design — or say something binding, such as <em>“we will not build at The Flats”</em>, and record it as a promise. The world will hold you to it.`;
+  const b=$('#body'); b.insertBefore(n, b.firstChild); b.scrollTop=0;
+  G.promiseTarget = r.actor;
+}
+
+function panelWitness(B){
+  const S=G.state;
+  const b=el('button','btn hot','LET A WEEK PASS');
+  b.onclick=()=>{ if(G.week>=MAXWEEK) return toast('The year is done.');
+    push({k:'witness'}); G.verb='witness'; renderAll(); draw();
+    const S2=G.state; const ev=S2.events.filter(e=>e.wk===G.week);
+    if(ev.length) toast(ev[ev.length-1].text, 4200);
+    const rs = reassemble(G,S2,G.loads,G.holder);
+    if(rs){ push({k:'reseat', actor:rs.actor, to:rs.to}); }
+  };
+  B.appendChild(b);
+  const feed = S.events.slice().reverse().slice(0,40);
+  if(!feed.length) B.appendChild(el('div','note','Nothing has happened yet. Let a week pass.'));
+  feed.forEach(e=>{
+    const d=el('button','evt'+(e.big?' big':'')+(e.bad?' bad':'')+(e.mem?' mem':''));
+    d.appendChild(el('span','wk',`WEEK ${e.wk}`));
+    d.appendChild(el('span','',e.text));
+    if(e.aid){
+      const src=el('span','src','why did that happen? <u>test it against a world without this</u>');
+      d.appendChild(src);
+      d.onclick=()=>openTest(e.aid);
+    } else if(e.kind==='water'||e.kind==='school'||e.kind==='money'||e.kind==='land'||e.kind==='housing'){
+      const acts=G.state.acts.filter(a=>a.committed<=e.wk);
+      if(acts.length){ d.appendChild(el('span','src','<u>test this against a world where we did not do that</u>'));
+        d.onclick=()=>openTest(acts[acts.length-1].id) }
+    }
+    B.appendChild(d);
+  });
+}
+
+/* --------------------------- 9e · THE COUNTERFACTUAL --------------------
+   The only thing in this file that can settle an argument, and it costs
+   the world some of its slack to run.  ------------------------------------ */
+function openTest(aid){
+  const S=G.state; const act=S.acts.find(a=>a.id===aid); if(!act) return;
+  if(S.slack<1) return toast('There is no slack left to run a test. The world is too stretched to spare the attention.', 5000);
+  const without = G.log.filter(e=>!(e.id===aid) && !(e.k==='commit' && e.pid===aid));
+  const alt = runWorld(without, G.week);
+  const mon = monitored();
+  const since = act.committed;
+  const worst = (obs, c) => {
+    let v = 0, wk = null;
+    obs.forEach(o=>{ if(o.week < since) return;
+      const x = c.bad<0 ? -o[c.id] : o[c.id];
+      if(wk===null || x > v){ v = x; wk = o.week } });
+    return {v: wk===null?0:(c.bad<0?-v:v), wk};
+  };
+  const rows = CONDS.map(c=>{
+    const a=worst(S.obs,c), b=worst(alt.obs,c);
+    return {c, real:a.v, alt:b.v, wk:a.wk, d:a.v-b.v,
+            vis: myDoms().includes(c.dom) || (c.id in mon)};
+  }).filter(r=>Math.abs(r.d) > Math.max(0.4, Math.abs(r.alt)*0.02));
+  rows.sort((x,y)=> (y.vis-x.vis) || (Math.abs(y.d)/(y.c.sc||10) - Math.abs(x.d)/(x.c.sc||10)));
+  const m=$('#modalin'); m.innerHTML='';
+  m.appendChild(el('h2','',`A WORLD WITHOUT — ${(VERB_TEXT[act.type]||act.type).toUpperCase()}, WEEK ${act.committed}`));
+  const lead = rows.find(r=>r.vis);
+  if(lead) m.appendChild(el('div','note',
+    `Without it, the worst week for <em>${lead.c.label}</em> would have been <em>${lead.alt}${lead.c.unit}</em> instead of <em>${lead.real}${lead.c.unit}</em>.`));
+  if(!rows.length) m.appendChild(el('div','note','Nothing measurable would have been different. That is an answer too — and it is not the answer anybody expected.'));
+  let hidden=0;
+  rows.forEach(r=>{
+    if(!r.vis){ hidden++; return }
+    const row=el('div','rowi'); row.style.padding='8px 12px';
+    row.appendChild(el('span','dom'+(myDoms().includes(r.c.dom)?' mine':''), r.c.dom));
+    row.appendChild(el('span','k', `${r.c.label}<br><span style="opacity:.55;font-size:10px">worst in week ${r.wk}</span>`));
+    row.appendChild(el('span','v'+((r.d>0)===(r.c.bad>0)?' up':' dn'),
+      `${r.alt}${r.c.unit} → ${r.real}${r.c.unit}`));
+    m.appendChild(row);
+  });
+  if(hidden) m.appendChild(el('div','note',
+    `<em>${hidden} more thing${hidden>1?'s':''} moved</em> in domains nobody at this table is watching. The test cannot tell you what you never looked at.`));
+  m.appendChild(el('div','note','This is the same world folded again with one action deleted, and nothing else changed. It is the only thing here that can settle an argument, which is why it costs the world some of its slack.'));
+  const close=el('button','btn pri','ACCEPT THE RESULT — COSTS ONE SLACK');
+  close.onclick=()=>{
+    $('#modal').classList.remove('on');
+    push({k:'test', target:aid, pair:testPair(rows), supported:rows.length>0});
+  };
+  m.appendChild(close);
+  $('#modal').classList.add('on');
+}
+function testPair(rows){
+  if(rows.length<2) return '';
+  return rows[0].c.id+'>'+rows[1].c.id;
+}
+
+/* --------------------------- 9f · SYSTEM PANEL -------------------------- */
+function panelSystem(B){
+  const mon=monitored();
+  const kn=Object.keys(mon).length;
+  B.appendChild(el('div','note',`The record holds <em>${kn} of ${CONDS.length}</em> conditions. Nothing that nobody watches has a history, and nothing without a history can be argued about.`));
+  const live=(G.edges||[]).filter(e=>e.status!=='faint').sort((a,b)=>Math.abs(b.r)-Math.abs(a.r));
+  if(!live.length) B.appendChild(el('div','note','No relation has shown itself yet.'));
+  live.forEach(e=>{
+    const row=el('button','evt');
+    const st={noticed:'MOVES TOGETHER',hypothesis:'CLAIMED',contested:'CONTESTED',tested:'TESTED',weakened:'WEAKENED'}[e.status];
+    row.appendChild(el('span','wk', `${st} · r ${e.r>0?'+':''}${e.r.toFixed(2)} · ${e.n} weeks`));
+    row.appendChild(el('span','', `${CO[e.a].label} <span style="color:var(--dim)">↔</span> ${CO[e.b].label}`));
+    if(e.claims.length){
+      row.appendChild(el('span','src', e.claims.map(c=>`<u>${esc(nameOf(c.by))}</u>: ${CO[c.cause].label} caused ${CO[c.effect].label}`).join(' · ')));
+    }
+    if(e.status==='contested') row.appendChild(el('span','src','two people disagree about which way this runs. Test it.'));
+    row.onclick=()=>{ const a=G.state.acts; if(a.length) openTest(a[a.length-1].id); else toast('Nothing has been done yet to test against.') };
+    B.appendChild(row);
+  });
+}
+function nameOf(id){
+  if(G.players[id]) return G.players[id].name;
+  if(AC[id]) return AC[id].name;
+  return id===G.me?'you':id;
+}
+
+/* --------------------------- 9g · THE ROOM ------------------------------ */
+function panelRoom(B){
+  const S=G.state;
+  const anyLoad = SEATS.some(s=>(G.loads[s]||0) > 0.02);
+  if(!anyLoad) B.appendChild(el('div','note',
+    'No cable is carrying anything. Nothing is on the record, so the assembly does not yet know that anybody needs anybody. <em>Notice something</em>, and get somebody else to notice theirs.'));
+  const loaded = SEATS.filter(s=>(G.loads[s]||0)>0.45 && !G.holder[s]);
+  if(loaded.length) B.appendChild(el('div','note',
+    `<em>${loaded.length} cable${loaded.length>1?'s are':' is'} under load with nobody on it.</em> When that happens the world drags somebody onto it, and everything you propose will need their name.`));
+  ACTORS.forEach(a=>{
+    const seat=seatOf(G,a.id); const held=G.holder[seat];
+    const taken = held && held.kind==='player';
+    const row=el('button','act'+(G.focus&&a.at.includes(G.focus)?' here':''));
+    row.appendChild(el('span','av', initials(a.name)));
+    const t=el('span',''); t.appendChild(el('div','nm', a.name + (taken?` · ${held.name}`:'')));
+    t.appendChild(el('div','sb', `${seat.replace('|',' ↔ ')} · ${a.role}`));
+    row.appendChild(t);
+    const st=S.standing[a.id]??1;
+    row.appendChild(el('span','tag '+(st<1?'ref':''), st<1?'WRONGED':`LOAD ${Math.round((G.loads[seat]||0)*100)}`));
+    row.onclick=()=>askActor(a.id);
+    B.appendChild(row);
+  });
+  if(S.broken.length){
+    B.appendChild(el('div','blk','<h3>what was promised</h3>'));
+    G.log.filter(e=>e.k==='promise').forEach(pr=>{
+      const br=S.broken.find(b=>b.id===pr.id);
+      const d=el('div','evt'+(br?' mem':''));
+      d.appendChild(el('span','wk',`WEEK ${pr.week} · ${br?'BROKEN IN WEEK '+br.brokenWk:'STANDING'}`));
+      d.appendChild(el('span','', `“${esc(pr.text||PROMISE_KINDS[pr.kind].t(pr))}”`));
+      B.appendChild(d);
+    });
+  }
+}
+function askActor(id){
+  const a=AC[id], S=G.state, mon=monitored();
+  const doms=domainsOfSeat(seatOf(G,id));
+  const rs=CONDS.filter(c=>doms.includes(c.dom) && a.at.includes(c.place));
+  const m=$('#modalin'); m.innerHTML='';
+  m.appendChild(el('h2','',`${a.name} — ${a.role}`));
+  m.appendChild(el('div','note',`Reads only <em>${doms.join('</em> and <em>')}</em>, and only where they stand.`));
+  if(!rs.length) m.appendChild(el('div','note','“I have nothing to tell you. I am not where that happens.”'));
+  rs.forEach(c=>{
+    const row=el('div','rowi'); row.style.padding='8px 12px';
+    row.appendChild(el('span','dom',c.dom));
+    row.appendChild(el('span','k',c.label));
+    row.appendChild(el('span','v', `${S.cur[c.id]}${c.unit}`));
+    m.appendChild(row);
+    if(!(c.id in mon)){
+      const harm = (c.bad>0? delta(c.id) : -delta(c.id));
+      const willing = harm > 0.2 || (S.standing[id]??1) >= 1 && (c.id in a.cares);
+      const b=el('button','btn'+(willing?' pri':''), willing?'ASK THEM TO PUT IT ON THE RECORD':'THEY WILL NOT PUT THIS ON THE RECORD');
+      if(!willing) b.setAttribute('disabled','');
+      b.onclick=()=>{ push({k:'notice', cond:c.id, place:c.place, by:id, text:`${a.name} said it out loud.`});
+        $('#modal').classList.remove('on'); toast(`${a.name} put ${c.label} on the record.`) };
+      m.appendChild(b);
+    }
+  });
+  const cl=el('button','btn','CLOSE'); cl.onclick=()=>$('#modal').classList.remove('on');
+  m.appendChild(cl);
+  $('#modal').classList.add('on');
+}
+function seatSomebody(seat){
+  const doms=domainsOfSeat(seat);
+  const cands=ACTORS.filter(a=>!Object.values(G.players).some(p=>p.actor===a.id))
+    .filter(a=>domainsOfSeat(seatOf(G,a.id)).some(d=>doms.includes(d)))
+    .sort((a,b)=>(G.loads[seatOf(G,a.id)]||0)-(G.loads[seatOf(G,b.id)]||0));
+  const m=$('#modalin'); m.innerHTML='';
+  m.appendChild(el('h2','',`NOBODY HOLDS ${seat.replace('|',' ↔ ')}`));
+  m.appendChild(el('div','note','Your proposal pulls on a cable with no one on it. Somebody has to move seats — and when they move, they stop watching what they were watching.'));
+  cands.slice(0,4).forEach(a=>{
+    const row=el('button','act');
+    row.appendChild(el('span','av',initials(a.name)));
+    const t=el('span',''); t.appendChild(el('div','nm',a.name));
+    t.appendChild(el('div','sb',`leaves ${seatOf(G,a.id).replace('|',' ↔ ')}`));
+    row.appendChild(t);
+    row.onclick=()=>{ $('#modal').classList.remove('on');
+      push({k:'reseat', actor:a.id, to:seat});
+      toast(`${a.name} has moved onto ${seat.replace('|',' ↔ ')}. They have stopped watching what they were watching.`, 5200) };
+    m.appendChild(row);
+  });
+  const cl=el('button','btn','CLOSE'); cl.onclick=()=>$('#modal').classList.remove('on');
+  m.appendChild(cl);
+  $('#modal').classList.add('on');
+}
+
+function openSeatSheet(){
+  const m=$('#modalin'); m.innerHTML='';
+  const me=meActor();
+  m.appendChild(el('h2','','YOUR SEAT'));
+  m.appendChild(el('div','note',`You are not above this place. You are one cable of it: <em>${mySeat().replace('|',' ↔ ')}</em>${me?`, standing where <em>${me.name}</em> stands`:''}. You can read those two domains and nothing else. Everything else in Brookside belongs to somebody's attention, and you will have to ask.`));
+  m.appendChild(el('div','blk','<h3>take a different seat</h3>'));
+  ACTORS.forEach(a=>{
+    const taken = Object.values(G.players).some(p=>p.actor===a.id && p.id!==G.me);
+    const row=el('button','act');
+    row.appendChild(el('span','av',initials(a.name)));
+    const t=el('span',''); t.appendChild(el('div','nm',a.name));
+    t.appendChild(el('div','sb',`${seatOf(G,a.id).replace('|',' ↔ ')} · ${a.role}`));
+    row.appendChild(t);
+    if(taken) row.appendChild(el('span','tag','TAKEN'));
+    row.onclick=()=>{ if(taken) return;
+      G.players[G.me]={id:G.me,name:G.players[G.me]?G.players[G.me].name:'YOU',seat:seatOf(G,a.id),actor:a.id};
+      net.send({t:'player', p:G.players[G.me]});
+      $('#modal').classList.remove('on'); afterChange() };
+    m.appendChild(row);
+  });
+  m.appendChild(el('div','blk','<h3>play with other people</h3>'));
+  const r=el('div','note',`Multiplayer room: <b>${esc(G.room||'—')}</b>. Anyone opening <em>?room=${esc(G.room||'NAME')}</em> sits at a different cable and sees a different half of Brookside.`);
+  m.appendChild(r);
+  const cl=el('button','btn','CLOSE'); cl.onclick=()=>$('#modal').classList.remove('on');
+  m.appendChild(cl);
+  $('#modal').classList.add('on');
+}
+</script>
+<script>
+/* ============================ 10 · HANDS ================================ */
+let toastT=null;
+function toast(msg, ms){
+  const t=$('#toast'); t.textContent=msg; t.classList.add('on');
+  t.classList.toggle('bad', /refus|broke|cannot|no slack/i.test(msg));
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'), ms||2600);
+}
+function screenToGrid(sx,sy){
+  let best=null, bd=1e9;
+  const T=G.state.T;
+  for(let y=0;y<H;y++) for(let x=0;x<W;x++){
+    const i=idx(x,y); if(!TRI[i]) continue;
+    const p=proj(x+0.5,y+0.5,T.e[i]);
+    const d=(p[0]-sx)*(p[0]-sx)+(p[1]-sy)*(p[1]-sy);
+    if(d<bd){ bd=d; best=[x+0.5,y+0.5] }
+  }
+  return bd < 4200 ? best : null;
+}
+(function pointer(){
+  const st=$('#stage');
+  let pts=new Map(), start=null, moved=0, dragYaw=0, dragTilt=0, pinch0=null, drawing=false;
+  st.addEventListener('pointerdown', e=>{
+    st.setPointerCapture(e.pointerId);
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===1){
+      const r=st.getBoundingClientRect();
+      start={x:e.clientX,y:e.clientY,t:performance.now(),lx:e.clientX-r.left,ly:e.clientY-r.top};
+      moved=0; dragYaw=cam.yaw; dragTilt=cam.tilt;
+      const d=G.propDraft;
+      drawing = !!(G.drawing && d && d.type && ACTIONS.find(a=>a.k===d.type).g==='line');
+      if(drawing){ d.pts=[]; const g=screenToGrid(start.lx,start.ly); if(g) d.pts.push(g) }
+    } else if(pts.size===2){
+      const a=[...pts.values()]; pinch0={d:Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y), s:cam.scale};
+    }
+    $('#hint').style.opacity=0;
+    if(document.body.classList.contains('peace')){ document.body.classList.remove('peace'); G.peaceSnooze=G.week+6 }
+  });
+  st.addEventListener('pointermove', e=>{
+    if(!pts.has(e.pointerId)) return;
+    pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(pts.size===2 && pinch0){
+      const a=[...pts.values()]; const d=Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y);
+      cam.scale=Math.max(3.4,Math.min(30, pinch0.s*d/pinch0.d)); recentre(); draw(0.5); return;
+    }
+    if(!start) return;
+    const r=st.getBoundingClientRect();
+    const dx=e.clientX-start.x, dy=e.clientY-start.y;
+    moved=Math.max(moved, Math.hypot(dx,dy));
+    if(drawing){
+      const g=screenToGrid(e.clientX-r.left, e.clientY-r.top);
+      const d=G.propDraft;
+      if(g && (!d.pts.length || Math.hypot(g[0]-d.pts[d.pts.length-1][0], g[1]-d.pts[d.pts.length-1][1])>1.1)) d.pts.push(g);
+      draw(0.5); drawDraftLine(); return;
+    }
+    cam.yaw = dragYaw + dx*0.006;
+    cam.tilt = Math.max(0.24, Math.min(0.96, dragTilt + dy*0.0022));
+    recentre(); draw(0.5);
+  });
+  const end = e=>{
+    pts.delete(e.pointerId); if(pts.size<2) pinch0=null;
+    if(pts.size) return;
+    if(drawing){ drawing=false; G.drawing=false; renderBody(); draw(); drawDraftLine();
+      toast(`${G.propDraft.pts.length} points. Preview it.`); start=null; return }
+    if(start && moved<7){
+      const r=st.getBoundingClientRect();
+      const g=screenToGrid(start.lx,start.ly);
+      if(g){
+        const d=G.propDraft;
+        if(d && d.type && ACTIONS.find(a=>a.k===d.type).g==='point' && !ACTIONS.find(a=>a.k===d.type).fixed){
+          d.x=g[0]; d.y=g[1]; d.place=nearestPlace(g[0],g[1]); renderBody(); draw(); drawDraftLine();
+          toast(`Sited at ${PL[d.place].name}.`);
+        } else {
+          G.focus = nearestPlace(g[0],g[1]);
+          if(G.verb!=='propose' && G.mode==='earth') { G.verb = G.verb==='witness'?'witness':G.verb }
+          renderAll(); draw();
+        }
+      }
+    }
+    start=null; draw();
+  };
+  st.addEventListener('pointerup', end); st.addEventListener('pointercancel', end);
+  st.addEventListener('wheel', e=>{ e.preventDefault();
+    cam.scale=Math.max(3.4,Math.min(30, cam.scale*(e.deltaY>0?0.92:1.08))); recentre(); draw() }, {passive:false});
+})();
+function drawDraftLine(){
+  const d=G.propDraft; if(!d) return;
+  const T=G.state.T;
+  ctx.save(); ctx.strokeStyle='#5ec8ff'; ctx.lineWidth=2.4; ctx.setLineDash([6,4]); ctx.lineJoin='round';
+  if(d.pts && d.pts.length>1){
+    ctx.beginPath();
+    d.pts.forEach((p,k)=>{ const i=idx(Math.floor(p[0]),Math.floor(p[1]));
+      const q=proj(p[0],p[1], TRI[i]?T.e[i]:40); k?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]) });
+    ctx.stroke();
+  } else if(d.x!=null){
+    const i=idx(Math.floor(d.x),Math.floor(d.y));
+    const q=proj(d.x,d.y, TRI[i]?T.e[i]:40);
+    ctx.beginPath(); ctx.ellipse(q[0],q[1], cam.scale*3, cam.scale*3*cam.tilt, 0,0,7); ctx.stroke();
+  }
+  ctx.restore();
+}
+
+/* --------------------------- the say bar -------------------------------- */
+function say(){
+  const inp=$('#say'); const text=inp.value.trim(); if(!text) return;
+  const p=parse(text);
+  if(p.promise && p.promise.kind){
+    const place = p.promise.place || G.focus;
+    if(!place) return toast('A promise needs a place. Touch the ground first.', 3400);
+    const target = G.promiseTarget || (ACTORS.find(a=>a.at.includes(place))||{}).id;
+    push({k:'promise', kind:p.promise.kind, place, level:p.promise.level, due:p.promise.due,
+      toActor:target, text, baseline:G.state.cur['land.orchard']});
+    inp.value=''; G.promiseTarget=null;
+    return toast(`Recorded as a promise to ${target?AC[target].name:'the room'}. The world will check it every week.`, 4600);
+  }
+  if(G.verb==='propose'){
+    if(!p.act) { toast('The world could not find an action in that. Pick one below, or say it plainer.', 4200); return }
+    const d = G.propDraft = G.propDraft || {};
+    d.type=p.act; d.pts=[]; d.x=null;
+    const fixed=ACTIONS.find(a=>a.k===p.act).fixed;
+    const pl = fixed || p.place || G.focus;
+    if(fixed){ d.x=PL[fixed].x; d.y=PL[fixed].y; d.place=fixed; G.drawing=false }
+    else if(ACTIONS.find(a=>a.k===p.act).g==='point' && pl){ d.x=PL[pl].x; d.y=PL[pl].y; d.place=pl; G.drawing=false }
+    else { G.drawing=true; if(pl){ d.place=pl } }
+    inp.value=''; renderBody(); draw();
+    return toast(G.drawing? 'Understood. Now drag the line on the ground.' : `Understood — ${p.act} at ${PL[d.place].name}. Preview it.`, 3600);
+  }
+  if(G.verb==='notice'){
+    const cid = p.cond || (G.focus? (readingsAt(G.focus).find(r=>r.readable)||{}).c?.id : null);
+    if(!cid) return toast('Say what you saw, and where. Touch a place first.', 3600);
+    if(!canPublish(cid)) return toast(`That belongs to ${CO[cid].dom}. You cannot read it from your seat — ask whoever can.`, 4600);
+    push({k:'notice', cond:cid, place:CO[cid].place, text});
+    inp.value=''; G.focus=CO[cid].place; renderAll(); draw();
+    return toast('On the record.');
+  }
+  if(G.verb==='claim'){
+    if(p.cond && p.cond2){ push({k:'claim', cause:p.cond, effect:p.cond2, text}); inp.value='';
+      G.mode='system'; syncMode(); afterChange(); return toast('Claim recorded. It can now be contested and tested.') }
+    return toast('A claim needs two things that are already on the record. Name both.', 4200);
+  }
+  if(G.verb==='connect'){
+    if(p.cond && p.cond2){ push({k:'connect', a:p.cond, b:p.cond2, text}); inp.value='';
+      G.mode='system'; syncMode(); afterChange(); return toast('Connected.') }
+    return toast('Name two conditions.', 3200);
+  }
+  push({k:'utter', text}); inp.value=''; toast('Said. Nobody can act on it until it names a place or a thing.', 4200);
+}
+$('#saygo').onclick=say;
+$('#say').addEventListener('keydown', e=>{ if(e.key==='Enter') say() });
+document.querySelectorAll('.mode').forEach(m=>m.onclick=()=>{ G.mode=m.dataset.mode; syncMode(); renderAll(); draw() });
+$('#seatbtn').onclick=openSeatSheet;
+$('#weekbtn').onclick=()=>{ G.verb='witness'; G.mode='earth'; syncMode(); renderAll(); draw() };
+$('#modal').onclick=e=>{ if(e.target.id==='modal') $('#modal').classList.remove('on') };
+
+/* ============================ 11 · OTHER PEOPLE =========================
+   Peers exchange log entries, never state. Everyone folds the same world.
+   ======================================================================== */
+const net = {
+  peer:null, conns:[], host:false,
+  send(msg){ if(!this.peer) return; this.conns.forEach(c=>{ try{ c.send(msg) }catch(e){} }) },
+  start(room){
+    if(!room || typeof Peer==='undefined') return;
+    G.room=room;
+    const hostId='wtens-'+room.toLowerCase().replace(/[^a-z0-9]/g,'');
+    const asHost=()=>{
+      this.peer=new Peer(hostId); this.host=true; G.host=true;
+      this.peer.on('open',()=>toast('You are holding the room. Others can join with ?room='+room, 4200));
+      this.peer.on('connection', c=>{
+        this.conns.push(c);
+        c.on('open',()=>c.send({t:'sync', log:G.log, players:G.players}));
+        c.on('data', m=>{ this.take(m); this.conns.forEach(x=>{ if(x!==c) try{x.send(m)}catch(e){} }) });
+        c.on('close',()=>{ this.conns=this.conns.filter(x=>x!==c) });
+      });
+      this.peer.on('error', e=>{ if(e.type==='unavailable-id') asGuest(); });
+    };
+    const asGuest=()=>{
+      this.peer=new Peer(); G.host=false;
+      this.peer.on('open',()=>{
+        const c=this.peer.connect(hostId,{reliable:true});
+        c.on('open',()=>{ this.conns=[c]; c.send({t:'player', p:G.players[G.me]}); toast('Joined '+room, 3000) });
+        c.on('data', m=>this.take(m));
+      });
+      this.peer.on('error', e=>toast('Cannot reach room '+room, 3200));
+    };
+    asHost();
+  },
+  take(m){
+    if(m.t==='entry'){ if(!G.log.some(e=>e.id===m.e.id)){ G.log.push(m.e); afterChange() } }
+    else if(m.t==='player' && m.p && m.p.id){
+      G.players[m.p.id] = {id:String(m.p.id).slice(0,24),
+        name:String(m.p.name||'?').replace(/[^\w .'-]/g,'').slice(0,14).toUpperCase() || '?',
+        seat: SEATS.includes(m.p.seat) ? m.p.seat : SEATS[0],
+        actor: AC[m.p.actor] ? m.p.actor : null};
+      afterChange();
+    }
+    else if(m.t==='sync'){ G.log=m.log; Object.assign(G.players,m.players); afterChange() }
+  }
+};
+
+/* ============================ 12 · BOOT ================================= */
+function rebuildDerived(){
+  G.moved={}; for(const e of G.log) if(e.k==='reseat') G.moved[e.actor]=e.to;
+  G.tests = G.log.filter(e=>e.k==='test').map(e=>({pair:e.pair,supported:e.supported}));
+}
+const _recompute = recompute;
+recompute = function(){ rebuildDerived(); _recompute() };
+
+(function boot(){
+  const q=new URLSearchParams(location.search);
+  G.me = 'p'+Math.floor(Math.random()*1e6).toString(36);
+  const seatWanted = q.get('seat');
+  const actor = seatWanted && AC[seatWanted] ? AC[seatWanted] : AC.okonjo;
+  G.players[G.me] = {id:G.me, name:(q.get('name')||'YOU').toUpperCase().slice(0,12),
+    seat:seatId(actor.seat[0],actor.seat[1]), actor:actor.id};
+  G.players[G.me].name = G.players[G.me].name.replace(/[^\w .'-]/g,'').slice(0,14) || 'YOU';
+  // Brookside did not start when you arrived.
+  for(let k=0;k<12;k++) G.log.push({k:"witness", id:"seed"+k, by:"world", week:k});
+  resize(); recompute();
+  G.focus='crossing'; G.verb='notice';
+  draw(); renderAll(); loop();
+  const room=q.get('room'); if(room) net.start(room);
+  setTimeout(()=>{ $('#hint').style.opacity=1 }, 600);
+})();
+</script>
+<!--END-->
+
+
+
+
+
+
+</body>
+</html>

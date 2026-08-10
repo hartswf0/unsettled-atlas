@@ -39,6 +39,15 @@ A council is not a diagram beside the world. At planetary scale it is the world:
 The seats are registers of description, not people. Nothing simulates a resident.
 
 Data: Natural Earth 110m, public domain.
+Body of Other Bodies
+
+A body can be an emergent agreement among other bodies. Open the page, give it a camera, and the pose the camera finds is not drawn as a skeleton. It is inhabited. Several hundred small figures take up residence in fifteen anatomical territories and hold the posture between them.
+
+None of them is the body. Each carries its own scale, lag, mobility, preferred distance from its neighbours and length of memory, and each is pulled at once toward the anatomy it belongs to, toward the neighbours it can reach, and toward where it has recently been. The whole exists because the constituents keep negotiating where the whole is.
+
+Four things the population makes visible rather than states. Aggregation: raise an arm and a population raises with you. Residue: recent organisations stay faintly present wherever the body has moved away from them, and converge back into you when you are still. Confidence: where the model is unsure of you the population loosens, cools and sheds members, and a lost limb is held up by memory before it dissolves and re-forms. Habitude: the session accumulates where movement has already been, and organises more tightly there. It remembers movement. It infers nothing else.
+
+Camera frames are processed in the page and never leave it. There is no account and no server.
 
 Data: OpenStreetMap Notes, © OpenStreetMap contributors, ODbL 1.0.
 

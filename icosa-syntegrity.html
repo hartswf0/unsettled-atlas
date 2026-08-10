@@ -16,9 +16,12 @@
   --ink:#121514;
   --muted:#5f6763;
   --signal:#a8462a;      /* tension */
-  --land:#ddd7c6;
-  --landline:#8d8878;
-  --water:#b9c4c2;
+  --land:#ece7dc;
+  --landline:#7d8983;
+  --water:#8fa8ad;
+  --sea:#dbe3e4;
+  --urban:#d6c6a9;
+  --road:#ab9d87;
   --paper:#faf8f1;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -223,6 +226,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 
 <div class="hud" id="modes">
   <button id="mFold" title="fold / unfold">FOLD</button>
+  <button id="mPaint" title="paint an area across triangles">PAINT</button>
   <button id="mRel" title="relational geometry">TENSION</button>
   <button id="mHelp">?</button>
 </div>
@@ -970,7 +974,10 @@ var COL = {
   signal: css.getPropertyValue('--signal').trim() || '#a8462a',
   land: css.getPropertyValue('--land').trim() || '#ddd7c6',
   landline: css.getPropertyValue('--landline').trim() || '#8d8878',
-  water: css.getPropertyValue('--water').trim() || '#b9c4c2',
+  water: css.getPropertyValue('--water').trim() || '#8fa8ad',
+  sea: css.getPropertyValue('--sea').trim() || '#dbe3e4',
+  urban: css.getPropertyValue('--urban').trim() || '#dccfb8',
+  road: css.getPropertyValue('--road').trim() || '#ab9d87',
   paper: css.getPropertyValue('--paper').trim() || '#faf8f1'
 };
 // six registers, three opposed pairs — each pair reads as a contrast
@@ -993,6 +1000,71 @@ var traceCells = null;
  * 7,342 settlements, named regions and seas, airports, ports, rivers — plus
  * country outlines, so a triangle can say what is in it and who governs it.
  * Loaded after the first paint: the map appears immediately, then fills.  */
+
+/* ------------------------------------------------------------ the detail
+ * Everything else was upgraded to Natural Earth 10m and the coastline was
+ * not, so past continental scale the shore was still six-kilometre mush and
+ * sea was painted almost the colour of land. This is the real coastline,
+ * lakes, built-up areas and roads — cut to each face at build time, so a
+ * reader downloads the ground they are looking at and not the planet.  */
+var DETAIL = new Array(20), DETAIL_STATE = new Array(20), detailBusy = 0;
+function pad2(n) { return (n < 10 ? '0' : '') + n; }
+function baryBox(a) {
+  var x0 = 9, x1 = -9, y0 = 9, y1 = -9;
+  for (var i = 0; i < a.length; i += 3) {
+    if (a[i] < x0) x0 = a[i]; if (a[i] > x1) x1 = a[i];
+    if (a[i + 1] < y0) y0 = a[i + 1]; if (a[i + 1] > y1) y1 = a[i + 1];
+  }
+  return [x0, y0, x1, y1];
+}
+function decodeBary(str) {
+  if (!str) return [];
+  return str.split(';').map(function (g) {
+    var nums = g.split(','), out = new Float64Array((nums.length / 2) * 3);
+    var x = 0, y = 0;
+    for (var i = 0, j = 0; i < nums.length; i += 2, j += 3) {
+      x += +nums[i]; y += +nums[i + 1];
+      out[j] = x / 1e5; out[j + 1] = y / 1e5; out[j + 2] = 1 - out[j] - out[j + 1];
+    }
+    out.box = baryBox(out);
+    return out;
+  });
+}
+// what the screen can see, in this face's own weights
+function visibleBaryBox(f, S) {
+  var pts = [[0, 0], [W, 0], [0, H], [W, H], [W / 2, H / 2]];
+  var x0 = 9, x1 = -9, y0 = 9, y1 = -9, got = 0;
+  for (var i = 0; i < pts.length; i++) {
+    var hit = pick(pts[i][0], pts[i][1]);
+    if (!hit) continue;
+    var w = baryOf(f, hit.p);
+    got++;
+    if (w[0] < x0) x0 = w[0]; if (w[0] > x1) x1 = w[0];
+    if (w[1] < y0) y0 = w[1]; if (w[1] > y1) y1 = w[1];
+  }
+  if (got < 2) return null;
+  var m = 0.06 * Math.max(x1 - x0, y1 - y0) + 0.002;
+  return [x0 - m, y0 - m, x1 + m, y1 + m];
+}
+function needDetail(f, span) {
+  if (DETAIL[f] || DETAIL_STATE[f] || detailBusy > 1) return;
+  if (view.zoom < 2.6 || span < Math.min(W, H) * 0.45) return;
+  DETAIL_STATE[f] = 'busy'; detailBusy++;
+  var tag = document.createElement('script');
+  tag.src = 'detail/f' + pad2(f) + '.js';
+  tag.onerror = function () { DETAIL_STATE[f] = 'absent'; detailBusy--; };
+  tag.onload = function () {
+    var raw = window['ICOSA_DETAIL_' + pad2(f)];
+    if (raw) {
+      DETAIL[f] = { coast: decodeBary(raw.coast), lakes: decodeBary(raw.lakes),
+                    urban: decodeBary(raw.urban), roads: decodeBary(raw.roads) };
+      DETAIL_STATE[f] = 'ready';
+    } else DETAIL_STATE[f] = 'absent';
+    detailBusy--;
+    wake();
+  };
+  document.head.appendChild(tag);
+}
 
 var GAZ = null, GAZ_STATE = 'waiting';
 function decodeStream(str, scale) {
@@ -1240,6 +1312,7 @@ function lookUp(cell, done) {
       }
       kept.sort(function (a, b) { return (b.inside - a.inside) || (a.m - b.m); });
       if (!DB.lookups) DB.lookups = {};
+if (!DB.areas) DB.areas = {};
       DB.lookups[slug] = { t: Date.now(), radius: radius, covered: want <= 10000,
                            source: 'en.wikipedia.org geosearch', items: kept };
       commit();
@@ -1268,6 +1341,7 @@ if (!DB.notes) DB.notes = [];
 if (!DB.seats) DB.seats = {};
 if (!DB.me) DB.me = '';
 if (!DB.lookups) DB.lookups = {};
+if (!DB.areas) DB.areas = {};
 function commit() { saveStore(DB); }
 function notesOf(slug) {
   return DB.notes.filter(function (n) { return n.cell === slug && n.kind !== 'second'; });
@@ -1331,6 +1405,14 @@ function carriesIn(slug) {
 function seatKey(slug, i) { return slug + '|' + i; }
 function seatHolder(slug, i) { return DB.seats[seatKey(slug, i)] || ''; }
 
+/* -------------------------------------------------------------- an area
+ * A triangle is often the wrong unit — a watershed, a district, a burnt
+ * strip is several. An area is just a set of addresses, so it needs no new
+ * model: paint the cells, name it, and it can be argued about like any
+ * other ground.                                                          */
+var painting = false, brush = {};
+function areaCells() { return Object.keys(brush); }
+
 var councilCell = null;    // the cell a council is currently seated in
 var councilSeat = null;
 
@@ -1377,7 +1459,49 @@ function pathFrom(pts, close) {
   if (close) ctx.closePath();
 }
 
+function fillBaryGroups(f, groups, S, fill, stroke, width, box) {
+  for (var i = 0; i < groups.length; i++) {
+    var b = groups[i].box;
+    if (box && b && (b[2] < box[0] || b[0] > box[2] || b[3] < box[1] || b[1] > box[3])) continue;
+    var pts = weightsToScreen(f, groups[i], S);
+    if (pts.length < 6) continue;
+    pathFrom(pts, !!fill);
+    if (fill) { ctx.fillStyle = fill; ctx.fill(); }
+    if (stroke) { ctx.strokeStyle = stroke; ctx.lineWidth = width || 0.8; ctx.stroke(); }
+  }
+}
 function drawFaceSurface(f, S) {
+  var d = DETAIL[f];
+  if (d && view.zoom >= 2.6) {
+    var vbox = visibleBaryBox(f, S);
+    // the real coastline, drawn over sea rather than beside it
+    fillBaryGroups(f, d.coast, S, COL.land, COL.landline, 0.9, vbox);
+    fillBaryGroups(f, d.lakes, S, COL.sea, COL.landline, 0.6, vbox);
+    fillBaryGroups(f, d.urban, S, COL.urban, null, 0, vbox);
+    if (view.zoom > 3.0 && d.roads.length) {
+      ctx.strokeStyle = COL.road;
+      ctx.lineWidth = 0.9;
+      ctx.beginPath();
+      for (var r = 0; r < d.roads.length; r++) {
+        var rb = d.roads[r].box;
+        if (vbox && rb && (rb[2] < vbox[0] || rb[0] > vbox[2] || rb[3] < vbox[1] || rb[1] > vbox[3])) continue;
+        var rp = weightsToScreen(f, d.roads[r], S);
+        ctx.moveTo(rp[0], rp[1]);
+        for (var k = 2; k < rp.length; k += 2) ctx.lineTo(rp[k], rp[k + 1]);
+      }
+      ctx.stroke();
+    }
+    var rivD = SURFACE.rivers[f];
+    for (var q = 0; q < rivD.length; q++) {
+      var rr = rivD[q];
+      var litD = traced && rr.river >= traced.from && rr.river < traced.to;
+      ctx.strokeStyle = litD ? COL.signal : COL.water;
+      ctx.lineWidth = litD ? 2.4 : 1.2;
+      pathFrom(weightsToScreen(f, rr.w, S), false);
+      ctx.stroke();
+    }
+    return;
+  }
   var land = SURFACE.land[f];
   ctx.fillStyle = COL.land;
   ctx.strokeStyle = COL.landline;
@@ -1389,7 +1513,7 @@ function drawFaceSurface(f, S) {
     ctx.stroke();
   }
   var lakes = SURFACE.lakes[f];
-  ctx.fillStyle = COL.ground;
+  ctx.fillStyle = COL.sea;
   for (var j = 0; j < lakes.length; j++) {
     var lp = weightsToScreen(f, lakes[j], S);
     pathFrom(lp, true);
@@ -1480,6 +1604,9 @@ function facingCamera(p) {                   // is this bit of ground toward us
 // two passes: what is behind the world is drawn before the world, and the
 // world covers it. A tendon that runs through the body should look like it.
 function drawRelations(S, pass) {
+  // these are a declared fixture about planetary relation, not features of
+  // the ground. Drawn at street scale they are just a line across the view.
+  if (!pulled && view.relax < 0.02) return;
   var shown = pulled ? [pulled] : RELATIONS;
   for (var i = 0; i < shown.length; i++) {
     var r = shown[i];
@@ -1905,13 +2032,15 @@ function render() {
     ctx.lineTo(vis2.pb[0], vis2.pb[1]);
     ctx.lineTo(vis2.pd[0], vis2.pd[1]);
     ctx.closePath();
-    ctx.fillStyle = COL.ground;
+    ctx.fillStyle = COL.sea;
     ctx.fill();
     ctx.clip();
-    drawFaceSurface(f2, S);
-    drawGazRivers(f2, S, Math.max(
+    var spanF = Math.max(
       Math.max(vis2.pa[0], vis2.pb[0], vis2.pd[0]) - Math.min(vis2.pa[0], vis2.pb[0], vis2.pd[0]),
-      Math.max(vis2.pa[1], vis2.pb[1], vis2.pd[1]) - Math.min(vis2.pa[1], vis2.pb[1], vis2.pd[1])));
+      Math.max(vis2.pa[1], vis2.pb[1], vis2.pd[1]) - Math.min(vis2.pa[1], vis2.pb[1], vis2.pd[1]));
+    needDetail(f2, spanF);
+    drawFaceSurface(f2, S);
+    drawGazRivers(f2, S, spanF);
     var budget = { n: 0 };
     drawGrid(f2, ROOT_TRI, 0, S, stopPx, budget);
     ctx.restore();
@@ -1937,6 +2066,17 @@ function render() {
   if (traceCells) {
     for (var t = 0; t < traceCells.length; t++) {
       strokeCell(traceCells[t], S, COL.signal, 1.6, 'rgba(168,70,42,.13)');
+    }
+  }
+  for (var slug in brush) {
+    var pc = cellFromSlug(slug);
+    if (pc) strokeCell(pc, S, 'rgba(168,70,42,.75)', 1.6, 'rgba(168,70,42,.22)');
+  }
+  for (var an in DB.areas) {
+    if (an === DB.openArea) continue;
+    for (var q2 = 0; q2 < DB.areas[an].length; q2++) {
+      var ac = cellFromSlug(DB.areas[an][q2]);
+      if (ac) strokeCell(ac, S, 'rgba(18,21,20,.45)', 1.2, 'rgba(18,21,20,.07)');
     }
   }
   if (selection) {
@@ -2260,6 +2400,17 @@ canvas.addEventListener('pointermove', function (e) {
   var prev = pointers.get(e.pointerId);
   pointers.set(e.pointerId, p);
   if (!gesture) return;
+  if (gesture.mode === 'turn' && pointers.size === 1 && painting) {
+    clearTimeout(pressTimer);
+    gesture.moved += Math.abs(p.x - prev.x) + Math.abs(p.y - prev.y);
+    var ph = pick(p.x, p.y);
+    if (ph) {
+      var pks = cellSlug(cellAt(ph.p, depthForZoom()));
+      if (!brush[pks]) { brush[pks] = 1; elPaint.textContent = 'PAINT ' + areaCells().length; }
+    }
+    wake();
+    return;
+  }
   if (gesture.mode === 'turn' && pointers.size === 1) {
     var dx = p.x - prev.x, dy = p.y - prev.y;
     gesture.moved += Math.abs(dx) + Math.abs(dy);
@@ -2319,6 +2470,13 @@ function endPointer(e) {
       tapTimer = setTimeout(function () {
         // TAP — the triangle becomes the interface
         var hit = pick(p.x, p.y);
+        if (hit && painting) {
+          var pk = cellSlug(cellAt(hit.p, depthForZoom()));
+          if (brush[pk]) delete brush[pk]; else brush[pk] = 1;
+          elPaint.textContent = 'PAINT ' + areaCells().length;
+          wake();
+          return;
+        }
         if (hit) {
           selection = cellAt(hit.p, depthForZoom());
           showActions(selection, p.x, p.y);
@@ -3044,6 +3202,65 @@ function openHelp() {
     r.readAsText(f);
   };
 }
+var elPaint = document.getElementById('mPaint');
+elPaint.onclick = function () {
+  painting = !painting;
+  elPaint.classList.toggle('sig', painting);
+  if (painting) hideActions();
+  elPaint.textContent = painting ? 'PAINT ' + areaCells().length : 'PAINT';
+  openArea();
+  wake();
+};
+function openArea() {
+  var cells = areaCells();
+  var km = 0;
+  for (var i = 0; i < cells.length; i++) {
+    var c = cellFromSlug(cells[i]);
+    if (c) km += cellAreaKm2(c);
+  }
+  var saved = Object.keys(DB.areas).map(function (n) {
+    return '<div class="row" data-area="' + esc(n) + '"><b>' + esc(n.toUpperCase()) + '</b><span>' +
+      DB.areas[n].length + ' triangles</span></div>';
+  }).join('');
+  panel('AREA' + (painting ? ' · PAINTING' : ''),
+    '<p>A triangle is often the wrong unit. A watershed, a district, a burnt strip is several, ' +
+    'and none of them is a triangle. An area is simply <b>a set of addresses</b> — it needs no new ' +
+    'model, and it can be argued about like any other ground.</p>' +
+    '<p>' + (painting
+      ? 'Painting is on. Tap triangles to add and remove them; the rest of the map still turns and pinches.'
+      : 'Painting is off. Turn it on and tap triangles.') + '</p>' +
+    '<div class="row"><b>PAINTED</b><span>' + cells.length + ' triangle' +
+      (cells.length === 1 ? '' : 's') + (km ? ' · ' + areaLabel(km) : '') + '</span></div>' +
+    (cells.length ? '<p style="margin-top:10px;font-size:10px;word-break:break-all;color:var(--muted)">' +
+      cells.join(' ') + '</p>' : '') +
+    '<input id="aName" placeholder="name this area" value="' + esc(DB.openArea || '') + '">' +
+    '<button class="go" id="aSave">KEEP IT</button> ' +
+    '<button class="go ghost" id="aClear">CLEAR</button>' +
+    (saved ? '<p style="margin-top:14px">Kept areas:</p>' + saved : ''));
+  document.getElementById('aSave').onclick = function () {
+    var n = document.getElementById('aName').value.trim();
+    if (!n || !areaCells().length) return;
+    DB.areas[n] = areaCells();
+    DB.openArea = n;
+    commit(); openArea(); wake();
+  };
+  document.getElementById('aClear').onclick = function () {
+    brush = {}; DB.openArea = ''; commit(); openArea(); wake();
+  };
+  elPanel.querySelectorAll('[data-area]').forEach(function (row) {
+    row.style.cursor = 'pointer';
+    row.onclick = function () {
+      var n = row.getAttribute('data-area');
+      brush = {};
+      DB.areas[n].forEach(function (sl) { brush[sl] = 1; });
+      DB.openArea = n;
+      var first = cellFromSlug(DB.areas[n][0]);
+      if (first) lookAt(cellCentre(first), first.depth);
+      openArea(); wake();
+    };
+  });
+}
+
 document.getElementById('mHelp').onclick = openHelp;
 elFold.onclick = function () {
   var t = view.fold > 0.5 ? 0 : 1;

@@ -211,6 +211,48 @@ The structure works without any of this: a human writes their own carry and
 the protocol is unchanged. The model is an assist on one step, not a
 participant.
 
+## Seeing it: water, roads, and areas
+
+The screenshot that prompted this showed the problem: settlements had been
+upgraded to Natural Earth 10m and **the coastline never had**. It was still
+110m simplified to about six kilometres, painted `#ddd7c6` against a
+`#f1eee4` ground — five percent of luminance between sea and land. Past
+continental scale the shore was mush and the water was invisible.
+
+Two fixes, and they are different fixes.
+
+**Contrast.** Sea is now a cool tint of its own and land a warm one, with a
+darker coastline. A map that cannot distinguish sea from land is not
+austere, it is broken.
+
+**Resolution, tiled.** `icosa-detail.build.mjs` compiles the 10m coastline,
+lakes, built-up areas and the major road network, **clipped to each root
+face at build time** and written as twenty files. A reader downloads the
+ground they are looking at — 143 KB on average, 4 KB for an ocean face —
+rather than 2.8 MB of planet. It loads on descent past regional scale, which
+is where the coarse coastline starts being visibly wrong, and stays off
+above it, where the coarse one is fine and the fine one costs 23 fps.
+
+Groups carry a barycentric bounding box so off-screen geometry is rejected
+before it is transformed. 37 fps at continental scale and 61 below it, the
+same as before the detail existed.
+
+Built-up areas matter more than they sound: they are the only honest way to
+paint a city as an **area** rather than a dot.
+
+## Painting an area
+
+A triangle is often the wrong unit. A watershed, a district, a burnt strip
+is several triangles and none of them is a triangle. So `PAINT` lets you
+drag across the map and mark a set of cells, name it, and keep it.
+
+An area needs no new model — **it is a set of addresses**. Because the
+addressing already carries containment and area, a painted region reports
+its own extent (three triangles over north Georgia came to 302,369 km²) and
+can be argued about exactly like a single cell.
+
+Dragging paints. Tapping one triangle at a time is not circling anything.
+
 ## What it still does not do
 
 Being plain about this, because the gap is the interesting part.

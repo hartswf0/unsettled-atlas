@@ -108,6 +108,8 @@ The map cannot find the people in a small triangle and does not pretend to: it s
 
 Where the compiled gazetteer stops — at about a village — the page asks Wikipedia directly from the reader's browser, with no key and no server, and keeps only the articles that actually fall inside the triangle. And because a syntegration works by people carrying claims between the two rooms they each sit in, CARRY is an operation on a seat you hold, drawn on the map as a mark travelling the strut that moved it. A model may draft that carry from what is already in the room, citing every line, and may not send it.
 
+The coastline is tiled: the 10m shore, lakes, built-up areas and major roads are clipped to each root face at build time and written as twenty files, so a reader downloads the ground they are looking at rather than the planet, and only once they descend past the scale where the coarse coastline is visibly wrong. Sea and land are painted as different things, which they had not been. And because a triangle is often the wrong unit — a watershed is several — PAINT drags across the map to mark a set of cells and keep it as a named area, which needs no new model because an area is just a set of addresses.
+
 The compiled gazetteer stops at about a village. Below roughly five kilometres a triangle divides the ground without telling you more about it, and the panel says so rather than pretending. See ICOSA-SYNTEGRITY.md.
 
 Data: Natural Earth 110m, public domain.

@@ -104,6 +104,8 @@ Icosa World is a good map and an empty one: a cell had an id and an edge length 
 
 Descending reveals more rather than less: a compiled gazetteer carries 7,342 settlements with their populations and provinces, 1,366 named rivers, named regions and seas, airports, ports, and country outlines. So a triangle can say what is inside it and, more to the point, who a concern about it would be addressed to — sampled against the country outlines at its centre, corners and edge midpoints, with the provinces from the settlements within. When no state claims a triangle it says so.
 
+The map cannot find the people in a small triangle and does not pretend to: it structures recruitment instead — an address you send, a seat someone claims by name, and a nomination for the next seat. An issue is a claim somebody seconded, so a concern reads as raised by one until it is held by two. What the map genuinely does is escalate: because a cell address is a prefix code, a concern raised on a block climbs to the scale at which a jurisdiction could answer it, and arrives there naming who that is.
+
 The gazetteer stops at about a village. Below roughly five kilometres a triangle divides the ground without telling you more about it, and the panel says so rather than pretending. See ICOSA-SYNTEGRITY.md.
 
 Data: Natural Earth 110m, public domain.

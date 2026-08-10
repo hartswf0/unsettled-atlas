@@ -98,6 +98,58 @@ from — the named settlements inside it, and the authorities over them.
 When no state claims a triangle, it says so: *there is nobody to address*.
 That is a fact about the ground, not a gap.
 
+## Finding the people, and finding the issues
+
+The honest answer has three parts, and the map can only supply two of them.
+
+**The map cannot find people, and should not pretend to.** No register lists
+who belongs to a 3 km triangle, and one that claimed to would be exactly the
+laundering this project exists to criticise. What the map can do is
+structure recruitment: a triangle has an address you can send, the person
+who opens it lands on that exact ground, they take a seat by typing their
+name, and they can name who should hold the next one. That is snowball
+sampling — what field research actually does when there is no register —
+and the geometry supplies the thing snowball sampling usually lacks, which
+is a fixed number of seats and a defined critic for each.
+
+**An issue is not in a dataset either.** It is a claim somebody made that
+somebody else seconded. One person is a complaint; two is an issue. So a
+note can be marked a concern, and a concern shows as *raised by one* until
+another name seconds it, at which point it is *held by two*. Nothing is
+inferred and nothing is aggregated.
+
+**What the map genuinely can do is escalation.** A concern raised on a block
+cannot be answered on that block. It has to climb until it reaches a
+triangle whose jurisdiction could act on it. Because a cell address is a
+prefix code, ancestry is a string test, so the climb costs nothing to
+compute: every concern carries the scale at which it is answerable, and it
+surfaces at the shallowest ancestor in that band.
+
+The result reads like this. A concern raised at `F11.1103331300` — a 6.9 km
+block in the Nile Delta — marked answerable at metropolitan scale, appears
+at `F11.110333`, the 110 km triangle over Cairo, as:
+
+> **1** concern raised below has climbed to this scale, because this is the
+> scale at which something could answer. Here that is **Egypt**, and below
+> it Al Qahirah, Al Minufiyah, Al Gharbiyah.
+
+On the map the block where it was raised carries a hollow mark with an
+upward chevron: it did not stay where it was said.
+
+## Context, so nowhere is nowhere
+
+Containment fails at small scale — nothing named is inside a 3 km triangle
+and the panel goes quiet. But a triangle is only contextless if you refuse
+to ask the other two questions.
+
+- **What is near.** The nearest settlement, river, region, port, airport and
+  named water, each with a distance and a compass bearing from the
+  triangle's centre.
+- **What contains this.** The ladder of ancestors, each with the largest
+  thing that scale knows about, so a block reads as a block in a city in a
+  delta in a country rather than as an unlabelled triangle. Every rung is
+  clickable.
+
 ## What it still does not do
 
 Being plain about this, because the gap is the interesting part.
@@ -116,7 +168,12 @@ Being plain about this, because the gap is the interesting part.
   voices over an empty one is the thing the whole project exists to
   criticise.
 - **The record is local.** Two people in the same room can each hold a seat
-  and merge records by file. Two people in different rooms cannot yet.
+  and merge records by file. Two people in different rooms cannot yet, and
+  until they can, escalation is a demonstration rather than a channel: a
+  concern climbs to the scale where an authority exists, and then stops,
+  because there is nothing to hand it to.
+- **Nobody is notified.** Naming the addressee is not the same as reaching
+  them. The map can say a concern belongs to Al Qahirah; it cannot post it.
 - **`icosa-world.html` is unchanged.** It remains the instrument: the
   geometry, the fold, the invariants, the compiled councils. This fork is
   where the argument about consequence happens.
@@ -127,7 +184,9 @@ Everything from `icosa-world`, plus:
 
 - **tap the address plate** — corners, area, contents, and the link
 - **WHERE** — the same, from the action ring
-- **SAID** — the thread on this triangle, and the field to add to it
+- **SAID** — the thread on this triangle, what has climbed to it from
+  below, and the field to add to it. Tick *a concern* and choose the scale
+  at which it could be answered.
 - **COUNCIL** — the seats, each one claimable by name
 
 The compiled geometry, the solid family and the register assignment all come

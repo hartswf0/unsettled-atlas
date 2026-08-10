@@ -110,6 +110,8 @@ Where the compiled gazetteer stops — at about a village — the page asks Wiki
 
 The coastline is tiled: the 10m shore, lakes, built-up areas and major roads are clipped to each root face at build time and written as twenty files, so a reader downloads the ground they are looking at rather than the planet, and only once they descend past the scale where the coarse coastline is visibly wrong. Sea and land are painted as different things, which they had not been. And because a triangle is often the wrong unit — a watershed is several — PAINT drags across the map to mark a set of cells and keep it as a named area, which needs no new model because an area is just a set of addresses.
 
+The links live on the map rather than beside it. A looked-up article is drawn where it actually is, as a real anchor with a live href and every affordance of being a link, and every painted mark is askable — tapping a city opens it with its province, population, coordinates, the triangle it sits in, and outbound links to Wikipedia and OpenStreetMap. Canvas text can be none of those things.
+
 The compiled gazetteer stops at about a village. Below roughly five kilometres a triangle divides the ground without telling you more about it, and the panel says so rather than pretending. See ICOSA-SYNTEGRITY.md.
 
 Data: Natural Earth 110m, public domain.

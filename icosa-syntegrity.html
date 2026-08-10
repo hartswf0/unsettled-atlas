@@ -181,6 +181,19 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #modes button:first-child{margin-left:0}
 #modes button.on{background:var(--ink);color:var(--ground)}
 #modes button.sig{background:var(--signal);border-color:var(--signal);color:var(--paper)}
+/* Real anchors, positioned over the ground they name. Canvas text cannot be
+   opened in a new tab, copied, or long-pressed — a link has to be a link. */
+#links{position:absolute;inset:0;pointer-events:none;z-index:6}
+#links a{
+  position:absolute;transform:translate(-50%,-50%);pointer-events:auto;
+  display:flex;align-items:center;gap:4px;white-space:nowrap;
+  font:700 8px ui-monospace,monospace;letter-spacing:.06em;
+  color:var(--signal);text-decoration:none;padding:3px 5px 3px 3px;
+  background:rgba(241,238,228,.86);border:1px solid var(--signal)
+}
+#links a:hover,#links a:focus{background:var(--signal);color:var(--paper)}
+#links a i{display:block;width:5px;height:5px;background:var(--signal);border-radius:50%;flex:0 0 auto}
+#links a:hover i,#links a:focus i{background:var(--paper)}
 #reglegend{
   left:max(10px,env(safe-area-inset-left));bottom:72px;
   display:none;flex-direction:column;gap:2px
@@ -204,6 +217,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 <body>
 <div id="stage">
 <canvas id="world"></canvas>
+<div id="links"></div>
 
 <div class="hud" id="situation">
   <div class="plate" id="cellplate">
@@ -1841,6 +1855,60 @@ function drawSaid(S) {
   ctx.textAlign = 'left';
 }
 
+// A looked-up article is a place on the Earth, so it is drawn at that place
+// and given a real anchor — openable in a new tab, copyable, long-pressable.
+// Canvas text can do none of that, which is why the panel was never enough.
+var linkPool = {}, elLinks = null;
+function syncLinks(S) {
+  if (!elLinks) elLinks = document.getElementById('links');
+  var want = {};
+  for (var slug in (DB.lookups || {})) {
+    var got = DB.lookups[slug];
+    for (var i = 0; i < got.items.length; i++) {
+      var it = got.items[i];
+      if (!it.inside && view.zoom < 5) continue;
+      var v = fromLonLat(it.lon, it.lat);
+      var f = faceOf(v);
+      var vv = toView(worldOf(f, baryOf(f, v)));
+      if (dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) <= 0) continue;
+      var sp = project(vv, S);
+      if (sp[0] < 4 || sp[0] > W - 4 || sp[1] < 4 || sp[1] > H - 4) continue;
+      want[it.pageid] = { x: sp[0], y: sp[1], title: it.title };
+    }
+  }
+  for (var id in linkPool) {
+    if (!want[id]) { linkPool[id].remove(); delete linkPool[id]; }
+  }
+  // anchors stack rather than pile on top of one another
+  var placed = [];
+  var keys = Object.keys(want).sort(function (a, b) { return want[a].y - want[b].y; });
+  for (var q = 0; q < keys.length; q++) {
+    var w = want[keys[q]];
+    for (var z = 0; z < placed.length; z++) {
+      if (Math.abs(placed[z].y - w.y) < 15 && Math.abs(placed[z].x - w.x) < 150) {
+        w.y = placed[z].y + 16;
+        z = -1;
+      }
+    }
+    placed.push(w);
+  }
+  for (var id2 in want) {
+    var a = linkPool[id2];
+    if (!a) {
+      a = document.createElement('a');
+      a.href = 'https://en.wikipedia.org/?curid=' + id2;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.innerHTML = '<i></i>';
+      a.appendChild(document.createTextNode(want[id2].title));
+      elLinks.appendChild(a);
+      linkPool[id2] = a;
+    }
+    a.style.left = want[id2].x + 'px';
+    a.style.top = want[id2].y + 'px';
+  }
+}
+
 function drawSeams(S) {
   ctx.setLineDash([5, 4]);
   for (var i = 0; i < SEAMS.length; i++) {
@@ -1901,6 +1969,19 @@ function drawGazRivers(f, S, span) {
 }
 
 // Labels have to thin themselves out or the deep view is a wall of type.
+// everything painted on the map records where it landed, so the map can be
+// asked what is under a finger instead of only which triangle
+var HITS = [];
+function hit(x, y, r, kind, payload) { HITS.push({ x: x, y: y, r: r, kind: kind, p: payload }); }
+function hitAt(x, y) {
+  var best = null, bd = 26 * 26;
+  for (var i = 0; i < HITS.length; i++) {
+    var h = HITS[i], dx = h.x - x, dy = h.y - y, d = dx * dx + dy * dy;
+    if (d < bd) { bd = d; best = h; }
+  }
+  return best;
+}
+
 var labelGrid = {};
 function claimLabel(x, y) {
   var k = ((x / 74) | 0) + ',' + ((y / 15) | 0);
@@ -1908,7 +1989,7 @@ function claimLabel(x, y) {
   labelGrid[k] = 1;
   return true;
 }
-function markPoint(set, i, label, size, weight) {
+function markPoint(set, i, label, size, weight, kind) {
   var f = set.face[i];
   var vv = toView(worldOf(f, [set.bary[i * 3], set.bary[i * 3 + 1], set.bary[i * 3 + 2]]));
   if (dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) <= 0) return false;
@@ -1918,6 +1999,7 @@ function markPoint(set, i, label, size, weight) {
   ctx.beginPath();
   ctx.arc(sp[0], sp[1], size, 0, TAU);
   ctx.fill();
+  if (kind) hit(sp[0], sp[1], size, kind, { set: set, i: i });
   if (label && claimLabel(sp[0], sp[1])) {
     ctx.font = weight + 'px ui-monospace,monospace';
     ctx.textAlign = 'left';
@@ -1934,6 +2016,7 @@ var S_NOW = 1;
 function drawGround(S) {
   S_NOW = S;
   labelGrid = {};
+  HITS = [];
   if (!GAZ) { drawCities(S); return; }
   var z = view.zoom;
   var minPop = Math.pow(10, clamp(7.0 - z * 0.92, -1, 7.2));
@@ -1942,22 +2025,22 @@ function drawGround(S) {
   if (z < 3.4) {
     ctx.font = '700 8px ui-monospace,monospace';
     for (var r = 0; r < GAZ.regions.n && drawn < 600; r++) {
-      if (markPoint(GAZ.regions, r, GAZ.regions.name[r].toUpperCase(), 0.8, '700 8')) drawn++;
+      if (markPoint(GAZ.regions, r, GAZ.regions.name[r].toUpperCase(), 0.8, '700 8', 'region')) drawn++;
     }
     for (var m = 0; m < GAZ.marine.n && drawn < 900; m++) {
-      if (markPoint(GAZ.marine, m, GAZ.marine.name[m].toUpperCase(), 0.8, '8')) drawn++;
+      if (markPoint(GAZ.marine, m, GAZ.marine.name[m].toUpperCase(), 0.8, '8', 'water')) drawn++;
     }
   }
   for (var i = 0; i < GAZ.places.n && drawn < 1400; i++) {
     if (GAZ.places.pop[i] < minPop) continue;
-    if (markPoint(GAZ.places, i, GAZ.places.name[i].toUpperCase(), 1.9, '8')) drawn++;
+    if (markPoint(GAZ.places, i, GAZ.places.name[i].toUpperCase(), 2.4, '8', 'place')) drawn++;
   }
   if (z > 3.2) {
     for (var a = 0; a < GAZ.airports.n && drawn < 1700; a++) {
-      if (markPoint(GAZ.airports, a, '✈ ' + GAZ.airports.name[a].toUpperCase(), 1.4, '7')) drawn++;
+      if (markPoint(GAZ.airports, a, '✈ ' + GAZ.airports.name[a].toUpperCase(), 1.8, '7', 'airport')) drawn++;
     }
     for (var o = 0; o < GAZ.ports.n && drawn < 1900; o++) {
-      if (markPoint(GAZ.ports, o, '⚓ ' + GAZ.ports.name[o].toUpperCase(), 1.4, '7')) drawn++;
+      if (markPoint(GAZ.ports, o, '⚓ ' + GAZ.ports.name[o].toUpperCase(), 1.8, '7', 'port')) drawn++;
     }
   }
 }
@@ -2090,6 +2173,7 @@ function render() {
   drawCouncil(S);
   drawSaid(S);
   drawGround(S);
+  syncLinks(S);
   drawRelations(S, 'front');
   drawNorth(S);
 
@@ -2469,6 +2553,8 @@ function endPointer(e) {
       lastTap = now;
       tapTimer = setTimeout(function () {
         // TAP — the triangle becomes the interface
+        var onMap = hitAt(p.x, p.y);
+        if (onMap && !painting) { openThing(onMap); wake(); return; }
         var hit = pick(p.x, p.y);
         if (hit && painting) {
           var pk = cellSlug(cellAt(hit.p, depthForZoom()));
@@ -2934,6 +3020,57 @@ function openCarry(cell, seatIdx) {
       document.getElementById('kText').value = txt;
       msg.textContent = 'drafted — it is not sent until you send it';
     });
+  };
+}
+
+// what is under the finger, with links that are links
+function openThing(h) {
+  var set = h.p.set, i = h.p.i;
+  var name = set.name[i];
+  var v = set.v[i], p = lonlat(v);
+  var cell = cellAt(v, depthForZoom());
+  var extra = '';
+  if (h.kind === 'place') {
+    extra = '<div class="row"><b>WHERE</b><span>' +
+      esc([GAZ.adm1[GAZ.places.a1[i]], GAZ.adm0[GAZ.places.a0[i]]].filter(Boolean).join(', ')) +
+      '</span></div>' +
+      (GAZ.places.pop[i] ? '<div class="row"><b>PEOPLE</b><span>' +
+        GAZ.places.pop[i].toLocaleString('en') + '</span></div>' : '');
+  }
+  if (h.kind === 'airport' && GAZ.airports.code[i]) {
+    extra = '<div class="row"><b>CODE</b><span>' + esc(GAZ.airports.code[i]) + '</span></div>';
+  }
+  var wiki = 'https://en.wikipedia.org/w/index.php?search=' + encodeURIComponent(name);
+  var geo = 'https://www.openstreetmap.org/?mlat=' + p[1].toFixed(5) + '&mlon=' + p[0].toFixed(5) + '#map=14/' +
+    p[1].toFixed(5) + '/' + p[0].toFixed(5);
+  panel(h.kind.toUpperCase() + ' · ' + name.toUpperCase(),
+    '<div class="row"><b>KIND</b><span>' + h.kind + '</span></div>' +
+    extra +
+    '<div class="row"><b>AT</b><span>' + ll(v) + '</span></div>' +
+    '<div class="row" data-go="' + cellSlug(cell) + '"><b>IN TRIANGLE</b><span>' + cellSlug(cell) +
+      ' · ' + kmLabel(cellEdgeKm(cell)) + '</span></div>' +
+    '<p style="margin-top:12px">Leaving here goes to somebody else\'s record, so it is a link and ' +
+    'not a claim of ours.</p>' +
+    '<div class="row"><b><a href="' + wiki + '" target="_blank" rel="noopener">Search Wikipedia</a></b>' +
+      '<span>en.wikipedia.org</span></div>' +
+    '<div class="row"><b><a href="' + geo + '" target="_blank" rel="noopener">Open the ground</a></b>' +
+      '<span>openstreetmap.org</span></div>' +
+    '<button class="go" id="tGo" style="margin-top:10px">GO TO THIS TRIANGLE</button> ' +
+    '<button class="go ghost" id="tLook">LOOK UP HERE</button>');
+  elPanel.querySelectorAll('[data-go]').forEach(function (el) {
+    el.style.cursor = 'pointer';
+    el.onclick = function () {
+      var c2 = cellFromSlug(el.getAttribute('data-go'));
+      if (c2) { selection = c2; lookAt(cellCentre(c2), c2.depth); openWhere(c2); }
+    };
+  });
+  document.getElementById('tGo').onclick = function () {
+    selection = cell; lookAt(cellCentre(cell), cell.depth); openWhere(cell);
+  };
+  document.getElementById('tLook').onclick = function () {
+    var btn = document.getElementById('tLook');
+    btn.textContent = 'ASKING…';
+    lookUp(cell, function (err) { btn.textContent = err ? 'COULD NOT REACH IT' : 'DRAWN ON THE MAP'; });
   };
 }
 

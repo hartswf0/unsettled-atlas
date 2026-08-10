@@ -253,6 +253,29 @@ can be argued about exactly like a single cell.
 
 Dragging paints. Tapping one triangle at a time is not circling anything.
 
+## The links live on the map
+
+Everything drawn was painted canvas, which means it was inert. You could not
+open a place, copy it, long-press it or send it to anyone — the only
+clickable things were in the sheet, describing ground you were looking at
+somewhere else. That was backwards.
+
+**A looked-up article is now drawn where it is**, as a real `<a>` anchor
+positioned over its coordinates, with a live `href`, `target="_blank"` and
+every browser affordance that comes with being an actual link. Canvas text
+can do none of that, which is why the panel was never enough. Colliding
+anchors stack rather than pile up.
+
+**And everything painted is now askable.** Each mark records where it landed,
+so a tap resolves to the thing under the finger before it falls through to
+the triangle beneath it. Tapping the Atlanta dot opens *place · Atlanta* —
+its province and country, its population, its coordinates, the triangle it
+sits in as a clickable address, and two outbound links: Wikipedia, and the
+ground itself on OpenStreetMap.
+
+Leaving here goes to somebody else's record, which is the point: it is a
+link and not a claim of ours.
+
 ## What it still does not do
 
 Being plain about this, because the gap is the interesting part.

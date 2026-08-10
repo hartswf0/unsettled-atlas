@@ -48,6 +48,13 @@ None of them is the body. Each carries its own scale, lag, mobility, preferred d
 Four things the population makes visible rather than states. Aggregation: raise an arm and a population raises with you. Residue: recent organisations stay faintly present wherever the body has moved away from them, and converge back into you when you are still. Confidence: where the model is unsure of you the population loosens, cools and sheds members, and a lost limb is held up by memory before it dissolves and re-forms. Habitude: the session accumulates where movement has already been, and organises more tightly there. It remembers movement. It infers nothing else.
 
 Camera frames are processed in the page and never leave it. There is no account and no server.
+Common Ground · Living Mapmaker
+
+A living map woven by the people who move through a place. You leave a thread on a real city; where threads meet at an angle the place ties itself off into a knot; returning thickens it, and common ground is not something you can make alone. The map is the interface — one control on a cold ground, no menus, no legends, no copy.
+
+Atlanta's geometry is compiled from the Soft Cadastre basemap into the file itself, so the ground draws on the first frame with no network at all. OpenStreetMap raster tiles fade in underneath when there is one, and nothing depends on them. Several phones join one ground by link or QR: BroadcastChannel between clients on a device, and MQTT over WebSocket across them, racing public brokers, with `?broker=` for a ground that would rather name its own. If none of it answers, the weave still works and still persists.
+
+Built as a gauntlet loop: each piece was given a builder and a separate critic in fresh context, and the critics drove the running artifact on phone-sized screens rather than reading about it. See living-mapmaker.html.
 
 Data: OpenStreetMap Notes, © OpenStreetMap contributors, ODbL 1.0.
 

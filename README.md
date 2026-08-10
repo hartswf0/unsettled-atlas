@@ -102,7 +102,9 @@ Icosa Syntegrity
 
 Icosa World is a good map and an empty one: a cell had an id and an edge length and nothing else, which is why its council read as arbitrary and why nothing could be sent to anyone. Icosa Syntegrity is the fork where that is fixed. A triangle has corners in degrees, an area, a list of what is inside it, and an address that lives in the URL, so it can be linked and cited and returned to. The sheet sits beside the map instead of over it. A council seat is held by whoever types their name into it, and your critic is the seat opposite yours — a person, not a category. What is said stays on the triangle it was said about, drawn there, kept in the browser, and carried out as a file.
 
-Below about six kilometres the source runs out and the triangles do not. That gap is the next thing worth closing. See ICOSA-SYNTEGRITY.md.
+Descending reveals more rather than less: a compiled gazetteer carries 7,342 settlements with their populations and provinces, 1,366 named rivers, named regions and seas, airports, ports, and country outlines. So a triangle can say what is inside it and, more to the point, who a concern about it would be addressed to — sampled against the country outlines at its centre, corners and edge midpoints, with the provinces from the settlements within. When no state claims a triangle it says so.
+
+The gazetteer stops at about a village. Below roughly five kilometres a triangle divides the ground without telling you more about it, and the panel says so rather than pretending. See ICOSA-SYNTEGRITY.md.
 
 Data: Natural Earth 110m, public domain.
 

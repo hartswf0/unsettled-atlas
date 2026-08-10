@@ -985,6 +985,145 @@ var pulled = null;         // a relation under PULL
 var pressing = false;      // PRESS: the map's own compression
 var traced = null;         // a phenomenon under TRACE
 var traceCells = null;
+/* ---------------------------------------------------------- the gazetteer
+ * The map used to show less the deeper you went, which is the opposite of
+ * what a map is for. Natural Earth 110m carries 243 settlements; past
+ * continental scale there was nothing left to draw. This is the 10m tier —
+ * 7,342 settlements, named regions and seas, airports, ports, rivers — plus
+ * country outlines, so a triangle can say what is in it and who governs it.
+ * Loaded after the first paint: the map appears immediately, then fills.  */
+
+var GAZ = null, GAZ_STATE = 'waiting';
+function decodeStream(str, scale) {
+  var nums = str.split(','), lon = [], lat = [], x = 0, y = 0;
+  for (var i = 0; i < nums.length; i += 2) {
+    x += +nums[i]; y += +nums[i + 1];
+    lon.push(x / scale); lat.push(y / scale);
+  }
+  var v = new Array(lon.length), fc = new Int8Array(lon.length), bw = new Float64Array(lon.length * 3);
+  for (var j = 0; j < lon.length; j++) {
+    v[j] = fromLonLat(lon[j], lat[j]);
+    var f = faceOf(v[j]), w = baryOf(f, v[j]);
+    fc[j] = f; bw[j * 3] = w[0]; bw[j * 3 + 1] = w[1]; bw[j * 3 + 2] = w[2];
+  }
+  return { lon: lon, lat: lat, v: v, face: fc, bary: bw, n: lon.length };
+}
+function decodeGroups(str, scale) {
+  if (!str) return [];
+  return str.split(';').map(function (g) {
+    var nums = g.split(','), out = [], x = 0, y = 0;
+    for (var i = 0; i < nums.length; i += 2) {
+      x += +nums[i]; y += +nums[i + 1];
+      out.push([x / scale, y / scale]);
+    }
+    return out;
+  });
+}
+function loadGazetteer() {
+  var tag = document.createElement('script');
+  tag.src = 'icosa-gazetteer.data.js';
+  tag.onerror = function () { GAZ_STATE = 'absent'; wake(); };
+  tag.onload = function () {
+    var G = window.ICOSA_GAZETTEER;
+    if (!G) { GAZ_STATE = 'absent'; return; }
+    GAZ = {
+      meta: G.meta, adm0: G.adm0, adm1: G.adm1,
+      places: Object.assign(decodeStream(G.places.g, 1e3),
+        { name: G.places.n, pop: G.places.p, a0: G.places.a0, a1: G.places.a1 }),
+      regions: Object.assign(decodeStream(G.regions.g, 1e3), { name: G.regions.n }),
+      marine: Object.assign(decodeStream(G.marine.g, 1e3), { name: G.marine.n }),
+      airports: Object.assign(decodeStream(G.airports.g, 1e3), { name: G.airports.n, code: G.airports.c }),
+      ports: Object.assign(decodeStream(G.ports.g, 1e3), { name: G.ports.n }),
+      rivers: { name: G.rivers.n, idx: G.rivers.idx, lines: decodeGroups(G.rivers.g, 1e3) },
+      countries: { name: G.countries.n, iso: G.countries.iso, box: G.countries.box,
+                   idx: G.countries.idx, rings: decodeGroups(G.countries.g, 50) },
+      faceRivers: new Array(NF)
+    };
+    GAZ_STATE = 'ready';
+    wake();
+  };
+  document.head.appendChild(tag);
+}
+
+// who governs this point — the first thing a concern has to know
+function countryAt(v) {
+  if (!GAZ) return null;
+  var ll2 = lonlat(v), lon = ll2[0], lat = ll2[1];
+  var C = GAZ.countries;
+  for (var c = 0; c < C.name.length; c++) {
+    var b = C.box[c];
+    if (lon * 50 < b[0] - 1 || lon * 50 > b[2] + 1 || lat * 50 < b[1] - 1 || lat * 50 > b[3] + 1) continue;
+    var hit = false;
+    for (var r = C.idx[c][0]; r < C.idx[c][1]; r++) {
+      var ring = C.rings[r];
+      for (var i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+        var xi = ring[i][0], yi = ring[i][1], xj = ring[j][0], yj = ring[j][1];
+        if ((yi > lat) !== (yj > lat) && lon < ((xj - xi) * (lat - yi)) / (yj - yi) + xi) hit = !hit;
+      }
+    }
+    if (hit) return { name: C.name[c], iso: C.iso[c] };
+  }
+  return null;
+}
+
+// everything the sources know is inside this triangle
+function cellInventory(cell) {
+  var inv = { places: [], airports: [], ports: [], regions: [], marine: [], rivers: [],
+              pop: 0, countries: [], admin1: [], ready: false };
+  if (!GAZ) return inv;
+  inv.ready = true;
+  var i;
+  for (i = 0; i < GAZ.places.n; i++) {
+    if (!cellContains(cell, GAZ.places.v[i])) continue;
+    inv.places.push({ name: GAZ.places.name[i], pop: GAZ.places.pop[i],
+      a0: GAZ.adm0[GAZ.places.a0[i]], a1: GAZ.adm1[GAZ.places.a1[i]] });
+    inv.pop += GAZ.places.pop[i];
+  }
+  inv.places.sort(function (a, b) { return b.pop - a.pop; });
+  var seen1 = {};
+  inv.places.forEach(function (p) {
+    var k = (p.a1 || '') + ' · ' + (p.a0 || '');
+    if (p.a1 && !seen1[k]) { seen1[k] = 1; inv.admin1.push(k); }
+  });
+  for (i = 0; i < GAZ.airports.n; i++) {
+    if (cellContains(cell, GAZ.airports.v[i])) {
+      inv.airports.push(GAZ.airports.name[i] + (GAZ.airports.code[i] ? ' (' + GAZ.airports.code[i] + ')' : ''));
+    }
+  }
+  for (i = 0; i < GAZ.ports.n; i++) {
+    if (cellContains(cell, GAZ.ports.v[i])) inv.ports.push(GAZ.ports.name[i]);
+  }
+  for (i = 0; i < GAZ.regions.n; i++) {
+    if (cellContains(cell, GAZ.regions.v[i])) inv.regions.push(GAZ.regions.name[i]);
+  }
+  for (i = 0; i < GAZ.marine.n; i++) {
+    if (cellContains(cell, GAZ.marine.v[i])) inv.marine.push(GAZ.marine.name[i]);
+  }
+  var R = GAZ.rivers;
+  for (var r = 0; r < R.name.length; r++) {
+    var hit = false;
+    for (var l = R.idx[r][0]; l < R.idx[r][1] && !hit; l++) {
+      var line = R.lines[l];
+      for (var k = 0; k < line.length; k += 2) {
+        if (cellContains(cell, fromLonLat(line[k][0], line[k][1]))) { hit = true; break; }
+      }
+    }
+    if (hit) inv.rivers.push(R.name[r]);
+  }
+  // jurisdiction by sampling the triangle, not by guessing from the nearest town
+  var C2 = cellCorners(cell), seenC = {};
+  var probes = [cellCentre(cell)];
+  for (i = 0; i < 3; i++) {
+    probes.push(norm(lerp3(C2[i], cellCentre(cell), 0.25)));
+    probes.push(norm(lerp3(C2[i], C2[(i + 1) % 3], 0.5)));
+  }
+  for (i = 0; i < probes.length; i++) {
+    var c3 = countryAt(probes[i]);
+    if (c3 && !seenC[c3.name]) { seenC[c3.name] = 1; inv.countries.push(c3.name); }
+  }
+  return inv;
+}
+
 /* ------------------------------------------------------------ the record
  * What is said stays on the triangle it was said about. No server, no
  * account: the thread lives in this browser and leaves as a file. A cell
@@ -1404,6 +1543,100 @@ function drawSeams(S) {
   ctx.setLineDash([]);
 }
 
+// rivers from the gazetteer, clipped to a face the first time that face is
+// looked at, then kept. One face per frame so nothing stutters.
+var riverBudget = 0;
+function faceRiversOf(f) {
+  if (!GAZ) return null;
+  if (GAZ.faceRivers[f]) return GAZ.faceRivers[f];
+  if (riverBudget > 0) return null;
+  riverBudget++;
+  var out = [], R = GAZ.rivers;
+  for (var r = 0; r < R.name.length; r++) {
+    for (var l = R.idx[r][0]; l < R.idx[r][1]; l++) {
+      var pts = densify(R.lines[l], 0.9);
+      var parts = clipLineToFace(pts, f);
+      for (var m = 0; m < parts.length; m++) out.push({ w: toFaceWeights(f, parts[m]), river: r });
+    }
+  }
+  GAZ.faceRivers[f] = out;
+  return out;
+}
+function drawGazRivers(f, S) {
+  if (!GAZ || view.zoom < 1.2) return;
+  var rs = faceRiversOf(f);
+  if (!rs) return;
+  ctx.strokeStyle = COL.water;
+  ctx.lineWidth = 1;
+  for (var i = 0; i < rs.length; i++) {
+    var sp = weightsToScreen(f, rs[i].w, S);
+    pathFrom(sp, false);
+    ctx.stroke();
+  }
+}
+
+// Labels have to thin themselves out or the deep view is a wall of type.
+var labelGrid = {};
+function claimLabel(x, y) {
+  var k = ((x / 74) | 0) + ',' + ((y / 15) | 0);
+  if (labelGrid[k]) return false;
+  labelGrid[k] = 1;
+  return true;
+}
+function markPoint(set, i, label, size, weight) {
+  var f = set.face[i];
+  var vv = toView(worldOf(f, [set.bary[i * 3], set.bary[i * 3 + 1], set.bary[i * 3 + 2]]));
+  if (dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) <= 0) return false;
+  var sp = project(vv, S_NOW);
+  if (sp[0] < -50 || sp[0] > W + 50 || sp[1] < -20 || sp[1] > H + 20) return false;
+  ctx.fillStyle = COL.ink;
+  ctx.beginPath();
+  ctx.arc(sp[0], sp[1], size, 0, TAU);
+  ctx.fill();
+  if (label && claimLabel(sp[0], sp[1])) {
+    ctx.font = weight + 'px ui-monospace,monospace';
+    ctx.textAlign = 'left';
+    ctx.fillStyle = COL.muted;
+    ctx.fillText(label, sp[0] + size + 2.5, sp[1] + 2.6);
+  }
+  return true;
+}
+
+// The whole point: descending must reveal, not empty out. The threshold on
+// what counts as worth naming falls as the ground gets smaller, so a cell
+// that held three capitals at continental scale holds villages at block.
+var S_NOW = 1;
+function drawGround(S) {
+  S_NOW = S;
+  labelGrid = {};
+  if (!GAZ) { drawCities(S); return; }
+  var z = view.zoom;
+  var minPop = Math.pow(10, clamp(7.0 - z * 0.92, -1, 7.2));
+  var drawn = 0;
+  // named ground and named water first, so settlements sit on top of them
+  if (z < 3.4) {
+    ctx.font = '700 8px ui-monospace,monospace';
+    for (var r = 0; r < GAZ.regions.n && drawn < 600; r++) {
+      if (markPoint(GAZ.regions, r, GAZ.regions.name[r].toUpperCase(), 0.8, '700 8')) drawn++;
+    }
+    for (var m = 0; m < GAZ.marine.n && drawn < 900; m++) {
+      if (markPoint(GAZ.marine, m, GAZ.marine.name[m].toUpperCase(), 0.8, '8')) drawn++;
+    }
+  }
+  for (var i = 0; i < GAZ.places.n && drawn < 1400; i++) {
+    if (GAZ.places.pop[i] < minPop) continue;
+    if (markPoint(GAZ.places, i, GAZ.places.name[i].toUpperCase(), 1.9, '8')) drawn++;
+  }
+  if (z > 3.2) {
+    for (var a = 0; a < GAZ.airports.n && drawn < 1700; a++) {
+      if (markPoint(GAZ.airports, a, '✈ ' + GAZ.airports.name[a].toUpperCase(), 1.4, '7')) drawn++;
+    }
+    for (var o = 0; o < GAZ.ports.n && drawn < 1900; o++) {
+      if (markPoint(GAZ.ports, o, '⚓ ' + GAZ.ports.name[o].toUpperCase(), 1.4, '7')) drawn++;
+    }
+  }
+}
+
 function drawCities(S) {
   var minPop = Math.pow(10, clamp(7.2 - view.zoom * 0.62, 4.0, 7.2));
   var drawn = 0;
@@ -1478,6 +1711,7 @@ function render() {
     ctx.fill();
     ctx.clip();
     drawFaceSurface(f2, S);
+    drawGazRivers(f2, S);
     var budget = { n: 0 };
     drawGrid(f2, ROOT_TRI, 0, S, stopPx, budget);
     ctx.restore();
@@ -1512,9 +1746,10 @@ function render() {
   }
   if (pressing) drawSeams(S);
 
+  riverBudget = 0;
   drawCouncil(S);
   drawSaid(S);
-  drawCities(S);
+  drawGround(S);
   drawRelations(S, 'front');
   drawNorth(S);
 
@@ -2074,9 +2309,60 @@ function openThread(cell, presetTopic) {
   document.getElementById('sWhere').onclick = function () { openWhere(cell); };
 }
 
+// What is in here, and who a concern about it would be addressed to. This
+// is the difference between a triangle and an outline.
+function gazBlock(cell, km) {
+  if (GAZ_STATE !== 'ready') {
+    var inside = cellContents(cell);
+    return '<p style="margin-top:12px">' + (GAZ_STATE === 'absent'
+      ? 'The gazetteer did not load, so this falls back to the coarse source: '
+      : 'The gazetteer is still loading. From the coarse source so far: ') +
+      (inside.places.length || 'no') + ' named place' + (inside.places.length === 1 ? '' : 's') +
+      (inside.rivers.length ? ', and the ' + inside.rivers.join(', ') : '') + '.</p>';
+  }
+  var inv = cellInventory(cell);
+  var rows = '';
+  if (inv.countries.length) {
+    rows += '<div class="row"><b>GOVERNED BY</b><span>' + esc(inv.countries.join(' · ')) + '</span></div>';
+  }
+  if (inv.admin1.length) {
+    rows += '<div class="row"><b>ADMINISTERED</b><span>' +
+      esc(inv.admin1.slice(0, 6).join(' · ')) + (inv.admin1.length > 6 ? ' +' + (inv.admin1.length - 6) : '') +
+      '</span></div>';
+  }
+  rows += '<div class="row"><b>SETTLEMENTS</b><span>' + inv.places.length +
+    (inv.pop ? ' · ' + inv.pop.toLocaleString('en') + ' people at least' : '') + '</span></div>';
+  if (inv.regions.length) rows += '<div class="row"><b>GROUND</b><span>' + esc(inv.regions.slice(0, 6).join(' · ')) + '</span></div>';
+  if (inv.marine.length) rows += '<div class="row"><b>WATER</b><span>' + esc(inv.marine.slice(0, 6).join(' · ')) + '</span></div>';
+  if (inv.rivers.length) rows += '<div class="row"><b>RIVERS</b><span>' + esc(inv.rivers.slice(0, 8).join(' · ')) + '</span></div>';
+  if (inv.airports.length) rows += '<div class="row"><b>AIRPORTS</b><span>' + esc(inv.airports.slice(0, 6).join(' · ')) + '</span></div>';
+  if (inv.ports.length) rows += '<div class="row"><b>PORTS</b><span>' + esc(inv.ports.slice(0, 6).join(' · ')) + '</span></div>';
+
+  var top = inv.places.slice(0, 14).map(function (pl) {
+    return '<div class="row"><b>' + esc(pl.name.toUpperCase()) + '</b><span>' +
+      esc([pl.a1, pl.a0].filter(Boolean).join(', ')) +
+      (pl.pop ? ' · ' + pl.pop.toLocaleString('en') : '') + '</span></div>';
+  }).join('');
+
+  var empty = !inv.places.length && !inv.regions.length && !inv.marine.length &&
+              !inv.rivers.length && !inv.airports.length && !inv.ports.length;
+  return rows +
+    (inv.countries.length
+      ? '<p style="margin-top:12px">A concern about this ground is addressed to <b>' +
+        esc(inv.countries.join(' and ')) + '</b>' +
+        (inv.admin1.length ? ', and below that to ' + esc(inv.admin1.slice(0, 3).join(', ')) : '') + '.</p>'
+      : '<p style="margin-top:12px">No state claims this triangle — it is water, or ice, or ' +
+        'outside every boundary in the source. There is nobody to address.</p>') +
+    (empty
+      ? '<p>Nothing named is inside it. ' + (km < SOURCE_KM
+          ? 'At ' + kmLabel(km) + ' the triangle is finer than the gazetteer, which stops at about ' +
+            'a village. Descending further divides the ground without telling you more about it.'
+          : 'That is a fact about this ground, not a gap in the record.') + '</p>'
+      : top);
+}
+
 function openWhere(cell) {
   var P = cellCorners(cell), km = cellEdgeKm(cell);
-  var inside = cellContents(cell);
   var nb = neighbours(cell);
   var slug = cellSlug(cell);
   var url = location.origin + location.pathname + '#' + slug;
@@ -2084,10 +2370,6 @@ function openWhere(cell) {
   for (var k = 0; k < 4; k++) {
     kids += (k ? ' ' : '') + cellSlug(makeCell(cell.f, cell.path.concat([k])));
   }
-  var placeRows = inside.places.slice(0, 12).map(function (pl) {
-    return '<div class="row"><b>' + pl.name.toUpperCase() + '</b><span>' +
-      (pl.note || '') + (pl.pop ? ' · ' + pl.pop.toLocaleString('en') : '') + '</span></div>';
-  }).join('');
   panel('WHERE · ' + slug,
     '<p>A triangle that cannot be named, measured or sent to anyone is a container ' +
     'with nothing in it. This is the address.</p>' +
@@ -2104,11 +2386,7 @@ function openWhere(cell) {
     (cell.depth ? '<div class="row"><b>INSIDE</b><span>' +
       cellSlug(makeCell(cell.f, cell.path.slice(0, -1))) + '</span></div>' : '') +
     '<div class="row"><b>CONTAINS</b><span>' + kids + '</span></div>' +
-    '<p style="margin-top:12px"><b>' + (inside.places.length || 'no') + '</b> named place' +
-      (inside.places.length === 1 ? '' : 's') + ' from the source set' +
-      (inside.rivers.length ? ', and the ' + inside.rivers.join(', ') : '') + '.' +
-      (km < SOURCE_KM ? ' Below the source resolution the triangle keeps going and the record does not.' : '') +
-    '</p>' + placeRows +
+    gazBlock(cell, km) +
     '<p style="margin-top:12px">Link to this triangle:</p>' +
     '<div class="row" id="wlink"><b style="word-break:break-all;font-weight:400">' + url + '</b><span>copy</span></div>');
   var row = document.getElementById('wlink');
@@ -2158,6 +2436,24 @@ function openCouncil(cell) {
       '<input data-seat="' + i + '" placeholder="unclaimed" value="' + esc(seatHolder(slug, i)) + '"></div>';
   }).join('');
   var taken = seat.struts.filter(function (st, i) { return seatHolder(slug, i); }).length;
+  // a council has to be drawn from somewhere. This is where.
+  var from = '';
+  if (GAZ_STATE === 'ready') {
+    var inv = cellInventory(cell);
+    if (inv.places.length || inv.countries.length) {
+      from = '<p style="margin-top:14px">This ground holds <b>' + inv.places.length + '</b> named settlement' +
+        (inv.places.length === 1 ? '' : 's') +
+        (inv.pop ? ' and at least <b>' + inv.pop.toLocaleString('en') + '</b> people' : '') +
+        (inv.countries.length ? ', governed by <b>' + esc(inv.countries.join(' and ')) + '</b>' : '') +
+        '. ' + (inv.places.length
+          ? 'Seats would be drawn from ' + esc(inv.places.slice(0, 6).map(function (x) { return x.name; }).join(', ')) +
+            (inv.places.length > 6 ? ' and ' + (inv.places.length - 6) + ' more' : '') + '.'
+          : 'There is nobody living here to draw seats from.') + '</p>';
+    } else {
+      from = '<p style="margin-top:14px">Nothing named lives on this ground. A council seated here ' +
+        'would be a council about somewhere nobody is.</p>';
+    }
+  }
   panel('COUNCIL · ' + c.name.toUpperCase(),
     '<p>The same solid, used twice. Above, the icosahedron holds the Earth. Here it holds a ' +
     'conversation: <b>' + c.stat.people + ' struts</b> are ' + c.stat.people + ' seats, ' +
@@ -2176,6 +2472,7 @@ function openCouncil(cell) {
       ? 'every one of the ' + c.stat.topics + ' rooms hears every kind at once, so no room can be all data or all anecdote.'
       : reg.roomsFullyMixed + ' of ' + c.stat.topics + ' rooms hear a full mix.') + '</p>' +
     rows +
+    from +
     '<p style="margin-top:14px"><b>' + taken + ' of ' + seat.struts.length + '</b> seats taken. ' +
     'A seat is held by whoever types their name into it — this invents nobody. ' +
     'Your critic is the seat opposite yours, and it is a person, not a category.</p>' +
@@ -2226,6 +2523,10 @@ function openHelp() {
     '<b>A seat is held by whoever types their name into it.</b> Nothing here invents a voice or ' +
     'speaks for a resident; the only way a seat speaks is if a person takes it. Your critic is ' +
     'the seat opposite yours, and it is a person too.</p>' +
+    '<p>Descending reveals more, not less. The gazetteer carries 7,342 settlements, named ' +
+    'regions and seas, airports, ports and rivers, and country outlines — so a triangle can say ' +
+    'what is inside it and, more to the point, <b>who a concern about it would be addressed to</b>. ' +
+    'It loads after the map, so the world appears first and then fills.</p>' +
     '<p>Say something and it stays on the triangle you said it about, drawn where you said it. ' +
     'The record lives in this browser and leaves as a file — there is no server and no account, ' +
     'so a conversation is something you carry rather than something you are lent.</p>' +
@@ -2379,6 +2680,7 @@ function start() {
   if (fromUrl) { view.centre = cellCentre(fromUrl); lookAt(view.centre, fromUrl.depth); selection = fromUrl; }
   document.getElementById('boot').classList.add('gone');
   frame();
+  setTimeout(loadGazetteer, 60);   // the map first, then everything in it
   if (/(^|[?&])verify\b/.test(location.search)) setTimeout(verify, 60);
 }
 window.addEventListener('resize', function () { resize(); wake(); });

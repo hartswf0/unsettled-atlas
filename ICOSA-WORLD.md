@@ -331,20 +331,50 @@ not host bigger syntegrations; they host sparser ones. They buy headcount
 and pay for it in reverberation, and the build fails if that ceiling ever
 moves.
 
+### A council must fit the ground it governs
+
+A council drawn beside its cell is not that cell's council. So the seating
+is a claim about a graph, and it is checked as one: the struts the solid
+hands us must be exactly the struts the triangle rule hands us. Two of them
+embed exactly.
+
+```
+tetrahedron ≅ 3 corners + centroid           6 struts, every pair joined
+octahedron  ≅ 3 corners + 3 edge midpoints   12 struts, each corner opposite
+                                             the midpoint of the far edge
+```
+
+The consequence is the good part. **A cell's topics are exactly the points
+it shares with its neighbours** — corners and edge midpoints belong to more
+than one cell — so the councils of adjacent cells hold topics in common by
+construction, and what is said in one has somewhere to go. That is the
+between-council reverberation a single solid cannot supply, and it is
+geometry rather than protocol.
+
+The cube does not embed: three corners, three midpoints and a centroid is
+seven points, not eight. It leaves the ladder and stays in the family table
+as evidence, which costs nothing — the octahedron seats the same twelve
+people with better closure (every topic pair shares four people rather than
+two) and a shorter diameter.
+
+The icosahedron is the exception at the top: its twelve topics are the
+world's own vertices and its thirty struts are the world's own edges, so it
+seats the planet rather than any one cell.
+
 ### The ladder
 
 So a council is chosen by how much world a cell holds, not by how many
 people are available:
 
-| cell edge | scale | solid | people | topics |
-|---|---|---|---:|---:|
-| ≥ 2500 km | EARTH | icosahedron | 30 | 12 |
-| ≥ 700 km | CONTINENTAL | icosahedron | 30 | 12 |
-| ≥ 150 km | REGIONAL | cube | 12 | 8 |
-| ≥ 20 km | METROPOLITAN | octahedron | 12 | 6 |
-| ≥ 4 km | NEIGHBOURHOOD | octahedron | 12 | 6 |
-| ≥ 0.8 km | BLOCK | tetrahedron | 6 | 4 |
-| below | BUILDING and down | — | — | — |
+| cell edge | scale | solid | people | topics | seated on |
+|---|---|---|---:|---:|---|
+| ≥ 2500 km | EARTH | icosahedron | 30 | 12 | the world's vertices and edges |
+| ≥ 700 km | CONTINENTAL | octahedron | 12 | 6 | corners + midpoints |
+| ≥ 150 km | REGIONAL | octahedron | 12 | 6 | corners + midpoints |
+| ≥ 20 km | METROPOLITAN | octahedron | 12 | 6 | corners + midpoints |
+| ≥ 4 km | NEIGHBOURHOOD | octahedron | 12 | 6 | corners + midpoints |
+| ≥ 0.8 km | BLOCK | tetrahedron | 6 | 4 | corners + centroid |
+| below | BUILDING and down | — | — | — | — |
 
 Bounded at the top by closure and at the bottom by the tetrahedron: six
 people over four topics is the smallest structure that can seat member and
@@ -394,6 +424,25 @@ registers balanced at five struts each on the icosahedron.
 What that buys is not decoration. **A room cannot be all data or all
 anecdote, because the seating chart forbids it.**
 
+### The council is the map
+
+`COUNCIL` does not open a diagram beside the world. It draws the council
+*in* the world, and at planetary scale the two are the same object: the
+thirty struts are the thirty edges of the Dymaxion net, each one carrying a
+register, and the twelve topics are the twelve vertices.
+
+Unfolded, a strut appears on both of the faces it separates and a topic
+appears once for every face that meets it — topic 11 in three places at
+once, topic 0 in two. Fold the world and they gather back into one. **The
+net scatters a council that folding assembles**, which is the clearest thing
+this instrument says about what a flat map does to a conversation.
+
+Inside a cell the same drawing runs on the embedding: topics at the corners
+and midpoints, struts between them, coloured by register. Three of the
+octahedron's twelve struts run corner to corner straight through a midpoint,
+so they are bowed toward the middle — flat, they hide beneath the short ones
+and take their registers out of sight with them.
+
 And the twelve planetary topics have addresses — all of them at sea, the
 closest 267 km offshore. That is not a decision about agendas; it falls out
 of solving for no vertex on land. The planetary agenda sits in
@@ -401,8 +450,8 @@ international waters, where no jurisdiction can claim it.
 
 ### Not yet built
 
-No council has been convened. The compiler derives the structure; it does
-not fill it. Two things come next, in this order, because the order is the
+No council has been convened. The compiler derives the structure and the map
+draws it; neither fills it. Two things come next, in this order, because the order is the
 safeguard:
 
 1. **A dossier per cell** — heritage and historic sites with coordinates and

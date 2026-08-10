@@ -507,7 +507,7 @@ function solidFamily() {
   };
   return {
     tetrahedron: dedupe([[1, 1, 1], [1, -1, -1], [-1, 1, -1], [-1, -1, 1]]),
-    octahedron: dedupe(spread([1, 0, 0], 1, 0, 0, true)),
+    octahedron: [[1, 0, 0], [-1, 0, 0], [0, 1, 0], [0, -1, 0], [0, 0, 1], [0, 0, -1]],
     cube: dedupe(spread([1, 1, 1], 1, 1, 1, false)),
     cuboctahedron: dedupe(spread([1, 1, 0], 1, 1, 0, true)),
     icosahedron: dedupe(spread([0, 1, P], 0, 1, 1, true)),
@@ -673,27 +673,94 @@ function subdivisionDegeneracy(V0, F0, steps) {
   return out;
 }
 
-// Which council a piece of ground is entitled to. Not by headcount available
-// — by how much world the cell holds. Below the tetrahedron there is no
-// solid, and the honest answer is that you are not in a council, you are
-// talking.
+// A council has to be seatable in the ground it governs, or it is not that
+// ground's council. Two of the solids embed in a triangle exactly, and the
+// embedding puts their topics on the points a cell SHARES with its
+// neighbours — so adjacent councils hold topics in common, which is the
+// reverberation between rooms that a single solid cannot supply.
+//
+//   tetrahedron ≅ 3 corners + centroid          every pair joined
+//   octahedron  ≅ 3 corners + 3 edge midpoints  each corner opposite the
+//                                               midpoint of the far edge
+//
+// The cube does not embed: 3 corners + 3 midpoints + a centroid is seven
+// points, not eight. It stays in the family table as evidence and off the
+// ladder — which costs nothing, since the octahedron seats the same twelve
+// people with better closure (every topic pair shares 4 rather than 2) and
+// a shorter diameter.
+//
+// The icosahedron is the exception and the top of the ladder: its twelve
+// topics are the world's own vertices and its thirty struts are the world's
+// own edges, so it seats the planet rather than any one cell.
+const B_A = [1, 0, 0], B_B = [0, 1, 0], B_C = [0, 0, 1];
+const bmid = (p, q) => [(p[0] + q[0]) / 2, (p[1] + q[1]) / 2, (p[2] + q[2]) / 2];
+const EMBEDDINGS = {
+  world: {
+    solid: 'icosahedron',
+    seats: 'the world\'s twelve vertices and thirty edges',
+    points: null,                       // the icosahedron itself
+  },
+  'corners+midpoints': {
+    solid: 'octahedron',
+    seats: 'the three corners and three edge midpoints of the cell',
+    // canonical octahedron order (+x,−x,+y,−y,+z,−z), so the three
+    // non-adjacent pairs are (0,1) (2,3) (4,5): corner ↔ opposite midpoint
+    points: [B_A, bmid(B_B, B_C), B_B, bmid(B_A, B_C), B_C, bmid(B_A, B_B)],
+    labels: ['A', 'mBC', 'B', 'mAC', 'C', 'mAB'],
+  },
+  'corners+centroid': {
+    solid: 'tetrahedron',
+    seats: 'the three corners and the centroid of the cell',
+    points: [B_A, B_B, B_C, [1 / 3, 1 / 3, 1 / 3]],
+    labels: ['A', 'B', 'C', 'centre'],
+  },
+};
+
 const LADDER = [
-  { scale: 'EARTH',         minKm: 2500,  solid: 'icosahedron' },
-  { scale: 'CONTINENTAL',   minKm: 700,   solid: 'icosahedron' },
-  { scale: 'REGIONAL',      minKm: 150,   solid: 'cube' },
-  { scale: 'METROPOLITAN',  minKm: 20,    solid: 'octahedron' },
-  { scale: 'NEIGHBOURHOOD', minKm: 4,     solid: 'octahedron' },
-  { scale: 'BLOCK',         minKm: 0.8,   solid: 'tetrahedron' },
-  { scale: 'BUILDING',      minKm: 0.06,  solid: null },
-  { scale: 'ROOM',          minKm: 0.012, solid: null },
-  { scale: 'OBJECT',        minKm: 0.003, solid: null },
-  { scale: 'EVENT',         minKm: 0,     solid: null },
+  { scale: 'EARTH',         minKm: 2500,  solid: 'icosahedron', seating: 'world' },
+  { scale: 'CONTINENTAL',   minKm: 700,   solid: 'octahedron',  seating: 'corners+midpoints' },
+  { scale: 'REGIONAL',      minKm: 150,   solid: 'octahedron',  seating: 'corners+midpoints' },
+  { scale: 'METROPOLITAN',  minKm: 20,    solid: 'octahedron',  seating: 'corners+midpoints' },
+  { scale: 'NEIGHBOURHOOD', minKm: 4,     solid: 'octahedron',  seating: 'corners+midpoints' },
+  { scale: 'BLOCK',         minKm: 0.8,   solid: 'tetrahedron', seating: 'corners+centroid' },
+  { scale: 'BUILDING',      minKm: 0.06,  solid: null,          seating: null },
+  { scale: 'ROOM',          minKm: 0.012, solid: null,          seating: null },
+  { scale: 'OBJECT',        minKm: 0.003, solid: null,          seating: null },
+  { scale: 'EVENT',         minKm: 0,     solid: null,          seating: null },
 ];
+
+// The embedding is a claim about a graph, so check it as one: the struts the
+// geometry hands us must be exactly the struts the triangle rule hands us.
+function checkEmbedding(key, council) {
+  const emb = EMBEDDINGS[key];
+  if (!emb.points) return { key, solid: emb.solid, exact: true, note: 'the world itself' };
+  const n = emb.points.length;
+  if (n !== council.topics) throw new Error(`${key}: ${n} points for ${council.topics} topics`);
+  const same = (p, q) => p.every((x, i) => Math.abs(x - q[i]) < 1e-12);
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+    if (same(emb.points[i], emb.points[j])) throw new Error(`${key}: two topics at one point`);
+  }
+  const have = new Set(council.edges.map(([a, b]) => (a < b ? a + ',' + b : b + ',' + a)));
+  // the triangle rule: every pair joined, except a corner and the midpoint
+  // of the edge opposite it — which is exactly non-adjacency in the solid
+  const want = new Set();
+  for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+    const opposite = emb.labels[i][0] === 'm'
+      ? emb.labels[i].slice(1).indexOf(emb.labels[j]) < 0 && emb.labels[j].length === 1
+      : emb.labels[j][0] === 'm' && emb.labels[j].slice(1).indexOf(emb.labels[i]) < 0;
+    if (!opposite) want.add(i + ',' + j);
+  }
+  const exact = have.size === want.size && [...want].every((k) => have.has(k));
+  if (!exact) throw new Error(`${key} does not embed in a triangle: ${[...have]} vs ${[...want]}`);
+  return { key, solid: emb.solid, exact: true, topics: n, struts: council.edges.length, note: emb.seats };
+}
 
 function buildCouncils(icoV, icoFaces, links) {
   const family = solidFamily();
   const seated = new Set(LADDER.map((l) => l.solid).filter(Boolean));
-  const all = [], detail = {};
+  const seatingOf = {};
+  LADDER.forEach((l) => { if (l.solid) seatingOf[l.solid] = l.seating; });
+  const all = [], detail = {}, embeds = [];
   let seed = 7;
   for (const [name, V] of Object.entries(family)) {
     // the icosahedron reuses the map's own edge numbering, so strut i here
@@ -707,7 +774,12 @@ function buildCouncils(icoV, icoFaces, links) {
     });
     if (!seated.has(name)) continue;
     const reg = assignRegisters(c, seed += 101);
+    const key = seatingOf[name];
+    embeds.push(checkEmbedding(key, c));
     detail[name] = {
+      seating: key,
+      barycentric: EMBEDDINGS[key].points,
+      labels: EMBEDDINGS[key].labels || null,
       vertices: V.map((v) => v.map((x) => +x.toFixed(9))),
       struts: c.edges.map((e, i) => ({
         topics: e, critiques: c.critics[i], register: reg ? reg.seats[i] : null,
@@ -716,7 +788,7 @@ function buildCouncils(icoV, icoFaces, links) {
       registers: reg,
     };
   }
-  return { family: all, seated: detail };
+  return { family: all, seated: detail, embeddings: embeds };
 }
 
 /* ------------------------------------------------------------- compile -- */
@@ -761,6 +833,7 @@ const geodesic = subdivisionDegeneracy(V, faces, 3);
       throw new Error(`frequency ${g.frequency} has ${g.degrees[5]} five-valent topics, not twelve`);
     }
   }
+  if (!councils.embeddings.every((e) => e.exact)) throw new Error('a council does not fit its cell');
   const bigger = councils.family.filter((c) => c.people > ico.people && c.closure);
   if (bigger.length) {
     throw new Error(`the closure ceiling moved: ${bigger.map((c) => c.name).join(', ')}`);
@@ -842,6 +915,7 @@ const payload = {
         + 'Registers are ways of describing a place, never simulated people.',
     registers: REGISTERS,
     ladder: LADDER,
+    embeddings: councils.embeddings,
     family: councils.family,
     seated: councils.seated,
     geodesic,
@@ -876,6 +950,7 @@ process.stderr.write(
     + `${String(c.perTopic).padStart(2)} per topic, closure ${c.covered.padStart(9)}`
     + `${c.closure ? ' ✓' : ''}`).join('\n') + '\n' +
   `    seated: ${Object.keys(councils.seated).join(', ')}\n` +
+  councils.embeddings.map((e) => `      ${e.solid.padEnd(12)} ${e.note}\n`).join('') +
   `    icosahedron rooms hearing every register: ${councils.seated.icosahedron.registers.roomsFullyMixed}/12\n` +
   `    subdivision keeps five-valent topics at: ${geodesic.map((g) => g.degrees[5]).join(', ')} (twelve, forever)\n`
 );

@@ -34,6 +34,8 @@ The icosahedron's orientation and the eleven cuts that open the map are not tran
 
 The solid is used twice. Above, the icosahedron holds the Earth. Turned toward discourse it is Stafford Beer's Team Syntegrity — thirty edges are thirty people, twelve vertices are twelve topics, everyone sits in two rooms, and closure is a property of the object rather than a promise about the chair. The compiler derives which solids can seat such a council, and proves two things the design rests on: a council cannot be scaled by subdividing the world, because every geodesic subdivision keeps exactly twelve five-valent vertices forever; and the icosahedron is the largest solid in which every pair of topics still shares a person. So a cell is entitled to a council by how much ground it holds — icosahedron at continental scale, octahedron at metropolitan, tetrahedron at block scale, and nothing at all below that.
 
+A council is not a diagram beside the world. At planetary scale it is the world: the thirty struts are the thirty edges of the Dymaxion net and the twelve topics are its vertices, so unfolding scatters a council that folding gathers back into one. Inside a cell the topics sit on the corners and edge midpoints — the points a cell shares with its neighbours — so adjacent councils hold topics in common.
+
 The seats are registers of description, not people. Nothing simulates a resident.
 
 Data: Natural Earth 110m, public domain.

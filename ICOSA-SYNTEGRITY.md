@@ -150,6 +150,67 @@ to ask the other two questions.
   delta in a country rather than as an unlabelled triangle. Every rung is
   clickable.
 
+## Asking the wider record, live
+
+The compiled gazetteer stops at about a village, and I had been treating
+that as the floor because this build environment cannot reach Wikipedia,
+Wikidata, Overpass or any model API — the egress policy refuses them all.
+
+That was the wrong conclusion. **The page runs in the reader's browser, not
+on a server.** A published page fetches from their network, and Wikipedia's
+API answers anonymous cross-origin requests. So `LOOK UP THIS TRIANGLE`
+asks Wikipedia geosearch directly, with no key, no account and nothing sent
+anywhere but the query.
+
+A radius query becomes a triangle query by keeping only the results that
+actually fall inside the cell — the rest are shown as *nearby*, which is a
+different and honest claim. Geosearch caps its radius at 10 km, so for a
+larger triangle the panel says it searched the middle rather than implying
+it covered the whole thing. Results are cached by address, kept in the same
+record as everything else, exported with it, and every item links to the
+article it came from.
+
+It degrades: if the network refuses, the panel says so and the compiled
+gazetteer is still there.
+
+## The carry, and the flow of information
+
+A syntegration works because every seat sits in two rooms, so what is said
+in one is carried into the other **by a person**, and changed in the
+carrying — carrying faithfully is not available, and choosing what to lose
+is the actual work. That movement is the information flow, and it happens
+along a strut.
+
+So `CARRY` is an operation on a seat you hold: it shows you everything said
+in your first room, each line with its id, and asks what survives the move
+into your second. The carry is recorded with its origin room, its
+destination and its seat, and drawn on the map as a dashed line along that
+strut with a mark travelling it.
+
+## What a model may do here
+
+Drafting a carry is the one task in the protocol that is genuinely tedious
+and genuinely a translation: restating what is already in the room, for a
+different room. So a model may draft one, and may not send one.
+
+- It is given only what is in the source room, plus what the sources say
+  about this ground.
+- Every sentence must end with the bracketed id of the note it came from.
+- It is told that adding a fact is the one thing it must not do — not
+  context, not background, not a plausible detail — and to answer *nothing
+  here carries* if the material does not support one.
+- Temperature is zero.
+- The draft lands in the text field. **A person edits it and a person
+  sends it.** Nothing a model produces is ever stored as somebody's words.
+
+The key is pasted into the page and kept in that browser with the rest of
+the record. It is never in this repository, and there is no server to send
+it to.
+
+The structure works without any of this: a human writes their own carry and
+the protocol is unchanged. The model is an assist on one step, not a
+participant.
+
 ## What it still does not do
 
 Being plain about this, because the gap is the interesting part.
@@ -163,10 +224,14 @@ Being plain about this, because the gap is the interesting part.
 - **Population is a floor, not a count.** It sums the settlements the
   gazetteer knows, so it undercounts everywhere and undercounts worst where
   settlements are small and many.
-- **No model writes anything.** Deliberately, and still. A council of real
-  people over a grounded dossier is worth building; a council of synthetic
-  voices over an empty one is the thing the whole project exists to
-  criticise.
+- **No model speaks as anyone.** It drafts one step and a person sends it.
+  A council of synthetic voices over an empty triangle remains the thing
+  this project exists to criticise.
+- **The live lookup is untested against the real endpoint.** It cannot be
+  reached from the environment this was built in, so the plumbing was
+  proved against a stand-in: the failure path, the radius, the
+  inside-versus-nearby filter and the caching all work, but whether
+  Wikipedia answers your browser is something only your browser can settle.
 - **The record is local.** Two people in the same room can each hold a seat
   and merge records by file. Two people in different rooms cannot yet, and
   until they can, escalation is a demonstration rather than a channel: a

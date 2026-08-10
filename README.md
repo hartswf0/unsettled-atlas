@@ -106,7 +106,9 @@ Descending reveals more rather than less: a compiled gazetteer carries 7,342 set
 
 The map cannot find the people in a small triangle and does not pretend to: it structures recruitment instead — an address you send, a seat someone claims by name, and a nomination for the next seat. An issue is a claim somebody seconded, so a concern reads as raised by one until it is held by two. What the map genuinely does is escalate: because a cell address is a prefix code, a concern raised on a block climbs to the scale at which a jurisdiction could answer it, and arrives there naming who that is.
 
-The gazetteer stops at about a village. Below roughly five kilometres a triangle divides the ground without telling you more about it, and the panel says so rather than pretending. See ICOSA-SYNTEGRITY.md.
+Where the compiled gazetteer stops — at about a village — the page asks Wikipedia directly from the reader's browser, with no key and no server, and keeps only the articles that actually fall inside the triangle. And because a syntegration works by people carrying claims between the two rooms they each sit in, CARRY is an operation on a seat you hold, drawn on the map as a mark travelling the strut that moved it. A model may draft that carry from what is already in the room, citing every line, and may not send it.
+
+The compiled gazetteer stops at about a village. Below roughly five kilometres a triangle divides the ground without telling you more about it, and the panel says so rather than pretending. See ICOSA-SYNTEGRITY.md.
 
 Data: Natural Earth 110m, public domain.
 

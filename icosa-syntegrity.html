@@ -135,6 +135,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 }
 #panel .row:last-child{border-bottom:1px solid rgba(18,21,20,.18)}
 #panel .row b{font-weight:700}
+#panel .row a{color:var(--signal);text-underline-offset:3px}
 #panel .row span{color:var(--muted);text-align:right;flex:0 0 auto}
 #panel .row.on{background:var(--ink);color:var(--ground);padding-inline:6px}
 #panel .row.on span{color:var(--ground);opacity:.75}
@@ -1200,6 +1201,59 @@ function cellInventory(cell) {
   return inv;
 }
 
+/* ----------------------------------------------------------- the lookup
+ * The compiled gazetteer stops at about a village, and below that the
+ * triangle went quiet. But the page runs in the reader's browser, not on
+ * a server, so it can ask Wikipedia directly — anonymous CORS, no key, no
+ * account. A radius query becomes a triangle query by keeping only the
+ * results that actually fall inside the cell.
+ *
+ * On demand only, never on a pan. Cached by address, kept with the record,
+ * and every item carries where it came from.                            */
+
+var LOOKUP_STATE = {};                       // slug -> 'busy' | 'error' | null
+function lookupOf(slug) { return (DB.lookups || {})[slug] || null; }
+
+function lookUp(cell, done) {
+  var slug = cellSlug(cell);
+  if (LOOKUP_STATE[slug] === 'busy') return;
+  LOOKUP_STATE[slug] = 'busy';
+  var c = cellCentre(cell), p = lonlat(c);
+  // geosearch caps the radius at 10 km, so a larger triangle is sampled at
+  // its middle rather than covered — the panel says so rather than implying
+  // it looked everywhere.
+  var want = Math.round(cellEdgeKm(cell) * 1000 * 0.62);
+  var radius = Math.max(400, Math.min(10000, want));
+  var url = 'https://en.wikipedia.org/w/api.php?action=query&list=geosearch' +
+    '&gscoord=' + p[1].toFixed(5) + '%7C' + p[0].toFixed(5) +
+    '&gsradius=' + radius + '&gslimit=50&format=json&origin=*';
+  fetch(url, { credentials: 'omit' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (j) {
+      var hits = (j && j.query && j.query.geosearch) || [];
+      var kept = [];
+      for (var i = 0; i < hits.length; i++) {
+        var h = hits[i];
+        var v = fromLonLat(h.lon, h.lat);
+        kept.push({ title: h.title, pageid: h.pageid, lon: h.lon, lat: h.lat,
+                    m: Math.round(h.dist), inside: cellContains(cell, v) });
+      }
+      kept.sort(function (a, b) { return (b.inside - a.inside) || (a.m - b.m); });
+      if (!DB.lookups) DB.lookups = {};
+      DB.lookups[slug] = { t: Date.now(), radius: radius, covered: want <= 10000,
+                           source: 'en.wikipedia.org geosearch', items: kept };
+      commit();
+      LOOKUP_STATE[slug] = null;
+      if (done) done(null);
+      wake();
+    })
+    .catch(function (e) {
+      LOOKUP_STATE[slug] = 'error';
+      if (done) done(String(e && e.message || e));
+      wake();
+    });
+}
+
 /* ------------------------------------------------------------ the record
  * What is said stays on the triangle it was said about. No server, no
  * account: the thread lives in this browser and leaves as a file. A cell
@@ -1213,6 +1267,7 @@ var DB = loadStore();
 if (!DB.notes) DB.notes = [];
 if (!DB.seats) DB.seats = {};
 if (!DB.me) DB.me = '';
+if (!DB.lookups) DB.lookups = {};
 function commit() { saveStore(DB); }
 function notesOf(slug) {
   return DB.notes.filter(function (n) { return n.cell === slug && n.kind !== 'second'; });
@@ -1262,6 +1317,15 @@ function seconds(n) {
   });
   if (n.who) who[n.who.toLowerCase()] = 1;
   return Object.keys(who).length;
+}
+
+/* ------------------------------------------------------------- the carry
+ * The whole mechanism of a syntegration is that every seat sits in two
+ * rooms, so what is said in one is carried, by a person, into the other —
+ * changed in the carrying, because carrying faithfully is not available.
+ * That movement is the information flow, and it happens along a strut.  */
+function carriesIn(slug) {
+  return DB.notes.filter(function (n) { return n.kind === 'carry' && n.cell === slug; });
 }
 
 function seatKey(slug, i) { return slug + '|' + i; }
@@ -2551,7 +2615,41 @@ function gazBlock(cell, km) {
         (inv.admin1.length ? ', and below that to ' + esc(inv.admin1.slice(0, 3).join(', ')) : '') + '.</p>'
       : '<p style="margin-top:12px">No state claims this triangle — it is water, or ice, or ' +
         'outside every boundary in the source. There is nobody to address.</p>') +
-    (empty ? nearBlock(cell, km) : top + nearBlock(cell, km)) + ladderBlock(cell);
+    (empty ? nearBlock(cell, km) : top + nearBlock(cell, km)) +
+    lookupBlock(cell, km) + ladderBlock(cell);
+}
+
+// what the wider record says about this exact ground, fetched live
+function lookupBlock(cell, km) {
+  var slug = cellSlug(cell);
+  var got = lookupOf(slug);
+  var head = '<p style="margin-top:14px">The compiled gazetteer stops at about a village. ' +
+    'Below that, this page can ask Wikipedia directly from your browser — no key, no account, ' +
+    'nothing sent anywhere but the query itself.</p>';
+  if (LOOKUP_STATE[slug] === 'busy') return head + '<p style="opacity:.7">Asking…</p>';
+  if (!got) {
+    return head + '<button class="go" id="wLook">LOOK UP THIS TRIANGLE</button>' +
+      (LOOKUP_STATE[slug] === 'error'
+        ? '<p style="margin-top:8px;color:var(--signal)">That did not reach Wikipedia. ' +
+          'Either the network refused it or this page is being served somewhere that blocks it.</p>' : '');
+  }
+  var inside = got.items.filter(function (x) { return x.inside; });
+  var near = got.items.filter(function (x) { return !x.inside; }).slice(0, 8);
+  var rows = function (list, tag) {
+    return list.map(function (x) {
+      return '<div class="row"><b><a href="https://en.wikipedia.org/?curid=' + x.pageid +
+        '" target="_blank" rel="noopener">' + esc(x.title) + '</a></b><span>' + tag +
+        ' · ' + (x.m >= 1000 ? (x.m / 1000).toFixed(1) + ' km' : x.m + ' m') + '</span></div>';
+    }).join('');
+  };
+  return head +
+    '<p><b>' + inside.length + '</b> article' + (inside.length === 1 ? '' : 's') +
+    ' fall inside this triangle' + (near.length ? ', ' + near.length + ' more just outside' : '') +
+    '. Searched a ' + (got.radius / 1000).toFixed(1) + ' km radius from the centre' +
+    (got.covered ? '' : ', which is smaller than the triangle — this is its middle, not all of it') +
+    '. From ' + esc(got.source) + ', ' + whenLabel(got.t) + '.</p>' +
+    rows(inside, 'inside') + rows(near, 'nearby') +
+    '<button class="go ghost" id="wLook" style="margin-top:8px">LOOK AGAIN</button>';
 }
 
 // containment can come back empty; proximity and ancestry never do
@@ -2581,6 +2679,104 @@ function ladderBlock(cell) {
       return '<div class="row" data-go="' + r.slug + '"><b>' + r.scale + '</b><span>' +
         (r.head ? esc(r.head) + ' · ' : '') + r.slug + '</span></div>';
     }).join('');
+}
+
+// A model may draft a carry and may not post one. It is given only what is
+// already in the source room and in the record, told to cite, and told that
+// adding a fact is the one thing it must not do. A person edits and sends.
+function draftCarry(cell, fromTopic, toTopic, cb) {
+  if (!DB.key) return cb('no key');
+  var slug = cellSlug(cell);
+  var src = notesOf(slug).filter(function (n) { return n.topic === fromTopic && n.text; });
+  if (!src.length) return cb('nothing has been said in that room yet');
+  var inv = GAZ_STATE === 'ready' ? cellInventory(cell) : null;
+  var look = lookupOf(slug);
+  var ground = [
+    'Triangle ' + slug + ', ' + kmLabel(cellEdgeKm(cell)) + ' on a side, centred ' + ll(cellCentre(cell)) + '.',
+    inv && inv.countries.length ? 'Governed by ' + inv.countries.join(' and ') + '.' : '',
+    inv && inv.places.length ? 'Settlements: ' + inv.places.slice(0, 8).map(function (x) { return x.name; }).join(', ') + '.' : '',
+    look ? 'Wikipedia articles inside: ' + look.items.filter(function (x) { return x.inside; })
+      .slice(0, 8).map(function (x) { return x.title; }).join(', ') + '.' : ''
+  ].filter(Boolean).join(' ');
+  var said = src.map(function (n) { return '[' + n.id + '] ' + (n.who || 'someone') + ': ' + n.text; }).join('\n');
+  var sys = 'You carry a claim from one room of a syntegration into another. You may only ' +
+    'restate what is in MATERIAL, and every sentence must end with the bracketed id of the ' +
+    'note it came from. Adding a fact that is not in MATERIAL is the one thing you must not ' +
+    'do — not context, not background, not a plausible detail. If MATERIAL does not support a ' +
+    'carry, say exactly: nothing here carries. Two sentences at most. No preamble.';
+  var user = 'GROUND: ' + ground + '\n\nMATERIAL (room ' + fromTopic + '):\n' + said +
+    '\n\nCarry into room ' + toTopic + '.';
+  fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + DB.key },
+    body: JSON.stringify({
+      model: DB.model || 'gpt-4o-mini', temperature: 0,
+      messages: [{ role: 'system', content: sys }, { role: 'user', content: user }]
+    })
+  }).then(function (r) {
+    if (!r.ok) return r.text().then(function (t) { throw new Error(r.status + ' ' + t.slice(0, 120)); });
+    return r.json();
+  }).then(function (j) {
+    var txt = j && j.choices && j.choices[0] && j.choices[0].message &&
+              j.choices[0].message.content;
+    cb(null, (txt || '').trim());
+  }).catch(function (e) { cb(String(e.message || e)); });
+}
+
+function openCarry(cell, seatIdx) {
+  var slug = cellSlug(cell), seat = councilSeat.seat;
+  var st = seat.struts[seatIdx];
+  var a = st.topics[0], b = st.topics[1];
+  var who = seatHolder(slug, seatIdx) || DB.me || '';
+  var src = notesOf(slug).filter(function (n) { return n.topic === a && n.text; });
+  panel('CARRY · SEAT ' + seatIdx,
+    '<p>You sit in room <b>' + a + '</b> and room <b>' + b + '</b>. Everything that moves between ' +
+    'them moves because you move it, and it changes in the carrying — carrying faithfully is not ' +
+    'available. Choose what to lose.</p>' +
+    '<div class="row"><b>FROM</b><span>room ' + a + ' · ' + src.length + ' said</span></div>' +
+    '<div class="row"><b>INTO</b><span>room ' + b + '</span></div>' +
+    (src.length ? src.map(function (n) {
+      return '<div class="said"><b>' + esc((n.who || 'someone').toUpperCase()) + '</b> <span>[' +
+        n.id + ']</span><p>' + esc(n.text) + '</p></div>';
+    }).join('') : '<p style="opacity:.7">Nothing has been said in room ' + a + ' yet.</p>') +
+    '<input id="kWho" placeholder="who is carrying" value="' + esc(who) + '">' +
+    '<textarea id="kText" placeholder="what of it survives the move"></textarea>' +
+    '<button class="go" id="kGo">CARRY IT</button> ' +
+    '<button class="go ghost" id="kSwap">CARRY THE OTHER WAY</button>' +
+    '<p style="margin-top:14px;font-size:10px;letter-spacing:.08em;color:var(--muted)">' +
+    'A model may draft this and may not send it. It gets only what is in room ' + a + ' and ' +
+    'what the sources say about this ground, and it is told that adding a fact is the one thing ' +
+    'it must not do. You edit it and you send it, or you write it yourself.</p>' +
+    '<input id="kKey" type="password" placeholder="openai api key, kept in this browser only" value="' +
+      esc(DB.key || '') + '">' +
+    '<input id="kModel" placeholder="model" value="' + esc(DB.model || 'gpt-4o-mini') + '">' +
+    '<button class="go ghost" id="kDraft">DRAFT IT</button>' +
+    '<div id="kMsg" style="font-size:10px;letter-spacing:.06em;color:var(--signal);margin-top:8px"></div>');
+  document.getElementById('kSwap').onclick = function () {
+    councilSeat.seat.struts[seatIdx] = { topics: [b, a], critiques: st.critiques, register: st.register };
+    openCarry(cell, seatIdx);
+  };
+  document.getElementById('kGo').onclick = function () {
+    var text = document.getElementById('kText').value.trim();
+    if (!text) return;
+    DB.me = document.getElementById('kWho').value.trim() || DB.me;
+    DB.notes.push({ id: 'n' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36),
+      cell: slug, topic: b, from: a, seat: seatIdx, who: DB.me || 'someone',
+      text: text, t: Date.now(), kind: 'carry' });
+    commit(); openCouncil(cell); wake();
+  };
+  document.getElementById('kDraft').onclick = function () {
+    DB.key = document.getElementById('kKey').value.trim();
+    DB.model = document.getElementById('kModel').value.trim() || 'gpt-4o-mini';
+    commit();
+    var msg = document.getElementById('kMsg');
+    msg.textContent = 'asking the model…';
+    draftCarry(cell, a, b, function (err, txt) {
+      if (err) { msg.textContent = err === 'no key' ? 'paste a key first' : err; return; }
+      document.getElementById('kText').value = txt;
+      msg.textContent = 'drafted — it is not sent until you send it';
+    });
+  };
 }
 
 function openWhere(cell) {
@@ -2618,6 +2814,11 @@ function openWhere(cell) {
   if (wc) wc.onclick = function () {
     councilCell = cell; councilSeat = councilFor(cellEdgeKm(cell));
     setLegend(councilSeat); openCouncil(cell); wake();
+  };
+  var lk = document.getElementById('wLook');
+  if (lk) lk.onclick = function () {
+    lk.textContent = 'ASKING…';
+    lookUp(cell, function () { openWhere(cell); });
   };
   elPanel.querySelectorAll('[data-go]').forEach(function (el) {
     el.style.cursor = 'pointer';
@@ -2670,7 +2871,10 @@ function openCouncil(cell) {
       '<em>critiques ' + st.critiques.join(' & ') +
       (criticName ? ' · answered by ' + esc(criticName.toUpperCase()) : '') +
       (st.register ? ' · ' + st.register.toLowerCase() : '') + '</em></div>' +
-      '<input data-seat="' + i + '" placeholder="unclaimed" value="' + esc(seatHolder(slug, i)) + '"></div>';
+      '<div><input data-seat="' + i + '" placeholder="unclaimed" value="' + esc(seatHolder(slug, i)) + '">' +
+      (seatHolder(slug, i) ? '<button class="go ghost" data-carry="' + i +
+        '" style="font-size:9px;padding:4px 7px;margin-top:3px;width:100%">CARRY</button>' : '') +
+      '</div></div>';
   }).join('');
   var taken = seat.struts.filter(function (st, i) { return seatHolder(slug, i); }).length;
   // a council has to be drawn from somewhere. This is where.
@@ -2701,10 +2905,10 @@ function openCouncil(cell) {
     '<p><b>' + cellId(cell) + '</b> is ' + kmLabel(km) + ' on a side, which is what entitles it to ' +
     'this solid and no larger. A council is sized by how much world the cell holds, never by ' +
     'how many people are available.</p>' +
-    '<p>The seats are <b>registers of description, not people</b>. Nothing here simulates a ' +
-    'resident: synthesising testimony and attaching it to a real place is the laundering this ' +
-    'apparatus exists to expose. Each seat is critiqued by the register incommensurable with ' +
-    'its own — coordinate answered by body, record answered by absence — and ' +
+    '<p>A seat is <b>held by a person</b> — the name in it is typed by whoever takes it, and ' +
+    'nothing here invents an occupant. The register on a seat is a lens it argues through, not ' +
+    'a substitute for the human in it. Each seat is answered by the register incommensurable ' +
+    'with its own — coordinate answered by body, record answered by absence — and ' +
     (reg && reg.roomsFullyMixed === c.stat.topics
       ? 'every one of the ' + c.stat.topics + ' rooms hears every kind at once, so no room can be all data or all anecdote.'
       : reg.roomsFullyMixed + ' of ' + c.stat.topics + ' rooms hear a full mix.') + '</p>' +
@@ -2756,6 +2960,9 @@ function openCouncil(cell) {
       if (v && !DB.me) DB.me = v;
       commit(); wake();
     };
+  });
+  elPanel.querySelectorAll('[data-carry]').forEach(function (btn) {
+    btn.onclick = function () { openCarry(cell, +btn.getAttribute('data-carry')); };
   });
   var cs = document.getElementById('cSay');
   if (cs) cs.onclick = function () { openThread(cell); };
@@ -2830,6 +3037,7 @@ function openHelp() {
         DB.notes.forEach(function (n) { have[n.id] = 1; });
         (got.notes || []).forEach(function (n) { if (!have[n.id]) DB.notes.push(n); });
         for (var k in (got.seats || {})) if (!DB.seats[k]) DB.seats[k] = got.seats[k];
+        for (var k2 in (got.lookups || {})) if (!DB.lookups[k2]) DB.lookups[k2] = got.lookups[k2];
         commit(); openHelp(); wake();
       } catch (e) { }
     };

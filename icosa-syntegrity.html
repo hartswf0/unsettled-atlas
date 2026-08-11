@@ -170,8 +170,9 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 
 /* --- corner marks -------------------------------------------------- */
 #modes{
-  left:max(10px,env(safe-area-inset-left));top:auto;bottom:34px;
-  display:flex;gap:0;pointer-events:auto
+  left:max(10px,env(safe-area-inset-left));right:max(10px,env(safe-area-inset-right));
+  top:auto;bottom:34px;
+  display:flex;flex-wrap:wrap;gap:0;pointer-events:auto;justify-content:flex-start
 }
 #modes button{
   font:inherit;font-size:9px;font-weight:700;letter-spacing:.12em;
@@ -283,6 +284,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   <button id="mPaint" title="paint an area across triangles">PAINT</button>
   <button id="mRel" title="relational geometry">TENSION</button>
   <button id="mHelp">?</button>
+  <button id="mDrop" class="sig" title="drop what the map is holding" style="display:none"></button>
 </div>
 
 </div><!-- /stage -->
@@ -2429,6 +2431,8 @@ var elCellId = document.getElementById('cellid');
 var elCellExtent = document.getElementById('cellextent');
 var elCellCouncil = document.getElementById('cellcouncil');
 var elCellFound = document.getElementById('cellfound');
+var elDrop = document.getElementById('mDrop');
+elDrop.onclick = function () { dropOne(); syncDrop(); };
 document.getElementById('cellplate').style.pointerEvents = 'auto';
 document.getElementById('cellplate').style.cursor = 'pointer';
 document.getElementById('cellplate').onclick = function () { openWhere(focusCell()); };
@@ -2502,6 +2506,7 @@ function updateReadouts() {
   for (var i = 0; i < rungs.length; i++) {
     rungs[i].className = 'rung' + (i === si ? ' on' : Math.abs(i - si) === 1 ? ' near' : '');
   }
+  syncDrop();
   syncHash(c);
   var key = cellId(c);
   if (key !== lastCellKey) {
@@ -2623,6 +2628,7 @@ function doAction(kind, cell) {
     selection = par;
   } else if (kind === 'anchor') {
     anchor = { p: cellCentre(cell), label: cellId(cell) };
+    anchorHeld = true;
   } else if (kind === 'pull') {
     var rels = relationsIn(cell);
     pulled = rels[0];
@@ -2655,6 +2661,47 @@ function doAction(kind, cell) {
 function updateActionsFor(cell) {
   if (!cell) return;
   showActions(cell, actAt.x, actAt.y);
+}
+
+/* --------------------------------------------------------- letting go
+ * Everything here sticks, which is the point: a triangle stays picked, a
+ * trace stays drawn, a council stays seated. But there was no way back to
+ * nothing except a key a phone does not have, and tapping the map only ever
+ * picked something else. You could get in and never out.
+ *
+ * So the map says what it is holding and drops one layer at a time, most
+ * recent first. The button names the layer, so you know what you are about
+ * to lose before you lose it, and painted work is last in the order because
+ * it is the only thing here somebody actually made.                      */
+var anchorHeld = false;
+function heldLayers() {
+  var L = [];
+  if (cardFor) L.push({ n: 'CARD', f: closeCard });
+  if (pressing) L.push({ n: 'PRESS', f: function () { pressing = false; } });
+  if (pulled || view.relaxTarget > 0) {
+    L.push({ n: 'TENSION', f: function () { pulled = null; view.relaxTarget = 0; } });
+  }
+  if (traceCells) L.push({ n: 'TRACE', f: clearTrace });
+  if (councilSeat) L.push({ n: 'COUNCIL', f: function () {
+    councilCell = null; councilSeat = null; setLegend(null); } });
+  if (anchorHeld) L.push({ n: 'HOLD', f: function () { anchor = null; anchorHeld = false; } });
+  if (selection) L.push({ n: 'TRIANGLE', f: function () { selection = null; hideActions(); } });
+  if (areaCells().length) L.push({ n: 'PAINT', f: function () {
+    brush = {}; DB.openArea = ''; commit();
+    if (elPanel.classList.contains('open')) closePanel(); } });
+  return L;
+}
+function dropOne() {
+  var L = heldLayers();
+  if (!L.length) return false;
+  L[0].f();
+  wake();
+  return true;
+}
+function syncDrop() {
+  var L = heldLayers();
+  elDrop.style.display = L.length ? '' : 'none';
+  if (L.length) elDrop.textContent = 'DROP ' + L[0].n;
 }
 
 function startTrace(ph) {
@@ -2702,6 +2749,7 @@ canvas.addEventListener('pointerdown', function (e) {
       var hit = pick(p.x, p.y);
       if (hit) {
         anchor = { p: hit.p, label: cellId(cellAt(hit.p, depthForZoom())) };
+        anchorHeld = true;
         selection = cellAt(hit.p, depthForZoom());
         showActions(selection, p.x, p.y);
         if (navigator.vibrate) navigator.vibrate(12);
@@ -2807,6 +2855,7 @@ function endPointer(e) {
           return;
         }
         if (onMap && !painting && onMap.kind === 'find') {
+          if (cardFor && cardFor.title === onMap.p.item.title) { closeCard(); wake(); return; }
           openCard({ title: onMap.p.item.title, kind: 'article', v: onMap.p.item.v,
                      url: 'https://en.wikipedia.org/?curid=' + onMap.p.item.pageid },
                    onMap.x, onMap.y);
@@ -2815,6 +2864,8 @@ function endPointer(e) {
         }
         if (onMap && !painting) {
           var set = onMap.p.set, ix = onMap.p.i;
+          // tapping the mark you are already reading closes it
+          if (cardFor && cardFor.title === set.name[ix]) { closeCard(); wake(); return; }
           openCard({
             title: set.name[ix], kind: onMap.kind, v: set.v[ix],
             where: onMap.kind === 'place'
@@ -2834,8 +2885,15 @@ function endPointer(e) {
           return;
         }
         if (hit) {
-          selection = cellAt(hit.p, depthForZoom());
-          showActions(selection, p.x, p.y);
+          // tapping the triangle you already have lets it go — the way out
+          // is the same gesture as the way in
+          var tc = cellAt(hit.p, depthForZoom());
+          if (selection && cellSlug(selection) === cellSlug(tc)) {
+            selection = null; hideActions();
+          } else {
+            selection = tc;
+            showActions(selection, p.x, p.y);
+          }
         } else { selection = null; hideActions(); }
         wake();
       }, 190);
@@ -2870,9 +2928,11 @@ window.addEventListener('keydown', function (e) {
   else if (e.key === 'Enter' || e.key === '+') { doAction('enter', selection || c); }
   else if (e.key === 'Backspace' || e.key === '-') { if (c.depth) doAction('exit', selection || c); }
   else if (e.key === 'Escape') {
-    hideActions(); selection = null; pulled = null; pressing = false;
-    councilCell = null; councilSeat = null; setLegend(null);
-    clearTrace(); closePanel();
+    // one press, one layer — the same order the DROP button peels, so the
+    // key and the button are one model rather than two
+    if (elPanel.classList.contains('open')) closePanel();
+    else if (!dropOne()) hideActions();
+    syncDrop();
   }
   else if (e.key === '?') { openHelp(); }
   wake();
@@ -3330,21 +3390,35 @@ function closeCard() {
   if (elCard) elCard.classList.remove('open');
   cardFor = null; cardAt = null;
 }
-// Beside the mark, never on top of it. On a phone there is often no room
-// either side, and the old fallback centred the card on the dot — covering
-// the one thing the card is about. So the last resort is under it, or over
-// it, and the mark stays visible in every case.
+// Beside the mark, never on top of it — and "never" has to survive the
+// clamp. Choosing a side and then clamping into the viewport was not the
+// same thing as not covering the dot: a tall card on a low mark got pulled
+// straight back over it, and then you could not tap the mark again either.
+// So each candidate is clamped first and rejected if it lands on the mark,
+// and if none survives the card is shortened rather than allowed to sit on
+// the one thing it is about.
 function placeCard(sx, sy) {
+  elCard.style.maxHeight = '';
   var w = elCard.offsetWidth || 260, h = elCard.offsetHeight || 180;
-  var x, y;
-  if (sx + 16 + w <= W - 8) { x = sx + 16; y = sy - h / 2; }
-  else if (sx - 16 - w >= 8) { x = sx - w - 16; y = sy - h / 2; }
-  else {
-    x = sx - w / 2;
-    y = (sy + 18 + h <= H - 8) ? sy + 18 : sy - h - 18;
+  function put(x, y, hh) {
+    x = clamp(x, 8, Math.max(8, W - w - 8));
+    y = clamp(y, 8, Math.max(8, H - hh - 8));
+    elCard.style.left = Math.round(x) + 'px';
+    elCard.style.top = Math.round(y) + 'px';
+    return sx < x - 3 || sx > x + w + 3 || sy < y - 3 || sy > y + hh + 3;
   }
-  elCard.style.left = Math.round(clamp(x, 8, Math.max(8, W - w - 8))) + 'px';
-  elCard.style.top = Math.round(clamp(y, 8, Math.max(8, H - h - 8))) + 'px';
+  if (put(sx + 16, sy - h / 2, h)) return;            // beside, right
+  if (put(sx - w - 16, sy - h / 2, h)) return;        // beside, left
+  if (put(sx - w / 2, sy + 18, h)) return;            // under
+  if (put(sx - w / 2, sy - h - 18, h)) return;        // over
+  // Shorten to whichever side has more room. Not to some comfortable
+  // minimum — a floor larger than the room is how the card ended up back on
+  // the mark. Below about 90 px of stage there is nowhere clear to put it
+  // and the ✕ is the way out.
+  var above = sy - 26, below = H - sy - 26;
+  elCard.style.maxHeight = Math.max(64, above, below) + 'px';
+  h = elCard.offsetHeight;
+  put(sx - w / 2, below >= above ? sy + 18 : sy - h - 18, h);
 }
 // The card is about a point on the ground, so it belongs to the point and
 // not to the screen. Pan and it follows; turn the point onto the far side of
@@ -3694,15 +3768,22 @@ function openHelp() {
     '<p>Say something and it stays on the triangle you said it about, drawn where you said it. ' +
     'The record lives in this browser and leaves as a file — there is no server and no account, ' +
     'so a conversation is something you carry rather than something you are lent.</p>' +
+    '<p><b>Everything you do here sticks, and everything can be let go.</b> Tap the triangle you ' +
+    'already have and it releases — the way out is the same gesture as the way in — and the same ' +
+    'goes for a mark you are already reading. When the map is holding anything at all, a ' +
+    '<b>DROP</b> button appears naming what it will let go of, most recent first, so you always ' +
+    'know what you are about to lose. Painted work is last in that order, because it is the only ' +
+    'thing here that somebody actually made.</p>' +
     '<div class="kbd">' +
     '<b>drag</b> turn the world · in the net, slide it<br>' +
-    '<b>tap</b> the triangle becomes the interface<br>' +
+    '<b>tap</b> the triangle becomes the interface · tap it again to let it go<br>' +
     '<b>double tap</b> enter<br>' +
     '<b>pinch</b> descend and ascend the scale<br>' +
     '<b>two-finger twist</b> fold toward the icosahedron, unfold toward the map<br>' +
     '<b>long press</b> hold a place as anchor<br>' +
     '<b>tap the address plate</b> corners, area, contents, link<br>' +
-    '<span style="opacity:.6">desktop: wheel = scale, shift+wheel = fold, enter/backspace = enter/exit, f = fold, esc = clear</span><br>' +
+    '<b>DROP</b> let go of one thing at a time, most recent first<br>' +
+    '<span style="opacity:.6">desktop: wheel = scale, shift+wheel = fold, enter/backspace = enter/exit, f = fold, esc = drop one</span><br>' +
     '<span style="opacity:.6">add <b>?verify</b> to the address to check the seven invariants against random points</span>' +
     '</div>' +
     '<p style="margin-top:12px">Now: <b>' + cellId(c) + '</b>, edge ' + kmLabel(cellEdgeKm(c)) +

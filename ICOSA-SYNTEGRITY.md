@@ -361,14 +361,57 @@ Two details that are easy to get wrong and were:
 
 - On a narrow screen there is often no room either side of the mark. The
   first version fell back to centring the card on the dot — covering the one
-  thing the card was about. It now goes under the mark, or over it, and the
-  mark stays visible in every case.
+  thing the card was about. It goes under the mark, or over it, instead.
+  (Getting this actually right took a second pass; see *Letting go* below.)
 - The opening anchor is already drawn as a signal-coloured ring of exactly
   this size. Two different things looking the same is a lie, so the card's
   subject is a filled disc on a cleared halo instead.
 
 Summaries are cached in the record, so a place read once reads instantly
 after that, and reads at all with no network.
+
+## Letting go
+
+Everything here sticks, which is the point: a triangle stays picked, a
+trace stays drawn, a council stays seated, a card stays open. But there was
+no way back to nothing except `Esc` — a key a phone does not have — and
+tapping the map only ever picked something *else*. You could get in and
+never out.
+
+**Tap the triangle you already have and it releases.** The way out is the
+same gesture as the way in, and the same goes for a mark you are already
+reading. No new furniture, no mode.
+
+**When the map is holding anything, a `DROP` button appears naming what it
+will let go of.** It peels one layer at a time, most recent first:
+
+```
+CARD → PRESS → TENSION → TRACE → COUNCIL → HOLD → TRIANGLE → PAINT
+```
+
+The button says the layer, so you know what you are about to lose before
+you lose it. Painted work is last in the order because it is the only thing
+here that somebody actually made. `Esc` peels the same stack, one press per
+layer, so the key and the button are one model rather than two — this
+replaces the old `Esc`, which cleared everything at once and cleared
+neither the card nor the brush.
+
+### A bug this turned up
+
+Making the mark tappable-again exposed that the card could still land on
+top of it. The placement chose a side and *then* clamped into the viewport,
+and those are not the same thing as not covering the dot: a tall card on a
+low mark got pulled straight back over it — so the earlier claim that the
+mark stayed visible in every case was wrong.
+
+Each candidate position is now clamped first and rejected if the clamped
+rectangle contains the mark, and if no candidate survives the card is
+shortened to whichever side has more room. The first attempt at that
+shortening had a floor of 110 px, which is the same mistake in a smaller
+form: a floor larger than the available room puts the card back on the
+mark. Checked across 390×380, 390×664 and 1280×860 — 32 cards, none on top
+of its mark. Below about 90 px of stage there is nowhere clear to put it,
+and the ✕ is the way out.
 
 ## What it still does not do
 
@@ -407,6 +450,8 @@ Being plain about this, because the gap is the interesting part.
 Everything from `icosa-world`, plus:
 
 - **tap the address plate** — corners, area, contents, and the link
+- **tap the same triangle again** — let it go
+- **DROP** — appears when the map is holding something, and names it
 - **tap a number** — the count of what a triangle holds; going in divides it
 - **tap a mark on the map** — the card, beside the dot: what it is, what is
   written about it, and the way out to the article or the ground

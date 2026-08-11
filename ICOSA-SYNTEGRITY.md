@@ -420,6 +420,34 @@ That makes the diagram answer three questions at a glance that the rows
 answered nowhere: which way this triangle is facing, which of its quarters
 is worth entering, and whether the interesting ground is next door instead.
 
+### It follows you
+
+The first version of the diagram redrew every frame and redrew the same
+snapshot: the cell it was built for when the panel opened. Move, and it
+went on describing somewhere you had left. A compass that keeps pointing
+where you were is worse than no compass, and the rows below it were worse
+still — they never changed at all.
+
+So the panel is about the cell **in focus**, the same cell the address
+plate names, and it is split by cost:
+
+- **The shape** — which cell, its four children, its three neighbours — is
+  three `cellAt` calls, so it follows the focus immediately.
+- **The counts and the rows** are eight scans of the gazetteer, which
+  cannot run on a pan. They are cached by address and rebuilt once the view
+  has been still for 220 ms.
+
+Between the two you get the right triangle at once and its numbers a moment
+later, which is the honest order: never the wrong triangle, and never a
+number belonging to a cell you have left. While the counts are catching up
+the diagram says `COUNTING…` rather than showing stale ones.
+
+Scroll position and the open state of the measurements carry across a
+rebuild, or following the map would throw you back to the top of the panel
+on every step. And the panel only re-measures the map when it actually
+appears or disappears — re-measuring on each rebuild resized the canvas as
+you panned.
+
 ### Clicking a name goes to the thing it names
 
 A name in a panel that does not take you to what it names is just ink.

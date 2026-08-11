@@ -2751,6 +2751,44 @@ function updateActionsFor(cell) {
  * each is somewhere you can go. The address structure is the navigation,
  * which is what it was for.                                             */
 var miniInfo = null, elMini = null, elMiniCtx = null;
+// WHERE describes the cell in focus, so it follows the focus. The rows cost
+// eight scans of the gazetteer to build, which cannot happen on a pan, so
+// the rebuild waits for the view to settle. Scroll position and the open
+// state of the measurements are carried across, or following the map would
+// throw you back to the top of the panel on every step.
+var whereCell = null, whereSince = 0;
+function followWhere(moving) {
+  if (!whereCell || !elPanel.classList.contains('open')) return;
+  var c = focusCell();
+  if (cellSlug(c) === cellSlug(whereCell)) { whereSince = 0; return; }
+  if (moving) { whereSince = 0; return; }
+  if (!whereSince) { whereSince = performance.now(); return; }
+  if (performance.now() - whereSince < 220) return;
+  whereSince = 0;
+  openWhere(c, true);
+}
+/* The diagram redrew every frame but redrew the same snapshot: the cell it
+ * was built for when the panel opened. Move, and it went on describing
+ * somewhere you had left — a compass that keeps pointing where you were is
+ * worse than no compass.
+ *
+ * So it is split. The shape — which cell, its four children, its three
+ * neighbours — is cheap and follows the focus immediately. The counts are
+ * seven scans of the gazetteer and cannot run on a pan, so they are cached
+ * by address and recomputed once the view settles. Between the two you see
+ * the right triangle at once and its numbers a moment later, which is the
+ * honest order: never the wrong triangle, and never a number belonging to a
+ * cell you have left.                                                    */
+var miniGeom = null;      // { slug, cell, kids[4], nb[3] } — cheap, follows now
+var miniHits = [];
+function miniShape(cell) {
+  var slug = cellSlug(cell);
+  if (miniGeom && miniGeom.slug === slug) return miniGeom;
+  var kids = [];
+  for (var k = 0; k < 4; k++) kids.push(makeCell(cell.f, cell.path.concat([k])));
+  miniGeom = { slug: slug, cell: cell, kids: kids, nb: neighbours(cell) };
+  return miniGeom;
+}
 function buildMini(cell) {
   var kids = [], k;
   for (k = 0; k < 4; k++) {
@@ -2769,7 +2807,7 @@ function buildMini(cell) {
   if (GAZ_STATE === 'ready') {
     for (k = 0; k < 3; k++) nb[k].places = cellInventory(nb[k].c).places.length;
   }
-  miniInfo = { cell: cell, kids: kids, nb: nb, hits: [] };
+  miniInfo = { slug: cellSlug(cell), cell: cell, kids: kids, nb: nb };
 }
 function miniCorners(cell, S) {
   var C = cell.tri, fc = faceCorners[cell.f], P = [];
@@ -2789,9 +2827,13 @@ function inTri(p, a, b, c) {
   return u >= 0 && v >= 0 && u + v <= 1;
 }
 function drawMini() {
-  if (!miniInfo || !elPanel.classList.contains('open')) return;
+  if (!whereCell || !elPanel.classList.contains('open')) return;
   if (!elMini) elMini = document.getElementById('mini');
   if (!elMini) return;
+  // the shape is whatever is in focus now; the counts are whatever has been
+  // computed, and only if they belong to this same address
+  var shape = miniShape(focusCell());
+  var counts = (miniInfo && miniInfo.slug === shape.slug) ? miniInfo : null;
   var w = elMini.clientWidth, h = elMini.clientHeight;
   if (!w || !h) return;
   if (elMini.width !== Math.round(w * DPR)) {
@@ -2804,11 +2846,11 @@ function drawMini() {
 
   // the cell as it is on screen, so the diagram and the map agree. If it is
   // turned away, fall back to the canonical triangle rather than a sliver.
-  var P = miniCorners(miniInfo.cell, pxScale());
+  var P = miniCorners(shape.cell, pxScale());
   var area = Math.abs((P[1][0] - P[0][0]) * (P[2][1] - P[0][1]) -
                       (P[2][0] - P[0][0]) * (P[1][1] - P[0][1]));
-  var facing = dot(qApply(view.q, faceNormal(miniInfo.cell.f)),
-                   sub([0, 0, CAM_D], toView(cellCentre(miniInfo.cell))));
+  var facing = dot(qApply(view.q, faceNormal(shape.cell.f)),
+                   sub([0, 0, CAM_D], toView(cellCentre(shape.cell))));
   if (facing <= 0 || area < 40) P = [[0, -1], [0.866, 0.5], [-0.866, 0.5]];
 
   // Fit the whole composition — the cell plus the three neighbours reflected
@@ -2829,7 +2871,7 @@ function drawMini() {
   var mx = w / 2 - ((bx0 + bx1) / 2 - cx0) * k, my = h / 2 + 3 - ((by0 + by1) / 2 - cy0) * k;
   var A = P.map(function (p) { return [mx + (p[0] - cx0) * k, my + (p[1] - cy0) * k]; });
 
-  miniInfo.hits = [];
+  miniHits = [];
   function tri(a, b, c, fill, stroke, width) {
     g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.lineTo(c[0], c[1]); g.closePath();
     if (fill) { g.fillStyle = fill; g.fill(); }
@@ -2858,44 +2900,45 @@ function drawMini() {
     var m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
     var refl = [2 * m[0] - opp[0], 2 * m[1] - opp[1]];
     tri(a, b, refl, 'rgba(18,21,20,.045)', 'rgba(18,21,20,.35)', 1);
-    var nd = miniInfo.nb[e];
     // A neighbour carries no digit. A digit here would read as a fifth
     // child and the diagram would be lying about what is inside what — so
     // what a neighbour shows is what is over there.
-    var nn = nd.finds || nd.places;
-    label(a, b, refl, nn ? String(nn) : '·', '', 10, true);
-    miniInfo.hits.push({ t: [a, b, refl], go: nd.c, kind: 'near' });
+    var nd = counts ? counts.nb[e] : null;
+    var nn = nd ? (nd.finds || nd.places) : 0;
+    label(a, b, refl, nd ? (nn ? String(nn) : '·') : '', '', 10, true);
+    miniHits.push({ t: [a, b, refl], go: shape.nb[e], kind: 'near' });
   }
 
   // the cell, and inside it the four children it actually has
   tri(A[0], A[1], A[2], COL.ground, COL.ink, 2);
   var kidTris = [[A[0], mid01, mid02], [mid01, A[1], mid12],
                  [mid02, mid12, A[2]], [mid01, mid12, mid02]];
-  var deepest = miniInfo.cell.depth >= MAX_DEPTH;
+  var deepest = shape.cell.depth >= MAX_DEPTH;
   for (var i = 0; i < 4; i++) {
-    var t = kidTris[i], kd = miniInfo.kids[i];
-    var n = kd.finds || kd.places;
+    var t = kidTris[i], kd = counts ? counts.kids[i] : null;
+    var n = kd ? (kd.finds || kd.places) : 0;
     var tint = n ? 'rgba(168,70,42,' + (0.08 + Math.min(0.22, n / 24)).toFixed(3) + ')' : null;
     tri(t[0], t[1], t[2], tint, 'rgba(18,21,20,.5)', 1);
     if (!deepest) {
       label(t[0], t[1], t[2], String(i),
-            kd.finds ? String(kd.finds) : kd.places ? String(kd.places) : '', 11);
-      miniInfo.hits.push({ t: t, go: kd.c, kind: 'child' });
+            kd ? (kd.finds ? String(kd.finds) : kd.places ? String(kd.places) : '') : '', 11);
+      miniHits.push({ t: t, go: shape.kids[i], kind: 'child' });
     }
   }
   g.font = '700 8px ui-monospace,monospace';
   g.fillStyle = COL.muted;
-  var anyFind = miniInfo.kids.some(function (x) { return x.finds; });
   g.fillText('FOUR CHILDREN · THREE NEIGHBOURS · TAP TO GO', 8, 13);
   g.fillStyle = COL.signal;
-  g.fillText(anyFind ? 'NUMBERS ARE ARTICLES FOUND' : 'NUMBERS ARE SETTLEMENTS', 8, h - 7);
+  if (!counts) g.fillText('COUNTING…', 8, h - 7);
+  else g.fillText(counts.kids.some(function (x) { return x.finds; })
+    ? 'NUMBERS ARE ARTICLES FOUND' : 'NUMBERS ARE SETTLEMENTS', 8, h - 7);
 }
 function miniTap(ev) {
-  if (!miniInfo || !miniInfo.hits.length) return;
+  if (!miniHits.length) return;
   var r = elMini.getBoundingClientRect();
   var p = [ev.clientX - r.left, ev.clientY - r.top];
-  for (var i = 0; i < miniInfo.hits.length; i++) {
-    var hh = miniInfo.hits[i];
+  for (var i = 0; i < miniHits.length; i++) {
+    var hh = miniHits[i];
     if (!inTri(p, hh.t[0], hh.t[1], hh.t[2])) continue;
     selection = hh.go;
     lookAt(cellCentre(hh.go), hh.go.depth);
@@ -3184,17 +3227,21 @@ window.addEventListener('keydown', function (e) {
  *  10 · PANELS                                                          *
  * ==================================================================== */
 
-function closePanel() { elPanel.classList.remove('open'); reflow(); }
+function closePanel() { elPanel.classList.remove('open'); whereCell = null; reflow(); }
 function reflow() {
   // the map lost or gained room; re-measure rather than let it stretch
   requestAnimationFrame(function () { resize(); wake(); });
 }
 function panel(title, body) {
   hideActions();
+  whereCell = null;               // only openWhere claims the follow
+  var wasOpen = elPanel.classList.contains('open');
   elPanel.innerHTML = '<h2>' + title + '<button id="pclose">CLOSE</button></h2>' + body;
   elPanel.classList.add('open');
   elPanel.scrollTop = 0;
-  reflow();
+  // the map only lost or gained room if the panel just appeared; re-measuring
+  // on every rebuild would resize the canvas as you pan
+  if (!wasOpen) reflow();
   document.getElementById('pclose').onclick = closePanel;
 }
 function openRelations() {
@@ -3822,11 +3869,14 @@ function openThing(h) {
   };
 }
 
-function openWhere(cell) {
+function openWhere(cell, keep) {
   var P = cellCorners(cell), km = cellEdgeKm(cell);
   var slug = cellSlug(cell);
   var url = location.origin + location.pathname + '#' + slug;
   var parent = cell.depth ? makeCell(cell.f, cell.path.slice(0, -1)) : null;
+  var wasScroll = keep ? elPanel.scrollTop : 0;
+  var wasOpen = keep && elPanel.querySelector('details') &&
+                elPanel.querySelector('details').open;
   buildMini(cell);
   panel('WHERE · ' + slug,
     '<canvas id="mini"></canvas>' +
@@ -3849,9 +3899,15 @@ function openWhere(cell) {
     gazBlock(cell, km) +
     '<button class="go" id="wSaid" style="margin-top:10px">SAID HERE</button> ' +
     (councilFor(km) ? '<button class="go ghost" id="wCouncil">COUNCIL</button>' : ''));
+  whereCell = cell;                 // set after panel(), which clears it
   elMini = document.getElementById('mini');
   elMiniCtx = null;
   elMini.onclick = miniTap;
+  if (keep) {
+    var det = elPanel.querySelector('details');
+    if (det && wasOpen) det.open = true;
+    elPanel.scrollTop = wasScroll;
+  }
   drawMini();
   document.getElementById('wSaid').onclick = function () { openThread(cell); };
   var wc = document.getElementById('wCouncil');
@@ -4250,6 +4306,7 @@ function frame() {
   render();
   drawMini();
   updateReadouts();
+  followWhere(moving);
   requestAnimationFrame(frame);
 }
 

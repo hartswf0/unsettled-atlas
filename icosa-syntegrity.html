@@ -184,13 +184,18 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 /* Real anchors, positioned over the ground they name. Canvas text cannot be
    opened in a new tab, copied, or long-pressed — a link has to be a link. */
 #links{position:absolute;inset:0;pointer-events:none;z-index:6}
+/* The dot inside the chip sits exactly on the coordinate, so the label
+   extends away from its place instead of covering it. Near the right edge
+   it extends the other way. */
 #links a{
-  position:absolute;transform:translate(-50%,-50%);pointer-events:auto;
+  position:absolute;transform:translate(-6.5px,-50%);pointer-events:auto;
   display:flex;align-items:center;gap:4px;white-space:nowrap;
   font:700 8px ui-monospace,monospace;letter-spacing:.06em;
   color:var(--signal);text-decoration:none;padding:3px 5px 3px 3px;
   background:rgba(241,238,228,.86);border:1px solid var(--signal)
 }
+#links a.flip{flex-direction:row-reverse;padding:3px 3px 3px 5px;
+  transform:translate(calc(-100% + 6.5px),-50%)}
 #links a:hover,#links a:focus{background:var(--signal);color:var(--paper)}
 #links a i{display:block;width:5px;height:5px;background:var(--signal);border-radius:50%;flex:0 0 auto}
 #links a:hover i,#links a:focus i{background:var(--paper)}
@@ -258,6 +263,7 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
     <div id="cellid">—</div>
     <div class="dim" id="cellextent">—</div>
     <div class="dim" id="cellcouncil">—</div>
+    <div class="dim" id="cellfound" style="display:none;color:var(--signal);font-size:9px"></div>
   </div>
   <div class="plate" id="scaleplate">
     <div><b id="scalename">EARTH</b></div>
@@ -1889,42 +1895,217 @@ function drawSaid(S) {
   ctx.textAlign = 'left';
 }
 
-// A looked-up article is a place on the Earth, so it is drawn at that place
-// and given a real anchor — openable in a new tab, copyable, long-pressable.
+/* ------------------------------------------------------ finds, by triangle
+ * Fifty labels over a fourteen-kilometre triangle is not a map. The anchors
+ * collided, the collision rule stacked them, and they became a column down
+ * the middle of the world: covering the ground they were meant to point at,
+ * telling you nothing about where anything was, repeating the panel
+ * underneath, and — because a stack is a screen position and not a place —
+ * floating in mid-air the moment the world folded.
+ *
+ * The instrument already has an index, and it is the subdivision. So a
+ * triangle holding more than a few finds shows how many, and splitting it
+ * is how you read it: descend, and one number becomes four smaller numbers;
+ * descend far enough and the numbers become names. Nothing is hidden and
+ * nothing is stacked. A number is a door, a dot is a thing, and both are
+ * drawn on the face, so they fold with the world instead of over it.
+ *
+ * Two constants do the whole job: how many names a triangle may show at
+ * once, and how small a triangle may get before it stops being splittable.
+ * Everything else follows from the geometry that was already there.      */
+var FIND_MAX_DIVE = 9;     // how far below the focus a find is pre-addressed
+var FIND_NAME_MAX = 3;     // names one triangle may show before it becomes a count
+var FIND_MIN_PX = 46;      // below this a triangle cannot usefully be split
+var FIND_NAME_PX = 62;     // and below this a name will not fit inside it
+var FIND_MEMO = {};
+var FIND_BINS = [], FIND_LABELS = [];
+
+function lookupsKey() {
+  var k = '';
+  for (var s in (DB.lookups || {})) k += s + ':' + DB.lookups[s].items.length + ';';
+  return k;
+}
+// Each find is addressed once, deep, and after that binning is a prefix
+// test on its path — no geometry per frame, the same trick escalation uses.
+function findsIn(cell) {
+  var key = cellSlug(cell) + '|' + lookupsKey();
+  if (FIND_MEMO[key]) return FIND_MEMO[key];
+  var out = [], seen = {}, deep = cell.depth + FIND_MAX_DIVE;
+  for (var slug in (DB.lookups || {})) {
+    var its = DB.lookups[slug].items;
+    for (var i = 0; i < its.length; i++) {
+      var it = its[i];
+      if (seen[it.pageid]) continue;
+      var v = fromLonLat(it.lon, it.lat);
+      var at = cellAt(v, deep);
+      if (at.f !== cell.f) continue;
+      var ok = true;
+      for (var d = 0; d < cell.depth; d++) if (at.path[d] !== cell.path[d]) { ok = false; break; }
+      if (!ok) continue;
+      seen[it.pageid] = 1;
+      out.push({ title: it.title, pageid: it.pageid, v: v, path: at.path });
+    }
+  }
+  var keys = Object.keys(FIND_MEMO);
+  if (keys.length > 8) delete FIND_MEMO[keys[0]];
+  FIND_MEMO[key] = out;
+  return out;
+}
+// the same four bins the map draws, in address order, for the panel
+function findBins(cell) {
+  var list = findsIn(cell), bins = [[], [], [], []];
+  for (var i = 0; i < list.length; i++) bins[list[i].path[cell.depth]].push(list[i]);
+  return bins;
+}
+function cellScreen(cell, S) {
+  var C = cell.tri, c = faceCorners[cell.f], pts = [];
+  for (var k = 0; k < 3; k++) {
+    var w = C[k];
+    pts.push(project(toView([c[0][0] * w[0] + c[1][0] * w[1] + c[2][0] * w[2],
+                             c[0][1] * w[0] + c[1][1] * w[1] + c[2][1] * w[2],
+                             c[0][2] * w[0] + c[1][2] * w[1] + c[2][2] * w[2]]), S));
+  }
+  return pts;
+}
+function layoutFinds(S) {
+  FIND_BINS = []; FIND_LABELS = [];
+  var focus = focusCell();
+  var list = findsIn(focus);
+  if (!list.length) return;
+  var nrm = qApply(view.q, faceNormal(focus.f));
+  if (dot(nrm, sub([0, 0, CAM_D], toView(worldOf(focus.f, [1 / 3, 1 / 3, 1 / 3])))) <= 0) return;
+
+  (function walk(cell, items, d) {
+    var pts = cellScreen(cell, S);
+    var x0 = Math.min(pts[0][0], pts[1][0], pts[2][0]), x1 = Math.max(pts[0][0], pts[1][0], pts[2][0]);
+    var y0 = Math.min(pts[0][1], pts[1][1], pts[2][1]), y1 = Math.max(pts[0][1], pts[1][1], pts[2][1]);
+    if (x1 < -40 || x0 > W + 40 || y1 < -40 || y0 > H + 40) return;
+    var span = Math.max(x1 - x0, y1 - y0);
+    var cx = (pts[0][0] + pts[1][0] + pts[2][0]) / 3, cy = (pts[0][1] + pts[1][1] + pts[2][1]) / 3;
+    if (items.length <= FIND_NAME_MAX && span >= FIND_NAME_PX) {
+      for (var i = 0; i < items.length; i++) {
+        var f = faceOf(items[i].v);
+        var sp = project(toView(worldOf(f, baryOf(f, items[i].v))), S);
+        FIND_LABELS.push({ x: sp[0], y: sp[1], item: items[i], show: false });
+      }
+      return;
+    }
+    if (d >= FIND_MAX_DIVE || span < FIND_MIN_PX) {
+      FIND_BINS.push({ x: cx, y: cy, span: span, cell: cell, items: items });
+      return;
+    }
+    var bins = [[], [], [], []];
+    for (var j = 0; j < items.length; j++) bins[items[j].path[cell.depth]].push(items[j]);
+    for (var k = 0; k < 4; k++) {
+      if (bins[k].length) walk(makeCell(cell.f, cell.path.concat([k])), bins[k], d + 1);
+    }
+  })(focus, list, 0);
+  placeLabels();
+}
+
+// A label that overlaps another label is worse than no label: it makes both
+// unreadable and buries the ground under them. So they are packed as real
+// rectangles, shortest first — a short name costs little room and earns its
+// place — and a name that will not fit is simply not drawn. Its dot stays,
+// and the dot is what says the thing is there.
+var FIND_LABEL_MAX = 14, FIND_TITLE_MAX = 26;
+function shortTitle(t) {
+  return t.length > FIND_TITLE_MAX ? t.slice(0, FIND_TITLE_MAX - 1).replace(/[\s,.\-]+$/, '') + '…' : t;
+}
+function placeLabels() {
+  if (!FIND_LABELS.length) return;
+  ctx.font = '700 8px ui-monospace,monospace';
+  var cand = FIND_LABELS.slice();
+  for (var i = 0; i < cand.length; i++) {
+    cand[i].text = shortTitle(cand[i].item.title);
+    cand[i].w = ctx.measureText(cand[i].text).width + 18;   // dot, gaps, border
+  }
+  cand.sort(function (a, b) { return a.w - b.w; });
+  // the counts were placed first and mean more than any one name, so they
+  // are reserved before a single label is allowed anywhere
+  var taken = [], shown = 0;
+  for (var q = 0; q < FIND_BINS.length; q++) {
+    var B = FIND_BINS[q];
+    var r = B.items.length > 1 ? clamp(Math.round(B.span * 0.30), 10, 26) * 0.75 : 7;
+    taken.push([B.x - r, B.y - r, B.x + r, B.y + r]);
+  }
+  for (var j = 0; j < cand.length && shown < FIND_LABEL_MAX; j++) {
+    var L = cand[j];
+    if (L.x < 4 || L.x > W - 4 || L.y < 8 || L.y > H - 8) continue;
+    var flip = L.x > W - (L.w + 24);
+    var x0 = flip ? L.x + 6.5 - L.w : L.x - 6.5, y0 = L.y - 7;
+    var clash = false;
+    for (var t = 0; t < taken.length; t++) {
+      var r = taken[t];
+      if (x0 < r[2] && x0 + L.w > r[0] && y0 < r[3] && y0 + 14 > r[1]) { clash = true; break; }
+    }
+    if (clash) continue;
+    taken.push([x0, y0, x0 + L.w, y0 + 14]);
+    L.show = true; L.flip = flip;
+    shown++;
+  }
+}
+// The count is not a badge pinned to the ground, it is what the ground says.
+// So the triangle is tinted by how much it holds — density you read before
+// you read anything — and the numeral is painted into it rather than sat in
+// a box on top of it. Fifteen boxes look like a control panel; fifteen
+// tinted triangles look like a map.
+function drawFinds(S) {
+  var most = 1;
+  for (var q = 0; q < FIND_BINS.length; q++) most = Math.max(most, FIND_BINS[q].items.length);
+  for (var i = 0; i < FIND_BINS.length; i++) {
+    var b = FIND_BINS[i], n = b.items.length;
+    // only a count gets a tinted triangle; a single find is a thing sitting
+    // somewhere, not a region worth shading
+    if (n > 1 && b.span > 16) {
+      var a = 0.07 + 0.20 * (n / most);
+      strokeCell(b.cell, S, 'rgba(168,70,42,.42)', 1, 'rgba(168,70,42,' + a.toFixed(3) + ')');
+    }
+    if (n === 1) {                     // one find is a thing, not a door
+      ctx.beginPath(); ctx.arc(b.x, b.y, 5.5, 0, TAU);
+      ctx.fillStyle = COL.ground; ctx.fill();
+      ctx.strokeStyle = COL.signal; ctx.lineWidth = 1.4; ctx.stroke();
+      ctx.beginPath(); ctx.arc(b.x, b.y, 2.2, 0, TAU);
+      ctx.fillStyle = COL.signal; ctx.fill();
+      hit(b.x, b.y, 6, 'find', { item: b.items[0] });
+      continue;
+    }
+    var size = clamp(Math.round(b.span * 0.30), 10, 26);
+    ctx.font = '700 ' + size + 'px ui-monospace,monospace';
+    ctx.textAlign = 'center';
+    var txt = String(n), ty = b.y + size * 0.35;
+    ctx.lineWidth = 3.5; ctx.lineJoin = 'round';
+    ctx.strokeStyle = COL.ground; ctx.strokeText(txt, b.x, ty);
+    ctx.fillStyle = COL.signal; ctx.fillText(txt, b.x, ty);
+    ctx.textAlign = 'left';
+    hit(b.x, b.y, Math.max(15, size * 0.9), 'bin', { cell: b.cell, n: n });
+  }
+  // a named find keeps its dot even when its label could not be fitted, so a
+  // place is never represented only by a label that got dropped
+  for (var j = 0; j < FIND_LABELS.length; j++) {
+    var L = FIND_LABELS[j];
+    if (L.show) continue;              // its anchor carries the dot instead
+    ctx.beginPath(); ctx.arc(L.x, L.y, 5, 0, TAU);
+    ctx.fillStyle = COL.ground; ctx.fill();
+    ctx.strokeStyle = COL.signal; ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.beginPath(); ctx.arc(L.x, L.y, 2, 0, TAU);
+    ctx.fillStyle = COL.signal; ctx.fill();
+    hit(L.x, L.y, 6, 'find', { item: L.item });
+  }
+}
+
+// A named find is a place on the Earth, so it is drawn at that place and
+// given a real anchor — openable in a new tab, copyable, long-pressable.
 // Canvas text can do none of that, which is why the panel was never enough.
 var linkPool = {}, elLinks = null;
 function syncLinks(S) {
   if (!elLinks) elLinks = document.getElementById('links');
   var want = {};
-  for (var slug in (DB.lookups || {})) {
-    var got = DB.lookups[slug];
-    for (var i = 0; i < got.items.length; i++) {
-      var it = got.items[i];
-      if (!it.inside && view.zoom < 5) continue;
-      var v = fromLonLat(it.lon, it.lat);
-      var f = faceOf(v);
-      var vv = toView(worldOf(f, baryOf(f, v)));
-      if (dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) <= 0) continue;
-      var sp = project(vv, S);
-      if (sp[0] < 4 || sp[0] > W - 4 || sp[1] < 4 || sp[1] > H - 4) continue;
-      want[it.pageid] = { x: sp[0], y: sp[1], title: it.title, v: v };
-    }
+  for (var i = 0; i < FIND_LABELS.length; i++) {
+    if (FIND_LABELS[i].show) want[FIND_LABELS[i].item.pageid] = FIND_LABELS[i];
   }
   for (var id in linkPool) {
     if (!want[id]) { linkPool[id].remove(); delete linkPool[id]; }
-  }
-  // anchors stack rather than pile on top of one another
-  var placed = [];
-  var keys = Object.keys(want).sort(function (a, b) { return want[a].y - want[b].y; });
-  for (var q = 0; q < keys.length; q++) {
-    var w = want[keys[q]];
-    for (var z = 0; z < placed.length; z++) {
-      if (Math.abs(placed[z].y - w.y) < 15 && Math.abs(placed[z].x - w.x) < 150) {
-        w.y = placed[z].y + 16;
-        z = -1;
-      }
-    }
-    placed.push(w);
   }
   for (var id2 in want) {
     var a = linkPool[id2];
@@ -1933,24 +2114,26 @@ function syncLinks(S) {
       a.href = 'https://en.wikipedia.org/?curid=' + id2;
       a.target = '_blank';
       a.rel = 'noopener';
-      a.innerHTML = '<i></i>';
-      a.appendChild(document.createTextNode(want[id2].title));
-      (function (t, href) {
-        a.onclick = function (ev) {
+      a.innerHTML = '<i></i><span></span>';
+      a.title = want[id2].item.title;
+      (function (el) {
+        el.onclick = function (ev) {
           if (ev.metaKey || ev.ctrlKey || ev.shiftKey) return;   // let the browser have it
           ev.preventDefault();
-          var r = a.getBoundingClientRect(), st = document.getElementById('stage').getBoundingClientRect();
-          openCard({ title: t, kind: 'article', v: a.__v, url: href },
-                   r.left - st.left + r.width / 2, r.top - st.top);
+          openCard({ title: el.__it.title, kind: 'article', v: el.__it.v, url: el.href },
+                   el.__x, el.__y);
           wake();
         };
-      })(want[id2].title, a.href);
+      })(a);
       elLinks.appendChild(a);
       linkPool[id2] = a;
     }
     a.style.left = want[id2].x + 'px';
     a.style.top = want[id2].y + 'px';
-    a.__v = want[id2].v;
+    a.classList.toggle('flip', !!want[id2].flip);
+    a.querySelector('span').textContent = want[id2].text;
+    a.__it = want[id2].item;
+    a.__x = want[id2].x; a.__y = want[id2].y;
   }
 }
 
@@ -2218,6 +2401,8 @@ function render() {
   drawCouncil(S);
   drawSaid(S);
   drawGround(S);
+  layoutFinds(S);
+  drawFinds(S);
   syncLinks(S);
   trackCard(S);
   drawRelations(S, 'front');
@@ -2243,6 +2428,7 @@ function render() {
 var elCellId = document.getElementById('cellid');
 var elCellExtent = document.getElementById('cellextent');
 var elCellCouncil = document.getElementById('cellcouncil');
+var elCellFound = document.getElementById('cellfound');
 document.getElementById('cellplate').style.pointerEvents = 'auto';
 document.getElementById('cellplate').style.cursor = 'pointer';
 document.getElementById('cellplate').onclick = function () { openWhere(focusCell()); };
@@ -2298,6 +2484,16 @@ function updateReadouts() {
   elCellCouncil.textContent = council
     ? 'council · ' + council.name + ' ' + council.stat.people + '/' + council.stat.topics
     : 'below the smallest solid';
+  // A numeral painted on the ground does not say what it counts, and one
+  // line in a plate that is already there beats a plate of its own.
+  var nFound = (FIND_BINS.length || FIND_LABELS.length) ? findsIn(c).length : 0;
+  elCellFound.style.display = nFound ? '' : 'none';
+  if (nFound) {
+    var counted = 0;
+    for (var b = 0; b < FIND_BINS.length; b++) if (FIND_BINS[b].items.length > 1) counted++;
+    elCellFound.textContent = nFound + ' found · ' +
+      (counted ? 'tap a number to go in' : 'tap a mark to read');
+  }
   elScaleName.textContent = SCALES[si].n;
   elFoldState.textContent = view.fold < 0.02 ? 'unfolded · net'
     : view.fold > 0.98 ? 'folded · icosahedron'
@@ -2600,6 +2796,23 @@ function endPointer(e) {
       tapTimer = setTimeout(function () {
         // TAP — the triangle becomes the interface
         var onMap = hitAt(p.x, p.y);
+        // a number is a door and a dot is a thing: tap the count to go in,
+        // tap the mark to read it
+        if (onMap && !painting && onMap.kind === 'bin') {
+          var bc = onMap.p.cell;
+          closeCard();
+          selection = bc; hideActions();
+          lookAt(cellCentre(bc), bc.depth);
+          wake();
+          return;
+        }
+        if (onMap && !painting && onMap.kind === 'find') {
+          openCard({ title: onMap.p.item.title, kind: 'article', v: onMap.p.item.v,
+                     url: 'https://en.wikipedia.org/?curid=' + onMap.p.item.pageid },
+                   onMap.x, onMap.y);
+          wake();
+          return;
+        }
         if (onMap && !painting) {
           var set = onMap.p.set, ix = onMap.p.i;
           openCard({
@@ -2935,22 +3148,44 @@ function lookupBlock(cell, km) {
           'Either the network refused it or this page is being served somewhere that blocks it.</p>' : '');
   }
   var inside = got.items.filter(function (x) { return x.inside; });
-  var near = got.items.filter(function (x) { return !x.inside; }).slice(0, 8);
-  var rows = function (list, tag) {
-    return list.map(function (x) {
-      return '<div class="row"><b><a href="https://en.wikipedia.org/?curid=' + x.pageid +
-        '" target="_blank" rel="noopener">' + esc(x.title) + '</a></b><span>' + tag +
-        ' · ' + (x.m >= 1000 ? (x.m / 1000).toFixed(1) + ' km' : x.m + ' m') + '</span></div>';
-    }).join('');
+  var near = got.items.filter(function (x) { return !x.inside; }).slice(0, 6);
+  var link = function (x, tag) {
+    return '<div class="row"><b><a href="https://en.wikipedia.org/?curid=' + x.pageid +
+      '" target="_blank" rel="noopener">' + esc(x.title) + '</a></b><span>' + tag + '</span></div>';
   };
-  return head +
+  var found = head +
     '<p><b>' + inside.length + '</b> article' + (inside.length === 1 ? '' : 's') +
     ' fall inside this triangle' + (near.length ? ', ' + near.length + ' more just outside' : '') +
     '. Searched a ' + (got.radius / 1000).toFixed(1) + ' km radius from the centre' +
     (got.covered ? '' : ', which is smaller than the triangle — this is its middle, not all of it') +
-    '. From ' + esc(got.source) + ', ' + whenLabel(got.t) + '.</p>' +
-    rows(inside, 'inside') + rows(near, 'nearby') +
-    '<button class="go ghost" id="wLook" style="margin-top:8px">LOOK AGAIN</button>';
+    '. From ' + esc(got.source) + ', ' + whenLabel(got.t) + '.</p>';
+
+  // A list of fifty names is the thing the map was trying not to be, and it
+  // says nothing about where any of them are. They sort into the four
+  // triangles that hold them, which is what the map draws, so this reads as
+  // the legend to the ground rather than a second copy of it.
+  var all = findsIn(cell);
+  if (all.length > FIND_NAME_MAX + 1) {
+    var bins = findBins(cell), rows = '';
+    for (var k = 0; k < 4; k++) {
+      var kid = makeCell(cell.f, cell.path.concat([k]));
+      rows += '<div class="row"' + (bins[k].length ? ' data-go="' + cellSlug(kid) + '"' : '') +
+        '><b style="font-weight:400' + (bins[k].length ? '' : ';opacity:.45') + '">' + cellSlug(kid) +
+        '</b><span>' + (bins[k].length ? '<b>' + bins[k].length + '</b> here' : 'none') + '</span></div>';
+    }
+    found += '<p style="margin-top:12px">All <b>' + all.length + '</b> known here sort into the four ' +
+      'triangles that hold them — the same numbers the map draws on the ground. Go into one and it ' +
+      'divides again, until a triangle holds few enough to name them.</p>' + rows;
+  } else {
+    found += all.map(function (x) { return link(x, 'inside'); }).join('');
+  }
+  if (near.length) {
+    found += '<p style="margin-top:12px">Just outside it:</p>' +
+      near.map(function (x) {
+        return link(x, (x.m >= 1000 ? (x.m / 1000).toFixed(1) + ' km' : x.m + ' m'));
+      }).join('');
+  }
+  return found + '<button class="go ghost" id="wLook" style="margin-top:8px">LOOK AGAIN</button>';
 }
 
 // containment can come back empty; proximity and ancestry never do

@@ -276,6 +276,59 @@ ground itself on OpenStreetMap.
 Leaving here goes to somebody else's record, which is the point: it is a
 link and not a claim of ours.
 
+## The triangle is the index
+
+Fifty labels over a fourteen-kilometre triangle is not a map. The anchors
+collided, the collision rule stacked them, and they became a column down
+the middle of the world — covering the ground they were meant to point at,
+saying nothing about where anything was, repeating the panel underneath,
+and, because a stack is a screen position rather than a place, floating in
+mid-air the moment the world folded. The design failed exactly where it
+mattered: at density.
+
+The instrument already had an index and was not using it. **A triangle
+holding more than a few finds shows how many, and splitting it is how you
+read it.** Go into a number and it breaks into four smaller numbers. Go far
+enough and the numbers become names.
+
+```
+depth 9   ·  40 found        15 numerals painted on the ground
+tap 12    ·  2 found         two names, two links
+tap       ·  the article
+```
+
+Two constants do the whole job — how many names a triangle may show at once
+(three), and how small a triangle may get before it stops being splittable
+(46 px). Everything else falls out of geometry that was already there:
+
+- **The count is not a badge, it is what the ground says.** The triangle is
+  tinted in proportion to what it holds, so density reads before anything
+  else does, and the numeral is painted into the triangle rather than sat in
+  a box on top of it. Fifteen boxes look like a control panel; fifteen
+  tinted triangles look like a map.
+- **A number is a door, a dot is a thing.** Tap a count and you descend into
+  the triangle that holds it. Tap a mark and you read it. A bin of one is
+  drawn as a mark, not as the numeral `1`.
+- **It folds, because it is drawn on the face.** Unfold the world and fifty
+  articles are one tinted triangle over Korea reading `50`, on the surface,
+  in the right place. The old chips could not do this at all.
+- **Binning costs nothing per frame.** Each find is addressed once, deep,
+  and after that sorting it into a triangle is a prefix test on its path —
+  the same trick escalation uses. 61 fps standing still and dragging, with
+  fifty finds loaded.
+- **A label that will not fit is dropped, never stacked.** Names are packed
+  as real rectangles, shortest first, and the counts are reserved before any
+  name is allowed anywhere. A dropped label still leaves its dot, and the
+  dot is what says the thing is there.
+- **The panel stopped repeating the map.** It shows the same four counts
+  with their addresses, each one tappable, so it reads as the legend to the
+  ground rather than a second copy of it. Names appear there only once a
+  triangle holds few enough to list.
+
+The chip itself changed too: the dot inside it now sits exactly on the
+coordinate, so the label extends away from its place instead of covering
+it, and flips near the right edge.
+
 ## Read it where it is
 
 Opening a mark used to raise a sheet — a full-height panel that covered the
@@ -354,6 +407,7 @@ Being plain about this, because the gap is the interesting part.
 Everything from `icosa-world`, plus:
 
 - **tap the address plate** — corners, area, contents, and the link
+- **tap a number** — the count of what a triangle holds; going in divides it
 - **tap a mark on the map** — the card, beside the dot: what it is, what is
   written about it, and the way out to the article or the ground
 - **WHERE** — the same, from the action ring

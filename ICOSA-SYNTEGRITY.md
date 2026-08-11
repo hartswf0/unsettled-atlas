@@ -370,6 +370,23 @@ Two details that are easy to get wrong and were:
 Summaries are cached in the record, so a place read once reads instantly
 after that, and reads at all with no network.
 
+### The card takes the room there is
+
+It was capped at `min(46vh, 340px)` and scrolled past that. On a 924×1064
+screen that meant a scrollbar hiding half an article while a thousand
+pixels of empty map sat around it — hiding data to protect space nothing
+was using, which is the wrong way round.
+
+The height now comes from the room a placement actually has. Beside the
+mark the card is clear of it whatever its height, so it gets the whole
+column; under or over, it gets the gap that is really there. Width went
+from 280 to 340 where there is room for it, and the photograph is capped at
+132 px because a 200 px photograph in a 340 px card is mostly ink.
+
+Measured on a full Wikipedia extract: **no scrolling at 924×1064, 1280×860
+or 390×664, with 100% of the extract visible on all three.** The mark is
+still never covered — 32 cards across three viewports, none on top.
+
 ## The panel draws the shape it is describing
 
 The address panel spent two thousand pixels describing a triangle and never
@@ -480,6 +497,15 @@ and the ✕ is the way out.
 
 Being plain about this, because the gap is the interesting part.
 
+- **The empty map over Siberia is the source, not the drawing.** Two
+  hypotheses were tried and both measured and dropped: making the
+  population threshold adapt to how full the screen is (no change on three
+  views, and it *thinned* a dense one from 1.19% to 0.61% ink), and
+  tightening the label-collision grid from 74×15 to 50×12 px (0.37 / 0.40 /
+  0.47 → 0.37 / 0.40 / 0.47 — no change at all). Neither was the binding
+  constraint: at those scales the map is already drawing every place the
+  gazetteer has in view. The lever for a sparse triangle is the live
+  lookup, not the renderer.
 - **The gazetteer stops at about a village.** Below roughly 5 km a triangle
   divides the ground without telling you more about it, and the panel says
   so rather than pretending. Street-level naming would need Wikidata or

@@ -231,11 +231,14 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
    in an iframe — en.wikipedia.org sends X-Frame-Options, so a frame renders
    blank — so the summary is fetched and drawn here instead. Which is better
    anyway: it matches the map, and it never navigates away. */
+/* The height is set from the room there actually is, in placeCard. A fixed
+   cap put a scrollbar on a card with a thousand pixels of empty map around
+   it, which is hiding data to protect space nothing was using. */
 #card{
-  position:absolute;z-index:12;display:none;width:min(280px,72vw);
+  position:absolute;z-index:12;display:none;width:min(340px,76vw);
   background:var(--ground);border:1.5px solid var(--ink);
   box-shadow:4px 4px 0 rgba(18,21,20,.13);
-  max-height:min(46vh,340px);overflow-y:auto;touch-action:pan-y
+  max-height:70vh;overflow-y:auto;touch-action:pan-y
 }
 #card.open{display:block}
 #card .top{
@@ -253,7 +256,10 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #card .body .fact{display:flex;justify-content:space-between;gap:8px;font-size:9px;letter-spacing:.07em;
   color:var(--muted);border-top:1px solid rgba(18,21,20,.16);padding:4px 0}
 #card .body .fact b{color:var(--ink);font-weight:700}
-#card img{width:100%;height:auto;display:block;margin:0 0 7px;border:1px solid var(--ink)}
+/* the photograph is data, but a 200px photograph in a 340px card is mostly
+   ink — it gets a band, and the words get the rest */
+#card img{width:100%;height:auto;max-height:132px;object-fit:cover;
+  display:block;margin:0 0 7px;border:1px solid var(--ink)}
 #card .go{
   font:inherit;font-size:9px;font-weight:700;letter-spacing:.12em;display:inline-block;
   border:1.5px solid var(--ink);background:var(--ground);color:var(--ink);
@@ -3643,27 +3649,36 @@ function closeCard() {
 // and if none survives the card is shortened rather than allowed to sit on
 // the one thing it is about.
 function placeCard(sx, sy) {
-  elCard.style.maxHeight = '';
-  var w = elCard.offsetWidth || 260, h = elCard.offsetHeight || 180;
-  function put(x, y, hh) {
+  var w, h;
+  // Beside the mark the card is free of it whatever its height, so it gets
+  // the whole column. Under or over, it gets the gap that is actually
+  // there. Either way the number comes from the room and not from a
+  // constant, because a constant is what put a scrollbar on a card with a
+  // thousand pixels of empty map around it.
+  function fit(px) {
+    var next = Math.round(clamp(px, 64, 660)) + 'px';
+    if (elCard.style.maxHeight !== next) elCard.style.maxHeight = next;
+    w = elCard.offsetWidth || 260; h = elCard.offsetHeight || 180;
+  }
+  function put(x, y) {
     x = clamp(x, 8, Math.max(8, W - w - 8));
-    y = clamp(y, 8, Math.max(8, H - hh - 8));
+    y = clamp(y, 8, Math.max(8, H - h - 8));
     elCard.style.left = Math.round(x) + 'px';
     elCard.style.top = Math.round(y) + 'px';
-    return sx < x - 3 || sx > x + w + 3 || sy < y - 3 || sy > y + hh + 3;
+    return sx < x - 3 || sx > x + w + 3 || sy < y - 3 || sy > y + h + 3;
   }
-  if (put(sx + 16, sy - h / 2, h)) return;            // beside, right
-  if (put(sx - w - 16, sy - h / 2, h)) return;        // beside, left
-  if (put(sx - w / 2, sy + 18, h)) return;            // under
-  if (put(sx - w / 2, sy - h - 18, h)) return;        // over
-  // Shorten to whichever side has more room. Not to some comfortable
-  // minimum — a floor larger than the room is how the card ended up back on
-  // the mark. Below about 90 px of stage there is nowhere clear to put it
-  // and the ✕ is the way out.
+  fit(H - 16);
+  if (put(sx + 16, sy - h / 2)) return;               // beside, right
+  if (put(sx - w - 16, sy - h / 2)) return;           // beside, left
   var above = sy - 26, below = H - sy - 26;
-  elCard.style.maxHeight = Math.max(64, above, below) + 'px';
-  h = elCard.offsetHeight;
-  put(sx - w / 2, below >= above ? sy + 18 : sy - h - 18, h);
+  fit(below); if (put(sx - w / 2, sy + 18)) return;   // under
+  fit(above); if (put(sx - w / 2, sy - h - 18)) return;  // over
+  // Nowhere clears the mark at full height, so take the roomier side and
+  // shorten to exactly that. Not to some comfortable minimum — a floor
+  // larger than the room is how the card ended up back on the mark. Below
+  // about 90 px of stage there is nowhere clear and the ✕ is the way out.
+  fit(Math.max(above, below));
+  put(sx - w / 2, below >= above ? sy + 18 : sy - h - 18);
 }
 // The card is about a point on the ground, so it belongs to the point and
 // not to the screen. Pan and it follows; turn the point onto the far side of

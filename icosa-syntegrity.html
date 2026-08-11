@@ -183,6 +183,15 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   border-top:1px solid rgba(18,21,20,.18);padding:6px 0;font-size:10px;letter-spacing:.06em}
 #panel .seat b{font-weight:700}
 #panel .seat em{font-style:normal;color:var(--muted);display:block;font-size:9px;margin-top:1px}
+/* a nomination, marked as one: a name the record ties to this ground, and
+   not somebody who agreed to sit in the seat */
+#panel .nom{margin-top:5px;padding:5px 7px;border-left:2px solid var(--signal);
+  background:rgba(168,70,42,.06)}
+#panel .nom a{color:var(--signal);font-weight:700;text-decoration:none;font-size:10px}
+#panel .nom a:hover{text-decoration:underline}
+#panel .nom span{color:var(--ink);font-size:9px}
+#panel .nom em{color:var(--muted);font-size:8px;letter-spacing:.08em;margin-top:2px}
+#panel .nom .go{font-size:8px;padding:3px 6px;margin-top:4px;letter-spacing:.1em}
 #panel .go{
   font:inherit;font-size:11px;font-weight:700;letter-spacing:.14em;cursor:pointer;
   border:1.5px solid var(--ink);background:var(--ink);color:var(--ground);padding:9px 14px;margin-top:6px
@@ -1425,6 +1434,247 @@ if (!DB.areas) DB.areas = {};
     });
 }
 
+/* ------------------------------------------------------- recruiting a council
+ * A council of empty seats is a diagram, not a body. So the seats are filled
+ * from the record: who is Wikidata actually connected to this ground, ranked,
+ * assigned to the seat whose ground they are nearest to.
+ *
+ * Three sources, all answering cross-origin, all running in the reader's
+ * browser with no key and no server:
+ *
+ *   enwiki  generator=geosearch + pageprops   the places in this triangle,
+ *                                             with their Wikidata ids
+ *   wikidata list=search haswbstatement       humans born, died or working
+ *                                             at any of those places
+ *   wikidata wbgetentities                    names, descriptions, and the
+ *                                             count of language editions
+ *   enwiki  prop=pageviews                    sixty days of attention
+ *
+ * The ranking is stated rather than implied. Three terms:
+ *
+ *   local   1/(1+levels ascended)  — someone tied to this block outranks
+ *                                    someone merely famous in the country
+ *   reach   log10(sitelinks)       — how many language editions carry them,
+ *                                    which is the best available reading of
+ *                                    "most cited"
+ *   attention log10(pageviews)     — sixty days of English readership
+ *
+ * and locality is weighted heaviest, because a council for this ground that
+ * returns the same six global names at every scale is not a council for this
+ * ground.
+ *
+ * NEVER EMPTY, at every scale, has three layers. A cell address is a prefix
+ * code, so ascending is free: if a 7 km triangle knows nobody, its parent is
+ * asked, then its parent, up to the face — and a face of the Earth always
+ * knows someone. Each name carries the scale it was found at, so a borrowed
+ * name is visibly borrowed. And if the network answers nothing at all, a seat
+ * still is not empty, because a seat always spans two points of real ground
+ * and the gazetteer names those offline.
+ *
+ * Untested against the live endpoints: this environment's egress policy
+ * refuses en.wikipedia.org and www.wikidata.org (403 at the proxy), so the
+ * pipeline is proved against recorded response shapes. Whether Wikimedia
+ * answers your browser is something only your browser can settle.        */
+var PEOPLE_STATE = {};
+var WD = 'https://www.wikidata.org/w/api.php?origin=*&format=json&formatversion=2&';
+var WP = 'https://en.wikipedia.org/w/api.php?origin=*&format=json&formatversion=2&';
+
+function getJSON(url, cb) {
+  fetch(url, { credentials: 'omit' })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (j) { cb(null, j); })
+    .catch(function (e) { cb(String(e && e.message || e)); });
+}
+// the places inside this cell, with the Wikidata id each one has
+function placesWithIds(cell, cb) {
+  var p = lonlat(cellCentre(cell));
+  var want = Math.round(cellEdgeKm(cell) * 1000 * 0.62);
+  var radius = Math.max(500, Math.min(10000, want));
+  getJSON(WP + 'action=query&generator=geosearch&ggscoord=' + p[1].toFixed(5) + '%7C' +
+          p[0].toFixed(5) + '&ggsradius=' + radius + '&ggslimit=50' +
+          '&prop=pageprops|coordinates&ppprop=wikibase_item', function (err, j) {
+    if (err) return cb(err);
+    var out = [];
+    var pages = (j && j.query && j.query.pages) || [];
+    for (var i = 0; i < pages.length; i++) {
+      var pg = pages[i];
+      var qid = pg.pageprops && pg.pageprops.wikibase_item;
+      if (!qid) continue;
+      var co = pg.coordinates && pg.coordinates[0];
+      if (co && !cellContains(cell, fromLonLat(co.lon, co.lat))) continue;
+      out.push({ qid: qid, title: pg.title, v: co ? fromLonLat(co.lon, co.lat) : cellCentre(cell) });
+    }
+    cb(null, out);
+  });
+}
+// humans that Wikidata ties to any of those places, by birth, death or work
+function humansAt(places, cb) {
+  if (!places.length) return cb(null, []);
+  var ids = places.slice(0, 12).map(function (x) { return x.qid; });
+  var clause = ['P19', 'P20', 'P937'].map(function (prop) {
+    return 'haswbstatement:' + ids.map(function (q) { return prop + '=' + q; }).join('|');
+  }).join(' OR ');
+  getJSON(WD + 'action=query&list=search&srlimit=50&srsearch=' +
+          encodeURIComponent('haswbstatement:P31=Q5 (' + clause + ')'), function (err, j) {
+    if (err) return cb(err);
+    var hits = (j && j.query && j.query.search) || [];
+    cb(null, hits.map(function (h) { return h.title; }).filter(function (q) { return /^Q\d+$/.test(q); }));
+  });
+}
+// names, what they are known for, and how many language editions carry them
+function describeHumans(qids, cb) {
+  if (!qids.length) return cb(null, []);
+  // claims come too, because the seat assignment is geometric: without
+  // knowing which place each person is tied to, "nearest seat" would be a
+  // sentence rather than a fact
+  getJSON(WD + 'action=wbgetentities&languages=en&props=labels|descriptions|sitelinks|claims&ids=' +
+          qids.slice(0, 30).join('%7C'), function (err, j) {
+    if (err) return cb(err);
+    var ent = (j && j.entities) || {}, out = [];
+    for (var q in ent) {
+      var e = ent[q];
+      if (!e || e.missing !== undefined) continue;
+      var label = e.labels && e.labels.en && e.labels.en.value;
+      if (!label) continue;
+      var links = e.sitelinks || {};
+      var ties = [], cl = e.claims || {};
+      ['P19', 'P20', 'P937'].forEach(function (prop) {
+        (cl[prop] || []).forEach(function (st) {
+          var dv = st.mainsnak && st.mainsnak.datavalue && st.mainsnak.datavalue.value;
+          var id = dv && (dv.id || (dv['numeric-id'] ? 'Q' + dv['numeric-id'] : null));
+          if (id) ties.push(id);
+        });
+      });
+      out.push({ qid: q, name: label, ties: ties,
+                 what: (e.descriptions && e.descriptions.en && e.descriptions.en.value) || '',
+                 sitelinks: Object.keys(links).length,
+                 title: links.enwiki ? links.enwiki.title : label });
+    }
+    cb(null, out);
+  });
+}
+// sixty days of English readership, for the attention term
+function viewsFor(people, cb) {
+  if (!people.length) return cb(null, people);
+  var titles = people.slice(0, 50).map(function (x) { return encodeURIComponent(x.title); }).join('%7C');
+  getJSON(WP + 'action=query&prop=pageviews&pvipmetric=pageviews&titles=' + titles, function (err, j) {
+    if (err) return cb(null, people);           // ranking survives without it
+    var pages = (j && j.query && j.query.pages) || [];
+    var by = {};
+    for (var i = 0; i < pages.length; i++) {
+      var pv = pages[i].pageviews || {}, sum = 0;
+      for (var d in pv) sum += pv[d] || 0;
+      by[pages[i].title] = sum;
+    }
+    for (var k = 0; k < people.length; k++) people[k].views = by[people[k].title] || 0;
+    cb(null, people);
+  });
+}
+function scorePerson(p) {
+  var local = 1 / (1 + (p.up || 0));
+  var reach = Math.min(1, Math.log10((p.sitelinks || 0) + 1) / 2.4);
+  var attn = Math.min(1, Math.log10((p.views || 0) + 1) / 6.5);
+  return local * 0.55 + reach * 0.30 + attn * 0.15;
+}
+// one rung: everybody this exact cell knows about
+function peopleAt(cell, cb) {
+  placesWithIds(cell, function (e1, places) {
+    if (e1) return cb(e1);
+    humansAt(places, function (e2, qids) {
+      if (e2) return cb(e2);
+      describeHumans(qids, function (e3, people) {
+        if (e3) return cb(e3);
+        var byId = {};
+        for (var q = 0; q < places.length; q++) byId[places[q].qid] = places[q];
+        for (var i = 0; i < people.length; i++) {
+          // the place this person is actually tied to, when we know it
+          var anchor = null;
+          for (var t = 0; t < people[i].ties.length && !anchor; t++) anchor = byId[people[i].ties[t]];
+          people[i].where = anchor ? anchor.title : '';
+          people[i].v = anchor ? anchor.v : cellCentre(cell);
+          delete people[i].ties;                 // not worth keeping in the record
+        }
+        viewsFor(people, function (_, done) { cb(null, done || people, places); });
+      });
+    });
+  });
+}
+// the ladder: ask this cell, then its parent, until there are enough
+function recruit(cell, want, done) {
+  var slug = cellSlug(cell);
+  if (PEOPLE_STATE[slug] === 'busy') return;
+  PEOPLE_STATE[slug] = 'busy';
+  var found = [], seen = {}, chain = [], errs = 0, dry = 0;
+  (function rung(c, up) {
+    if (!c || found.length >= want) return finish();
+    chain.push({ slug: cellSlug(c), km: cellEdgeKm(c) });
+    peopleAt(c, function (err, people) {
+      var fresh = 0;
+      if (err) errs++;
+      else {
+        for (var i = 0; i < people.length; i++) {
+          if (seen[people[i].qid]) continue;
+          seen[people[i].qid] = 1;
+          people[i].up = up;
+          people[i].at = cellSlug(c);
+          people[i].km = cellEdgeKm(c);
+          people[i].score = scorePerson(people[i]);
+          found.push(people[i]);
+          fresh++;
+        }
+      }
+      // Climb for as long as it is buying something. Once every seat can be
+      // filled, or two rungs running have added nobody new, the ladder has
+      // done its work — and it never costs more than eight rungs of calls.
+      dry = fresh ? 0 : dry + 1;
+      if (found.length >= want || c.depth === 0 || up >= 7 ||
+          (dry >= 2 && found.length)) return finish();
+      rung(makeCell(c.f, c.path.slice(0, -1)), up + 1);
+    });
+  })(cell, 0);
+  function finish() {
+    found.sort(function (a, b) { return b.score - a.score; });
+    if (!DB.people) DB.people = {};
+    DB.people[slug] = { t: Date.now(), chain: chain, errs: errs, list: found.slice(0, 60) };
+    commit();
+    PEOPLE_STATE[slug] = found.length ? null : 'empty';
+    done(errs && !found.length ? 'the network refused it' : null, DB.people[slug]);
+    wake();
+  }
+}
+function peopleFor(cell) {
+  if (!DB.people) DB.people = {};
+  // a parent's answer serves every cell inside it, so descending is instant
+  for (var c = cell; c; c = c.depth ? makeCell(c.f, c.path.slice(0, -1)) : null) {
+    var got = DB.people[cellSlug(c)];
+    if (got && got.list.length) return got;
+    if (!c.depth) break;
+  }
+  return null;
+}
+/* Geometry does the assignment, not a list order. Every seat is a strut
+ * between two topics, which are two real points on this ground; a person is
+ * given to the seat whose midpoint their place is nearest. Highest score
+ * chooses first, and nobody sits twice.                                   */
+function seatPeople(cell, seat, list) {
+  var pts = councilPoints(cell, seat);
+  var mids = seat.struts.map(function (st) {
+    return norm(add(pts[st.topics[0]], pts[st.topics[1]]));
+  });
+  var out = new Array(seat.struts.length), taken = {};
+  for (var i = 0; i < list.length; i++) {
+    var best = -1, bd = 1e9;
+    for (var s = 0; s < mids.length; s++) {
+      if (out[s] || taken[s]) continue;
+      var d = arcKm(mids[s], list[i].v || cellCentre(cell));
+      if (d < bd) { bd = d; best = s; }
+    }
+    if (best < 0) break;
+    out[best] = list[i]; taken[best] = 1;
+  }
+  return out;
+}
+
 /* ------------------------------------------------------------ the record
  * What is said stays on the triangle it was said about. No server, no
  * account: the thread lives in this browser and leaves as a file. A cell
@@ -1440,6 +1690,7 @@ if (!DB.seats) DB.seats = {};
 if (!DB.me) DB.me = '';
 if (!DB.lookups) DB.lookups = {};
 if (!DB.areas) DB.areas = {};
+if (!DB.people) DB.people = {};
 function commit() { saveStore(DB); }
 function notesOf(slug) {
   return DB.notes.filter(function (n) { return n.cell === slug && n.kind !== 'second'; });
@@ -3956,6 +4207,43 @@ function openWhere(cell, keep) {
   };
 }
 
+// Every topic is a real point on this ground, and the gazetteer knows what
+// is nearest it with no network at all. So a seat always has something to
+// speak for, even when nobody has been found and nothing has answered.
+function councilGround(cell, seat, world) {
+  var pts = world ? DATA.ico.vertexLonLat.map(function (p) { return fromLonLat(p[0], p[1]); })
+                  : councilPoints(cell, seat);
+  var out = [];
+  for (var i = 0; i < pts.length; i++) {
+    var n = GAZ_STATE === 'ready' ? nearestIn(GAZ.places, pts[i], 'settlement') : null;
+    out.push(n ? n.name + (n.km > 60 ? ' (' + kmLabel(n.km) + ')' : '') : ll(pts[i]));
+  }
+  return out;
+}
+function recruitBlock(cell, seat, rec) {
+  var slug = cellSlug(cell);
+  var head = '<p style="margin-top:12px">The seats can be filled from the record: who Wikidata ' +
+    'actually ties to this ground, ranked by how local they are first, then by how many language ' +
+    'editions carry them, then by how much they are read. If this triangle knows nobody the ' +
+    'question climbs to its parent, and to its parent, so an answer always comes back — and each ' +
+    'name says the scale it was found at, so a borrowed one is visibly borrowed. ' +
+    '<b>A nomination is not a seat.</b> It is a name the record connects to here, not somebody ' +
+    'who agreed to sit.</p>';
+  if (PEOPLE_STATE[slug] === 'busy') return head + '<p style="opacity:.7">Asking the record…</p>';
+  if (!rec) {
+    return head + '<button class="go" id="cFind">FIND PEOPLE FOR THESE SEATS</button>' +
+      (PEOPLE_STATE[slug] === 'empty'
+        ? '<p style="margin-top:8px;color:var(--signal)">Nothing came back. Either the network ' +
+          'refused it, or this page is served somewhere that blocks Wikimedia.</p>' : '');
+  }
+  var rungs = rec.chain.map(function (r) { return kmLabel(r.km); }).join(' → ');
+  return head +
+    '<div class="row"><b>FOUND</b><span>' + rec.list.length + ' people</span></div>' +
+    '<div class="row"><b>ASKED</b><span>' + rungs + '</span></div>' +
+    '<div class="row"><b>WHEN</b><span>' + whenLabel(rec.t) + '</span></div>' +
+    '<button class="go ghost" id="cFind" style="margin-top:8px">ASK AGAIN</button> ' +
+    '<button class="go ghost" id="cSeatAll">SEAT THE TOP ' + seat.struts.length + '</button>';
+}
 function openCouncil(cell) {
   var km = cellEdgeKm(cell);
   var c = councilFor(km);
@@ -3980,8 +4268,13 @@ function openCouncil(cell) {
       : pts ? ' <span style="opacity:.6">' + ll(pts[t]) + '</span>' : '';
     return '<div class="row"><b>TOPIC ' + t + where + '</b><span>' + kinds.join(' · ') + '</span></div>';
   }).join('');
-  // a seat is held by a person who types their own name into it. Nothing
-  // here invents a voice; the only way a seat speaks is if someone takes it.
+  // A seat is held by a person who types their own name into it — that is
+  // still the only way a seat speaks. What is filled in from the record is a
+  // NOMINATION, and it says so on every row: a name Wikidata ties to this
+  // ground, at the scale it was found, not somebody who agreed to sit.
+  var rec = peopleFor(cell);
+  var nominees = rec ? seatPeople(cell, seat, rec.list) : [];
+  var nearTopic = councilGround(cell, seat, c.seating === 'world');
   var seats = seat.struts.map(function (st, i) {
     var critic = null;
     for (var j = 0; j < seat.struts.length; j++) {
@@ -3989,10 +4282,26 @@ function openCouncil(cell) {
       if (o.topics[0] === st.critiques[0] && o.topics[1] === st.critiques[1]) critic = j;
     }
     var criticName = critic != null ? seatHolder(slug, critic) : '';
+    var who = nominees[i];
+    // the ground never comes back empty: a strut always spans two real
+    // points, and the gazetteer names them with no network at all
+    var ground = [nearTopic[st.topics[0]], nearTopic[st.topics[1]]].filter(Boolean).join(' ↔ ');
     return '<div class="seat"><div><b>SEAT ' + i + '</b> · topics ' + st.topics.join(' & ') +
       '<em>critiques ' + st.critiques.join(' & ') +
       (criticName ? ' · answered by ' + esc(criticName.toUpperCase()) : '') +
-      (st.register ? ' · ' + st.register.toLowerCase() : '') + '</em></div>' +
+      (st.register ? ' · ' + st.register.toLowerCase() : '') + '</em>' +
+      (ground ? '<em>speaks for ' + esc(ground) + '</em>' : '') +
+      (who
+        ? '<div class="nom"><a href="https://en.wikipedia.org/wiki/' +
+          encodeURIComponent(who.title.replace(/ /g, '_')) + '" target="_blank" rel="noopener">' +
+          esc(who.name) + '</a>' +
+          (who.what ? ' <span>' + esc(who.what) + '</span>' : '') +
+          '<em>nominated · ' + (who.up ? 'from ' + kmLabel(who.km) + ' up' : 'from this ground') +
+          ' · ' + who.sitelinks + ' languages' +
+          (who.views ? ' · ' + who.views.toLocaleString('en') + ' reads' : '') + '</em>' +
+          '<button class="go ghost" data-take="' + i + '" data-name="' + esc(who.name) +
+          '">SEAT THEM</button></div>'
+        : '') + '</div>' +
       '<div><input data-seat="' + i + '" placeholder="unclaimed" value="' + esc(seatHolder(slug, i)) + '">' +
       (seatHolder(slug, i) ? '<button class="go ghost" data-carry="' + i +
         '" style="font-size:9px;padding:4px 7px;margin-top:3px;width:100%">CARRY</button>' : '') +
@@ -4039,6 +4348,7 @@ function openCouncil(cell) {
     '<p style="margin-top:14px"><b>' + taken + ' of ' + seat.struts.length + '</b> seats taken. ' +
     'A seat is held by whoever types their name into it — this invents nobody. ' +
     'Your critic is the seat opposite yours, and it is a person, not a category.</p>' +
+    recruitBlock(cell, seat, rec) +
     seats +
     '<div class="kbd" style="margin-top:10px">' +
     DATA.council.registers.map(function (r) {
@@ -4086,6 +4396,28 @@ function openCouncil(cell) {
   elPanel.querySelectorAll('[data-carry]').forEach(function (btn) {
     btn.onclick = function () { openCarry(cell, +btn.getAttribute('data-carry')); };
   });
+  // seating a nominee writes their name into the seat like any other claim,
+  // so the record cannot tell the two apart and neither should the reader —
+  // the row keeps saying where the name came from
+  elPanel.querySelectorAll('[data-take]').forEach(function (btn) {
+    btn.onclick = function () {
+      DB.seats[seatKey(slug, +btn.getAttribute('data-take'))] = btn.getAttribute('data-name');
+      commit(); openCouncil(cell); wake();
+    };
+  });
+  var sa = document.getElementById('cSeatAll');
+  if (sa) sa.onclick = function () {
+    for (var i = 0; i < nominees.length; i++) {
+      if (nominees[i] && !seatHolder(slug, i)) DB.seats[seatKey(slug, i)] = nominees[i].name;
+    }
+    commit(); openCouncil(cell); wake();
+  };
+  var cf = document.getElementById('cFind');
+  if (cf) cf.onclick = function () {
+    cf.textContent = 'ASKING…';
+    recruit(cell, seat.struts.length, function () { openCouncil(cell); });
+    openCouncil(cell);
+  };
   var cs = document.getElementById('cSay');
   if (cs) cs.onclick = function () { openThread(cell); };
 }

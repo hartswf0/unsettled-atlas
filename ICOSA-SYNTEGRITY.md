@@ -478,6 +478,89 @@ words; the country is only appended when the triangle actually spans two.
 The panel went from 2,186 px to about 1,750 px on a phone, and the top of
 it is now a picture instead of a stack of rows.
 
+## Filling the seats from the record
+
+A council of empty seats is a diagram, not a body. So the seats are now
+filled from Wikidata: who the record actually ties to this ground, ranked,
+each assigned to the seat whose ground they are nearest to.
+
+**Four calls, all cross-origin, all in the reader's browser, no key and no
+server:**
+
+```
+enwiki    generator=geosearch + pageprops    the places in this triangle,
+                                             with their Wikidata ids
+wikidata  list=search haswbstatement         humans born (P19), died (P20)
+                                             or working (P937) at any of them
+wikidata  wbgetentities                      names, what they are known for,
+                                             their claims, and how many
+                                             language editions carry them
+enwiki    prop=pageviews                     sixty days of readership
+```
+
+**The ranking is stated, not implied.** Three terms, weighted:
+
+```
+local      1 / (1 + levels ascended)      × 0.55
+reach      log10(sitelinks) / 2.4         × 0.30
+attention  log10(pageviews) / 6.5         × 0.15
+```
+
+Locality is heaviest on purpose. A council for *this* ground that returns
+the same six global names at every scale is not a council for this ground.
+`sitelinks` — the number of language editions with an article about someone
+— is the best available reading of "most cited"; it is robust, it is not
+English-centric, and it comes free with the call that fetches their name.
+
+**It never returns an empty seat, at any scale, in three layers.**
+
+1. **The ladder.** A cell address is a prefix code, so ascending costs
+   nothing. If a 14 km triangle knows nobody, its parent is asked, then its
+   parent — up to the face, and a face of the Earth always knows someone.
+   The climb stops as soon as every seat can be filled, or after two rungs
+   running that add nobody new, and never exceeds eight rungs.
+2. **Every name says where it came from.** `from this ground` or `from
+   441 km up`, on the row. A borrowed name is visibly borrowed.
+3. **Ground, with no network at all.** A seat is a strut between two
+   topics, and a topic is a real point on this cell. The compiled gazetteer
+   names what is nearest each of them offline, so every seat reads *speaks
+   for Dumyat ↔ Ismailia* even when nothing has answered and nobody has
+   been found.
+
+**Geometry does the assignment.** Each seat's strut has a midpoint on the
+sphere; a person is given to the seat whose midpoint their tied place is
+nearest, highest score choosing first, nobody sitting twice. This is why
+the pipeline pulls `claims` as well as labels — without knowing which place
+each person is tied to, "assigned to the nearest seat" would have been a
+sentence rather than a fact. A parent's answer is cached and serves every
+cell inside it, so descending is instant after the first ask.
+
+### A nomination is not a seat
+
+This is the one line the feature rests on, and it is on every row.
+
+A seat is still held by a person who types their own name into it. What
+comes back from the record is a **nomination** — a name Wikidata connects
+to this ground, not somebody who agreed to sit. `SEAT THEM` writes the name
+into the seat like any other claim, and the row goes on saying where the
+name came from and at what scale.
+
+I argued against this and was overruled, which is recorded here because the
+reasoning still applies: a dead novelist cannot answer a critic, and
+ranking by fame optimises for notability when the geometry is built to stop
+anyone optimising a single end. Read the filled bench as *what the record
+says about this ground*, which is a real and useful thing, and not as *who
+is in the room*.
+
+### Untested against the live endpoints
+
+This environment's egress refuses `en.wikipedia.org` and `www.wikidata.org`
+outright — 403 at the proxy, the same wall the live lookup hit. The
+pipeline is proved against recorded response shapes: the ascent, the
+ranking, the geometric assignment, the caching, the offline floor and the
+failure path all work. Whether Wikimedia answers *your* browser is
+something only your browser can settle.
+
 ## Letting go
 
 Everything here sticks, which is the point: a triangle stays picked, a
@@ -545,7 +628,9 @@ Being plain about this, because the gap is the interesting part.
   settlements are small and many.
 - **No model speaks as anyone.** It drafts one step and a person sends it.
   A council of synthetic voices over an empty triangle remains the thing
-  this project exists to criticise.
+  this project exists to criticise. Nominating a name from Wikidata does
+  not change that: a nominee is a citation, not an occupant, and nothing
+  in this build makes one talk.
 - **The live lookup is untested against the real endpoint.** It cannot be
   reached from the environment this was built in, so the plumbing was
   proved against a stand-in: the failure path, the radius, the

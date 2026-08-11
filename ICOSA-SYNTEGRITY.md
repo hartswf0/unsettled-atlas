@@ -535,22 +535,58 @@ each person is tied to, "assigned to the nearest seat" would have been a
 sentence rather than a fact. A parent's answer is cached and serves every
 cell inside it, so descending is instant after the first ask.
 
+### The topics are subjects now, not coordinates
+
+A topic used to read `TOPIC 3 · 30.8080°N 32.3046°E · ABSENCE · BODY ·
+CATEGORY`, which is a location and a list of lenses, and no subject at all.
+But a topic point is real ground, so the record can say what is there:
+
+```
+TOPIC 3   Nile Delta
+          a place in Egypt · 30.8080°N 32.3046°E
+          ABSENCE · BODY · CATEGORY · COORDINATE
+```
+
+The name is the most-read article at that point — one geosearch per topic,
+ranked by pageviews — and it links out and moves the map when tapped. When
+the network says nothing, the compiled gazetteer names the nearest
+settlement, sea or named region instead, which is why the twelve planetary
+topics (all of them at sea, by construction) still come back named. A topic
+is never blank at any scale, with or without a network.
+
+### Nothing has to be clicked
+
+Opening a council asks the record immediately — people and topics at once —
+and the seats claim themselves the moment it answers. Ten calls for a
+twelve-seat bench; cached per cell afterwards, and a parent's answer serves
+every cell inside it, so descending is instant.
+
+The claim carries a stamp saying where the name came from. That stamp is
+what makes auto-filling honest rather than laundering: a seat filled from
+the record says **from the record · found on this ground · 215 languages ·
+4,100,000 reads · not a person who agreed to sit**, and a seat somebody
+typed says **claimed by hand**. Typing over a filled seat deletes the stamp
+and the seat becomes yours. `CLEAR THE FILLED SEATS` empties every
+record-filled seat and leaves hand-typed ones alone, because those are
+somebody's and not the record's.
+
 ### A nomination is not a seat
 
 This is the one line the feature rests on, and it is on every row.
 
-A seat is still held by a person who types their own name into it. What
-comes back from the record is a **nomination** — a name Wikidata connects
-to this ground, not somebody who agreed to sit. `SEAT THEM` writes the name
-into the seat like any other claim, and the row goes on saying where the
-name came from and at what scale.
+The bench arrives full, and every row says which kind of full it is. A name
+from the record is a citation with a place attached; a name typed by a
+person is a claim. The two are never allowed to look the same, and the
+distinction survives in the record itself — `DB.seats` holds the name,
+`DB.seatSrc` holds where it came from, and clearing one clears the other.
 
-I argued against this and was overruled, which is recorded here because the
-reasoning still applies: a dead novelist cannot answer a critic, and
-ranking by fame optimises for notability when the geometry is built to stop
-anyone optimising a single end. Read the filled bench as *what the record
-says about this ground*, which is a real and useful thing, and not as *who
-is in the room*.
+I argued against filling seats this way and was overruled, which is
+recorded here because the reasoning still applies: a dead novelist cannot
+answer a critic, and ranking by fame optimises for notability when the
+geometry is built to stop anyone optimising a single end. Read the filled
+bench as *what the record says about this ground*, which is a real and
+useful thing, and not as *who is in the room*. The stamp on every row is
+what keeps those two readings apart.
 
 ### Untested against the live endpoints
 

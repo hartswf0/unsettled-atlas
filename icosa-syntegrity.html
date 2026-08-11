@@ -183,6 +183,19 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   border-top:1px solid rgba(18,21,20,.18);padding:6px 0;font-size:10px;letter-spacing:.06em}
 #panel .seat b{font-weight:700}
 #panel .seat em{font-style:normal;color:var(--muted);display:block;font-size:9px;margin-top:1px}
+/* a topic is a subject at a place, so it stacks: what it is, then where and
+   what it is, then the registers that meet in it. Squeezed into a two-column
+   row the name broke across three lines and read as noise. */
+#panel .topic{border-top:1px solid rgba(18,21,20,.18);padding:7px 0;cursor:pointer}
+#panel .topic b{display:block;font-size:11px;letter-spacing:.06em;font-weight:700}
+#panel .topic b s{text-decoration:none;color:var(--muted);font-weight:400;
+  font-size:9px;letter-spacing:.12em;margin-right:7px}
+#panel .topic b a{color:var(--signal);text-decoration:none}
+#panel .topic b a:hover{text-decoration:underline}
+#panel .topic em{font-style:normal;display:block;color:var(--muted);font-size:9px;margin-top:2px}
+#panel .topic i{font-style:normal;display:block;color:var(--muted);font-size:8px;
+  letter-spacing:.1em;margin-top:3px}
+#panel .topic:hover b{color:var(--signal)}
 /* a nomination, marked as one: a name the record ties to this ground, and
    not somebody who agreed to sit in the seat */
 #panel .nom{margin-top:5px;padding:5px 7px;border-left:2px solid var(--signal);
@@ -1642,6 +1655,48 @@ function recruit(cell, want, done) {
     wake();
   }
 }
+/* Nothing should have to be clicked for the bench to exist. The seats claim
+ * themselves from the record the moment there is a record, and the claim is
+ * stamped with where it came from — so a name filled in by the machine can
+ * still be told from a name a person typed, and typing over it clears the
+ * stamp. Without that stamp auto-claiming would launder a citation into a
+ * participant, which is the one thing this must not do.                  */
+function seatSource(slug, i) { return (DB.seatSrc || {})[seatKey(slug, i)] || null; }
+// asked once per cell, on open, and never again unless it failed or you ask
+function autoCouncil(cell, seat, world) {
+  var slug = cellSlug(cell);
+  if (!peopleFor(cell) && !PEOPLE_STATE[slug]) {
+    recruit(cell, seat.struts.length, function () {
+      autoSeat(cell, seat, world);
+      if (councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+    });
+  }
+  if (!(DB.topics || {})[slug] && !TOPIC_STATE[slug]) {
+    recruitTopics(cell, seat, world, function () {
+      if (councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+    });
+  }
+}
+function autoSeat(cell, seat, world) {
+  var rec = peopleFor(cell);
+  if (!rec) return 0;
+  var slug = cellSlug(cell), n = 0;
+  var nominees = seatPeople(cell, seat, rec.list, world);
+  if (!DB.seatSrc) DB.seatSrc = {};
+  for (var i = 0; i < nominees.length; i++) {
+    var key = seatKey(slug, i);
+    if (!nominees[i]) continue;
+    if (DB.seats[key] && !DB.seatSrc[key]) continue;      // a person typed that
+    if (DB.seats[key] === nominees[i].name) continue;
+    DB.seats[key] = nominees[i].name;
+    DB.seatSrc[key] = { qid: nominees[i].qid, at: nominees[i].at, up: nominees[i].up,
+                        km: nominees[i].km, what: nominees[i].what, title: nominees[i].title,
+                        sitelinks: nominees[i].sitelinks, views: nominees[i].views || 0 };
+    n++;
+  }
+  if (n) commit();
+  return n;
+}
 function peopleFor(cell) {
   if (!DB.people) DB.people = {};
   // a parent's answer serves every cell inside it, so descending is instant
@@ -1652,12 +1707,71 @@ function peopleFor(cell) {
   }
   return null;
 }
+/* --------------------------------------------------------------- topics
+ * A topic was a pair of coordinates and a list of registers, which is a
+ * location and not a subject. But the point is real ground, so the record
+ * can say what is there: the most-read article at that point, and failing
+ * that whatever the compiled gazetteer names nearest it. A topic at sea —
+ * and all twelve planetary ones are at sea — gets the sea.
+ *
+ * So a topic is never blank either, at any scale, with or without a
+ * network.                                                               */
+var TOPIC_STATE = {};
+function topicPoints(cell, seat, world) {
+  if (world) return DATA.ico.vertexLonLat.map(function (p) { return fromLonLat(p[0], p[1]); });
+  return councilPoints(cell, seat);
+}
+function offlineTopic(v) {
+  if (GAZ_STATE !== 'ready') return null;
+  var best = null;
+  [['places', 'settlement'], ['marine', 'water'], ['regions', 'ground']].forEach(function (pair) {
+    var n = nearestIn(GAZ[pair[0]], v, pair[1]);
+    if (n && (!best || n.km < best.km)) best = n;
+  });
+  return best ? { title: best.name, what: best.label, km: best.km, from: 'gazetteer' } : null;
+}
+function recruitTopics(cell, seat, world, done) {
+  var slug = cellSlug(cell);
+  if (TOPIC_STATE[slug] === 'busy') return;
+  TOPIC_STATE[slug] = 'busy';
+  var pts = topicPoints(cell, seat, world);
+  var out = new Array(pts.length), left = pts.length, anyNet = false;
+  var radius = Math.max(1000, Math.min(10000, Math.round(cellEdgeKm(cell) * 1000 * 0.3)));
+  pts.forEach(function (v, i) {
+    out[i] = offlineTopic(v);            // the floor, before anything is asked
+    var ll2 = lonlat(v);
+    getJSON(WP + 'action=query&generator=geosearch&ggscoord=' + ll2[1].toFixed(5) + '%7C' +
+            ll2[0].toFixed(5) + '&ggsradius=' + radius + '&ggslimit=10&prop=pageviews|description',
+      function (err, j) {
+        if (!err) {
+          var pages = (j && j.query && j.query.pages) || [], best = null;
+          for (var k = 0; k < pages.length; k++) {
+            var pv = pages[k].pageviews || {}, sum = 0;
+            for (var d in pv) sum += pv[d] || 0;
+            if (!best || sum > best.views) {
+              best = { title: pages[k].title, what: pages[k].description || '',
+                       views: sum, km: 0, from: 'wikipedia' };
+            }
+          }
+          if (best) { out[i] = best; anyNet = true; }
+        }
+        if (--left === 0) {
+          if (!DB.topics) DB.topics = {};
+          DB.topics[slug] = { t: Date.now(), net: anyNet, list: out };
+          commit();
+          TOPIC_STATE[slug] = null;
+          done();
+          wake();
+        }
+      });
+  });
+}
 /* Geometry does the assignment, not a list order. Every seat is a strut
  * between two topics, which are two real points on this ground; a person is
  * given to the seat whose midpoint their place is nearest. Highest score
  * chooses first, and nobody sits twice.                                   */
-function seatPeople(cell, seat, list) {
-  var pts = councilPoints(cell, seat);
+function seatPeople(cell, seat, list, world) {
+  var pts = topicPoints(cell, seat, world);
   var mids = seat.struts.map(function (st) {
     return norm(add(pts[st.topics[0]], pts[st.topics[1]]));
   });
@@ -1691,6 +1805,8 @@ if (!DB.me) DB.me = '';
 if (!DB.lookups) DB.lookups = {};
 if (!DB.areas) DB.areas = {};
 if (!DB.people) DB.people = {};
+if (!DB.topics) DB.topics = {};
+if (!DB.seatSrc) DB.seatSrc = {};
 function commit() { saveStore(DB); }
 function notesOf(slug) {
   return DB.notes.filter(function (n) { return n.cell === slug && n.kind !== 'second'; });
@@ -4120,6 +4236,30 @@ function openThing(h) {
   };
 }
 
+// A name in the panel that does not take you to the thing it names is just
+// ink. Every row that stands for a place on the ground — a settlement, a
+// nearest thing, a find, a council topic — moves the map to it, holds it,
+// and reads it there.
+function wireGoTo(cell) {
+  elPanel.querySelectorAll('[data-at]').forEach(function (el) {
+    el.style.cursor = 'pointer';
+    el.onclick = function (ev) {
+      if (ev.target.tagName === 'A') return;             // a real link stays a link
+      var ll2 = el.getAttribute('data-at').split(',');
+      var v = fromLonLat(parseFloat(ll2[0]), parseFloat(ll2[1]));
+      var d = clamp(Math.max(cell.depth, depthForZoom()), 4, MAX_DEPTH);
+      selection = cellAt(v, d);
+      lookAt(v, d);
+      closePanel();
+      var st = document.getElementById('stage').getBoundingClientRect();
+      openCard({ title: el.getAttribute('data-name') || '', kind: el.getAttribute('data-kind') || 'place',
+                 v: v, depth: d, where: el.getAttribute('data-where') || '',
+                 pop: parseInt(el.getAttribute('data-pop') || '0', 10),
+                 url: el.getAttribute('data-url') || '' }, st.width / 2, st.height * 0.42);
+      wake();
+    };
+  });
+}
 function openWhere(cell, keep) {
   var P = cellCorners(cell), km = cellEdgeKm(cell);
   var slug = cellSlug(cell);
@@ -4178,28 +4318,7 @@ function openWhere(cell, keep) {
       if (c2) { selection = c2; lookAt(cellCentre(c2), c2.depth); openWhere(c2); }
     };
   });
-  // A name in the panel that does not take you to the thing it names is
-  // just ink. Every row that stands for a place on the ground now moves the
-  // map to it, holds it, and reads it where it is.
-  elPanel.querySelectorAll('[data-at]').forEach(function (el) {
-    el.style.cursor = 'pointer';
-    el.onclick = function (ev) {
-      if (ev.target.tagName === 'A') return;             // a real link stays a link
-      var ll2 = el.getAttribute('data-at').split(',');
-      var v = fromLonLat(parseFloat(ll2[0]), parseFloat(ll2[1]));
-      var d = clamp(Math.max(cell.depth, depthForZoom()), 4, MAX_DEPTH);
-      var c2 = cellAt(v, d);
-      selection = c2;
-      lookAt(v, d);
-      closePanel();
-      var st = document.getElementById('stage').getBoundingClientRect();
-      openCard({ title: el.getAttribute('data-name') || ll2[2] || '', kind: el.getAttribute('data-kind') || 'place',
-                 v: v, depth: d, where: el.getAttribute('data-where') || '',
-                 pop: parseInt(el.getAttribute('data-pop') || '0', 10),
-                 url: el.getAttribute('data-url') || '' }, st.width / 2, st.height * 0.42);
-      wake();
-    };
-  });
+  wireGoTo(cell);
   var row = document.getElementById('wlink');
   if (row) row.onclick = function () {
     try { navigator.clipboard.writeText(url); row.querySelector('span').textContent = 'copied'; }
@@ -4207,34 +4326,41 @@ function openWhere(cell, keep) {
   };
 }
 
-// Every topic is a real point on this ground, and the gazetteer knows what
-// is nearest it with no network at all. So a seat always has something to
-// speak for, even when nobody has been found and nothing has answered.
-function councilGround(cell, seat, world) {
-  var pts = world ? DATA.ico.vertexLonLat.map(function (p) { return fromLonLat(p[0], p[1]); })
-                  : councilPoints(cell, seat);
-  var out = [];
+// Every topic is a real point on this ground. The record names what is
+// there when it can; the compiled gazetteer names it when the record cannot
+// or has not answered yet. Either way a topic has a subject and a seat has
+// something to speak for, with no network and no waiting.
+function topicNames(cell, seat, world) {
+  var slug = cellSlug(cell);
+  var got = (DB.topics || {})[slug];
+  var pts = topicPoints(cell, seat, world), out = [];
   for (var i = 0; i < pts.length; i++) {
-    var n = GAZ_STATE === 'ready' ? nearestIn(GAZ.places, pts[i], 'settlement') : null;
-    out.push(n ? n.name + (n.km > 60 ? ' (' + kmLabel(n.km) + ')' : '') : ll(pts[i]));
+    var t = got && got.list[i];
+    if (!t) t = offlineTopic(pts[i]);
+    out.push(t || { title: ll(pts[i]), what: '', from: 'coordinate' });
   }
   return out;
 }
+function councilGround(cell, seat, world) {
+  return topicNames(cell, seat, world).map(function (t) { return t.title; });
+}
 function recruitBlock(cell, seat, rec) {
   var slug = cellSlug(cell);
-  var head = '<p style="margin-top:12px">The seats can be filled from the record: who Wikidata ' +
+  var head = '<p style="margin-top:12px">The bench fills itself from the record: who Wikidata ' +
     'actually ties to this ground, ranked by how local they are first, then by how many language ' +
     'editions carry them, then by how much they are read. If this triangle knows nobody the ' +
     'question climbs to its parent, and to its parent, so an answer always comes back — and each ' +
     'name says the scale it was found at, so a borrowed one is visibly borrowed. ' +
-    '<b>A nomination is not a seat.</b> It is a name the record connects to here, not somebody ' +
-    'who agreed to sit.</p>';
+    '<b>A claim from the record is not a person who agreed to sit</b>, and every row says which ' +
+    'it is. Type over one and it becomes yours.</p>';
   if (PEOPLE_STATE[slug] === 'busy') return head + '<p style="opacity:.7">Asking the record…</p>';
   if (!rec) {
-    return head + '<button class="go" id="cFind">FIND PEOPLE FOR THESE SEATS</button>' +
-      (PEOPLE_STATE[slug] === 'empty'
-        ? '<p style="margin-top:8px;color:var(--signal)">Nothing came back. Either the network ' +
-          'refused it, or this page is served somewhere that blocks Wikimedia.</p>' : '');
+    return head + (PEOPLE_STATE[slug] === 'empty'
+      ? '<p style="margin-top:8px;color:var(--signal)">Nothing came back — the network refused it, ' +
+        'or this page is served somewhere that blocks Wikimedia. Every seat still says what ground ' +
+        'it speaks for, from the compiled gazetteer.</p>' +
+        '<button class="go ghost" id="cFind">TRY AGAIN</button>'
+      : '<p style="opacity:.7">Asking the record…</p>');
   }
   var rungs = rec.chain.map(function (r) { return kmLabel(r.km); }).join(' → ');
   return head +
@@ -4242,7 +4368,7 @@ function recruitBlock(cell, seat, rec) {
     '<div class="row"><b>ASKED</b><span>' + rungs + '</span></div>' +
     '<div class="row"><b>WHEN</b><span>' + whenLabel(rec.t) + '</span></div>' +
     '<button class="go ghost" id="cFind" style="margin-top:8px">ASK AGAIN</button> ' +
-    '<button class="go ghost" id="cSeatAll">SEAT THE TOP ' + seat.struts.length + '</button>';
+    '<button class="go ghost" id="cClearSeats">CLEAR THE FILLED SEATS</button>';
 }
 function openCouncil(cell) {
   var km = cellEdgeKm(cell);
@@ -4259,22 +4385,35 @@ function openCouncil(cell) {
   // for the planetary council the topics have addresses, and every one of
   // them is at sea — a consequence of solving for no vertex on land
   var placed = c.name === 'icosahedron' ? DATA.ico.vertexLonLat : null;
-  var pts = c.seating === 'world' ? null : councilPoints(cell, seat);
+  var world = c.seating === 'world';
   var slug = cellSlug(cell);
+  var rec = peopleFor(cell);
+  // nothing here waits for a click: the record is asked the moment the
+  // council is opened, and the seats claim themselves when it answers
+  autoCouncil(cell, seat, world);
+  autoSeat(cell, seat, world);
+  var topics = topicNames(cell, seat, world);
+  var tpts = topicPoints(cell, seat, world);
   var rows = seat.members.map(function (m, t) {
     var kinds = m.map(function (i) { return seat.struts[i].register; }).sort();
-    var where = placed
-      ? ' <span style="opacity:.6">' + placed[t][1].toFixed(1) + '°, ' + placed[t][0].toFixed(1) + '°</span>'
-      : pts ? ' <span style="opacity:.6">' + ll(pts[t]) + '</span>' : '';
-    return '<div class="row"><b>TOPIC ' + t + where + '</b><span>' + kinds.join(' · ') + '</span></div>';
+    var tp = topics[t];
+    var where = placed ? placed[t][1].toFixed(1) + '°, ' + placed[t][0].toFixed(1) + '°'
+                       : ll(tpts[t]);
+    // a topic is a subject now, not a pair of coordinates and a register list
+    return '<div class="topic" data-at="' + lonlat(tpts[t])[0].toFixed(4) + ',' +
+      lonlat(tpts[t])[1].toFixed(4) + '" data-name="' + esc(tp.title) + '">' +
+      '<b><s>TOPIC ' + t + '</s>' + (tp.from === 'wikipedia'
+        ? '<a href="https://en.wikipedia.org/wiki/' +
+          encodeURIComponent(tp.title.replace(/ /g, '_')) + '" target="_blank" rel="noopener">' +
+          esc(tp.title) + '</a>'
+        : esc(tp.title)) + '</b>' +
+      '<em>' + esc(tp.what || (tp.from === 'gazetteer' ? 'nearest named thing' : 'coordinate')) +
+      ' · ' + where + '</em>' +
+      '<i>' + kinds.join(' · ') + '</i></div>';
   }).join('');
-  // A seat is held by a person who types their own name into it — that is
-  // still the only way a seat speaks. What is filled in from the record is a
-  // NOMINATION, and it says so on every row: a name Wikidata ties to this
-  // ground, at the scale it was found, not somebody who agreed to sit.
-  var rec = peopleFor(cell);
-  var nominees = rec ? seatPeople(cell, seat, rec.list) : [];
-  var nearTopic = councilGround(cell, seat, c.seating === 'world');
+  // A seat carries the name in it and where the name came from. Filled from
+  // the record, it says so; typed by a person, it says that. The two are
+  // never allowed to look the same.
   var seats = seat.struts.map(function (st, i) {
     var critic = null;
     for (var j = 0; j < seat.struts.length; j++) {
@@ -4282,28 +4421,26 @@ function openCouncil(cell) {
       if (o.topics[0] === st.critiques[0] && o.topics[1] === st.critiques[1]) critic = j;
     }
     var criticName = critic != null ? seatHolder(slug, critic) : '';
-    var who = nominees[i];
-    // the ground never comes back empty: a strut always spans two real
-    // points, and the gazetteer names them with no network at all
-    var ground = [nearTopic[st.topics[0]], nearTopic[st.topics[1]]].filter(Boolean).join(' ↔ ');
+    var held = seatHolder(slug, i), src = seatSource(slug, i);
+    var ground = [topics[st.topics[0]].title, topics[st.topics[1]].title].filter(Boolean).join(' ↔ ');
     return '<div class="seat"><div><b>SEAT ' + i + '</b> · topics ' + st.topics.join(' & ') +
       '<em>critiques ' + st.critiques.join(' & ') +
       (criticName ? ' · answered by ' + esc(criticName.toUpperCase()) : '') +
       (st.register ? ' · ' + st.register.toLowerCase() : '') + '</em>' +
       (ground ? '<em>speaks for ' + esc(ground) + '</em>' : '') +
-      (who
+      (src
         ? '<div class="nom"><a href="https://en.wikipedia.org/wiki/' +
-          encodeURIComponent(who.title.replace(/ /g, '_')) + '" target="_blank" rel="noopener">' +
-          esc(who.name) + '</a>' +
-          (who.what ? ' <span>' + esc(who.what) + '</span>' : '') +
-          '<em>nominated · ' + (who.up ? 'from ' + kmLabel(who.km) + ' up' : 'from this ground') +
-          ' · ' + who.sitelinks + ' languages' +
-          (who.views ? ' · ' + who.views.toLocaleString('en') + ' reads' : '') + '</em>' +
-          '<button class="go ghost" data-take="' + i + '" data-name="' + esc(who.name) +
-          '">SEAT THEM</button></div>'
-        : '') + '</div>' +
-      '<div><input data-seat="' + i + '" placeholder="unclaimed" value="' + esc(seatHolder(slug, i)) + '">' +
-      (seatHolder(slug, i) ? '<button class="go ghost" data-carry="' + i +
+          encodeURIComponent((src.title || held).replace(/ /g, '_')) + '" target="_blank" rel="noopener">' +
+          esc(held) + '</a>' +
+          (src.what ? ' <span>' + esc(src.what) + '</span>' : '') +
+          '<em>from the record · ' + (src.up ? 'found ' + kmLabel(src.km) + ' up' : 'found on this ground') +
+          ' · ' + src.sitelinks + ' languages' +
+          (src.views ? ' · ' + src.views.toLocaleString('en') + ' reads' : '') +
+          ' · not a person who agreed to sit</em></div>'
+        : held ? '<div class="nom" style="border-color:var(--ink);background:rgba(18,21,20,.05)">' +
+          '<em style="color:var(--ink)">claimed by hand</em></div>' : '') + '</div>' +
+      '<div><input data-seat="' + i + '" placeholder="unclaimed" value="' + esc(held) + '">' +
+      (held ? '<button class="go ghost" data-carry="' + i +
         '" style="font-size:9px;padding:4px 7px;margin-top:3px;width:100%">CARRY</button>' : '') +
       '</div></div>';
   }).join('');
@@ -4336,10 +4473,13 @@ function openCouncil(cell) {
     '<p><b>' + cellId(cell) + '</b> is ' + kmLabel(km) + ' on a side, which is what entitles it to ' +
     'this solid and no larger. A council is sized by how much world the cell holds, never by ' +
     'how many people are available.</p>' +
-    '<p>A seat is <b>held by a person</b> — the name in it is typed by whoever takes it, and ' +
-    'nothing here invents an occupant. The register on a seat is a lens it argues through, not ' +
-    'a substitute for the human in it. Each seat is answered by the register incommensurable ' +
-    'with its own — coordinate answered by body, record answered by absence — and ' +
+    '<p>The bench arrives full. Every seat carries a name the record ties to this ground and ' +
+    'every topic carries the subject that is actually at its point, without anything being ' +
+    'clicked — and every row says which of the two it is: <b>from the record</b>, or ' +
+    '<b>claimed by hand</b>. A name from the record is a citation, not somebody who agreed to ' +
+    'sit; type over it and the seat becomes yours. The register on a seat is a lens it argues ' +
+    'through, not a substitute for the human in it. Each seat is answered by the register ' +
+    'incommensurable with its own — coordinate answered by body, record answered by absence — and ' +
     (reg && reg.roomsFullyMixed === c.stat.topics
       ? 'every one of the ' + c.stat.topics + ' rooms hears every kind at once, so no room can be all data or all anecdote.'
       : reg.roomsFullyMixed + ' of ' + c.stat.topics + ' rooms hear a full mix.') + '</p>' +
@@ -4369,11 +4509,11 @@ function openCouncil(cell) {
     '<p style="margin-top:12px">No council has yet been convened in this cell. When one is, it ' +
     'will speak only from a compiled dossier of cited sources, and whatever it says will stay ' +
     'bound to this cell rather than being handed upward.</p>' +
-    '<p style="margin-top:12px">No register lists who belongs to a triangle this size, and one ' +
-    'that claimed to would be the invention this whole thing exists to avoid. So the seats are ' +
-    'filled the way field research actually fills them: send the address to someone who is here, ' +
-    'they land on this exact triangle, they take a seat, and they name who should hold the next ' +
-    'one.</p>' +
+    '<p style="margin-top:12px">No register lists who <b>lives</b> in a triangle this size. What ' +
+    'the record can supply is who it connects to this ground, which is a different and smaller ' +
+    'claim — so the filled bench is a reading of the sources, and the way it becomes a body is ' +
+    'still the way field research does it: send the address to someone who is here, they land on ' +
+    'this exact triangle, they type over a seat, and they name who should hold the next one.</p>' +
     '<div class="row" id="cInvite"><b style="word-break:break-all;font-weight:400">' +
     location.origin + location.pathname + '#' + slug + '</b><span>copy invite</span></div>' +
     '<button class="go" id="cSay" style="margin-top:10px">SAY SOMETHING HERE</button>');
@@ -4386,38 +4526,37 @@ function openCouncil(cell) {
   };
   elPanel.querySelectorAll('.seat input').forEach(function (inp) {
     inp.onchange = function () {
-      var v = inp.value.trim();
-      if (v) DB.seats[seatKey(slug, +inp.getAttribute('data-seat'))] = v;
-      else delete DB.seats[seatKey(slug, +inp.getAttribute('data-seat'))];
+      var v = inp.value.trim(), key = seatKey(slug, +inp.getAttribute('data-seat'));
+      // typing over a seat the record filled makes it yours, so the stamp goes
+      if (v) DB.seats[key] = v; else delete DB.seats[key];
+      delete DB.seatSrc[key];
       if (v && !DB.me) DB.me = v;
-      commit(); wake();
+      commit(); openCouncil(cell); wake();
     };
   });
   elPanel.querySelectorAll('[data-carry]').forEach(function (btn) {
     btn.onclick = function () { openCarry(cell, +btn.getAttribute('data-carry')); };
   });
-  // seating a nominee writes their name into the seat like any other claim,
-  // so the record cannot tell the two apart and neither should the reader —
-  // the row keeps saying where the name came from
-  elPanel.querySelectorAll('[data-take]').forEach(function (btn) {
-    btn.onclick = function () {
-      DB.seats[seatKey(slug, +btn.getAttribute('data-take'))] = btn.getAttribute('data-name');
-      commit(); openCouncil(cell); wake();
-    };
-  });
-  var sa = document.getElementById('cSeatAll');
-  if (sa) sa.onclick = function () {
-    for (var i = 0; i < nominees.length; i++) {
-      if (nominees[i] && !seatHolder(slug, i)) DB.seats[seatKey(slug, i)] = nominees[i].name;
+  // the filled seats can be emptied in one move; hand-typed ones are left
+  // alone, because those are somebody's and not the record's
+  var cc = document.getElementById('cClearSeats');
+  if (cc) cc.onclick = function () {
+    for (var i = 0; i < seat.struts.length; i++) {
+      var key = seatKey(slug, i);
+      if (DB.seatSrc[key]) { delete DB.seats[key]; delete DB.seatSrc[key]; }
     }
     commit(); openCouncil(cell); wake();
   };
   var cf = document.getElementById('cFind');
   if (cf) cf.onclick = function () {
     cf.textContent = 'ASKING…';
-    recruit(cell, seat.struts.length, function () { openCouncil(cell); });
+    PEOPLE_STATE[slug] = null;
+    recruit(cell, seat.struts.length, function () {
+      autoSeat(cell, seat, world); openCouncil(cell);
+    });
     openCouncil(cell);
   };
+  wireGoTo(cell);
   var cs = document.getElementById('cSay');
   if (cs) cs.onclick = function () { openThread(cell); };
 }

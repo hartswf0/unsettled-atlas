@@ -370,6 +370,69 @@ Two details that are easy to get wrong and were:
 Summaries are cached in the record, so a place read once reads instantly
 after that, and reads at all with no network.
 
+## The panel draws the shape it is describing
+
+The address panel spent two thousand pixels describing a triangle and never
+drew one:
+
+```
+ADDRESS   F02.11        TOUCHES   F02.13 F02.10 F02.22
+SCALE     depth 2       INSIDE    F02.1
+EDGE      1763 km       CONTAINS  F02.110 F02.111 F02.112 F02.113
+CORNER A  41.0°N 74.2°W
+CORNER B  33.1°N 62.4°W    ← seven rows of text for three corners,
+CORNER C  29.7°N 81.5°W       three neighbours and four children,
+                              none of which is a list
+```
+
+Every one of those is a *position*. So the cell is now drawn, at the top of
+the panel, **oriented the way it is on screen right now** — turn the world
+and the diagram turns with it, so the two never disagree about which way is
+which. Inside it are the four children it actually has, in the true
+subdivision: three at the corners and one inverted in the middle, the way
+`childTri` cuts them. Outside each edge is the neighbour that shares it,
+placed by reflecting the opposite corner over that edge, which is exactly
+where it lies.
+
+Each child carries its digit and what it holds. Each neighbour carries only
+what it holds — **a neighbour gets no digit**, because a digit there would
+read as a fifth child and the diagram would be lying about what is inside
+what. Everything in it is somewhere you can go.
+
+That makes the diagram answer three questions at a glance that the rows
+answered nowhere: which way this triangle is facing, which of its quarters
+is worth entering, and whether the interesting ground is next door instead.
+
+### Clicking a name goes to the thing it names
+
+A name in a panel that does not take you to what it names is just ink.
+Every row that stands for a place on the ground now moves the map to it,
+holds it, and reads it there — the panel closes, the map flies, the mark is
+ringed, the card opens beside it. Settlements, the nearest things, and the
+Wikipedia finds all behave this way. On a find the title stays a real
+`<a>`, so the article is still one click and the row is the ground.
+
+### The breadcrumb is the address, drawn
+
+`WORLD ▸ F02 ▸ 3 ▸ 3 ▸ 1 ▸ 2` was digits nobody could read and nobody could
+click. A step down this address is a choice of one quarter out of four, so
+each step is now drawn as that quarter — filled corner or inverted middle —
+and tapping any step goes back to it. The four glyphs are built once,
+because the chain rebuilds on every cell change.
+
+### What was cut
+
+The measurements are still true and still there, behind one summary line
+that reads `continental · 1763 km edge · 1.25 million km²`. They are just no
+longer the first thing you have to read to find out where you are. The
+settlement list went from fourteen to eight, since it is now navigable and
+the map draws them anyway. And `ADMINISTERED` stopped repeating the country
+after every province — six provinces had become six lines of the same
+words; the country is only appended when the triangle actually spans two.
+
+The panel went from 2,186 px to about 1,750 px on a phone, and the top of
+it is now a picture instead of a stack of rows.
+
 ## Letting go
 
 Everything here sticks, which is the point: a triangle stays picked, a
@@ -450,6 +513,10 @@ Being plain about this, because the gap is the interesting part.
 Everything from `icosa-world`, plus:
 
 - **tap the address plate** — corners, area, contents, and the link
+- **the diagram at the top of WHERE** — four children inside, three
+  neighbours outside, each carrying what it holds; tap any of them to go
+- **any named row** — moves the map to it and reads it there
+- **a step in the breadcrumb** — the quarter it took; tap to go back to it
 - **tap the same triangle again** — let it go
 - **DROP** — appears when the map is holding something, and names it
 - **tap a number** — the count of what a triangle holds; going in divides it

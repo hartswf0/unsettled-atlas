@@ -85,6 +85,22 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 }
 .link.here{color:var(--ink);font-weight:700;border-color:var(--ink);background:var(--ground)}
 .link.sep{opacity:.45;padding:0}
+#chain .link:not(.sep){cursor:pointer;pointer-events:auto}
+#chain .link:not(.sep):hover{color:var(--signal);border-color:var(--signal)}
+/* The address drawn as itself: which quarter of its parent this cell is.
+   Four digits in a row say nothing; four quarters say where you went. */
+#chain .q{display:inline-block;width:11px;height:10px;vertical-align:-1px}
+/* The panel described a shape and never drew it. This is the cell as it is
+   on screen right now — its four children with what each holds, and the
+   three neighbours across its edges — and every part of it is somewhere
+   you can go. */
+#mini{
+  /* the map canvas is absolutely positioned by the bare `canvas` rule
+     above; this one belongs in the flow of the panel */
+  position:static;inset:auto;
+  display:block;width:100%;max-width:420px;height:190px;background:var(--paper);
+  border:1.5px solid var(--ink);cursor:pointer;touch-action:manipulation
+}
 
 /* --- actions appear only where they are possible ------------------- */
 #acts{
@@ -138,6 +154,17 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 }
 #panel .row:last-child{border-bottom:1px solid rgba(18,21,20,.18)}
 #panel .row b{font-weight:700}
+#panel .row[data-at]:hover,#panel .row[data-go]:hover{color:var(--signal)}
+/* measurements are still true and still here — just not the first thing you
+   have to read to find out where you are */
+#panel details{margin:8px 0 4px}
+#panel details summary{
+  cursor:pointer;font-size:10px;letter-spacing:.08em;color:var(--muted);
+  padding:6px 0;list-style:none
+}
+#panel details summary::-webkit-details-marker{display:none}
+#panel details summary::before{content:'▸ ';color:var(--signal)}
+#panel details[open] summary::before{content:'▾ '}
 #panel .row a{color:var(--signal);text-underline-offset:3px}
 #panel .row span{color:var(--muted);text-align:right;flex:0 0 auto}
 #panel .row.on{background:var(--ink);color:var(--ground);padding-inline:6px}
@@ -1219,7 +1246,7 @@ function nearestIn(set, from, label) {
   }
   if (best < 0) return null;
   return { i: best, name: set.name[best], km: arcKm(from, set.v[best]),
-           dir: compassOf(from, set.v[best]), label: label };
+           dir: compassOf(from, set.v[best]), label: label, v: set.v[best] };
 }
 // the ladder of containment: at every scale above this one, the biggest
 // thing that scale knows about. A block in Cairo is never nowhere.
@@ -1280,15 +1307,23 @@ function cellInventory(cell) {
   var i;
   for (i = 0; i < GAZ.places.n; i++) {
     if (!cellContains(cell, GAZ.places.v[i])) continue;
+    var plp = lonlat(GAZ.places.v[i]);
     inv.places.push({ name: GAZ.places.name[i], pop: GAZ.places.pop[i],
+      lon: plp[0].toFixed(4), lat: plp[1].toFixed(4),
       a0: GAZ.adm0[GAZ.places.a0[i]], a1: GAZ.adm1[GAZ.places.a1[i]] });
     inv.pop += GAZ.places.pop[i];
   }
   inv.places.sort(function (a, b) { return b.pop - a.pop; });
-  var seen1 = {};
+  // A province is only ambiguous when two countries are in the triangle;
+  // otherwise repeating the country after every one of them is noise, and
+  // it was turning six provinces into six lines of the same words.
+  var seen1 = {}, seenC = {};
+  inv.places.forEach(function (p) { if (p.a0) seenC[p.a0] = 1; });
+  var manyCountries = Object.keys(seenC).length > 1;
   inv.places.forEach(function (p) {
-    var k = (p.a1 || '') + ' · ' + (p.a0 || '');
-    if (p.a1 && !seen1[k]) { seen1[k] = 1; inv.admin1.push(k); }
+    if (!p.a1) return;
+    var k = manyCountries ? p.a1 + ' · ' + (p.a0 || '') : p.a1;
+    if (!seen1[k]) { seen1[k] = 1; inv.admin1.push(k); }
   });
   for (i = 0; i < GAZ.airports.n; i++) {
     if (cellContains(cell, GAZ.airports.v[i])) {
@@ -1365,6 +1400,7 @@ function lookUp(cell, done) {
         var v = fromLonLat(h.lon, h.lat);
         kept.push({ title: h.title, pageid: h.pageid, lon: h.lon, lat: h.lat,
                     m: Math.round(h.dist), inside: cellContains(cell, v) });
+        // (lon/lat are kept so a row in the panel can move the map to it)
       }
       kept.sort(function (a, b) { return (b.inside - a.inside) || (a.m - b.m); });
       if (!DB.lookups) DB.lookups = {};
@@ -2440,6 +2476,33 @@ var elScaleName = document.getElementById('scalename');
 var elFoldState = document.getElementById('foldstate');
 var elLadder = document.getElementById('ladder');
 var elChain = document.getElementById('chain');
+// Which quarter of its parent a step took: three corners and the middle,
+// drawn the way childTri actually cuts them. There are exactly four, so
+// they are built once — the chain rebuilds on every cell change, and
+// re-parsing SVG on a drag costs a fifth of the frame rate.
+var QUARTER_GLYPH = [
+  'M5.5 0.5 L8 5 L3 5 Z',                          // 0 · the corner at A
+  'M8 5 L10.5 9.5 L5.5 9.5 Z',                     // 1 · the corner at B
+  'M3 5 L5.5 9.5 L0.5 9.5 Z',                      // 2 · the corner at C
+  'M3 5 L8 5 L5.5 9.5 Z'                           // 3 · the middle, point down
+].map(function (fill, i) {
+  return '<svg class="q" viewBox="0 0 11 10" aria-label="quarter ' + i + '">' +
+    '<path d="M0.5 9.5 L5.5 0.5 L10.5 9.5 Z" fill="none" stroke="currentColor" stroke-width="1"/>' +
+    '<path d="' + fill + '" fill="currentColor"/></svg>';
+});
+function quarterGlyph(i) { return QUARTER_GLYPH[i]; }
+// one listener for the whole breadcrumb, bound once
+elChain.addEventListener('click', function (ev) {
+  var el = ev.target.closest ? ev.target.closest('[data-up]') : null;
+  if (!el) return;
+  var c = focusCell(), n = +el.getAttribute('data-up');
+  if (n < 0) {
+    view.centre = null; view.centreTarget = null; view.zoomTarget = fitZoom(view.fold);
+    selection = null; hideActions(); wake(); return;
+  }
+  var to = makeCell(c.f, c.path.slice(0, n));
+  selection = to; lookAt(cellCentre(to), to.depth); wake();
+});
 var elActs = document.getElementById('acts');
 var elLegend = document.getElementById('reglegend');
 var elPanel = document.getElementById('panel');
@@ -2511,15 +2574,22 @@ function updateReadouts() {
   var key = cellId(c);
   if (key !== lastCellKey) {
     lastCellKey = key;
-    var html = '<span class="link">WORLD</span>';
-    html += '<span class="link sep">▸</span><span class="link' + (c.depth === 0 ? ' here' : '') + '">F' +
-      (c.f < 10 ? '0' : '') + c.f + '</span>';
-    var shown = c.path.length > 9 ? c.path.slice(c.path.length - 9) : c.path;
+    // The breadcrumb was digits nobody could read and nobody could click.
+    // A step down this address is a choice of one quarter out of four, so
+    // each step is drawn as that quarter — and tapping it goes back to it.
+    var html = '<span class="link" data-up="-1">WORLD</span>';
+    html += '<span class="link sep">▸</span><span class="link' + (c.depth === 0 ? ' here' : '') +
+      '" data-up="0">F' + (c.f < 10 ? '0' : '') + c.f + '</span>';
+    var shown = c.path.length > 8 ? c.path.slice(c.path.length - 8) : c.path;
     var skipped = c.path.length - shown.length;
-    if (skipped > 0) html += '<span class="link sep">▸</span><span class="link">+' + skipped + '</span>';
+    if (skipped > 0) {
+      html += '<span class="link sep">▸</span><span class="link" data-up="' + skipped +
+        '">+' + skipped + '</span>';
+    }
     for (var d = 0; d < shown.length; d++) {
       html += '<span class="link sep">▸</span><span class="link' +
-        (d === shown.length - 1 ? ' here' : '') + '">' + shown[d] + '</span>';
+        (d === shown.length - 1 ? ' here' : '') + '" data-up="' + (skipped + d + 1) + '">' +
+        quarterGlyph(shown[d]) + '</span>';
     }
     elChain.innerHTML = html;
   }
@@ -2661,6 +2731,172 @@ function doAction(kind, cell) {
 function updateActionsFor(cell) {
   if (!cell) return;
   showActions(cell, actAt.x, actAt.y);
+}
+
+/* ------------------------------------------------- the cell, drawn as itself
+ * The panel spent two thousand pixels describing a shape it never drew.
+ * ADDRESS, TOUCHES, INSIDE, CONTAINS, CORNER A, CORNER B, CORNER C — seven
+ * rows of text for a triangle with three corners, three neighbours and four
+ * children, all of which are positions and none of which is a list.
+ *
+ * So the cell is drawn: oriented the way it is on screen, subdivided into
+ * the four children it actually has, with the three neighbours sitting
+ * across the edges they actually share. Each carries what it holds, and
+ * each is somewhere you can go. The address structure is the navigation,
+ * which is what it was for.                                             */
+var miniInfo = null, elMini = null, elMiniCtx = null;
+function buildMini(cell) {
+  var kids = [], k;
+  for (k = 0; k < 4; k++) {
+    var kc = makeCell(cell.f, cell.path.concat([k]));
+    kids.push({ c: kc, places: 0, pop: 0, finds: findsIn(kc).length });
+  }
+  if (GAZ_STATE === 'ready' && cell.depth < MAX_DEPTH) {
+    for (k = 0; k < 4; k++) {
+      var inv = cellInventory(kids[k].c);
+      kids[k].places = inv.places.length;
+      kids[k].pop = inv.pop;
+      kids[k].top = inv.places.length ? inv.places[0].name : '';
+    }
+  }
+  var nb = neighbours(cell).map(function (n) { return { c: n, places: 0, finds: findsIn(n).length }; });
+  if (GAZ_STATE === 'ready') {
+    for (k = 0; k < 3; k++) nb[k].places = cellInventory(nb[k].c).places.length;
+  }
+  miniInfo = { cell: cell, kids: kids, nb: nb, hits: [] };
+}
+function miniCorners(cell, S) {
+  var C = cell.tri, fc = faceCorners[cell.f], P = [];
+  for (var k = 0; k < 3; k++) {
+    var w = C[k];
+    P.push(project(toView([fc[0][0] * w[0] + fc[1][0] * w[1] + fc[2][0] * w[2],
+                           fc[0][1] * w[0] + fc[1][1] * w[1] + fc[2][1] * w[2],
+                           fc[0][2] * w[0] + fc[1][2] * w[1] + fc[2][2] * w[2]]), S));
+  }
+  return P;
+}
+function inTri(p, a, b, c) {
+  var d = (b[1] - c[1]) * (a[0] - c[0]) + (c[0] - b[0]) * (a[1] - c[1]);
+  if (!d) return false;
+  var u = ((b[1] - c[1]) * (p[0] - c[0]) + (c[0] - b[0]) * (p[1] - c[1])) / d;
+  var v = ((c[1] - a[1]) * (p[0] - c[0]) + (a[0] - c[0]) * (p[1] - c[1])) / d;
+  return u >= 0 && v >= 0 && u + v <= 1;
+}
+function drawMini() {
+  if (!miniInfo || !elPanel.classList.contains('open')) return;
+  if (!elMini) elMini = document.getElementById('mini');
+  if (!elMini) return;
+  var w = elMini.clientWidth, h = elMini.clientHeight;
+  if (!w || !h) return;
+  if (elMini.width !== Math.round(w * DPR)) {
+    elMini.width = Math.round(w * DPR); elMini.height = Math.round(h * DPR);
+    elMiniCtx = elMini.getContext('2d');
+  }
+  var g = elMiniCtx || (elMiniCtx = elMini.getContext('2d'));
+  g.setTransform(DPR, 0, 0, DPR, 0, 0);
+  g.fillStyle = COL.paper; g.fillRect(0, 0, w, h);
+
+  // the cell as it is on screen, so the diagram and the map agree. If it is
+  // turned away, fall back to the canonical triangle rather than a sliver.
+  var P = miniCorners(miniInfo.cell, pxScale());
+  var area = Math.abs((P[1][0] - P[0][0]) * (P[2][1] - P[0][1]) -
+                      (P[2][0] - P[0][0]) * (P[1][1] - P[0][1]));
+  var facing = dot(qApply(view.q, faceNormal(miniInfo.cell.f)),
+                   sub([0, 0, CAM_D], toView(cellCentre(miniInfo.cell))));
+  if (facing <= 0 || area < 40) P = [[0, -1], [0.866, 0.5], [-0.866, 0.5]];
+
+  // Fit the whole composition — the cell plus the three neighbours reflected
+  // across its edges — rather than the cell alone, or most of the box is
+  // margin. Reflecting a corner over the opposite edge is exactly where the
+  // neighbour lies, so the bounds are known before anything is drawn.
+  var cx0 = (P[0][0] + P[1][0] + P[2][0]) / 3, cy0 = (P[0][1] + P[1][1] + P[2][1]) / 3;
+  var all = P.slice();
+  for (var q = 0; q < 3; q++) {
+    var qa = P[q], qb = P[(q + 1) % 3], qo = P[(q + 2) % 3];
+    all.push([qa[0] + qb[0] - qo[0], qa[1] + qb[1] - qo[1]]);
+  }
+  var bx0 = Math.min.apply(null, all.map(function (p) { return p[0]; }));
+  var bx1 = Math.max.apply(null, all.map(function (p) { return p[0]; }));
+  var by0 = Math.min.apply(null, all.map(function (p) { return p[1]; }));
+  var by1 = Math.max.apply(null, all.map(function (p) { return p[1]; }));
+  var k = Math.min((w - 20) / Math.max(1, bx1 - bx0), (h - 40) / Math.max(1, by1 - by0));
+  var mx = w / 2 - ((bx0 + bx1) / 2 - cx0) * k, my = h / 2 + 3 - ((by0 + by1) / 2 - cy0) * k;
+  var A = P.map(function (p) { return [mx + (p[0] - cx0) * k, my + (p[1] - cy0) * k]; });
+
+  miniInfo.hits = [];
+  function tri(a, b, c, fill, stroke, width) {
+    g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.lineTo(c[0], c[1]); g.closePath();
+    if (fill) { g.fillStyle = fill; g.fill(); }
+    if (stroke) { g.strokeStyle = stroke; g.lineWidth = width || 1; g.stroke(); }
+  }
+  function label(a, b, c, top, bottom, size, dim) {
+    var x = (a[0] + b[0] + c[0]) / 3, y = (a[1] + b[1] + c[1]) / 3;
+    g.textAlign = 'center';
+    g.font = (dim ? '' : '700 ') + (size || 10) + 'px ui-monospace,monospace';
+    g.fillStyle = dim ? COL.muted : COL.ink;
+    g.fillText(top, x, y + (bottom ? 0 : 3));
+    if (bottom) {
+      g.font = (size > 10 ? 8 : 7) + 'px ui-monospace,monospace';
+      g.fillStyle = COL.signal; g.fillText(bottom, x, y + 10);
+    }
+    g.textAlign = 'left';
+  }
+  var mid01 = [(A[0][0] + A[1][0]) / 2, (A[0][1] + A[1][1]) / 2];
+  var mid12 = [(A[1][0] + A[2][0]) / 2, (A[1][1] + A[2][1]) / 2];
+  var mid02 = [(A[0][0] + A[2][0]) / 2, (A[0][1] + A[2][1]) / 2];
+
+  // three neighbours, each across the edge it actually shares: the opposite
+  // corner reflected over that edge is exactly where it lies
+  for (var e = 0; e < 3; e++) {
+    var a = A[e], b = A[(e + 1) % 3], opp = A[(e + 2) % 3];
+    var m = [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2];
+    var refl = [2 * m[0] - opp[0], 2 * m[1] - opp[1]];
+    tri(a, b, refl, 'rgba(18,21,20,.045)', 'rgba(18,21,20,.35)', 1);
+    var nd = miniInfo.nb[e];
+    // A neighbour carries no digit. A digit here would read as a fifth
+    // child and the diagram would be lying about what is inside what — so
+    // what a neighbour shows is what is over there.
+    var nn = nd.finds || nd.places;
+    label(a, b, refl, nn ? String(nn) : '·', '', 10, true);
+    miniInfo.hits.push({ t: [a, b, refl], go: nd.c, kind: 'near' });
+  }
+
+  // the cell, and inside it the four children it actually has
+  tri(A[0], A[1], A[2], COL.ground, COL.ink, 2);
+  var kidTris = [[A[0], mid01, mid02], [mid01, A[1], mid12],
+                 [mid02, mid12, A[2]], [mid01, mid12, mid02]];
+  var deepest = miniInfo.cell.depth >= MAX_DEPTH;
+  for (var i = 0; i < 4; i++) {
+    var t = kidTris[i], kd = miniInfo.kids[i];
+    var n = kd.finds || kd.places;
+    var tint = n ? 'rgba(168,70,42,' + (0.08 + Math.min(0.22, n / 24)).toFixed(3) + ')' : null;
+    tri(t[0], t[1], t[2], tint, 'rgba(18,21,20,.5)', 1);
+    if (!deepest) {
+      label(t[0], t[1], t[2], String(i),
+            kd.finds ? String(kd.finds) : kd.places ? String(kd.places) : '', 11);
+      miniInfo.hits.push({ t: t, go: kd.c, kind: 'child' });
+    }
+  }
+  g.font = '700 8px ui-monospace,monospace';
+  g.fillStyle = COL.muted;
+  var anyFind = miniInfo.kids.some(function (x) { return x.finds; });
+  g.fillText('FOUR CHILDREN · THREE NEIGHBOURS · TAP TO GO', 8, 13);
+  g.fillStyle = COL.signal;
+  g.fillText(anyFind ? 'NUMBERS ARE ARTICLES FOUND' : 'NUMBERS ARE SETTLEMENTS', 8, h - 7);
+}
+function miniTap(ev) {
+  if (!miniInfo || !miniInfo.hits.length) return;
+  var r = elMini.getBoundingClientRect();
+  var p = [ev.clientX - r.left, ev.clientY - r.top];
+  for (var i = 0; i < miniInfo.hits.length; i++) {
+    var hh = miniInfo.hits[i];
+    if (!inTri(p, hh.t[0], hh.t[1], hh.t[2])) continue;
+    selection = hh.go;
+    lookAt(cellCentre(hh.go), hh.go.depth);
+    openWhere(hh.go);
+    wake();
+    return;
+  }
 }
 
 /* --------------------------------------------------------- letting go
@@ -3174,9 +3410,11 @@ function gazBlock(cell, km) {
   if (inv.airports.length) rows += '<div class="row"><b>AIRPORTS</b><span>' + esc(inv.airports.slice(0, 6).join(' · ')) + '</span></div>';
   if (inv.ports.length) rows += '<div class="row"><b>PORTS</b><span>' + esc(inv.ports.slice(0, 6).join(' · ')) + '</span></div>';
 
-  var top = inv.places.slice(0, 14).map(function (pl) {
-    return '<div class="row"><b>' + esc(pl.name.toUpperCase()) + '</b><span>' +
-      esc([pl.a1, pl.a0].filter(Boolean).join(', ')) +
+  var top = inv.places.slice(0, 8).map(function (pl) {
+    var where = [pl.a1, pl.a0].filter(Boolean).join(', ');
+    return '<div class="row" data-at="' + pl.lon + ',' + pl.lat + '" data-name="' + esc(pl.name) +
+      '" data-kind="place" data-where="' + esc(where) + '" data-pop="' + (pl.pop || 0) + '"><b>' +
+      esc(pl.name.toUpperCase()) + '</b><span>' + esc(where) +
       (pl.pop ? ' · ' + pl.pop.toLocaleString('en') : '') + '</span></div>';
   }).join('');
 
@@ -3209,9 +3447,12 @@ function lookupBlock(cell, km) {
   }
   var inside = got.items.filter(function (x) { return x.inside; });
   var near = got.items.filter(function (x) { return !x.inside; }).slice(0, 6);
+  // the name is a real link to the article; the row takes you to the ground
   var link = function (x, tag) {
-    return '<div class="row"><b><a href="https://en.wikipedia.org/?curid=' + x.pageid +
-      '" target="_blank" rel="noopener">' + esc(x.title) + '</a></b><span>' + tag + '</span></div>';
+    return '<div class="row" data-at="' + x.lon + ',' + x.lat + '" data-name="' + esc(x.title) +
+      '" data-kind="article" data-url="https://en.wikipedia.org/?curid=' + x.pageid +
+      '"><b><a href="https://en.wikipedia.org/?curid=' + x.pageid +
+      '" target="_blank" rel="noopener">' + esc(x.title) + '</a></b><span>' + tag + ' ▸</span></div>';
   };
   var found = head +
     '<p><b>' + inside.length + '</b> article' + (inside.length === 1 ? '' : 's') +
@@ -3255,8 +3496,12 @@ function nearBlock(cell, km) {
   var bits = [];
   function say(x) {
     if (!x || !x.name || !x.label) return;
-    bits.push('<div class="row"><b>' + x.label.toUpperCase() + '</b><span>' + esc(x.name) +
-      ' · ' + kmLabel(x.km) + (x.dir ? ' ' + x.dir : '') + '</span></div>');
+    var at = x.v ? lonlat(x.v) : null;
+    bits.push('<div class="row"' +
+      (at ? ' data-at="' + at[0].toFixed(4) + ',' + at[1].toFixed(4) + '" data-name="' +
+            esc(x.name) + '" data-kind="' + esc(x.label) + '"' : '') +
+      '><b>' + x.label.toUpperCase() + '</b><span>' + esc(x.name) +
+      ' · ' + kmLabel(x.km) + (x.dir ? ' ' + x.dir : '') + (at ? ' ▸' : '') + '</span></div>');
   }
   say(near.place); say(near.river); say(near.region);
   if (near.port && near.port.km < 400) say(near.port);
@@ -3465,7 +3710,10 @@ function summaryOf(title, cb) {
 function openCard(o, sx, sy) {
   if (!elCard) elCard = document.getElementById('card');
   cardFor = o;
-  var cell = cellAt(o.v, depthForZoom());
+  // when the card is opened by a jump, the zoom is still on its way, so the
+  // caller says what depth it is taking us to rather than the card reading a
+  // scale we have already left
+  var cell = cellAt(o.v, typeof o.depth === 'number' ? o.depth : depthForZoom());
   var out = o.url || 'https://en.wikipedia.org/w/index.php?search=' + encodeURIComponent(o.title);
   var osm = 'https://www.openstreetmap.org/?mlat=' + lonlat(o.v)[1].toFixed(5) +
             '&mlon=' + lonlat(o.v)[0].toFixed(5) + '#map=15/' +
@@ -3561,34 +3809,35 @@ function openThing(h) {
 
 function openWhere(cell) {
   var P = cellCorners(cell), km = cellEdgeKm(cell);
-  var nb = neighbours(cell);
   var slug = cellSlug(cell);
   var url = location.origin + location.pathname + '#' + slug;
-  var kids = '';
-  for (var k = 0; k < 4; k++) {
-    kids += (k ? ' ' : '') + cellSlug(makeCell(cell.f, cell.path.concat([k])));
-  }
+  var parent = cell.depth ? makeCell(cell.f, cell.path.slice(0, -1)) : null;
+  buildMini(cell);
   panel('WHERE · ' + slug,
-    '<p>A triangle that cannot be named, measured or sent to anyone is a container ' +
-    'with nothing in it. This is the address.</p>' +
-    '<div class="row"><b>ADDRESS</b><span>' + slug + '</span></div>' +
-    '<div class="row"><b>SCALE</b><span>' + SCALES[scaleOf(km)].n.toLowerCase() +
-      ' · depth ' + cell.depth + ' · one of ' + (cell.depth === 0 ? '20' : '20 × 4^' + cell.depth) + '</span></div>' +
-    '<div class="row"><b>EDGE</b><span>' + kmLabel(km) + '</span></div>' +
-    '<div class="row"><b>AREA</b><span>' + areaLabel(cellAreaKm2(cell)) + '</span></div>' +
+    '<canvas id="mini"></canvas>' +
+    (parent
+      ? '<div class="row" data-go="' + cellSlug(parent) + '"><b>INSIDE</b><span>' +
+        cellSlug(parent) + ' · ' + kmLabel(cellEdgeKm(parent)) + '</span></div>'
+      : '<div class="row"><b>INSIDE</b><span>the Earth · one of twenty</span></div>') +
+    // the measurements are still true and still here; they are just not the
+    // first thing you have to read to find out where you are
+    '<details><summary>' + SCALES[scaleOf(km)].n.toLowerCase() + ' · ' + kmLabel(km) +
+      ' edge · ' + areaLabel(cellAreaKm2(cell)) + '</summary>' +
+    '<div class="row"><b>SCALE</b><span>depth ' + cell.depth + ' · one of ' +
+      (cell.depth === 0 ? '20' : '20 × 4^' + cell.depth) + '</span></div>' +
     '<div class="row"><b>CENTRE</b><span>' + ll(cellCentre(cell)) + '</span></div>' +
     '<div class="row"><b>CORNER A</b><span>' + ll(P[0]) + '</span></div>' +
     '<div class="row"><b>CORNER B</b><span>' + ll(P[1]) + '</span></div>' +
     '<div class="row"><b>CORNER C</b><span>' + ll(P[2]) + '</span></div>' +
-    '<div class="row"><b>TOUCHES</b><span>' + nb.map(cellSlug).join(' ') + '</span></div>' +
-    (cell.depth ? '<div class="row"><b>INSIDE</b><span>' +
-      cellSlug(makeCell(cell.f, cell.path.slice(0, -1))) + '</span></div>' : '') +
-    '<div class="row"><b>CONTAINS</b><span>' + kids + '</span></div>' +
+    '<div class="row" id="wlink"><b style="word-break:break-all;font-weight:400">' + url +
+      '</b><span>copy</span></div></details>' +
     gazBlock(cell, km) +
-    '<p style="margin-top:12px">Link to this triangle:</p>' +
-    '<div class="row" id="wlink"><b style="word-break:break-all;font-weight:400">' + url + '</b><span>copy</span></div>' +
     '<button class="go" id="wSaid" style="margin-top:10px">SAID HERE</button> ' +
     (councilFor(km) ? '<button class="go ghost" id="wCouncil">COUNCIL</button>' : ''));
+  elMini = document.getElementById('mini');
+  elMiniCtx = null;
+  elMini.onclick = miniTap;
+  drawMini();
   document.getElementById('wSaid').onclick = function () { openThread(cell); };
   var wc = document.getElementById('wCouncil');
   if (wc) wc.onclick = function () {
@@ -3605,6 +3854,28 @@ function openWhere(cell) {
     el.onclick = function () {
       var c2 = cellFromSlug(el.getAttribute('data-go'));
       if (c2) { selection = c2; lookAt(cellCentre(c2), c2.depth); openWhere(c2); }
+    };
+  });
+  // A name in the panel that does not take you to the thing it names is
+  // just ink. Every row that stands for a place on the ground now moves the
+  // map to it, holds it, and reads it where it is.
+  elPanel.querySelectorAll('[data-at]').forEach(function (el) {
+    el.style.cursor = 'pointer';
+    el.onclick = function (ev) {
+      if (ev.target.tagName === 'A') return;             // a real link stays a link
+      var ll2 = el.getAttribute('data-at').split(',');
+      var v = fromLonLat(parseFloat(ll2[0]), parseFloat(ll2[1]));
+      var d = clamp(Math.max(cell.depth, depthForZoom()), 4, MAX_DEPTH);
+      var c2 = cellAt(v, d);
+      selection = c2;
+      lookAt(v, d);
+      closePanel();
+      var st = document.getElementById('stage').getBoundingClientRect();
+      openCard({ title: el.getAttribute('data-name') || ll2[2] || '', kind: el.getAttribute('data-kind') || 'place',
+                 v: v, depth: d, where: el.getAttribute('data-where') || '',
+                 pop: parseInt(el.getAttribute('data-pop') || '0', 10),
+                 url: el.getAttribute('data-url') || '' }, st.width / 2, st.height * 0.42);
+      wake();
     };
   });
   var row = document.getElementById('wlink');
@@ -3962,6 +4233,7 @@ function step() {
 function frame() {
   var moving = step();
   render();
+  drawMini();
   updateReadouts();
   requestAnimationFrame(frame);
 }

@@ -205,6 +205,12 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #panel .nom span{color:var(--ink);font-size:9px}
 #panel .nom em{color:var(--muted);font-size:8px;letter-spacing:.08em;margin-top:2px}
 #panel .nom .go{font-size:8px;padding:3px 6px;margin-top:4px;letter-spacing:.1em}
+/* a guess must not look like a citation. Dashed, grey, and it says so. */
+#panel .nom.guess{border-left:2px dashed var(--muted);background:rgba(18,21,20,.04)}
+#panel .nom.guess a{color:var(--ink)}
+#panel .nom.guess em b{color:var(--signal)}
+#panel .topic q{display:block;quotes:none;font-size:10px;line-height:1.45;color:var(--ink);
+  margin:3px 0 1px;padding-left:7px;border-left:2px solid var(--signal)}
 #panel .go{
   font:inherit;font-size:11px;font-weight:700;letter-spacing:.14em;cursor:pointer;
   border:1.5px solid var(--ink);background:var(--ink);color:var(--ground);padding:9px 14px;margin-top:6px
@@ -1491,6 +1497,132 @@ if (!DB.areas) DB.areas = {};
 var PEOPLE_STATE = {};
 var WD = 'https://www.wikidata.org/w/api.php?origin=*&format=json&formatversion=2&';
 var WP = 'https://en.wikipedia.org/w/api.php?origin=*&format=json&formatversion=2&';
+var WDQS = 'https://query.wikidata.org/sparql?format=json&query=';
+var OVERPASS = 'https://overpass-api.de/api/interpreter?data=';
+
+/* Why a triangle used to come back empty, and what fixed it.
+ *
+ * Wikipedia's geosearch caps its radius at ten kilometres. That is a hard
+ * limit of the endpoint, not a setting — so a 441 km triangle was being
+ * answered by a disc covering about a twentieth of one per cent of it, and a
+ * 7054 km face by a rounding error. The panel said so honestly, which is not
+ * the same as being useful. Anywhere without a town in that particular disc
+ * came back with nothing, and the emptiness was an artefact of the query
+ * rather than a fact about the ground.
+ *
+ * Wikidata's query service has no such cap: wikibase:around takes any radius
+ * and returns everything with coordinates inside it, with the sitelink count
+ * already attached. It answers cross-origin. So it is the primary source
+ * now, and the capped endpoint is one of the fallbacks rather than the only
+ * door.
+ *
+ * The ladder, in order, and it never runs out:
+ *
+ *   1  Wikidata query service   any radius, ranked, people and places
+ *   2  Wikipedia geosearch      ten km, sampled at several points across
+ *                               the triangle rather than only its middle
+ *   3  OpenStreetMap/Overpass   every named settlement in the box, far
+ *                               denser than either, but with no notability
+ *   4  the compiled gazetteer   offline, in the page, cannot fail
+ *   5  a model, if you supply a key, for what the sources leave thin
+ *
+ * Layers 1 to 4 need no key and no account. Layer 5 needs yours, and what it
+ * produces is stamped as inferred wherever it appears.                    */
+function sparql(q, cb) {
+  getJSON(WDQS + encodeURIComponent(q), function (err, j) {
+    if (err) return cb(err);
+    var rows = (j && j.results && j.results.bindings) || [];
+    cb(null, rows);
+  });
+}
+function wktPoint(v) {
+  var p = lonlat(v);
+  return 'Point(' + p[0].toFixed(5) + ' ' + p[1].toFixed(5) + ')';
+}
+// everything with coordinates inside a real radius, ranked by how many
+// language editions carry it
+function wdPlacesAround(v, km, limit, cb) {
+  sparql('SELECT ?x ?xLabel ?xDescription ?links ?coord WHERE {' +
+    ' SERVICE wikibase:around { ?x wdt:P625 ?coord .' +
+    ' bd:serviceParam wikibase:center "' + wktPoint(v) + '"^^geo:wktLiteral .' +
+    ' bd:serviceParam wikibase:radius "' + Math.max(1, Math.round(km)) + '" . }' +
+    ' ?x wikibase:sitelinks ?links . FILTER(?links > 0)' +
+    ' SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . } }' +
+    ' ORDER BY DESC(?links) LIMIT ' + (limit || 40), function (err, rows) {
+    if (err) return cb(err);
+    cb(null, rows.map(function (r) {
+      var m = /Point\(([-\d.]+) ([-\d.]+)\)/.exec((r.coord && r.coord.value) || '');
+      return { qid: (r.x.value || '').split('/').pop(),
+               title: r.xLabel ? r.xLabel.value : '',
+               what: r.xDescription ? r.xDescription.value : '',
+               sitelinks: +(r.links && r.links.value || 0),
+               v: m ? fromLonLat(+m[1], +m[2]) : v };
+    }).filter(function (x) { return x.title && !/^Q\d+$/.test(x.title); }));
+  });
+}
+// the same radius, but asking for humans the record ties to anything in it
+function wdPeopleAround(v, km, limit, cb) {
+  sparql('SELECT ?p ?pLabel ?pDescription ?links ?coord WHERE {' +
+    ' SERVICE wikibase:around { ?place wdt:P625 ?coord .' +
+    ' bd:serviceParam wikibase:center "' + wktPoint(v) + '"^^geo:wktLiteral .' +
+    ' bd:serviceParam wikibase:radius "' + Math.max(1, Math.round(km)) + '" . }' +
+    ' ?p wdt:P31 wd:Q5 ; (wdt:P19|wdt:P20|wdt:P937) ?place .' +
+    ' ?p wikibase:sitelinks ?links .' +
+    ' SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . } }' +
+    ' ORDER BY DESC(?links) LIMIT ' + (limit || 60), function (err, rows) {
+    if (err) return cb(err);
+    var seen = {}, out = [];
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i], qid = (r.p.value || '').split('/').pop();
+      if (seen[qid]) continue;
+      seen[qid] = 1;
+      var m = /Point\(([-\d.]+) ([-\d.]+)\)/.exec((r.coord && r.coord.value) || '');
+      var name = r.pLabel ? r.pLabel.value : '';
+      if (!name || /^Q\d+$/.test(name)) continue;
+      out.push({ qid: qid, name: name, title: name,
+                 what: r.pDescription ? r.pDescription.value : '',
+                 sitelinks: +(r.links && r.links.value || 0), views: 0,
+                 v: m ? fromLonLat(+m[1], +m[2]) : v, from: 'wikidata' });
+    }
+    cb(null, out);
+  });
+}
+// Ten kilometres is all geosearch will give, so ask at several points
+// instead of one. The triangle's own lattice supplies them, which keeps the
+// sampling honest about what it did and did not cover.
+function latticePoints(cell, n) {
+  var t = cell.tri, out = [], k = Math.max(1, Math.min(6, Math.round(Math.sqrt(n))));
+  for (var a = 0; a <= k; a++) {
+    for (var b = 0; a + b <= k; b++) {
+      var c = k - a - b;
+      var w = [(a + 0.34) / (k + 1), (b + 0.33) / (k + 1), (c + 0.33) / (k + 1)];
+      var s = w[0] + w[1] + w[2];
+      out.push(baryPoint(cell.f, [
+        (t[0][0] * w[0] + t[1][0] * w[1] + t[2][0] * w[2]) / s,
+        (t[0][1] * w[0] + t[1][1] * w[1] + t[2][1] * w[2]) / s,
+        (t[0][2] * w[0] + t[1][2] * w[1] + t[2][2] * w[2]) / s]));
+    }
+  }
+  return out.slice(0, n);
+}
+function overpassIn(cell, cb) {
+  var P = cellCorners(cell).map(lonlat);
+  var s = Math.min(P[0][1], P[1][1], P[2][1]), n = Math.max(P[0][1], P[1][1], P[2][1]);
+  var w = Math.min(P[0][0], P[1][0], P[2][0]), e = Math.max(P[0][0], P[1][0], P[2][0]);
+  if (e - w > 90 || n - s > 90) return cb('too large for a bounding box');
+  getJSON(OVERPASS + encodeURIComponent(
+    '[out:json][timeout:20];node["place"~"city|town|village"]' +
+    '(' + s.toFixed(4) + ',' + w.toFixed(4) + ',' + n.toFixed(4) + ',' + e.toFixed(4) + ');out 60;'),
+    function (err, j) {
+      if (err) return cb(err);
+      var el = (j && j.elements) || [];
+      cb(null, el.map(function (x) {
+        return { qid: x.tags && x.tags.wikidata, title: (x.tags && x.tags.name) || '',
+                 what: (x.tags && x.tags.place) || '', sitelinks: 0,
+                 v: fromLonLat(x.lon, x.lat), from: 'osm' };
+      }).filter(function (x) { return x.title; }));
+    });
+}
 
 function getJSON(url, cb) {
   fetch(url, { credentials: 'omit' })
@@ -1500,24 +1632,31 @@ function getJSON(url, cb) {
 }
 // the places inside this cell, with the Wikidata id each one has
 function placesWithIds(cell, cb) {
-  var p = lonlat(cellCentre(cell));
-  var want = Math.round(cellEdgeKm(cell) * 1000 * 0.62);
-  var radius = Math.max(500, Math.min(10000, want));
-  getJSON(WP + 'action=query&generator=geosearch&ggscoord=' + p[1].toFixed(5) + '%7C' +
-          p[0].toFixed(5) + '&ggsradius=' + radius + '&ggslimit=50' +
-          '&prop=pageprops|coordinates&ppprop=wikibase_item', function (err, j) {
-    if (err) return cb(err);
-    var out = [];
-    var pages = (j && j.query && j.query.pages) || [];
-    for (var i = 0; i < pages.length; i++) {
-      var pg = pages[i];
-      var qid = pg.pageprops && pg.pageprops.wikibase_item;
-      if (!qid) continue;
-      var co = pg.coordinates && pg.coordinates[0];
-      if (co && !cellContains(cell, fromLonLat(co.lon, co.lat))) continue;
-      out.push({ qid: qid, title: pg.title, v: co ? fromLonLat(co.lon, co.lat) : cellCentre(cell) });
-    }
-    cb(null, out);
+  // several samples across the triangle, not one at its middle: ten km is
+  // all this endpoint will give, so the only way to cover ground is to ask
+  // in more than one place
+  var pts = latticePoints(cell, cellEdgeKm(cell) > 40 ? 10 : 1);
+  var out = [], seen = {}, left = pts.length, anyErr = 0;
+  pts.forEach(function (v) {
+    var p = lonlat(v);
+    getJSON(WP + 'action=query&generator=geosearch&ggscoord=' + p[1].toFixed(5) + '%7C' +
+            p[0].toFixed(5) + '&ggsradius=10000&ggslimit=50' +
+            '&prop=pageprops|coordinates&ppprop=wikibase_item', function (err, j) {
+      if (err) anyErr++;
+      else {
+        var pages = (j && j.query && j.query.pages) || [];
+        for (var i = 0; i < pages.length; i++) {
+          var pg = pages[i];
+          var qid = pg.pageprops && pg.pageprops.wikibase_item;
+          if (!qid || seen[qid]) continue;
+          var co = pg.coordinates && pg.coordinates[0];
+          if (co && !cellContains(cell, fromLonLat(co.lon, co.lat))) continue;
+          seen[qid] = 1;
+          out.push({ qid: qid, title: pg.title, v: co ? fromLonLat(co.lon, co.lat) : v });
+        }
+      }
+      if (--left === 0) cb(anyErr === pts.length ? 'every sample failed' : null, out);
+    });
   });
 }
 // humans that Wikidata ties to any of those places, by birth, death or work
@@ -1589,8 +1728,21 @@ function scorePerson(p) {
   var attn = Math.min(1, Math.log10((p.views || 0) + 1) / 6.5);
   return local * 0.55 + reach * 0.30 + attn * 0.15;
 }
-// one rung: everybody this exact cell knows about
+// one rung: everybody this exact cell knows about. The query service first,
+// because it can cover the whole triangle; the capped endpoint only if that
+// fails or comes back empty.
 function peopleAt(cell, cb) {
+  var reach = cellEdgeKm(cell) * 0.62;
+  wdPeopleAround(cellCentre(cell), reach, 60, function (err, people) {
+    if (!err && people && people.length) {
+      var inside = people.filter(function (p) { return cellContains(cell, p.v); });
+      var use = inside.length ? inside : people;
+      return viewsFor(use, function (_, done) { cb(null, done || use); });
+    }
+    peopleViaGeosearch(cell, cb);
+  });
+}
+function peopleViaGeosearch(cell, cb) {
   placesWithIds(cell, function (e1, places) {
     if (e1) return cb(e1);
     humansAt(places, function (e2, qids) {
@@ -1661,6 +1813,106 @@ function recruit(cell, want, done) {
  * still be told from a name a person typed, and typing over it clears the
  * stamp. Without that stamp auto-claiming would launder a citation into a
  * participant, which is the one thing this must not do.                  */
+/* -------------------------------------------------- the last rung: a model
+ * Four sources answer without a key and cover most of the planet. What they
+ * cannot do is the part of a syntegration that is not a lookup at all: the
+ * statements of importance — what is actually at issue on this ground —
+ * because no database holds those.
+ *
+ * So a key you supply, kept in this browser and sent nowhere but OpenAI,
+ * fills what is thin: a statement of importance for each topic that has
+ * only a place name, and candidate people for seats the record left empty.
+ * It is given the ground and told to work from it.
+ *
+ * Everything it produces is stamped `inferred`, in a different colour, on
+ * every row it touches. An inferred name is a guess about who matters here,
+ * not a citation and not a participant, and the moment those three become
+ * indistinguishable the council is worthless. The stamp is the feature.
+ *
+ * It runs only when the free sources have already been tried and only when
+ * a key is present. No key, no call, and the bench is still full from the
+ * gazetteer.                                                              */
+var INFER_STATE = {};
+function groundBrief(cell) {
+  var inv = GAZ_STATE === 'ready' ? cellInventory(cell) : null;
+  var rec = peopleFor(cell);
+  return [
+    'Triangle ' + cellSlug(cell) + ', ' + kmLabel(cellEdgeKm(cell)) + ' on a side, centred ' +
+      ll(cellCentre(cell)) + ', area ' + areaLabel(cellAreaKm2(cell)) + '.',
+    inv && inv.countries.length ? 'Governed by ' + inv.countries.join(' and ') + '.' : '',
+    inv && inv.admin1.length ? 'Provinces: ' + inv.admin1.slice(0, 6).join(', ') + '.' : '',
+    inv && inv.places.length ? 'Settlements: ' + inv.places.slice(0, 12).map(function (x) {
+      return x.name + (x.pop ? ' (' + x.pop.toLocaleString('en') + ')' : ''); }).join(', ') + '.' : '',
+    inv && inv.rivers.length ? 'Rivers: ' + inv.rivers.slice(0, 6).join(', ') + '.' : '',
+    inv && inv.marine.length ? 'Water: ' + inv.marine.slice(0, 4).join(', ') + '.' : '',
+    rec ? 'Already found in the record: ' + rec.list.slice(0, 10).map(function (x) {
+      return x.name; }).join(', ') + '.' : ''
+  ].filter(Boolean).join(' ');
+}
+function askModel(sys, user, cb) {
+  if (!DB.key) return cb('no key');
+  fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + DB.key },
+    body: JSON.stringify({ model: DB.model || 'gpt-4o-mini', temperature: 0.2,
+      response_format: { type: 'json_object' },
+      messages: [{ role: 'system', content: sys }, { role: 'user', content: user }] })
+  }).then(function (r) {
+    if (!r.ok) return r.text().then(function (t) { throw new Error(r.status + ' ' + t.slice(0, 140)); });
+    return r.json();
+  }).then(function (j) {
+    var txt = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+    if (!txt) throw new Error('the model returned nothing');
+    cb(null, JSON.parse(txt));
+  }).catch(function (e) { cb(String(e && e.message || e)); });
+}
+// statements of importance, which is where a syntegration actually starts
+function inferTopics(cell, topics, cb) {
+  var thin = [];
+  for (var i = 0; i < topics.length; i++) {
+    if (!topics[i].issue) thin.push({ i: i, at: topics[i].title });
+  }
+  if (!thin.length) return cb(null, topics);
+  askModel(
+    'You are preparing a Team Syntegrity session about one piece of ground. For each named ' +
+    'location you are given, write ONE statement of importance: a specific, contestable question ' +
+    'or tension that people who live and work there would actually argue about — water, land, ' +
+    'transport, work, memory, jurisdiction. It must be about that place, not a generic civic ' +
+    'topic. Twelve to twenty words. No preamble. If you do not know the place, say what is at ' +
+    'issue for somewhere of that kind in that region, and set "sure": false. ' +
+    'Reply as JSON: {"topics":[{"i":<index>,"issue":"...","sure":true|false}]}',
+    'GROUND: ' + groundBrief(cell) + '\n\nLOCATIONS:\n' +
+      thin.map(function (t) { return t.i + ': ' + t.at; }).join('\n'),
+    function (err, j) {
+      if (err) return cb(err);
+      var got = (j && j.topics) || [];
+      for (var k = 0; k < got.length; k++) {
+        var t = topics[got[k].i];
+        if (t && got[k].issue) { t.issue = got[k].issue; t.sure = got[k].sure !== false; t.inferred = true; }
+      }
+      cb(null, topics);
+    });
+}
+function inferPeople(cell, need, cb) {
+  askModel(
+    'You are filling seats in a Team Syntegrity council for one piece of ground. Name real ' +
+    'people connected to it — born, worked, wrote, built, organised or governed there — across ' +
+    'history, not only the famous. For each give a one-line reason naming the connection. ' +
+    'Never invent a person. If you are not confident someone is real and connected, leave them ' +
+    'out rather than filling the list. ' +
+    'Reply as JSON: {"people":[{"name":"...","what":"...","why":"...","sure":true|false}]}',
+    'GROUND: ' + groundBrief(cell) + '\n\nName up to ' + need + ' people.',
+    function (err, j) {
+      if (err) return cb(err);
+      var got = (j && j.people) || [];
+      cb(null, got.filter(function (p) { return p && p.name; }).map(function (p, i) {
+        return { qid: 'inferred:' + cellSlug(cell) + ':' + i, name: p.name, title: p.name,
+                 what: p.what || '', why: p.why || '', sure: p.sure !== false,
+                 sitelinks: 0, views: 0, up: 0, km: cellEdgeKm(cell), at: cellSlug(cell),
+                 from: 'model', v: cellCentre(cell), score: 0.2 };
+      }));
+    });
+}
 function seatSource(slug, i) { return (DB.seatSrc || {})[seatKey(slug, i)] || null; }
 // asked once per cell, on open, and never again unless it failed or you ask
 function autoCouncil(cell, seat, world) {
@@ -1675,6 +1927,45 @@ function autoCouncil(cell, seat, world) {
     recruitTopics(cell, seat, world, function () {
       if (councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
     });
+  }
+  // The last rung runs once the free ones have been tried, only if a key is
+  // here, and only for what is still thin. It waits for them to be *done*,
+  // not for them to have succeeded — the first version tested `!PEOPLE_STATE`,
+  // which is false once a rung has failed, so the model was locked out by
+  // exactly the emptiness it exists to fill.
+  if (DB.key && INFER_STATE[slug] === undefined &&
+      PEOPLE_STATE[slug] !== 'busy' && TOPIC_STATE[slug] !== 'busy') {
+    var got = (DB.topics || {})[slug];
+    var rec2 = peopleFor(cell);
+    var shortBy = seat.struts.length - (rec2 ? rec2.list.length : 0);
+    var needTopics = got && got.list.some(function (t) { return t && !t.issue; });
+    if (!got || (!needTopics && shortBy <= 0)) return;
+    INFER_STATE[slug] = 'busy';
+    var pending = (needTopics ? 1 : 0) + (shortBy > 0 ? 1 : 0);
+    var settle = function () {
+      if (--pending) return;
+      INFER_STATE[slug] = 'done';
+      commit();
+      if (councilCell && cellSlug(councilCell) === slug) { autoSeat(cell, seat, world); openCouncil(cell); }
+      wake();
+    };
+    if (needTopics) {
+      inferTopics(cell, got.list, function (err) {
+        if (err) INFER_STATE[slug] = 'error:' + err;
+        settle();
+      });
+    }
+    if (shortBy > 0) {
+      inferPeople(cell, shortBy + 2, function (err, people) {
+        if (err) { INFER_STATE[slug] = 'error:' + err; return settle(); }
+        var rec3 = DB.people[slug] || { t: Date.now(), chain: [], errs: 0, list: [] };
+        var have = {};
+        rec3.list.forEach(function (x) { have[x.name.toLowerCase()] = 1; });
+        people.forEach(function (p) { if (!have[p.name.toLowerCase()]) rec3.list.push(p); });
+        DB.people[slug] = rec3;
+        settle();
+      });
+    }
   }
 }
 function autoSeat(cell, seat, world) {
@@ -1691,7 +1982,9 @@ function autoSeat(cell, seat, world) {
     DB.seats[key] = nominees[i].name;
     DB.seatSrc[key] = { qid: nominees[i].qid, at: nominees[i].at, up: nominees[i].up,
                         km: nominees[i].km, what: nominees[i].what, title: nominees[i].title,
-                        sitelinks: nominees[i].sitelinks, views: nominees[i].views || 0 };
+                        sitelinks: nominees[i].sitelinks, views: nominees[i].views || 0,
+                        from: nominees[i].from || 'wikidata', why: nominees[i].why || '',
+                        sure: nominees[i].sure !== false };
     n++;
   }
   if (n) commit();
@@ -1717,6 +2010,9 @@ function peopleFor(cell) {
  * So a topic is never blank either, at any scale, with or without a
  * network.                                                               */
 var TOPIC_STATE = {};
+var SOURCE_NAME = { wikidata: 'wikidata', wikipedia: 'wikipedia', osm: 'openstreetmap',
+                    gazetteer: 'the compiled gazetteer', coordinate: 'coordinate only',
+                    model: 'inferred by the model' };
 function topicPoints(cell, seat, world) {
   if (world) return DATA.ico.vertexLonLat.map(function (p) { return fromLonLat(p[0], p[1]); });
   return councilPoints(cell, seat);
@@ -1736,35 +2032,55 @@ function recruitTopics(cell, seat, world, done) {
   TOPIC_STATE[slug] = 'busy';
   var pts = topicPoints(cell, seat, world);
   var out = new Array(pts.length), left = pts.length, anyNet = false;
-  var radius = Math.max(1000, Math.min(10000, Math.round(cellEdgeKm(cell) * 1000 * 0.3)));
+  // a topic point is a point, so the reach is a fraction of the cell rather
+  // than a fixed disc — at 7054 km that is hundreds of kilometres, which the
+  // query service will answer and geosearch never could
+  var km = Math.max(2, cellEdgeKm(cell) * 0.22);
   pts.forEach(function (v, i) {
     out[i] = offlineTopic(v);            // the floor, before anything is asked
-    var ll2 = lonlat(v);
-    getJSON(WP + 'action=query&generator=geosearch&ggscoord=' + ll2[1].toFixed(5) + '%7C' +
-            ll2[0].toFixed(5) + '&ggsradius=' + radius + '&ggslimit=10&prop=pageviews|description',
-      function (err, j) {
-        if (!err) {
-          var pages = (j && j.query && j.query.pages) || [], best = null;
+    // 1 · the query service, any radius
+    wdPlacesAround(v, km, 6, function (e1, rows) {
+      if (!e1 && rows && rows.length) {
+        out[i] = { title: rows[0].title, what: rows[0].what, qid: rows[0].qid,
+                   sitelinks: rows[0].sitelinks, from: 'wikidata' };
+        anyNet = true;
+        return finishOne();
+      }
+      // 2 · the capped endpoint, at this point
+      var ll2 = lonlat(v);
+      getJSON(WP + 'action=query&generator=geosearch&ggscoord=' + ll2[1].toFixed(5) + '%7C' +
+              ll2[0].toFixed(5) + '&ggsradius=10000&ggslimit=10&prop=pageviews|description',
+        function (e2, j) {
+          var pages = (!e2 && j && j.query && j.query.pages) || [], best = null;
           for (var k = 0; k < pages.length; k++) {
             var pv = pages[k].pageviews || {}, sum = 0;
             for (var d in pv) sum += pv[d] || 0;
             if (!best || sum > best.views) {
               best = { title: pages[k].title, what: pages[k].description || '',
-                       views: sum, km: 0, from: 'wikipedia' };
+                       views: sum, from: 'wikipedia' };
             }
           }
-          if (best) { out[i] = best; anyNet = true; }
-        }
-        if (--left === 0) {
-          if (!DB.topics) DB.topics = {};
-          DB.topics[slug] = { t: Date.now(), net: anyNet, list: out };
-          commit();
-          TOPIC_STATE[slug] = null;
-          done();
-          wake();
-        }
-      });
+          if (best) { out[i] = best; anyNet = true; return finishOne(); }
+          // 3 · OpenStreetMap, which knows every village and no fame at all
+          overpassIn(cellAt(v, Math.min(MAX_DEPTH, cell.depth + 2)), function (e3, osm) {
+            if (!e3 && osm && osm.length) {
+              out[i] = { title: osm[0].title, what: osm[0].what, from: 'osm' };
+              anyNet = true;
+            }
+            finishOne();                 // 4 · the gazetteer floor already set
+          });
+        });
+    });
   });
+  function finishOne() {
+    if (--left) return;
+    if (!DB.topics) DB.topics = {};
+    DB.topics[slug] = { t: Date.now(), net: anyNet, list: out };
+    commit();
+    TOPIC_STATE[slug] = null;
+    done();
+    wake();
+  }
 }
 /* Geometry does the assignment, not a list order. Every seat is a strut
  * between two topics, which are two real points on this ground; a person is
@@ -4363,12 +4679,34 @@ function recruitBlock(cell, seat, rec) {
       : '<p style="opacity:.7">Asking the record…</p>');
   }
   var rungs = rec.chain.map(function (r) { return kmLabel(r.km); }).join(' → ');
+  var byWho = {};
+  rec.list.forEach(function (x) { byWho[x.from || 'wikidata'] = (byWho[x.from || 'wikidata'] || 0) + 1; });
+  var mix = Object.keys(byWho).map(function (k) {
+    return byWho[k] + ' ' + (SOURCE_NAME[k] || k); }).join(' · ');
   return head +
-    '<div class="row"><b>FOUND</b><span>' + rec.list.length + ' people</span></div>' +
+    '<div class="row"><b>FOUND</b><span>' + rec.list.length + ' people · ' + esc(mix) + '</span></div>' +
     '<div class="row"><b>ASKED</b><span>' + rungs + '</span></div>' +
     '<div class="row"><b>WHEN</b><span>' + whenLabel(rec.t) + '</span></div>' +
     '<button class="go ghost" id="cFind" style="margin-top:8px">ASK AGAIN</button> ' +
     '<button class="go ghost" id="cClearSeats">CLEAR THE FILLED SEATS</button>';
+}
+// The four free rungs need nothing. This one needs your key, and it says
+// exactly what it will and will not be used for.
+function modelBlock(cell, seat) {
+  var slug = cellSlug(cell), st = INFER_STATE[slug];
+  return '<p style="margin-top:14px">Four sources answer without a key: the Wikidata query ' +
+    'service at any radius, Wikipedia geosearch sampled across the triangle, OpenStreetMap, and ' +
+    'the gazetteer compiled into this page. What none of them holds is the part of a syntegration ' +
+    'that is not a lookup — <b>what is actually at issue here</b>. A key of yours fills that, and ' +
+    'names candidates for seats the record left empty. It is kept in this browser, sent nowhere ' +
+    'but OpenAI, and <b>everything it produces is stamped as inferred</b> wherever it appears.</p>' +
+    (st === 'busy' ? '<p style="opacity:.7">Asking the model…</p>' : '') +
+    (typeof st === 'string' && st.indexOf('error:') === 0
+      ? '<p style="color:var(--signal)">' + esc(st.slice(6)) + '</p>' : '') +
+    '<input id="cKey" type="password" placeholder="openai api key, kept in this browser only" value="' +
+      esc(DB.key || '') + '">' +
+    '<input id="cModel" placeholder="model" value="' + esc(DB.model || 'gpt-4o-mini') + '">' +
+    '<button class="go ghost" id="cInfer">FILL WHAT IS THIN</button>';
 }
 function openCouncil(cell) {
   var km = cellEdgeKm(cell);
@@ -4407,8 +4745,10 @@ function openCouncil(cell) {
           encodeURIComponent(tp.title.replace(/ /g, '_')) + '" target="_blank" rel="noopener">' +
           esc(tp.title) + '</a>'
         : esc(tp.title)) + '</b>' +
+      (tp.issue ? '<q>' + esc(tp.issue) + (tp.sure === false ? ' <b>·</b> uncertain' : '') + '</q>' : '') +
       '<em>' + esc(tp.what || (tp.from === 'gazetteer' ? 'nearest named thing' : 'coordinate')) +
-      ' · ' + where + '</em>' +
+      ' · ' + where + ' · ' + SOURCE_NAME[tp.from || 'coordinate'] +
+      (tp.inferred ? ' · issue inferred by the model' : '') + '</em>' +
       '<i>' + kinds.join(' · ') + '</i></div>';
   }).join('');
   // A seat carries the name in it and where the name came from. Filled from
@@ -4429,14 +4769,23 @@ function openCouncil(cell) {
       (st.register ? ' · ' + st.register.toLowerCase() : '') + '</em>' +
       (ground ? '<em>speaks for ' + esc(ground) + '</em>' : '') +
       (src
-        ? '<div class="nom"><a href="https://en.wikipedia.org/wiki/' +
-          encodeURIComponent((src.title || held).replace(/ /g, '_')) + '" target="_blank" rel="noopener">' +
-          esc(held) + '</a>' +
+        ? '<div class="nom' + (src.from === 'model' ? ' guess' : '') + '">' +
+          // an inferred name has no article to point at, so it points at a
+          // search — the href has to match what the stamp claims it is
+          '<a href="' + (src.from === 'model'
+            ? 'https://en.wikipedia.org/w/index.php?search=' + encodeURIComponent(held)
+            : 'https://en.wikipedia.org/wiki/' +
+              encodeURIComponent((src.title || held).replace(/ /g, '_'))) +
+          '" target="_blank" rel="noopener">' + esc(held) + '</a>' +
           (src.what ? ' <span>' + esc(src.what) + '</span>' : '') +
-          '<em>from the record · ' + (src.up ? 'found ' + kmLabel(src.km) + ' up' : 'found on this ground') +
-          ' · ' + src.sitelinks + ' languages' +
-          (src.views ? ' · ' + src.views.toLocaleString('en') + ' reads' : '') +
-          ' · not a person who agreed to sit</em></div>'
+          (src.from === 'model'
+            ? '<em><b>inferred by the model</b>' + (src.sure === false ? ' · and it is unsure' : '') +
+              ' · not a citation, not checked' + (src.why ? ' · ' + esc(src.why) : '') +
+              ' · the link is a search, not a source</em>'
+            : '<em>from the record · ' + (src.up ? 'found ' + kmLabel(src.km) + ' up' : 'found on this ground') +
+              ' · ' + src.sitelinks + ' languages' +
+              (src.views ? ' · ' + src.views.toLocaleString('en') + ' reads' : '') +
+              ' · not a person who agreed to sit</em>') + '</div>'
         : held ? '<div class="nom" style="border-color:var(--ink);background:rgba(18,21,20,.05)">' +
           '<em style="color:var(--ink)">claimed by hand</em></div>' : '') + '</div>' +
       '<div><input data-seat="' + i + '" placeholder="unclaimed" value="' + esc(held) + '">' +
@@ -4489,6 +4838,7 @@ function openCouncil(cell) {
     'A seat is held by whoever types their name into it — this invents nobody. ' +
     'Your critic is the seat opposite yours, and it is a person, not a category.</p>' +
     recruitBlock(cell, seat, rec) +
+    modelBlock(cell, seat) +
     seats +
     '<div class="kbd" style="margin-top:10px">' +
     DATA.council.registers.map(function (r) {
@@ -4554,6 +4904,18 @@ function openCouncil(cell) {
     recruit(cell, seat.struts.length, function () {
       autoSeat(cell, seat, world); openCouncil(cell);
     });
+    openCouncil(cell);
+  };
+  var ck = document.getElementById('cKey'), cm = document.getElementById('cModel');
+  var ci2 = document.getElementById('cInfer');
+  if (ci2) ci2.onclick = function () {
+    DB.key = ck.value.trim();
+    DB.model = cm.value.trim() || 'gpt-4o-mini';
+    commit();
+    if (!DB.key) { ci2.textContent = 'PASTE A KEY FIRST'; return; }
+    INFER_STATE[slug] = null;
+    ci2.textContent = 'ASKING…';
+    autoCouncil(cell, seat, world);
     openCouncil(cell);
   };
   wireGoTo(cell);

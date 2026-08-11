@@ -484,19 +484,47 @@ A council of empty seats is a diagram, not a body. So the seats are now
 filled from Wikidata: who the record actually ties to this ground, ranked,
 each assigned to the seat whose ground they are nearest to.
 
-**Four calls, all cross-origin, all in the reader's browser, no key and no
-server:**
+### Why a triangle used to come back empty
 
+Wikipedia's geosearch caps its radius at **ten kilometres**. That is a hard
+limit of the endpoint, not a setting. So a 441 km triangle was being
+answered by a disc covering about a twentieth of one per cent of it, and a
+7054 km face by a rounding error. Anywhere without a town in that
+particular disc came back with nothing — and the emptiness was an artefact
+of the query, not a fact about the ground. Saying so honestly in the panel
+was not the same as being useful.
+
+Wikidata's query service has no such cap. `wikibase:around` takes any
+radius, returns everything with coordinates inside it, carries the sitelink
+count already attached, and answers cross-origin. It is the primary source
+now; the capped endpoint is one of the fallbacks rather than the only door.
+
+**The ladder, in order, and it does not run out:**
+
+| | source | reach | needs |
+|---|---|---|---|
+| 1 | Wikidata query service | any radius, ranked | nothing |
+| 2 | Wikipedia geosearch | 10 km, sampled at up to 10 points across the triangle rather than only its middle | nothing |
+| 3 | OpenStreetMap / Overpass | every named settlement in the box — far denser than either, no notability | nothing |
+| 4 | the compiled gazetteer | offline, in the page | nothing |
+| 5 | a model | what the sources leave thin | your key |
+
+One SPARQL query now does what three chained calls did, and covers the
+whole triangle instead of its middle:
+
+```sparql
+SERVICE wikibase:around { ?place wdt:P625 ?coord .
+  bd:serviceParam wikibase:center "Point(31.2 30.0)"^^geo:wktLiteral .
+  bd:serviceParam wikibase:radius "273" . }
+?p wdt:P31 wd:Q5 ; (wdt:P19|wdt:P20|wdt:P937) ?place .
+?p wikibase:sitelinks ?links .
+ORDER BY DESC(?links)
 ```
-enwiki    generator=geosearch + pageprops    the places in this triangle,
-                                             with their Wikidata ids
-wikidata  list=search haswbstatement         humans born (P19), died (P20)
-                                             or working (P937) at any of them
-wikidata  wbgetentities                      names, what they are known for,
-                                             their claims, and how many
-                                             language editions carry them
-enwiki    prop=pageviews                     sixty days of readership
-```
+
+Rung 2 also stopped asking in one place. Ten kilometres is all geosearch
+will give, so it is asked at up to ten points drawn from the triangle's own
+subdivision lattice — which is why a 14 km cell that previously had to
+climb two rungs to fill its bench now fills it from one.
 
 **The ranking is stated, not implied.** Three terms, weighted:
 
@@ -553,6 +581,50 @@ the network says nothing, the compiled gazetteer names the nearest
 settlement, sea or named region instead, which is why the twelve planetary
 topics (all of them at sea, by construction) still come back named. A topic
 is never blank at any scale, with or without a network.
+
+### The fifth rung: what no database holds
+
+Four sources answer without a key and cover most of the planet. What none
+of them holds is the part of a syntegration that is not a lookup at all —
+**the statements of importance**. A syntegration begins by asking a group
+what is actually at issue on this ground, and no gazetteer has that.
+
+So the last rung is a key you supply, kept in this browser and sent nowhere
+but OpenAI. It fills exactly two things, and only what the free rungs left
+thin: a statement of importance for each topic that has nothing but a place
+name, and candidate people for seats the record left empty. It is handed
+the ground — jurisdiction, provinces, settlements with populations, rivers,
+water, and whoever was already found — and told to work from it.
+
+```
+TOPIC 0   Dumyat
+          Who controls the barrage releases when the delta salts up in August
+          settlement · 32.5584°N 31.5843°E · the compiled gazetteer ·
+          issue inferred by the model
+          BODY · CATEGORY · COORDINATE · RECORD
+```
+
+**Everything it produces is stamped, and the stamp is the feature.** An
+inferred seat is dashed and grey where a cited one is solid and signal-red,
+and it reads *inferred by the model · not a citation, not checked · the
+link is a search, not a source*. Its link really is a search, because there
+is no article to point at — the href has to match what the stamp claims it
+is. When the model says it is unsure, the row says that too.
+
+There are now three kinds of name a seat can hold, and no two of them are
+allowed to look alike: **from the record** (a citation with a place
+attached), **inferred by the model** (a guess), and **claimed by hand** (a
+person). The moment those three become indistinguishable the council is
+worthless.
+
+The model runs automatically, but only after the free rungs have finished,
+only if a key is present, and only for what is still thin. No key means no
+call, and the bench is still full from the gazetteer.
+
+*One bug worth recording:* the first version gated this on `!PEOPLE_STATE`,
+which is false once a rung has **failed** — so the model was locked out by
+exactly the emptiness it exists to fill. It now waits for the free rungs to
+be *done*, not to have succeeded.
 
 ### Nothing has to be clicked
 

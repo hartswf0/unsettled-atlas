@@ -53,6 +53,18 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 .plate b{font-weight:700}
 .plate .dim{color:var(--muted)}
 #cellplate{min-width:0;flex:0 1 auto;overflow:hidden}
+#wire{margin-top:3px;font-size:8px;letter-spacing:.1em;color:var(--muted);cursor:pointer}
+#wire.busy{color:var(--ink)}
+#wire.warn{color:var(--signal)}
+#wire .wdot{display:inline-block;width:5px;height:5px;border-radius:50%;
+  background:var(--signal);margin-right:4px;vertical-align:1px;
+  animation:cvbreathe 1.1s ease-in-out infinite}
+#wire .wtog{opacity:.55}
+#wiretbl{margin-top:4px;padding-top:4px;border-top:1px solid var(--muted);
+  font-size:8px;line-height:1.7;letter-spacing:.08em;color:var(--muted);
+  white-space:normal;max-width:min(300px,72vw);cursor:default}
+#wiretbl .wrow b{color:var(--ink);font-weight:700}
+#wiretbl .wnote{margin-top:3px;opacity:.75}
 #scaleplate{flex:0 0 auto}
 #cellid{font-weight:700;letter-spacing:.14em}
 #scaleplate{text-align:right}
@@ -343,6 +355,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
     <div class="dim" id="cellextent">—</div>
     <div class="dim" id="cellcouncil">—</div>
     <div class="dim" id="cellfound" style="display:none;color:var(--signal);font-size:9px"></div>
+    <div id="wire" style="display:none"></div>
+    <div id="wiretbl" style="display:none"></div>
   </div>
   <div class="plate" id="scaleplate">
     <div><b id="scalename">EARTH</b></div>
@@ -1671,19 +1685,119 @@ var SOURCE_STATE = {
   'overpass-api.de':      { gap: 900, last: 0, chain: null, dead: '' },
   'api.gdeltproject.org': { gap: 400, last: 0, chain: null, dead: '' }
 };
-function sourceNote() {
-  var out = [];
-  for (var h in SOURCE_STATE) {
-    if (SOURCE_STATE[h].dead) out.push(h + ' — ' + SOURCE_STATE[h].dead);
-    else if (SOURCE_STATE[h].gap > 1500) out.push(h + ' — rate limited, asking slowly');
+/* The wire. Every request this page makes to the internet passes through
+ * one chokepoint, so status is observed there rather than reported by each
+ * subsystem in its own words in its own corner. One line under the address
+ * plate says what is being asked right now and why; tapping it opens the
+ * full table — every source, its state, how often it was asked, what for.
+ * The scattered status strings this replaces are gone.                    */
+var WIRE = { n: 0, now: {}, hosts: {}, open: false, fadeT: null, tickT: null };
+function shortHost(h) {
+  return { 'en.wikipedia.org': 'wikipedia', 'www.wikidata.org': 'wikidata',
+           'query.wikidata.org': 'the query service', 'overpass-api.de': 'openstreetmap',
+           'api.gdeltproject.org': 'gdelt', 'en.wikinews.org': 'wikinews',
+           'api.openai.com': 'the model' }[h] || h;
+}
+function whyOf(url) {
+  if (url.indexOf('generator=geosearch') >= 0) return 'finding places';
+  if (url.indexOf('prop=pageviews') >= 0) return 'readership';
+  if (url.indexOf('prop=revisions') >= 0) return 'recent edits';
+  if (url.indexOf('haswbstatement') >= 0) return 'finding people';
+  if (url.indexOf('wbgetentities') >= 0) return 'describing people';
+  if (url.indexOf('rest_v1/page/summary') >= 0) return 'reading a summary';
+  if (url.indexOf('wikinews') >= 0) return 'news';
+  if (url.indexOf('gdeltproject') >= 0) return 'news';
+  if (url.indexOf('query.wikidata.org') >= 0) return 'asking the whole triangle';
+  if (url.indexOf('overpass') >= 0) return 'settlements';
+  if (url.indexOf('list=search') >= 0) return 'searching';
+  return 'asking';
+}
+function netStart(host, why) {
+  WIRE.n++;
+  WIRE.now[host] = (WIRE.now[host] || 0) + 1;
+  var h = WIRE.hosts[host] || (WIRE.hosts[host] = { asked: 0, errs: 0, t: 0, why: '' });
+  h.asked++; h.t = Date.now(); h.why = why;
+  paintWire();
+}
+function netEnd(host, err) {
+  WIRE.n = Math.max(0, WIRE.n - 1);
+  WIRE.now[host] = Math.max(0, (WIRE.now[host] || 1) - 1);
+  var h = WIRE.hosts[host];
+  if (h) { h.t = Date.now(); if (err) h.errs++; }
+  paintWire();
+  if (!WIRE.n) {
+    if (WIRE.fadeT) clearTimeout(WIRE.fadeT);
+    WIRE.fadeT = setTimeout(paintWire, 4200);
   }
-  return out;
+}
+function wireLine() {
+  if (WIRE.n) {
+    var hs = Object.keys(WIRE.now).filter(function (h) { return WIRE.now[h]; });
+    var h = hs[0] || '';
+    return { cls: 'busy', txt: 'asking ' + shortHost(h) + ' — ' +
+             ((WIRE.hosts[h] || {}).why || '') + (WIRE.n > 1 ? ' · ' + WIRE.n + ' in flight' : '') };
+  }
+  for (var k in SOURCE_STATE) {
+    var st = SOURCE_STATE[k];
+    if (st.dead) return { cls: 'warn', txt: shortHost(k) + ' unreachable from this browser' };
+    if (st.deadUntil && Date.now() < st.deadUntil)
+      return { cls: 'warn', txt: shortHost(k) + ' resting · ' +
+               Math.ceil((st.deadUntil - Date.now()) / 1000) + 's' };
+    if (st.gap > 1500) return { cls: 'warn', txt: shortHost(k) + ' rate limited · asking slowly' };
+  }
+  var latest = null, lt = 0;
+  for (var j in WIRE.hosts) if (WIRE.hosts[j].t > lt) { lt = WIRE.hosts[j].t; latest = j; }
+  if (latest && Date.now() - lt < 4000)
+    return { cls: 'done', txt: 'asked ' + shortHost(latest) + ' — ' + WIRE.hosts[latest].why };
+  return null;
+}
+function wireTable() {
+  var hosts = {};
+  for (var a in SOURCE_STATE) hosts[a] = 1;
+  for (var b in WIRE.hosts) hosts[b] = 1;
+  var rows = Object.keys(hosts).sort().map(function (h) {
+    var n = WIRE.hosts[h] || { asked: 0, errs: 0, why: '' };
+    var st = SOURCE_STATE[h], state = 'quiet';
+    if (WIRE.now[h]) state = 'asking now';
+    else if (st && st.dead) state = 'unreachable';
+    else if (st && st.deadUntil && Date.now() < st.deadUntil)
+      state = 'resting ' + Math.ceil((st.deadUntil - Date.now()) / 1000) + 's';
+    else if (st && st.gap > 1500) state = 'slowed';
+    else if (n.asked) state = 'answering';
+    return '<div class="wrow">' + esc(shortHost(h)) + ' · <b>' + state + '</b>' +
+      (n.asked ? ' · ' + n.asked + ' asked' + (n.errs ? ' (' + n.errs + ' failed)' : '') : '') +
+      (n.why ? ' · ' + esc(n.why) : '') + '</div>';
+  });
+  return rows.join('') +
+    '<div class="wnote">Everything this page asks the internet passes through this wire. ' +
+    'A source that misbehaves is slowed, then rested — never hammered. Nothing is sent ' +
+    'anywhere except these hosts.</div>';
+}
+function paintWire() {
+  var el = document.getElementById('wire'), tb = document.getElementById('wiretbl');
+  if (!el) return;
+  var line = wireLine();
+  if (!line && !WIRE.open) { el.style.display = 'none'; if (tb) tb.style.display = 'none'; return; }
+  el.style.display = 'block';
+  el.className = line ? line.cls : 'done';
+  el.innerHTML = (line && line.cls === 'busy' ? '<span class="wdot"></span>' : '') +
+    esc(line ? line.txt : 'the wire') +
+    ' <span class="wtog">' + (WIRE.open ? '×' : '···') + '</span>';
+  if (tb) {
+    tb.style.display = WIRE.open ? 'block' : 'none';
+    if (WIRE.open) tb.innerHTML = wireTable();
+  }
+  // resting countdowns move once a second while anyone is watching
+  if (WIRE.tickT) { clearTimeout(WIRE.tickT); WIRE.tickT = null; }
+  if (WIRE.open || (line && line.cls === 'warn')) WIRE.tickT = setTimeout(paintWire, 1000);
 }
 function fetchJSON(url, cb) {
+  var host = url.split('/')[2] || '';
+  netStart(host, whyOf(url));
   fetch(url, { credentials: 'omit' })
     .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then(function (j) { cb(null, j); })
-    .catch(function (e) { cb(String(e && e.message || e)); });
+    .then(function (j) { netEnd(host); cb(null, j); })
+    .catch(function (e) { netEnd(host, true); cb(String(e && e.message || e)); });
 }
 function getJSON(url, cb) {
   cb = once(cb);
@@ -2126,6 +2240,9 @@ function askOpenAI(opts, cb) {
   // knob they have
   send(body, true);
   function send(payload, mayRetry) {
+    netStart('api.openai.com', opts.op || 'reasoning');
+    var ended = false;
+    function end(err) { if (!ended) { ended = true; netEnd('api.openai.com', err); } }
     fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: 'Bearer ' + OPENAI_KEY },
@@ -2136,11 +2253,13 @@ function askOpenAI(opts, cb) {
       });
       return r.json();
     }).then(function (j) {
+      end();
       countSpend(opts.op || 'ask', model, j);
       var text = responseText(j);
       if (!text) throw new Error('the model returned no output text');
       cb(null, opts.schema ? JSON.parse(text) : text, j);
     }).catch(function (e) {
+      end(true);
       // what this file believes about reasoning parameters comes from release
       // notes, not from the machine. If the machine disagrees, drop the knob
       // and ask again rather than losing the answer.
@@ -4419,6 +4538,10 @@ elDrop.onclick = function () { dropOne(); syncDrop(); };
 document.getElementById('cellplate').style.pointerEvents = 'auto';
 document.getElementById('cellplate').style.cursor = 'pointer';
 document.getElementById('cellplate').onclick = function () { openWhere(focusCell()); };
+document.getElementById('wire').onclick = function (e) {
+  e.stopPropagation(); WIRE.open = !WIRE.open; paintWire();
+};
+document.getElementById('wiretbl').onclick = function (e) { e.stopPropagation(); };
 var elScaleName = document.getElementById('scalename');
 var elFoldState = document.getElementById('foldstate');
 var elLadder = document.getElementById('ladder');
@@ -5709,18 +5832,24 @@ function summaryOf(title, cb) {
   if (DB.summaries[title]) return cb(null, DB.summaries[title]);
   var ctl = window.AbortController ? new AbortController() : null;
   var leash = ctl && setTimeout(function () { ctl.abort(); }, 8000);
+  netStart('en.wikipedia.org', 'reading a summary');
   fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title),
         { credentials: 'omit', signal: ctl ? ctl.signal : undefined })
     .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function (j) {
       if (leash) clearTimeout(leash);
+      netEnd('en.wikipedia.org');
       var got = { title: j.title, extract: j.extract || '', type: j.type || '',
                   thumb: j.thumbnail && j.thumbnail.source, url: j.content_urls &&
                   j.content_urls.desktop && j.content_urls.desktop.page };
       DB.summaries[title] = got; commit();
       cb(null, got);
     })
-    .catch(function (e) { if (leash) clearTimeout(leash); cb(String(e.message || e)); });
+    .catch(function (e) {
+      if (leash) clearTimeout(leash);
+      netEnd('en.wikipedia.org', true);
+      cb(String(e.message || e));
+    });
 }
 /* The card should open already knowing its text. The summaries a reader is
  * most likely to ask for next — the open council's topics and the largest
@@ -6021,9 +6150,6 @@ function runBlock(cell, seat, world) {
         (news.list.length === 1 ? '' : 's') + ' about this ground.'
       : ' Nothing live has been gathered yet, so they argue from the record alone.') +
     '</p>' +
-    (sourceNote().length
-      ? '<p style="color:var(--muted);font-size:9px;letter-spacing:.06em">sources: ' +
-        esc(sourceNote().join(' · ')) + '</p>' : '') +
     '<button class="go" id="cRun">' + (rounds ? 'CONVENE AGAIN' : 'CONVENE') + '</button> ' +
     (said.length ? '<button class="go ghost" id="cScript">READ THE TRANSCRIPT</button> ' : '') +
     (said.length || ch ? '<button class="go ghost" id="cCopyRun">COPY THE RUN</button> ' : '') +

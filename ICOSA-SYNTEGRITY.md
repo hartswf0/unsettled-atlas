@@ -834,6 +834,38 @@ now built in:
   that follows is answered from memory — with an eight-second leash on the
   fetch so "reading…" can never hang forever.
 
+## The wire
+
+The instrument talks to the internet constantly — Wikipedia for places and
+summaries and edits, Wikidata for people, the query service for whole
+triangles, OpenStreetMap, Wikinews, OpenAI — and none of it was visible.
+Every background answer that landed re-arranged some panel "by itself";
+every slow source felt like a glitch, because the waiting had no face. The
+fix is not another status panel. Every request already flows through one
+chokepoint, so the status is *observed* there rather than reported by each
+subsystem in its own words in its own corner.
+
+**One line under the address plate** — the wire — says what is being asked
+right now and why, in words a person uses: *asking wikipedia — finding
+places · 10 in flight*, *asking the query service — asking the whole
+triangle*, then *asked wikipedia — reading a summary* fading out when the
+air goes quiet. When a source misbehaves the line turns signal-red and
+says so plainly: *gdelt unreachable from this browser*, *the query service
+resting · 52s* with the countdown running. Tap it and the full table
+unfolds in the same plate: every source, its state (asking now / answering
+/ slowed / resting / unreachable / quiet), how many times it was asked,
+how many failed, and what it was last asked for — with one sentence of
+policy at the bottom: everything this page asks the internet passes
+through this wire; a source that misbehaves is slowed, then rested — never
+hammered; nothing is sent anywhere except these hosts.
+
+This was subtraction, not addition. The council's own `sources:` footnote
+is gone, and so is the function that produced it — the wire is the one
+place that question is answered. The instrumentation is three lines at the
+chokepoint (`fetchJSON`), plus the two fetches that bypass it (summaries,
+the model), and the purpose labels are parsed from the URLs, so no call
+site anywhere had to change.
+
 ## The agenda is produced, not inherited
 
 The live council showed topics named "Kentucky" and "Charlotte" — places,

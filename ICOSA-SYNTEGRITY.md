@@ -199,13 +199,16 @@ different room. So a model may draft one, and may not send one.
 - It is told that adding a fact is the one thing it must not do — not
   context, not background, not a plausible detail — and to answer *nothing
   here carries* if the material does not support one.
-- Temperature is zero.
+- No temperature is sent; these are reasoning models.
 - The draft lands in the text field. **A person edits it and a person
-  sends it.** Nothing a model produces is ever stored as somebody's words.
+  sends it.** A drafted carry is never stored until a person sends it.
+  (The convening below is the one exception to models writing into the
+  record, and everything it writes is stamped `rehearsal`, in the thread
+  and on the transcript alike.)
 
-The key is pasted into the page and kept in that browser with the rest of
-the record. It is never in this repository, and there is no server to send
-it to.
+The key is kept in this browser under its own name, never on the record,
+and never in an export. It is never in this repository, and there is no
+server to send it to.
 
 The structure works without any of this: a human writes their own carry and
 the protocol is unchanged. The model is an assist on one step, not a
@@ -794,6 +797,65 @@ ranking, the geometric assignment, the caching, the offline floor and the
 failure path all work. Whether Wikimedia answers *your* browser is
 something only your browser can settle.
 
+## The harness
+
+One model call in a loop is a chatbot. A convening needs a harness:
+deterministic code steering model calls through a shape, where the shape —
+not the model — decides what runs next, what is kept, and what gets to
+influence the following step. The cognition is in the calls; the control
+flow never is.
+
+The shape, and the engineering each layer answers for:
+
+| layer | what it is here |
+|---|---|
+| **prompt** | three layers of instruction. `LAW` is constitutional and never changes. **The charter is written by a model** — once per ground, from the compiled state and what is live there, so the system instruction is itself a model output, cached in the record, rewritable on demand. The directive is per call and rides inside the context. |
+| **context** | the compiled world state, ordered so the hot part is a prefix: instructions (LAW + charter) and the front of the context are identical across every call on a cell, and the only thing that varies — the operation, with its directive — is the final key. Steering tokens starts with deciding which ones repeat. |
+| **harness** | the orchestrator. Plain JS, no model. It owns the order, the budget, the gate and the record. |
+| **loop** | the reverberation. Beer runs the icosahedron more than once on purpose: each iteration re-speaks every topic with what arrived from the others. Two iterations per convening. |
+| **ralph loop** | the retry. A room whose statements fail the gate is sent back **once, with the judge's notes**, and the better attempt is kept — the same task re-run against its own critique, not a conversation. |
+| **graph loop** | the routing. Every seat sits in two rooms, so after judging a topic the judge extracts each member's strongest claim and the harness carries it into that seat's **other** room for the next iteration — along the strut, which is the actual edge topology of the solid, not a mailing list. |
+| **gauntlet loop** | the gate. Every line is scored — grounded, in-register, specific, engaged, each 0–3, clamped in code — and the gate is taken on the room: a team averaging below 8/12, or under 2/3 grounded, retries. A room that still fails stays in the transcript stamped with its scores and carries nothing anywhere. |
+
+**Two models where the account has two of the same generation.** The judge
+is the other model of that generation — Terra scoring what Sol said — so
+the scorer is not the speaker marking its own work; an account with one
+model judges itself, and the fold says which is which. The retried room is
+shown its own failed attempt beside the judge's notes, because "fix what it
+names" is only possible when you can see what it named. The judge also
+receives the register rulebook — what each register may and may not do —
+since a quarter of its score is register fidelity, and scoring against
+rules absent from the input is theatre. Efforts are set per stage: the charter
+and the outcomes think hard, the rooms think at working pace, and the fold
+shows the whole table.
+
+**The speakers can ask for the world.** A speak call in any iteration but
+the last may return `needs` — plain questions — and between iterations the
+harness resolves the first eight against GDELT and Wikipedia search,
+feeding what came back into the next iteration's evidence marked
+`fetched`. The directive says exactly that, including the cap, because a
+promise the harness does not keep would teach the model to stop asking.
+Multi-step inference with the internet, where the internet is what a
+browser can reach without a key.
+
+**The price is stated before the button.** For an octahedron: charter +
+2 × 6 topics × (speak → critique → judge) + outcomes = **38 calls, up to
+62** if the judge sends rooms back. Lookups between iterations are free and
+say so. Afterwards the spend readout shows each stage's bill.
+
+**The run closes on outcome statements** — one per topic, drawn only from
+the transcript, favouring what scored high, with dissent recorded where
+the registers did not close. That is what the next convening inherits.
+
+The transcript shows all of it: reverberations, each line with its score
+chip, second attempts flagged, claims arriving `carried in from room 2`,
+the judge's note wherever a kept line still failed either bar of the gate,
+and the outcomes at the end. Everywhere else a rehearsal line surfaces —
+the SAID thread, the map — it is stamped `rehearsal — written by <model>,
+not by <name>`, because the transcript's disclaimer is worthless if the
+same words circulate unlabelled elsewhere. It still says at the top what it is — a rehearsal of
+the argument this ground would have, not a record of one that happened.
+
 ## Convening it
 
 Everything up to here prepared a council and never held one. A syntegration
@@ -817,12 +879,14 @@ TOPIC 0  Dumyat
        Answering that: it assumes the schedule is the only lever
 ```
 
-Two calls per topic — twelve for an octahedron, twenty-four for an
-icosahedron — and the panel says the number **before** you press it, because
-it is not this file's money. Every line is written into the record as an
-utterance stamped with the model, the round, the seat and its register,
-drawn on the map like anything else said here, readable as a transcript and
-deletable in one move.
+Three calls per topic per reverberation — speak, critique, judge — priced
+in the panel **before** you press it, because it is not this file's money.
+Every line is written into the record as an utterance stamped with the
+model that wrote it, the model that judged it, the round, the iteration,
+the seat, its register, its score and its attempt, drawn on the map like
+anything else said here, readable as a transcript and deletable in one
+move. A convening that hits an API error **stops rather than paying to
+continue**, says so, and keeps what was recorded before the stop.
 
 The transcript says what it is at the top: a rehearsal of the argument this
 ground would have, not a record of one that happened, and the people named
@@ -929,7 +993,11 @@ Being plain about this, because the gap is the interesting part.
 - **Population is a floor, not a count.** It sums the settlements the
   gazetteer knows, so it undercounts everywhere and undercounts worst where
   settlements are small and many.
-- **No model speaks as anyone.** It drafts one step and a person sends it.
+- **No model speaks as anyone — outside the convening, which is labelled.**
+  The convening writes rehearsal lines under nominee names; every one is
+  stamped `rehearsal — written by <model>, not by <name>` in the thread,
+  scored in the transcript, and deletable in one move. Elsewhere it drafts
+  one step and a person sends it.
   A council of synthetic voices over an empty triangle remains the thing
   this project exists to criticise. Nominating a name from Wikidata does
   not change that: a nominee is a citation, not an occupant, and nothing

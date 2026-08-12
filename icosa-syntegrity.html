@@ -1626,7 +1626,19 @@ function overpassIn(cell, cb) {
     });
 }
 
+function once(cb) {
+  // a callback that runs exactly once, and never on the promise chain that
+  // produced it — an exception thrown by the continuation must surface as
+  // an error, not re-enter .catch and run the continuation a second time
+  var used = false;
+  return function (a, b, c) {
+    if (used) return;
+    used = true;
+    setTimeout(function () { cb(a, b, c); }, 0);
+  };
+}
 function getJSON(url, cb) {
+  cb = once(cb);
   fetch(url, { credentials: 'omit' })
     .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function (j) { cb(null, j); })
@@ -1950,7 +1962,8 @@ function countSpend(op, model, j) {
   DB.spend.calls++; DB.spend.input += inp; DB.spend.output += outp;
   DB.spend.cached += cached; DB.spend.reasoning += reas;
   DB.spend.model = model;
-  commit();
+  // no commit here: a convening writes the record at every topic gate, and
+  // serialising the whole DB once per call was most of the work
 }
 function tok(n) {
   return n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n || 0);
@@ -1979,6 +1992,7 @@ function responseText(j) {
   return out.join('');
 }
 function askOpenAI(opts, cb) {
+  cb = once(cb);
   if (!OPENAI_KEY) return cb('no key');
   var model = opts.model || pickModel();
   var body = {
@@ -1992,7 +2006,7 @@ function askOpenAI(opts, cb) {
   };
   var can = reasoningFor(model);
   if (can.efforts.length) {
-    var want = DB.effort || opts.reasoning || 'medium';
+    var want = opts.reasoning || DB.effort || 'medium';
     if (can.efforts.indexOf(want) < 0) want = can.efforts.indexOf('medium') >= 0 ? 'medium' : can.efforts[0];
     body.reasoning = { effort: want };
     var mode = DB.mode || 'standard';
@@ -2099,6 +2113,7 @@ function newsAbout(cell, cb) {
     if (--left) return;
     out.sort(function (a, b) { return (b.t || 0) - (a.t || 0); });
     if (!DB.news) DB.news = {};
+if (!DB.charter) DB.charter = {};
     DB.news[slug] = { t: Date.now(), list: out.slice(0, 24) };
     commit(); NEWS_STATE[slug] = null; cb && cb(); wake();
   }
@@ -2195,6 +2210,8 @@ function compileContext(cell, seat, world, op) {
     } : { note: 'the compiled gazetteer has not loaded in this browser yet' },
     council: seat ? {
       solid: (councilFor(cellEdgeKm(cell)) || {}).name || '',
+      registers: DATA.council.registers.map(function (r) {
+        return { id: r.id, opposite: r.opposite, may: r.may, may_not: r.mayNot }; }),
       seats_total: seat.struts.length, topics_total: seat.members.length,
       topics: topics.map(function (t, i) {
         return { id: i, place: t.title, issue: t.issue || null,
@@ -2210,7 +2227,8 @@ function compileContext(cell, seat, world, op) {
       })
     } : null,
     discourse: {
-      said_here: notesOf(slug).slice(-12).map(function (n) {
+      said_here: notesOf(slug).filter(function (n) { return n.kind !== 'sim'; })
+        .slice(-12).map(function (n) {
         return { id: n.id, who: n.who || null, topic: n.topic === undefined ? null : n.topic,
                  kind: n.kind || 'note', text: n.text, seconded: seconds(n) }; }),
       carries_here: carriesIn(slug).slice(-8).map(function (n) {
@@ -2218,7 +2236,14 @@ function compileContext(cell, seat, world, op) {
       concerns_arriving: concernsArriving(cell).slice(0, 8).map(function (n) {
         return { id: n.id, raised_at: n.cell, who: n.who || null, text: n.text,
                  answerable_at: SCALES[n.answer] ? SCALES[n.answer].n.toLowerCase() : null }; }),
-      concerns_below: concernsUnder(cell).length
+      concerns_below: concernsUnder(cell).length,
+      convened: (function () {
+        var sim = utterances(slug);
+        return { rounds: roundsRun(slug),
+          outcomes: sim.filter(function (n) { return n.mode === 'outcome'; })
+            .slice(-8).map(function (n) { return { topic: n.topic, statement: n.text,
+              dissent: n.dissent || '' }; }) };
+      })()
     },
     evidence: {
       wikidata: rec ? rec.list.filter(function (p) { return p.from !== 'model'; })
@@ -2303,11 +2328,13 @@ function inferTopics(cell, topics, cb, seat, world) {
 function inferPeople(cell, need, cb, seat, world) {
   var ctx = compileContext(cell, seat, world, 'INFER_PEOPLE');
   ctx.operation.seats_to_fill = need;
+  var already = peopleFor(cell);
+  ctx.operation.already_named = already ? already.list.map(function (x) { return x.name; }) : [];
   askOpenAI({
     instructions: LAW + '\n\nName up to operation.seats_to_fill real people connected to this ' +
       'ground — born, worked, wrote, built, organised or governed there — across history, not only ' +
-      'the famous, and not anyone already listed in evidence.wikidata. For each, one line naming ' +
-      'the connection, referring to the ground in the context where you can. If you are not ' +
+      'the famous, and not anyone in operation.already_named. For each: what is who they are in a ' +
+      'few words, why is the connection to this ground, one line, naming the ground where you can. If you are not ' +
       'confident a person is real and connected here, leave them out rather than filling the list; ' +
       'a short honest list is the correct answer. Set sure to false where you are unsure.',
     context: ctx, schema: SCHEMA_PEOPLE, schemaName: 'seat_candidates'
@@ -2322,30 +2349,106 @@ function inferPeople(cell, need, cb, seat, world) {
     }));
   });
 }
-/* ------------------------------------------------------- running the thing
- * Everything up to here prepared a council and never convened one. A
- * syntegration is not a bench, it is a protocol: each topic team states its
- * case, the seats whose registers are incommensurable with theirs answer,
- * and because every seat sits in two rooms what is said in one arrives in
- * the other by being carried there.
+/* ------------------------------------------------------------- the harness
+ * One model call in a loop is a chatbot. A convening needs a harness:
+ * deterministic code steering model calls through a shape, where the shape —
+ * not the model — decides what runs next, what is kept, and what gets to
+ * influence the following step. The cognition is in the calls; the control
+ * flow never is.
  *
- * So a round is two passes over each topic. First the members speak, each
- * from their own register and from the ground. Then the critics answer —
- * and the critics are given what was just said, which is the whole point;
- * a critique written without hearing the statement is decoration.
+ * The shape, and the engineering each layer answers for:
  *
- * Two calls per topic, which is six or twelve or twenty-four for a round
- * depending on the solid, and the panel says the number before you press it
- * because it is not this file's money. Everything produced is written into
- * the record as an utterance stamped with the model, the round and the seat,
- * drawn on the map like anything else said here, and deletable in one move.
- */
-var ROUND_STATE = {};
+ *   PROMPT     three layers of instruction. LAW is constitutional and never
+ *              changes. THE CHARTER is written by a model, once per ground,
+ *              from the compiled state and what is live there — the system
+ *              instruction is itself a model output, cached in the record.
+ *              The DIRECTIVE is per call and rides inside the context.
+ *   CONTEXT    the compiled world state, ordered so the hot part is a
+ *              prefix: instructions (LAW + charter) and the front of the
+ *              context are identical across every call on a cell, and the
+ *              only thing that varies — the operation — is the final key.
+ *              Steering tokens starts with deciding which ones repeat.
+ *   HARNESS    this orchestrator. Plain JS, no model. It owns the order,
+ *              the budget, the gate, and the record.
+ *   LOOP       the reverberation. Beer runs the icosahedron more than once
+ *              on purpose: each iteration re-speaks every topic with what
+ *              arrived from the others.
+ *   RALPH      the retry. A room whose statements fail the gate is sent
+ *              back once, with the judge's notes, and the better attempt is
+ *              kept. Not a conversation — the same task, re-run against its
+ *              own critique.
+ *   GRAPH      the routing. Every seat sits in two rooms, so after judging
+ *              a topic the judge extracts each member's strongest claim and
+ *              the harness carries it into that seat's other room for the
+ *              next iteration — along the strut, which is the actual edge
+ *              topology of the solid, not a mailing list.
+ *   GAUNTLET   the gate. Nothing influences the next step until it has
+ *              been scored: grounded, in-register, specific, engaged, each
+ *              0–3. Below the gate it stays in the transcript, stamped with
+ *              its score, and carries nothing anywhere.
+ *
+ * The speakers may also ask for the world: a speak call can return `needs`,
+ * plain questions, and between iterations the harness resolves them against
+ * the keyless sources (GDELT, Wikipedia search) and feeds what came back
+ * into the next iteration's evidence. Multi-step inference with the
+ * internet, where the internet is what a browser can reach without a key.
+ *
+ * Two models where the account has two: the judge is the other model of the
+ * same generation, so the scorer is not the speaker marking its own work.
+ * Efforts are set per stage — the charter and the outcomes think hard, the
+ * rooms think at working pace.
+ *
+ * Everything is priced before the button is pressed, counted per stage
+ * after, and recorded stamped with model, iteration, seat, register, score
+ * and attempt. The transcript is a rehearsal of the argument this ground
+ * would have, and says so.                                               */
+var ROUND_STATE = {}, HARNESS_ERR = {};
+var REVERB = 2;                              // iterations per convening
+var GATE = { total: 8, grounded: 2 };        // of 12, and of 3
+var HARNESS_STAGE = {
+  charter:  { effort: 'high',   who: 'top'    },
+  speak:    { effort: 'medium', who: 'top'    },
+  critique: { effort: 'medium', who: 'top'    },
+  judge:    { effort: 'medium', who: 'second' },
+  outcome:  { effort: 'high',   who: 'top'    }
+};
 var SCHEMA_SPEAK = {
   type: 'object', additionalProperties: false, required: ['utterances'],
   properties: { utterances: { type: 'array', items: {
     type: 'object', additionalProperties: false, required: ['seat', 'text'],
     properties: { seat: { type: 'integer' }, text: { type: 'string' } } } } }
+};
+var SCHEMA_SPEAK_NEEDS = {
+  type: 'object', additionalProperties: false, required: ['utterances', 'needs'],
+  properties: {
+    utterances: { type: 'array', items: {
+      type: 'object', additionalProperties: false, required: ['seat', 'text'],
+      properties: { seat: { type: 'integer' }, text: { type: 'string' } } } },
+    needs: { type: 'array', items: { type: 'string' } } }
+};
+var SCHEMA_CHARTER = {
+  type: 'object', additionalProperties: false, required: ['charter', 'tensions'],
+  properties: {
+    charter: { type: 'string' },
+    tensions: { type: 'array', items: {
+      type: 'object', additionalProperties: false, required: ['title', 'why_now'],
+      properties: { title: { type: 'string' }, why_now: { type: 'string' } } } } }
+};
+var SCHEMA_JUDGE = {
+  type: 'object', additionalProperties: false, required: ['scores'],
+  properties: { scores: { type: 'array', items: {
+    type: 'object', additionalProperties: false,
+    required: ['seat', 'grounded', 'register', 'specific', 'engaged', 'note', 'carry'],
+    properties: { seat: { type: 'integer' }, grounded: { type: 'integer' },
+      register: { type: 'integer' }, specific: { type: 'integer' },
+      engaged: { type: 'integer' }, note: { type: 'string' }, carry: { type: 'string' } } } } }
+};
+var SCHEMA_OUTCOME = {
+  type: 'object', additionalProperties: false, required: ['outcomes'],
+  properties: { outcomes: { type: 'array', items: {
+    type: 'object', additionalProperties: false, required: ['topic', 'statement', 'dissent'],
+    properties: { topic: { type: 'integer' }, statement: { type: 'string' },
+      dissent: { type: 'string' } } } } }
 };
 function utterances(slug) {
   return DB.notes.filter(function (n) { return n.kind === 'sim' && n.cell === slug; });
@@ -2355,86 +2458,412 @@ function roundsRun(slug) {
   utterances(slug).forEach(function (n) { if (n.round > m) m = n.round; });
   return m;
 }
-function runRound(cell, seat, world, onStep, done) {
+function charterOf(slug) { return (DB.charter || {})[slug] || null; }
+// the scorer is not the speaker marking its own work, where that is possible
+function modelFor(stage) {
+  var top = pickModel();
+  if (HARNESS_STAGE[stage] && HARNESS_STAGE[stage].who === 'second' && MODELS.list.length > 1) {
+    var g = modelFacts(top).gen;
+    for (var i = 0; i < MODELS.list.length; i++) {
+      var id = MODELS.list[i].id;
+      if (id !== top && modelFacts(id).gen === g) return id;
+    }
+  }
+  return top;
+}
+// LAW + charter is the hot prefix, identical across every call on a cell.
+// The per-call task rides in operation.directive, at the very end of the
+// input, so what varies is what comes last.
+function lawFor(slug) {
+  var ch = charterOf(slug);
+  return LAW +
+    (ch ? '\n\nTHE CHARTER FOR THIS GROUND, written for this convening from its compiled ' +
+          'state and what is live on it. It governs every call that carries it:\n' + ch.charter
+        : '') +
+    '\n\nYour task for this specific call is in operation.directive, at the end of the ' +
+    'context. Follow it exactly; everything before it is the world it applies to.';
+}
+function askHarness(cell, stage, ctx, schema, schemaName, maxTok, cb) {
+  askOpenAI({ op: stage, model: modelFor(stage),
+    reasoning: (HARNESS_STAGE[stage] || {}).effort || 'medium',
+    instructions: lawFor(cellSlug(cell)), context: ctx, schema: schema,
+    schemaName: schemaName, maxOutputTokens: maxTok || 1800 }, cb);
+}
+var CHARTER_STATE = {};
+function writeCharter(cell, seat, world, cb) {
+  var slug = cellSlug(cell);
+  if (CHARTER_STATE[slug] === 'busy') {
+    return setTimeout(function () { cb('the charter is already being written'); }, 0);
+  }
+  CHARTER_STATE[slug] = 'busy';
+  var ctx = compileContext(cell, seat, world, 'WRITE_CHARTER');
+  ctx.operation.directive =
+    'You are writing the charter: the standing instruction under which a syntegration ' +
+    'about this exact triangle will run. From the compiled state — the jurisdiction, the ' +
+    'settlements, the water, what has been said and escalated, and above all ' +
+    'evidence.recent, which is what is unresolved there now — write 150 to 250 words that ' +
+    'tell a room of arguers what this convening is about, what is genuinely contested on ' +
+    'this ground, what each kind of argument should attend to here, and what would count ' +
+    'as progress. Name places and actors from the context only. Then list three to six ' +
+    'tensions: short title, and why it is live now. No pleasantries, no invented facts.';
+  askOpenAI({ op: 'charter', model: modelFor('charter'), reasoning: 'high',
+    instructions: LAW + '\n\nYour task is in operation.directive, at the end of the context.',
+    context: ctx, schema: SCHEMA_CHARTER, schemaName: 'charter', maxOutputTokens: 2000 },
+    function (err, j) {
+      CHARTER_STATE[slug] = null;
+      if (err) return cb(err);
+      if (!DB.charter) DB.charter = {};
+      DB.charter[slug] = { t: Date.now(), model: modelFor('charter'),
+                          charter: j.charter, tensions: (j.tensions || []).slice(0, 6) };
+      commit(); cb(null);
+    });
+}
+// what a convening will cost, before the button
+function harnessPlan(seat) {
+  var topics = seat.members.length;
+  var base = REVERB * topics * 3 + 1;         // speak+critique+judge per topic, then outcomes
+  return { topics: topics, base: base, worst: base + REVERB * topics * 2 };
+}
+// the speakers asked for the world; answer from what a browser can reach
+function resolveNeeds(cell, needs, cb) {
+  var slug = cellSlug(cell);
+  var qs = [];
+  needs.forEach(function (q) {
+    q = String(q || '').trim().slice(0, 120);
+    if (q && qs.indexOf(q) < 0 && qs.length < 8) qs.push(q);
+  });
+  if (!qs.length) return cb(0);
+  var left = qs.length * 2, got = 0;
+  function keep(item) {
+    if (!DB.news) DB.news = {};
+    var n = DB.news[slug] || (DB.news[slug] = { t: Date.now(), list: [] });
+    n.list.unshift(item); n.list = n.list.slice(0, 30); got++;
+  }
+  function done1() { if (--left === 0) { commit(); cb(got); wake(); } }
+  qs.forEach(function (q) {
+    getJSON('https://api.gdeltproject.org/api/v2/doc/doc?format=json&mode=artlist' +
+      '&maxrecords=3&timespan=1m&query=' + encodeURIComponent(q), function (err, j) {
+        if (!err) ((j && j.articles) || []).slice(0, 2).forEach(function (a) {
+          keep({ from: 'fetched', title: a.title || '', note: 'asked: ' + q,
+                 source: a.domain || '', url: a.url || '', when: a.seendate || '',
+                 t: Date.now() });
+        });
+        done1();
+      });
+    getJSON(WP + 'action=query&list=search&srlimit=2&srsearch=' + encodeURIComponent(q),
+      function (err, j) {
+        if (!err) ((j && j.query && j.query.search) || []).forEach(function (h) {
+          keep({ from: 'fetched', title: h.title,
+                 note: 'asked: ' + q + ' · ' + String(h.snippet || '').replace(/<[^>]*>/g, '').slice(0, 120),
+                 url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(h.title.replace(/ /g, '_')),
+                 when: '', t: Date.now() });
+        });
+        done1();
+      });
+  });
+}
+function runHarness(cell, seat, world, onStep, done) {
   var slug = cellSlug(cell);
   if (ROUND_STATE[slug]) return;
   var round = roundsRun(slug) + 1;
   var topics = topicNames(cell, seat, world);
   var order = topics.map(function (_, i) { return i; });
-  var made = 0;
-  ROUND_STATE[slug] = { at: 0, of: order.length * 2 };
-  step(0);
-  function step(k) {
-    if (k >= order.length) {
-      ROUND_STATE[slug] = null; commit();
-      done(null, made); wake(); return;
-    }
-    var t = order[k];
-    var members = [], critics = [];
+  var plan = harnessPlan(seat);
+  var carryNext = {};                          // topic -> claims arriving next iteration
+  var carryNow = {};
+  var needsAll = [], made = 0;
+  var judgeModel = modelFor('judge');
+  var frozenLaw = null;                          // set once the charter exists
+  delete HARNESS_ERR[slug];
+  ROUND_STATE[slug] = { at: 0, of: plan.base + (charterOf(slug) ? 0 : 1), label: 'charter' };
+  function tick(label) {
+    if (!ROUND_STATE[slug]) return;
+    ROUND_STATE[slug].at++;
+    ROUND_STATE[slug].label = label;
+    try { onStep && onStep(); } catch (e) { }     // a render error must not wedge the run
+    wake();
+  }
+  function abort(err) {
+    ROUND_STATE[slug] = null;
+    HARNESS_ERR[slug] = String(err);
+    commit();
+    try { done(String(err), made); } catch (e) { }
+    wake();
+  }
+  function membersOf(t) {
+    var out = [];
     seat.struts.forEach(function (st, i) {
       if (st.topics.indexOf(t) >= 0) {
-        members.push({ seat: i, who: seatHolder(slug, i) || 'seat ' + i, register: st.register,
-                       other_room: st.topics[0] === t ? st.topics[1] : st.topics[0] });
-      }
-      if (st.critiques.indexOf(t) >= 0) {
-        critics.push({ seat: i, who: seatHolder(slug, i) || 'seat ' + i, register: st.register });
+        out.push({ seat: i, who: seatHolder(slug, i) || 'seat ' + i, register: st.register,
+                   other_room: st.topics[0] === t ? st.topics[1] : st.topics[0] });
       }
     });
-    var ctx = compileContext(cell, seat, world, 'SPEAK');
+    return out;
+  }
+  function criticsOf(t) {
+    var out = [];
+    seat.struts.forEach(function (st, i) {
+      if (st.critiques.indexOf(t) >= 0) {
+        out.push({ seat: i, who: seatHolder(slug, i) || 'seat ' + i, register: st.register });
+      }
+    });
+    return out;
+  }
+  function ask(stage, ctx, schema, name, maxTok, cb2) {
+    askOpenAI({ op: stage, model: modelFor(stage),
+      reasoning: (HARNESS_STAGE[stage] || {}).effort || 'medium',
+      instructions: frozenLaw || lawFor(slug), context: ctx, schema: schema,
+      schemaName: name, maxOutputTokens: maxTok || 1800 }, cb2);
+  }
+  function baseCtx(op, iter, t) {
+    var ctx = compileContext(cell, seat, world, op);
     ctx.operation.round = round;
+    ctx.operation.iteration = iter + '/' + REVERB;
     ctx.operation.topic = { id: t, place: topics[t].title, issue: topics[t].issue || null };
-    ctx.operation.members = members;
-    ctx.operation.said_before = utterances(slug).filter(function (n) { return n.topic === t; })
-      .slice(-8).map(function (n) { return { round: n.round, seat: n.seat, who: n.who, text: n.text }; });
-    ROUND_STATE[slug].at = k * 2 + 1;
-    wake();
-    askOpenAI({
-      op: 'speak', context: ctx, schema: SCHEMA_SPEAK, schemaName: 'topic_statements',
-      instructions: LAW + '\n\nThis is a working session of the topic team for ' +
-        'operation.topic. Write one short statement for each seat in operation.members, in that ' +
-        'seat\'s register — a register is a way of arguing, not a personality, and each seat may ' +
-        'only do what its register may do. Speak to the issue, using the settlements, water, ' +
-        'jurisdiction, what has escalated from below and especially evidence.recent, which is ' +
-        'what is actually unresolved there now. Disagree where the registers would disagree. ' +
-        'Two sentences each, plain, no preamble, no stage directions, and never claim a fact ' +
-        'the context does not carry.',
-      maxOutputTokens: 1800
-    }, function (e1, spoke) {
-      if (!e1 && spoke) record(spoke.utterances, t, 'said');
-      var ctx2 = compileContext(cell, seat, world, 'CRITIQUE');
-      ctx2.operation.round = round;
-      ctx2.operation.topic = ctx.operation.topic;
-      ctx2.operation.critics = critics;
-      ctx2.operation.just_said = (!e1 && spoke ? spoke.utterances : []);
-      ROUND_STATE[slug].at = k * 2 + 2;
-      onStep && onStep();
-      askOpenAI({
-        op: 'critique', context: ctx2, schema: SCHEMA_SPEAK, schemaName: 'critic_responses',
-        instructions: LAW + '\n\nYou are the critics of operation.topic. Each seat in ' +
-          'operation.critics answers what is in operation.just_said, from a register ' +
-          'incommensurable with the one that said it — that opposition is the mechanism, not ' +
-          'rudeness. Name the specific claim you are answering. Say what it leaves out, what it ' +
-          'assumes, or who it does not speak for. Two sentences each, no preamble, and never ' +
-          'introduce a fact the context does not carry.',
-        maxOutputTokens: 1800
-      }, function (e2, crit) {
-        if (!e2 && crit) record(crit.utterances, t, 'critique');
-        commit(); onStep && onStep();
-        step(k + 1);
+    var ch = charterOf(slug);
+    if (ch && ch.tensions && ch.tensions.length) ctx.operation.tensions = ch.tensions;
+    return ctx;
+  }
+  function rec(mode, iter, t, u, extra) {
+    var st = seat.struts[u.seat];
+    var note = { id: 'u' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36),
+      kind: 'sim', mode: mode, cell: slug, topic: t, seat: u.seat, round: round, iter: iter,
+      who: u.seat >= 0 && st ? (seatHolder(slug, u.seat) || 'seat ' + u.seat) : 'the convening',
+      register: st ? st.register : '', text: String(u.text).trim(),
+      model: mode === 'judge' ? judgeModel : pickModel(), t: Date.now() };
+    if (extra) for (var k in extra) note[k] = extra[k];
+    DB.notes.push(note); made++;
+    return note;
+  }
+  function ensureCharter(next) {
+    if (charterOf(slug)) { frozenLaw = lawFor(slug); return next(); }
+    tick('writing the charter');
+    writeCharter(cell, seat, world, function (err) {
+      if (err) return abort(err);
+      frozenLaw = lawFor(slug);
+      next();
+    });
+  }
+  function speakOnce(iter, t, retry, cb2) {
+    var ctx = baseCtx('SPEAK', iter, t);
+    var mayNeed = iter < REVERB;
+    ctx.operation.members = membersOf(t);
+    if (carryNow[t] && carryNow[t].length) ctx.operation.carried_in = carryNow[t];
+    if (retry) {
+      ctx.operation.judge_notes = retry.notes;
+      ctx.operation.first_attempt = retry.first;   // fix what you can see
+    }
+    ctx.operation.said_before = utterances(slug)
+      .filter(function (n) { return n.topic === t && n.mode === 'said'; })
+      .slice(-6).map(function (n) { return { round: n.round, iter: n.iter, seat: n.seat, text: n.text }; });
+    ctx.operation.directive =
+      'This is the working session of the topic team for operation.topic' +
+      (retry ? ', RE-RUN: operation.first_attempt is what this team said, it failed the ' +
+               'gate, and operation.judge_notes says exactly why, seat by seat. Rewrite ' +
+               'the statements to fix what the notes name.' : '.') +
+      ' Write one statement for each seat in operation.members, in that seat\'s register — a ' +
+      'register is a way of arguing, not a personality, and each seat may only do what its ' +
+      'register may do. Speak to the issue from the ground: the settlements, the water, the ' +
+      'jurisdiction, what has escalated from below, and above all evidence.recent. If ' +
+      'operation.carried_in is present, those claims arrived from your seats\' other rooms — ' +
+      'engage them, do not restate them. Disagree where the registers would disagree. Two ' +
+      'sentences per seat, plain, no preamble, and never claim a fact the context does not ' +
+      'carry.' +
+      (mayNeed ? ' If a seat genuinely needs something the context lacks, put a short plain ' +
+        'question in needs — at most two, and an empty list if nothing is needed. The first ' +
+        'several questions across the rooms are looked up before the next iteration; the ' +
+        'rest are dropped, so only ask what matters.' : '');
+    ask('speak', ctx, mayNeed ? SCHEMA_SPEAK_NEEDS : SCHEMA_SPEAK, 'topic_statements', 1800, cb2);
+  }
+  function judgeOnce(iter, t, said, crit, cb2) {
+    var ctx = baseCtx('JUDGE', iter, t);
+    ctx.operation.members = membersOf(t);
+    // the judge scores "engaged" partly against what was carried in, so it
+    // has to see what was carried in
+    if (carryNow[t] && carryNow[t].length) ctx.operation.carried_in = carryNow[t];
+    ctx.operation.said = said;
+    ctx.operation.critiques = crit;
+    ctx.operation.directive =
+      'You are the gate, not a participant. Score every utterance in operation.said and ' +
+      'operation.critiques, one entry per seat, each 0-3: grounded (every claim traceable to ' +
+      'this context), register (argues in its register\'s way and within what it may do), ' +
+      'specific (names places, actors, quantities of this ground), engaged (answers the issue ' +
+      'and, where present, operation.carried_in or the statement it critiques). The register ' +
+      'rules are in council.registers — what each may and may not do. Be strict; a generic ' +
+      'sentence that could be said of any ground scores 0 on specific. One short note per ' +
+      'seat saying what would raise it. For each MEMBER seat, also extract carry: the one ' +
+      'claim worth carrying into that seat\'s other room, in one sentence, or an empty ' +
+      'string if nothing survives. For critic seats, carry is always an empty string.';
+    ask('judge', ctx, SCHEMA_JUDGE, 'gate_scores', 2000, cb2);
+  }
+  function c3(v) { return clamp(v | 0, 0, 3); }
+  function gate(scores, memberSeats) {
+    var tot = 0, gr = 0, n = 0;
+    (scores || []).forEach(function (sc) {
+      if (memberSeats.indexOf(sc.seat) < 0) return;
+      tot += c3(sc.grounded) + c3(sc.register) + c3(sc.specific) + c3(sc.engaged);
+      gr += c3(sc.grounded); n++;
+    });
+    return { avg: n ? tot / n : 0, grounded: n ? gr / n : 0, n: n };
+  }
+  function topicPass(iter, t, cb2) {
+    var mem = membersOf(t).map(function (m) { return m.seat; });
+    tick('iteration ' + iter + ' · topic ' + t + ' · the team speaks');
+    speakOnce(iter, t, null, function (e1, first) {
+      if (e1) return abort(e1);
+      var saidA = (first && first.utterances) || [];
+      if (!saidA.length) return abort('the team for topic ' + t + ' returned nothing');
+      (first && first.needs || []).forEach(function (q) { needsAll.push(q); });
+      var ctx2 = baseCtx('CRITIQUE', iter, t);
+      ctx2.operation.critics = criticsOf(t);
+      ctx2.operation.just_said = saidA;
+      ctx2.operation.directive =
+        'You are the critics of operation.topic. Each seat in operation.critics answers what ' +
+        'is in operation.just_said, from a register incommensurable with the one that said it ' +
+        '— that opposition is the mechanism, not rudeness. Name the specific claim you are ' +
+        'answering. Say what it leaves out, what it assumes, or who it does not speak for. ' +
+        'Two sentences per seat, no preamble, and never introduce a fact the context does ' +
+        'not carry.';
+      tick('iteration ' + iter + ' · topic ' + t + ' · the critics answer');
+        ask('critique', ctx2, SCHEMA_SPEAK, 'critic_responses', 1800, function (e2, cr) {
+        if (e2) return abort(e2);
+        var critA = (cr && cr.utterances) || [];
+        tick('iteration ' + iter + ' · topic ' + t + ' · the judge scores');
+        judgeOnce(iter, t, saidA, critA, function (e3, j1) {
+          if (e3) return abort(e3);
+          var scoresA = (j1 && j1.scores) || [];
+          var gA = gate(scoresA, mem);
+          if (gA.n && (gA.avg < GATE.total || gA.grounded < GATE.grounded)) {
+            // RALPH: once, with the notes, and the better attempt is kept
+            ROUND_STATE[slug].of += 2;
+            var notes = scoresA.filter(function (sc) { return mem.indexOf(sc.seat) >= 0; })
+              .map(function (sc) { return { seat: sc.seat, note: sc.note }; });
+            tick('iteration ' + iter + ' · topic ' + t + ' · sent back');
+            speakOnce(iter, t, { notes: notes, first: saidA }, function (e4, second) {
+              var saidB = (!e4 && second && second.utterances) || [];
+              (second && second.needs || []).forEach(function (q) { needsAll.push(q); });
+              tick('iteration ' + iter + ' · topic ' + t + ' · re-scored');
+              judgeOnce(iter, t, saidB, critA, function (e5, j2) {
+                var scoresB = (!e5 && j2 && j2.scores) || [];
+                var gB = gate(scoresB, mem);
+                if (gB.avg >= gA.avg && saidB.length) {
+                  finish(saidB, critA, scoresB, 2, gB);
+                } else {
+                  finish(saidA, critA, scoresA, 1, gA);
+                }
+              });
+            });
+          } else {
+            finish(saidA, critA, scoresA, 1, gA);
+          }
+          function finish(said, crit, scores, attempt, g) {
+            var byseat = {};
+            scores.forEach(function (sc) { byseat[sc.seat] = sc; });
+            function stamp(u, mode, extra) {
+              var sc = byseat[u.seat];
+              var x = extra || {};
+              if (sc) {
+                x.sc = { g: c3(sc.grounded), r: c3(sc.register), s: c3(sc.specific), e: c3(sc.engaged) };
+                x.tot = x.sc.g + x.sc.r + x.sc.s + x.sc.e;
+                x.jnote = sc.note; x.jm = judgeModel;
+              }
+              rec(mode, iter, t, u, x);
+            }
+            said.forEach(function (u) { stamp(u, 'said', { att: attempt }); });
+            crit.forEach(function (u) { stamp(u, 'critique', null); });
+            // GRAPH: passing members' claims travel the strut to the other room
+            var passed = g.avg >= GATE.total && g.grounded >= GATE.grounded;
+            if (passed) {
+              membersOf(t).forEach(function (m) {
+                var sc = byseat[m.seat];
+                if (sc && sc.carry) {
+                  (carryNext[m.other_room] = carryNext[m.other_room] || []).push(
+                    { seat: m.seat, who: m.who, register: m.register, from_room: t, claim: sc.carry });
+                }
+              });
+            }
+            commit(); cb2();
+          }
+        });
       });
     });
   }
-  function record(list, topic, mode) {
-    (list || []).forEach(function (u) {
-      if (!u || !u.text) return;
-      var st = seat.struts[u.seat];
-      DB.notes.push({ id: 'u' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36),
-        kind: 'sim', mode: mode, cell: slug, topic: topic, seat: u.seat, round: round,
-        who: seatHolder(slug, u.seat) || 'seat ' + u.seat,
-        register: st ? st.register : '', text: String(u.text).trim(),
-        model: pickModel(), t: Date.now() });
-      made++;
+  function iteration(iter, next) {
+    carryNow = carryNext; carryNext = {};
+    // record the reverberation itself, so the transcript shows the routing
+    for (var t in carryNow) {
+      carryNow[t].forEach(function (cy) {
+        rec('reverb', iter, +t, { seat: cy.seat, text: cy.claim }, { from_room: cy.from_room });
+      });
+    }
+    var k = 0;
+    (function nextTopic() {
+      if (k >= order.length) {
+        if (iter < REVERB && needsAll.length) {
+          var q = needsAll.slice(); needsAll = [];
+          tick('iteration ' + iter + ' · looking things up');
+          ROUND_STATE[slug].at--;            // fetches are free; do not count them
+          return resolveNeeds(cell, q, function () { next(); });
+        }
+        return next();
+      }
+      var t = order[k]; k++;
+      topicPass(iter, t, nextTopic);
+    })();
+  }
+  function outcomes() {
+    var ctx = compileContext(cell, seat, world, 'OUTCOME');
+    ctx.operation.round = round;
+    var ch = charterOf(slug);
+    if (ch && ch.tensions) ctx.operation.tensions = ch.tensions;
+    var byT = {};
+    utterances(slug).forEach(function (n) {
+      if (n.round !== round || n.mode === 'reverb') return;
+      (byT[n.topic] = byT[n.topic] || []).push(n);
     });
+    var tr = [];
+    Object.keys(byT).forEach(function (k) {
+      byT[k].slice(-8).forEach(function (n) {      // each topic keeps its tail
+        tr.push({ iter: n.iter, topic: n.topic, seat: n.seat, mode: n.mode,
+          register: n.register, tot: n.tot === undefined ? null : n.tot, text: n.text });
+      });
+    });
+    ctx.operation.transcript = tr;
+    ctx.operation.topics = topics.map(function (tp, i) {
+      return { id: i, place: tp.title, issue: tp.issue || null }; });
+    ctx.operation.directive =
+      'The convening is over. For every topic in operation.topics write the outcome: what ' +
+      'this round actually established about its issue, drawn only from operation.transcript ' +
+      '— favour what scored high, and say where the registers still disagree in dissent, or ' +
+      'leave dissent empty if they closed. Three sentences at most per statement. This is ' +
+      'the statement the next convening will inherit, so no summary padding: only what was ' +
+      'established, and what is still open.';
+    tick('writing the outcomes');
+    ask('outcome', ctx, SCHEMA_OUTCOME, 'outcomes', 2400, function (err, j) {
+      if (err) return abort(err);
+      if (j) {
+        (j.outcomes || []).forEach(function (o) {
+          if (topics[o.topic] === undefined) return;
+          rec('outcome', REVERB + 1, o.topic, { seat: -1, text: o.statement },
+              o.dissent ? { dissent: o.dissent } : null);
+        });
+      }
+      commit();
+      ROUND_STATE[slug] = null;
+      done(null, made); wake();
+    });
+  }
+  try {
+    ensureCharter(function () {
+      var i = 1;
+      (function nextIter() {
+        if (i > REVERB) return outcomes();
+        var it = i; i++;
+        iteration(it, nextIter);
+      })();
+    });
+  } catch (e) {
+    abort(e && e.message || e);
   }
 }
 function seatSource(slug, i) { return (DB.seatSrc || {})[seatKey(slug, i)] || null; }
@@ -4566,8 +4995,11 @@ function openThread(cell, presetTopic) {
   }
   var said = notes.map(function (n) {
     var held = n.kind === 'concern' ? seconds(n) : 0;
-    return '<div class="said"><b>' + esc((n.who || 'someone').toUpperCase()) + '</b> ' +
+    return '<div class="said' + (n.kind === 'sim' ? ' crit' : '') + '"><b>' +
+      esc((n.who || 'someone').toUpperCase()) + '</b> ' +
       '<span>' + whenLabel(n.t) + (n.topic != null ? ' · topic ' + n.topic : '') +
+      (n.kind === 'sim' ? ' · <b style="color:var(--signal)">rehearsal</b> — written by ' +
+        esc(n.model || 'a model') + ', not by ' + esc(n.who || 'anyone') : '') +
       (n.kind === 'concern' ? ' · concern, answerable at ' + SCALES[n.answer].n.toLowerCase() +
         ' · ' + (held > 1 ? 'held by ' + held : 'raised by one') : '') +
       '</span><p>' + esc(n.text) + '</p>' +
@@ -4827,8 +5259,10 @@ function draftCarry(cell, fromTopic, toTopic, cb) {
       'sentence must end with the bracketed id of the note it came from. Adding a fact that is ' +
       'not in operation.material is the one thing you must not do — not context, not background, ' +
       'not a plausible detail, and nothing from the rest of this context either. The rest of the ' +
-      'context is there so you know where you are, not so you can draw on it. If the material ' +
-      'does not support a carry, set carries_nothing true and leave carry empty. Two sentences ' +
+      'context is there so you know where you are, not so you can draw on it. ' +
+      'operation.may_infer is false: for this call the LAW\'s licence to infer is revoked. ' +
+      'List in cites the ids of the notes you restated. If the material does not support a ' +
+      'carry, set carries_nothing true, leave carry empty and cites empty. Two sentences ' +
       'at most.',
     context: ctx, schema: SCHEMA_CARRY, schemaName: 'carry', maxOutputTokens: 900
   }, function (err, j) {
@@ -5237,55 +5671,115 @@ function recruitBlock(cell, seat, rec) {
 // exactly what it will and will not be used for.
 // convening it, and reading back what was said
 function runBlock(cell, seat, world) {
-  var slug = cellSlug(cell), n = seat.members.length, run = ROUND_STATE[slug];
+  var slug = cellSlug(cell), run = ROUND_STATE[slug];
   var said = utterances(slug), rounds = roundsRun(slug);
-  var news = newsFor(cell);
+  var news = newsFor(cell), ch = charterOf(slug);
+  var plan = harnessPlan(seat);
   if (run) {
-    return '<p style="color:var(--signal)">Convening · ' + run.at + ' of ' + run.of +
-      ' · the topic teams are speaking and their critics are answering.</p>';
+    return '<p style="color:var(--signal)">Convening · call ' + run.at + ' of ' + run.of +
+      ' · ' + esc(run.label || '') + '</p>';
   }
-  return '<p style="margin-top:12px">' +
+  var outs = said.filter(function (n) { return n.mode === 'outcome'; });
+  return (HARNESS_ERR[slug]
+    ? '<p style="color:var(--signal)">The last convening stopped rather than paying to ' +
+      'continue: ' + esc(HARNESS_ERR[slug]) + '. What was recorded before the stop is kept.</p>'
+    : '') +
+    '<p style="margin-top:12px">' +
     (rounds
-      ? '<b>' + said.length + '</b> things said across <b>' + rounds + '</b> round' +
-        (rounds === 1 ? '' : 's') + '. '
+      ? '<b>' + said.length + '</b> things said across <b>' + rounds + '</b> convening' +
+        (rounds === 1 ? '' : 's') + (outs.length ? ', closing on ' + outs.length +
+        ' outcome statement' + (outs.length === 1 ? '' : 's') : '') + '. '
       : 'Nothing has been convened here yet. ') +
-    'A round is every topic team stating its case and its critics answering — ' +
-    '<b>' + (n * 2) + ' calls</b>, because the critics have to hear the statements before they ' +
-    'can answer them.' +
+    'CONVENE runs the whole harness: a charter written for this ground' +
+    (ch ? ' (already written)' : '') + ', then ' + REVERB + ' reverberations of ' +
+    'speak → critique → judge over ' + plan.topics + ' topics with claims carried along the ' +
+    'struts between them, then the outcome statements — <b>' + (plan.base + (ch ? 0 : 1)) +
+    ' calls</b>, up to ' + (plan.worst + (ch ? 0 : 1)) + ' if the judge sends rooms back.' +
     (news && news.list.length
-      ? ' They argue from <b>' + news.list.length + '</b> live items about this ground, not from history.'
-      : ' Nothing live has been gathered about this ground yet, so they will argue from the record alone.') +
+      ? ' They argue from <b>' + news.list.length + '</b> live item' +
+        (news.list.length === 1 ? '' : 's') + ' about this ground.'
+      : ' Nothing live has been gathered yet, so they argue from the record alone.') +
     '</p>' +
-    '<button class="go" id="cRun">' + (rounds ? 'RUN ANOTHER ROUND' : 'CONVENE A ROUND') + '</button> ' +
+    '<button class="go" id="cRun">' + (rounds ? 'CONVENE AGAIN' : 'CONVENE') + '</button> ' +
     (said.length ? '<button class="go ghost" id="cScript">READ THE TRANSCRIPT</button> ' +
-                   '<button class="go ghost" id="cWipe">CLEAR IT</button>' : '');
+                   '<button class="go ghost" id="cWipe">CLEAR IT</button>' : '') +
+    (ch ? '<details><summary>the charter for this ground · ' + esc(ch.model) +
+      ' · ' + whenLabel(ch.t) + '</summary><p style="white-space:pre-wrap">' + esc(ch.charter) +
+      '</p>' + (ch.tensions || []).map(function (tn) {
+        return '<div class="row"><b>' + esc(tn.title.toUpperCase()) + '</b><span>' +
+          esc(tn.why_now) + '</span></div>'; }).join('') +
+      '<button class="go ghost" id="cRewrite" style="margin-top:8px">REWRITE IT</button></details>' : '') +
+    '<details><summary>the harness, and how the tokens are steered</summary>' +
+    '<p>Deterministic code decides what runs; models only speak, score and write. ' +
+    'LAW and the charter are the hot prefix, identical across every call on this cell, and ' +
+    'the per-call task rides at the very end of the context — so most input tokens are cache ' +
+    'reads. Every line is scored: grounded, register, specific, engaged, each 0–3. The gate ' +
+    'is taken on the room — a team averaging below ' + GATE.total + '/12, or under ' +
+    GATE.grounded + '/3 grounded, is sent back once with the judge\'s notes and its own ' +
+    'first attempt, and the better attempt is kept. Passing claims travel each ' +
+    'seat\'s strut into its other room for the next reverberation. Speakers may ask for the ' +
+    'world; their questions are looked up between iterations, without a model call.</p>' +
+    Object.keys(HARNESS_STAGE).map(function (k) {
+      return '<div class="row"><b>' + k.toUpperCase() + '</b><span>' + esc(modelFor(k)) +
+        ' · ' + HARNESS_STAGE[k].effort + ' effort</span></div>'; }).join('') +
+    '</details>';
 }
 function openTranscript(cell, seat) {
   var slug = cellSlug(cell), said = utterances(slug);
   var topics = topicNames(cell, seat, councilSeat && councilSeat.seating === 'world');
   var byRound = {};
   said.forEach(function (n) { (byRound[n.round] = byRound[n.round] || []).push(n); });
+  function chip(n) {
+    if (n.tot === undefined || n.tot === null) return '';
+    var pass = n.tot >= GATE.total && (!n.sc || n.sc.g >= GATE.grounded);
+    return ' <span style="color:' + (pass ? 'var(--muted)' : 'var(--signal)') + '">' +
+      n.tot + '/12' + (n.att > 1 ? ' · second attempt' : '') + '</span>';
+  }
   var body = Object.keys(byRound).sort(function (a, b) { return a - b; }).map(function (r) {
-    var byTopic = {};
-    byRound[r].forEach(function (n) { (byTopic[n.topic] = byTopic[n.topic] || []).push(n); });
-    return '<h3 style="font-size:11px;letter-spacing:.14em;margin:16px 0 4px">ROUND ' + r + '</h3>' +
-      Object.keys(byTopic).sort(function (a, b) { return a - b; }).map(function (t) {
-        return '<div class="topic" style="cursor:default"><b><s>TOPIC ' + t + '</s>' +
-          esc((topics[t] || {}).title || '') + '</b>' +
-          ((topics[t] || {}).issue ? '<q>' + esc(topics[t].issue) + '</q>' : '') + '</div>' +
-          byTopic[t].map(function (n) {
-            return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') + '"><b>' +
-              esc((n.who || '').toUpperCase()) + '</b> <span>' + esc(n.register || '') +
-              (n.mode === 'critique' ? ' · answering' : '') + '</span><p>' + esc(n.text) + '</p></div>';
+    var rs = byRound[r];
+    var iters = {};
+    rs.forEach(function (n) { (iters[n.iter || 1] = iters[n.iter || 1] || []).push(n); });
+    return '<h3 style="font-size:11px;letter-spacing:.14em;margin:16px 0 4px">CONVENING ' + r +
+      '</h3>' + Object.keys(iters).sort(function (a, b) { return a - b; }).map(function (it) {
+        var byTopic = {};
+        iters[it].forEach(function (n) { (byTopic[n.topic] = byTopic[n.topic] || []).push(n); });
+        var isOutcome = iters[it].every(function (n) { return n.mode === 'outcome'; });
+        return '<p style="letter-spacing:.14em;font-size:9px;color:var(--muted);margin:10px 0 2px">' +
+          (isOutcome || it > REVERB ? 'OUTCOMES' : 'REVERBERATION ' + it + ' OF ' + REVERB) + '</p>' +
+          Object.keys(byTopic).sort(function (a, b) { return a - b; }).map(function (t) {
+            return '<div class="topic" style="cursor:default"><b><s>TOPIC ' + t + '</s>' +
+              esc((topics[t] || {}).title || '') + '</b>' +
+              ((topics[t] || {}).issue ? '<q>' + esc(topics[t].issue) + '</q>' : '') + '</div>' +
+              byTopic[t].map(function (n) {
+                if (n.mode === 'outcome') {
+                  return '<div class="said" style="border-left:2px solid var(--ink);padding-left:7px">' +
+                    '<b>OUTCOME</b><p>' + esc(n.text) + '</p>' +
+                    (n.dissent ? '<p style="color:var(--signal)">still open: ' + esc(n.dissent) + '</p>' : '') +
+                    '</div>';
+                }
+                if (n.mode === 'reverb') {
+                  return '<div class="said" style="opacity:.8"><b>' + esc((n.who || '').toUpperCase()) +
+                    '</b> <span>carried in from room ' + n.from_room + '</span><p>' + esc(n.text) + '</p></div>';
+                }
+                return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') + '"><b>' +
+                  esc((n.who || '').toUpperCase()) + '</b> <span>' + esc(n.register || '') +
+                  (n.mode === 'critique' ? ' · answering' : '') + '</span>' + chip(n) +
+                  '<p>' + esc(n.text) + '</p>' +
+                  (n.jnote && (n.tot < GATE.total || (n.sc && n.sc.g < GATE.grounded))
+                    ? '<p style="color:var(--signal);font-size:9px">the judge: ' +
+                      esc(n.jnote) + '</p>' : '') + '</div>';
+              }).join('');
           }).join('');
       }).join('');
   }).join('');
+  var models = {};
+  said.forEach(function (n) { if (n.model) models[n.model] = 1; if (n.jm) models[n.jm] = 1; });
   panel('TRANSCRIPT · ' + slug,
-    '<p>What the council said, in the order it said it. Every line was written by <b>' +
-    esc((said[0] || {}).model || pickModel()) + '</b> from the compiled world state and is ' +
-    'marked as such — it is a rehearsal of the argument this ground would have, not a record of ' +
-    'one that happened. The people named are the nominees the record supplied; none of them said ' +
-    'any of this.</p>' + body +
+    '<p>What the council said, in the order it said it, with the score the judge gave each ' +
+    'line. Written and judged by <b>' + esc(Object.keys(models).join(', ') || pickModel()) + '</b> from ' +
+    'the compiled world state — a rehearsal of the argument this ground would have, not a ' +
+    'record of one that happened. The people named are the nominees the record supplied; ' +
+    'none of them said any of this.</p>' + body +
     '<button class="go ghost" id="tBack" style="margin-top:12px">BACK TO THE COUNCIL</button>');
   document.getElementById('tBack').onclick = function () { openCouncil(cell); };
 }
@@ -5604,9 +6098,15 @@ function openCouncil(cell) {
   if (cr) cr.onclick = function () {
     if (!OPENAI_KEY) { cr.textContent = 'PASTE A KEY FIRST'; return; }
     cr.textContent = 'CONVENING…';
-    runRound(cell, seat, world,
+    runHarness(cell, seat, world,
       function () { if (PANEL === 'council') openCouncil(cell); },
       function () { if (PANEL === 'council') openCouncil(cell); });
+  };
+  var crw = document.getElementById('cRewrite');
+  if (crw) crw.onclick = function () {
+    delete DB.charter[slug]; commit();
+    crw.textContent = 'REWRITING…';
+    writeCharter(cell, seat, world, function () { if (PANEL === 'council') openCouncil(cell); });
   };
   var cscr = document.getElementById('cScript');
   if (cscr) cscr.onclick = function () { openTranscript(cell, seat); };

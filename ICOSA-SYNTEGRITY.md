@@ -967,27 +967,99 @@ so. The agenda outranks any inferred issue, flows into every room's
 context, heads every room in the transcript, and shows above the fold as
 `OPENING QUESTION`.
 
-## They speak as themselves
+## The persona is a lens, not a voice
 
-The first transcript read "From BODY: the release schedule serves the
-canal" — register-speak, which is nobody talking. The seats hold real named
-people, so the rooms now run in the first person: each statement is written
-as the seat's holder would actually argue it, from their documented life
-and work (`who_is` travels with every bench entry), in their own voice — a
-president does not argue like a streamer — with the register as the
-*discipline* the argument must satisfy, not the voice. They are distinct
-people with distinct stakes who would not necessarily get along; the
-directive tells them to take positions, disagree, and name each other, and
-critics answer the speaker by name.
+The first-person doctrine did not survive contact with its own transcript.
+A live run showed six registers reduced to six costumes: RECORD advocating
+policy without a citation, ABSENCE arguing instead of naming empty slots,
+RECURSION cheering sustainability — the register labels were on the lines,
+and the registers were not in them. Worse, the constitution contradicted
+itself: the directive ordered every seat to speak IN THE FIRST PERSON while
+BODY’s own rule forbade speaking in the first person for anyone. A seat
+holding both instructions could not obey either.
 
-The person is a lens onto the evidence, not a source of new facts — every
-claim must still come from the context, the gate still scores it, and every
-line is still stamped `rehearsal`. The transcript is now a room script:
-Opening Question at the top, each room headed by its subject *at* its
-place with its statement of importance and its bench (*at the table: … ·
-answering: …*), and each line carrying who the speaker is. While a
-convening runs, the panel shows the last lines as they land instead of a
-bare counter.
+So the doctrine inverted. **A seat is an epistemic operator, not a
+character.** The register determines what kind of proposition can exist at
+that seat at all; the named holder is an *argumentative lens* — their
+documented life selects which evidence they reach for and what they attack
+— never a simulated voice, and no seat pretends its holder witnessed
+anything. Every utterance now compiles as
+
+```
+CLAIM = operation(register, evidence[])
+```
+
+carried in the schema itself: each statement ships with `op` (cite /
+derive / name-missing / name-classification / trace-return / report-record
+/ silence) and `evidence` (the context items it stands on), and both ride
+into the record, the transcript, and the export. `op: silence` with one
+sentence naming exactly what evidence is missing is a *perfect* statement
+— RECORD with nothing citable says so and scores full marks for saying so.
+
+The six registers, restated as the operators they are:
+
+| | |
+|---|---|
+| **COORDINATE** | what does administration know? |
+| **BODY** | what does that knowledge imply materially for bodies? — derived from a citation, marked as derivation, never testimony |
+| **RECORD** | what can actually be proven? |
+| **ABSENCE** | what is structurally unknowable from this compiled state? — the unnamed operator, the unmeasured habitat, the absent governing body |
+| **CATEGORY** | which classifications are organizing perception, and who authored them? |
+| **RECURSION** | which descriptions have begun producing the reality subsequently observed? |
+
+RECURSION’s charge now includes the instrument’s own failure mode:
+**retrieval contamination**. Evidence arrives stamped with the query that
+fetched it (`asked: …`), so an item that entered by lexical collision — a
+hotel chain answering for a place name — is visible as what it is: a
+description that became environment by error, then conditioned the next
+round of description. Tracing that return is RECURSION’s work, and the LAW
+says naming a retrieval error is admissible work for any seat.
+
+**Admissibility precedes quality.** The judge’s first decision on every
+line is now boolean: did the seat perform only its register’s operation on
+evidence the context supplies? A violation is `INVALID` — zero, struck
+from the gate’s average, marked in the transcript and the export — not
+7/12 with an encouraging note. And the judge’s notes are bounded the same
+way: a note may demand better use of the supplied evidence, never facts
+the packet does not contain, because a scorer that rewards invention
+teaches invention.
+
+**The agenda stopped smuggling.** A charter used to be able to assert
+"Timmins is experiencing growth" as a starting condition no evidence
+established — an uncited pseudo-record upstream of every room. Agenda
+subjects now carry their epistemic standing on their face — `OBSERVED`
+(with its basis named), `INFERRED` (from what), `QUESTIONED` (phrased as a
+question, premise not established), `CLAIMED` (a human asserts it),
+`UNKNOWN` — and the speak directive tells the rooms that a QUESTIONED
+subject is under investigation, not a fact to build on.
+
+**A carry is a transformation, not a slogan.** What travels the strut is
+no longer the room’s best sentence — "we must prioritize local voices"
+fits every room on Earth and moves none of them. The judge now extracts
+`{claim, evidence, contradiction}`: the claim, what it stands on, and what
+it leaves undecided that the destination room must face. The receiving
+directive orders the room to *operate* on what arrived — test it against
+this room’s evidence, say what it decides or breaks here — and states
+that restating or applauding it is a violation.
+
+**Convergence is not the success condition.** The outcome stage now says
+so: a sharpened incompatibility outranks agreement prose, dissent records
+where registers cannot both be right, and every outcome carries `needed` —
+what evidence or institutional answer would make the topic decidable. "No
+substantive conclusion is admissible, because X is missing" is a finding,
+and the next convening inherits the research agenda, not a communiqué.
+
+**Locality beats fame on the bench.** The ranking already weighted the tie
+to the ground heaviest; the fame terms are now capped lower still, so they
+break ties among the equally local and never outrank a genuine relation to
+the polygon. The bench this wants is the hydrologist who published on this
+water beside the political leader responsible to it beside the artist from
+the settlement — six different *records*, not six recognizable voices.
+
+What survives from the earlier doctrine: the holder’s `who_is` still
+travels with every bench entry, the persona still colours the argument —
+after the claim compiles, never instead of it — and every line is still
+stamped `rehearsal`.
 
 ## The harness
 
@@ -1006,8 +1078,8 @@ The shape, and the engineering each layer answers for:
 | **harness** | the orchestrator. Plain JS, no model. It owns the order, the budget, the gate and the record. |
 | **loop** | the reverberation. Beer runs the icosahedron more than once on purpose: each iteration re-speaks every topic with what arrived from the others. Two iterations per convening. |
 | **ralph loop** | the retry. A room whose statements fail the gate is sent back **once, with the judge's notes**, and the better attempt is kept — the same task re-run against its own critique, not a conversation. |
-| **graph loop** | the routing. Every seat sits in two rooms, so after judging a topic the judge extracts each member's strongest claim and the harness carries it into that seat's **other** room for the next iteration — along the strut, which is the actual edge topology of the solid, not a mailing list. |
-| **gauntlet loop** | the gate. Every line is scored — grounded, in-register, specific, engaged, each 0–3, clamped in code — and the gate is taken on the room: a team averaging below 8/12, or under 2/3 grounded, retries. A room that still fails stays in the transcript stamped with its scores and carries nothing anywhere. |
+| **graph loop** | the routing. Every seat sits in two rooms, so after judging a topic the judge extracts each member's unresolved transformation — claim, evidence, contradiction — and the harness carries it into that seat's **other** room for the next iteration — along the strut, which is the actual edge topology of the solid, not a mailing list. The receiving room must operate on it, not applaud it. |
+| **gauntlet loop** | the gate. Admissibility first: a line performing an operation its register may not is INVALID and contributes zero — struck in code, not averaged. Admissible lines are scored — grounded, in-register, specific, engaged, each 0–3, clamped in code — and the gate is taken on the room: a team averaging below 8/12, or under 2/3 grounded, retries. A room that still fails stays in the transcript stamped with its scores and carries nothing anywhere. |
 
 **Two models where the account has two of the same generation.** The judge
 is the other model of that generation — Terra scoring what Sol said — so

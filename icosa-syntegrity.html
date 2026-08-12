@@ -1992,10 +1992,15 @@ function viewsFor(people, cb) {
   });
 }
 function scorePerson(p) {
+  // LOCALITY BEATS FAME. A celebrity bench brings six recognizable voices
+  // and one record; a local bench — the hydrologist who published here, the
+  // planner responsible for the road, the artist from the settlement —
+  // brings six different records. Fame terms are capped low so they break
+  // ties among the equally local, never outrank a tie to the ground.
   var local = 1 / (1 + (p.up || 0));
   var reach = Math.min(1, Math.log10((p.sitelinks || 0) + 1) / 2.4);
   var attn = Math.min(1, Math.log10((p.views || 0) + 1) / 6.5);
-  return local * 0.55 + reach * 0.30 + attn * 0.15;
+  return local * 0.68 + reach * 0.20 + attn * 0.12;
 }
 // one rung: everybody this exact cell knows about. The query service first,
 // because it can cover the whole triangle; the capped endpoint only if that
@@ -2535,7 +2540,7 @@ function compileContext(cell, seat, world, op) {
         return { rounds: roundsRun(slug),
           outcomes: sim.filter(function (n) { return n.mode === 'outcome'; })
             .slice(-8).map(function (n) { return { topic: n.topic, statement: n.text,
-              dissent: n.dissent || '' }; }) };
+              dissent: n.dissent || '', must_learn: n.needed || '' }; }) };
       })()
     },
     evidence: {
@@ -2588,6 +2593,11 @@ var LAW = 'You are one instrument inside a syntegration atlas. The input is a co
   'ground under it, the council seated on it, what has been said and carried and escalated, and ' +
   'the evidence already gathered with its provenance. Work only from that. You may infer, and ' +
   'you must never invent a source, a citation, or a person you are not confident is real. ' +
+  'The six registers are epistemic operators, not styles: what a seat may say is bounded by ' +
+  'what its register may do to the evidence, and admissibility precedes eloquence — a claim ' +
+  'the register cannot produce is invalid however well it reads. Evidence carries its own ' +
+  'provenance: an item that arrived by a query sharing only a word with this ground is a ' +
+  'retrieval error, and naming it as one is admissible work. ' +
   'You propose; a human accepts. Nothing you return is a fact about the record until someone ' +
   'accepts it, and everything you return will be shown to the reader stamped as inferred.';
 
@@ -2735,20 +2745,29 @@ var HARNESS_STAGE = {
   judge:    { effort: 'medium', who: 'second' },
   outcome:  { effort: 'high',   who: 'top'    }
 };
+// CLAIM = operation(register, evidence[]) — the compiled form of every
+// utterance. op names the epistemic operation performed; evidence names the
+// context items it stands on. The persona colours text; it never adds facts.
+var SPEAK_ITEM = {
+  type: 'object', additionalProperties: false, required: ['seat', 'op', 'evidence', 'text'],
+  properties: { seat: { type: 'integer' },
+    op: { type: 'string', enum: ['cite', 'derive', 'name-missing', 'name-classification',
+                                 'trace-return', 'report-record', 'silence'] },
+    evidence: { type: 'array', items: { type: 'string' } },
+    text: { type: 'string' } }
+};
 var SCHEMA_SPEAK = {
   type: 'object', additionalProperties: false, required: ['utterances'],
-  properties: { utterances: { type: 'array', items: {
-    type: 'object', additionalProperties: false, required: ['seat', 'text'],
-    properties: { seat: { type: 'integer' }, text: { type: 'string' } } } } }
+  properties: { utterances: { type: 'array', items: SPEAK_ITEM } }
 };
 var SCHEMA_SPEAK_NEEDS = {
   type: 'object', additionalProperties: false, required: ['utterances', 'needs'],
   properties: {
-    utterances: { type: 'array', items: {
-      type: 'object', additionalProperties: false, required: ['seat', 'text'],
-      properties: { seat: { type: 'integer' }, text: { type: 'string' } } } },
+    utterances: { type: 'array', items: SPEAK_ITEM },
     needs: { type: 'array', items: { type: 'string' } } }
 };
+// the agenda carries its epistemic standing — an agenda is not a record, and
+// a subject the evidence does not establish must say so on its face
 var SCHEMA_CHARTER = {
   type: 'object', additionalProperties: false,
   required: ['charter', 'opening_question', 'agenda', 'tensions'],
@@ -2757,28 +2776,38 @@ var SCHEMA_CHARTER = {
     opening_question: { type: 'string' },
     agenda: { type: 'array', items: {
       type: 'object', additionalProperties: false,
-      required: ['topic', 'subject', 'statement'],
+      required: ['topic', 'subject', 'statement', 'standing', 'basis'],
       properties: { topic: { type: 'integer' }, subject: { type: 'string' },
-                    statement: { type: 'string' } } } },
+                    statement: { type: 'string' },
+                    standing: { type: 'string',
+                      enum: ['OBSERVED', 'INFERRED', 'QUESTIONED', 'CLAIMED', 'UNKNOWN'] },
+                    basis: { type: 'string' } } } },
     tensions: { type: 'array', items: {
       type: 'object', additionalProperties: false, required: ['title', 'why_now'],
       properties: { title: { type: 'string' }, why_now: { type: 'string' } } } } }
 };
+// admissibility precedes quality; a carry is a transformation, not a slogan
 var SCHEMA_JUDGE = {
   type: 'object', additionalProperties: false, required: ['scores'],
   properties: { scores: { type: 'array', items: {
     type: 'object', additionalProperties: false,
-    required: ['seat', 'grounded', 'register', 'specific', 'engaged', 'note', 'carry'],
-    properties: { seat: { type: 'integer' }, grounded: { type: 'integer' },
+    required: ['seat', 'admissible', 'grounded', 'register', 'specific', 'engaged', 'note', 'carry'],
+    properties: { seat: { type: 'integer' }, admissible: { type: 'boolean' },
+      grounded: { type: 'integer' },
       register: { type: 'integer' }, specific: { type: 'integer' },
-      engaged: { type: 'integer' }, note: { type: 'string' }, carry: { type: 'string' } } } } }
+      engaged: { type: 'integer' }, note: { type: 'string' },
+      carry: { type: 'object', additionalProperties: false,
+        required: ['claim', 'evidence', 'contradiction'],
+        properties: { claim: { type: 'string' }, evidence: { type: 'string' },
+                      contradiction: { type: 'string' } } } } } } }
 };
 var SCHEMA_OUTCOME = {
   type: 'object', additionalProperties: false, required: ['outcomes'],
   properties: { outcomes: { type: 'array', items: {
-    type: 'object', additionalProperties: false, required: ['topic', 'statement', 'dissent'],
+    type: 'object', additionalProperties: false,
+    required: ['topic', 'statement', 'dissent', 'needed'],
     properties: { topic: { type: 'integer' }, statement: { type: 'string' },
-      dissent: { type: 'string' } } } } }
+      dissent: { type: 'string' }, needed: { type: 'string' } } } } }
 };
 function utterances(slug) {
   return DB.notes.filter(function (n) { return n.kind === 'sim' && n.cell === slug; });
@@ -2821,22 +2850,36 @@ function speakDirective(retry, mayNeed) {
   return 'This is the working session of the topic team for operation.topic' +
     (retry ? ', RE-RUN: operation.first_attempt is what this team said, it failed the ' +
              'gate, and operation.judge_notes says exactly why, seat by seat. Rewrite ' +
-             'the statements to fix what the notes name.' : '.') +
-    ' Each seat in operation.members is held by the person named in who — who_is says who ' +
-    'they are. Write one statement per seat IN THE FIRST PERSON, as that person would ' +
-    'actually argue it from their documented life and work, in their own voice — a ' +
-    'president does not argue like a streamer, an astronaut does not argue like a cult ' +
-    'leader, and none of them talk about process. The person is a lens onto the evidence, ' +
-    'not a source of new facts: everything they claim must come from this context. Their ' +
-    'register (rules in council.registers) is the discipline their argument must satisfy, ' +
-    'not their voice. Speak to operation.topic.subject on this ground: the settlements, ' +
-    'the water, the jurisdiction, what has escalated from below, and above all ' +
-    'evidence.recent. These are distinct people with distinct stakes who would not ' +
-    'necessarily get along: take positions, disagree, name each other. If ' +
-    'operation.carried_in is present, those claims arrived from your seats\' other rooms — ' +
-    'engage them, do not restate them. Two ' +
-    'sentences per seat, plain, no preamble, and never claim a fact the context does not ' +
-    'carry.' +
+             'the statements to fix what the notes name — never by adding facts the ' +
+             'context does not carry.' : '.') +
+    ' Each seat in operation.members is an EPISTEMIC OPERATOR, not a character. Its ' +
+    'register (rules in council.registers) determines what kind of proposition can exist ' +
+    'at that seat at all; the person named in who is an argumentative lens — their ' +
+    'documented life selects which evidence they reach for and what they attack — never a ' +
+    'simulated voice, and no seat pretends its holder witnessed or testified to anything. ' +
+    'Every utterance compiles as claim = operation(register, evidence): put the operation ' +
+    'performed in op (cite / derive / name-missing / name-classification / trace-return / ' +
+    'report-record / silence) and the context items it stands on in evidence — titles, ' +
+    'field paths or urls from THIS context only, at least one unless op is silence. A seat ' +
+    'whose register has nothing admissible to produce says so: op silence, text one ' +
+    'sentence naming exactly what evidence is missing — that is a perfect statement, not a ' +
+    'failure. COORDINATE reports what the administrative record contains, with its source. ' +
+    'BODY derives the bodily consequence of a cited fact, marked as a derivation, never as ' +
+    'testimony. RECORD asserts nothing uncited. ABSENCE names the empty slots — the ' +
+    'unnamed operator, the unmeasured habitat, the absent governing body, the missing ' +
+    'designation — and never explains the emptiness away. CATEGORY names the ' +
+    'classification in force and its author without endorsing it. RECURSION points to a ' +
+    'description already returned as environment — including retrieval itself: an ' +
+    'evidence item whose note shows it arrived by a query that merely shares a word with ' +
+    'this ground has become environment by error, and tracing that return is its work. ' +
+    'Speak to operation.topic.subject; where its standing is QUESTIONED or UNKNOWN the ' +
+    'subject is under investigation — do not treat its premise as established. These are ' +
+    'incompatible ways of knowing operating on the same evidence: sharpen the ' +
+    'incompatibilities, name the claim you contradict. If operation.carried_in is ' +
+    'present, those are unresolved claims arrived from your seats\' other rooms — operate ' +
+    'on each: test it against this room\'s evidence and say what it decides, breaks, or ' +
+    'fails to decide here; restating or applauding it is a violation. Two sentences per ' +
+    'seat, plain, no preamble, and never claim a fact the context does not carry.' +
     (mayNeed ? ' If a seat genuinely needs something the context lacks, put a short plain ' +
       'question in needs — at most two, and an empty list if nothing is needed. The first ' +
       'several questions across the rooms are looked up before the next iteration; the ' +
@@ -2913,7 +2956,13 @@ function writeCharter(cell, seat, world, cb) {
     'Second, write the AGENDA: for every entry in operation.topic_points, a SUBJECT — the ' +
     'live issue at that place, not the place name — and a one-sentence statement of ' +
     'importance saying what is at stake and for whom. Subjects must be distinct, concrete ' +
-    'and contestable; a subject that could hang over any city has failed. ' +
+    'and contestable; a subject that could hang over any city has failed. The agenda is ' +
+    'not a record: every subject carries its epistemic standing — OBSERVED (established ' +
+    'by supplied evidence; name that evidence in basis), INFERRED (derived from evidence; ' +
+    'say from what in basis), QUESTIONED (a proposition to investigate; phrase the ' +
+    'subject as a question and leave basis empty), CLAIMED (a human note asserts it), or ' +
+    'UNKNOWN (nothing grounds it yet). A condition the packet does not establish must be ' +
+    'QUESTIONED or UNKNOWN, never smuggled in as a standing fact. ' +
     'Third, write the CHARTER: 150 to 250 words telling a room of arguers what this ' +
     'convening is about, what each kind of argument should attend to here, and what would ' +
     'count as progress. Then three to six tensions: short title, why it is live now. ' +
@@ -3058,6 +3107,8 @@ function runHarness(cell, seat, world, onStep, done) {
     ctx.operation.topic = { id: t, place: topics[t].title,
       subject: topics[t].subject || topics[t].issue || null,
       statement: topics[t].statement || null,
+      standing: topics[t].standing || null,
+      basis: topics[t].basis || null,
       issue: topics[t].issue || null };
     var ch = charterOf(slug);
     if (ch && ch.opening) ctx.operation.opening_question = ch.opening;
@@ -3113,25 +3164,38 @@ function runHarness(cell, seat, world, onStep, done) {
     ctx.operation.said = said;
     ctx.operation.critiques = crit;
     ctx.operation.directive =
-      'You are the gate, not a participant. Score every utterance in operation.said and ' +
-      'operation.critiques, one entry per seat, each 0-3: grounded (every claim traceable to ' +
-      'this context), register (argues in its register\'s way and within what it may do), ' +
-      'specific (names places, actors, quantities of this ground), engaged (answers the issue ' +
-      'and, where present, operation.carried_in or the statement it critiques). The register ' +
-      'rules are in council.registers — what each may and may not do. Be strict; a generic ' +
-      'sentence that could be said of any ground scores 0 on specific. One short note per ' +
-      'seat saying what would raise it. For each MEMBER seat, also extract carry: the one ' +
-      'claim worth carrying into that seat\'s other room, in one sentence, or an empty ' +
-      'string if nothing survives. For critic seats, carry is always an empty string.';
-    ask('judge', ctx, SCHEMA_JUDGE, 'gate_scores', 2000, cb2);
+      'You are the gate, not a participant. ADMISSIBILITY PRECEDES QUALITY. For every ' +
+      'utterance in operation.said and operation.critiques, one entry per seat, first ' +
+      'decide admissible: did the seat perform only its register\'s operation (rules in ' +
+      'council.registers) on evidence this context actually supplies, with op and evidence ' +
+      'filled honestly? Advocacy from RECORD, testimony or first-person simulation from ' +
+      'BODY, an explanation from ABSENCE, a prediction from RECURSION, an endorsement from ' +
+      'CATEGORY, policy from COORDINATE — inadmissible: admissible false and every score 0. ' +
+      'INVALID is not 7/12. A correct silence — op silence, naming exactly what evidence is ' +
+      'missing — is perfect register behaviour: admissible, 3 on grounded and register. ' +
+      'Then score admissible utterances 0-3: grounded (each claim traceable to its named ' +
+      'evidence), register, specific (names places, actors, quantities of this ground), ' +
+      'engaged (operates on the issue and, where present, operation.carried_in or the ' +
+      'statement it critiques). Be strict; a sentence that could be said of any ground ' +
+      'scores 0 on specific. One short note per seat saying what would raise it — a note ' +
+      'may only demand better use of the supplied evidence, never facts the packet does ' +
+      'not contain. For each MEMBER seat, extract carry as the unresolved transformation ' +
+      'for that seat\'s other room: carry.claim (one sentence), carry.evidence (what it ' +
+      'stands on in this context), carry.contradiction (what it leaves undecided that the ' +
+      'other room must face). A slogan that could enter any room on Earth is not a carry — ' +
+      'use empty strings instead. For critic seats, all carry fields are empty strings.';
+    ask('judge', ctx, SCHEMA_JUDGE, 'gate_scores', 2400, cb2);
   }
   function c3(v) { return clamp(v | 0, 0, 3); }
   function gate(scores, memberSeats) {
+    // an inadmissible utterance is INVALID: it contributes zero, whatever
+    // numbers rode in beside the verdict
     var tot = 0, gr = 0, n = 0;
     (scores || []).forEach(function (sc) {
       if (memberSeats.indexOf(sc.seat) < 0) return;
-      tot += c3(sc.grounded) + c3(sc.register) + c3(sc.specific) + c3(sc.engaged);
-      gr += c3(sc.grounded); n++;
+      var adm = sc.admissible !== false;
+      tot += adm ? c3(sc.grounded) + c3(sc.register) + c3(sc.specific) + c3(sc.engaged) : 0;
+      gr += adm ? c3(sc.grounded) : 0; n++;
     });
     return { avg: n ? tot / n : 0, grounded: n ? gr / n : 0, n: n };
   }
@@ -3147,14 +3211,17 @@ function runHarness(cell, seat, world, onStep, done) {
       ctx2.operation.critics = criticsOf(t);
       ctx2.operation.just_said = saidA;
       ctx2.operation.directive =
-        'You are the critics of operation.topic — each seat in operation.critics is held by ' +
-        'the person named in who, and who_is says who they are. Each answers what is in ' +
-        'operation.just_said IN THE FIRST PERSON, in their own voice, from a register ' +
-        'incommensurable with the one that said it — that opposition is the mechanism, not ' +
-        'rudeness. Address the speaker by name and name the specific claim you are ' +
-        'answering. Say what it leaves out, what it assumes, or who it does not speak for. ' +
-        'Two sentences per seat, no preamble, and never introduce a fact the context does ' +
-        'not carry.';
+        'You are the critics of operation.topic — each seat in operation.critics is an ' +
+        'epistemic operator whose register is incommensurable with the one it answers; ' +
+        'that opposition is the mechanism, not rudeness. The person named in who is a lens, ' +
+        'never a voice: no first-person simulation. The same law of compilation holds: ' +
+        'claim = operation(register, evidence) — fill op and evidence honestly, and op ' +
+        'silence with the missing evidence named is a legitimate answer. Name the seat ' +
+        'whose claim you answer and the specific proposition, then say what its register ' +
+        'could not see: the slot it left empty, the citation it lacks, the classification ' +
+        'doing silent work, the body that bears it, the description feeding back, the ' +
+        'record it overreads. Two sentences per seat, no preamble, and never introduce a ' +
+        'fact the context does not carry.';
       tick('iteration ' + iter + ' · topic ' + t + ' · the critics answer', t, 'critique');
         ask('critique', ctx2, SCHEMA_SPEAK, 'critic_responses', 1800, function (e2, cr) {
         if (e2) return abort(e2);
@@ -3193,24 +3260,35 @@ function runHarness(cell, seat, world, onStep, done) {
             function stamp(u, mode, extra) {
               var sc = byseat[u.seat];
               var x = extra || {};
+              // the compiled claim rides with the prose: the operation
+              // performed and the evidence it stands on
+              if (u.op) x.op = u.op;
+              if (u.evidence && u.evidence.length) x.ev = u.evidence.slice(0, 6);
               if (sc) {
                 x.sc = { g: c3(sc.grounded), r: c3(sc.register), s: c3(sc.specific), e: c3(sc.engaged) };
                 x.tot = x.sc.g + x.sc.r + x.sc.s + x.sc.e;
+                if (sc.admissible === false) { x.inv = 1; x.tot = 0; }
                 x.jnote = sc.note; x.jm = judgeModel;
               }
               rec(mode, iter, t, u, x);
             }
             said.forEach(function (u) { stamp(u, 'said', { att: attempt }); });
             crit.forEach(function (u) { stamp(u, 'critique', null); });
-            // GRAPH: passing members' claims travel the strut to the other room
+            // GRAPH: passing members' unresolved claims travel the strut to
+            // the other room — claim, evidence, contradiction, so the
+            // destination has something to operate on, not applaud
             var passed = g.avg >= GATE.total && g.grounded >= GATE.grounded;
             if (passed) {
               var launched = 0;
               membersOf(t).forEach(function (m) {
                 var sc = byseat[m.seat];
-                if (sc && sc.carry) {
+                var cy = sc && sc.admissible !== false && sc.carry &&
+                         (typeof sc.carry === 'string' ? { claim: sc.carry, evidence: '', contradiction: '' } : sc.carry);
+                if (cy && cy.claim) {
                   (carryNext[m.other_room] = carryNext[m.other_room] || []).push(
-                    { seat: m.seat, who: m.who, register: m.register, from_room: t, claim: sc.carry });
+                    { seat: m.seat, who: m.who, register: m.register, from_room: t,
+                      claim: cy.claim, evidence: cy.evidence || '',
+                      contradiction: cy.contradiction || '' });
                   if (CONVENE_VIS && CONVENE_VIS.slug === slug) {
                     CONVENE_VIS.anims.push({ from: t, to: m.other_room,
                       t0: performance.now() + 240 * launched++, dur: 1700 });
@@ -3226,10 +3304,13 @@ function runHarness(cell, seat, world, onStep, done) {
   }
   function iteration(iter, next) {
     carryNow = carryNext; carryNext = {};
-    // record the reverberation itself, so the transcript shows the routing
+    // record the reverberation itself, so the transcript shows the routing —
+    // and what the destination room is now under pressure to decide
     for (var t in carryNow) {
       carryNow[t].forEach(function (cy) {
-        rec('reverb', iter, +t, { seat: cy.seat, text: cy.claim }, { from_room: cy.from_room });
+        rec('reverb', iter, +t, { seat: cy.seat,
+          text: cy.claim + (cy.contradiction ? ' — undecided: ' + cy.contradiction : '') },
+          { from_room: cy.from_room, cev: cy.evidence || '' });
       });
     }
     var k = 0;
@@ -3261,7 +3342,8 @@ function runHarness(cell, seat, world, onStep, done) {
     Object.keys(byT).forEach(function (k) {
       byT[k].slice(-8).forEach(function (n) {      // each topic keeps its tail
         tr.push({ iter: n.iter, topic: n.topic, seat: n.seat, mode: n.mode,
-          register: n.register, tot: n.tot === undefined ? null : n.tot, text: n.text });
+          register: n.register, op: n.op || null, invalid: n.inv ? true : false,
+          tot: n.tot === undefined ? null : n.tot, text: n.text });
       });
     });
     ctx.operation.transcript = tr;
@@ -3269,19 +3351,27 @@ function runHarness(cell, seat, world, onStep, done) {
       return { id: i, place: tp.title, issue: tp.issue || null }; });
     ctx.operation.directive =
       'The convening is over. For every topic in operation.topics write the outcome: what ' +
-      'this round actually established about its issue, drawn only from operation.transcript ' +
-      '— favour what scored high, and say where the registers still disagree in dissent, or ' +
-      'leave dissent empty if they closed. Three sentences at most per statement. This is ' +
-      'the statement the next convening will inherit, so no summary padding: only what was ' +
-      'established, and what is still open.';
+      'this round actually established about its issue, drawn only from admissible lines ' +
+      'of operation.transcript — favour what scored high, and count nothing marked ' +
+      'invalid. Consensus is not the goal: a sharpened incompatibility is a better ' +
+      'outcome than agreement prose. Say where the registers still cannot both be right ' +
+      'in dissent, or leave it empty only if they genuinely closed. In needed, write the ' +
+      'research agenda this round discovered: what evidence or institutional answer would ' +
+      'make the topic decidable, or empty if it is decided. An outcome may legitimately ' +
+      'be that no substantive conclusion is admissible — then the statement names exactly ' +
+      'which evidence is missing, and that is a finding, not a failure. Three sentences ' +
+      'at most per statement. This is what the next convening inherits: what can be said, ' +
+      'what cannot, and what must be learned next.';
     tick('writing the outcomes', -1, 'outcome');
     ask('outcome', ctx, SCHEMA_OUTCOME, 'outcomes', 2400, function (err, j) {
       if (err) return abort(err);
       if (j) {
         (j.outcomes || []).forEach(function (o) {
           if (topics[o.topic] === undefined) return;
-          rec('outcome', REVERB + 1, o.topic, { seat: -1, text: o.statement },
-              o.dissent ? { dissent: o.dissent } : null);
+          var x = {};
+          if (o.dissent) x.dissent = o.dissent;
+          if (o.needed) x.needed = o.needed;
+          rec('outcome', REVERB + 1, o.topic, { seat: -1, text: o.statement }, x);
         });
       }
       commit();
@@ -6175,7 +6265,9 @@ function topicNames(cell, seat, world) {
     if (ag) {
       t = { title: t.title, what: t.what, from: t.from, qid: t.qid, sitelinks: t.sitelinks,
             issue: ag.subject + (ag.statement ? ' — ' + ag.statement : ''),
-            subject: ag.subject, statement: ag.statement, sure: true, agenda: true };
+            subject: ag.subject, statement: ag.statement,
+            standing: ag.standing || null, basis: ag.basis || '',
+            sure: true, agenda: true };
     }
     out.push(t);
   }
@@ -6287,6 +6379,7 @@ function openTranscript(cell, seat) {
   var byRound = {};
   said.forEach(function (n) { (byRound[n.round] = byRound[n.round] || []).push(n); });
   function chip(n) {
+    if (n.inv) return ' <span style="color:var(--signal)">INVALID — outside its register</span>';
     if (n.tot === undefined || n.tot === null) return '';
     var pass = n.tot >= GATE.total && (!n.sc || n.sc.g >= GATE.grounded);
     return ' <span style="color:' + (pass ? 'var(--muted)' : 'var(--signal)') + '">' +
@@ -6327,18 +6420,25 @@ function openTranscript(cell, seat) {
                   return '<div class="said" style="border-left:2px solid var(--ink);padding-left:7px">' +
                     '<b>OUTCOME</b><p>' + esc(n.text) + '</p>' +
                     (n.dissent ? '<p style="color:var(--signal)">still open: ' + esc(n.dissent) + '</p>' : '') +
+                    (n.needed ? '<p style="color:var(--muted)">must learn: ' + esc(n.needed) + '</p>' : '') +
                     '</div>';
                 }
                 if (n.mode === 'reverb') {
                   return '<div class="said" style="opacity:.8"><b>' + esc((n.who || '').toUpperCase()) +
-                    '</b> <span>carried in from room ' + n.from_room + '</span><p>' + esc(n.text) + '</p></div>';
+                    '</b> <span>carried in from room ' + n.from_room + '</span><p>' + esc(n.text) + '</p>' +
+                    (n.cev ? '<p style="color:var(--muted);font-size:9px">stands on: ' + esc(n.cev) + '</p>' : '') +
+                    '</div>';
                 }
                 return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') + '"><b>' +
                   esc((n.who || '').toUpperCase()) + '</b> <span>' +
                   (n.who_is ? esc(n.who_is) + ' · ' : '') + esc(n.register || '') +
+                  (n.op ? ' · ' + esc(n.op) : '') +
                   (n.mode === 'critique' ? ' · answering' : '') + '</span>' + chip(n) +
                   '<p>' + esc(n.text) + '</p>' +
-                  (n.jnote && (n.tot < GATE.total || (n.sc && n.sc.g < GATE.grounded))
+                  (n.ev && n.ev.length
+                    ? '<p style="color:var(--muted);font-size:9px">← ' +
+                      esc(n.ev.join(' · ')) + '</p>' : '') +
+                  (n.jnote && (n.inv || n.tot < GATE.total || (n.sc && n.sc.g < GATE.grounded))
                     ? '<p style="color:var(--signal);font-size:9px">the judge: ' +
                       esc(n.jnote) + '</p>' : '') + '</div>';
               }).join('');
@@ -6593,23 +6693,33 @@ function runExportText(cell, seat, world) {
       'name \u2014 with a one-sentence statement of importance; then three to six TENSIONS.'));
   L.push('4. CONVENE. Run ' + REVERB + ' reverberations. In each, take the topic rooms in ' +
          'order, and for each room:');
-  L.push('   a. every member speaks FIRST PERSON as the named holder of their seat, under ' +
-         'THE SPEAKING DIRECTIVE, in their register as defined in THE REGISTERS \u2014 ' +
-         'concrete, placed, no pleasantries;');
-  L.push('   b. the room\'s critics answer what was just said, register against register;');
-  L.push('   c. judge every line \u2014 grounded, register, specific, engaged, 0\u20133 each. A ' +
-         'room averaging below ' + GATE.total + '/12, or below ' + GATE.grounded + '/3 on ' +
-         'grounded, speaks once more with your notes, and the better attempt is kept;');
-  L.push('   d. carry each passing member\'s strongest claim along their strut into their ' +
-         'OTHER room \u2014 THE BENCH names both rooms for every seat \u2014 where it is read ' +
-         'into the next reverberation.');
-  L.push('5. CLOSE. One outcome statement per topic \u2014 what this convening established \u2014 ' +
-         'and record dissent honestly where a register refused the consensus.');
+  L.push('   a. every member seat produces one compiled claim \u2014 ' +
+         'claim = operation(register, evidence) \u2014 under THE SPEAKING DIRECTIVE, in its ' +
+         'register as defined in THE REGISTERS. The named holder is a lens, never a ' +
+         'simulated voice; a correct silence naming the missing evidence is a perfect ' +
+         'statement;');
+  L.push('   b. the room\'s critics answer what was just said, register against register, ' +
+         'under the same law of compilation;');
+  L.push('   c. judge every line \u2014 ADMISSIBILITY FIRST: a line that performs an operation ' +
+         'its register may not is INVALID and scores 0, not 7/12; then grounded, register, ' +
+         'specific, engaged, 0\u20133 each. A judge\u2019s note may only demand better use of the ' +
+         'supplied evidence, never facts the packet lacks. A room averaging below ' +
+         GATE.total + '/12, or below ' + GATE.grounded + '/3 on grounded, speaks once more ' +
+         'with your notes, and the better attempt is kept;');
+  L.push('   d. carry each passing member\'s unresolved transformation \u2014 claim, its ' +
+         'evidence, and the contradiction it leaves undecided \u2014 along their strut into ' +
+         'their OTHER room \u2014 THE BENCH names both rooms for every seat \u2014 where the next ' +
+         'reverberation must operate on it, not applaud it.');
+  L.push('5. CLOSE. One outcome statement per topic \u2014 what this convening established, ' +
+         'from admissible lines only. Consensus is not the goal: record where registers ' +
+         'still cannot both be right, and what must be learned next to decide them. ' +
+         '\u201cNo substantive conclusion is admissible, because X is missing\u201d is a finding.');
   L.push('6. WRITE IT DOWN in exactly the transcript format used below: ' +
          "'### CONVENING n \u00b7 REVERBERATION i OF " + REVERB + "', '#### TOPIC t \u00b7 SUBJECT " +
-         "(at Place)', then '- Name (description \u00b7 REGISTER) [score/12]: line', " +
-         "'- carried in from room k \u2014 Name: claim', '- OUTCOME: statement'. Head your " +
-         'output with the address ' + slug + ' so the run stays tracked to its polygon.');
+         "(at Place)', then '- Name (description \u00b7 REGISTER \u00b7 op) [score/12]: line' with " +
+         "'\u2190 evidence' on the next line, '- carried in from room k \u2014 Name: claim \u2014 " +
+         "undecided: contradiction', '- OUTCOME: statement' with '  must learn: \u2026'. Head " +
+         'your output with the address ' + slug + ' so the run stays tracked to its polygon.');
   L.push('');
   L.push('## SYSTEM INSTRUCTION');
   L.push('The hot prefix, verbatim \u2014 identical across every call on this cell:');
@@ -6635,10 +6745,14 @@ function runExportText(cell, seat, world) {
     if (ch.opening) { L.push('## OPENING QUESTION'); L.push(ch.opening); L.push(''); }
     if ((ch.agenda || []).length) {
       L.push('## AGENDA');
+      L.push('Each subject carries its epistemic standing \u2014 the agenda is not a record. ' +
+             'OBSERVED/INFERRED rest on the named basis; QUESTIONED and UNKNOWN are under ' +
+             'investigation and their premises are not established facts.');
       ch.agenda.forEach(function (a) {
         var tp = topics[a.topic] || {};
-        L.push('- TOPIC ' + a.topic + ' \u00b7 ' + a.subject +
-               (tp.title ? ' (at ' + tp.title + ')' : '') + ' \u2014 ' + a.statement);
+        L.push('- TOPIC ' + a.topic + (a.standing ? ' \u00b7 ' + a.standing : '') + ' \u00b7 ' + a.subject +
+               (tp.title ? ' (at ' + tp.title + ')' : '') + ' \u2014 ' + a.statement +
+               (a.basis ? ' [basis: ' + a.basis + ']' : ''));
       });
       L.push('');
     }
@@ -6691,8 +6805,9 @@ function runExportText(cell, seat, world) {
   L.push('## THE BENCH');
   L.push('Each seat sits in two rooms and answers two others \u2014 the struts are the ' +
          'routing. A critic\'s register is chosen to be incommensurable with what it answers. ' +
-         'Every line a seat produces is FIRST PERSON as its named holder \u2014 the register ' +
-         'is the discipline, never the voice.');
+         'A seat is an epistemic operator: its register bounds what propositions it can ' +
+         'produce, and its named holder is an argumentative lens \u2014 their documented life ' +
+         'selects which evidence they reach for \u2014 never a simulated voice.');
   seat.struts.forEach(function (st, i) {
     var held = seatHolder(slug, i), src = seatSource(slug, i);
     L.push('- SEAT ' + i + (st.register ? ' \u00b7 ' + st.register : '') + ' \u00b7 ' +
@@ -6728,19 +6843,23 @@ function runExportText(cell, seat, world) {
             if (n.mode === 'outcome') {
               L.push('- OUTCOME: ' + n.text);
               if (n.dissent) L.push('  still open: ' + n.dissent);
+              if (n.needed) L.push('  must learn: ' + n.needed);
               return;
             }
             if (n.mode === 'reverb') {
-              L.push('- carried in from room ' + n.from_room + ' \u2014 ' + (n.who || '') + ': ' + n.text);
+              L.push('- carried in from room ' + n.from_room + ' \u2014 ' + (n.who || '') + ': ' + n.text +
+                     (n.cev ? ' [stands on: ' + n.cev + ']' : ''));
               return;
             }
             L.push('- ' + (n.who || '') + ' (' +
-                   [n.who_is, n.register, n.mode === 'critique' ? 'answering' : '']
+                   [n.who_is, n.register, n.op, n.mode === 'critique' ? 'answering' : '']
                      .filter(Boolean).join(' \u00b7 ') + ')' +
-                   (n.tot !== undefined && n.tot !== null
+                   (n.inv ? ' [INVALID \u2014 outside its register]'
+                    : n.tot !== undefined && n.tot !== null
                      ? ' [' + n.tot + '/12' + (n.att > 1 ? ', second attempt' : '') + ']' : '') +
                    ': ' + n.text);
-            if (n.jnote && (n.tot < GATE.total || (n.sc && n.sc.g < GATE.grounded)))
+            if (n.ev && n.ev.length) L.push('  \u2190 ' + n.ev.join(' \u00b7 '));
+            if (n.jnote && (n.inv || n.tot < GATE.total || (n.sc && n.sc.g < GATE.grounded)))
               L.push('  the judge: ' + n.jnote);
           });
         });
@@ -6758,7 +6877,10 @@ function runExportText(cell, seat, world) {
            tok(DB.spend.input) + ' in (' + tok(DB.spend.cached) + ' cached) \u00b7 ' +
            tok(DB.spend.output) + ' out');
   L.push('pipeline: charter \u2192 (speak \u2192 critique \u2192 judge) \u00d7 topics \u00d7 ' + REVERB +
-         ' reverberations, claims carried along the struts between rooms \u2192 outcomes.');
+         ' reverberations, unresolved claims carried along the struts between rooms \u2192 ' +
+         'outcomes. Every utterance compiles as operation(register, evidence); the judge ' +
+         'gates admissibility before quality, and an inadmissible line is INVALID, not ' +
+         'low-scoring.');
   return L.join('\n');
 }
 /* Copy has three rungs, because clipboards are the least standard thing a

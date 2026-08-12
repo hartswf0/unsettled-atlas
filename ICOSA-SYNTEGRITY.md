@@ -1131,6 +1131,85 @@ with different minds. That last phrase is the goal — *same topology,
 different minds* — and it is what makes iteration produce structure a
 single room could not have produced alone.
 
+## The soul is a transition function, and every seat has a door
+
+The memory architecture gave the seats persistence; it did not give them
+difference. Twelve seats with twelve registers still converged on one
+committee voice — a bland average — because everything the system knew
+about a holder was *descriptive*: who they are, not how they transform
+what happens to them. Description asks the model to infer behaviour; what
+was missing is the machine that keeps producing the person under pressure.
+
+So each seat now carries a **soul kernel**, compiled once per bench by one
+call, from the documented record, cached on the cell, invalidated when the
+bench changes:
+
+```
+STABLE                          MUTABLE
+attention   what enters this    belief    what it currently takes
+            mind first                    to be true
+values      what must not be    desire    what it wants to make
+            sacrificed                    happen here
+refusals    what framing it     charge    its emotional state,
+            will not accept               one word
+tactics     its move repertoire
+update_when what actually changes it
+```
+
+Causal, not decorative — the directive forbids trait words: never
+`provocative`; instead the attention, values and refusals that would
+*make* provocation locally rational. Jokes need no `HumorStyle` field: a
+joke emerges from belief + tension + social target + tactic(joke). Two
+souls under identical pressure diverge because their kernels price the
+moves differently — and the souls are ordered to be distinct enough that
+a reader could recover who is who from trajectories of thought alone,
+with the names removed. That is the blind test, and it is stricter than
+believability.
+
+**The move library is a chemistry set, not a screenplay.** Sixteen moves
+— joke, provoke, confess, attack-premise, reframe, analogize, tell-story,
+simplify, ask-dangerous-question, withdraw, concede, name-feeling,
+enlarge-scale, sermonize, expose-avoidance, bargain — each with a real
+cost: a joke spends seriousness, an attack spends relationship, a
+concession spends consistency, a confession spends status. Nobody is told
+"now disagree"; a seat whose values collide with the room cannot easily
+avoid disagreeing. Every spoken line names its move, and distinctness
+lives INSIDE discipline: the move is how a seat presses its claim — the
+register still bounds what kind of proposition may exist. A joke from
+RECORD still cites.
+
+**Temperature is emergent, not assigned.** Each room carries a social
+temperature — playful, hostile, guarded, confessional, competitive,
+curious, or level — accumulated in code from the moves actually made,
+decayed between reverberations, and read back as part of the next
+speaker's perception. A joke lowers hostility; a confession turns a
+guarded room confessional; the harness computes the chemistry and never
+decrees the weather.
+
+**Memory remembers moves, not transcripts.** An utterance enters the
+stream as `my move: joke — it failed the gate · …`, so the seat whose joke
+failed in room A arrives in room B as a seat whose joke failed — and may
+choose the sincere question instead. That is character development
+without scripting character development.
+
+**And every claimed seat has a door.** SPEAK WITH THE SEAT, from the
+dossier: a private chat with one seat, running the same kernel through
+the same loop — notice what this mind would find salient, read the
+pressure on what it protects, choose a move and pay for it, act, absorb,
+remember. The exchange genuinely alters the seat's mutable state and
+writes `ENCOUNTER` memories into the stream, so a seat you argued with
+privately arrives at the next convening changed. Every reply is stamped
+`rehearsal — written by a model, not by <name>`, the mutable layer is
+shown as the seat's simulated state, never as the person's beliefs, and
+the chat has its own emergent temperature.
+
+The system instruction for all of it is almost tiny, and it is the
+opposite of a character sheet: *you are not describing this person; you
+are running a model of them. Never optimise for consensus, narrative
+closure, or balanced representation. Never imitate catchphrases as a
+substitute for cognition. Invented speech is rehearsal, not historical
+fact.*
+
 ## The harness
 
 One model call in a loop is a chatbot. A convening needs a harness:
@@ -1173,8 +1252,8 @@ Multi-step inference with the internet, where the internet is what a
 browser can reach without a key.
 
 **The price is stated before the button.** For an octahedron: charter +
-2 × 6 topics × (speak → critique → judge) + 2 reflections + outcomes =
-**40 calls, up to 64** if the judge sends rooms back. Lookups between iterations are free and
+souls + 2 × 6 topics × (speak → critique → judge) + 2 reflections +
+outcomes = **41 calls, up to 65** if the judge sends rooms back. Lookups between iterations are free and
 say so. Afterwards the spend readout shows each stage's bill.
 
 **The run closes on outcome statements** — one per topic, drawn only from

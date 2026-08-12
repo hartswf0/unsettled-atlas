@@ -2751,10 +2751,11 @@ var HARNESS_STAGE = {
 // context items it stands on. The persona colours text; it never adds facts.
 var SPEAK_ITEM = {
   type: 'object', additionalProperties: false,
-  required: ['seat', 'op', 'evidence', 'memories', 'question', 'text'],
+  required: ['seat', 'op', 'move', 'evidence', 'memories', 'question', 'text'],
   properties: { seat: { type: 'integer' },
     op: { type: 'string', enum: ['cite', 'derive', 'name-missing', 'name-classification',
                                  'trace-return', 'report-record', 'silence'] },
+    move: { type: 'string' },                  // from the MOVES library, or 'none'
     evidence: { type: 'array', items: { type: 'string' } },
     memories: { type: 'array', items: { type: 'string' } },
     question: { type: 'string' },
@@ -2892,16 +2893,27 @@ function speakDirective(retry, mayNeed) {
     'subject is under investigation — do not treat its premise as established. These are ' +
     'incompatible ways of knowing operating on the same evidence: sharpen the ' +
     'incompatibilities, name the claim you contradict. Each member carries its own mind: ' +
-    'scratch is that seat\'s working state (its last claim, the strongest challenge it ' +
-    'took, its unresolved question, its commitments — continue that trajectory, do not ' +
-    'reset it), memories are what THIS seat encountered before, retrieved for this room ' +
-    '(cite the ids of any you build on in the memories output field), and incoming is ' +
-    'what crossed the strut from its OTHER room. A bridge in incoming or in ' +
+    'soul is that seat\'s transition function — attention (what it notices first), values ' +
+    '(what must not be sacrificed), refusals (framings it will not accept), tactics (its ' +
+    'move repertoire), update_when (what actually changes it), and its mutable belief, ' +
+    'desire and charge — RUN it, do not describe it: notice what THIS soul would notice, ' +
+    'read the pressure on what it protects, then choose a move from its tactics and put ' +
+    'it in the move field (or none). Every move has a cost — a joke spends seriousness, ' +
+    'an attack spends relationship, a concession spends consistency, a confession spends ' +
+    'status — pay it knowingly. The move is HOW the seat presses its claim; the register ' +
+    'still bounds WHAT kind of proposition may exist: a joke from RECORD still cites. ' +
+    'operation.topic.temperature is the room\'s present social temperature, made by the ' +
+    'moves before yours — perceive it and let it price your move. Scratch is the seat\'s ' +
+    'working state (continue that trajectory, do not reset it), memories are what THIS ' +
+    'seat encountered before (cite the ids you build on in the memories field), and ' +
+    'incoming is what crossed the strut from its OTHER room. A bridge in incoming or in ' +
     'operation.carried_in is a consequence, not a quote — operate on it: test it against ' +
     'this room\'s evidence and say what it decides, breaks, or fails to decide here; ' +
-    'restating or applauding it is a violation. If a line surfaces a question this room ' +
-    'cannot answer, put it in the question field (empty otherwise). Two sentences per ' +
-    'seat, plain, no preamble, and never claim a fact the context does not carry.' +
+    'restating or applauding it is a violation. Never optimise for consensus or balanced ' +
+    'representation; never imitate catchphrases as a substitute for cognition. If a line ' +
+    'surfaces a question this room cannot answer, put it in the question field (empty ' +
+    'otherwise). Two sentences per seat, plain, no preamble, and never claim a fact the ' +
+    'context does not carry.' +
     (mayNeed ? ' If a seat genuinely needs something the context lacks, put a short plain ' +
       'question in needs — at most two, and an empty list if nothing is needed. The first ' +
       'several questions across the rooms are looked up before the next iteration; the ' +
@@ -3075,10 +3087,14 @@ function runHarness(cell, seat, world, onStep, done) {
   // stream. Owned and updated by the harness, in code — never by the model.
   var SCRATCH = {};
   seat.struts.forEach(function (st, i) {
-    SCRATCH[i] = { reverberation: 0, last_claim: '', last_op: '',
+    SCRATCH[i] = { reverberation: 0, last_claim: '', last_op: '', last_move: '',
                    strongest_challenge: '', unresolved_question: '',
                    commitments: [], contradictions: [] };
   });
+  // ROOM TEMPERATURE — one per topic room, made by the moves, decayed
+  // between reverberations, perceived by the next speakers
+  var TEMPS = {};
+  topics.forEach(function (_, i) { TEMPS[i] = tempZero(); });
   var judgeModel = modelFor('judge');
   var frozenLaw = null;                          // set once the charter exists
   delete HARNESS_ERR[slug];
@@ -3141,6 +3157,7 @@ function runHarness(cell, seat, world, onStep, done) {
       statement: topics[t].statement || null,
       standing: topics[t].standing || null,
       basis: topics[t].basis || null,
+      temperature: TEMPS[t] ? tempLabel(TEMPS[t]) : 'level',
       issue: topics[t].issue || null };
     var ch = charterOf(slug);
     if (ch && ch.opening) ctx.operation.opening_question = ch.opening;
@@ -3172,6 +3189,15 @@ function runHarness(cell, seat, world, onStep, done) {
       next();
     });
   }
+  function ensureSoulsStep(next) {
+    if (soulsFor(slug, seat)) return next();
+    ROUND_STATE[slug].of += 1;
+    tick('compiling the souls — a transition function per seat', -1, 'souls');
+    ensureSouls(cell, seat, world, function (err) {
+      if (err) return abort(err);
+      next();
+    });
+  }
   function speakOnce(iter, t, retry, cb2) {
     var ctx = baseCtx('SPEAK', iter, t);
     var mayNeed = iter < REVERB;
@@ -3183,8 +3209,16 @@ function runHarness(cell, seat, world, onStep, done) {
     var query = (topics[t].subject || '') + ' ' + (topics[t].statement || topics[t].issue || '');
     ctx.operation.members = membersOf(t).map(function (m) {
       var sc = SCRATCH[m.seat] || {};
+      var soul = soulOf(slug, seat, m.seat);
       return Object.assign({}, m, {
+        soul: soul ? { attention: soul.stable.attention, values: soul.stable.values,
+                       refusals: soul.stable.refusals, tactics: soul.stable.tactics,
+                       update_when: soul.stable.update_when,
+                       belief: (soul.mutable || {}).belief || '',
+                       desire: (soul.mutable || {}).desire || '',
+                       charge: (soul.mutable || {}).charge || '' } : null,
         scratch: { reverberation: sc.reverberation, last_claim: sc.last_claim,
+                   last_move: sc.last_move,
                    strongest_challenge: sc.strongest_challenge,
                    unresolved_question: sc.unresolved_question,
                    commitments: sc.commitments.slice(-3),
@@ -3310,8 +3344,10 @@ function runHarness(cell, seat, world, onStep, done) {
               var sc = byseat[u.seat];
               var x = extra || {};
               // the compiled claim rides with the prose: the operation
-              // performed and the evidence it stands on
+              // performed, the move that delivered it, the evidence it
+              // stands on
               if (u.op) x.op = u.op;
+              if (u.move && u.move !== 'none' && MOVES[u.move]) x.move = u.move;
               if (u.evidence && u.evidence.length) x.ev = u.evidence.slice(0, 6);
               if (sc) {
                 x.sc = { g: c3(sc.grounded), r: c3(sc.register), s: c3(sc.specific), e: c3(sc.engaged) };
@@ -3328,15 +3364,24 @@ function runHarness(cell, seat, world, onStep, done) {
             said.forEach(function (u) {
               var sc = byseat[u.seat], inv = sc && sc.admissible === false;
               var s2 = SCRATCH[u.seat];
+              var mv = u.move && u.move !== 'none' && MOVES[u.move] ? u.move : '';
+              if (mv && !inv) tempApply(TEMPS[t], mv);   // the move heats the room
               if (s2) {
                 s2.reverberation = iter;
                 s2.last_claim = String(u.text).slice(0, 220);
                 s2.last_op = u.op || '';
+                s2.last_move = mv;
                 if (u.question) s2.unresolved_question = String(u.question).slice(0, 160);
               }
               if (inv) return;                 // an invalid line is not a memory
+              // memory remembers the MOVE and its fate, not just the prose —
+              // "my joke held" and "my joke failed" produce different seats
+              var held = sc && sc.grounded !== undefined
+                ? (c3(sc.grounded) + c3(sc.register) + c3(sc.specific) + c3(sc.engaged)) >= GATE.total
+                : true;
               memAdd({ cell: slug, conv: round, seat: u.seat, type: 'UTTERANCE',
-                room: t, iter: iter, text: u.text,
+                room: t, iter: iter,
+                text: (mv ? 'my move: ' + mv + ' — ' + (held ? 'it held' : 'it failed the gate') + ' · ' : '') + u.text,
                 src: (u.evidence || []).slice(0, 4),
                 imp: sc && sc.grounded >= 2 && (sc.specific | 0) >= 2 ? 2 : 1,
                 prov: (u.evidence || []).length ? 2 : 1 });
@@ -3477,6 +3522,8 @@ function runHarness(cell, seat, world, onStep, done) {
   }
   function iteration(iter, next) {
     carryNow = carryNext; carryNext = {};
+    // the rooms cool between reverberations, but do not reset
+    for (var tt in TEMPS) tempDecay(TEMPS[tt]);
     // record the reverberation itself, so the transcript shows the routing —
     // and what the destination room is now under pressure to decide
     for (var t in carryNow) {
@@ -3568,12 +3615,14 @@ function runHarness(cell, seat, world, onStep, done) {
   }
   try {
     ensureCharter(function () {
-      var i = 1;
-      (function nextIter() {
-        if (i > REVERB) return outcomes();
-        var it = i; i++;
-        iteration(it, nextIter);
-      })();
+      ensureSoulsStep(function () {
+        var i = 1;
+        (function nextIter() {
+          if (i > REVERB) return outcomes();
+          var it = i; i++;
+          iteration(it, nextIter);
+        })();
+      });
     });
   } catch (e) {
     abort(e && e.message || e);
@@ -3817,7 +3866,8 @@ function commit() { saveStore(DB); }
  * at F14.331 is retrievable at F14, marked inherited, provenance intact —
  * semantic zoom is memory zoom.                                          */
 var MEM_TYPES = ['EVIDENCE', 'HEARD_CLAIM', 'UTTERANCE', 'CRITIQUE', 'BRIDGE',
-                 'REFLECTION', 'CONTRADICTION', 'OPEN_QUESTION', 'COMMITMENT', 'OUTCOME'];
+                 'REFLECTION', 'CONTRADICTION', 'OPEN_QUESTION', 'COMMITMENT', 'OUTCOME',
+                 'ENCOUNTER'];
 var MEM_CAP = 420;
 function memAdd(m) {
   m.id = 'M' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
@@ -3894,6 +3944,146 @@ window.ICOSA_MEM = {
   of: function (slug) { return memFor(slug); },
   retrieve: memRetrieve
 };
+
+/* ------------------------------------------------- the move library
+ * A chemistry set, not a screenplay. Nobody is told "now joke" or "now
+ * disagree": a seat holds a repertoire of moves, each with a real cost,
+ * and chooses under pressure. A joke spends seriousness and changes the
+ * social temperature; an attack spends relationship and forces a
+ * distinction; a concession spends consistency and buys adaptation.
+ * Distinctness lives INSIDE discipline: the move is how a seat presses
+ * its claim — the register still bounds what kind of proposition may
+ * exist at all. A joke from RECORD still cites.                        */
+var MOVES = {
+  'joke':                   { cost: 'seriousness',   temp: { playful: 2, hostile: -1 } },
+  'provoke':                { cost: 'goodwill',      temp: { hostile: 2 } },
+  'confess':                { cost: 'status',        temp: { confessional: 2, guarded: -2 } },
+  'attack-premise':         { cost: 'relationship',  temp: { competitive: 2, hostile: 1 } },
+  'reframe':                { cost: 'momentum',      temp: { curious: 1 } },
+  'analogize':              { cost: 'precision',     temp: { curious: 1, playful: 1 } },
+  'tell-story':             { cost: 'brevity',       temp: { confessional: 1, curious: 1 } },
+  'simplify':               { cost: 'nuance',        temp: { competitive: 1 } },
+  'ask-dangerous-question': { cost: 'safety',        temp: { curious: 2, guarded: -1 } },
+  'withdraw':               { cost: 'participation', temp: { guarded: 2 } },
+  'concede':                { cost: 'consistency',   temp: { curious: 1, competitive: -2 } },
+  'name-feeling':           { cost: 'privacy',       temp: { confessional: 2 } },
+  'enlarge-scale':          { cost: 'focus',         temp: { competitive: 1 } },
+  'sermonize':              { cost: 'reciprocity',   temp: { guarded: 1, competitive: 1 } },
+  'expose-avoidance':       { cost: 'comfort',       temp: { hostile: 1, confessional: 1 } },
+  'bargain':                { cost: 'principle',     temp: { competitive: 1, curious: 1 } }
+};
+var MOVE_IDS = Object.keys(MOVES);
+var TEMP_DIMS = ['playful', 'hostile', 'guarded', 'confessional', 'competitive', 'curious'];
+/* ROOM TEMPERATURE — not assigned by the harness, accumulated from the
+ * moves actually made, decayed between reverberations, read back as part
+ * of the next speaker's perception. Emergent, and inspectable.          */
+function tempZero() {
+  var T = {};
+  TEMP_DIMS.forEach(function (d) { T[d] = 0; });
+  return T;
+}
+function tempApply(T, move) {
+  var m = MOVES[move];
+  if (!m) return;
+  for (var d in m.temp) if (T[d] !== undefined) T[d] += m.temp[d];
+}
+function tempDecay(T) { TEMP_DIMS.forEach(function (d) { T[d] *= 0.6; }); }
+function tempLabel(T) {
+  var best = null, bv = 1.4;                   // below this the room is simply level
+  TEMP_DIMS.forEach(function (d) { if (T[d] > bv) { bv = T[d]; best = d; } });
+  return best || 'level';
+}
+
+/* ------------------------------------------------- the soul kernel
+ * The schemas that describe a person are metadata. What runs a person is
+ * a transition function: what enters this mind first (ATTENTION), what
+ * must not be sacrificed (VALUE), what framing it will not accept
+ * (REFUSAL), how it moves other people (TACTICS), and what kinds of
+ * encounters actually change it (UPDATE). Those five are STABLE. Beliefs,
+ * desires and emotional charge are MUTABLE — the run changes them, and a
+ * chat changes them, and that is the point. A soul is compiled once per
+ * bench from the documented record, cached on the cell, invalidated when
+ * the bench changes. Not "Kanye = provocative"; instead attention, values,
+ * refusals and tactics that make certain moves locally rational.        */
+if (!DB.souls) DB.souls = {};
+if (!DB.chats) DB.chats = {};
+var SCHEMA_SOULS = {
+  type: 'object', additionalProperties: false, required: ['souls'],
+  properties: { souls: { type: 'array', items: {
+    type: 'object', additionalProperties: false,
+    required: ['seat', 'attention', 'values', 'refusals', 'tactics', 'update_when',
+               'belief', 'desire', 'charge'],
+    properties: { seat: { type: 'integer' },
+      attention: { type: 'string' },
+      values: { type: 'array', items: { type: 'string' } },
+      refusals: { type: 'array', items: { type: 'string' } },
+      tactics: { type: 'array', items: { type: 'string', enum: MOVE_IDS } },
+      update_when: { type: 'string' },
+      belief: { type: 'string' }, desire: { type: 'string' },
+      charge: { type: 'string' } } } } }
+};
+function benchSig(slug, seat) {
+  return seat.struts.map(function (_, i) { return seatHolder(slug, i) || '-'; }).join('|');
+}
+function soulsFor(slug, seat) {
+  var got = DB.souls[slug];
+  return got && got.sig === benchSig(slug, seat) ? got : null;
+}
+function soulOf(slug, seat, i) {
+  var got = soulsFor(slug, seat);
+  if (!got) return null;
+  var st = null;
+  (got.list || []).forEach(function (s) { if (s.seat === i) st = s; });
+  return st ? { stable: st, mutable: (got.mut || {})[i] || null } : null;
+}
+var SOULS_STATE = {};
+function ensureSouls(cell, seat, world, cb) {
+  var slug = cellSlug(cell);
+  if (soulsFor(slug, seat)) return cb(null);
+  if (SOULS_STATE[slug] === 'busy') return cb('the souls are already being written');
+  SOULS_STATE[slug] = 'busy';
+  var ctx = compileContext(cell, seat, world, 'WRITE_SOULS');
+  ctx.operation.bench = seat.struts.map(function (st, i) {
+    var src = seatSource(slug, i);
+    return { seat: i, who: seatHolder(slug, i) || 'seat ' + i,
+             who_is: src ? src.what : '', register: st.register };
+  });
+  ctx.operation.move_library = MOVE_IDS.map(function (id) {
+    return id + ' (spends ' + MOVES[id].cost + ')';
+  });
+  ctx.operation.directive =
+    'For every seat in operation.bench, compile a SOUL: not a description of the person, ' +
+    'a machine that keeps producing them under pressure. From their documented record ' +
+    '(who_is, and the evidence in this context) derive: attention — what enters this ' +
+    'mind first, one sentence; values — one to three things that must not be sacrificed; ' +
+    'refusals — one or two framings, compromises or humiliations this record shows they ' +
+    'will not accept; tactics — four to seven moves from operation.move_library that ' +
+    'their record makes locally rational, most characteristic first; update_when — what ' +
+    'kind of encounter actually changes this mind, one sentence. Then the mutable seed: ' +
+    'belief — what they currently take to be true about this ground; desire — what they ' +
+    'want to make happen here; charge — their emotional state in one word. Causal, not ' +
+    'decorative: never a trait word like "provocative" — write the attention, values and ' +
+    'refusals that would MAKE provocation locally rational. No catchphrases; no invented ' +
+    'biography; ground every entry in the record or mark it inferred inside the text. ' +
+    'These souls must be utterly distinct from each other: if two read alike, sharpen ' +
+    'both until the reader could recover who is who from trajectories of thought alone.';
+  askOpenAI({ op: 'souls', model: pickModel(), reasoning: 'high',
+    instructions: LAW + '\n\nYour task is in operation.directive, at the end of the context.',
+    context: ctx, schema: SCHEMA_SOULS, schemaName: 'soul_kernels', maxOutputTokens: 3400 },
+    function (err, j) {
+      SOULS_STATE[slug] = null;
+      if (err) return cb(err);
+      var mut = {};
+      ((j && j.souls) || []).forEach(function (s) {
+        mut[s.seat] = { belief: s.belief || '', desire: s.desire || '',
+                        charge: s.charge || '', question: '' };
+      });
+      DB.souls[slug] = { t: Date.now(), sig: benchSig(slug, seat),
+                        list: (j && j.souls) || [], mut: mut };
+      commit(); cb(null);
+    });
+}
+window.ICOSA_SOULS = { of: function (slug) { return DB.souls[slug] || null; } };
 // an older record may carry a key from before it was session-only; take it
 // off the record and put it where it belongs
 if (DB.key) { if (!OPENAI_KEY) setOpenAIKey(DB.key); scrubKeys(DB); commit(); }
@@ -6717,6 +6907,7 @@ function openTranscript(cell, seat) {
                   esc((n.who || '').toUpperCase()) + '</b> <span>' +
                   (n.who_is ? esc(n.who_is) + ' · ' : '') + esc(n.register || '') +
                   (n.op ? ' · ' + esc(n.op) : '') +
+                  (n.move ? ' · move: ' + esc(n.move) : '') +
                   (n.mode === 'critique' ? ' · answering' : '') + '</span>' + chip(n) +
                   '<p>' + esc(n.text) + '</p>' +
                   (n.ev && n.ev.length
@@ -6838,9 +7029,202 @@ function openSeatDossier(cell, seat, world, i) {
     'background:var(--paper);border:1px solid var(--ink);padding:8px">' +
     'operation.members[…] = ' + esc(JSON.stringify(cs.member_entry)) + '\n\n' +
     esc(cs.charge) + '</pre>' +
+    (function () {
+      var soul = soulOf(slug, seat, i);
+      if (!soul) return '';
+      var s = soul.stable, m = soul.mutable || {};
+      return '<p style="margin-top:10px"><b>The soul.</b> Not a description — the ' +
+        'transition function that keeps producing this seat under pressure:</p>' +
+        '<div class="team" style="border-left-color:' + col + '">' +
+        '<em>attends to: ' + esc(s.attention || '') + '</em>' +
+        '<em>values: ' + esc((s.values || []).join(' · ')) + '</em>' +
+        '<em>refuses: ' + esc((s.refusals || []).join(' · ')) + '</em>' +
+        '<em>moves: ' + esc((s.tactics || []).join(', ')) + '</em>' +
+        '<em>changes when: ' + esc(s.update_when || '') + '</em>' +
+        '<em style="color:var(--muted)">now believes: ' + esc(m.belief || '—') +
+        ' · wants: ' + esc(m.desire || '—') + ' · charge: ' + esc(m.charge || '—') + '</em>' +
+        '</div>';
+    })() +
+    (cs.holder
+      ? '<button class="go" id="sdChat" style="margin-top:12px">SPEAK WITH THE SEAT</button> '
+      : '') +
     '<button class="go ghost" id="sdBack" style="margin-top:12px">BACK TO THE DECK</button>');
   PANEL = 'dossier';
   document.getElementById('sdBack').onclick = function () { openDeck(cell, seat, world); };
+  var chatBtn = document.getElementById('sdChat');
+  if (chatBtn) chatBtn.onclick = function () { openSeatChat(cell, seat, world, i); };
+}
+/* ------------------------------------------------- speaking with one seat
+ * The council is rooms; this is a door. Any claimed seat can be spoken
+ * with individually — not a chatbot wearing a name, the same soul kernel
+ * the convening runs: notice → pressure → move → act → absorb → remember.
+ * The exchange genuinely alters the seat's mutable state and leaves
+ * memories in the stream, so a seat you argued with privately arrives at
+ * the next convening changed. Every line is a rehearsal and says so.    */
+var SCHEMA_CHAT = {
+  type: 'object', additionalProperties: false,
+  required: ['notice', 'pressure', 'move', 'text', 'absorb', 'remember'],
+  properties: { notice: { type: 'string' }, pressure: { type: 'string' },
+    move: { type: 'string' }, text: { type: 'string' },
+    absorb: { type: 'object', additionalProperties: false,
+      required: ['belief', 'desire', 'charge'],
+      properties: { belief: { type: 'string' }, desire: { type: 'string' },
+                    charge: { type: 'string' } } },
+    remember: { type: 'string' } }
+};
+function chatKey(slug, i) { return slug + '#' + i; }
+function chatOf(slug, i) {
+  var k = chatKey(slug, i);
+  if (!DB.chats[k]) DB.chats[k] = { list: [], temp: tempZero() };
+  if (!DB.chats[k].temp) DB.chats[k].temp = tempZero();
+  return DB.chats[k];
+}
+function chatHTML(cell, seat, i) {
+  var slug = cellSlug(cell);
+  var ch = chatOf(slug, i);
+  var held = seatHolder(slug, i) || 'seat ' + i;
+  return ch.list.map(function (l) {
+    return '<div class="said' + (l.who === 'you' ? ' crit' : '') + '"><b>' +
+      esc((l.who === 'you' ? (DB.me || 'YOU') : held).toUpperCase()) + '</b>' +
+      (l.who !== 'you'
+        ? ' <span>' + (l.move && l.move !== 'none' ? 'move: ' + esc(l.move) + ' · ' : '') +
+          'rehearsal — written by a model, not by ' + esc(held) + '</span>' : '') +
+      '<p>' + esc(l.text) + '</p></div>';
+  }).join('') || '<p style="color:var(--muted)">nothing said yet — the seat is listening</p>';
+}
+var CHAT_BUSY = {};
+function openSeatChat(cell, seat, world, i) {
+  var slug = cellSlug(cell);
+  var held = seatHolder(slug, i);
+  if (!held) return;
+  if (!soulsFor(slug, seat)) {
+    if (!OPENAI_KEY) {
+      panel('SPEAK WITH THE SEAT',
+        '<p>Speaking with a seat runs its soul kernel, which a model must first compile ' +
+        'from the record — and that needs a key. Add one in the council panel, or run a ' +
+        'convening, and the souls are written once and kept.</p>' +
+        '<button class="go ghost" id="chBack">BACK</button>');
+      document.getElementById('chBack').onclick = function () { openSeatDossier(cell, seat, world, i); };
+      return;
+    }
+    panel('SPEAK WITH THE SEAT', '<p>compiling the souls — a transition function per seat…</p>');
+    ensureSouls(cell, seat, world, function (err) {
+      if (err) {
+        panel('SPEAK WITH THE SEAT', '<p>the souls did not come: ' + esc(String(err)) + '</p>' +
+          '<button class="go ghost" id="chBack">BACK</button>');
+        document.getElementById('chBack').onclick = function () { openSeatDossier(cell, seat, world, i); };
+        return;
+      }
+      openSeatChat(cell, seat, world, i);
+    });
+    return;
+  }
+  var soul = soulOf(slug, seat, i);
+  var ch = chatOf(slug, i);
+  var st = seat.struts[i];
+  panel('SPEAK WITH · ' + held.toUpperCase(),
+    '<p>A private door to one seat — the same soul the convening runs, so what you say ' +
+    'here genuinely changes what it believes, wants and remembers at the next convening. ' +
+    'Every reply is a <b>rehearsal</b>: a model running a documented kernel, not the ' +
+    'person, who has said none of it.</p>' +
+    '<p style="font-size:9px;color:var(--muted)" id="chTemp">the room is ' +
+    esc(tempLabel(ch.temp)) + ' · register ' + esc(st.register) +
+    (soul && soul.mutable ? ' · charge: ' + esc(soul.mutable.charge || '—') : '') + '</p>' +
+    '<div id="chLog">' + chatHTML(cell, seat, i) + '</div>' +
+    '<div style="display:flex;gap:6px;margin-top:8px">' +
+    '<input id="chIn" type="text" placeholder="say something to ' + esc(held) + '…" ' +
+    'style="flex:1;font:inherit;background:var(--paper);color:var(--ink);' +
+    'border:1.5px solid var(--ink);padding:8px">' +
+    '<button class="go" id="chSend">SAY IT</button></div>' +
+    '<button class="go ghost" id="chBack" style="margin-top:10px">BACK TO THE SEAT</button>');
+  PANEL = 'chat';
+  document.getElementById('chBack').onclick = function () { openSeatDossier(cell, seat, world, i); };
+  var input = document.getElementById('chIn');
+  function send() {
+    var line = (input.value || '').trim();
+    if (!line || CHAT_BUSY[chatKey(slug, i)]) return;
+    if (!OPENAI_KEY) {
+      ch.list.push({ who: 'them', move: 'none',
+        text: '(the seat cannot answer without a key — add one in the council panel)', t: Date.now() });
+      document.getElementById('chLog').innerHTML = chatHTML(cell, seat, i);
+      return;
+    }
+    CHAT_BUSY[chatKey(slug, i)] = 1;
+    ch.list.push({ who: 'you', text: line, t: Date.now() });
+    input.value = '';
+    document.getElementById('chLog').innerHTML = chatHTML(cell, seat, i) +
+      '<p style="color:var(--muted)">' + esc(held) + ' is thinking…</p>';
+    commit();
+    var soul2 = soulOf(slug, seat, i);
+    var ctx = compileContext(cell, seat, world, 'CHAT');
+    ctx.operation.seat = { seat: i, who: held,
+      who_is: (seatSource(slug, i) || {}).what || '', register: st.register,
+      rooms: st.topics, answers: st.critiques };
+    ctx.operation.soul = soul2 ? Object.assign({}, soul2.stable,
+      { belief: (soul2.mutable || {}).belief || '', desire: (soul2.mutable || {}).desire || '',
+        charge: (soul2.mutable || {}).charge || '' }) : null;
+    ctx.operation.temperature = tempLabel(ch.temp);
+    ctx.operation.memories = memRetrieve(slug, i, undefined, line, 6);
+    ctx.operation.chat = ch.list.slice(-10).map(function (l) {
+      return { who: l.who === 'you' ? 'visitor' : held, text: l.text };
+    });
+    ctx.operation.user_line = line;
+    ctx.operation.directive =
+      'You are not describing ' + held + '; you are running a model of them. ' +
+      'operation.soul is the STABLE layer (attention, values, refusals, tactics, ' +
+      'update_when) and the MUTABLE layer (belief, desire, charge); operation.memories ' +
+      'is what this seat remembers, operation.temperature the present temperature of ' +
+      'this exchange. For this turn: notice only what this mind would find salient in ' +
+      'operation.user_line and the chat — write it in notice. Read the pressure on what ' +
+      'it protects — in pressure. Choose a move from its tactics (or none) and pay its ' +
+      'cost — in move. Act in text: one concrete reply, two to four sentences — you may ' +
+      'agree, attack, joke, evade, question, reframe, misunderstand, concede, form an ' +
+      'alliance, change your mind, or refuse the premise. Never optimise for consensus, ' +
+      'narrative closure, or balanced representation; never imitate catchphrases as a ' +
+      'substitute for cognition. Let the visitor genuinely alter the mutable layer: put ' +
+      'the NEW belief, desire and charge in absorb (empty strings where unchanged) — ' +
+      'this seat changes only in the ways update_when says it changes. In remember, one ' +
+      'line this seat would keep because it would change a later action, or empty. ' +
+      'Everything factual comes from this context; invented speech is rehearsal, not ' +
+      'historical fact.';
+    askOpenAI({ op: 'chat', model: pickModel(), reasoning: 'medium',
+      instructions: lawFor(slug), context: ctx, schema: SCHEMA_CHAT,
+      schemaName: 'seat_turn', maxOutputTokens: 1200 }, function (err, j) {
+      CHAT_BUSY[chatKey(slug, i)] = 0;
+      if (err) {
+        ch.list.push({ who: 'them', move: 'none', text: '(the wire failed: ' + err + ')', t: Date.now() });
+      } else {
+        var mv = j.move && MOVES[j.move] ? j.move : 'none';
+        ch.list.push({ who: 'them', move: mv, text: String(j.text || '').trim(), t: Date.now() });
+        if (mv !== 'none') tempApply(ch.temp, mv);
+        var got = DB.souls[slug];
+        if (got && got.mut && got.mut[i] && j.absorb) {
+          if (j.absorb.belief) got.mut[i].belief = j.absorb.belief;
+          if (j.absorb.desire) got.mut[i].desire = j.absorb.desire;
+          if (j.absorb.charge) got.mut[i].charge = j.absorb.charge;
+        }
+        if (j.remember) {
+          memAdd({ cell: slug, conv: 0, seat: i, type: 'ENCOUNTER',
+                   iter: 0, text: j.remember, src: [], imp: 2, prov: 0 });
+        }
+      }
+      commit();
+      var log = document.getElementById('chLog');
+      if (log) {
+        log.innerHTML = chatHTML(cell, seat, i);
+        var tempEl = document.getElementById('chTemp');
+        var s3 = soulOf(slug, seat, i);
+        if (tempEl) tempEl.textContent = 'the room is ' + tempLabel(ch.temp) +
+          ' · register ' + st.register +
+          (s3 && s3.mutable ? ' · charge: ' + (s3.mutable.charge || '—') : '');
+        log.scrollTop = log.scrollHeight;
+      }
+      wake();
+    });
+  }
+  document.getElementById('chSend').onclick = send;
+  input.onkeydown = function (ev) { if (ev.key === 'Enter') send(); };
+  input.focus();
 }
 function openDeck(cell, seat, world) {
   var slug = cellSlug(cell);
@@ -7105,6 +7489,15 @@ function runExportText(cell, seat, world) {
            (src && src.what ? ' (' + src.what + ')' : '') +
            ' \u00b7 speaks in rooms ' + st.topics.join(' & ') +
            ' \u00b7 answers rooms ' + st.critiques.join(' & '));
+    var soul = soulOf(slug, seat, i);
+    if (soul && soul.stable) {
+      var s = soul.stable;
+      L.push('  soul: attends to ' + (s.attention || '\u2014') +
+             ' \u00b7 values ' + (s.values || []).join(', ') +
+             ' \u00b7 refuses ' + (s.refusals || []).join(', ') +
+             ' \u00b7 moves ' + (s.tactics || []).join(', ') +
+             ' \u00b7 changes when ' + (s.update_when || '\u2014'));
+    }
   });
   L.push('');
   if (said.length) {
@@ -7148,7 +7541,8 @@ function runExportText(cell, seat, world) {
               return;
             }
             L.push('- ' + (n.who || '') + ' (' +
-                   [n.who_is, n.register, n.op, n.mode === 'critique' ? 'answering' : '']
+                   [n.who_is, n.register, n.op, n.move ? 'move: ' + n.move : '',
+                    n.mode === 'critique' ? 'answering' : '']
                      .filter(Boolean).join(' \u00b7 ') + ')' +
                    (n.inv ? ' [INVALID \u2014 outside its register]'
                     : n.tot !== undefined && n.tot !== null

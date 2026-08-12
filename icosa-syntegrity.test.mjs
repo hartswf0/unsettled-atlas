@@ -32,7 +32,8 @@ async function rig(p){
     const bo=JSON.parse(r.request().postData()||'{}');
     const ctx=JSON.parse(bo.input[0].content[0].text); const op=ctx.operation||{};
     seen.push({type:op.type, iteration:op.iteration||null,
-      members:(op.members||[]).map(m=>({seat:m.seat,
+      temperature:(op.topic&&op.topic.temperature)||op.temperature||null,
+      members:(op.members||[]).map(m=>({seat:m.seat, hasSoul:!!m.soul,
         hasScratch:!!m.scratch, hasMemories:Array.isArray(m.memories),
         memoryCount:(m.memories||[]).length,
         incoming:(m.incoming||[]).map(x=>({kind:x.kind||null,tension:x.tension||null}))})),
@@ -45,7 +46,7 @@ async function rig(p){
         standing:'QUESTIONED',basis:''})),
       tensions:[{title:'TENSION-A',why_now:'because now'}]});
     else if (op.type==='SPEAK') txt=JSON.stringify({utterances:(op.members||[]).map(m=>({seat:m.seat,
-      op:'cite',evidence:['evidence.recent: Local dispute'],
+      op:'cite',move:'joke',evidence:['evidence.recent: Local dispute'],
       memories:(m.memories||[]).slice(0,1).map(x=>x.id),
       question:'Q-'+m.seat+'?',
       text:'SPOKE-'+m.seat+' at '+op.topic.place+'.'})),needs:[]});
@@ -57,7 +58,14 @@ async function rig(p){
         note:'fine',carry:(op.members||[]).some(m=>m.seat===sn)
           ?{claim:'CARRY',evidence:'EV-'+sn,contradiction:'CONTRA-'+sn}
           :{claim:'',evidence:'',contradiction:''}}))});
-    } else if (op.type==='REFLECT') txt=JSON.stringify({reflections:(op.seats||[]).map(s=>({
+    } else if (op.type==='WRITE_SOULS') txt=JSON.stringify({souls:(op.bench||[]).map(b=>({
+      seat:b.seat,attention:'ATT-'+b.seat,values:['V'+b.seat],refusals:['R'+b.seat],
+      tactics:['joke','reframe','attack-premise'],update_when:'UPD-'+b.seat,
+      belief:'B0-'+b.seat,desire:'D0-'+b.seat,charge:'calm'}))});
+    else if (op.type==='CHAT') txt=JSON.stringify({notice:'N',pressure:'P',move:'joke',
+      text:'CHAT-REPLY to: '+op.user_line,
+      absorb:{belief:'B1-CHANGED',desire:'',charge:'amused'},remember:'REMEMBER-THIS'});
+    else if (op.type==='REFLECT') txt=JSON.stringify({reflections:(op.seats||[]).map(s=>({
       seat:s.seat,implication:'IMPL-'+s.seat+' across '+s.two_rooms.map(r=>r.room).join('&'),
       bridge_to:s.two_rooms[1].room,bridge_claim:'BRIDGE-'+s.seat,
       why_there:'WHY-'+s.seat,tension:'TENSION-'+s.seat}))});
@@ -75,7 +83,10 @@ const ctx=await b.newContext({viewport:{width:1000,height:900}});
 await ctx.grantPermissions(['clipboard-read','clipboard-write'],{origin:BASE});
 const p=await ctx.newPage(); const errs=[]; const seen=[]; p.on('pageerror',e=>errs.push(e.message));
 await rig(p);
-await p.addInitScript(()=>{try{localStorage.setItem('icosa.openai.key','sk-t');}catch(e){}});
+await p.addInitScript(()=>{try{
+  localStorage.setItem('icosa.openai.key','sk-t');
+  localStorage.setItem('icosa.syn.v1',JSON.stringify({seats:{'F11.1103|0':'Ada Testholder'}}));
+}catch(e){}});
 await p.goto(BASE+'/icosa-syntegrity.html#F11.1103'); await p.waitForTimeout(3000);
 await p.click('#cellplate'); await p.waitForTimeout(600);
 await p.evaluate(()=>{const x=[...document.querySelectorAll('#panel button')].find(y=>/COUNCIL/.test(y.textContent)); if(x)x.click();});
@@ -136,14 +147,20 @@ out.council = {
   bridgeWhy: doc.includes('why it matters here: WHY-'),
   reflectStep: doc.includes('e. after ALL rooms') && doc.includes('Same topology, different minds'),
   pipelineHasMinds: doc.includes('seats reflect') && doc.includes('memory stream'),
+  soulLines: (doc.match(/^  soul: attends to ATT-\d+/gm)||[]).length,
+  moveLines: (doc.match(/move: joke/g)||[]).length > 10,
 };
 // the mind between the calls: perspectival packets, scratch continuity, memory
+const soulsCalls = seen.filter(s=>s.type==='WRITE_SOULS');
 const speaks = seen.filter(s=>s.type==='SPEAK');
 const r1 = speaks.filter(s=>/^1\//.test(s.iteration||''));
 const r2 = speaks.filter(s=>/^2\//.test(s.iteration||''));
 const reflects = seen.filter(s=>s.type==='REFLECT');
 out.minds = {
+  soulsCompiledOnce: soulsCalls.length===1,
   speakCalls: speaks.length,
+  soulsInPackets: r2.length>0 && r2.every(s=>s.members.every(m=>m.seat!==0 || m.hasSoul)),
+  jokesWarmTheRoom: r2.some(s=>s.temperature==='playful'),
   perspectival: speaks.every(s=>s.members.length && s.members.every(m=>m.hasScratch && m.hasMemories)),
   r2HasMemories: r2.length>0 && r2.some(s=>s.members.some(m=>m.memoryCount>0)),
   r2HasBridges: r2.some(s=>s.members.some(m=>m.incoming.some(x=>x.kind==='bridge' && x.tension))),
@@ -175,5 +192,34 @@ out.transcript = {
   sameShape: doc2.includes('## SYSTEM INSTRUCTION') && doc2.includes('## THE TRANSCRIPT SO FAR'),
   fileOffered: !!got, fileName: got && got.suggestedFilename(),
 };
+// ---- speaking with one seat, individually ----
+// the transcript view is open; walk back to the council, then the deck
+await p.click('#cellplate'); await p.waitForTimeout(400);
+await p.evaluate(()=>{const x=[...document.querySelectorAll('#panel button')].find(y=>/COUNCIL/.test(y.textContent)); if(x)x.click();});
+await p.waitForTimeout(1500);
+await p.evaluate(()=>document.getElementById('cDeck').click());
+await p.waitForTimeout(1200);
+await p.evaluate(()=>{const c=[...document.querySelectorAll('#panel .pcard')]
+  .find(x=>/ADA TESTHOLDER/i.test(x.textContent)); if(c)c.click();});
+await p.waitForTimeout(600);
+out.chat = { doorExists: await p.evaluate(()=>!!document.getElementById('sdChat')),
+  soulInDossier: await p.evaluate(()=>/attends to: ATT-0/.test(document.getElementById('panel').textContent)) };
+await p.evaluate(()=>document.getElementById('sdChat').click());
+await p.waitForTimeout(600);
+await p.evaluate(()=>{document.getElementById('chIn').value='why is the water contested?';
+  document.getElementById('chSend').click();});
+await p.waitForTimeout(1500);
+Object.assign(out.chat, await p.evaluate(()=>{
+  const txt = document.getElementById('chLog').textContent;
+  const soul = window.ICOSA_SOULS.of('F11.1103');
+  const enc = window.ICOSA_MEM.all().filter(m=>m.type==='ENCOUNTER');
+  return { replied: /CHAT-REPLY to: why is the water contested\?/.test(txt),
+    moveShown: /move: joke/.test(txt),
+    stampedRehearsal: /rehearsal — written by a model, not by Ada Testholder/.test(txt),
+    beliefChanged: soul && soul.mut && soul.mut[0] && soul.mut[0].belief==='B1-CHANGED',
+    chargeChanged: soul && soul.mut && soul.mut[0] && soul.mut[0].charge==='amused',
+    remembered: enc.length===1 && enc[0].text==='REMEMBER-THIS' && enc[0].seat===0,
+    tempWarmed: /the room is playful/.test(document.getElementById('panel').textContent) };
+}));
 console.log(JSON.stringify(out,null,1));
 await b.close();

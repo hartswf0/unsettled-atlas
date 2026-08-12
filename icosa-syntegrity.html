@@ -1843,13 +1843,19 @@ var INFER_STATE = {};
  * The key now lives in sessionStorage and never touches DB. Anything found
  * on an old record is deleted on load, and the export strips it again on
  * the way out in case a record arrives from somewhere carrying one.      */
+// Its own storage key, so it is nowhere near the record. It persists, because
+// re-pasting a key every reload is friction with nothing to show for it — the
+// bug was never that the key was stored, it was that the key was stored
+// *inside the thing you hand to other people*.
+var KEY_STORE = 'icosa.openai.key';
 var OPENAI_KEY = '';
-try { OPENAI_KEY = sessionStorage.getItem('icosa.openai.key') || ''; } catch (e) { }
+try { OPENAI_KEY = localStorage.getItem(KEY_STORE) || sessionStorage.getItem(KEY_STORE) || ''; } catch (e) { }
 function setOpenAIKey(key) {
   OPENAI_KEY = String(key || '').trim();
   try {
-    if (OPENAI_KEY) sessionStorage.setItem('icosa.openai.key', OPENAI_KEY);
-    else sessionStorage.removeItem('icosa.openai.key');
+    if (OPENAI_KEY) localStorage.setItem(KEY_STORE, OPENAI_KEY);
+    else localStorage.removeItem(KEY_STORE);
+    sessionStorage.removeItem(KEY_STORE);
   } catch (e) { }
 }
 function scrubKeys(rec) {                      // never let one into a file
@@ -1943,8 +1949,9 @@ function askOpenAI(opts, cb) {
   };
   var can = reasoningFor(model);
   if (can.efforts.length) {
-    var want = DB.effort || opts.reasoning || 'low';
-    body.reasoning = { effort: can.efforts.indexOf(want) >= 0 ? want : can.efforts[1] || can.efforts[0] };
+    var want = DB.effort || opts.reasoning || 'medium';
+    if (can.efforts.indexOf(want) < 0) want = can.efforts.indexOf('medium') >= 0 ? 'medium' : can.efforts[0];
+    body.reasoning = { effort: want };
     var mode = DB.mode || 'standard';
     if (can.modes.indexOf(mode) > 0) body.reasoning.mode = mode;
   }
@@ -2155,7 +2162,7 @@ function inferTopics(cell, topics, cb, seat, world) {
       'this place, not a generic civic topic. Twelve to twenty-five words. If the context does not ' +
       'let you be specific about that location, write what is at issue for somewhere of its kind in ' +
       'this region and set sure to false.',
-    context: ctx, schema: SCHEMA_TOPICS, schemaName: 'statements_of_importance', reasoning: 'low'
+    context: ctx, schema: SCHEMA_TOPICS, schemaName: 'statements_of_importance'
   }, function (err, j) {
     if (err) return cb(err);
     var got = (j && j.topics) || [];
@@ -2176,7 +2183,7 @@ function inferPeople(cell, need, cb, seat, world) {
       'the connection, referring to the ground in the context where you can. If you are not ' +
       'confident a person is real and connected here, leave them out rather than filling the list; ' +
       'a short honest list is the correct answer. Set sure to false where you are unsure.',
-    context: ctx, schema: SCHEMA_PEOPLE, schemaName: 'seat_candidates', reasoning: 'low'
+    context: ctx, schema: SCHEMA_PEOPLE, schemaName: 'seat_candidates'
   }, function (err, j) {
     if (err) return cb(err);
     var got = (j && j.people) || [];
@@ -4572,7 +4579,7 @@ function draftCarry(cell, fromTopic, toTopic, cb) {
       'context is there so you know where you are, not so you can draw on it. If the material ' +
       'does not support a carry, set carries_nothing true and leave carry empty. Two sentences ' +
       'at most.',
-    context: ctx, schema: SCHEMA_CARRY, schemaName: 'carry', reasoning: 'low', maxOutputTokens: 900
+    context: ctx, schema: SCHEMA_CARRY, schemaName: 'carry', maxOutputTokens: 900
   }, function (err, j) {
     if (err) return cb(err);
     if (!j || j.carries_nothing || !j.carry) return cb(null, 'nothing here carries');
@@ -4966,12 +4973,14 @@ function recruitBlock(cell, seat, rec) {
   rec.list.forEach(function (x) { byWho[x.from || 'wikidata'] = (byWho[x.from || 'wikidata'] || 0) + 1; });
   var mix = Object.keys(byWho).map(function (k) {
     return byWho[k] + ' ' + (SOURCE_NAME[k] || k); }).join(' · ');
-  return head +
-    '<div class="row"><b>FOUND</b><span>' + rec.list.length + ' people · ' + esc(mix) + '</span></div>' +
+  // it worked; the workings are here for anyone who wants them, and out of
+  // the way of anyone who does not
+  return '<details><summary>' + rec.list.length + ' people found · ' + esc(mix) + '</summary>' +
+    head +
     '<div class="row"><b>ASKED</b><span>' + rungs + '</span></div>' +
     '<div class="row"><b>WHEN</b><span>' + whenLabel(rec.t) + '</span></div>' +
     '<button class="go ghost" id="cFind" style="margin-top:8px">ASK AGAIN</button> ' +
-    '<button class="go ghost" id="cClearSeats">CLEAR THE FILLED SEATS</button>';
+    '<button class="go ghost" id="cClearSeats">CLEAR THE FILLED SEATS</button></details>';
 }
 // The four free rungs need nothing. This one needs your key, and it says
 // exactly what it will and will not be used for.
@@ -4983,8 +4992,10 @@ function modelBlock(cell, seat, world) {
   // Context engineering that cannot be seen is a claim, not a property. This
   // is what the model is allowed to know, before it is asked anything.
   var can = reasoningFor(model), facts = modelFacts(model);
+  // medium, not low: this is a background fill, not a latency-sensitive one,
+  // and the question it is being asked is a judgement rather than a lookup
   var effort = can.efforts.indexOf(DB.effort) >= 0 ? DB.effort
-             : (can.efforts.indexOf('low') >= 0 ? 'low' : can.efforts[0] || '');
+             : (can.efforts.indexOf('medium') >= 0 ? 'medium' : can.efforts[0] || '');
   var mode = can.modes.indexOf(DB.mode) > 0 ? DB.mode : (can.modes[0] || '');
   var readout =
     '<div class="row"><b>MODEL</b><span>' + esc(model) +
@@ -5016,24 +5027,36 @@ function modelBlock(cell, seat, world) {
        : typeof MODELS.state === 'string' && MODELS.state.indexOf('error:') === 0
          ? '<p style="color:var(--signal)">could not list models: ' + esc(MODELS.state.slice(6)) + '</p>'
          : '');
-  return '<p style="margin-top:14px">Four sources answer without a key: the Wikidata query ' +
-    'service at any radius, Wikipedia geosearch sampled across the triangle, OpenStreetMap, and ' +
-    'the gazetteer compiled into this page. What none of them holds is the part of a syntegration ' +
-    'that is not a lookup — <b>what is actually at issue here</b>. A key of yours fills that, and ' +
-    'names candidates for seats the record left empty.</p>' +
-    '<p>The model is not given a paragraph about this place. It is given the compiled world state ' +
-    'below — the address, what contains it, what it touches, the ground, the council with its ' +
-    'topic topology and who answers whom, what has been said and carried and escalated, and the ' +
-    'evidence with its provenance. It proposes; you accept. <b>Everything it returns is stamped ' +
-    'as inferred</b> wherever it appears.</p>' +
-    '<p style="color:var(--signal)">Your key is held for this browser tab only. It is never ' +
-    'written to the record and never leaves in an export.</p>' +
-    readout +
-    (st === 'busy' ? '<p style="opacity:.7">Asking the model…</p>' : '') +
-    (typeof st === 'string' && st.indexOf('error:') === 0
-      ? '<p style="color:var(--signal)">' + esc(st.slice(6)) + '</p>' : '') +
-    '<input id="cKey" type="password" placeholder="openai api key, this tab only" value="' +
-      esc(OPENAI_KEY) + '">' + models +
+  /* Nothing here should need setting. Paste a key and the rest is chosen:
+   * the best model the account holds, a balanced reasoning effort, and the
+   * whole compiled world state. The dials still exist, folded away, because
+   * a thing you cannot inspect is a thing you have to trust — but the
+   * default is not a starting point to tune, it is the answer.            */
+  var busy = st === 'busy';
+  var failed = typeof st === 'string' && st.indexOf('error:') === 0;
+  if (!OPENAI_KEY) {
+    return '<p style="margin-top:14px">Four sources fill this bench without a key. The one thing ' +
+      'none of them holds is what is actually <b>at issue</b> on this ground — no database has ' +
+      'that. Paste a key and it is written, along with candidates for any seat still empty. ' +
+      'Nothing else to set.</p>' +
+      '<p style="color:var(--signal)">The key is kept on this device under its own name. It is ' +
+      'never written into the record and never leaves in an export.</p>' +
+      '<input id="cKey" type="password" placeholder="openai api key">';
+  }
+  return '<p style="margin-top:14px">' +
+    (busy ? 'Asking ' + esc(model) + ' what is at issue here…'
+     : failed ? '<span style="color:var(--signal)">' + esc(st.slice(6)) + '</span>'
+     : '<b>' + esc(model) + '</b> is filling what the four free sources left thin — the statements ' +
+       'of importance, and candidates for empty seats. It proposes; you accept; everything it ' +
+       'returns is stamped as inferred.') + '</p>' +
+    (failed ? '<button class="go ghost" id="cInfer">TRY AGAIN</button> ' : '') +
+    '<details><summary>the model, and what it is allowed to know</summary>' +
+    '<p>It is not given a paragraph about this place. It is given the compiled world state — the ' +
+    'address, what contains it, what it touches, the ground, the council with its topic topology ' +
+    'and who answers whom, what has been said and carried and escalated, and the evidence with ' +
+    'its provenance. No conversation is kept on a server: the memory is recompiled from this ' +
+    'record every call.</p>' +
+    readout + models +
     // the knobs appear only where the chosen model has them; the top of each
     // scale belongs to the frontier tier alone, so it is offered only there
     (can.efforts.length
@@ -5044,8 +5067,10 @@ function modelBlock(cell, seat, world) {
       ? '<select id="cMode">' + can.modes.map(function (m) {
           return '<option value="' + m + '"' + (m === mode ? ' selected' : '') + '>' +
             m.toUpperCase() + ' MODE</option>'; }).join('') + '</select>' : '') +
-    '<button class="go ghost" id="cInfer">FILL WHAT IS THIN</button> ' +
-    '<button class="go ghost" id="cShowCtx">SHOW THE CONTEXT</button>';
+    '<input id="cKey" type="password" placeholder="openai api key" value="' + esc(OPENAI_KEY) + '">' +
+    '<button class="go ghost" id="cShowCtx">SHOW THE CONTEXT</button> ' +
+    '<button class="go ghost" id="cForget">FORGET THE KEY</button>' +
+    '</details>';
 }
 function openCouncil(cell) {
   var km = cellEdgeKm(cell);
@@ -5179,10 +5204,11 @@ function openCouncil(cell) {
     recruitBlock(cell, seat, rec) +
     modelBlock(cell, seat, world) +
     seats +
-    '<div class="kbd" style="margin-top:10px">' +
+    '<details><summary>the ' + DATA.council.registers.length + ' registers, and what each may not do</summary>' +
+    '<div class="kbd">' +
     DATA.council.registers.map(function (r) {
       return '<b>' + r.id + '</b> ↔ ' + r.opposite + '<br>may ' + r.may + '<br>may not ' + r.mayNot;
-    }).join('<br><br>') + '</div>' +
+    }).join('<br><br>') + '</div></details>' +
     (placed ? '<p style="margin-top:10px">Every one of those twelve topics is at sea. That is not a ' +
       'choice about agendas — it falls out of solving for no vertex on land, the closest being ' +
       DATA.ico.minClearanceKm + ' km offshore. The planetary agenda sits in international waters, ' +
@@ -5262,12 +5288,15 @@ function openCouncil(cell) {
   if (cmo) cmo.onchange = function () { DB.mode = cmo.value; commit(); openCouncil(cell); };
   var ci2 = document.getElementById('cInfer');
   if (ci2) ci2.onclick = function () {
-    setOpenAIKey(ck.value);
-    if (cm) { DB.model = cm.value.trim() || 'auto'; commit(); }
-    if (!OPENAI_KEY) { ci2.textContent = 'PASTE A KEY FIRST'; return; }
     INFER_STATE[slug] = undefined;
     ci2.textContent = 'ASKING…';
     autoCouncil(cell, seat, world);
+    openCouncil(cell);
+  };
+  var cfg = document.getElementById('cForget');
+  if (cfg) cfg.onclick = function () {
+    setOpenAIKey('');
+    MODELS.state = ''; MODELS.list = [];
     openCouncil(cell);
   };
   var cx = document.getElementById('cShowCtx');

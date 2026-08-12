@@ -678,6 +678,35 @@ scope, topics and seats and how many are held, what discourse is included,
 what evidence and from where, and that provenance is on. `SHOW THE CONTEXT`
 prints the entire object.
 
+### Paste a key. That is the whole of it.
+
+The first version of this asked for a key, a model, a reasoning effort, a
+mode, and then a button press — five decisions before anything happened, on
+a feature whose entire job is to spare you work. A default that is a
+starting point to tune is not a default.
+
+**There is one field now.** Everything else is chosen: the best model the
+account holds, a balanced reasoning effort, standard mode, the whole
+compiled world state, and it runs the moment the council opens. Zero clicks
+from pasting a key to a full bench.
+
+The dials still exist, folded behind *the model, and what it is allowed to
+know* — the selector, the effort, the mode, the context readout, and `SHOW
+THE CONTEXT`. A thing you cannot inspect is a thing you have to trust, so
+none of it was removed; it was just got out of the way. The workings of the
+free rungs went the same way: a summary line reading `12 people found · 12
+wikidata`, with the ladder, the timestamp and the retry behind it.
+
+**The effort default is `medium`, not `low`.** This is a background fill,
+not a latency-sensitive one, and what it is being asked for is a judgement
+about contested ground rather than a lookup.
+
+**And the key persists.** It lives in `localStorage` under its own name —
+`icosa.openai.key`, nowhere near `icosa.syn.v1` — so a reload does not cost
+you a paste. The bug was never that the key was stored. It was that the key
+was stored *inside the thing you hand to other people*. `FORGET THE KEY`
+is in the fold.
+
 ### The fifth rung: what no database holds
 
 Four sources answer without a key and cover most of the planet. What none

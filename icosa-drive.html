@@ -1,0 +1,1168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>UNSETTLED ATLAS · ICOSA DRIVE</title>
+<style>
+  :root { --ink:#e8e4d8; --dim:#8a867c; --line:#33312b; --hot:#ffd75e; --bad:#ff5e5e; --ok:#7fd88b; }
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { height:100%; overflow:hidden; background:#0b0b09; color:var(--ink);
+    font:13px/1.45 ui-monospace,Menlo,Consolas,monospace; }
+  canvas { position:fixed; inset:0; width:100%; height:100%; touch-action:none; }
+  #gl { display:none; }
+  .chip { position:fixed; z-index:5; background:rgba(11,11,9,.82); border:1px solid var(--line);
+    border-radius:6px; padding:6px 10px; backdrop-filter:blur(3px); }
+  #addr { top:10px; left:10px; font-size:15px; letter-spacing:.06em; }
+  #addr b { color:var(--hot); font-weight:700; }
+  #addr i { display:block; font-style:normal; color:var(--dim); font-size:11px; margin-top:2px; }
+  #geo { top:10px; right:10px; text-align:right; font-size:11px; color:var(--dim); display:none; }
+  #geo b { color:var(--ink); font-size:13px; }
+  #foot { bottom:12px; left:50%; transform:translateX(-50%); display:flex; gap:8px; align-items:center; }
+  button { background:#181712; color:var(--ink); border:1px solid var(--line); border-radius:6px;
+    padding:9px 14px; font:inherit; letter-spacing:.05em; cursor:pointer; }
+  button:disabled { color:var(--dim); border-color:#221f1a; cursor:default; }
+  button.hot { border-color:var(--hot); color:var(--hot); }
+  #wire { position:fixed; z-index:6; bottom:56px; left:50%; transform:translateX(-50%);
+    max-width:92vw; padding:4px 10px; border-radius:5px; font-size:11px; color:var(--dim);
+    background:rgba(11,11,9,.85); border:1px solid var(--line); display:none; white-space:nowrap;
+    overflow:hidden; text-overflow:ellipsis; }
+  #wire.busy { color:var(--hot); border-color:#4d431f; }
+  #wire.warn { color:var(--bad); border-color:#4d1f1f; }
+  #wire.ok { color:var(--ok); border-color:#1f4d28; }
+  #pad { position:fixed; z-index:5; right:14px; bottom:64px; display:none;
+    grid-template:repeat(2,52px)/repeat(3,52px); gap:6px; }
+  #pad button { font-size:19px; padding:0; opacity:.85; }
+  #pad .g1{grid-area:1/2} #pad .g2{grid-area:2/1} #pad .g3{grid-area:2/2} #pad .g4{grid-area:2/3}
+  #boot { position:fixed; inset:0; z-index:20; display:flex; align-items:center; justify-content:center;
+    background:#0b0b09; color:var(--dim); letter-spacing:.2em; transition:opacity .5s; }
+  #boot.gone { opacity:0; pointer-events:none; }
+</style>
+<script src="icosa-world.data.js"></script>
+</head>
+<body>
+<canvas id="globe"></canvas>
+<canvas id="gl"></canvas>
+<div class="chip" id="addr"><b id="aSlug">ICOSA DRIVE</b><i id="aSub">loading the world…</i></div>
+<div class="chip" id="geo"><b id="gPos">—</b><br><span id="gElev">—</span><br><span id="gSpd">—</span></div>
+<div id="wire"></div>
+<div id="foot">
+  <button id="bUp" style="display:none">ASCEND</button>
+  <button id="bLand" style="display:none">LAND</button>
+  <button id="bRise" style="display:none">RISE</button>
+  <button id="bSave" style="display:none">SAVE LAND</button>
+  <button id="bMount">MOUNT</button>
+</div>
+<div id="pad">
+  <button class="g1" data-k="up">▲</button>
+  <button class="g2" data-k="left">◀</button>
+  <button class="g3" data-k="down">▼</button>
+  <button class="g4" data-k="right">▶</button>
+</div>
+<input type="file" id="fMount" accept=".json,application/json" style="display:none">
+<div id="boot">ICOSA DRIVE</div>
+<script>
+/* ==================================================================== *
+ *  ICOSA DRIVE                                                          *
+ *                                                                       *
+ *  The triangular grid is the world's land selector, and driving is     *
+ *  what a triangle means at street scale.                               *
+ *                                                                       *
+ *  Seven laws (the full theory is ICOSA-DRIVE.md):                      *
+ *   1 THE ADDRESS IS THE DEED — one slug names the triangle on the      *
+ *     globe and the drivable tile; #F07.2013 is a place you can stand.  *
+ *   2 DEPTH IS SCALE — window size, tile zooms and meters-per-unit are  *
+ *     functions of subdivision depth, never free parameters.            *
+ *   3 THE CAR LIVES ON THE SPHERE — its authoritative position is a     *
+ *     geographic point; the tile is a chart of it, inverted each frame. *
+ *   4 THE GROUND IS ONE QUESTION — y(x,z) has one answerer; the sea     *
+ *     answers with its floor and the program says so.                   *
+ *   5 TRAVEL IS CONTAINMENT FAILURE — leave the triangle and cellAt     *
+ *     names the neighbour; the world scrolls by one triangle.           *
+ *   6 LAND FETCHED ONCE IS LAND OWNED — every fetch becomes an          *
+ *     unsettled.landpack/v1 (+cell) that remounts offline.              *
+ *   7 NO ENGINE BUT THE GROUND — hand-rolled WebGL, no libraries; only  *
+ *     the two tile services are remote, and only at fetch time.        *
+ * ==================================================================== */
+
+var DATA = window.ICOSA_WORLD_DATA;
+var TAU = Math.PI * 2, D2R = Math.PI / 180, R2D = 180 / Math.PI;
+var EARTH_R = 6371.0088;                       // km
+var ICO_EDGE_KM = EARTH_R * Math.acos(Math.sqrt(5) / 5); // ≈7053.65 km
+var MAX_DEPTH = 30;
+
+/* ------------------------------------------------------------ vectors */
+function dot(a, b) { return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]; }
+function cross(a, b) {
+  return [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+}
+function norm(a) {
+  var l = Math.sqrt(dot(a, a)) || 1; return [a[0] / l, a[1] / l, a[2] / l];
+}
+function lerp3(a, b, t) {
+  return [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t];
+}
+function clamp(x, a, b) { return x < a ? a : x > b ? b : x; }
+function lonlat(v) { return [Math.atan2(v[1], v[0]) * R2D, Math.asin(clamp(v[2], -1, 1)) * R2D]; }
+function fromLonLat(lon, lat) {
+  var p = lat * D2R, l = lon * D2R;
+  return [Math.cos(p) * Math.cos(l), Math.cos(p) * Math.sin(l), Math.sin(p)];
+}
+
+/* -------------------------------------------------------- quaternions */
+function qId() { return [0, 0, 0, 1]; }
+function qMul(a, b) {
+  return [
+    a[3] * b[0] + a[0] * b[3] + a[1] * b[2] - a[2] * b[1],
+    a[3] * b[1] - a[0] * b[2] + a[1] * b[3] + a[2] * b[0],
+    a[3] * b[2] + a[0] * b[1] - a[1] * b[0] + a[2] * b[3],
+    a[3] * b[3] - a[0] * b[0] - a[1] * b[1] - a[2] * b[2]
+  ];
+}
+function qAxis(axis, ang) {
+  var a = norm(axis), s = Math.sin(ang / 2);
+  return [a[0] * s, a[1] * s, a[2] * s, Math.cos(ang / 2)];
+}
+function qNorm(q) {
+  var l = Math.hypot(q[0], q[1], q[2], q[3]) || 1;
+  return [q[0] / l, q[1] / l, q[2] / l, q[3] / l];
+}
+function qConj(q) { return [-q[0], -q[1], -q[2], q[3]]; }
+function qApply(q, v) {
+  var x = q[0], y = q[1], z = q[2], w = q[3];
+  var tx = 2 * (y * v[2] - z * v[1]), ty = 2 * (z * v[0] - x * v[2]), tz = 2 * (x * v[1] - y * v[0]);
+  return [v[0] + w * tx + y * tz - z * ty, v[1] + w * ty + z * tx - x * tz, v[2] + w * tz + x * ty - y * tx];
+}
+function qSlerp(a, b, t) {
+  var d = a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3], bb = b;
+  if (d < 0) { bb = [-b[0], -b[1], -b[2], -b[3]]; d = -d; }
+  if (d > 0.9995) {
+    return qNorm([a[0] + (bb[0] - a[0]) * t, a[1] + (bb[1] - a[1]) * t,
+                  a[2] + (bb[2] - a[2]) * t, a[3] + (bb[3] - a[3]) * t]);
+  }
+  var th = Math.acos(clamp(d, -1, 1)), s = Math.sin(th);
+  var k0 = Math.sin((1 - t) * th) / s, k1 = Math.sin(t * th) / s;
+  return [a[0] * k0 + bb[0] * k1, a[1] * k0 + bb[1] * k1, a[2] * k0 + bb[2] * k1, a[3] * k0 + bb[3] * k1];
+}
+function qBetween(a, b) {
+  var d = dot(a, b);
+  if (d > 0.999999) return qId();
+  if (d < -0.999999) {
+    var ax = Math.abs(a[0]) < 0.9 ? cross(a, [1, 0, 0]) : cross(a, [0, 1, 0]);
+    return qAxis(ax, Math.PI);
+  }
+  var c = cross(a, b);
+  return qNorm([c[0], c[1], c[2], 1 + d]);
+}
+
+/* ==================================================================== *
+ *  1 · THE WORLD — twenty faces, exact subdivision (verbatim from the   *
+ *  parents; the fusion changes what a cell is FOR, not what it is).     *
+ * ==================================================================== */
+
+var V = DATA.ico.vertices;
+var FACES = DATA.ico.faces;
+var NF = FACES.length;
+var BINV = FACES.map(function (f) {
+  var a = V[f[0]], b = V[f[1]], c = V[f[2]];
+  var det = a[0] * (b[1] * c[2] - b[2] * c[1])
+          - b[0] * (a[1] * c[2] - a[2] * c[1])
+          + c[0] * (a[1] * b[2] - a[2] * b[1]);
+  return [
+    [(b[1] * c[2] - b[2] * c[1]) / det, (c[0] * b[2] - b[0] * c[2]) / det, (b[0] * c[1] - c[0] * b[1]) / det],
+    [(c[1] * a[2] - a[1] * c[2]) / det, (a[0] * c[2] - c[0] * a[2]) / det, (c[0] * a[1] - a[0] * c[1]) / det],
+    [(a[1] * b[2] - b[1] * a[2]) / det, (b[0] * a[2] - a[0] * b[2]) / det, (a[0] * b[1] - b[0] * a[1]) / det]
+  ];
+});
+function baryRaw(f, p) {
+  var m = BINV[f];
+  return [m[0][0] * p[0] + m[0][1] * p[1] + m[0][2] * p[2],
+          m[1][0] * p[0] + m[1][1] * p[1] + m[1][2] * p[2],
+          m[2][0] * p[0] + m[2][1] * p[1] + m[2][2] * p[2]];
+}
+function baryOf(f, p) {
+  var r = baryRaw(f, p), s = r[0] + r[1] + r[2];
+  return [r[0] / s, r[1] / s, r[2] / s];
+}
+function baryPoint(f, w) {
+  var a = V[FACES[f][0]], b = V[FACES[f][1]], c = V[FACES[f][2]];
+  return norm([a[0] * w[0] + b[0] * w[1] + c[0] * w[2],
+               a[1] * w[0] + b[1] * w[1] + c[1] * w[2],
+               a[2] * w[0] + b[2] * w[1] + c[2] * w[2]]);
+}
+function faceOf(p) {
+  var best = 0, bestMin = -Infinity;
+  for (var f = 0; f < NF; f++) {
+    var r = baryRaw(f, p), s = r[0] + r[1] + r[2];
+    if (s <= 0) continue;
+    var m = Math.min(r[0], Math.min(r[1], r[2])) / s;
+    if (m >= -1e-12) return f;
+    if (m > bestMin) { bestMin = m; best = f; }
+  }
+  return best;
+}
+var ROOT_TRI = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+function mid(a, b) { return [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2]; }
+function childTri(t, i) {
+  var m01 = mid(t[0], t[1]), m12 = mid(t[1], t[2]), m02 = mid(t[0], t[2]);
+  if (i === 0) return [t[0], m01, m02];
+  if (i === 1) return [m01, t[1], m12];
+  if (i === 2) return [m02, m12, t[2]];
+  return [m01, m12, m02];
+}
+function cellTri(face, path) {
+  var t = ROOT_TRI;
+  for (var i = 0; i < path.length; i++) t = childTri(t, path[i]);
+  return t;
+}
+function makeCell(face, path) {
+  return { f: face, path: path.slice(), depth: path.length, tri: cellTri(face, path) };
+}
+function descend(w) {
+  if (w[0] >= 0.5) return [0, [2 * w[0] - 1, 2 * w[1], 2 * w[2]]];
+  if (w[1] >= 0.5) return [1, [2 * w[0], 2 * w[1] - 1, 2 * w[2]]];
+  if (w[2] >= 0.5) return [2, [2 * w[0], 2 * w[1], 2 * w[2] - 1]];
+  return [3, [1 - 2 * w[2], 1 - 2 * w[0], 1 - 2 * w[1]]];
+}
+function cellAt(p, depth) {
+  var f = faceOf(p), w = baryOf(f, p), path = [];
+  for (var d = 0; d < depth; d++) {
+    var r = descend(w);
+    path.push(r[0]); w = r[1];
+  }
+  return makeCell(f, path);
+}
+function cellCorners(c) {
+  return [baryPoint(c.f, c.tri[0]), baryPoint(c.f, c.tri[1]), baryPoint(c.f, c.tri[2])];
+}
+function cellCentre(c) {
+  var t = c.tri;
+  return baryPoint(c.f, [(t[0][0] + t[1][0] + t[2][0]) / 3,
+                         (t[0][1] + t[1][1] + t[2][1]) / 3,
+                         (t[0][2] + t[1][2] + t[2][2]) / 3]);
+}
+function cellEdgeKm(c) { return ICO_EDGE_KM / Math.pow(2, c.depth); }
+function cellContains(c, p) {
+  if (faceOf(p) !== c.f) return false;
+  var w = baryOf(c.f, p), t = c.tri;
+  var d = (t[1][1] - t[2][1]) * (t[0][0] - t[2][0]) + (t[2][0] - t[1][0]) * (t[0][1] - t[2][1]);
+  if (Math.abs(d) < 1e-18) return false;
+  var a = ((t[1][1] - t[2][1]) * (w[0] - t[2][0]) + (t[2][0] - t[1][0]) * (w[1] - t[2][1])) / d;
+  var b = ((t[2][1] - t[0][1]) * (w[0] - t[2][0]) + (t[0][0] - t[2][0]) * (w[1] - t[2][1])) / d;
+  return a >= -1e-9 && b >= -1e-9 && a + b <= 1 + 1e-9;
+}
+function sphericalAngle(a, b, c) {
+  var n1 = norm(cross(a, b)), n2 = norm(cross(a, c));
+  return Math.acos(clamp(dot(n1, n2), -1, 1));
+}
+function cellAreaKm2(c) {
+  var P = cellCorners(c);
+  var excess = sphericalAngle(P[0], P[1], P[2]) + sphericalAngle(P[1], P[2], P[0])
+             + sphericalAngle(P[2], P[0], P[1]) - Math.PI;
+  return Math.abs(excess) * EARTH_R * EARTH_R;
+}
+function areaLabel(km2) {
+  if (km2 >= 1e6) return (km2 / 1e6).toFixed(2) + ' million km²';
+  if (km2 >= 1) return Math.round(km2).toLocaleString('en') + ' km²';
+  if (km2 >= 0.01) return (km2 * 100).toFixed(1) + ' ha';
+  return Math.round(km2 * 1e6) + ' m²';
+}
+function cellSlug(c) {
+  return 'F' + (c.f < 10 ? '0' : '') + c.f + (c.path.length ? '.' + c.path.join('') : '');
+}
+function cellFromSlug(str) {
+  var m = /^F?(\d{1,2})[.\-·]?([0-3]*)$/.exec(String(str || '').trim());
+  if (!m) return null;
+  var f = +m[1];
+  if (!(f >= 0 && f < NF)) return null;
+  return makeCell(f, m[2].split('').filter(function (s) { return s !== ''; }).map(Number).slice(0, MAX_DEPTH));
+}
+
+/* -------------------------------------------------- coastlines, cities */
+function decodeLines(s, q) {
+  if (!s) return [];
+  q = q || 100;
+  var out = [], groups = s.split(';');
+  for (var g = 0; g < groups.length; g++) {
+    var nums = groups[g].split(','), pts = [], x = 0, y = 0;
+    for (var i = 0; i < nums.length; i += 2) {
+      x += +nums[i]; y += +nums[i + 1];
+      pts.push([x / q, y / q]);
+    }
+    out.push(pts);
+  }
+  return out;
+}
+var LAND_RINGS = decodeLines(DATA.land).map(function (r) {
+  return r.map(function (p) { return fromLonLat(p[0], p[1]); });
+});
+var CITIES = DATA.cities.slice().sort(function (a, b) { return b.pop - a.pop; })
+  .map(function (c) { return { name: c.name, v: fromLonLat(c.lon, c.lat), pop: c.pop }; });
+
+/* ==================================================================== *
+ *  2 · THE WINDOW — law 2: everything derives from depth.               *
+ *  halfM covers the triangle's circumradius (0.577·edge) with margin,   *
+ *  floored at THUNDER RIGS' street standard (147 m over 160 units =     *
+ *  1.84 m/unit) and capped at the depth-10 fetch budget.                *
+ * ==================================================================== */
+
+var WU = 160, GRID_N = 129;
+var HALF_MIN = 147, HALF_MAX = 4273, DRIVE_DEPTH = 10;
+function windowOf(cell) {
+  var edgeM = cellEdgeKm(cell) * 1000;
+  var halfM = clamp(0.62 * edgeM, HALF_MIN, HALF_MAX);
+  var g = lonlat(cellCentre(cell));
+  var ez = halfM <= 260 ? 15 : halfM <= 1100 ? 14 : 13;
+  var iz = halfM <= 200 ? 18 : halfM <= 420 ? 17 : halfM <= 1100 ? 16 : 14;
+  return { slug: cellSlug(cell), lat: g[1], lon: g[0], halfM: halfM,
+           S: 2 * halfM / WU, ez: ez, iz: iz };
+}
+// the chart and its inverse — law 3. North is -z, east is +x.
+function chartToGeo(win, x, z) {
+  var mLat = 111320, mLon = 111320 * Math.cos(win.lat * D2R);
+  return [win.lat - z * win.S / mLat, win.lon + x * win.S / mLon];
+}
+function geoToChart(win, lat, lon) {
+  var mLat = 111320, mLon = 111320 * Math.cos(win.lat * D2R);
+  var dl = lon - win.lon;
+  if (dl > 180) dl -= 360; if (dl < -180) dl += 360;
+  return [dl * mLon / win.S, (win.lat - lat) * mLat / win.S];
+}
+
+/* ==================================================================== *
+ *  3 · TERRA — the fetch, the pack, the cache. Law 6: every fetch is    *
+ *  immediately an unsettled.landpack/v1 (+cell) — cached, savable,      *
+ *  mountable offline. Encoding byte-compatible with THUNDER RIGS.       *
+ * ==================================================================== */
+
+var LAND_FMT = 'unsettled.landpack/v1';
+var LAND_CACHE_KEY = 'icosa.landcache.v1';
+function packHeights(H, relief) {
+  var bin = '';
+  for (var i = 0; i < H.length; i += 2) {
+    var a = Math.max(0, Math.min(4095, Math.round(H[i] / relief * 4095)));
+    var b = (i + 1 < H.length) ? Math.max(0, Math.min(4095, Math.round(H[i + 1] / relief * 4095))) : 0;
+    bin += String.fromCharCode(a >> 4, ((a & 15) << 4) | (b >> 8), b & 255);
+  }
+  return btoa(bin);
+}
+function unpackHeights(hf, count, relief) {
+  var bin = atob(hf), H = new Float32Array(count), vi = 0;
+  for (var i = 0; i < bin.length && vi < count; i += 3) {
+    var a = bin.charCodeAt(i), b = bin.charCodeAt(i + 1), c = bin.charCodeAt(i + 2) || 0;
+    H[vi++] = ((a << 4) | (b >> 4)) / 4095 * relief;
+    if (vi < count) H[vi++] = (((b & 15) << 8) | c) / 4095 * relief;
+  }
+  return H;
+}
+function cacheGet(key) {
+  try {
+    var st = JSON.parse(localStorage.getItem(LAND_CACHE_KEY) || '[]');
+    var hit = st.find(function (r) { return r[0] === key; });
+    return hit ? hit[1] : null;
+  } catch (_) { return null; }
+}
+function cachePut(key, pack) {
+  var st = [];
+  try { st = JSON.parse(localStorage.getItem(LAND_CACHE_KEY) || '[]'); } catch (_) {}
+  st = st.filter(function (r) { return r[0] !== key; });
+  st.push([key, pack]);
+  for (var n = 3; n >= 1; n--) {  // quota guard: keep the newest few deeds
+    try { localStorage.setItem(LAND_CACHE_KEY, JSON.stringify(st.slice(-n))); return; } catch (_) {}
+  }
+  try { localStorage.removeItem(LAND_CACHE_KEY); } catch (_) {}
+}
+var t2 = {
+  x: function (lon, z) { return (lon + 180) / 360 * Math.pow(2, z); },
+  y: function (lat, z) { return (1 - Math.asinh(Math.tan(lat * D2R)) / Math.PI) / 2 * Math.pow(2, z); }
+};
+function img(url) {
+  return new Promise(function (ok, no) {
+    var i = new Image(); i.crossOrigin = 'anonymous';
+    i.onload = function () { ok(i); };
+    i.onerror = function () { no(new Error('tile failed: ' + url.split('/')[2])); };
+    i.src = url;
+  });
+}
+async function fetchPack(win) {
+  var lat = win.lat, lon = win.lon, halfM = win.halfM;
+  var mLat = 111320, mLon = 111320 * Math.cos(lat * D2R);
+  wire('asking s3 elevation-tiles — how high is ' + win.slug, 'busy');
+  var ez = win.ez;
+  var ex0 = Math.floor(t2.x(lon - halfM / mLon, ez)), ex1 = Math.floor(t2.x(lon + halfM / mLon, ez));
+  var ey0 = Math.floor(t2.y(lat + halfM / mLat, ez)), ey1 = Math.floor(t2.y(lat - halfM / mLat, ez));
+  var ec = document.createElement('canvas');
+  ec.width = (ex1 - ex0 + 1) * 256; ec.height = (ey1 - ey0 + 1) * 256;
+  var eq = ec.getContext('2d', { willReadFrequently: true });
+  var ejobs = [];
+  for (var j = ey0; j <= ey1; j++) for (var i = ex0; i <= ex1; i++) {
+    ejobs.push(img('https://s3.amazonaws.com/elevation-tiles-prod/terrarium/' + ez + '/' + i + '/' + j + '.png')
+      .then((function (ii, jj) {
+        return function (im) { eq.drawImage(im, (ii - ex0) * 256, (jj - ey0) * 256); };
+      })(i, j)));
+  }
+  await Promise.all(ejobs);
+  var ed = eq.getImageData(0, 0, ec.width, ec.height).data;
+  function elevAt(la, lo) {
+    var px = Math.round((t2.x(lo, ez) - ex0) * 256), py = Math.round((t2.y(la, ez) - ey0) * 256);
+    var k = (Math.max(0, Math.min(ec.height - 1, py)) * ec.width
+           + Math.max(0, Math.min(ec.width - 1, px))) * 4;
+    return ed[k] * 256 + ed[k + 1] + ed[k + 2] / 256 - 32768;
+  }
+  var N = GRID_N, S = win.S;
+  var H = new Float32Array(N * N), zmin = Infinity;
+  for (var jj2 = 0; jj2 < N; jj2++) for (var ii2 = 0; ii2 < N; ii2++) {
+    var la = lat + (halfM - 2 * halfM * jj2 / (N - 1)) / mLat;
+    var lo = lon + (-halfM + 2 * halfM * ii2 / (N - 1)) / mLon;
+    var vv = elevAt(la, lo) / S;
+    H[jj2 * N + ii2] = vv; if (vv < zmin) zmin = vv;
+  }
+  for (var k2 = 0; k2 < H.length; k2++) H[k2] -= zmin;
+  wire('asking esri world imagery — what does ' + win.slug + ' look like', 'busy');
+  var iz = win.iz;
+  var ix0 = Math.floor(t2.x(lon - halfM / mLon, iz)), ix1 = Math.floor(t2.x(lon + halfM / mLon, iz));
+  var iy0 = Math.floor(t2.y(lat + halfM / mLat, iz)), iy1 = Math.floor(t2.y(lat - halfM / mLat, iz));
+  var cc = document.createElement('canvas');
+  cc.width = (ix1 - ix0 + 1) * 256; cc.height = (iy1 - iy0 + 1) * 256;
+  var cq = cc.getContext('2d');
+  var ijobs = [];
+  for (var j3 = iy0; j3 <= iy1; j3++) for (var i3 = ix0; i3 <= ix1; i3++) {
+    ijobs.push(img('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/' + iz + '/' + j3 + '/' + i3)
+      .then((function (ii, jj) {
+        return function (im) { cq.drawImage(im, (ii - ix0) * 256, (jj - iy0) * 256); };
+      })(i3, j3)).catch(function () {}));
+  }
+  await Promise.all(ijobs);
+  var px0 = (t2.x(lon - halfM / mLon, iz) - ix0) * 256, px1 = (t2.x(lon + halfM / mLon, iz) - ix0) * 256;
+  var py0 = (t2.y(lat + halfM / mLat, iz) - iy0) * 256, py1 = (t2.y(lat - halfM / mLat, iz) - iy0) * 256;
+  var oc = document.createElement('canvas'); oc.width = 1024; oc.height = 1024;
+  oc.getContext('2d').drawImage(cc, px0, py0, px1 - px0, py1 - py0, 0, 0, 1024, 1024);
+  var relief = 0;
+  for (var k3 = 0; k3 < H.length; k3++) if (H[k3] > relief) relief = H[k3];
+  relief = Math.max(relief, 0.001);
+  return {
+    format: LAND_FMT, name: 'ICOSA ' + win.slug, cell: win.slug,
+    lat: +lat.toFixed(5), lon: +lon.toFixed(5), halfM: Math.round(halfM),
+    scale: +S.toFixed(3), w: WU, h: WU, nx: N, nz: N,
+    relief: +relief.toFixed(3), zminM: Math.round(zmin * S), reliefM: +(relief * S).toFixed(1),
+    hf: packHeights(H, relief), tex: oc.toDataURL('image/jpeg', 0.82),
+    spawn: { x: 0, z: 0 }, saved: new Date().toISOString()
+  };
+}
+
+/* ==================================================================== *
+ *  4 · GROUND — law 4: one question, one answerer.                      *
+ * ==================================================================== */
+
+var GROUND = { on: false, y: null, n: null, datum: 0, zminM: 0, S: 1 };
+function mountGround(H, pack) {
+  var N = pack.nx;
+  function grid(x, z) {
+    var fx = (x + WU / 2) / WU * (N - 1), fz = (z + WU / 2) / WU * (N - 1);
+    var i = Math.max(0, Math.min(N - 2, Math.floor(fx)));
+    var j = Math.max(0, Math.min(N - 2, Math.floor(fz)));
+    var tx = clamp(fx - i, 0, 1), tz = clamp(fz - j, 0, 1);
+    return H[j * N + i] * (1 - tx) * (1 - tz) + H[j * N + i + 1] * tx * (1 - tz)
+         + H[(j + 1) * N + i] * (1 - tx) * tz + H[(j + 1) * N + i + 1] * tx * tz;
+  }
+  var datum = grid(0, 0);
+  GROUND.on = true;
+  GROUND.datum = datum;
+  GROUND.zminM = pack.zminM || 0;
+  GROUND.S = pack.scale;
+  GROUND.y = function (x, z) { return grid(x, z) - datum; };
+  GROUND.n = function (x, z) {
+    var e = 1.1;
+    var nx = -(GROUND.y(x + e, z) - GROUND.y(x - e, z)) / (2 * e);
+    var nz = -(GROUND.y(x, z + e) - GROUND.y(x, z - e)) / (2 * e);
+    return norm([nx, 1, nz]);
+  };
+  return grid;
+}
+function elevOfM(x, z) {              // absolute meters, for the HUD
+  return GROUND.zminM + (GROUND.y(x, z) + GROUND.datum) * GROUND.S;
+}
+
+/* ==================================================================== *
+ *  5 · THE RENDERER — law 7: no engine but the ground. One program for  *
+ *  the draped heightfield, one for lit colored boxes (the car).         *
+ * ==================================================================== */
+
+var glCanvas = document.getElementById('gl');
+var GL = null, GLP = {};
+function mIdent() { return new Float32Array([1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1]); }
+function mMul(a, b) {
+  var o = new Float32Array(16);
+  for (var c = 0; c < 4; c++) for (var r = 0; r < 4; r++) {
+    o[c * 4 + r] = a[r] * b[c * 4] + a[4 + r] * b[c * 4 + 1]
+                 + a[8 + r] * b[c * 4 + 2] + a[12 + r] * b[c * 4 + 3];
+  }
+  return o;
+}
+function mPersp(fov, asp, n, f) {
+  var t = 1 / Math.tan(fov / 2);
+  return new Float32Array([t / asp,0,0,0, 0,t,0,0, 0,0,(f + n) / (n - f),-1, 0,0,2 * f * n / (n - f),0]);
+}
+function mLookAt(e, c, u) {
+  var Z = norm([e[0] - c[0], e[1] - c[1], e[2] - c[2]]);
+  var X = norm(cross(u, Z)), Y = cross(Z, X);
+  return new Float32Array([
+    X[0], Y[0], Z[0], 0,  X[1], Y[1], Z[1], 0,  X[2], Y[2], Z[2], 0,
+    -(X[0]*e[0]+X[1]*e[1]+X[2]*e[2]), -(Y[0]*e[0]+Y[1]*e[1]+Y[2]*e[2]), -(Z[0]*e[0]+Z[1]*e[1]+Z[2]*e[2]), 1]);
+}
+function mTRS(x, y, z, yaw, pitch, roll, sx, sy, sz) {
+  var cy = Math.cos(yaw), sy_ = Math.sin(yaw);
+  var cp = Math.cos(pitch), sp = Math.sin(pitch);
+  var cr = Math.cos(roll), sr = Math.sin(roll);
+  // R = Ry(yaw)·Rx(pitch)·Rz(roll), column-major
+  var r00 = cy * cr + sy_ * sp * sr, r01 = cp * sr, r02 = -sy_ * cr + cy * sp * sr;
+  var r10 = -cy * sr + sy_ * sp * cr, r11 = cp * cr, r12 = sy_ * sr + cy * sp * cr;
+  var r20 = sy_ * cp, r21 = -sp, r22 = cy * cp;
+  return new Float32Array([
+    r00 * sx, r01 * sx, r02 * sx, 0,
+    r10 * sy, r11 * sy, r12 * sy, 0,
+    r20 * sz, r21 * sz, r22 * sz, 0,
+    x, y, z, 1]);
+}
+function shader(vs, fs) {
+  function one(type, src) {
+    var s = GL.createShader(type);
+    GL.shaderSource(s, src); GL.compileShader(s);
+    if (!GL.getShaderParameter(s, GL.COMPILE_STATUS)) throw new Error(GL.getShaderInfoLog(s));
+    return s;
+  }
+  var p = GL.createProgram();
+  GL.attachShader(p, one(GL.VERTEX_SHADER, vs));
+  GL.attachShader(p, one(GL.FRAGMENT_SHADER, fs));
+  GL.linkProgram(p);
+  if (!GL.getProgramParameter(p, GL.LINK_STATUS)) throw new Error(GL.getProgramInfoLog(p));
+  return p;
+}
+var FOG = [0.68, 0.76, 0.83];
+function glInit() {
+  if (GL) return true;
+  GL = glCanvas.getContext('webgl', { antialias: true });
+  if (!GL) return false;
+  GLP.terra = shader(
+    'attribute vec3 aP; attribute vec2 aT; uniform mat4 uMVP; varying vec2 vT; varying float vD;' +
+    'void main(){ vec4 p = uMVP * vec4(aP, 1.0); gl_Position = p; vT = aT; vD = p.w; }',
+    'precision mediump float; uniform sampler2D uTex; uniform vec3 uFog;' +
+    'varying vec2 vT; varying float vD;' +
+    'void main(){ float f = clamp((vD - 45.0) / 150.0, 0.0, 1.0);' +
+    ' gl_FragColor = vec4(mix(texture2D(uTex, vT).rgb, uFog, f), 1.0); }');
+  GLP.box = shader(
+    'attribute vec3 aP; attribute vec3 aN; uniform mat4 uM; uniform mat4 uVP;' +
+    'varying vec3 vN; void main(){ gl_Position = uVP * uM * vec4(aP, 1.0);' +
+    ' vN = normalize((uM * vec4(aN, 0.0)).xyz); }',
+    'precision mediump float; uniform vec3 uC; varying vec3 vN;' +
+    'void main(){ float l = 0.45 + 0.55 * max(0.0, dot(vN, normalize(vec3(-0.4, 0.9, 0.3))));' +
+    ' gl_FragColor = vec4(uC * l, 1.0); }');
+  // unit cube with normals (centered, 1×1×1)
+  var P = [], Nrm = [], I = [];
+  var faces = [
+    [[ .5,-.5,-.5],[ .5, .5,-.5],[ .5, .5, .5],[ .5,-.5, .5],[1,0,0]],
+    [[-.5,-.5, .5],[-.5, .5, .5],[-.5, .5,-.5],[-.5,-.5,-.5],[-1,0,0]],
+    [[-.5, .5,-.5],[-.5, .5, .5],[ .5, .5, .5],[ .5, .5,-.5],[0,1,0]],
+    [[-.5,-.5, .5],[-.5,-.5,-.5],[ .5,-.5,-.5],[ .5,-.5, .5],[0,-1,0]],
+    [[-.5,-.5, .5],[ .5,-.5, .5],[ .5, .5, .5],[-.5, .5, .5],[0,0,1]],
+    [[ .5,-.5,-.5],[-.5,-.5,-.5],[-.5, .5,-.5],[ .5, .5,-.5],[0,0,-1]]
+  ];
+  for (var f = 0; f < 6; f++) {
+    var b = f * 4;
+    for (var v = 0; v < 4; v++) { P.push.apply(P, faces[f][v]); Nrm.push.apply(Nrm, faces[f][4]); }
+    I.push(b, b + 1, b + 2, b, b + 2, b + 3);
+  }
+  GLP.cubeP = GL.createBuffer();
+  GL.bindBuffer(GL.ARRAY_BUFFER, GLP.cubeP);
+  GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(P), GL.STATIC_DRAW);
+  GLP.cubeN = GL.createBuffer();
+  GL.bindBuffer(GL.ARRAY_BUFFER, GLP.cubeN);
+  GL.bufferData(GL.ARRAY_BUFFER, new Float32Array(Nrm), GL.STATIC_DRAW);
+  GLP.cubeI = GL.createBuffer();
+  GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, GLP.cubeI);
+  GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, new Uint16Array(I), GL.STATIC_DRAW);
+  GL.enable(GL.DEPTH_TEST);
+  return true;
+}
+var TERRA_MESH = null;
+function buildTerrain(gridFn, texSource) {
+  var N = GRID_N, P = new Float32Array(N * N * 3), T = new Float32Array(N * N * 2);
+  for (var j = 0; j < N; j++) for (var i = 0; i < N; i++) {
+    var x = -WU / 2 + WU * i / (N - 1), z = -WU / 2 + WU * j / (N - 1);
+    var k = j * N + i;
+    P[k * 3] = x; P[k * 3 + 1] = GROUND.y(x, z); P[k * 3 + 2] = z;
+    T[k * 2] = i / (N - 1); T[k * 2 + 1] = j / (N - 1);
+  }
+  var I = new Uint16Array((N - 1) * (N - 1) * 6), c = 0;
+  for (var j2 = 0; j2 < N - 1; j2++) for (var i2 = 0; i2 < N - 1; i2++) {
+    var a = j2 * N + i2;
+    I[c++] = a; I[c++] = a + N; I[c++] = a + 1;
+    I[c++] = a + 1; I[c++] = a + N; I[c++] = a + N + 1;
+  }
+  if (TERRA_MESH) {
+    GL.deleteBuffer(TERRA_MESH.p); GL.deleteBuffer(TERRA_MESH.t);
+    GL.deleteBuffer(TERRA_MESH.i); GL.deleteTexture(TERRA_MESH.tex);
+  }
+  var bp = GL.createBuffer();
+  GL.bindBuffer(GL.ARRAY_BUFFER, bp); GL.bufferData(GL.ARRAY_BUFFER, P, GL.STATIC_DRAW);
+  var bt = GL.createBuffer();
+  GL.bindBuffer(GL.ARRAY_BUFFER, bt); GL.bufferData(GL.ARRAY_BUFFER, T, GL.STATIC_DRAW);
+  var bi = GL.createBuffer();
+  GL.bindBuffer(GL.ELEMENT_ARRAY_BUFFER, bi); GL.bufferData(GL.ELEMENT_ARRAY_BUFFER, I, GL.STATIC_DRAW);
+  var tex = GL.createTexture();
+  GL.bindTexture(GL.TEXTURE_2D, tex);
+  GL.texImage2D(GL.TEXTURE_2D, 0, GL.RGBA, GL.RGBA, GL.UNSIGNED_BYTE, texSource);
+  GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MIN_FILTER, GL.LINEAR);
+  GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_MAG_FILTER, GL.LINEAR);
+  GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_S, GL.CLAMP_TO_EDGE);
+  GL.texParameteri(GL.TEXTURE_2D, GL.TEXTURE_WRAP_T, GL.CLAMP_TO_EDGE);
+  TERRA_MESH = { p: bp, t: bt, i: bi, tex: tex, count: I.length };
+}
+function drawBox(vpLoc, m, color) {
+  var g = GL, pr = GLP.box;
+  g.uniformMatrix4fv(g.getUniformLocation(pr, 'uM'), false, m);
+  g.uniform3fv(g.getUniformLocation(pr, 'uC'), color);
+  g.drawElements(g.TRIANGLES, 36, g.UNSIGNED_SHORT, 0);
+}
+function renderDrive() {
+  var g = GL;
+  var w = glCanvas.clientWidth, h = glCanvas.clientHeight, dpr = Math.min(devicePixelRatio || 1, 2);
+  if (glCanvas.width !== w * dpr || glCanvas.height !== h * dpr) {
+    glCanvas.width = w * dpr; glCanvas.height = h * dpr;
+  }
+  g.viewport(0, 0, glCanvas.width, glCanvas.height);
+  g.clearColor(FOG[0], FOG[1], FOG[2], 1);
+  g.clear(g.COLOR_BUFFER_BIT | g.DEPTH_BUFFER_BIT);
+  var proj = mPersp(60 * D2R, w / h, 0.3, 400);
+  var fx = Math.sin(CAR.yaw), fz = -Math.cos(CAR.yaw);
+  var tgt = [CAR.x, CAR.y + 1.2, CAR.z];
+  CAM.x += (CAR.x - fx * 9 - CAM.x) * 0.08;
+  CAM.y += (CAR.y + 4.5 - CAM.y) * 0.08;
+  CAM.z += (CAR.z - fz * 9 - CAM.z) * 0.08;
+  var eyeY = Math.max(CAM.y, GROUND.y(CAM.x, CAM.z) + 1.2);
+  var vp = mMul(proj, mLookAt([CAM.x, eyeY, CAM.z], tgt, [0, 1, 0]));
+  // terrain
+  var pr = GLP.terra;
+  g.useProgram(pr);
+  g.uniformMatrix4fv(g.getUniformLocation(pr, 'uMVP'), false, vp);
+  g.uniform3fv(g.getUniformLocation(pr, 'uFog'), FOG);
+  g.bindBuffer(g.ARRAY_BUFFER, TERRA_MESH.p);
+  var aP = g.getAttribLocation(pr, 'aP');
+  g.enableVertexAttribArray(aP); g.vertexAttribPointer(aP, 3, g.FLOAT, false, 0, 0);
+  g.bindBuffer(g.ARRAY_BUFFER, TERRA_MESH.t);
+  var aT = g.getAttribLocation(pr, 'aT');
+  g.enableVertexAttribArray(aT); g.vertexAttribPointer(aT, 2, g.FLOAT, false, 0, 0);
+  g.activeTexture(g.TEXTURE0);
+  g.bindTexture(g.TEXTURE_2D, TERRA_MESH.tex);
+  g.uniform1i(g.getUniformLocation(pr, 'uTex'), 0);
+  g.bindBuffer(g.ELEMENT_ARRAY_BUFFER, TERRA_MESH.i);
+  g.drawElements(g.TRIANGLES, TERRA_MESH.count, g.UNSIGNED_SHORT, 0);
+  // car — an honest box on four wheels
+  pr = GLP.box;
+  g.useProgram(pr);
+  g.uniformMatrix4fv(g.getUniformLocation(pr, 'uVP'), false, vp);
+  g.bindBuffer(g.ARRAY_BUFFER, GLP.cubeP);
+  var aP2 = g.getAttribLocation(pr, 'aP');
+  g.enableVertexAttribArray(aP2); g.vertexAttribPointer(aP2, 3, g.FLOAT, false, 0, 0);
+  g.bindBuffer(g.ARRAY_BUFFER, GLP.cubeN);
+  var aN = g.getAttribLocation(pr, 'aN');
+  g.enableVertexAttribArray(aN); g.vertexAttribPointer(aN, 3, g.FLOAT, false, 0, 0);
+  g.bindBuffer(g.ELEMENT_ARRAY_BUFFER, GLP.cubeI);
+  var base = mTRS(CAR.x, CAR.y + 0.55, CAR.z, -CAR.yaw, CAR.pitch, CAR.roll, 1, 1, 1);
+  drawBox(null, mMul(base, mTRS(0, 0, 0, 0, 0, 0, 1.1, 0.45, 2.4)), [0.92, 0.55, 0.15]);
+  drawBox(null, mMul(base, mTRS(0, 0.38, 0.25, 0, 0, 0, 0.9, 0.34, 1.1)), [0.16, 0.15, 0.13]);
+  var spin = CAR.odo / 0.34;
+  var wp = [[-0.62, -0.34, -0.82], [0.62, -0.34, -0.82], [-0.62, -0.34, 0.82], [0.62, -0.34, 0.82]];
+  for (var wI = 0; wI < 4; wI++) {
+    drawBox(null, mMul(base, mTRS(wp[wI][0], wp[wI][1], wp[wI][2], 0, spin, 0, 0.24, 0.62, 0.62)),
+      [0.09, 0.09, 0.09]);
+  }
+}
+
+/* ==================================================================== *
+ *  6 · THE CAR — arcade dynamics in the chart; the pose that matters    *
+ *  is geographic (law 3).                                               *
+ * ==================================================================== */
+
+var CAR = { x: 0, z: 0, y: 0, yaw: 0, speed: 0, pitch: 0, roll: 0, odo: 0, lat: 0, lon: 0 };
+var CAM = { x: 0, y: 6, z: 10 };
+var INPUT = { up: false, down: false, left: false, right: false };
+function stepCar(dt) {
+  var th = (INPUT.up ? 1 : 0) - (INPUT.down ? 1 : 0);
+  var st = (INPUT.right ? 1 : 0) - (INPUT.left ? 1 : 0);
+  var gU = 9.81 / GROUND.S;                     // gravity, in units/s²
+  var fx = Math.sin(CAR.yaw), fz = -Math.cos(CAR.yaw);
+  var hF = GROUND.y(CAR.x + fx * 1.2, CAR.z + fz * 1.2);
+  var hB = GROUND.y(CAR.x - fx * 1.2, CAR.z - fz * 1.2);
+  var hR = GROUND.y(CAR.x - fz * 1.2, CAR.z + fx * 1.2);
+  var hL = GROUND.y(CAR.x + fz * 1.2, CAR.z - fx * 1.2);
+  var gradAlong = (hF - hB) / 2.4;
+  CAR.speed += (th * 16 - CAR.speed * 0.55 - gU * gradAlong * 0.6) * dt;
+  CAR.speed = clamp(CAR.speed, -14, 34);
+  if (!th) CAR.speed *= Math.pow(0.4, dt);
+  CAR.yaw += st * 2.1 * dt * clamp(CAR.speed / 7, -1, 1);
+  CAR.x += fx * CAR.speed * dt;
+  CAR.z += fz * CAR.speed * dt;
+  CAR.x = clamp(CAR.x, -WU / 2 + 1, WU / 2 - 1);
+  CAR.z = clamp(CAR.z, -WU / 2 + 1, WU / 2 - 1);
+  CAR.y = GROUND.y(CAR.x, CAR.z);
+  CAR.pitch = Math.atan2(hF - hB, 2.4);
+  CAR.roll = Math.atan2(hR - hL, 2.4);
+  CAR.odo += Math.abs(CAR.speed) * dt;
+  var geo = chartToGeo(WIN, CAR.x, CAR.z);
+  CAR.lat = geo[0]; CAR.lon = geo[1];
+}
+
+/* ==================================================================== *
+ *  7 · MODES — SELECT (the globe), LANDING (the fetch), DRIVE, CROSSING *
+ * ==================================================================== */
+
+var MODE = 'select';
+var CELL = null;                      // the selected / driven cell
+var WIN = null;                       // the current chart
+var PACK = null;                      // the mounted landpack
+var wireEl = document.getElementById('wire');
+var wireT = 0;
+function wire(msg, cls) {
+  wireEl.textContent = msg;
+  wireEl.className = cls || '';
+  wireEl.style.display = 'block';
+  clearTimeout(wireT);
+  if (cls !== 'busy') wireT = setTimeout(function () { wireEl.style.display = 'none'; }, 5000);
+}
+function setHash(slug) {
+  try { history.replaceState(null, '', '#' + slug + (MODE === 'drive' ? '@drive' : '')); } catch (_) {}
+}
+
+async function mountPack(pack) {
+  var H = unpackHeights(pack.hf, pack.nx * pack.nz, pack.relief);
+  mountGround(H, pack);
+  var im = new Image();
+  await new Promise(function (ok, no) {
+    im.onload = function () { ok(); };
+    im.onerror = function () { no(new Error('pack texture unreadable')); };
+    im.src = pack.tex;
+  });
+  buildTerrain(null, im);
+  PACK = pack;
+}
+
+async function land(opts) {
+  opts = opts || {};
+  if (!CELL || CELL.depth < DRIVE_DEPTH) { wire('descend to depth ' + DRIVE_DEPTH + ' before landing', 'warn'); return false; }
+  if (!glInit()) {
+    wire('this browser has no WebGL — the selector still selects, but the land cannot rise', 'warn');
+    return false;
+  }
+  var win = windowOf(CELL);
+  var key = win.slug + '@' + Math.round(win.halfM);
+  MODE = 'landing';
+  try {
+    var pack = cacheGet(key);
+    if (pack) {
+      wire('land remembered — mounting ' + win.slug + ' with zero network', 'ok');
+    } else {
+      pack = await fetchPack(win);
+      cachePut(key, pack);
+    }
+    WIN = win;
+    await mountPack(pack);
+    // stand on the ground — at the centroid, or at a carried geographic point
+    if (opts.geo) {
+      var lc = geoToChart(win, opts.geo[0], opts.geo[1]);
+      CAR.x = clamp(lc[0], -WU / 2 + 1, WU / 2 - 1);
+      CAR.z = clamp(lc[1], -WU / 2 + 1, WU / 2 - 1);
+    } else { CAR.x = 0; CAR.z = 0; CAR.speed = 0; }
+    CAR.y = GROUND.y(CAR.x, CAR.z);
+    CAM.x = CAR.x; CAM.y = CAR.y + 6; CAM.z = CAR.z + 10;
+    MODE = 'drive';
+    enterDriveUI();
+    setHash(win.slug);
+    var seaNote = (pack.zminM < -5) ? ' · elevations are bathymetric — this is the sea floor' : '';
+    wire(win.slug + ' · 1 unit = ' + win.S.toFixed(2) + ' m · relief ' + pack.reliefM + ' m' + seaNote, 'ok');
+    return true;
+  } catch (e) {
+    MODE = 'select';
+    wire('the land did not come: ' + e.message, 'warn');
+    return false;
+  }
+}
+
+// law 5 — travel is containment failure
+var CROSS_LOCK = false;
+async function crossInto(p) {
+  if (CROSS_LOCK) return;
+  var next = cellAt(p, CELL.depth);
+  if (cellSlug(next) === cellSlug(CELL)) return;   // numeric jitter at the very edge
+  CROSS_LOCK = true;
+  MODE = 'crossing';
+  var carried = [CAR.lat, CAR.lon];
+  var from = cellSlug(CELL);
+  wire('crossing ' + from + ' → ' + cellSlug(next) + ' — raising the next triangle', 'busy');
+  var prevCell = CELL, prevWin = WIN, prevPack = PACK;
+  CELL = next;
+  var ok = await land({ geo: carried });
+  if (!ok) {                                        // the neighbour did not come; stay home
+    CELL = prevCell; WIN = prevWin; PACK = prevPack;
+    if (prevPack) { await mountPack(prevPack); }
+    var lc = geoToChart(WIN, carried[0], carried[1]);
+    CAR.x = clamp(lc[0] * 0.94, -WU / 2 + 1, WU / 2 - 1);   // nudged back inside
+    CAR.z = clamp(lc[1] * 0.94, -WU / 2 + 1, WU / 2 - 1);
+    CAR.speed = 0;
+    MODE = 'drive';
+  } else {
+    CAR.speed *= 0.6;
+    wire('crossed into ' + cellSlug(CELL), 'ok');
+  }
+  CROSS_LOCK = false;
+}
+
+/* ==================================================================== *
+ *  8 · THE SELECTOR — the orthographic globe. SPIN, DESCEND, ASCEND.    *
+ * ==================================================================== */
+
+var globe = document.getElementById('globe');
+var g2 = globe.getContext('2d');
+var Q = qNorm(DATA.ico.quat ? [DATA.ico.quat[0], DATA.ico.quat[1], DATA.ico.quat[2], DATA.ico.quat[3]] : qId());
+var Q_TARGET = null;
+function project(p, cx, cy, R) {
+  var r = qApply(Q, p);
+  return { x: cx + r[0] * R, y: cy - r[2] * R, front: r[1] <= 0.02 };
+}
+function rotateTo(p) {
+  var qt = qMul(qBetween(qApply(Q, p), [0, -1, 0]), Q);
+  // roll so north is up at the target — a centred place should read as a map
+  var f = 1 - p[2] * p[2];
+  if (f > 1e-9) {
+    var nt = norm([-p[0] * p[2], -p[1] * p[2], f]);
+    var t = qApply(qt, nt);
+    qt = qNorm(qMul(qAxis([0, 1, 0], -Math.atan2(t[0], t[2])), qt));
+  }
+  Q_TARGET = qt;
+}
+function drawArc(a, b, cx, cy, R, segs) {
+  segs = segs || 10;
+  var started = false;
+  for (var i = 0; i <= segs; i++) {
+    var p = project(norm(lerp3(a, b, i / segs)), cx, cy, R);
+    if (!p.front) { started = false; continue; }
+    if (!started) { g2.moveTo(p.x, p.y); started = true; }
+    else g2.lineTo(p.x, p.y);
+  }
+}
+function drawGlobe() {
+  var w = globe.clientWidth, h = globe.clientHeight, dpr = Math.min(devicePixelRatio || 1, 2);
+  if (globe.width !== w * dpr || globe.height !== h * dpr) {
+    globe.width = w * dpr; globe.height = h * dpr;
+  }
+  g2.setTransform(dpr, 0, 0, dpr, 0, 0);
+  g2.clearRect(0, 0, w, h);
+  var cx = w / 2, cy = h / 2, R = Math.min(w, h) * 0.42;
+  if (Q_TARGET) {
+    Q = qSlerp(Q, Q_TARGET, 0.14);
+    var d = Math.abs(Q[0] * Q_TARGET[0] + Q[1] * Q_TARGET[1] + Q[2] * Q_TARGET[2] + Q[3] * Q_TARGET[3]);
+    if (d > 0.99999) { Q = Q_TARGET; Q_TARGET = null; }
+  }
+  // the ocean
+  g2.beginPath(); g2.arc(cx, cy, R, 0, TAU);
+  g2.fillStyle = '#101d26'; g2.fill();
+  g2.strokeStyle = '#2a3a46'; g2.lineWidth = 1; g2.stroke();
+  // coastlines
+  g2.beginPath();
+  for (var r = 0; r < LAND_RINGS.length; r++) {
+    var ring = LAND_RINGS[r], started = false;
+    for (var i = 0; i < ring.length; i++) {
+      var p = project(ring[i], cx, cy, R);
+      if (!p.front) { started = false; continue; }
+      if (!started) { g2.moveTo(p.x, p.y); started = true; }
+      else g2.lineTo(p.x, p.y);
+    }
+  }
+  g2.strokeStyle = '#7a7466'; g2.lineWidth = 1; g2.stroke();
+  // the icosa wireframe
+  g2.beginPath();
+  var E = DATA.ico.edges;                      // [faceA, faceB, sideA, sideB, vertA, vertB]
+  for (var e = 0; e < E.length; e++) drawArc(V[E[e][4]], V[E[e][5]], cx, cy, R, 12);
+  g2.strokeStyle = 'rgba(120,140,160,0.25)'; g2.lineWidth = 1; g2.stroke();
+  // cities — the biggest, as orientation
+  g2.fillStyle = 'rgba(232,228,216,0.75)';
+  g2.font = '10px ui-monospace,monospace';
+  for (var c = 0; c < 24; c++) {
+    var ct = CITIES[c], pc = project(ct.v, cx, cy, R);
+    if (!pc.front) continue;
+    g2.beginPath(); g2.arc(pc.x, pc.y, 1.6, 0, TAU); g2.fill();
+    if (c < 12) g2.fillText(ct.name, pc.x + 4, pc.y + 3);
+  }
+  // the selected cell and its four children
+  if (CELL) {
+    var corners = cellCorners(CELL);
+    g2.beginPath();
+    drawArc(corners[0], corners[1], cx, cy, R, 16);
+    drawArc(corners[1], corners[2], cx, cy, R, 16);
+    drawArc(corners[2], corners[0], cx, cy, R, 16);
+    g2.strokeStyle = '#ffd75e'; g2.lineWidth = 2; g2.stroke();
+    if (CELL.depth < MAX_DEPTH) {
+      var m01 = baryPoint(CELL.f, mid(CELL.tri[0], CELL.tri[1]));
+      var m12 = baryPoint(CELL.f, mid(CELL.tri[1], CELL.tri[2]));
+      var m02 = baryPoint(CELL.f, mid(CELL.tri[0], CELL.tri[2]));
+      g2.beginPath();
+      drawArc(m01, m12, cx, cy, R, 8); drawArc(m12, m02, cx, cy, R, 8); drawArc(m02, m01, cx, cy, R, 8);
+      g2.strokeStyle = 'rgba(255,215,94,0.45)'; g2.lineWidth = 1; g2.stroke();
+      g2.fillStyle = 'rgba(255,215,94,0.8)';
+      g2.font = '11px ui-monospace,monospace';
+      for (var ch = 0; ch < 4; ch++) {
+        var ct2 = childTri(CELL.tri, ch);
+        var cp = project(baryPoint(CELL.f, [(ct2[0][0] + ct2[1][0] + ct2[2][0]) / 3,
+          (ct2[0][1] + ct2[1][1] + ct2[2][1]) / 3, (ct2[0][2] + ct2[1][2] + ct2[2][2]) / 3]), cx, cy, R);
+        if (cp.front) g2.fillText(String(ch), cp.x - 3, cp.y + 4);
+      }
+    }
+  } else {
+    // no selection: name the faces faintly
+    g2.fillStyle = 'rgba(160,170,180,0.5)';
+    g2.font = '10px ui-monospace,monospace';
+    for (var f = 0; f < NF; f++) {
+      var fc = project(cellCentre(makeCell(f, [])), cx, cy, R);
+      if (fc.front) g2.fillText('F' + (f < 10 ? '0' : '') + f, fc.x - 9, fc.y + 3);
+    }
+  }
+}
+
+/* -------------------------------------------------- selector gestures */
+var drag = null;
+globe.addEventListener('pointerdown', function (ev) {
+  drag = { x: ev.clientX, y: ev.clientY, moved: false, id: ev.pointerId };
+  globe.setPointerCapture(ev.pointerId);
+});
+globe.addEventListener('pointermove', function (ev) {
+  if (!drag || ev.pointerId !== drag.id) return;
+  var dx = ev.clientX - drag.x, dy = ev.clientY - drag.y;
+  if (Math.abs(dx) + Math.abs(dy) > 6) drag.moved = true;
+  if (drag.moved) {
+    var R = Math.min(globe.clientWidth, globe.clientHeight) * 0.42;
+    Q = qNorm(qMul(qAxis([1, 0, 0], dy / R), qMul(qAxis([0, 0, 1], dx / R), Q)));
+    Q_TARGET = null;
+    drag.x = ev.clientX; drag.y = ev.clientY;
+  }
+});
+globe.addEventListener('pointerup', function (ev) {
+  if (!drag || ev.pointerId !== drag.id) return;
+  if (!drag.moved) tapGlobe(ev.clientX, ev.clientY);
+  drag = null;
+});
+function unproject(sx, sy) {
+  var w = globe.clientWidth, h = globe.clientHeight;
+  var cx = w / 2, cy = h / 2, R = Math.min(w, h) * 0.42;
+  var vx = (sx - cx) / R, vz = -(sy - cy) / R;
+  var rr = vx * vx + vz * vz;
+  if (rr > 1) return null;
+  return qApply(qConj(Q), [vx, -Math.sqrt(Math.max(0, 1 - rr)), vz]);
+}
+function tapGlobe(sx, sy) {
+  if (MODE !== 'select') return;
+  var p = unproject(sx, sy);
+  if (!p) return;
+  if (!CELL) selectCell(makeCell(faceOf(p), []));
+  else if (cellContains(CELL, p) && CELL.depth < MAX_DEPTH) selectCell(cellAt(p, CELL.depth + 1));
+  else selectCell(cellAt(p, CELL.depth));       // a lateral move at the same depth
+}
+function selectCell(c) {
+  CELL = c;
+  rotateTo(cellCentre(c));
+  setHash(cellSlug(c));
+  updateSelectUI();
+}
+
+/* ==================================================================== *
+ *  9 · UI — the address chip is the one truth about where you are.      *
+ * ==================================================================== */
+
+var el = function (id) { return document.getElementById(id); };
+function updateSelectUI() {
+  if (!CELL) {
+    el('aSlug').textContent = 'THE PLANET';
+    el('aSub').textContent = 'tap a face to begin · drag to spin';
+    el('bUp').style.display = 'none';
+    el('bLand').style.display = 'none';
+    return;
+  }
+  var slug = cellSlug(CELL), km = cellEdgeKm(CELL);
+  el('aSlug').textContent = slug;
+  el('aSub').textContent = 'depth ' + CELL.depth + ' · edge ' +
+    (km >= 1 ? km.toFixed(km < 10 ? 1 : 0) + ' km' : Math.round(km * 1000) + ' m') +
+    ' · ' + areaLabel(cellAreaKm2(CELL));
+  el('bUp').style.display = '';
+  el('bLand').style.display = '';
+  if (CELL.depth >= DRIVE_DEPTH) {
+    var win = windowOf(CELL);
+    el('bLand').disabled = false;
+    el('bLand').className = 'hot';
+    el('bLand').textContent = 'LAND — ' + Math.round(win.halfM * 2) + ' m of ground';
+  } else {
+    el('bLand').disabled = true;
+    el('bLand').className = '';
+    el('bLand').textContent = 'descend ' + (DRIVE_DEPTH - CELL.depth) + ' more to land';
+  }
+}
+function enterDriveUI() {
+  globe.style.display = 'none';
+  glCanvas.style.display = 'block';
+  el('bUp').style.display = 'none';
+  el('bLand').style.display = 'none';
+  el('bRise').style.display = '';
+  el('bSave').style.display = '';
+  el('geo').style.display = 'block';
+  el('pad').style.display = 'grid';
+  el('aSlug').textContent = WIN.slug;
+  el('aSub').textContent = '1 unit = ' + WIN.S.toFixed(2) + ' m · drive across the edge to travel';
+}
+function enterSelectUI() {
+  globe.style.display = 'block';
+  glCanvas.style.display = 'none';
+  el('bRise').style.display = 'none';
+  el('bSave').style.display = 'none';
+  el('geo').style.display = 'none';
+  el('pad').style.display = 'none';
+  updateSelectUI();
+}
+function fmtGeo(lat, lon) {
+  return Math.abs(lat).toFixed(5) + (lat < 0 ? '°S' : '°N') + ' ' +
+         Math.abs(lon).toFixed(5) + (lon < 0 ? '°W' : '°E');
+}
+function updateDriveHUD() {
+  el('aSlug').textContent = WIN.slug;
+  el('gPos').textContent = fmtGeo(CAR.lat, CAR.lon);
+  el('gElev').textContent = 'elev ' + Math.round(elevOfM(CAR.x, CAR.z)) + ' m';
+  el('gSpd').textContent = Math.abs(CAR.speed * GROUND.S * 3.6).toFixed(0) + ' km/h';
+}
+
+el('bUp').addEventListener('click', function () {
+  if (!CELL) return;
+  if (!CELL.path.length) { CELL = null; updateSelectUI(); setHash(''); return; }
+  selectCell(makeCell(CELL.f, CELL.path.slice(0, -1)));
+});
+el('bLand').addEventListener('click', function () { land(); });
+el('bRise').addEventListener('click', function () {
+  // RISE — back to the selector, at the cell you are IN (after driving,
+  // generally not the one you landed in).
+  MODE = 'select';
+  enterSelectUI();
+  if (CELL) { rotateTo(cellCentre(CELL)); setHash(cellSlug(CELL)); }
+});
+el('bSave').addEventListener('click', function () {
+  if (!PACK) { wire('no land mounted', 'warn'); return; }
+  var blob = new Blob([JSON.stringify(PACK)], { type: 'application/json' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (PACK.cell || 'land') + '.landpack.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  wire(a.download + ' — mounts anywhere, zero network', 'ok');
+});
+el('bMount').addEventListener('click', function () { el('fMount').click(); });
+el('fMount').addEventListener('change', function (ev) {
+  var f = ev.target.files && ev.target.files[0];
+  if (!f) return;
+  var rd = new FileReader();
+  rd.onload = async function () {
+    try {
+      var pack = JSON.parse(rd.result);
+      if (!pack.hf || !pack.nx) throw new Error('not a landpack — no heightfield inside');
+      if (!glInit()) throw new Error('no WebGL — the pack is readable but the land cannot rise');
+      if (pack.cell) { var c = cellFromSlug(pack.cell); if (c) CELL = c; }
+      WIN = { slug: pack.cell || pack.name || 'IMPORTED', lat: pack.lat || 0, lon: pack.lon || 0,
+              halfM: pack.halfM || (pack.scale ? pack.scale * WU / 2 : HALF_MIN), S: pack.scale || 1.84 };
+      await mountPack(pack);
+      CAR.x = (pack.spawn && pack.spawn.x) || 0; CAR.z = (pack.spawn && pack.spawn.z) || 0;
+      CAR.speed = 0; CAR.y = GROUND.y(CAR.x, CAR.z);
+      MODE = 'drive';
+      enterDriveUI();
+      wire('mounted ' + WIN.slug + ' from file — zero network', 'ok');
+    } catch (e) { wire('mount failed: ' + e.message, 'warn'); }
+  };
+  rd.readAsText(f);
+  ev.target.value = '';
+});
+
+/* ------------------------------------------------------------- input */
+var KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down',
+               ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
+addEventListener('keydown', function (ev) {
+  var k = KEYMAP[ev.code];
+  if (k) { INPUT[k] = true; ev.preventDefault(); }
+});
+addEventListener('keyup', function (ev) {
+  var k = KEYMAP[ev.code];
+  if (k) INPUT[k] = false;
+});
+Array.prototype.forEach.call(document.querySelectorAll('#pad button'), function (b) {
+  var k = b.dataset.k;
+  b.addEventListener('pointerdown', function (ev) { INPUT[k] = true; ev.preventDefault(); });
+  b.addEventListener('pointerup', function () { INPUT[k] = false; });
+  b.addEventListener('pointercancel', function () { INPUT[k] = false; });
+});
+
+/* ==================================================================== *
+ *  10 · LOOP & START                                                    *
+ * ==================================================================== */
+
+var lastT = 0;
+function frame(now) {
+  var dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
+  lastT = now;
+  if (MODE === 'select' || MODE === 'landing') drawGlobe();
+  if (MODE === 'drive') {
+    stepCar(dt);
+    // law 5, tested every frame with the grid's own membership function
+    var p = fromLonLat(CAR.lon, CAR.lat);
+    if (!cellContains(CELL, p)) crossInto(p);
+    if (MODE === 'drive') { renderDrive(); updateDriveHUD(); }
+  }
+  requestAnimationFrame(frame);
+}
+
+(function start() {
+  if (!DATA) { el('boot').textContent = 'icosa-world.data.js did not load'; return; }
+  var h = decodeURIComponent(location.hash.slice(1) || '');
+  var wantDrive = /@drive$/.test(h);
+  var c = cellFromSlug(h.replace(/@drive$/, ''));
+  rotateTo(c ? cellCentre(c) : fromLonLat(-30, 25));
+  Q = Q_TARGET; Q_TARGET = null;               // arrive oriented, no spin-up
+  if (c) CELL = c;
+  updateSelectUI();
+  requestAnimationFrame(frame);
+  setTimeout(function () { el('boot').classList.add('gone'); }, 600);
+  if (c && wantDrive && c.depth >= DRIVE_DEPTH) setTimeout(function () { land(); }, 700);
+})();
+
+/* -------------------------------------------------- verification hooks
+ * The laws must be checkable headless. Everything here reads or drives
+ * the same state the fingers do — no parallel truth.                   */
+window.ICOSA_DRIVE = {
+  fmt: LAND_FMT,
+  mode: function () { return MODE; },
+  slug: function () { return CELL ? cellSlug(CELL) : null; },
+  select: function (slug) {
+    var c = cellFromSlug(slug);
+    if (c) { selectCell(c); return cellSlug(c); }
+    return null;
+  },
+  windowOf: function (slug) { var c = cellFromSlug(slug); return c ? windowOf(c) : null; },
+  land: land,
+  rise: function () { el('bRise').click(); },
+  car: CAR,
+  input: INPUT,
+  teleport: function (x, z) { CAR.x = x; CAR.z = z; CAR.speed = 0; },
+  ground: function (x, z) { return GROUND.on ? GROUND.y(x, z) : null; },
+  elevM: elevOfM,
+  win: function () { return WIN; },
+  pack: function () { return PACK; },
+  cellAtGeo: function (lat, lon, depth) { return cellSlug(cellAt(fromLonLat(lon, lat), depth)); },
+  geoAt: function (x, z) { return WIN ? chartToGeo(WIN, x, z) : null; },
+  chartAt: function (lat, lon) { return WIN ? geoToChart(WIN, lat, lon) : null; },
+  contains: function (slug, lat, lon) {
+    var c = cellFromSlug(slug); return c ? cellContains(c, fromLonLat(lon, lat)) : null;
+  }
+};
+</script>
+</body>
+</html>

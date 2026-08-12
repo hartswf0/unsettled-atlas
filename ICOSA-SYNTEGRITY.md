@@ -1131,6 +1131,51 @@ with different minds. That last phrase is the goal — *same topology,
 different minds* — and it is what makes iteration produce structure a
 single room could not have produced alone.
 
+## The council was starving, so the harness reads
+
+A live run exposed the last failure plainly: the talk was abstract —
+sustainability, engagement, balance — a meaningless spend of tokens,
+because the evidence packet was made of TITLES. Search hits, headlines,
+seat names: pointers, not propositions. A register ordered to cite, handed
+nothing citable, has two options — go abstract or invent — and the
+constitution had closed the second. The admissibility gate made the seats
+honest; nothing had made them fed.
+
+So before anything argues, the harness now **reads**. One batch call to
+the record pulls the actual article text — introductions, plain text — for
+the topic subjects, the settlements of the ground, and the people on the
+bench, and compiles them into `evidence.readings`: the citable corpus,
+capped and cached on the cell, sitting in the hot prefix so all forty
+calls of a convening share it at cached-token prices. Populations,
+jurisdictions, named operators, dates, industries, disputes — the
+specifics are what the tokens were for.
+
+Every directive now points at it. The speak charge: *cite a reading BY
+TITLE plus the specific fact used — "Attawapiskat First Nation —
+population 1,549; the 2011 housing emergency" — never the bare title; a
+seat that names a number, a year, an operator or a statute is arguing; a
+seat speaking in themes will score 0 on specific.* The judge: *grounded
+means traceable to a NAMED reading — the title and the fact, not a
+gesture at the corpus.* The charter builds its agenda from the readings
+and must tag any subject the readings do not establish. The souls compile
+from the holders' own article text, so attention and refusals come from a
+documented life rather than a vibe.
+
+The needs loop stopped returning pointers too: when a room asks a
+question between reverberations, the harness now reads the top answer's
+actual summary text into the record, not its headline.
+
+COPY THE RUN carries the corpus as `## THE READINGS` — the exported
+prompt now states the rule in its first step: FETCH FIRST — AND READ; the
+rooms may only cite what has been read, by title, with the specific fact,
+extended by reading more, never by inventing.
+
+One honest caveat: this environment's egress policy refuses
+en.wikipedia.org, so the reader is proved against recorded response
+shapes; whether Wikimedia answers your browser is something only your
+browser can settle — and when it does not, ABSENCE has that to say, and
+the readings section says it is empty rather than pretending.
+
 ## The soul is a transition function, and every seat has a door
 
 The memory architecture gave the seats persistence; it did not give them

@@ -24,14 +24,26 @@ async function rig(p){
   await p.route('**/api.gdeltproject.org/**', r=>r.fulfill({status:200,contentType:'application/json',
     headers:{'access-control-allow-origin':'*'},
     body:JSON.stringify({articles:[{title:'Local dispute',url:'https://x/g',domain:'reuters.com',seendate:'20260811T080000Z'}]})}));
-  await p.route('**/en.wikipedia.org/**', r=>r.fulfill({status:200,contentType:'application/json',
-    headers:{'access-control-allow-origin':'*'},body:'{}'}));
+  await p.route('**/en.wikipedia.org/**', r=>{
+    const u=r.request().url();
+    if (u.includes('prop=extracts')){
+      const titles=decodeURIComponent((u.match(/titles=([^&]+)/)||[,''])[1]).split('|');
+      return r.fulfill({status:200,contentType:'application/json',
+        headers:{'access-control-allow-origin':'*'},
+        body:JSON.stringify({query:{pages:titles.map(ti=>({title:ti,
+          extract:'EXTRACT for '+ti+': population 4,213; the phosphate mine closed in 1998; '+
+          'the canal authority holds jurisdiction since 1975; the river floods each May.'}))}})});
+    }
+    return r.fulfill({status:200,contentType:'application/json',
+      headers:{'access-control-allow-origin':'*'},body:'{}'});
+  });
   await p.route('**/api.openai.com/v1/models', r=>r.fulfill({status:200,contentType:'application/json',
     headers:{'access-control-allow-origin':'*'},body:JSON.stringify({data:[{id:'gpt-5.6-sol'},{id:'gpt-5.6-terra'}]})}));
   await p.route('**/api.openai.com/v1/responses', async r=>{
     const bo=JSON.parse(r.request().postData()||'{}');
     const ctx=JSON.parse(bo.input[0].content[0].text); const op=ctx.operation||{};
     seen.push({type:op.type, iteration:op.iteration||null,
+      readings:(ctx.evidence&&ctx.evidence.readings)?ctx.evidence.readings.length:0,
       temperature:(op.topic&&op.topic.temperature)||op.temperature||null,
       members:(op.members||[]).map(m=>({seat:m.seat, hasSoul:!!m.soul,
         hasScratch:!!m.scratch, hasMemories:Array.isArray(m.memories),
@@ -109,7 +121,8 @@ out.council = {
   containment: /- contained by: F11 → F11\.1 → F11\.11 → F11\.110/.test(doc),
   harnessSteps: (doc.match(/^\d\. [A-Z]/gm)||[]).length,
   youAreTheHarness: doc.includes('you are the harness'),
-  fetchFirst: doc.includes('1. FETCH FIRST.'),
+  fetchFirst: doc.includes('1. FETCH FIRST'),
+  readDemanded: doc.includes('AND READ') && /may only cite what (has been read|is in THE READINGS)/.test(doc),
   unclaimedBranch: doc.includes('UNCLAIMED — fetch or infer a holder'),
   outputFormatDemanded: doc.includes('6. WRITE IT DOWN in exactly the transcript format'),
   addressTracked: doc.includes('Head your output with the address F11.1103'),
@@ -148,6 +161,9 @@ out.council = {
   reflectStep: doc.includes('e. after ALL rooms') && doc.includes('Same topology, different minds'),
   pipelineHasMinds: doc.includes('seats reflect') && doc.includes('memory stream'),
   soulLines: (doc.match(/^  soul: attends to ATT-\d+/gm)||[]).length,
+  readingsSection: doc.includes('## THE READINGS') && doc.includes('article text, not'),
+  readingsWithFacts: (doc.match(/^- .+ \((place|person|topic)\): EXTRACT for .+population 4,213/gm)||[]).length,
+  personRead: /^- Ada Testholder \(person\): EXTRACT/m.test(doc),
   moveLines: (doc.match(/move: joke/g)||[]).length > 10,
 };
 // the mind between the calls: perspectival packets, scratch continuity, memory
@@ -158,6 +174,8 @@ const r2 = speaks.filter(s=>/^2\//.test(s.iteration||''));
 const reflects = seen.filter(s=>s.type==='REFLECT');
 out.minds = {
   soulsCompiledOnce: soulsCalls.length===1,
+  everySpeakFed: speaks.every(s=>s.readings>0),
+  charterFed: seen.some(s=>s.type==='WRITE_CHARTER' && s.readings>0),
   speakCalls: speaks.length,
   soulsInPackets: r2.length>0 && r2.every(s=>s.members.every(m=>m.seat!==0 || m.hasSoul)),
   jokesWarmTheRoom: r2.some(s=>s.temperature==='playful'),

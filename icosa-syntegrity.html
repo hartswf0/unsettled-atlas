@@ -1752,6 +1752,7 @@ function whyOf(url) {
   if (url.indexOf('haswbstatement') >= 0) return 'finding people';
   if (url.indexOf('wbgetentities') >= 0) return 'describing people';
   if (url.indexOf('rest_v1/page/summary') >= 0) return 'reading a summary';
+  if (url.indexOf('prop=extracts') >= 0) return 'reading the articles themselves';
   if (url.indexOf('wikinews') >= 0) return 'news';
   if (url.indexOf('gdeltproject') >= 0) return 'news';
   if (url.indexOf('query.wikidata.org') >= 0) return 'asking the whole triangle';
@@ -2452,6 +2453,84 @@ if (!DB.charter) DB.charter = {};
 }
 function newsFor(cell) { return (DB.news || {})[cellSlug(cell)] || null; }
 
+/* ------------------------------------------------------ the readings
+ * The council was starving. Its evidence was TITLES — search hits,
+ * headlines, names — and a title is a pointer, not a proposition. A
+ * register told to cite, handed nothing citable, either goes abstract or
+ * invents; the constitution made it honest, which made it empty. So the
+ * harness now READS: before anything argues, it pulls the actual article
+ * text — the settlements, the topic subjects, the people on the bench —
+ * and compiles it into evidence.readings, the citable corpus. Population
+ * figures, jurisdictions, dates, industries, disputes: the specifics are
+ * what the tokens were for. A claim is cited BY READING TITLE; a seat
+ * that cannot tie its claim to a reading is a seat for silence.        */
+var READINGS_STATE = {};
+function readingsFor(cell) { return (DB.readings || {})[cellSlug(cell)] || null; }
+function readTheGround(cell, seat, world, cb) {
+  var slug = cellSlug(cell);
+  if (READINGS_STATE[slug] === 'busy') return cb && cb(null);
+  var have = (DB.readings || {})[slug];
+  if (have && have.list.length && Date.now() - have.t < 36e5) return cb && cb(null);
+  READINGS_STATE[slug] = 'busy';
+  var targets = [], seenT = {};
+  function add(title, about) {
+    if (!title || seenT[title] || targets.length >= 18) return;
+    seenT[title] = 1; targets.push({ title: title, about: about });
+  }
+  // the topics first — they are what the rooms will argue about
+  ((DB.topics || {})[slug] || { list: [] }).list.forEach(function (t) {
+    if (t && (t.from === 'wikipedia' || t.from === 'wikidata')) add(t.title, 'topic');
+  });
+  // the places — what the record calls this ground
+  var look = lookupOf(slug);
+  if (look) look.items.forEach(function (x) { if (x.inside) add(x.title, 'place'); });
+  var inv = GAZ_STATE === 'ready' ? cellInventory(cell) : null;
+  if (inv) inv.places.slice(0, 6).forEach(function (p) { add(p.name, 'place'); });
+  // the bench — who argues, from their actual record
+  if (seat) seat.struts.forEach(function (_, i) {
+    var src = seatSource(slug, i);
+    if (src && src.title) add(src.title, 'person');
+    else if (seatHolder(slug, i)) add(seatHolder(slug, i), 'person');
+  });
+  if (!targets.length) { READINGS_STATE[slug] = null; return cb && cb(null); }
+  var list = [], left = 0, batches = [];
+  for (var b = 0; b < targets.length; b += 18) batches.push(targets.slice(b, b + 18));
+  left = batches.length;
+  batches.forEach(function (batch) {
+    getJSON(WP + 'action=query&prop=extracts&explaintext&exintro&exlimit=' + batch.length +
+      '&redirects=1&titles=' + batch.map(function (x) { return encodeURIComponent(x.title); }).join('%7C'),
+      function (err, j) {
+        if (!err) {
+          ((j && j.query && j.query.pages) || []).forEach(function (pg) {
+            if (!pg || !pg.extract) return;
+            var about = 'place';
+            batch.forEach(function (x) {
+              if (x.title === pg.title ||
+                  x.title.toLowerCase() === String(pg.title).toLowerCase()) about = x.about;
+            });
+            var txt = String(pg.extract).replace(/\s+/g, ' ').trim();
+            if (txt.length > 900) {           // cut at a sentence, never mid-fact
+              var cut = txt.slice(0, 900), dot = cut.lastIndexOf('. ');
+              txt = dot > 400 ? cut.slice(0, dot + 1) : cut;
+            }
+            if (txt.length > 60) {
+              list.push({ title: pg.title, about: about, text: txt,
+                url: 'https://en.wikipedia.org/wiki/' +
+                     encodeURIComponent(String(pg.title).replace(/ /g, '_')) });
+            }
+          });
+        }
+        if (--left === 0) {
+          if (!DB.readings) DB.readings = {};
+          DB.readings[slug] = { t: Date.now(), list: list.slice(0, 16) };
+          commit(); READINGS_STATE[slug] = null;
+          cb && cb(null); wake();
+        }
+      });
+  });
+}
+window.ICOSA_READINGS = { of: function (slug) { return (DB.readings || {})[slug] || null; } };
+
 /* ------------------------------------------------------ the context compiler
  * A paragraph of prose about a triangle is not the triangle. What made this
  * project worth building is the structure — containment, neighbours, topic
@@ -2544,6 +2623,14 @@ function compileContext(cell, seat, world, op) {
       })()
     },
     evidence: {
+      // THE READINGS — actual article text, read before anything argues.
+      // This is the citable corpus; everything else is pointers.
+      readings: (function () {
+        var r = (DB.readings || {})[slug];
+        return r ? r.list.map(function (x) {
+          return { title: x.title, about: x.about,
+                   text: String(x.text).slice(0, 700) }; }) : [];
+      })(),
       wikidata: rec ? rec.list.filter(function (p) { return p.from !== 'model'; })
         .slice(0, 12).map(function (p) {
           return { name: p.name, what: p.what, sitelinks: p.sitelinks,
@@ -2876,8 +2963,15 @@ function speakDirective(retry, mayNeed) {
     'simulated voice, and no seat pretends its holder witnessed or testified to anything. ' +
     'Every utterance compiles as claim = operation(register, evidence): put the operation ' +
     'performed in op (cite / derive / name-missing / name-classification / trace-return / ' +
-    'report-record / silence) and the context items it stands on in evidence — titles, ' +
-    'field paths or urls from THIS context only, at least one unless op is silence. A seat ' +
+    'report-record / silence) and the context items it stands on in evidence — at least ' +
+    'one unless op is silence. THE CITABLE GROUND IS evidence.readings: actual article ' +
+    'text read from the record before this convening — populations, jurisdictions, dates, ' +
+    'industries, disputes. Cite a reading BY TITLE plus the specific fact used ' +
+    '("Attawapiskat First Nation — population 1,549; the 2011 housing emergency"), never ' +
+    'the bare title; evidence.recent and the settlements are also citable the same way. ' +
+    'Prefer the concrete figure to the theme every time: a seat that names a number, a ' +
+    'year, an operator or a statute is arguing; a seat speaking in themes is wasting the ' +
+    'table\'s time and will score 0 on specific. A seat ' +
     'whose register has nothing admissible to produce says so: op silence, text one ' +
     'sentence naming exactly what evidence is missing — that is a perfect statement, not a ' +
     'failure. COORDINATE reports what the administrative record contains, with its source. ' +
@@ -2982,9 +3076,11 @@ function writeCharter(cell, seat, world, cb) {
   });
   ctx.operation.directive =
     'You are opening a syntegration, the way Beer opens one: the agenda is produced, not ' +
-    'handed down. From the compiled state — the jurisdiction, the settlements, the water, ' +
-    'what has been said and escalated, and above all evidence.recent, which is what is ' +
-    'unresolved there now — do three things. ' +
+    'handed down. From the compiled state — above all evidence.readings, the actual ' +
+    'article text read for this ground, and evidence.recent, what is unresolved there ' +
+    'now — do three things. Work from the specifics the readings supply: the named ' +
+    'operators, the populations, the dates, the jurisdictions. An agenda subject that ' +
+    'does not rest on a reading or a recent item must say so in its standing. ' +
     'First, write the OPENING QUESTION: one genuinely contested question about this ground, ' +
     'too big for one room, that every topic below is an angle on. ' +
     'Second, write the AGENDA: for every entry in operation.topic_points, a SUBJECT — the ' +
@@ -3062,13 +3158,22 @@ function resolveNeeds(cell, needs, cb) {
       });
     getJSON(WP + 'action=query&list=search&srlimit=2&srsearch=' + encodeURIComponent(q),
       function (err, j) {
-        if (!err) ((j && j.query && j.query.search) || []).forEach(function (h) {
-          keep({ from: 'fetched', title: h.title,
-                 note: 'asked: ' + q + ' · ' + String(h.snippet || '').replace(/<[^>]*>/g, '').slice(0, 120),
-                 url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(h.title.replace(/ /g, '_')),
-                 when: '', t: Date.now() });
+        var hits = (!err && j && j.query && j.query.search) || [];
+        if (!hits.length) return done1();
+        // an answered question deserves an answer, not a pointer: read the
+        // top article's actual text and hand THAT back to the rooms
+        summaryOf(hits[0].title, function (e3, sum) {
+          hits.forEach(function (h, hi) {
+            var body = hi === 0 && !e3 && sum && sum.extract
+              ? String(sum.extract).replace(/\s+/g, ' ').slice(0, 340)
+              : String(h.snippet || '').replace(/<[^>]*>/g, '').slice(0, 120);
+            keep({ from: 'fetched', title: h.title,
+                   note: 'asked: ' + q + ' · ' + body,
+                   url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(h.title.replace(/ /g, '_')),
+                   when: '', t: Date.now() });
+          });
+          done1();
         });
-        done1();
       });
   });
 }
@@ -3198,6 +3303,16 @@ function runHarness(cell, seat, world, onStep, done) {
       next();
     });
   }
+  // FEED FIRST: the rooms may only cite what has been read, so the reading
+  // happens before the charter that will frame them. A fetch, not a call —
+  // it costs no tokens and it is where the tokens get their content.
+  function ensureReadingsStep(next) {
+    var have = readingsFor(cell);
+    if (have && have.list.length) return next();
+    tick('reading the record — the articles themselves', -1, 'lookup');
+    ROUND_STATE[slug].at--;                    // fetches are free; do not count them
+    readTheGround(cell, seat, world, function () { next(); });
+  }
   function speakOnce(iter, t, retry, cb2) {
     var ctx = baseCtx('SPEAK', iter, t);
     var mayNeed = iter < REVERB;
@@ -3256,11 +3371,13 @@ function runHarness(cell, seat, world, onStep, done) {
       'CATEGORY, policy from COORDINATE — inadmissible: admissible false and every score 0. ' +
       'INVALID is not 7/12. A correct silence — op silence, naming exactly what evidence is ' +
       'missing — is perfect register behaviour: admissible, 3 on grounded and register. ' +
-      'Then score admissible utterances 0-3: grounded (each claim traceable to its named ' +
-      'evidence), register, specific (names places, actors, quantities of this ground), ' +
-      'engaged (operates on the issue and, where present, operation.carried_in or the ' +
-      'statement it critiques). Be strict; a sentence that could be said of any ground ' +
-      'scores 0 on specific. One short note per seat saying what would raise it — a note ' +
+      'Then score admissible utterances 0-3: grounded (each claim traceable to a NAMED ' +
+      'item of evidence.readings or evidence.recent — the title and the specific fact, ' +
+      'not a gesture at the corpus), register, specific (names places, actors, ' +
+      'quantities, years of this ground — a figure from a reading is specific, a theme ' +
+      'is not), engaged (operates on the issue and, where present, operation.carried_in ' +
+      'or the statement it critiques). Be strict; a sentence that could be said of any ' +
+      'ground scores 0 on specific. One short note per seat saying what would raise it — a note ' +
       'may only demand better use of the supplied evidence, never facts the packet does ' +
       'not contain. For each MEMBER seat, extract carry as the unresolved transformation ' +
       'for that seat\'s other room: carry.claim (one sentence), carry.evidence (what it ' +
@@ -3614,14 +3731,16 @@ function runHarness(cell, seat, world, onStep, done) {
     });
   }
   try {
-    ensureCharter(function () {
-      ensureSoulsStep(function () {
-        var i = 1;
-        (function nextIter() {
-          if (i > REVERB) return outcomes();
-          var it = i; i++;
-          iteration(it, nextIter);
-        })();
+    ensureReadingsStep(function () {
+      ensureCharter(function () {
+        ensureSoulsStep(function () {
+          var i = 1;
+          (function nextIter() {
+            if (i > REVERB) return outcomes();
+            var it = i; i++;
+            iteration(it, nextIter);
+          })();
+        });
       });
     });
   } catch (e) {
@@ -3641,6 +3760,12 @@ function autoCouncil(cell, seat, world) {
   }
   if (!newsFor(cell) && !NEWS_STATE[slug]) {
     newsAbout(cell, function () {
+      if (ROUND_STATE[slug]) return paintConvene();
+      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell, true);
+    });
+  }
+  if (!(readingsFor(cell) && readingsFor(cell).list.length) && !READINGS_STATE[slug]) {
+    readTheGround(cell, seat, world, function () {
       if (ROUND_STATE[slug]) return paintConvene();
       if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell, true);
     });
@@ -4053,8 +4178,9 @@ function ensureSouls(cell, seat, world, cb) {
   });
   ctx.operation.directive =
     'For every seat in operation.bench, compile a SOUL: not a description of the person, ' +
-    'a machine that keeps producing them under pressure. From their documented record ' +
-    '(who_is, and the evidence in this context) derive: attention — what enters this ' +
+    'a machine that keeps producing them under pressure. From their documented record — ' +
+    'who_is, their entry in evidence.readings if one exists (their actual article text), ' +
+    'and the evidence in this context — derive: attention — what enters this ' +
     'mind first, one sentence; values — one to three things that must not be sacrificed; ' +
     'refusals — one or two framings, compromises or humiliations this record shows they ' +
     'will not accept; tactics — four to seven moves from operation.move_library that ' +
@@ -7342,16 +7468,19 @@ function runExportText(cell, seat, world) {
   if (chain.length) L.push('- contained by: ' + chain.join(' \u2192 '));
   L.push('');
   L.push('## HOW TO RUN IT \u2014 you are the harness');
-  L.push('1. FETCH FIRST. ' + (unclaimed.length || !ch
+  L.push('1. FETCH FIRST \u2014 AND READ. ' + (unclaimed.length || !ch
     ? (unclaimed.length ? unclaimed.length + ' seat(s) below are unclaimed. ' : '') +
       (!ch ? 'No charter has been written yet. ' : '') +
       'If you can search: find notable people genuinely tied to the settlements in THE ' +
       'GROUND \u2014 born, died or worked inside this polygon, most local first \u2014 and claim ' +
-      'each empty seat with one; find what is contested on this ground now. If you ' +
-      'cannot search: infer both, and mark every inferred name and issue as inferred, ' +
-      'not cited.'
-    : 'The bench and agenda below were already fetched from the record. Verify them if ' +
-      'you can search; otherwise run with them as given.'));
+      'each empty seat with one; find what is contested on this ground now. Then READ ' +
+      'the actual articles for the settlements, the topics and the bench \u2014 the rooms may ' +
+      'only cite what has been read, by title, with the specific fact. If you cannot ' +
+      'search: infer both, and mark every inferred name and issue as inferred, not cited.'
+    : 'The bench and agenda below were already fetched from the record, and THE READINGS ' +
+      'below are the corpus that was actually read. The rooms may only cite what is in ' +
+      'THE READINGS and THE GROUND, by title, with the specific fact \u2014 extend the corpus ' +
+      'by reading more if you can search; never by inventing.'));
   L.push('2. ADOPT THE LAW. The SYSTEM INSTRUCTION section below is your system ' +
          'instruction for every line you produce. Do not restate it; obey it.');
   L.push('3. THE CHARTER. ' + (ch
@@ -7456,6 +7585,17 @@ function runExportText(cell, seat, world) {
     });
   }
   L.push('');
+  var rdg = (DB.readings || {})[slug];
+  if (rdg && rdg.list.length) {
+    L.push('## THE READINGS');
+    L.push('The corpus that was actually read for this ground \u2014 article text, not ' +
+           'titles. This is what the rooms may cite, by title, with the specific fact. ' +
+           'Last read ' + whenLabel(rdg.t) + ':');
+    rdg.list.forEach(function (x) {
+      L.push('- ' + x.title + ' (' + x.about + '): ' + String(x.text).slice(0, 500));
+    });
+    L.push('');
+  }
   L.push('## THE TOPICS');
   if (world) {
     L.push('This is the planetary council: its topic anchors are distributed points \u2014 ' +

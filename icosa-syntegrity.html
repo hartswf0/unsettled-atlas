@@ -205,6 +205,21 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #panel .nom span{color:var(--ink);font-size:9px}
 #panel .nom em{color:var(--muted);font-size:8px;letter-spacing:.08em;margin-top:2px}
 #panel .nom .go{font-size:8px;padding:3px 6px;margin-top:4px;letter-spacing:.1em}
+/* the convening's live region: a quiet bar, a breathing dot, and lines
+   that land instead of a panel that jumps */
+#convene{margin-top:10px}
+#convene .cvhead{display:flex;align-items:center;gap:7px;font-size:10px;
+  letter-spacing:.08em;color:var(--signal)}
+#convene .cvhead b{font-weight:700}
+#convene .cvhead span{margin-left:auto;color:var(--muted)}
+#convene .cvdot{width:7px;height:7px;border-radius:50%;background:var(--signal);
+  flex:0 0 auto;animation:cvbreathe 1.2s ease-in-out infinite}
+#convene .cvbar{height:3px;background:rgba(18,21,20,.14);margin:6px 0 8px}
+#convene .cvbar i{display:block;height:100%;background:var(--signal);
+  transition:width .5s ease}
+#convene .said.landin{animation:cvland .5s ease}
+@keyframes cvbreathe{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
+@keyframes cvland{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
 /* a guess must not look like a citation. Dashed, grey, and it says so. */
 #panel .nom.guess{border-left:2px dashed var(--muted);background:rgba(18,21,20,.04)}
 #panel .nom.guess a{color:var(--ink)}
@@ -2493,6 +2508,36 @@ function inferPeople(cell, need, cb, seat, world) {
  * and attempt. The transcript is a rehearsal of the argument this ground
  * would have, and says so.                                               */
 var ROUND_STATE = {}, HARNESS_ERR = {};
+/* The convening is watchable, not just billed. CONVENE_VIS carries what the
+ * run is doing right now — which room is speaking, which stage — and the
+ * map draws it where it happens: a pulse on the active topic's point, and
+ * when a claim passes the gate, a signal travelling its seat's strut into
+ * the other room. The panel patches one live region in place instead of
+ * re-rendering, because a progress tick that throws the reader's scroll
+ * back to the top is not progress.                                       */
+var CONVENE_VIS = null;
+function conveneHTML(slug) {
+  var run = ROUND_STATE[slug];
+  if (!run) return '';
+  var said = utterances(slug).slice(-3);
+  var pct = Math.round(100 * Math.min(1, run.at / Math.max(1, run.of)));
+  return '<div class="cvhead"><i class="cvdot"></i><b>' + esc(run.label || 'convening') +
+    '</b><span>' + run.at + ' / ' + run.of + '</span></div>' +
+    '<div class="cvbar"><i style="width:' + pct + '%"></i></div>' +
+    said.map(function (n, i) {
+      return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') +
+        (i === said.length - 1 ? ' landin' : '') + '"><b>' +
+        esc((n.who || '').toUpperCase()) + '</b> <span>' +
+        (n.who_is ? esc(n.who_is) + ' · ' : '') + esc(n.register || '') +
+        (n.mode === 'critique' ? ' · answering' : '') + '</span>' +
+        '<p>' + esc(n.text) + '</p></div>';
+    }).join('');
+}
+function paintConvene() {
+  if (!CONVENE_VIS) return;
+  var el = document.getElementById('convene');
+  if (el) el.innerHTML = conveneHTML(CONVENE_VIS.slug);
+}
 var REVERB = 2;                              // iterations per convening
 var GATE = { total: 8, grounded: 2 };        // of 12, and of 3
 var HARNESS_STAGE = {
@@ -2695,16 +2740,23 @@ function runHarness(cell, seat, world, onStep, done) {
   var judgeModel = modelFor('judge');
   var frozenLaw = null;                          // set once the charter exists
   delete HARNESS_ERR[slug];
+  CONVENE_VIS = { slug: slug, pts: topicPoints(cell, seat, world),
+                  topic: -1, stage: 'charter', anims: [] };
   ROUND_STATE[slug] = { at: 0, of: plan.base + (charterOf(slug) ? 0 : 1), label: 'charter' };
-  function tick(label) {
+  function tick(label, topic, stage) {
     if (!ROUND_STATE[slug]) return;
     ROUND_STATE[slug].at++;
     ROUND_STATE[slug].label = label;
+    if (CONVENE_VIS && CONVENE_VIS.slug === slug) {
+      CONVENE_VIS.topic = topic === undefined ? -1 : topic;
+      CONVENE_VIS.stage = stage || '';
+    }
     try { onStep && onStep(); } catch (e) { }     // a render error must not wedge the run
     wake();
   }
   function abort(err) {
     ROUND_STATE[slug] = null;
+    if (CONVENE_VIS && CONVENE_VIS.slug === slug) CONVENE_VIS = null;
     HARNESS_ERR[slug] = String(err);
     commit();
     try { done(String(err), made); } catch (e) { }
@@ -2766,7 +2818,7 @@ function runHarness(cell, seat, world, onStep, done) {
   }
   function ensureCharter(next) {
     if (charterOf(slug)) { frozenLaw = lawFor(slug); topics = topicNames(cell, seat, world); return next(); }
-    tick('writing the charter');
+    tick('writing the charter', -1, 'charter');
     writeCharter(cell, seat, world, function (err) {
       if (err) return abort(err);
       frozenLaw = lawFor(slug);
@@ -2847,7 +2899,7 @@ function runHarness(cell, seat, world, onStep, done) {
   }
   function topicPass(iter, t, cb2) {
     var mem = membersOf(t).map(function (m) { return m.seat; });
-    tick('iteration ' + iter + ' · topic ' + t + ' · the team speaks');
+    tick('iteration ' + iter + ' · topic ' + t + ' · the team speaks', t, 'speak');
     speakOnce(iter, t, null, function (e1, first) {
       if (e1) return abort(e1);
       var saidA = (first && first.utterances) || [];
@@ -2865,11 +2917,11 @@ function runHarness(cell, seat, world, onStep, done) {
         'answering. Say what it leaves out, what it assumes, or who it does not speak for. ' +
         'Two sentences per seat, no preamble, and never introduce a fact the context does ' +
         'not carry.';
-      tick('iteration ' + iter + ' · topic ' + t + ' · the critics answer');
+      tick('iteration ' + iter + ' · topic ' + t + ' · the critics answer', t, 'critique');
         ask('critique', ctx2, SCHEMA_SPEAK, 'critic_responses', 1800, function (e2, cr) {
         if (e2) return abort(e2);
         var critA = (cr && cr.utterances) || [];
-        tick('iteration ' + iter + ' · topic ' + t + ' · the judge scores');
+        tick('iteration ' + iter + ' · topic ' + t + ' · the judge scores', t, 'judge');
         judgeOnce(iter, t, saidA, critA, function (e3, j1) {
           if (e3) return abort(e3);
           var scoresA = (j1 && j1.scores) || [];
@@ -2879,11 +2931,11 @@ function runHarness(cell, seat, world, onStep, done) {
             ROUND_STATE[slug].of += 2;
             var notes = scoresA.filter(function (sc) { return mem.indexOf(sc.seat) >= 0; })
               .map(function (sc) { return { seat: sc.seat, note: sc.note }; });
-            tick('iteration ' + iter + ' · topic ' + t + ' · sent back');
+            tick('iteration ' + iter + ' · topic ' + t + ' · sent back', t, 'speak');
             speakOnce(iter, t, { notes: notes, first: saidA }, function (e4, second) {
               var saidB = (!e4 && second && second.utterances) || [];
               (second && second.needs || []).forEach(function (q) { needsAll.push(q); });
-              tick('iteration ' + iter + ' · topic ' + t + ' · re-scored');
+              tick('iteration ' + iter + ' · topic ' + t + ' · re-scored', t, 'judge');
               judgeOnce(iter, t, saidB, critA, function (e5, j2) {
                 var scoresB = (!e5 && j2 && j2.scores) || [];
                 var gB = gate(scoresB, mem);
@@ -2915,11 +2967,16 @@ function runHarness(cell, seat, world, onStep, done) {
             // GRAPH: passing members' claims travel the strut to the other room
             var passed = g.avg >= GATE.total && g.grounded >= GATE.grounded;
             if (passed) {
+              var launched = 0;
               membersOf(t).forEach(function (m) {
                 var sc = byseat[m.seat];
                 if (sc && sc.carry) {
                   (carryNext[m.other_room] = carryNext[m.other_room] || []).push(
                     { seat: m.seat, who: m.who, register: m.register, from_room: t, claim: sc.carry });
+                  if (CONVENE_VIS && CONVENE_VIS.slug === slug) {
+                    CONVENE_VIS.anims.push({ from: t, to: m.other_room,
+                      t0: performance.now() + 240 * launched++, dur: 1700 });
+                  }
                 }
               });
             }
@@ -2942,7 +2999,7 @@ function runHarness(cell, seat, world, onStep, done) {
       if (k >= order.length) {
         if (iter < REVERB && needsAll.length) {
           var q = needsAll.slice(); needsAll = [];
-          tick('iteration ' + iter + ' · looking things up');
+          tick('iteration ' + iter + ' · looking things up', -1, 'lookup');
           ROUND_STATE[slug].at--;            // fetches are free; do not count them
           return resolveNeeds(cell, q, function () { next(); });
         }
@@ -2979,7 +3036,7 @@ function runHarness(cell, seat, world, onStep, done) {
       'leave dissent empty if they closed. Three sentences at most per statement. This is ' +
       'the statement the next convening will inherit, so no summary padding: only what was ' +
       'established, and what is still open.';
-    tick('writing the outcomes');
+    tick('writing the outcomes', -1, 'outcome');
     ask('outcome', ctx, SCHEMA_OUTCOME, 'outcomes', 2400, function (err, j) {
       if (err) return abort(err);
       if (j) {
@@ -2991,6 +3048,7 @@ function runHarness(cell, seat, world, onStep, done) {
       }
       commit();
       ROUND_STATE[slug] = null;
+      if (CONVENE_VIS && CONVENE_VIS.slug === slug) CONVENE_VIS = null;
       done(null, made); wake();
     });
   }
@@ -3014,17 +3072,20 @@ function autoCouncil(cell, seat, world) {
   if (!peopleFor(cell) && !PEOPLE_STATE[slug]) {
     recruit(cell, seat.struts.length, function () {
       autoSeat(cell, seat, world);
-      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+      if (ROUND_STATE[slug]) return paintConvene();
+      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell, true);
     });
   }
   if (!newsFor(cell) && !NEWS_STATE[slug]) {
     newsAbout(cell, function () {
-      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+      if (ROUND_STATE[slug]) return paintConvene();
+      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell, true);
     });
   }
   if (!(DB.topics || {})[slug] && !TOPIC_STATE[slug]) {
     recruitTopics(cell, seat, world, function () {
-      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+      if (ROUND_STATE[slug]) return paintConvene();
+      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell, true);
     });
   }
   // The last rung runs once the free ones have been tried, only if a key is
@@ -3045,8 +3106,9 @@ function autoCouncil(cell, seat, world) {
       if (--pending) return;
       INFER_STATE[slug] = 'done';
       commit();
+      if (ROUND_STATE[slug]) return paintConvene();
       if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) {
-        autoSeat(cell, seat, world); openCouncil(cell); }
+        autoSeat(cell, seat, world); openCouncil(cell, true); }
       wake();
     };
     if (needTopics) {
@@ -4135,6 +4197,73 @@ function drawCities(S) {
   }
 }
 
+// A convening is drawn on the ground it is about. The room at work pulses
+// at its topic's point — one look at the map says who is speaking — and a
+// claim that passes the gate travels its seat's strut into the other room
+// as a small signal, which is Beer's reverberation made visible.
+function drawConvening(S) {
+  if (!CONVENE_VIS) return;
+  var pts = CONVENE_VIS.pts, now = performance.now();
+  function screenOf(p) {
+    var f = faceOf(p);
+    var vv = toView(worldOf(f, baryOf(f, p)));
+    if (dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) <= 0) return null;
+    return project(vv, S);
+  }
+  // the active room breathes
+  if (CONVENE_VIS.topic >= 0 && pts[CONVENE_VIS.topic]) {
+    var sp = screenOf(pts[CONVENE_VIS.topic]);
+    if (sp) {
+      var ph = (now % 1400) / 1400;
+      ctx.beginPath(); ctx.arc(sp[0], sp[1], 9 + 13 * ph, 0, TAU);
+      ctx.strokeStyle = 'rgba(168,70,42,' + (0.75 * (1 - ph)).toFixed(3) + ')';
+      ctx.lineWidth = 2.2; ctx.stroke();
+      if (CONVENE_VIS.stage === 'judge') {          // the gate reads differently
+        ctx.setLineDash([3, 4]);
+        ctx.beginPath(); ctx.arc(sp[0], sp[1], 14, 0, TAU);
+        ctx.strokeStyle = COL.ink; ctx.lineWidth = 1.4; ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+  } else if (CONVENE_VIS.stage === 'charter' || CONVENE_VIS.stage === 'outcome') {
+    // the whole ground is being written about; the pulse sits on the cell
+    var cc = councilCell && cellSlug(councilCell) === CONVENE_VIS.slug
+      ? cellCentre(councilCell) : null;
+    if (cc) {
+      var sc2 = screenOf(cc);
+      if (sc2) {
+        var ph2 = (now % 1800) / 1800;
+        ctx.beginPath(); ctx.arc(sc2[0], sc2[1], 12 + 20 * ph2, 0, TAU);
+        ctx.strokeStyle = 'rgba(18,21,20,' + (0.5 * (1 - ph2)).toFixed(3) + ')';
+        ctx.lineWidth = 1.6; ctx.stroke();
+      }
+    }
+  }
+  // signals in flight along the struts
+  var keep = [];
+  for (var i = 0; i < CONVENE_VIS.anims.length; i++) {
+    var a = CONVENE_VIS.anims[i];
+    var p = (now - a.t0) / a.dur;
+    if (p < 1) keep.push(a);
+    if (p <= 0 || p >= 1) continue;
+    var e = p * p * (3 - 2 * p);                    // ease, so it leaves and lands
+    var from = pts[a.from], to = pts[a.to];
+    if (!from || !to) continue;
+    var pos = screenOf(norm(lerp3(from, to, e)));
+    if (!pos) continue;
+    var tr = screenOf(norm(lerp3(from, to, Math.max(0, e - 0.07))));
+    if (tr) {
+      ctx.beginPath(); ctx.moveTo(tr[0], tr[1]); ctx.lineTo(pos[0], pos[1]);
+      ctx.strokeStyle = 'rgba(168,70,42,.45)'; ctx.lineWidth = 2.6; ctx.stroke();
+    }
+    ctx.beginPath(); ctx.arc(pos[0], pos[1], 3.6, 0, TAU);
+    ctx.fillStyle = COL.signal; ctx.fill();
+    ctx.beginPath(); ctx.arc(pos[0], pos[1], 6.2, 0, TAU);
+    ctx.strokeStyle = 'rgba(168,70,42,.5)'; ctx.lineWidth = 1.2; ctx.stroke();
+  }
+  CONVENE_VIS.anims = keep;
+  wake();                                           // the show runs until the run ends
+}
 function drawNorth(S) {
   var np = [0, 0, 1];
   var f = faceOf(np);
@@ -4233,6 +4362,7 @@ function render() {
 
   riverBudget = 0;
   drawCouncil(S);
+  drawConvening(S);
   drawSaid(S);
   drawGround(S);
   layoutFinds(S);
@@ -5455,7 +5585,7 @@ function openCarry(cell, seatIdx) {
     DB.notes.push({ id: 'n' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36),
       cell: slug, topic: b, from: a, seat: seatIdx, who: DB.me || 'someone',
       text: text, t: Date.now(), kind: 'carry' });
-    commit(); openCouncil(cell); wake();
+    commit(); openCouncil(cell, true); wake();
   };
   document.getElementById('kDraft').onclick = function () {
     setOpenAIKey(document.getElementById('kKey').value);
@@ -5827,13 +5957,7 @@ function runBlock(cell, seat, world) {
   var news = newsFor(cell), ch = charterOf(slug);
   var plan = harnessPlan(seat);
   if (run) {
-    var latest = said.slice(-3).map(function (n) {
-      return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') + '"><b>' +
-        esc((n.who || '').toUpperCase()) + '</b> <span>' + esc(n.register || '') + '</span>' +
-        '<p>' + esc(n.text) + '</p></div>';
-    }).join('');
-    return '<p style="color:var(--signal)">Convening · call ' + run.at + ' of ' + run.of +
-      ' · ' + esc(run.label || '') + '</p>' + latest;
+    return '<div id="convene">' + conveneHTML(slug) + '</div>';
   }
   var outs = said.filter(function (n) { return n.mode === 'outcome'; });
   return (HARNESS_ERR[slug]
@@ -6055,7 +6179,8 @@ function modelBlock(cell, seat, world) {
     '<button class="go ghost" id="cForget">FORGET THE KEY</button>' +
     '</details>';
 }
-function openCouncil(cell) {
+function openCouncil(cell, keep) {
+  var wasScroll = keep && elPanel.classList.contains('open') ? elPanel.scrollTop : -1;
   var km = cellEdgeKm(cell);
   var c = councilFor(km);
   if (!c) {
@@ -6230,7 +6355,7 @@ function openCouncil(cell) {
       if (v) DB.seats[key] = v; else delete DB.seats[key];
       delete DB.seatSrc[key];
       if (v && !DB.me) DB.me = v;
-      commit(); openCouncil(cell); wake();
+      commit(); openCouncil(cell, true); wake();
     };
   });
   elPanel.querySelectorAll('[data-carry]').forEach(function (btn) {
@@ -6244,7 +6369,7 @@ function openCouncil(cell) {
       var key = seatKey(slug, i);
       if (DB.seatSrc[key]) { delete DB.seats[key]; delete DB.seatSrc[key]; }
     }
-    commit(); openCouncil(cell); wake();
+    commit(); openCouncil(cell, true); wake();
   };
   var cf = document.getElementById('cFind');
   if (cf) cf.onclick = function () {
@@ -6281,9 +6406,16 @@ function openCouncil(cell) {
   if (cr) cr.onclick = function () {
     if (!OPENAI_KEY) { cr.textContent = 'PASTE A KEY FIRST'; return; }
     cr.textContent = 'CONVENING…';
+    var opened = false;
     runHarness(cell, seat, world,
-      function () { if (PANEL === 'council') openCouncil(cell); },
-      function () { if (PANEL === 'council') openCouncil(cell); });
+      function () {
+        // one full render to raise the live region, then patches only —
+        // a progress tick must never move the reader's scroll
+        if (PANEL !== 'council') return;
+        if (!opened) { opened = true; openCouncil(cell, true); }
+        else paintConvene();
+      },
+      function () { if (PANEL === 'council') openCouncil(cell, true); });
   };
   var crw = document.getElementById('cRewrite');
   if (crw) crw.onclick = function () {
@@ -6296,7 +6428,7 @@ function openCouncil(cell) {
   var cw = document.getElementById('cWipe');
   if (cw) cw.onclick = function () {
     DB.notes = DB.notes.filter(function (n) { return !(n.kind === 'sim' && n.cell === slug); });
-    commit(); openCouncil(cell); wake();
+    commit(); openCouncil(cell, true); wake();
   };
   var cfg = document.getElementById('cForget');
   if (cfg) cfg.onclick = function () {
@@ -6319,11 +6451,13 @@ function openCouncil(cell) {
     document.getElementById('xBack').onclick = function () { openCouncil(cell); };
   };
   if (OPENAI_KEY && !MODELS.state) loadModels(function () {
-    if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+    if (ROUND_STATE[slug]) return paintConvene();
+    if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell, true);
   });
   wireGoTo(cell);
   var cs = document.getElementById('cSay');
   if (cs) cs.onclick = function () { openThread(cell); };
+  if (wasScroll >= 0) elPanel.scrollTop = wasScroll;
 }
 
 function openHelp() {

@@ -955,6 +955,34 @@ The transcript says what it is at the top: a rehearsal of the argument this
 ground would have, not a record of one that happened, and the people named
 are the record's nominees who said none of it.
 
+## Watching it without losing your place
+
+The first convening had a bug that was really a doctrine failure: every
+stage of the run re-rendered the whole panel, and a re-render resets the
+scroll, so the view bounced to the top thirty-eight times while the user
+was trying to read. The fix is a rule about attention. **The panel renders
+once when the run begins and is only patched after that** — a single live
+region (`#convene`) gets its contents replaced in place, and everything
+around it holds still, including wherever you have scrolled to. Background
+fetches that finish mid-run obey the same rule: they patch the live region
+instead of redrawing over it. When the run ends — or stops on an error —
+the panel earns one full render, because now there is something new to
+read.
+
+The live region is small on purpose: a breathing dot, `iteration · topic ·
+stage`, a call counter against the priced plan, a thin progress bar, and
+the last three lines said, the newest sliding in. Not a log — a pulse.
+
+The map plays the same run at the other scale. The room currently speaking
+carries an expanding ring at its topic point; when the judge is scoring,
+the ring is a dashed circle of ink; the charter and the outcomes pulse at
+the cell's centre, since they belong to the whole ground and no single
+room. And when a room passes the gate, **its carries visibly travel** —
+a small signal leaves the topic point and runs along the strut to the seat's
+other room, with a fading trail, staggered so simultaneous carries read as
+traffic rather than a flash. That is the reverberation drawn as itself:
+you can watch what one room established arrive where it will be heard next.
+
 ## What is live here, not what is historical
 
 A council of the historically notable argues about the past. What a

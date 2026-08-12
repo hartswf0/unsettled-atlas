@@ -1,0 +1,751 @@
+/* PERSPECTIVAL GROUND — the turn.
+
+   Chance, then agency. The two are never the same move and that is the whole
+   game:
+
+     THE DICE decide how much going you get. You do not choose them.
+     THE ASSIGNMENT decides who does the going. You choose that, entirely.
+
+   You have three bodies on one city — a car, a wheelchair, a walker — and all
+   three have to get home. Not the convenient one. All three. So the question
+   every turn is not "where do I go" but "which of these three can do the most
+   with a four", and the answer depends on ground that means something
+   different to each of them.
+
+   PICKING UP A BODY IS BECOMING. The instant a die is over the wheelchair, the
+   city re-reads as the wheelchair's city: the interstate stops existing, the
+   kerbs come up as walls, and the gentle line somebody drew last turn is
+   suddenly the fastest thing on screen. The board reorganises under your thumb
+   while you are still deciding. That is what a perspective costs and what it
+   buys, and nothing anywhere says a word about it.
+
+   THE GHOSTS show where each die would land each body — including the drop
+   through a chute and the ride up a ladder — before you commit to anything.
+   Perceiving the possibilities is the skill. Owning the consequence is the
+   game. */
+
+import {
+  View, sx, sy, wx, wy, clamp, lerp, ease, units, metres, TAU, distToSeg,
+  centerOn, worldSize,
+} from "./geo.js";
+import { G, route, routePoints, nearestNodeFor, afford, wear } from "./graph.js";
+import { CAR, CHAIR, FOOT, BEINGS } from "./beings.js";
+import { S, on, emit, become, creditMark, logBalk } from "./state.js";
+import { travelToken, setToken, busy } from "./move.js";
+
+/* what one pip is worth, in effort */
+const PIP = 300;
+/* how near home is home */
+const HOME = 260;
+
+const AMBER = "#c98a2e", AMBER_DEEP = "#8a5a12";
+
+/* Your three. They are fixed bodies, not costumes: the wheelchair is always
+   the wheelchair, and it is always the one that cannot take the bridge. */
+const BODIES = [CAR, CHAIR, FOOT];
+
+let tokens = [];       /* [{being,node,x,y,home,ang}] */
+let rivals = [];
+let dice = [];         /* [{v,to,dead}] */
+let phase = "roll";    /* roll | assign | resolving | over */
+let sel = -1;          /* which die is in the hand */
+let hover = -1;        /* which body it is over */
+let over = null;
+let turnNo = 0;
+let stuck = [];
+let ctxRef = null;
+
+let tray = null, bar = null;
+
+/* ============================================================
+   setting out
+   ============================================================ */
+export function init(ctx) {
+  ctxRef = ctx;
+  buildTray(ctx);
+  on("boot", () => setTimeout(setUp, 80));
+  on("arrive", () => setTimeout(next, 260));
+}
+
+function setUp() {
+  const start = nearestNodeFor(View.x, View.y, CAR, units(2000));
+  if (start < 0) { setTimeout(setUp, 150); return; }
+
+  tokens = seatOut(start);
+  S.tokens = tokens;
+
+  /* home: a real place, far enough to be a journey */
+  S.homeNode = pickHome(start);
+  rivals = seatOut(start);
+
+  select(0);
+  phase = "roll";
+  over = null; turnNo = 0;
+  render();
+  emit("crossing", { home: S.home });
+}
+
+/* Three bodies standing on one another are one body. Each starts on ground it
+   can actually use, near the others but never on top of them, so you can tell
+   them apart and put a die on the one you mean. */
+function seatOut(start) {
+  const used = [];
+  return BODIES.map((be) => {
+    let at = -1;
+    for (const reach of [90, 200, 380, 700, 1400]) {
+      const n = nearestNodeFor(G.nx[start], G.ny[start], be, units(reach));
+      if (n < 0) continue;
+      const clear = (i) => !used.some((u) =>
+        metres(Math.hypot(G.nx[u] - G.nx[i], G.ny[u] - G.ny[i])) < 55);
+      if (clear(n)) { at = n; break; }
+      let alt = -1, best = 1e9;
+      for (const e of G.adj[n]) {
+        const o = G.ea[e] === n ? G.eb[e] : G.ea[e];
+        if (!isFinite(be.cost(e, G.ea[e] === n))) continue;
+        if (!clear(o)) continue;
+        const d = metres(Math.hypot(G.nx[o] - G.nx[start], G.ny[o] - G.ny[start]));
+        if (d < best) { best = d; alt = o; }
+      }
+      if (alt >= 0) { at = alt; break; }
+    }
+    if (at < 0) at = start;
+    used.push(at);
+    return { being: be, node: at, x: G.nx[at], y: G.ny[at], home: false, ang: 0 };
+  });
+}
+
+/* Where home is decides whether this is a game or a wall.
+
+   Standing near a place is not the same as being able to get to it, so every
+   candidate is actually routed, not merely measured. The car and the walker
+   must genuinely be able to arrive, or there is no game. The wheelchair is
+   deliberately NOT required to — if it can already get there the crossing
+   costs nobody anything, and if it cannot, the only thing in the world that
+   can change that is a line somebody draws. That is the whole game, and it is
+   decided right here. */
+function reaches(be, from, to) {
+  const a = nearestNodeFor(G.nx[from], G.ny[from], be, units(400));
+  const b = nearestNodeFor(G.nx[to], G.ny[to], be, units(400));
+  if (a < 0 || b < 0) return false;
+  const r = route(a, b, be);
+  return !!(r && !r.balk && r.nodes.length > 1);
+}
+
+function pickHome(start) {
+  const cands = [];
+  for (let k = 0; k < 900 && cands.length < 26; k++) {
+    const i = Math.floor(Math.random() * G.n);
+    const d = metres(Math.hypot(G.nx[i] - G.nx[start], G.ny[i] - G.ny[start]));
+    if (d < 1300 || d > 2900) continue;
+    cands.push({ i, d });
+  }
+  cands.sort((a, b) => b.d - a.d);
+
+  let best = -1, fallback = -1;
+  for (const c of cands) {
+    if (!reaches(CAR, start, c.i)) continue;
+    if (fallback < 0) fallback = c.i;
+    if (!reaches(FOOT, start, c.i)) continue;
+    best = c.i;
+    break;
+  }
+  if (best < 0) best = fallback;
+  if (best < 0) best = start;
+  S.home = { x: G.nx[best], y: G.ny[best], node: best };
+  return best;
+}
+
+/* selecting a body IS becoming: the city re-reads as that body's city */
+function select(i) {
+  if (i < 0 || i >= tokens.length) return;
+  sel = sel;
+  if (S.being !== tokens[i].being) become(tokens[i].being);
+  setToken(tokens[i], false);
+  S.selToken = i;
+}
+
+/* ============================================================
+   the dice
+   ============================================================ */
+const d6 = () => 1 + Math.floor(Math.random() * 6);
+
+/* To decide, you have to be able to see what you are deciding between. The
+   camera follows whoever is going while they go, and comes back to the whole
+   board the moment it is your turn to think — which is also the only time a
+   body you cannot see would be a body you cannot choose. */
+function frameAll() {
+  const live = tokens.filter((t) => !t.home);
+  if (!live.length) return;
+  const xs = live.map((t) => t.x), ys = live.map((t) => t.y);
+  if (S.home) { xs.push(S.home.x); ys.push(S.home.y); }
+  const x0 = Math.min(...xs), x1 = Math.max(...xs);
+  const y0 = Math.min(...ys), y1 = Math.max(...ys);
+  const padX = Math.max(90, View.w * 0.16), padT = 96, padB = 150;
+  const aw = Math.max(80, View.w - padX * 2);
+  const ah = Math.max(80, View.h - padT - padB);
+  const w = Math.max(1e-9, x1 - x0), h = Math.max(1e-9, y1 - y0);
+  const z = clamp(Math.log2(Math.min(aw / w, ah / h) / 256), 11.6, 16.0);
+  const ws = 256 * Math.pow(2, z);
+  centerOn((x0 + x1) / 2, (y0 + y1) / 2 - (padT - padB) / (2 * ws), z);
+}
+
+function roll() {
+  if (phase !== "roll") return;
+  turnNo++;
+  frameAll();
+  dice = [{ v: d6(), to: null, dead: false }, { v: d6(), to: null, dead: false }];
+  phase = "assign";
+  markDead();
+  sel = firstOpen();
+  if (sel >= 0) hoverBody(preferredFor(sel));
+  render();
+}
+
+const firstOpen = () => dice.findIndex((d) => d.to === null && !d.dead);
+
+/* A die that no body can do anything with is dead. It is still shown — you
+   should see the roll you were given and what it was worth — but it does not
+   hold the turn hostage. */
+function markDead() {
+  clearGhosts();
+  for (let i = 0; i < dice.length; i++) {
+    if (dice[i].to !== null) continue;
+    let any = false;
+    for (let t = 0; t < tokens.length; t++) {
+      if (tokens[t].home || !allowed(i, t)) continue;
+      const g = ghost(i, t);
+      if (g && g.gain > 25) { any = true; break; }
+    }
+    dice[i].dead = !any;
+  }
+  tellStuck();
+}
+
+/* A body with nowhere to go is the loudest thing this game has to say, and it
+   is not allowed to say it in words. It knocks on the pip instead: the only
+   move left is a line, and the hand is the only thing that can make one. */
+function tellStuck() {
+  const walled = [];
+  for (let t = 0; t < tokens.length; t++) {
+    if (tokens[t].home) continue;
+    let best = null;
+    for (let i = 0; i < dice.length; i++) {
+      const g = ghost(i, t);
+      if (g && g.gain > 25) { best = g; break; }
+      if (g && g.balk && !best) best = g;
+    }
+    if (!best || best.gain <= 25) walled.push({ token: tokens[t], ghost: best });
+  }
+  stuck = walled;
+  emit("stuck", walled);
+}
+
+/* which body a die would do most for — only used to put the hand somewhere
+   sensible, never to decide for the player */
+function preferredFor(di) {
+  let best = -1, bd = -1;
+  for (let i = 0; i < tokens.length; i++) {
+    if (tokens[i].home || !allowed(di, i)) continue;
+    const g = ghost(di, i);
+    if (g && g.gain > bd) { bd = g.gain; best = i; }
+  }
+  return best;
+}
+
+function hoverBody(i) {
+  if (i === hover) return;
+  hover = i;
+  if (i >= 0) select(i);
+  render();
+}
+
+/* ---------- the ghost: where this die puts this body ---------- */
+const ghosts = new Map();
+function gkey(di, ti) { return di * 8 + ti; }
+
+function ghost(di, ti) {
+  const k = gkey(di, ti);
+  if (ghosts.has(k)) return ghosts.get(k);
+  const d = dice[di], t = tokens[ti];
+  let g = null;
+  if (d && t && !t.home && S.homeNode >= 0) {
+    const from = nearestNodeFor(t.x, t.y, t.being, units(700));
+    const to = nearestNodeFor(S.home.x, S.home.y, t.being, units(900));
+    if (from >= 0 && to >= 0) {
+      const full = route(from, to, t.being);
+      if (full && full.nodes.length >= 2) {
+        const { r, cut } = afford(full, t.being, d.v * PIP);
+        if (r && r.nodes.length >= 2) {
+          const end = r.nodes[r.nodes.length - 1];
+          /* Progress is ground covered along the way home, not distance across
+             the map. A car truncated halfway down a ramp is further from home
+             as the crow flies and much closer as the car drives, and the crow
+             is not playing. */
+          g = {
+            r, pts: routePoints(r), from,
+            ex: G.nx[end], ey: G.ny[end],
+            gain: r.dist,
+            remain: Math.max(0, full.dist - r.dist),
+            balk: full.balk,
+            arrives: !cut && !full.balk,
+          };
+        }
+      }
+    }
+  }
+  ghosts.set(k, g);
+  return g;
+}
+function clearGhosts() { ghosts.clear(); }
+
+/* ============================================================
+   input — tap a die, tap a body, commit
+   ============================================================ */
+export function onTap(ctx, p) {
+  if (ctx.mode !== "travel") return false;
+  if (over) { setUp(); return true; }
+  if (phase !== "assign" || busy()) return true;
+
+  /* tapping a body assigns the die in hand to it */
+  const ti = bodyAt(p);
+  if (ti >= 0 && sel >= 0 && allowed(sel, ti)) {
+    dice[sel].to = ti;
+    select(ti);
+    markDead();
+    const nxt = firstOpen();
+    sel = nxt;
+    if (nxt >= 0) hoverBody(preferredFor(nxt));
+    render();
+    return true;
+  }
+  if (ti >= 0) { hoverBody(ti); return true; }
+  return true;
+}
+
+/* One die to a body while there is more than one body left to move. Letting
+   both land on the same one would quietly delete the only choice in the game. */
+function allowed(di, ti) {
+  if (!tokens[ti] || tokens[ti].home) return false;
+  const live = tokens.filter((t) => !t.home).length;
+  if (live <= 1) return true;
+  return !dice.some((d, i) => i !== di && d.to === ti);
+}
+
+function bodyAt(p) {
+  let best = -1, bd = 46;
+  tokens.forEach((t, i) => {
+    if (t.home) return;
+    if (sel >= 0 && !allowed(sel, i)) return;
+    const off = seat(t, tokens);
+    const d = Math.hypot(sx(t.x) + off.dx - p.x, sy(t.y) + off.dy - p.y);
+    if (d < bd) { bd = d; best = i; }
+  });
+  return best;
+}
+
+/* ============================================================
+   resolving
+   ============================================================ */
+let queue = [];
+
+function commit() {
+  if (phase !== "assign") return;
+  queue = dice.map((d, i) => ({ d, i })).filter((x) => x.d.to !== null);
+  /* a turn where nothing fitted is still a turn: it passes, and the other
+     three keep coming */
+  if (!queue.length) { finishTurn(); return; }
+  phase = "resolving";
+  render();
+  step();
+}
+
+function step() {
+  if (!queue.length) return finishTurn();
+  const { d } = queue.shift();
+  const ti = d.to;
+  const t = tokens[ti];
+  clearGhosts();
+  select(ti);
+  const g = ghost(dice.indexOf(d), ti) || ghostFresh(d, ti);
+  if (!g) return step();
+  if (!travelToken(t, g.r)) return step();
+}
+
+/* after a body has moved, the next body's ghost is stale */
+function ghostFresh(d, ti) {
+  clearGhosts();
+  const t = tokens[ti];
+  const from = nearestNodeFor(t.x, t.y, t.being, units(700));
+  const to = nearestNodeFor(S.home.x, S.home.y, t.being, units(900));
+  if (from < 0 || to < 0) return null;
+  const full = route(from, to, t.being);
+  if (!full || full.nodes.length < 2) return null;
+  const { r } = afford(full, t.being, d.v * PIP);
+  return r && r.nodes.length >= 2 ? { r } : null;
+}
+
+function next() {
+  if (phase !== "resolving") return;
+  clearGhosts();
+  checkHome();
+  if (queue.length) { step(); return; }
+  finishTurn();
+}
+
+function finishTurn() {
+  checkHome();
+  clearGhosts();
+  if (over) { render(); return; }
+  rivalTurn();
+  dice = [];
+  phase = "roll";
+  sel = -1;
+  clearGhosts();
+  render();
+}
+
+function checkHome() {
+  for (const t of tokens) {
+    if (t.home) continue;
+    if (metres(Math.hypot(t.x - S.home.x, t.y - S.home.y)) < HOME) {
+      t.home = true;
+      emit("leg", { who: "you" });
+    }
+  }
+  for (const t of rivals) {
+    if (t.home) continue;
+    if (metres(Math.hypot(t.x - S.home.x, t.y - S.home.y)) < HOME) t.home = true;
+  }
+  if (tokens.every((t) => t.home)) { over = { who: "you", turnNo }; emit("crossing-over", over); }
+  else if (rivals.every((t) => t.home)) { over = { who: "rival", turnNo }; emit("crossing-over", over); }
+}
+
+/* the other three, same dice, same ground, same marks */
+function rivalTurn() {
+  const rd = [d6(), d6()];
+  for (const v of rd) {
+    let best = null;
+    for (const t of rivals) {
+      if (t.home) continue;
+      const from = nearestNodeFor(t.x, t.y, t.being, units(900));
+      const to = nearestNodeFor(S.home.x, S.home.y, t.being, units(900));
+      if (from < 0 || to < 0) continue;
+      const full = route(from, to, t.being);
+      if (!full || full.nodes.length < 2) continue;
+      const { r } = afford(full, t.being, v * PIP);
+      if (!r || r.nodes.length < 2) continue;
+      const end = r.nodes[r.nodes.length - 1];
+      if (!best || r.dist > best.gain) best = { t, r, gain: r.dist, end };
+    }
+    if (!best) continue;
+    wear(best.r.edges, 1);
+    for (const e of best.r.edges) {
+      const m = G.emark[e];
+      if (m) creditMark(m, { being: best.t.being, by: "rival" });
+    }
+    S.journeys.push({ pts: routePoints(best.r), by: "rival", being: best.t.being.id, t: Date.now() });
+    best.t.node = best.end;
+    best.t.x = G.nx[best.end]; best.t.y = G.ny[best.end];
+  }
+  checkHome();
+}
+
+/* ============================================================
+   the tray — two dice and a bar, and nothing else
+   ============================================================ */
+function buildTray(ctx) {
+  const style = document.createElement("style");
+  style.textContent = `
+    #pgtray{
+      position:fixed;left:0;right:0;bottom:0;
+      padding:9px 10px calc(9px + var(--sab));
+      display:flex;align-items:center;justify-content:center;gap:12px;
+      background:linear-gradient(to top,rgba(239,234,221,.97),rgba(239,234,221,.72) 70%,transparent);
+      pointer-events:none}
+    #pgtray > *{pointer-events:auto}
+    .pgdie{
+      width:56px;height:56px;border:2.5px solid var(--ink);background:var(--paper-lit);
+      border-radius:7px;display:grid;place-items:center;
+      font:700 27px/1 Georgia,serif;color:var(--ink);
+      box-shadow:0 1px 3px rgba(29,32,29,.16);
+      transition:transform .16s cubic-bezier(.2,.8,.3,1),background .18s,opacity .18s}
+    .pgdie.hand{background:var(--ink);color:var(--paper-lit);transform:translateY(-5px) scale(1.06)}
+    .pgdie.spent{opacity:.42;border-style:dashed}
+    .pgdie.dead{opacity:.34;border-style:dotted;text-decoration:line-through}
+    .pgdie.roll{font:700 12px/1.3 ui-monospace,monospace;letter-spacing:.13em;width:auto;padding:0 22px}
+    #pgbar{
+      border:0;border-radius:7px;padding:0 20px;height:56px;
+      font:700 12px/1 ui-monospace,monospace;letter-spacing:.15em;
+      background:var(--ink);color:var(--paper-lit)}
+    #pgbar[disabled]{background:transparent;color:var(--ink);opacity:.4;
+      box-shadow:inset 0 0 0 2px rgba(29,32,29,.3)}
+    /* the pip steps aside for the tray */
+    #pip{bottom:calc(84px + var(--sab)) !important;left:auto !important;right:14px !important;
+      transform:none !important;width:58px !important;height:58px !important}
+    #pip:active{transform:scale(.93) !important}
+    #pip.on{transform:scale(1.05) !important}
+    @keyframes pgbeat{0%,100%{transform:none}12%{transform:scale(1.075)}
+      26%{transform:scale(.995)}38%{transform:scale(1.03)}56%{transform:none}}`;
+  document.head.appendChild(style);
+
+  tray = document.createElement("div");
+  tray.id = "pgtray";
+  ctx.hud.appendChild(tray);
+}
+
+function render() {
+  if (!tray) return;
+  tray.innerHTML = "";
+
+  if (over) {
+    const b = document.createElement("button");
+    b.id = "pgbar";
+    b.textContent = over.who === "you" ? "ALL THREE HOME · AGAIN" : "IT GOT ALL THREE HOME · AGAIN";
+    b.addEventListener("click", setUp);
+    tray.appendChild(b);
+    return;
+  }
+
+  if (phase === "roll") {
+    const d = document.createElement("button");
+    d.className = "pgdie roll";
+    d.textContent = "ROLL";
+    d.addEventListener("click", roll);
+    tray.appendChild(d);
+    return;
+  }
+
+  if (phase === "resolving") {
+    const s = document.createElement("div");
+    s.id = "pgbar";
+    s.textContent = "GOING";
+    s.style.opacity = ".5";
+    tray.appendChild(s);
+    return;
+  }
+
+  dice.forEach((d, i) => {
+    const el = document.createElement("button");
+    el.className = "pgdie" + (d.to !== null ? " spent" : "") + (d.dead ? " dead" : "")
+      + (sel === i ? " hand" : "");
+    el.textContent = d.v;
+    if (d.to !== null) el.style.borderColor = tokens[d.to].being.ink.ladder;
+    el.addEventListener("click", () => {
+      if (d.to !== null) { d.to = null; }
+      sel = i;
+      hoverBody(preferredFor(i));
+      render();
+    });
+    tray.appendChild(el);
+  });
+
+  const b = document.createElement("button");
+  b.id = "pgbar";
+  const ready = dice.every((d) => d.to !== null || d.dead);
+  const none = dice.every((d) => d.to === null);
+  b.textContent = !ready ? "PUT A DIE ON A BODY" : none ? "NOTHING FITS · PASS" : "GO";
+  b.disabled = !ready;
+  b.addEventListener("click", commit);
+  tray.appendChild(b);
+}
+
+/* ============================================================
+   drawing — the bodies, home, and the ghosts of what a die would do
+   ============================================================ */
+export function draw(ctx, now) {
+  const c = ctx.c;
+  if (S.home) drawHome(c, now);
+
+  /* the ghost of the die in hand, over every body it could go to */
+  if (phase === "assign" && sel >= 0) {
+    for (let i = 0; i < tokens.length; i++) {
+      if (tokens[i].home || !allowed(sel, i)) continue;
+      const g = ghost(sel, i);
+      if (g) drawGhost(c, g, tokens[i], i === hover, now);
+    }
+  }
+  /* and the ones already placed */
+  if (phase === "assign") {
+    dice.forEach((d, di) => {
+      if (d.to === null) return;
+      const g = ghost(di, d.to);
+      if (g) drawGhost(c, g, tokens[d.to], true, now, true);
+    });
+  }
+
+  for (const t of rivals) drawBody(c, t, true, false, now);
+  tokens.forEach((t, i) => drawBody(c, t, false, i === hover && phase === "assign", now));
+
+  /* whatever is walled in, and exactly how much nothing is in the way */
+  if (phase === "assign") {
+    for (const w of stuck) {
+      if (!w.ghost || !w.ghost.balk) continue;
+      const b = w.ghost.balk;
+      c.save();
+      c.globalAlpha = 0.5 + 0.3 * Math.sin(now / 520);
+      c.strokeStyle = "#bf4526";
+      c.lineWidth = 2;
+      c.setLineDash([4, 6]);
+      c.beginPath();
+      c.moveTo(sx(w.ghost.ex), sy(w.ghost.ey));
+      c.lineTo(sx(b.toX), sy(b.toY));
+      c.stroke();
+      c.setLineDash([]);
+      c.restore();
+    }
+  }
+}
+
+function drawHome(c, now) {
+  const X = sx(S.home.x), Y = sy(S.home.y);
+  const pulse = 0.5 + 0.5 * Math.sin(now / 950);
+  c.save();
+  c.globalAlpha = 0.9;
+  c.strokeStyle = "#1d201d";
+  c.lineWidth = 2.4;
+  c.beginPath();
+  c.arc(X, Y, 15, 0, TAU);
+  c.stroke();
+  c.globalAlpha = 0.3 + pulse * 0.2;
+  c.beginPath();
+  c.arc(X, Y, 22 + pulse * 5, 0, TAU);
+  c.lineWidth = 1.2;
+  c.stroke();
+  c.globalAlpha = 1;
+  c.fillStyle = "#1d201d";
+  c.beginPath();
+  c.arc(X, Y, 4.5, 0, TAU);
+  c.fill();
+  c.restore();
+}
+
+function drawGhost(c, g, tok, strong, now, placed) {
+  const col = tok.being.ink.ladder;
+  c.save();
+  c.lineCap = "round";
+  c.lineJoin = "round";
+  c.globalAlpha = strong ? 0.9 : 0.3;
+  c.strokeStyle = col;
+  c.lineWidth = strong ? 4 : 2;
+  c.setLineDash(placed ? [] : [9, 7]);
+  c.beginPath();
+  c.moveTo(sx(g.pts[0]), sy(g.pts[1]));
+  for (let i = 2; i + 1 < g.pts.length; i += 2) c.lineTo(sx(g.pts[i]), sy(g.pts[i + 1]));
+  c.stroke();
+  c.setLineDash([]);
+
+  /* where it would come to rest */
+  const EX = sx(g.ex), EY = sy(g.ey);
+  c.globalAlpha = strong ? 0.95 : 0.4;
+  c.beginPath();
+  c.arc(EX, EY, strong ? 11 : 7, 0, TAU);
+  c.strokeStyle = col;
+  c.lineWidth = strong ? 3 : 1.8;
+  c.stroke();
+  if (g.arrives) {
+    c.beginPath();
+    c.arc(EX, EY, strong ? 17 : 12, 0, TAU);
+    c.lineWidth = 2;
+    c.stroke();
+  }
+
+  /* the ground ran out for this body. draw the exact amount of nothing that
+     is in the way, and let the hand work out the rest. */
+  if (g.balk && strong) {
+    c.globalAlpha = 0.85;
+    c.strokeStyle = "#bf4526";
+    c.lineWidth = 2;
+    c.setLineDash([4, 6]);
+    c.beginPath();
+    c.moveTo(EX, EY);
+    c.lineTo(sx(g.balk.toX), sy(g.balk.toY));
+    c.stroke();
+    c.setLineDash([]);
+    c.beginPath();
+    c.arc(sx(g.balk.toX), sy(g.balk.toY), 6, 0, TAU);
+    c.stroke();
+  }
+  c.restore();
+}
+
+/* Three bodies standing on the same corner are three bodies, not one. They
+   fan just enough to be told apart and touched apart, and the fan closes as
+   soon as the ground itself separates them. */
+function seat(t, list) {
+  let n = 0, k = 0;
+  for (const o of list) {
+    if (o === t) { k = n; n++; continue; }
+    if (Math.hypot(o.x - t.x, o.y - t.y) < units(70)) n++;
+  }
+  if (n < 2) return { dx: 0, dy: 0 };
+  const a = -Math.PI / 2 + (k / n) * TAU;
+  const r = 15;
+  return { dx: Math.cos(a) * r, dy: Math.sin(a) * r };
+}
+
+function drawBody(c, t, rival, lit, now) {
+  const off = seat(t, rival ? rivals : tokens);
+  const X = sx(t.x) + off.dx, Y = sy(t.y) + off.dy;
+  if (X < -40 || X > View.w + 40 || Y < -40 || Y > View.h + 40) return;
+  c.save();
+  if (t.home) c.globalAlpha = 0.45;
+
+  if (lit) {
+    c.globalAlpha = 0.5 + 0.3 * Math.sin(now / 300);
+    c.beginPath();
+    c.arc(X, Y, 26, 0, TAU);
+    c.strokeStyle = t.being.ink.ladder;
+    c.lineWidth = 2;
+    c.stroke();
+    c.globalAlpha = 1;
+  }
+
+  if (rival) {
+    c.fillStyle = AMBER;
+    c.strokeStyle = AMBER_DEEP;
+    c.lineWidth = 2;
+    c.beginPath();
+    c.rect(X - 6, Y - 6, 12, 12);
+    c.fill(); c.stroke();
+  } else {
+    c.fillStyle = t.being.ink.ladder;
+    c.beginPath();
+    c.arc(X, Y, 9, 0, TAU);
+    c.fill();
+    c.strokeStyle = "#f6f2e8";
+    c.lineWidth = 2.6;
+    c.stroke();
+    /* one letter, so three bodies are three bodies at a glance */
+    c.fillStyle = "#f6f2e8";
+    c.font = "700 10px ui-monospace, monospace";
+    c.textAlign = "center";
+    c.textBaseline = "middle";
+    c.fillText(t.being.name[0], X, Y + 0.5);
+  }
+  c.restore();
+}
+
+/* how much ground the best available die would win this body — the harness
+   uses it to prove that a drawn line changes what a body can do */
+export function gainFor(ti) {
+  clearGhosts();
+  let best = 0;
+  for (let i = 0; i < dice.length; i++) {
+    const g = ghost(i, ti);
+    if (g && g.gain > best) best = g.gain;
+  }
+  return Math.round(best);
+}
+
+/* the exact wall a body is standing at, for the harness */
+export function wallFor(ti) {
+  clearGhosts();
+  for (let i = 0; i < dice.length; i++) {
+    const g = ghost(i, ti);
+    if (g && g.balk) return { ex: g.ex, ey: g.ey, tx: g.balk.toX, ty: g.balk.toY };
+  }
+  const t = tokens[ti];
+  return t && S.home ? { ex: t.x, ey: t.y, tx: S.home.x, ty: S.home.y } : null;
+}
+
+export const state = () => ({ tokens, rivals, dice, phase, over, turnNo, home: S.home });

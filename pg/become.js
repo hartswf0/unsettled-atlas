@@ -66,12 +66,7 @@ export function init(ctx) {
   ctxRef = ctx;
   on("plan", () => { planAt = performance.now(); });
   on("depart", () => { tripping = true; planAt = 0; });
-  on("arrive", (info) => {
-    tripping = false;
-    planAt = 0;
-    /* a balk has already had its long, loud hold. it does not need another. */
-    due = performance.now() + (info && info.balk ? 220 : 400);
-  });
+  on("arrive", () => { tripping = false; planAt = 0; });
   /* fingers are watched, never claimed — main.js owns the gesture */
   const cv = ctx.cv;
   cv.addEventListener("pointerdown", (e) => fingers.add(e.pointerId), { passive: true });

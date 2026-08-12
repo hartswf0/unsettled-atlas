@@ -181,6 +181,9 @@ export function init(ctx) {
      gap belongs to the ground, not to whoever found it, so becoming something
      else does not answer it; only arriving somewhere whole does, or drawing. */
   on("arrive", ({ balk }) => setAsking(!!balk));
+  /* a body of yours that cannot move anywhere is the only instruction this
+     game ever gives, and it gives it by knocking rather than by talking */
+  on("stuck", (w) => { if (w && w.length) setAsking(true); });
   on("become", () => {
     if (live) { unpick(live); live = null; }
     if (armed) setArmed(false);

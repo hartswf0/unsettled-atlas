@@ -107,12 +107,11 @@ function row(cls, done, total) {
 
 function render() {
   if (!pips) return;
-  const n = (S.course || []).length;
+  const st = window.PG?.organs?.turn?.state?.();
   pips.innerHTML = "";
-  if (n) {
-    pips.appendChild(row("you", S.leg || 0, n));
-    const rl = window.PG?.organs?.goal?.state?.().rivalLeg ?? 0;
-    pips.appendChild(row("rival", rl, n));
+  if (st && st.tokens?.length) {
+    pips.appendChild(row("you", st.tokens.filter((t) => t.home).length, st.tokens.length));
+    pips.appendChild(row("rival", st.rivals.filter((t) => t.home).length, st.rivals.length));
   }
 
   const others = peers().length;

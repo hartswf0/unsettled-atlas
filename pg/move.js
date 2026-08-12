@@ -71,7 +71,6 @@ const cam = {
 };
 
 export function init(ctx) {
-  on("boot", () => place());
   on("become", () => {
     plan = null; trip = null;
     /* the gap does not belong to the being that found it. it stays a while
@@ -81,13 +80,39 @@ export function init(ctx) {
   });
 }
 
-function place() {
-  const n = nearestNodeFor(View.x, View.y, S.being, 0.004);
-  if (n < 0) return;
-  you = { node: n, x: G.nx[n], y: G.ny[n], ang: 0 };
-  S.you = you;
-  centerOn(you.x, you.y);
+/* The turn owns the bodies now. move.js is handed one and drives it: the
+   camera, the way it takes, and what happens when the ground runs out. */
+export function setToken(tok, centre) {
+  you = tok;
+  S.you = tok;
+  if (centre && tok) centerOn(tok.x, tok.y);
 }
+
+/* Take this body along this route. Everything the going looks like — the pull
+   away, the cruise, the settle, the wall — is the same as it ever was. */
+export function travelToken(tok, r) {
+  if (!tok || !r || r.nodes.length < 2) return false;
+  you = tok; S.you = tok;
+  const pts = routePoints(r);
+  const len = pathLength(pts);
+  if (len <= 0) return false;
+  const hard = !!r.balk;
+  const secs = clamp(metres(len) / ((tok.being || S.being).speed * 0.95), 1.2, 5.0);
+  balked = null;
+  plan = null;
+  trip = {
+    r, pts, len, at: 0, e: 0, T: secs * 1000,
+    hard, t0: performance.now(), vn: 0,
+    tx: r.balk ? r.balk.toX : pts[pts.length - 2],
+    ty: r.balk ? r.balk.toY : pts[pts.length - 1],
+  };
+  fx.push({ k: "off", x: tok.x, y: tok.y, t: 0, life: 520 });
+  cam.frame = null;
+  emit("depart", trip);
+  return true;
+}
+
+export const busy = () => !!trip;
 /* when you become something else you do not teleport — you stay where you are
    standing, on whatever ground the new body can stand on nearest to it */
 function reseat() {
@@ -99,6 +124,9 @@ function reseat() {
    tap
    ====================================================================== */
 export function onTap(ctx, p) {
+  return false;   /* the turn owns the tap now — see turn.js */
+}
+function _unusedOnTap(ctx, p) {
   if (ctx.mode !== "travel" || !you) return false;
   /* already going. the touch is felt but the journey is the journey. */
   if (trip) { ripple(wx(p.x), wy(p.y)); return true; }
@@ -268,7 +296,7 @@ function arrive(now) {
   you.node = last;
   you.x = G.nx[last]; you.y = G.ny[last];
   wear(r.edges, 1);
-  logJourney(trip.pts, r.edges, S.being);
+  logJourney(trip.pts, r.edges, (you && you.being) || S.being);
 
   if (r.balk) {
     logBalk(r.balk.x, r.balk.y, S.being);

@@ -721,6 +721,8 @@ var MODE = 'select';
 var CELL = null;                      // the selected / driven cell
 var WIN = null;                       // the current chart
 var PACK = null;                      // the mounted landpack
+var LAND_TOKEN = 0;                   // rising invalidates any landing in flight
+var LAST_POSE = null;                 // where the car stood when you rose
 var wireEl = document.getElementById('wire');
 var wireT = 0;
 function wire(msg, cls) {
@@ -756,22 +758,34 @@ async function land(opts) {
   }
   var win = windowOf(CELL);
   var key = win.slug + '@' + Math.round(win.halfM);
+  var tok = ++LAND_TOKEN;                       // rising while this runs cancels it
   MODE = 'landing';
+  var lb = el('bLand');
+  lb.disabled = true; lb.textContent = 'LANDING…';
+  // the seamless round trip: no explicit destination + the car's last stand
+  // is inside this cell → resume there, not at the centroid
+  var resume = null;
+  if (!opts.geo && LAST_POSE
+      && cellContains(CELL, fromLonLat(LAST_POSE.geo[1], LAST_POSE.geo[0]))) resume = LAST_POSE;
   try {
     var pack = cacheGet(key);
     if (pack) {
       wire('land remembered — mounting ' + win.slug + ' with zero network', 'ok');
     } else {
       pack = await fetchPack(win);
+      if (tok !== LAND_TOKEN) return false;     // the user rose; stay risen
       cachePut(key, pack);
     }
     WIN = win;
     await mountPack(pack);
-    // stand on the ground — at the centroid, or at a carried geographic point
-    if (opts.geo) {
-      var lc = geoToChart(win, opts.geo[0], opts.geo[1]);
+    if (tok !== LAND_TOKEN) return false;       // the user rose; stay risen
+    // stand on the ground — carried point, resumed pose, or the centroid
+    var geo = opts.geo || (resume && resume.geo);
+    if (geo) {
+      var lc = geoToChart(win, geo[0], geo[1]);
       CAR.x = clamp(lc[0], -WU / 2 + 1, WU / 2 - 1);
       CAR.z = clamp(lc[1], -WU / 2 + 1, WU / 2 - 1);
+      if (resume) { CAR.yaw = resume.yaw; CAR.speed = 0; }
     } else { CAR.x = 0; CAR.z = 0; CAR.speed = 0; }
     CAR.y = GROUND.y(CAR.x, CAR.z);
     CAM.x = CAR.x; CAM.y = CAR.y + 6; CAM.z = CAR.z + 10;
@@ -779,10 +793,13 @@ async function land(opts) {
     enterDriveUI();
     setHash(win.slug);
     var seaNote = (pack.zminM < -5) ? ' · elevations are bathymetric — this is the sea floor' : '';
-    wire(win.slug + ' · 1 unit = ' + win.S.toFixed(2) + ' m · relief ' + pack.reliefM + ' m' + seaNote, 'ok');
+    wire(win.slug + ' · 1 unit = ' + win.S.toFixed(2) + ' m · relief ' + pack.reliefM + ' m'
+      + (resume ? ' · resumed where you stood' : '') + seaNote, 'ok');
     return true;
   } catch (e) {
+    if (tok !== LAND_TOKEN) return false;
     MODE = 'select';
+    updateSelectUI();
     wire('the land did not come: ' + e.message, 'warn');
     return false;
   }
@@ -802,6 +819,10 @@ async function crossInto(p) {
   var prevCell = CELL, prevWin = WIN, prevPack = PACK;
   CELL = next;
   var ok = await land({ geo: carried });
+  if (!ok && MODE === 'select') {                   // the user rose mid-crossing: stay risen
+    CROSS_LOCK = false;
+    return;
+  }
   if (!ok) {                                        // the neighbour did not come; stay home
     CELL = prevCell; WIN = prevWin; PACK = prevPack;
     if (prevPack) { await mountPack(prevPack); }
@@ -1044,7 +1065,12 @@ el('bUp').addEventListener('click', function () {
 el('bLand').addEventListener('click', function () { land(); });
 el('bRise').addEventListener('click', function () {
   // RISE — back to the selector, at the cell you are IN (after driving,
-  // generally not the one you landed in).
+  // generally not the one you landed in). Works mid-crossing too: the
+  // token invalidates any landing in flight, and the pose is kept so
+  // LAND resumes exactly where the car stood.
+  LAND_TOKEN++;
+  CROSS_LOCK = false;
+  if (WIN) LAST_POSE = { geo: [CAR.lat, CAR.lon], yaw: CAR.yaw };
   MODE = 'select';
   enterSelectUI();
   if (CELL) { rotateTo(cellCentre(CELL)); setHash(cellSlug(CELL)); }
@@ -1087,6 +1113,13 @@ el('fMount').addEventListener('change', function (ev) {
 var KEYMAP = { ArrowUp: 'up', KeyW: 'up', ArrowDown: 'down', KeyS: 'down',
                ArrowLeft: 'left', KeyA: 'left', ArrowRight: 'right', KeyD: 'right' };
 addEventListener('keydown', function (ev) {
+  // the two modes are one keyboard apart: Enter lands, Escape rises
+  if (ev.code === 'Escape' && (MODE === 'drive' || MODE === 'crossing')) {
+    el('bRise').click(); ev.preventDefault(); return;
+  }
+  if (ev.code === 'Enter' && MODE === 'select' && CELL && !el('bLand').disabled) {
+    land(); ev.preventDefault(); return;
+  }
   var k = KEYMAP[ev.code];
   if (k) { INPUT[k] = true; ev.preventDefault(); }
 });

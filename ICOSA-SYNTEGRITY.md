@@ -794,6 +794,76 @@ ranking, the geometric assignment, the caching, the offline floor and the
 failure path all work. Whether Wikimedia answers *your* browser is
 something only your browser can settle.
 
+## Convening it
+
+Everything up to here prepared a council and never held one. A syntegration
+is not a bench, it is a protocol: each topic team states its case, the seats
+whose registers are incommensurable with theirs answer, and because every
+seat sits in two rooms what is said in one arrives in the other.
+
+**A round is two passes over each topic.** The members speak, each from
+their own register and from the ground. Then the critics answer — *and the
+critics are given what was just said*, which is the whole point. A critique
+written without hearing the statement is decoration.
+
+```
+ROUND 1
+TOPIC 0  Dumyat
+         Whether the barrage releases are timed for the delta or the canal
+
+  P3   BODY        the release schedule is set for the canal, not for us
+  P10  CATEGORY    …
+  P11  RECURSION · answering
+       Answering that: it assumes the schedule is the only lever
+```
+
+Two calls per topic — twelve for an octahedron, twenty-four for an
+icosahedron — and the panel says the number **before** you press it, because
+it is not this file's money. Every line is written into the record as an
+utterance stamped with the model, the round, the seat and its register,
+drawn on the map like anything else said here, readable as a transcript and
+deletable in one move.
+
+The transcript says what it is at the top: a rehearsal of the argument this
+ground would have, not a record of one that happened, and the people named
+are the record's nominees who said none of it.
+
+## What is live here, not what is historical
+
+A council of the historically notable argues about the past. What a
+syntegration is *for* is what is unresolved now — so the ground is asked
+what is happening on it, from two keyless sources:
+
+- **GDELT**, searched by the names of the settlements this triangle actually
+  contains, over the last fortnight.
+- **Wikipedia revisions** on the articles inside it. What people are editing
+  about a place is a real signal of what is live there, and it is the same
+  endpoint the rest of this already uses. Titles come from a prior lookup,
+  from the topics the council named, and failing both from the settlements
+  themselves.
+
+Both land in `evidence.recent` in the compiled context, marked with which
+one they came from, and the speaking instruction points at them
+specifically. Both degrade to nothing without breaking anything.
+
+## What it cost
+
+Someone else's key is paying for this, so the bill is not a footnote.
+
+```
+THIS SESSION   14 calls · 58.8k in (50.4k cached) · 5.3k out (1.7k thinking)
+ALL TIME       14 calls · 58.8k in · 5.3k out
+speak           6 calls · 25.2k in · 2.3k out
+critique        6 calls · 25.2k in · 2.3k out
+```
+
+Broken down by operation, so it is obvious which part of the instrument is
+expensive. The totals live in the record, so they survive a reload and
+travel with an exported atlas. **The cache column earns its place:** the
+compiled context is nearly identical between calls on one cell, so most of
+it should be a cache read rather than a fresh charge — and if it stops
+being one, that is a bug you can see rather than a bill you find later.
+
 ## Letting go
 
 Everything here sticks, which is the point: a triangle stays picked, a

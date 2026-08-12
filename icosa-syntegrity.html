@@ -218,6 +218,8 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #panel .go.ghost{background:var(--ground);color:var(--ink)}
 #panel .said{border-top:1px solid rgba(18,21,20,.18);padding:8px 0}
 #panel .said b{font-size:10px;letter-spacing:.1em}
+#panel .said.crit{border-left:2px solid var(--signal);padding-left:7px}
+#panel .said span{color:var(--muted);font-size:8px;letter-spacing:.1em}
 #panel .said span{color:var(--muted);font-size:9px;letter-spacing:.08em}
 #panel .said p{font-size:12px;line-height:1.5;color:var(--ink);margin:4px 0 0;max-width:60ch}
 #panel .kbd{font-size:9px;color:var(--muted);letter-spacing:.1em;line-height:1.9;margin-top:8px}
@@ -1926,6 +1928,47 @@ function reasoningFor(id) {
   return { modes: [], efforts: [] };
 }
 function supportsReasoning(model) { return reasoningFor(model).efforts.length > 0; }
+/* ------------------------------------------------------------ what it cost
+ * Someone else's key is paying for this, so the bill is not a footnote. Every
+ * call's usage is added up — by operation, so it is obvious which part of the
+ * instrument is expensive — and the totals stay in the record, which means
+ * they survive a reload and travel with an exported atlas. The cache figure
+ * is worth its own column: the compiled context is nearly identical between
+ * calls on one cell, so most of it should be a cache read rather than a
+ * fresh charge, and if it is not, that is a bug you can see.             */
+var SPEND = { calls: 0, input: 0, cached: 0, output: 0, reasoning: 0, byOp: {} };
+function countSpend(op, model, j) {
+  var u = (j && j.usage) || {};
+  var inp = u.input_tokens || 0, outp = u.output_tokens || 0;
+  var cached = (u.input_tokens_details && u.input_tokens_details.cached_tokens) || 0;
+  var reas = (u.output_tokens_details && u.output_tokens_details.reasoning_tokens) || 0;
+  SPEND.calls++; SPEND.input += inp; SPEND.output += outp;
+  SPEND.cached += cached; SPEND.reasoning += reas;
+  var b = SPEND.byOp[op] || (SPEND.byOp[op] = { calls: 0, input: 0, output: 0 });
+  b.calls++; b.input += inp; b.output += outp;
+  if (!DB.spend) DB.spend = { calls: 0, input: 0, output: 0, cached: 0, reasoning: 0 };
+  DB.spend.calls++; DB.spend.input += inp; DB.spend.output += outp;
+  DB.spend.cached += cached; DB.spend.reasoning += reas;
+  DB.spend.model = model;
+  commit();
+}
+function tok(n) {
+  return n >= 1e6 ? (n / 1e6).toFixed(2) + 'M' : n >= 1000 ? (n / 1000).toFixed(1) + 'k' : String(n || 0);
+}
+function spendBlock() {
+  if (!SPEND.calls && !(DB.spend && DB.spend.calls)) return '';
+  var all = DB.spend || SPEND;
+  var ops = Object.keys(SPEND.byOp).map(function (k) {
+    var b = SPEND.byOp[k];
+    return '<div class="row"><b>' + esc(k) + '</b><span>' + b.calls + ' call' +
+      (b.calls === 1 ? '' : 's') + ' · ' + tok(b.input) + ' in · ' + tok(b.output) + ' out</span></div>';
+  }).join('');
+  return '<div class="row"><b>THIS SESSION</b><span>' + SPEND.calls + ' calls · ' +
+      tok(SPEND.input) + ' in (' + tok(SPEND.cached) + ' cached) · ' + tok(SPEND.output) + ' out' +
+      (SPEND.reasoning ? ' (' + tok(SPEND.reasoning) + ' thinking)' : '') + '</span></div>' +
+    '<div class="row"><b>ALL TIME</b><span>' + all.calls + ' calls · ' + tok(all.input) +
+      ' in · ' + tok(all.output) + ' out</span></div>' + ops;
+}
 function responseText(j) {
   var out = [];
   ((j && j.output) || []).forEach(function (item) {
@@ -1973,6 +2016,7 @@ function askOpenAI(opts, cb) {
       });
       return r.json();
     }).then(function (j) {
+      countSpend(opts.op || 'ask', model, j);
       var text = responseText(j);
       if (!text) throw new Error('the model returned no output text');
       cb(null, opts.schema ? JSON.parse(text) : text, j);
@@ -2020,6 +2064,82 @@ function loadModels(cb) {
     })
     .catch(function (e) { MODELS.state = 'error:' + (e && e.message || e); if (cb) cb(String(e)); wake(); });
 }
+/* --------------------------------------------------------- what is live here
+ * A council of the historically notable argues about the past. What a
+ * syntegration is for is what is unresolved now, so the ground is asked what
+ * is happening on it, from two keyless sources that answer cross-origin:
+ *
+ *   GDELT      world news indexed the last few days, searched by the names
+ *              of the settlements this triangle actually contains
+ *   Wikipedia  the recent revisions of the articles inside it — what people
+ *              are editing about a place is a real signal of what is live,
+ *              and it is the same endpoint the rest of this already uses
+ *
+ * Both degrade to nothing without breaking anything, and what they return is
+ * marked with which one it came from.                                     */
+var NEWS_STATE = {};
+function newsAbout(cell, cb) {
+  var slug = cellSlug(cell);
+  if (NEWS_STATE[slug] === 'busy') return;
+  NEWS_STATE[slug] = 'busy';
+  var inv = GAZ_STATE === 'ready' ? cellInventory(cell) : null;
+  var names = inv ? inv.places.slice(0, 5).map(function (p) { return p.name; }) : [];
+  // article titles from wherever this cell already has them: a prior lookup,
+  // the topics the council named, and failing both the settlements
+  // themselves, whose names usually are the article titles
+  var look = lookupOf(slug), titles = [], seenT = {};
+  function addTitle(t) { if (t && !seenT[t] && titles.length < 14) { seenT[t] = 1; titles.push(t); } }
+  if (look) look.items.forEach(function (x) { if (x.inside) addTitle(x.title); });
+  ((DB.topics || {})[slug] || { list: [] }).list.forEach(function (t) {
+    if (t && (t.from === 'wikipedia' || t.from === 'wikidata')) addTitle(t.title);
+  });
+  names.forEach(addTitle);
+  var out = [], left = 2;
+  function done1() {
+    if (--left) return;
+    out.sort(function (a, b) { return (b.t || 0) - (a.t || 0); });
+    if (!DB.news) DB.news = {};
+    DB.news[slug] = { t: Date.now(), list: out.slice(0, 24) };
+    commit(); NEWS_STATE[slug] = null; cb && cb(); wake();
+  }
+  if (!names.length) done1();
+  else {
+    var q = names.map(function (n) { return '"' + n + '"'; }).join(' OR ');
+    getJSON('https://api.gdeltproject.org/api/v2/doc/doc?format=json&mode=artlist' +
+      '&maxrecords=25&timespan=14d&query=' + encodeURIComponent('(' + q + ')'),
+      function (err, j) {
+        if (!err) {
+          ((j && j.articles) || []).forEach(function (a) {
+            out.push({ from: 'news', title: a.title || '', url: a.url || '',
+                       source: a.domain || '', when: a.seendate || '',
+                       t: Date.parse((a.seendate || '').replace(
+                         /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/,
+                         '$1-$2-$3T$4:$5:$6Z')) || 0 });
+          });
+        }
+        done1();
+      });
+  }
+  if (!titles.length) done1();
+  else {
+    getJSON(WP + 'action=query&prop=revisions&rvprop=timestamp%7Ccomment%7Cuser&rvslots=main' +
+      '&titles=' + titles.map(encodeURIComponent).join('%7C'), function (err, j) {
+        if (!err) {
+          ((j && j.query && j.query.pages) || []).forEach(function (pg) {
+            var r = pg.revisions && pg.revisions[0];
+            if (!r || !r.comment) return;
+            out.push({ from: 'edit', title: pg.title, note: r.comment.slice(0, 160),
+                       when: r.timestamp || '', t: Date.parse(r.timestamp || '') || 0,
+                       url: 'https://en.wikipedia.org/wiki/' +
+                            encodeURIComponent(String(pg.title).replace(/ /g, '_')) });
+          });
+        }
+        done1();
+      });
+  }
+}
+function newsFor(cell) { return (DB.news || {})[cellSlug(cell)] || null; }
+
 /* ------------------------------------------------------ the context compiler
  * A paragraph of prose about a triangle is not the triangle. What made this
  * project worth building is the structure — containment, neighbours, topic
@@ -2107,6 +2227,13 @@ function compileContext(cell, seat, world, op) {
                    found_at: p.at, levels_up: p.up }; }) : [],
       wikipedia: look ? look.items.filter(function (x) { return x.inside; })
         .slice(0, 12).map(function (x) { return x.title; }) : [],
+      // what is unresolved now, which is what a syntegration is actually for
+      recent: (function () {
+        var n = newsFor(cell);
+        return n ? n.list.slice(0, 16).map(function (x) {
+          return { kind: x.from, title: x.title, note: x.note || '',
+                   source: x.source || '', when: (x.when || '').slice(0, 10) }; }) : [];
+      })(),
       gazetteer_settlements: inv ? inv.places.length : 0,
       painted_areas: Object.keys(DB.areas || {}).filter(function (n) {
         return (DB.areas[n] || []).some(function (s) { return s === slug || underCell(cell, s); });
@@ -2195,6 +2322,121 @@ function inferPeople(cell, need, cb, seat, world) {
     }));
   });
 }
+/* ------------------------------------------------------- running the thing
+ * Everything up to here prepared a council and never convened one. A
+ * syntegration is not a bench, it is a protocol: each topic team states its
+ * case, the seats whose registers are incommensurable with theirs answer,
+ * and because every seat sits in two rooms what is said in one arrives in
+ * the other by being carried there.
+ *
+ * So a round is two passes over each topic. First the members speak, each
+ * from their own register and from the ground. Then the critics answer —
+ * and the critics are given what was just said, which is the whole point;
+ * a critique written without hearing the statement is decoration.
+ *
+ * Two calls per topic, which is six or twelve or twenty-four for a round
+ * depending on the solid, and the panel says the number before you press it
+ * because it is not this file's money. Everything produced is written into
+ * the record as an utterance stamped with the model, the round and the seat,
+ * drawn on the map like anything else said here, and deletable in one move.
+ */
+var ROUND_STATE = {};
+var SCHEMA_SPEAK = {
+  type: 'object', additionalProperties: false, required: ['utterances'],
+  properties: { utterances: { type: 'array', items: {
+    type: 'object', additionalProperties: false, required: ['seat', 'text'],
+    properties: { seat: { type: 'integer' }, text: { type: 'string' } } } } }
+};
+function utterances(slug) {
+  return DB.notes.filter(function (n) { return n.kind === 'sim' && n.cell === slug; });
+}
+function roundsRun(slug) {
+  var m = 0;
+  utterances(slug).forEach(function (n) { if (n.round > m) m = n.round; });
+  return m;
+}
+function runRound(cell, seat, world, onStep, done) {
+  var slug = cellSlug(cell);
+  if (ROUND_STATE[slug]) return;
+  var round = roundsRun(slug) + 1;
+  var topics = topicNames(cell, seat, world);
+  var order = topics.map(function (_, i) { return i; });
+  var made = 0;
+  ROUND_STATE[slug] = { at: 0, of: order.length * 2 };
+  step(0);
+  function step(k) {
+    if (k >= order.length) {
+      ROUND_STATE[slug] = null; commit();
+      done(null, made); wake(); return;
+    }
+    var t = order[k];
+    var members = [], critics = [];
+    seat.struts.forEach(function (st, i) {
+      if (st.topics.indexOf(t) >= 0) {
+        members.push({ seat: i, who: seatHolder(slug, i) || 'seat ' + i, register: st.register,
+                       other_room: st.topics[0] === t ? st.topics[1] : st.topics[0] });
+      }
+      if (st.critiques.indexOf(t) >= 0) {
+        critics.push({ seat: i, who: seatHolder(slug, i) || 'seat ' + i, register: st.register });
+      }
+    });
+    var ctx = compileContext(cell, seat, world, 'SPEAK');
+    ctx.operation.round = round;
+    ctx.operation.topic = { id: t, place: topics[t].title, issue: topics[t].issue || null };
+    ctx.operation.members = members;
+    ctx.operation.said_before = utterances(slug).filter(function (n) { return n.topic === t; })
+      .slice(-8).map(function (n) { return { round: n.round, seat: n.seat, who: n.who, text: n.text }; });
+    ROUND_STATE[slug].at = k * 2 + 1;
+    wake();
+    askOpenAI({
+      op: 'speak', context: ctx, schema: SCHEMA_SPEAK, schemaName: 'topic_statements',
+      instructions: LAW + '\n\nThis is a working session of the topic team for ' +
+        'operation.topic. Write one short statement for each seat in operation.members, in that ' +
+        'seat\'s register — a register is a way of arguing, not a personality, and each seat may ' +
+        'only do what its register may do. Speak to the issue, using the settlements, water, ' +
+        'jurisdiction, what has escalated from below and especially evidence.recent, which is ' +
+        'what is actually unresolved there now. Disagree where the registers would disagree. ' +
+        'Two sentences each, plain, no preamble, no stage directions, and never claim a fact ' +
+        'the context does not carry.',
+      maxOutputTokens: 1800
+    }, function (e1, spoke) {
+      if (!e1 && spoke) record(spoke.utterances, t, 'said');
+      var ctx2 = compileContext(cell, seat, world, 'CRITIQUE');
+      ctx2.operation.round = round;
+      ctx2.operation.topic = ctx.operation.topic;
+      ctx2.operation.critics = critics;
+      ctx2.operation.just_said = (!e1 && spoke ? spoke.utterances : []);
+      ROUND_STATE[slug].at = k * 2 + 2;
+      onStep && onStep();
+      askOpenAI({
+        op: 'critique', context: ctx2, schema: SCHEMA_SPEAK, schemaName: 'critic_responses',
+        instructions: LAW + '\n\nYou are the critics of operation.topic. Each seat in ' +
+          'operation.critics answers what is in operation.just_said, from a register ' +
+          'incommensurable with the one that said it — that opposition is the mechanism, not ' +
+          'rudeness. Name the specific claim you are answering. Say what it leaves out, what it ' +
+          'assumes, or who it does not speak for. Two sentences each, no preamble, and never ' +
+          'introduce a fact the context does not carry.',
+        maxOutputTokens: 1800
+      }, function (e2, crit) {
+        if (!e2 && crit) record(crit.utterances, t, 'critique');
+        commit(); onStep && onStep();
+        step(k + 1);
+      });
+    });
+  }
+  function record(list, topic, mode) {
+    (list || []).forEach(function (u) {
+      if (!u || !u.text) return;
+      var st = seat.struts[u.seat];
+      DB.notes.push({ id: 'u' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36),
+        kind: 'sim', mode: mode, cell: slug, topic: topic, seat: u.seat, round: round,
+        who: seatHolder(slug, u.seat) || 'seat ' + u.seat,
+        register: st ? st.register : '', text: String(u.text).trim(),
+        model: pickModel(), t: Date.now() });
+      made++;
+    });
+  }
+}
 function seatSource(slug, i) { return (DB.seatSrc || {})[seatKey(slug, i)] || null; }
 // asked once per cell, on open, and never again unless it failed or you ask
 function autoCouncil(cell, seat, world) {
@@ -2202,6 +2444,11 @@ function autoCouncil(cell, seat, world) {
   if (!peopleFor(cell) && !PEOPLE_STATE[slug]) {
     recruit(cell, seat.struts.length, function () {
       autoSeat(cell, seat, world);
+      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+    });
+  }
+  if (!newsFor(cell) && !NEWS_STATE[slug]) {
+    newsAbout(cell, function () {
       if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
     });
   }
@@ -2257,6 +2504,8 @@ function autoSeat(cell, seat, world) {
   var slug = cellSlug(cell), n = 0;
   var nominees = seatPeople(cell, seat, rec.list, world);
   if (!DB.seatSrc) DB.seatSrc = {};
+if (!DB.news) DB.news = {};
+if (!DB.spend) DB.spend = { calls: 0, input: 0, output: 0, cached: 0, reasoning: 0 };
   for (var i = 0; i < nominees.length; i++) {
     var key = seatKey(slug, i);
     if (!nominees[i]) continue;
@@ -2406,6 +2655,8 @@ if (!DB.areas) DB.areas = {};
 if (!DB.people) DB.people = {};
 if (!DB.topics) DB.topics = {};
 if (!DB.seatSrc) DB.seatSrc = {};
+if (!DB.news) DB.news = {};
+if (!DB.spend) DB.spend = { calls: 0, input: 0, output: 0, cached: 0, reasoning: 0 };
 function commit() { saveStore(DB); }
 // an older record may carry a key from before it was session-only; take it
 // off the record and put it where it belongs
@@ -4984,6 +5235,60 @@ function recruitBlock(cell, seat, rec) {
 }
 // The four free rungs need nothing. This one needs your key, and it says
 // exactly what it will and will not be used for.
+// convening it, and reading back what was said
+function runBlock(cell, seat, world) {
+  var slug = cellSlug(cell), n = seat.members.length, run = ROUND_STATE[slug];
+  var said = utterances(slug), rounds = roundsRun(slug);
+  var news = newsFor(cell);
+  if (run) {
+    return '<p style="color:var(--signal)">Convening · ' + run.at + ' of ' + run.of +
+      ' · the topic teams are speaking and their critics are answering.</p>';
+  }
+  return '<p style="margin-top:12px">' +
+    (rounds
+      ? '<b>' + said.length + '</b> things said across <b>' + rounds + '</b> round' +
+        (rounds === 1 ? '' : 's') + '. '
+      : 'Nothing has been convened here yet. ') +
+    'A round is every topic team stating its case and its critics answering — ' +
+    '<b>' + (n * 2) + ' calls</b>, because the critics have to hear the statements before they ' +
+    'can answer them.' +
+    (news && news.list.length
+      ? ' They argue from <b>' + news.list.length + '</b> live items about this ground, not from history.'
+      : ' Nothing live has been gathered about this ground yet, so they will argue from the record alone.') +
+    '</p>' +
+    '<button class="go" id="cRun">' + (rounds ? 'RUN ANOTHER ROUND' : 'CONVENE A ROUND') + '</button> ' +
+    (said.length ? '<button class="go ghost" id="cScript">READ THE TRANSCRIPT</button> ' +
+                   '<button class="go ghost" id="cWipe">CLEAR IT</button>' : '');
+}
+function openTranscript(cell, seat) {
+  var slug = cellSlug(cell), said = utterances(slug);
+  var topics = topicNames(cell, seat, councilSeat && councilSeat.seating === 'world');
+  var byRound = {};
+  said.forEach(function (n) { (byRound[n.round] = byRound[n.round] || []).push(n); });
+  var body = Object.keys(byRound).sort(function (a, b) { return a - b; }).map(function (r) {
+    var byTopic = {};
+    byRound[r].forEach(function (n) { (byTopic[n.topic] = byTopic[n.topic] || []).push(n); });
+    return '<h3 style="font-size:11px;letter-spacing:.14em;margin:16px 0 4px">ROUND ' + r + '</h3>' +
+      Object.keys(byTopic).sort(function (a, b) { return a - b; }).map(function (t) {
+        return '<div class="topic" style="cursor:default"><b><s>TOPIC ' + t + '</s>' +
+          esc((topics[t] || {}).title || '') + '</b>' +
+          ((topics[t] || {}).issue ? '<q>' + esc(topics[t].issue) + '</q>' : '') + '</div>' +
+          byTopic[t].map(function (n) {
+            return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') + '"><b>' +
+              esc((n.who || '').toUpperCase()) + '</b> <span>' + esc(n.register || '') +
+              (n.mode === 'critique' ? ' · answering' : '') + '</span><p>' + esc(n.text) + '</p></div>';
+          }).join('');
+      }).join('');
+  }).join('');
+  panel('TRANSCRIPT · ' + slug,
+    '<p>What the council said, in the order it said it. Every line was written by <b>' +
+    esc((said[0] || {}).model || pickModel()) + '</b> from the compiled world state and is ' +
+    'marked as such — it is a rehearsal of the argument this ground would have, not a record of ' +
+    'one that happened. The people named are the nominees the record supplied; none of them said ' +
+    'any of this.</p>' + body +
+    '<button class="go ghost" id="tBack" style="margin-top:12px">BACK TO THE COUNCIL</button>');
+  document.getElementById('tBack').onclick = function () { openCouncil(cell); };
+}
 function modelBlock(cell, seat, world) {
   var slug = cellSlug(cell), st = INFER_STATE[slug];
   var ctx = compileContext(cell, seat, world, 'INFER_TOPICS');
@@ -5050,7 +5355,9 @@ function modelBlock(cell, seat, world) {
        'of importance, and candidates for empty seats. It proposes; you accept; everything it ' +
        'returns is stamped as inferred.') + '</p>' +
     (failed ? '<button class="go ghost" id="cInfer">TRY AGAIN</button> ' : '') +
+    runBlock(cell, seat, world) +
     '<details><summary>the model, and what it is allowed to know</summary>' +
+    spendBlock() +
     '<p>It is not given a paragraph about this place. It is given the compiled world state — the ' +
     'address, what contains it, what it touches, the ground, the council with its topic topology ' +
     'and who answers whom, what has been said and carried and escalated, and the evidence with ' +
@@ -5292,6 +5599,21 @@ function openCouncil(cell) {
     ci2.textContent = 'ASKING…';
     autoCouncil(cell, seat, world);
     openCouncil(cell);
+  };
+  var cr = document.getElementById('cRun');
+  if (cr) cr.onclick = function () {
+    if (!OPENAI_KEY) { cr.textContent = 'PASTE A KEY FIRST'; return; }
+    cr.textContent = 'CONVENING…';
+    runRound(cell, seat, world,
+      function () { if (PANEL === 'council') openCouncil(cell); },
+      function () { if (PANEL === 'council') openCouncil(cell); });
+  };
+  var cscr = document.getElementById('cScript');
+  if (cscr) cscr.onclick = function () { openTranscript(cell, seat); };
+  var cw = document.getElementById('cWipe');
+  if (cw) cw.onclick = function () {
+    DB.notes = DB.notes.filter(function (n) { return !(n.kind === 'sim' && n.cell === slug); });
+    commit(); openCouncil(cell); wake();
   };
   var cfg = document.getElementById('cForget');
   if (cfg) cfg.onclick = function () {

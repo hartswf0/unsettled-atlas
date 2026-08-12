@@ -582,6 +582,69 @@ settlement, sea or named region instead, which is why the twelve planetary
 topics (all of them at sea, by construction) still come back named. A topic
 is never blank at any scale, with or without a network.
 
+### The key was leaking into the record
+
+`DB.key` held the OpenAI key, `commit()` writes `DB` to localStorage, and
+`TAKE THE RECORD` serialised `DB` straight into a file. That file is the
+one thing this instrument exists to hand to other people. Exporting an
+atlas exported the key with it.
+
+The key now lives in `sessionStorage` and never touches `DB`. A key found
+on an older record is moved off it on load, the export scrubs again on the
+way out, and an imported record arriving with a key does not get to keep
+it. It is held for one browser tab, and the panel says so.
+
+### The model is an instrument of the triangle, not a textbox
+
+The old call was Chat Completions with a hard-coded `temperature`, the
+older JSON-object mode, and `gpt-4o-mini` baked into the source — which is
+exactly the shape that breaks the moment you type a current reasoning model
+into the box.
+
+**The core is the Responses API now:** `instructions` separate from
+`input`, structured output by strict JSON Schema rather than by asking
+nicely, `reasoning.effort` where the model takes it, `store: false`, a
+`prompt_cache_key`, and **no temperature at all** — several current models
+reject an arbitrary one and none of them need it here.
+
+**The model list comes from the account.** `/v1/models` is asked once the
+key is in, filtered and ranked, and offered as a selector with `AUTO` at
+the top. A new generation ships and it appears without a source edit.
+
+**And it is given the world state, not a paragraph.** The old prompt got a
+sentence about rivers. What makes this project worth building is the
+structure, and none of it was reaching the model. So the context is
+compiled and addressed:
+
+```
+icosa-context-v2
+  focus         address, scale, depth, edge, area, centre, corners
+  containment   parents, children, neighbours
+  ground        countries, admin1, settlements with populations,
+                rivers, water, regions, airports, ports, nearest things
+  council       solid, topics with their issue and provenance,
+                seats with topics, critiques, register, holder,
+                and whether the holder came from record, model or hand
+  discourse     said here, carried between rooms, concerns arriving
+                by escalation, concerns still below
+  evidence      wikidata with sitelinks and the scale found at,
+                wikipedia, gazetteer count, painted areas covering this
+  operation     type, may_infer, may_invent_sources, may_mutate_record
+```
+
+The pipeline is **triangle → retrieve → assemble context → reason →
+structured proposal → a human accepts → record**, and no server-side
+conversation memory is used. The memory is recompiled from the local
+record every call, because addressable inspectable knowledge is the whole
+claim and opaque remote state would quietly break it.
+
+**Context engineering you cannot see is a claim, not a property**, so the
+council panel shows it before anything is asked — the model and whether it
+takes reasoning, the context size, how many neighbours and ancestors are in
+scope, topics and seats and how many are held, what discourse is included,
+what evidence and from where, and that provenance is on. `SHOW THE CONTEXT`
+prints the entire object.
+
 ### The fifth rung: what no database holds
 
 Four sources answer without a key and cover most of the planet. What none

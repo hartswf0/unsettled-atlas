@@ -1833,85 +1833,292 @@ function recruit(cell, want, done) {
  * a key is present. No key, no call, and the bench is still full from the
  * gazetteer.                                                              */
 var INFER_STATE = {};
-function groundBrief(cell) {
-  var inv = GAZ_STATE === 'ready' ? cellInventory(cell) : null;
-  var rec = peopleFor(cell);
-  return [
-    'Triangle ' + cellSlug(cell) + ', ' + kmLabel(cellEdgeKm(cell)) + ' on a side, centred ' +
-      ll(cellCentre(cell)) + ', area ' + areaLabel(cellAreaKm2(cell)) + '.',
-    inv && inv.countries.length ? 'Governed by ' + inv.countries.join(' and ') + '.' : '',
-    inv && inv.admin1.length ? 'Provinces: ' + inv.admin1.slice(0, 6).join(', ') + '.' : '',
-    inv && inv.places.length ? 'Settlements: ' + inv.places.slice(0, 12).map(function (x) {
-      return x.name + (x.pop ? ' (' + x.pop.toLocaleString('en') + ')' : ''); }).join(', ') + '.' : '',
-    inv && inv.rivers.length ? 'Rivers: ' + inv.rivers.slice(0, 6).join(', ') + '.' : '',
-    inv && inv.marine.length ? 'Water: ' + inv.marine.slice(0, 4).join(', ') + '.' : '',
-    rec ? 'Already found in the record: ' + rec.list.slice(0, 10).map(function (x) {
-      return x.name; }).join(', ') + '.' : ''
-  ].filter(Boolean).join(' ');
+
+/* ---------------------------------------------------------------- the key
+ * The key was on DB, DB is committed to localStorage, and TAKE THE RECORD
+ * serialises DB straight into a file you are meant to hand to other people.
+ * So exporting an atlas exported the key with it. That is not a hardening
+ * nicety, it is a leak on the one path the record exists for.
+ *
+ * The key now lives in sessionStorage and never touches DB. Anything found
+ * on an old record is deleted on load, and the export strips it again on
+ * the way out in case a record arrives from somewhere carrying one.      */
+var OPENAI_KEY = '';
+try { OPENAI_KEY = sessionStorage.getItem('icosa.openai.key') || ''; } catch (e) { }
+function setOpenAIKey(key) {
+  OPENAI_KEY = String(key || '').trim();
+  try {
+    if (OPENAI_KEY) sessionStorage.setItem('icosa.openai.key', OPENAI_KEY);
+    else sessionStorage.removeItem('icosa.openai.key');
+  } catch (e) { }
 }
-function askModel(sys, user, cb) {
-  if (!DB.key) return cb('no key');
-  fetch('https://api.openai.com/v1/chat/completions', {
+function scrubKeys(rec) {                      // never let one into a file
+  if (rec && typeof rec === 'object') { delete rec.key; delete rec.apiKey; delete rec.openaiKey; }
+  return rec;
+}
+
+/* --------------------------------------------------- the model, addressed
+ * The old call was Chat Completions with a hard-coded temperature and the
+ * older JSON-object mode, which is exactly the shape that breaks the moment
+ * you type a current reasoning model into the box. This is the Responses
+ * API: instructions separate from input, structured output by JSON Schema
+ * rather than by asking nicely, reasoning effort where the model takes it,
+ * and no temperature at all — several current models reject an arbitrary
+ * one, and none of them need it here.                                     */
+var MODELS = { list: [], state: '', at: 0 };
+function supportsReasoning(model) { return /^gpt-5/.test(model) || /^o[134]/.test(model); }
+function responseText(j) {
+  var out = [];
+  ((j && j.output) || []).forEach(function (item) {
+    (item.content || []).forEach(function (c) {
+      if (c.type === 'output_text' && c.text) out.push(c.text);
+    });
+  });
+  return out.join('');
+}
+function askOpenAI(opts, cb) {
+  if (!OPENAI_KEY) return cb('no key');
+  var model = opts.model || pickModel();
+  var body = {
+    model: model,
+    instructions: opts.instructions,
+    input: [{ role: 'user', content: [{ type: 'input_text',
+              text: JSON.stringify(opts.context) }] }],
+    store: false,
+    max_output_tokens: opts.maxOutputTokens || 1600,
+    prompt_cache_key: 'icosa-syntegrity-v2'
+  };
+  if (supportsReasoning(model)) body.reasoning = { effort: opts.reasoning || 'low' };
+  if (opts.schema) {
+    body.text = { format: { type: 'json_schema', name: opts.schemaName || 'syntegrity_operation',
+                            strict: true, schema: opts.schema } };
+  }
+  // deliberately no temperature
+  fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
-    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + DB.key },
-    body: JSON.stringify({ model: DB.model || 'gpt-4o-mini', temperature: 0.2,
-      response_format: { type: 'json_object' },
-      messages: [{ role: 'system', content: sys }, { role: 'user', content: user }] })
+    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + OPENAI_KEY },
+    body: JSON.stringify(body)
   }).then(function (r) {
-    if (!r.ok) return r.text().then(function (t) { throw new Error(r.status + ' ' + t.slice(0, 140)); });
+    if (!r.ok) return r.text().then(function (t) { throw new Error(r.status + ' ' + t.slice(0, 500)); });
     return r.json();
   }).then(function (j) {
-    var txt = j && j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
-    if (!txt) throw new Error('the model returned nothing');
-    cb(null, JSON.parse(txt));
+    var text = responseText(j);
+    if (!text) throw new Error('the model returned no output text');
+    cb(null, opts.schema ? JSON.parse(text) : text, j);
   }).catch(function (e) { cb(String(e && e.message || e)); });
 }
-// statements of importance, which is where a syntegration actually starts
-function inferTopics(cell, topics, cb) {
-  var thin = [];
-  for (var i = 0; i < topics.length; i++) {
-    if (!topics[i].issue) thin.push({ i: i, at: topics[i].title });
-  }
-  if (!thin.length) return cb(null, topics);
-  askModel(
-    'You are preparing a Team Syntegrity session about one piece of ground. For each named ' +
-    'location you are given, write ONE statement of importance: a specific, contestable question ' +
-    'or tension that people who live and work there would actually argue about — water, land, ' +
-    'transport, work, memory, jurisdiction. It must be about that place, not a generic civic ' +
-    'topic. Twelve to twenty words. No preamble. If you do not know the place, say what is at ' +
-    'issue for somewhere of that kind in that region, and set "sure": false. ' +
-    'Reply as JSON: {"topics":[{"i":<index>,"issue":"...","sure":true|false}]}',
-    'GROUND: ' + groundBrief(cell) + '\n\nLOCATIONS:\n' +
-      thin.map(function (t) { return t.i + ': ' + t.at; }).join('\n'),
-    function (err, j) {
-      if (err) return cb(err);
-      var got = (j && j.topics) || [];
-      for (var k = 0; k < got.length; k++) {
-        var t = topics[got[k].i];
-        if (t && got[k].issue) { t.issue = got[k].issue; t.sure = got[k].sure !== false; t.inferred = true; }
-      }
-      cb(null, topics);
-    });
+/* Which models exist is the account's business, not this file's. Hard-coding
+ * a name means a source edit every time a generation ships, so the list is
+ * asked for once the key is in and ranked; AUTO takes the top of it.      */
+var MODEL_RANK = [
+  [/^gpt-5[.\d]*$/, 100], [/^gpt-5.*mini/, 92], [/^gpt-5/, 95],
+  [/^o[34]\b/, 88], [/^gpt-4\.1$/, 80], [/^gpt-4\.1-mini/, 74],
+  [/^gpt-4o$/, 70], [/^gpt-4o-mini/, 64], [/^o1\b/, 60]
+];
+function rankModel(id) {
+  for (var i = 0; i < MODEL_RANK.length; i++) if (MODEL_RANK[i][0].test(id)) return MODEL_RANK[i][1];
+  return /^gpt-/.test(id) ? 30 : 0;
 }
-function inferPeople(cell, need, cb) {
-  askModel(
-    'You are filling seats in a Team Syntegrity council for one piece of ground. Name real ' +
-    'people connected to it — born, worked, wrote, built, organised or governed there — across ' +
-    'history, not only the famous. For each give a one-line reason naming the connection. ' +
-    'Never invent a person. If you are not confident someone is real and connected, leave them ' +
-    'out rather than filling the list. ' +
-    'Reply as JSON: {"people":[{"name":"...","what":"...","why":"...","sure":true|false}]}',
-    'GROUND: ' + groundBrief(cell) + '\n\nName up to ' + need + ' people.',
-    function (err, j) {
-      if (err) return cb(err);
-      var got = (j && j.people) || [];
-      cb(null, got.filter(function (p) { return p && p.name; }).map(function (p, i) {
-        return { qid: 'inferred:' + cellSlug(cell) + ':' + i, name: p.name, title: p.name,
-                 what: p.what || '', why: p.why || '', sure: p.sure !== false,
-                 sitelinks: 0, views: 0, up: 0, km: cellEdgeKm(cell), at: cellSlug(cell),
-                 from: 'model', v: cellCentre(cell), score: 0.2 };
-      }));
-    });
+function pickModel() {
+  if (DB.model && DB.model !== 'auto') return DB.model;
+  return MODELS.list.length ? MODELS.list[0].id : 'gpt-5';
+}
+function loadModels(cb) {
+  if (!OPENAI_KEY) return cb && cb('no key');
+  if (MODELS.state === 'busy') return;
+  MODELS.state = 'busy';
+  fetch('https://api.openai.com/v1/models', { headers: { authorization: 'Bearer ' + OPENAI_KEY } })
+    .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+    .then(function (j) {
+      var seen = {};
+      MODELS.list = ((j && j.data) || [])
+        .map(function (m) { return { id: m.id, rank: rankModel(m.id) }; })
+        .filter(function (m) {
+          if (!m.rank || seen[m.id] || /audio|realtime|transcribe|tts|image|embed|moderation/.test(m.id)) return false;
+          seen[m.id] = 1; return true;
+        })
+        .sort(function (a, b) { return b.rank - a.rank || (a.id < b.id ? -1 : 1); });
+      MODELS.state = MODELS.list.length ? 'ready' : 'empty';
+      MODELS.at = Date.now();
+      if (cb) cb(null, MODELS.list);
+      wake();
+    })
+    .catch(function (e) { MODELS.state = 'error:' + (e && e.message || e); if (cb) cb(String(e)); wake(); });
+}
+/* ------------------------------------------------------ the context compiler
+ * A paragraph of prose about a triangle is not the triangle. What made this
+ * project worth building is the structure — containment, neighbours, topic
+ * topology, which seat answers which, where a name came from, what has
+ * climbed here from below, what was carried between rooms — and none of it
+ * was reaching the model. It got a sentence about rivers.
+ *
+ * So the world state is compiled into an addressed object and that object is
+ * the input. Same discipline as the rest of the instrument: the address is
+ * the structure, the provenance travels with the claim, and evidence from
+ * this cell is kept distinct from context inherited from above.          */
+function compileContext(cell, seat, world, op) {
+  var slug = cellSlug(cell);
+  var inv = GAZ_STATE === 'ready' ? cellInventory(cell) : null;
+  var near = GAZ_STATE === 'ready' ? cellNear(cell) : null;
+  var rec = peopleFor(cell);
+  var look = lookupOf(slug);
+  var topics = seat ? topicNames(cell, seat, world) : [];
+  var ancestors = [];
+  for (var d = cell.depth - 1; d >= 0; d--) {
+    var anc = makeCell(cell.f, cell.path.slice(0, d));
+    ancestors.push({ address: cellSlug(anc), edge_km: +cellEdgeKm(anc).toFixed(1),
+                     scale: SCALES[scaleOf(cellEdgeKm(anc))].n.toLowerCase() });
+  }
+  var ctx = {
+    version: 'icosa-context-v2',
+    focus: {
+      address: slug, scale: SCALES[scaleOf(cellEdgeKm(cell))].n.toLowerCase(),
+      depth: cell.depth, edge_km: +cellEdgeKm(cell).toFixed(2),
+      area_km2: Math.round(cellAreaKm2(cell)), centre: lonlat(cellCentre(cell)).map(function (x) {
+        return +x.toFixed(4); }),
+      corners: cellCorners(cell).map(function (p) {
+        return lonlat(p).map(function (x) { return +x.toFixed(4); }); })
+    },
+    containment: {
+      parents: ancestors,
+      children: [0, 1, 2, 3].map(function (k) {
+        return cellSlug(makeCell(cell.f, cell.path.concat([k]))); }),
+      neighbours: neighbours(cell).map(cellSlug)
+    },
+    ground: inv ? {
+      countries: inv.countries, admin1: inv.admin1.slice(0, 8),
+      settlements: inv.places.slice(0, 14).map(function (p) {
+        return { name: p.name, pop: p.pop || 0, admin1: p.a1 || '' }; }),
+      population_at_least: inv.pop,
+      rivers: inv.rivers.slice(0, 8), water: inv.marine.slice(0, 6),
+      regions: inv.regions.slice(0, 6),
+      airports: inv.airports.slice(0, 4), ports: inv.ports.slice(0, 4),
+      nearby: near ? ['place', 'river', 'region', 'port', 'air', 'sea'].map(function (k) {
+        return near[k] ? { kind: near[k].label, name: near[k].name,
+                           km: Math.round(near[k].km), dir: near[k].dir || '' } : null;
+      }).filter(Boolean) : []
+    } : { note: 'the compiled gazetteer has not loaded in this browser yet' },
+    council: seat ? {
+      solid: (councilFor(cellEdgeKm(cell)) || {}).name || '',
+      seats_total: seat.struts.length, topics_total: seat.members.length,
+      topics: topics.map(function (t, i) {
+        return { id: i, place: t.title, issue: t.issue || null,
+                 source: t.from || 'coordinate', inferred: !!t.inferred,
+                 registers: seat.members[i].map(function (s) { return seat.struts[s].register; }) };
+      }),
+      seats: seat.struts.map(function (st, i) {
+        var src = seatSource(slug, i);
+        return { id: i, holder: seatHolder(slug, i) || null,
+                 holder_source: src ? (src.from === 'model' ? 'model' : 'record')
+                                    : (seatHolder(slug, i) ? 'hand' : null),
+                 topics: st.topics, critiques: st.critiques, register: st.register };
+      })
+    } : null,
+    discourse: {
+      said_here: notesOf(slug).slice(-12).map(function (n) {
+        return { id: n.id, who: n.who || null, topic: n.topic === undefined ? null : n.topic,
+                 kind: n.kind || 'note', text: n.text, seconded: seconds(n) }; }),
+      carries_here: carriesIn(slug).slice(-8).map(function (n) {
+        return { id: n.id, who: n.who || null, from_room: n.from, into_room: n.topic, text: n.text }; }),
+      concerns_arriving: concernsArriving(cell).slice(0, 8).map(function (n) {
+        return { id: n.id, raised_at: n.cell, who: n.who || null, text: n.text,
+                 answerable_at: SCALES[n.answer] ? SCALES[n.answer].n.toLowerCase() : null }; }),
+      concerns_below: concernsUnder(cell).length
+    },
+    evidence: {
+      wikidata: rec ? rec.list.filter(function (p) { return p.from !== 'model'; })
+        .slice(0, 12).map(function (p) {
+          return { name: p.name, what: p.what, sitelinks: p.sitelinks,
+                   found_at: p.at, levels_up: p.up }; }) : [],
+      wikipedia: look ? look.items.filter(function (x) { return x.inside; })
+        .slice(0, 12).map(function (x) { return x.title; }) : [],
+      gazetteer_settlements: inv ? inv.places.length : 0,
+      painted_areas: Object.keys(DB.areas || {}).filter(function (n) {
+        return (DB.areas[n] || []).some(function (s) { return s === slug || underCell(cell, s); });
+      })
+    },
+    operation: {
+      type: op, may_infer: true, may_invent_sources: false, may_mutate_record: false
+    }
+  };
+  return ctx;
+}
+function contextSize(ctx) { return JSON.stringify(ctx).length; }
+
+// Strict JSON Schema, not a request to please reply in JSON: every object
+// closed, every property required, so a malformed answer is the API's problem
+// rather than a parse failure here.
+var SCHEMA_TOPICS = {
+  type: 'object', additionalProperties: false, required: ['topics'],
+  properties: { topics: { type: 'array', items: {
+    type: 'object', additionalProperties: false, required: ['id', 'issue', 'sure'],
+    properties: { id: { type: 'integer' }, issue: { type: 'string' }, sure: { type: 'boolean' } }
+  } } }
+};
+var SCHEMA_PEOPLE = {
+  type: 'object', additionalProperties: false, required: ['people'],
+  properties: { people: { type: 'array', items: {
+    type: 'object', additionalProperties: false, required: ['name', 'what', 'why', 'sure'],
+    properties: { name: { type: 'string' }, what: { type: 'string' },
+                  why: { type: 'string' }, sure: { type: 'boolean' } }
+  } } }
+};
+var LAW = 'You are one instrument inside a syntegration atlas. The input is a compiled world ' +
+  'state for one triangle of the Earth: its address, what contains it, what it touches, the ' +
+  'ground under it, the council seated on it, what has been said and carried and escalated, and ' +
+  'the evidence already gathered with its provenance. Work only from that. You may infer, and ' +
+  'you must never invent a source, a citation, or a person you are not confident is real. ' +
+  'You propose; a human accepts. Nothing you return is a fact about the record until someone ' +
+  'accepts it, and everything you return will be shown to the reader stamped as inferred.';
+
+// statements of importance, which is where a syntegration actually starts
+function inferTopics(cell, topics, cb, seat, world) {
+  var thin = [];
+  for (var i = 0; i < topics.length; i++) if (!topics[i].issue) thin.push(i);
+  if (!thin.length) return cb(null, topics);
+  var ctx = compileContext(cell, seat, world, 'INFER_TOPICS');
+  ctx.operation.topics_needing_an_issue = thin;
+  askOpenAI({
+    instructions: LAW + '\n\nFor each topic id listed in operation.topics_needing_an_issue, write ' +
+      'ONE statement of importance: a specific, contestable question that people who live and work ' +
+      'on this ground would actually argue about — water, land, transport, work, memory, ' +
+      'jurisdiction. Ground it in what the context gives you: the settlements, the rivers, the ' +
+      'jurisdiction, what has already been said, what has escalated from below. It must be about ' +
+      'this place, not a generic civic topic. Twelve to twenty-five words. If the context does not ' +
+      'let you be specific about that location, write what is at issue for somewhere of its kind in ' +
+      'this region and set sure to false.',
+    context: ctx, schema: SCHEMA_TOPICS, schemaName: 'statements_of_importance', reasoning: 'low'
+  }, function (err, j) {
+    if (err) return cb(err);
+    var got = (j && j.topics) || [];
+    for (var k = 0; k < got.length; k++) {
+      var t = topics[got[k].id];
+      if (t && got[k].issue) { t.issue = got[k].issue; t.sure = got[k].sure !== false; t.inferred = true; }
+    }
+    cb(null, topics);
+  });
+}
+function inferPeople(cell, need, cb, seat, world) {
+  var ctx = compileContext(cell, seat, world, 'INFER_PEOPLE');
+  ctx.operation.seats_to_fill = need;
+  askOpenAI({
+    instructions: LAW + '\n\nName up to operation.seats_to_fill real people connected to this ' +
+      'ground — born, worked, wrote, built, organised or governed there — across history, not only ' +
+      'the famous, and not anyone already listed in evidence.wikidata. For each, one line naming ' +
+      'the connection, referring to the ground in the context where you can. If you are not ' +
+      'confident a person is real and connected here, leave them out rather than filling the list; ' +
+      'a short honest list is the correct answer. Set sure to false where you are unsure.',
+    context: ctx, schema: SCHEMA_PEOPLE, schemaName: 'seat_candidates', reasoning: 'low'
+  }, function (err, j) {
+    if (err) return cb(err);
+    var got = (j && j.people) || [];
+    cb(null, got.filter(function (p) { return p && p.name; }).map(function (p, i) {
+      return { qid: 'inferred:' + cellSlug(cell) + ':' + i, name: p.name, title: p.name,
+               what: p.what || '', why: p.why || '', sure: p.sure !== false,
+               sitelinks: 0, views: 0, up: 0, km: cellEdgeKm(cell), at: cellSlug(cell),
+               from: 'model', v: cellCentre(cell), score: 0.2 };
+    }));
+  });
 }
 function seatSource(slug, i) { return (DB.seatSrc || {})[seatKey(slug, i)] || null; }
 // asked once per cell, on open, and never again unless it failed or you ask
@@ -1920,12 +2127,12 @@ function autoCouncil(cell, seat, world) {
   if (!peopleFor(cell) && !PEOPLE_STATE[slug]) {
     recruit(cell, seat.struts.length, function () {
       autoSeat(cell, seat, world);
-      if (councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
     });
   }
   if (!(DB.topics || {})[slug] && !TOPIC_STATE[slug]) {
     recruitTopics(cell, seat, world, function () {
-      if (councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
     });
   }
   // The last rung runs once the free ones have been tried, only if a key is
@@ -1933,7 +2140,7 @@ function autoCouncil(cell, seat, world) {
   // not for them to have succeeded — the first version tested `!PEOPLE_STATE`,
   // which is false once a rung has failed, so the model was locked out by
   // exactly the emptiness it exists to fill.
-  if (DB.key && INFER_STATE[slug] === undefined &&
+  if (OPENAI_KEY && INFER_STATE[slug] === undefined &&
       PEOPLE_STATE[slug] !== 'busy' && TOPIC_STATE[slug] !== 'busy') {
     var got = (DB.topics || {})[slug];
     var rec2 = peopleFor(cell);
@@ -1946,14 +2153,15 @@ function autoCouncil(cell, seat, world) {
       if (--pending) return;
       INFER_STATE[slug] = 'done';
       commit();
-      if (councilCell && cellSlug(councilCell) === slug) { autoSeat(cell, seat, world); openCouncil(cell); }
+      if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) {
+        autoSeat(cell, seat, world); openCouncil(cell); }
       wake();
     };
     if (needTopics) {
       inferTopics(cell, got.list, function (err) {
         if (err) INFER_STATE[slug] = 'error:' + err;
         settle();
-      });
+      }, seat, world);
     }
     if (shortBy > 0) {
       inferPeople(cell, shortBy + 2, function (err, people) {
@@ -1964,7 +2172,7 @@ function autoCouncil(cell, seat, world) {
         people.forEach(function (p) { if (!have[p.name.toLowerCase()]) rec3.list.push(p); });
         DB.people[slug] = rec3;
         settle();
-      });
+      }, seat, world);
     }
   }
 }
@@ -2124,6 +2332,9 @@ if (!DB.people) DB.people = {};
 if (!DB.topics) DB.topics = {};
 if (!DB.seatSrc) DB.seatSrc = {};
 function commit() { saveStore(DB); }
+// an older record may carry a key from before it was session-only; take it
+// off the record and put it where it belongs
+if (DB.key) { if (!OPENAI_KEY) setOpenAIKey(DB.key); scrubKeys(DB); commit(); }
 function notesOf(slug) {
   return DB.notes.filter(function (n) { return n.cell === slug && n.kind !== 'second'; });
 }
@@ -3915,8 +4126,13 @@ function reflow() {
   // the map lost or gained room; re-measure rather than let it stretch
   requestAnimationFrame(function () { resize(); wake(); });
 }
+// Which panel is showing. A fetch that finishes in the background must not
+// redraw the council over a thread you have since opened — the guard used to
+// be "is councilCell still set", which stays true after you have walked away.
+var PANEL = '';
 function panel(title, body) {
   hideActions();
+  PANEL = '';                     // an opener claims it after this returns
   whereCell = null;               // only openWhere claims the follow
   var wasOpen = elPanel.classList.contains('open');
   elPanel.innerHTML = '<h2>' + title + '<button id="pclose">CLOSE</button></h2>' + body;
@@ -4261,43 +4477,39 @@ function ladderBlock(cell) {
 // A model may draft a carry and may not post one. It is given only what is
 // already in the source room and in the record, told to cite, and told that
 // adding a fact is the one thing it must not do. A person edits and sends.
+var SCHEMA_CARRY = {
+  type: 'object', additionalProperties: false, required: ['carry', 'cites', 'carries_nothing'],
+  properties: { carry: { type: 'string' },
+                cites: { type: 'array', items: { type: 'string' } },
+                carries_nothing: { type: 'boolean' } }
+};
 function draftCarry(cell, fromTopic, toTopic, cb) {
-  if (!DB.key) return cb('no key');
+  if (!OPENAI_KEY) return cb('no key');
   var slug = cellSlug(cell);
   var src = notesOf(slug).filter(function (n) { return n.topic === fromTopic && n.text; });
   if (!src.length) return cb('nothing has been said in that room yet');
-  var inv = GAZ_STATE === 'ready' ? cellInventory(cell) : null;
-  var look = lookupOf(slug);
-  var ground = [
-    'Triangle ' + slug + ', ' + kmLabel(cellEdgeKm(cell)) + ' on a side, centred ' + ll(cellCentre(cell)) + '.',
-    inv && inv.countries.length ? 'Governed by ' + inv.countries.join(' and ') + '.' : '',
-    inv && inv.places.length ? 'Settlements: ' + inv.places.slice(0, 8).map(function (x) { return x.name; }).join(', ') + '.' : '',
-    look ? 'Wikipedia articles inside: ' + look.items.filter(function (x) { return x.inside; })
-      .slice(0, 8).map(function (x) { return x.title; }).join(', ') + '.' : ''
-  ].filter(Boolean).join(' ');
-  var said = src.map(function (n) { return '[' + n.id + '] ' + (n.who || 'someone') + ': ' + n.text; }).join('\n');
-  var sys = 'You carry a claim from one room of a syntegration into another. You may only ' +
-    'restate what is in MATERIAL, and every sentence must end with the bracketed id of the ' +
-    'note it came from. Adding a fact that is not in MATERIAL is the one thing you must not ' +
-    'do — not context, not background, not a plausible detail. If MATERIAL does not support a ' +
-    'carry, say exactly: nothing here carries. Two sentences at most. No preamble.';
-  var user = 'GROUND: ' + ground + '\n\nMATERIAL (room ' + fromTopic + '):\n' + said +
-    '\n\nCarry into room ' + toTopic + '.';
-  fetch('https://api.openai.com/v1/chat/completions', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + DB.key },
-    body: JSON.stringify({
-      model: DB.model || 'gpt-4o-mini', temperature: 0,
-      messages: [{ role: 'system', content: sys }, { role: 'user', content: user }]
-    })
-  }).then(function (r) {
-    if (!r.ok) return r.text().then(function (t) { throw new Error(r.status + ' ' + t.slice(0, 120)); });
-    return r.json();
-  }).then(function (j) {
-    var txt = j && j.choices && j.choices[0] && j.choices[0].message &&
-              j.choices[0].message.content;
-    cb(null, (txt || '').trim());
-  }).catch(function (e) { cb(String(e.message || e)); });
+  var ctx = compileContext(cell, councilSeat && councilSeat.seat,
+                           councilSeat && councilSeat.seating === 'world', 'DRAFT_CARRY');
+  ctx.operation.from_room = fromTopic;
+  ctx.operation.into_room = toTopic;
+  ctx.operation.material = src.map(function (n) {
+    return { id: n.id, who: n.who || 'someone', text: n.text }; });
+  ctx.operation.may_infer = false;
+  askOpenAI({
+    instructions: LAW + '\n\nYou are carrying a claim from operation.from_room into ' +
+      'operation.into_room. You may only restate what is in operation.material, and every ' +
+      'sentence must end with the bracketed id of the note it came from. Adding a fact that is ' +
+      'not in operation.material is the one thing you must not do — not context, not background, ' +
+      'not a plausible detail, and nothing from the rest of this context either. The rest of the ' +
+      'context is there so you know where you are, not so you can draw on it. If the material ' +
+      'does not support a carry, set carries_nothing true and leave carry empty. Two sentences ' +
+      'at most.',
+    context: ctx, schema: SCHEMA_CARRY, schemaName: 'carry', reasoning: 'low', maxOutputTokens: 900
+  }, function (err, j) {
+    if (err) return cb(err);
+    if (!j || j.carries_nothing || !j.carry) return cb(null, 'nothing here carries');
+    cb(null, String(j.carry).trim());
+  });
 }
 
 function openCarry(cell, seatIdx) {
@@ -4324,9 +4536,11 @@ function openCarry(cell, seatIdx) {
     'A model may draft this and may not send it. It gets only what is in room ' + a + ' and ' +
     'what the sources say about this ground, and it is told that adding a fact is the one thing ' +
     'it must not do. You edit it and you send it, or you write it yourself.</p>' +
-    '<input id="kKey" type="password" placeholder="openai api key, kept in this browser only" value="' +
-      esc(DB.key || '') + '">' +
-    '<input id="kModel" placeholder="model" value="' + esc(DB.model || 'gpt-4o-mini') + '">' +
+    '<p style="color:var(--signal);font-size:10px;letter-spacing:.06em">The key is held for this ' +
+    'browser tab only. It is never written to the record and never leaves in an export.</p>' +
+    '<input id="kKey" type="password" placeholder="openai api key, this tab only" value="' +
+      esc(OPENAI_KEY) + '">' +
+    '<input id="kModel" placeholder="model, or blank for auto" value="' + esc(DB.model || '') + '">' +
     '<button class="go ghost" id="kDraft">DRAFT IT</button>' +
     '<div id="kMsg" style="font-size:10px;letter-spacing:.06em;color:var(--signal);margin-top:8px"></div>');
   document.getElementById('kSwap').onclick = function () {
@@ -4343,8 +4557,8 @@ function openCarry(cell, seatIdx) {
     commit(); openCouncil(cell); wake();
   };
   document.getElementById('kDraft').onclick = function () {
-    DB.key = document.getElementById('kKey').value.trim();
-    DB.model = document.getElementById('kModel').value.trim() || 'gpt-4o-mini';
+    setOpenAIKey(document.getElementById('kKey').value);
+    DB.model = document.getElementById('kModel').value.trim() || 'auto';
     commit();
     var msg = document.getElementById('kMsg');
     msg.textContent = 'asking the model…';
@@ -4607,6 +4821,7 @@ function openWhere(cell, keep) {
     '<button class="go" id="wSaid" style="margin-top:10px">SAID HERE</button> ' +
     (councilFor(km) ? '<button class="go ghost" id="wCouncil">COUNCIL</button>' : ''));
   whereCell = cell;                 // set after panel(), which clears it
+  PANEL = 'where';
   elMini = document.getElementById('mini');
   elMiniCtx = null;
   elMini.onclick = miniTap;
@@ -4692,21 +4907,61 @@ function recruitBlock(cell, seat, rec) {
 }
 // The four free rungs need nothing. This one needs your key, and it says
 // exactly what it will and will not be used for.
-function modelBlock(cell, seat) {
+function modelBlock(cell, seat, world) {
   var slug = cellSlug(cell), st = INFER_STATE[slug];
+  var ctx = compileContext(cell, seat, world, 'INFER_TOPICS');
+  var chars = contextSize(ctx);
+  var model = pickModel();
+  // Context engineering that cannot be seen is a claim, not a property. This
+  // is what the model is allowed to know, before it is asked anything.
+  var readout =
+    '<div class="row"><b>MODEL</b><span>' + esc(model) +
+      (supportsReasoning(model) ? ' · low reasoning' : ' · no reasoning control') + '</span></div>' +
+    '<div class="row"><b>CONTEXT</b><span>' + (chars / 1000).toFixed(1) + 'k chars · ' +
+      'icosa-context-v2</span></div>' +
+    '<div class="row"><b>SEES</b><span>' + slug + ' + ' + ctx.containment.neighbours.length +
+      ' neighbours + ' + ctx.containment.parents.length + ' ancestors</span></div>' +
+    '<div class="row"><b>COUNCIL</b><span>' + (ctx.council ? ctx.council.topics.length + ' topics · ' +
+      ctx.council.seats.length + ' seats · ' + ctx.council.seats.filter(function (s) {
+        return s.holder; }).length + ' held' : 'none at this scale') + '</span></div>' +
+    '<div class="row"><b>DISCOURSE</b><span>' + ctx.discourse.said_here.length + ' said · ' +
+      ctx.discourse.carries_here.length + ' carried · ' + ctx.discourse.concerns_arriving.length +
+      ' arriving · ' + ctx.discourse.concerns_below + ' below</span></div>' +
+    '<div class="row"><b>EVIDENCE</b><span>' + ctx.evidence.wikidata.length + ' wikidata · ' +
+      ctx.evidence.wikipedia.length + ' wikipedia · ' + ctx.evidence.gazetteer_settlements +
+      ' gazetteer</span></div>' +
+    '<div class="row"><b>PROVENANCE</b><span>on · every claim carries its source</span></div>';
+  var models = MODELS.state === 'ready'
+    ? '<select id="cModel"><option value="auto"' + (!DB.model || DB.model === 'auto' ? ' selected' : '') +
+      '>AUTO · ' + esc(MODELS.list[0].id) + '</option>' +
+      MODELS.list.map(function (m) {
+        return '<option value="' + esc(m.id) + '"' + (DB.model === m.id ? ' selected' : '') + '>' +
+          esc(m.id) + '</option>'; }).join('') + '</select>'
+    : '<input id="cModel" placeholder="model" value="' + esc(DB.model || '') + '">' +
+      (MODELS.state === 'busy' ? '<p style="opacity:.7">asking your account which models it has…</p>'
+       : typeof MODELS.state === 'string' && MODELS.state.indexOf('error:') === 0
+         ? '<p style="color:var(--signal)">could not list models: ' + esc(MODELS.state.slice(6)) + '</p>'
+         : '');
   return '<p style="margin-top:14px">Four sources answer without a key: the Wikidata query ' +
     'service at any radius, Wikipedia geosearch sampled across the triangle, OpenStreetMap, and ' +
     'the gazetteer compiled into this page. What none of them holds is the part of a syntegration ' +
     'that is not a lookup — <b>what is actually at issue here</b>. A key of yours fills that, and ' +
-    'names candidates for seats the record left empty. It is kept in this browser, sent nowhere ' +
-    'but OpenAI, and <b>everything it produces is stamped as inferred</b> wherever it appears.</p>' +
+    'names candidates for seats the record left empty.</p>' +
+    '<p>The model is not given a paragraph about this place. It is given the compiled world state ' +
+    'below — the address, what contains it, what it touches, the ground, the council with its ' +
+    'topic topology and who answers whom, what has been said and carried and escalated, and the ' +
+    'evidence with its provenance. It proposes; you accept. <b>Everything it returns is stamped ' +
+    'as inferred</b> wherever it appears.</p>' +
+    '<p style="color:var(--signal)">Your key is held for this browser tab only. It is never ' +
+    'written to the record and never leaves in an export.</p>' +
+    readout +
     (st === 'busy' ? '<p style="opacity:.7">Asking the model…</p>' : '') +
     (typeof st === 'string' && st.indexOf('error:') === 0
       ? '<p style="color:var(--signal)">' + esc(st.slice(6)) + '</p>' : '') +
-    '<input id="cKey" type="password" placeholder="openai api key, kept in this browser only" value="' +
-      esc(DB.key || '') + '">' +
-    '<input id="cModel" placeholder="model" value="' + esc(DB.model || 'gpt-4o-mini') + '">' +
-    '<button class="go ghost" id="cInfer">FILL WHAT IS THIN</button>';
+    '<input id="cKey" type="password" placeholder="openai api key, this tab only" value="' +
+      esc(OPENAI_KEY) + '">' + models +
+    '<button class="go ghost" id="cInfer">FILL WHAT IS THIN</button> ' +
+    '<button class="go ghost" id="cShowCtx">SHOW THE CONTEXT</button>';
 }
 function openCouncil(cell) {
   var km = cellEdgeKm(cell);
@@ -4838,7 +5093,7 @@ function openCouncil(cell) {
     'A seat is held by whoever types their name into it — this invents nobody. ' +
     'Your critic is the seat opposite yours, and it is a person, not a category.</p>' +
     recruitBlock(cell, seat, rec) +
-    modelBlock(cell, seat) +
+    modelBlock(cell, seat, world) +
     seats +
     '<div class="kbd" style="margin-top:10px">' +
     DATA.council.registers.map(function (r) {
@@ -4906,18 +5161,45 @@ function openCouncil(cell) {
     });
     openCouncil(cell);
   };
+  PANEL = 'council';
   var ck = document.getElementById('cKey'), cm = document.getElementById('cModel');
+  if (ck) ck.onchange = function () {
+    setOpenAIKey(ck.value);
+    MODELS.state = ''; MODELS.list = [];
+    if (OPENAI_KEY) loadModels(function () { openCouncil(cell); });
+    else openCouncil(cell);
+  };
+  if (cm) cm.onchange = function () {
+    DB.model = cm.value.trim() || 'auto';
+    commit(); openCouncil(cell);
+  };
   var ci2 = document.getElementById('cInfer');
   if (ci2) ci2.onclick = function () {
-    DB.key = ck.value.trim();
-    DB.model = cm.value.trim() || 'gpt-4o-mini';
-    commit();
-    if (!DB.key) { ci2.textContent = 'PASTE A KEY FIRST'; return; }
-    INFER_STATE[slug] = null;
+    setOpenAIKey(ck.value);
+    if (cm) { DB.model = cm.value.trim() || 'auto'; commit(); }
+    if (!OPENAI_KEY) { ci2.textContent = 'PASTE A KEY FIRST'; return; }
+    INFER_STATE[slug] = undefined;
     ci2.textContent = 'ASKING…';
     autoCouncil(cell, seat, world);
     openCouncil(cell);
   };
+  var cx = document.getElementById('cShowCtx');
+  if (cx) cx.onclick = function () {
+    var ctx = compileContext(cell, seat, world, 'INSPECT');
+    panel('CONTEXT · ' + slug,
+      '<p>This is the whole of what the model is given for this triangle. Nothing else is sent, ' +
+      'and no conversation is kept on a server between calls — the memory is recompiled from ' +
+      'this record every time, which is the point of an atlas whose knowledge is addressed.</p>' +
+      '<div class="row"><b>SIZE</b><span>' + (contextSize(ctx) / 1000).toFixed(1) + 'k chars</span></div>' +
+      '<pre style="white-space:pre-wrap;word-break:break-word;font-size:9px;line-height:1.5;' +
+      'background:var(--paper);border:1px solid var(--ink);padding:8px;margin-top:8px">' +
+      esc(JSON.stringify(ctx, null, 1)) + '</pre>' +
+      '<button class="go ghost" id="xBack" style="margin-top:10px">BACK TO THE COUNCIL</button>');
+    document.getElementById('xBack').onclick = function () { openCouncil(cell); };
+  };
+  if (OPENAI_KEY && !MODELS.state) loadModels(function () {
+    if (PANEL === 'council' && councilCell && cellSlug(councilCell) === slug) openCouncil(cell);
+  });
   wireGoTo(cell);
   var cs = document.getElementById('cSay');
   if (cs) cs.onclick = function () { openThread(cell); };
@@ -4981,7 +5263,9 @@ function openHelp() {
     '<input type="file" id="hFile" accept="application/json" style="display:none">' +
     '<p style="opacity:.75;margin-top:12px">Unsettled Atlas · a synthetic place. Its instruments alter what they measure.</p>');
   document.getElementById('hOut').onclick = function () {
-    var blob = new Blob([JSON.stringify(DB, null, 1)], { type: 'application/json' });
+    // a record is meant to be handed to other people, so it leaves without a key
+    var out = scrubKeys(JSON.parse(JSON.stringify(DB)));
+    var blob = new Blob([JSON.stringify(out, null, 1)], { type: 'application/json' });
     var a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
     a.download = 'icosa-syntegrity-record.json';
@@ -5000,6 +5284,7 @@ function openHelp() {
         (got.notes || []).forEach(function (n) { if (!have[n.id]) DB.notes.push(n); });
         for (var k in (got.seats || {})) if (!DB.seats[k]) DB.seats[k] = got.seats[k];
         for (var k2 in (got.lookups || {})) if (!DB.lookups[k2]) DB.lookups[k2] = got.lookups[k2];
+        scrubKeys(DB);            // a record arriving with a key does not get one
         commit(); openHelp(); wake();
       } catch (e) { }
     };

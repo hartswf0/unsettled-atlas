@@ -158,4 +158,9 @@ cv.addEventListener("wheel", (e) => {
   zoomAt(e.clientX - r.left, e.clientY - r.top, -e.deltaY * 0.0022);
 }, { passive: false });
 
+/* A handle for the harness: critics drive the real build through this, and
+   pg/tools/age.mjs uses it to fast-forward a world so the late game can be
+   looked at without playing it for an hour. Not used by the game itself. */
+window.PG = { ctx, View, G, S, on, emit, organs: { cloth, traces, draw, travellers, move, become, hud } };
+
 boot();

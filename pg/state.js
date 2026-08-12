@@ -91,10 +91,14 @@ export function apply(op, { local = true } = {}) {
     if (op.e) wear(op.e, 1);
     emit("journey", j);
   } else if (op.k === "balk") {
-    const p = { x: op.x, y: op.y, n: 1, being: op.b, t: op.t };
+    /* tx,ty is where the body was trying to get to. It is what makes a bruise
+       into a desire line later, so it is kept even though nothing reads it yet. */
+    const p = { x: op.x, y: op.y, tx: op.tx, ty: op.ty, n: 1, being: op.b, t: op.t };
     const near = S.pressure.find((q) => Math.hypot(q.x - p.x, q.y - p.y) < 0.0000045);
-    if (near) near.n++;
-    else S.pressure.push(p);
+    if (near) {
+      near.n++;
+      if (near.tx == null) { near.tx = p.tx; near.ty = p.ty; }
+    } else S.pressure.push(p);
     emit("balk", near || p);
   } else if (op.k === "ghost") {
     const g = { id: op.id, pts: op.pts, t: op.t, edges: [] };
@@ -114,8 +118,8 @@ export function layMark(pts, width, being) {
 export function logJourney(pts, edges, being) {
   return apply({ k: "journey", id: opId(), pts, e: edges, by: ME, b: being.id, t: Date.now() });
 }
-export function logBalk(x, y, being) {
-  return apply({ k: "balk", id: opId(), x, y, b: being.id, t: Date.now() });
+export function logBalk(x, y, being, tx, ty) {
+  return apply({ k: "balk", id: opId(), x, y, tx, ty, b: being.id, t: Date.now() });
 }
 export function layGhost(pts) {
   return apply({ k: "ghost", id: opId(), pts, t: Date.now() });

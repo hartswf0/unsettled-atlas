@@ -611,6 +611,39 @@ reject an arbitrary one and none of them need it here.
 key is in, filtered and ranked, and offered as a selector with `AUTO` at
 the top. A new generation ships and it appears without a source edit.
 
+**And the ranking is parsed, not looked up.** A table of blessed names is
+the thing that goes stale: GPT-5.6 shipped in July 2026, after this file
+was written, and whatever comes next will ship after this sentence. So the
+number in the id orders the generations and the tier word orders within
+one, which means an id nobody here has ever seen still sorts into the right
+place.
+
+GPT-5.6 named its tiers rather than numbering them — `sol` is the frontier
+one, `terra` balances cost against capability, `luna` is the fast cheap one
+— and those are capability tiers that advance on their own cadence, so they
+are treated as ordering within a generation rather than as model names.
+`AUTO` picks the frontier tier of the newest generation the account holds;
+everything else is one click away, and the panel says which was chosen.
+
+**Reasoning controls follow what the generation actually takes.** From 5.6
+the scale split in two: `reasoning.mode` chooses standard or pro thinking,
+`reasoning.effort` chooses how much of it, and the top of each — `pro`, and
+`max` effort — belongs to the frontier tier alone. Before that there was one
+effort scale of low, medium, high. The knobs appear in the panel only where
+the chosen model has them, so picking Luna removes `pro` and `max` from the
+options rather than offering a setting that would be rejected.
+
+`temperature` is sent to none of them. These are reasoning models and it is
+not a knob they have — which is also why the old hard-coded `temperature: 0`
+was going to fail the moment anyone typed a current model into the box.
+
+**And this file can be wrong about all of that.** What it believes about
+reasoning parameters is read from release notes rather than from a machine
+this environment can reach. So if the API answers 400 complaining about
+reasoning, effort or mode, the reasoning block is dropped and the request is
+sent again. Being wrong about a parameter should cost a retry, not the
+answer.
+
 **And it is given the world state, not a paragraph.** The old prompt got a
 sentence about rivers. What makes this project worth building is the
 structure, and none of it was reaching the model. So the context is

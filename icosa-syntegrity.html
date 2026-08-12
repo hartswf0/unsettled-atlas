@@ -1866,7 +1866,60 @@ function scrubKeys(rec) {                      // never let one into a file
  * and no temperature at all — several current models reject an arbitrary
  * one, and none of them need it here.                                     */
 var MODELS = { list: [], state: '', at: 0 };
-function supportsReasoning(model) { return /^gpt-5/.test(model) || /^o[134]/.test(model); }
+
+/* What a model id says about itself.
+ *
+ * The generation is parsed, not looked up. A table of blessed names is the
+ * thing that goes stale — gpt-5.6 shipped after this file was written, and
+ * whatever comes next will ship after this sentence. So the number in the id
+ * orders the generations and the tier word orders within one, and an id
+ * nobody here has ever seen still sorts into the right place.
+ *
+ * GPT-5.6 named its tiers instead of numbering them: sol is the frontier
+ * one, terra balances cost against capability, luna is the fast cheap one.
+ * Those are capability tiers that advance on their own cadence, so they are
+ * treated as ordering within a generation rather than as model names.     */
+function modelFacts(id) {
+  var gen = 0, m = /^gpt-(\d+)(?:\.(\d+))?/.exec(id);
+  if (m) gen = +m[1] + (m[2] ? +('0.' + m[2]) : 0);
+  else { var o = /^o(\d+)/.exec(id); if (o) gen = 4.4 + (+o[1]) / 10; }
+  var tier = /(^|[-.])sol\b/.test(id) ? 'sol'
+           : /(^|[-.])terra\b/.test(id) ? 'terra'
+           : /(^|[-.])luna\b/.test(id) ? 'luna'
+           : /nano/.test(id) ? 'nano'
+           : /mini/.test(id) ? 'mini' : '';
+  var weight = { sol: 9, terra: 7, luna: 4, mini: 3, nano: 1 }[tier];
+  return { gen: gen, tier: tier, weight: weight === undefined ? 6 : weight };
+}
+function rankModel(id) {
+  var f = modelFacts(id);
+  if (!f.gen) return 0;
+  return Math.round(f.gen * 100) + f.weight;
+}
+/* Reasoning controls, by what the generation actually takes.
+ *
+ * From 5.6 the scale split in two: reasoning.mode chooses standard or pro
+ * thinking, reasoning.effort chooses how much of it, and the top of each —
+ * pro, and max effort — belongs to the frontier tier alone. Before that
+ * there was one effort scale of low, medium, high. Temperature is not sent
+ * to any of them; these are reasoning models and it is not a knob they
+ * have.
+ *
+ * All of which is read from release notes rather than from a machine, so
+ * askOpenAI drops the reasoning block and retries once if the API says it
+ * does not want it. Being wrong about a parameter should cost a retry, not
+ * the feature.                                                            */
+function reasoningFor(id) {
+  var f = modelFacts(id);
+  if (f.gen >= 5.6) {
+    return { modes: f.tier === 'sol' ? ['standard', 'pro'] : ['standard'],
+             efforts: ['none', 'low', 'medium', 'high', 'xhigh']
+               .concat(f.tier === 'sol' ? ['max'] : []) };
+  }
+  if (f.gen >= 5 || /^o\d/.test(id)) return { modes: [], efforts: ['low', 'medium', 'high'] };
+  return { modes: [], efforts: [] };
+}
+function supportsReasoning(model) { return reasoningFor(model).efforts.length > 0; }
 function responseText(j) {
   var out = [];
   ((j && j.output) || []).forEach(function (item) {
@@ -1888,40 +1941,55 @@ function askOpenAI(opts, cb) {
     max_output_tokens: opts.maxOutputTokens || 1600,
     prompt_cache_key: 'icosa-syntegrity-v2'
   };
-  if (supportsReasoning(model)) body.reasoning = { effort: opts.reasoning || 'low' };
+  var can = reasoningFor(model);
+  if (can.efforts.length) {
+    var want = DB.effort || opts.reasoning || 'low';
+    body.reasoning = { effort: can.efforts.indexOf(want) >= 0 ? want : can.efforts[1] || can.efforts[0] };
+    var mode = DB.mode || 'standard';
+    if (can.modes.indexOf(mode) > 0) body.reasoning.mode = mode;
+  }
   if (opts.schema) {
     body.text = { format: { type: 'json_schema', name: opts.schemaName || 'syntegrity_operation',
                             strict: true, schema: opts.schema } };
   }
-  // deliberately no temperature
-  fetch('https://api.openai.com/v1/responses', {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', authorization: 'Bearer ' + OPENAI_KEY },
-    body: JSON.stringify(body)
-  }).then(function (r) {
-    if (!r.ok) return r.text().then(function (t) { throw new Error(r.status + ' ' + t.slice(0, 500)); });
-    return r.json();
-  }).then(function (j) {
-    var text = responseText(j);
-    if (!text) throw new Error('the model returned no output text');
-    cb(null, opts.schema ? JSON.parse(text) : text, j);
-  }).catch(function (e) { cb(String(e && e.message || e)); });
+  // deliberately no temperature: these are reasoning models and it is not a
+  // knob they have
+  send(body, true);
+  function send(payload, mayRetry) {
+    fetch('https://api.openai.com/v1/responses', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json', authorization: 'Bearer ' + OPENAI_KEY },
+      body: JSON.stringify(payload)
+    }).then(function (r) {
+      if (!r.ok) return r.text().then(function (t) {
+        var e = new Error(r.status + ' ' + t.slice(0, 500)); e.status = r.status; e.body = t; throw e;
+      });
+      return r.json();
+    }).then(function (j) {
+      var text = responseText(j);
+      if (!text) throw new Error('the model returned no output text');
+      cb(null, opts.schema ? JSON.parse(text) : text, j);
+    }).catch(function (e) {
+      // what this file believes about reasoning parameters comes from release
+      // notes, not from the machine. If the machine disagrees, drop the knob
+      // and ask again rather than losing the answer.
+      if (mayRetry && e.status === 400 && /reasoning|effort|mode/i.test(e.body || '') && payload.reasoning) {
+        var lean = JSON.parse(JSON.stringify(payload));
+        delete lean.reasoning;
+        return send(lean, false);
+      }
+      cb(String(e && e.message || e));
+    });
+  }
 }
 /* Which models exist is the account's business, not this file's. Hard-coding
  * a name means a source edit every time a generation ships, so the list is
  * asked for once the key is in and ranked; AUTO takes the top of it.      */
-var MODEL_RANK = [
-  [/^gpt-5[.\d]*$/, 100], [/^gpt-5.*mini/, 92], [/^gpt-5/, 95],
-  [/^o[34]\b/, 88], [/^gpt-4\.1$/, 80], [/^gpt-4\.1-mini/, 74],
-  [/^gpt-4o$/, 70], [/^gpt-4o-mini/, 64], [/^o1\b/, 60]
-];
-function rankModel(id) {
-  for (var i = 0; i < MODEL_RANK.length; i++) if (MODEL_RANK[i][0].test(id)) return MODEL_RANK[i][1];
-  return /^gpt-/.test(id) ? 30 : 0;
-}
+// only used when the account cannot be asked what it has
+var MODEL_FALLBACK = 'gpt-5.6-terra';
 function pickModel() {
   if (DB.model && DB.model !== 'auto') return DB.model;
-  return MODELS.list.length ? MODELS.list[0].id : 'gpt-5';
+  return MODELS.list.length ? MODELS.list[0].id : MODEL_FALLBACK;
 }
 function loadModels(cb) {
   if (!OPENAI_KEY) return cb && cb('no key');
@@ -4914,9 +4982,15 @@ function modelBlock(cell, seat, world) {
   var model = pickModel();
   // Context engineering that cannot be seen is a claim, not a property. This
   // is what the model is allowed to know, before it is asked anything.
+  var can = reasoningFor(model), facts = modelFacts(model);
+  var effort = can.efforts.indexOf(DB.effort) >= 0 ? DB.effort
+             : (can.efforts.indexOf('low') >= 0 ? 'low' : can.efforts[0] || '');
+  var mode = can.modes.indexOf(DB.mode) > 0 ? DB.mode : (can.modes[0] || '');
   var readout =
     '<div class="row"><b>MODEL</b><span>' + esc(model) +
-      (supportsReasoning(model) ? ' · low reasoning' : ' · no reasoning control') + '</span></div>' +
+      (facts.tier ? ' · ' + facts.tier : '') +
+      (can.efforts.length ? ' · ' + (mode ? mode + ' · ' : '') + effort + ' reasoning'
+                          : ' · no reasoning control') + '</span></div>' +
     '<div class="row"><b>CONTEXT</b><span>' + (chars / 1000).toFixed(1) + 'k chars · ' +
       'icosa-context-v2</span></div>' +
     '<div class="row"><b>SEES</b><span>' + slug + ' + ' + ctx.containment.neighbours.length +
@@ -4960,6 +5034,16 @@ function modelBlock(cell, seat, world) {
       ? '<p style="color:var(--signal)">' + esc(st.slice(6)) + '</p>' : '') +
     '<input id="cKey" type="password" placeholder="openai api key, this tab only" value="' +
       esc(OPENAI_KEY) + '">' + models +
+    // the knobs appear only where the chosen model has them; the top of each
+    // scale belongs to the frontier tier alone, so it is offered only there
+    (can.efforts.length
+      ? '<select id="cEffort">' + can.efforts.map(function (e) {
+          return '<option value="' + e + '"' + (e === effort ? ' selected' : '') + '>' +
+            e.toUpperCase() + ' REASONING</option>'; }).join('') + '</select>' : '') +
+    (can.modes.length > 1
+      ? '<select id="cMode">' + can.modes.map(function (m) {
+          return '<option value="' + m + '"' + (m === mode ? ' selected' : '') + '>' +
+            m.toUpperCase() + ' MODE</option>'; }).join('') + '</select>' : '') +
     '<button class="go ghost" id="cInfer">FILL WHAT IS THIN</button> ' +
     '<button class="go ghost" id="cShowCtx">SHOW THE CONTEXT</button>';
 }
@@ -5173,6 +5257,9 @@ function openCouncil(cell) {
     DB.model = cm.value.trim() || 'auto';
     commit(); openCouncil(cell);
   };
+  var ce = document.getElementById('cEffort'), cmo = document.getElementById('cMode');
+  if (ce) ce.onchange = function () { DB.effort = ce.value; commit(); openCouncil(cell); };
+  if (cmo) cmo.onchange = function () { DB.mode = cmo.value; commit(); openCouncil(cell); };
   var ci2 = document.getElementById('cInfer');
   if (ci2) ci2.onclick = function () {
     setOpenAIKey(ck.value);

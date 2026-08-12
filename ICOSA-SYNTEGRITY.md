@@ -819,6 +819,20 @@ now built in:
 - **Radius discipline.** A 4,373 km `wikibase:around` is how you earn a
   502. Place queries cap at 600 km, people queries at 800 — above that the
   planetary seating applies anyway.
+- **Pay the retry cycle once, not once per rung.** Politeness to a
+  rate-limited server was making the bench slow: the recruit ladder climbs
+  up to eight rungs, and each rung was repeating the query service's whole
+  429-slow-down-and-retry cycle before falling back to geosearch. Now a
+  call that is still throttled after slowing down twice rests the host —
+  and the rest is checked when a queued call actually runs, not just when
+  it joins the lane — so the first rate-limited rung costs the full cycle
+  and every later caller fails in a millisecond and takes the fallback.
+  The readership term is asked for once per recruit, for everyone the
+  ladder found, instead of once per rung. And the card no longer waits to
+  be tapped to learn its text: opening a council quietly warms the summary
+  cache for its topics and largest settlements, spaced out, so the tap
+  that follows is answered from memory — with an eight-second leash on the
+  fetch so "reading…" can never hang forever.
 
 ## The agenda is produced, not inherited
 
@@ -972,6 +986,18 @@ read.
 The live region is small on purpose: a breathing dot, `iteration · topic ·
 stage`, a call counter against the priced plan, a thin progress bar, and
 the last three lines said, the newest sliding in. Not a log — a pulse.
+
+And the run leaves whole. **COPY THE RUN** — on the council and on the
+transcript — puts one document on the clipboard: the system instruction
+exactly as every call carried it (LAW plus the charter, verbatim), the
+opening question, the agenda, the tensions, the bench with each seat's
+register and rooms, the full transcript with every score, judge note,
+carry and second attempt, the outcomes with their dissents, and how it was
+made — models, spend, pipeline. **TAKE IT AS A FILE** saves the same thing
+as markdown. The point is portability: a convening can be logged, kept
+outside the browser, or handed to a different model in a different context
+window as a single self-describing document — including the honesty header
+saying it is a rehearsal and that the people named said none of it.
 
 The map plays the same run at the other scale. The room currently speaking
 carries an expanding ring at its topic point; when the judge is scoring,

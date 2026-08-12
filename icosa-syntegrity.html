@@ -1699,6 +1699,11 @@ function getJSON(url, cb) {
       var wait = Math.max(0, st.last + st.gap - Date.now());
       setTimeout(function () { attempt(0); }, wait);
       function attempt(n) {
+        // a call that queued before the host was rested must not wake it
+        if (st.deadUntil && Date.now() < st.deadUntil) {
+          release();
+          return cb('resting: ' + host + ' has refused twice; asking again in a minute');
+        }
         st.last = Date.now();
         fetchJSON(url, function (err, j) {
           if (!err) { st.fails = 0; release(); return cb(null, j); }
@@ -1716,6 +1721,9 @@ function getJSON(url, cb) {
             st.gap = Math.min(5000, st.gap * 3);
             return setTimeout(function () { attempt(n + 1); }, 1500 * (n + 1) * (n + 1));
           }
+          // still throttled after slowing down twice: rest the host, so the
+          // next caller fails in a millisecond instead of repeating the cycle
+          if (/^(429|502|503)/.test(err)) st.deadUntil = Date.now() + 60000;
           if (refused && n < 1) {
             return setTimeout(function () { attempt(n + 1); }, 1200);
           }
@@ -1830,13 +1838,20 @@ function scorePerson(p) {
 // one rung: everybody this exact cell knows about. The query service first,
 // because it can cover the whole triangle; the capped endpoint only if that
 // fails or comes back empty.
+var WDQS_REST = 0;
 function peopleAt(cell, cb) {
+  // when the query service is rate-limiting, every rung of the ladder would
+  // repeat its whole retry cycle before falling back — so one refusal rests
+  // it for a while and the capped endpoint answers at once instead
+  if (Date.now() < WDQS_REST) return peopleViaGeosearch(cell, cb);
   var reach = cellEdgeKm(cell) * 0.62;
   wdPeopleAround(cellCentre(cell), reach, 60, function (err, people) {
+    if (err && /^(429|502|503)|resting|unreachable/.test(String(err))) {
+      WDQS_REST = Date.now() + 90000;
+    }
     if (!err && people && people.length) {
       var inside = people.filter(function (p) { return cellContains(cell, p.v); });
-      var use = inside.length ? inside : people;
-      return viewsFor(use, function (_, done) { cb(null, done || use); });
+      return cb(null, inside.length ? inside : people);
     }
     peopleViaGeosearch(cell, cb);
   });
@@ -1858,7 +1873,7 @@ function peopleViaGeosearch(cell, cb) {
           people[i].v = anchor ? anchor.v : cellCentre(cell);
           delete people[i].ties;                 // not worth keeping in the record
         }
-        viewsFor(people, function (_, done) { cb(null, done || people, places); });
+        cb(null, people, places);
       });
     });
   });
@@ -1897,6 +1912,12 @@ function recruit(cell, want, done) {
     });
   })(cell, 0);
   function finish() {
+    // the attention term is asked for once, for everyone the ladder found,
+    // instead of once per rung — one readership call where there were eight
+    viewsFor(found, function () { finish2(); });
+  }
+  function finish2() {
+    for (var i = 0; i < found.length; i++) found[i].score = scorePerson(found[i]);
     found.sort(function (a, b) { return b.score - a.score; });
     if (!DB.people) DB.people = {};
     DB.people[slug] = { t: Date.now(), chain: chain, errs: errs, list: found.slice(0, 60) };
@@ -5686,16 +5707,36 @@ function trackCard(S) {
 function summaryOf(title, cb) {
   if (!DB.summaries) DB.summaries = {};
   if (DB.summaries[title]) return cb(null, DB.summaries[title]);
-  fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title), { credentials: 'omit' })
+  var ctl = window.AbortController ? new AbortController() : null;
+  var leash = ctl && setTimeout(function () { ctl.abort(); }, 8000);
+  fetch('https://en.wikipedia.org/api/rest_v1/page/summary/' + encodeURIComponent(title),
+        { credentials: 'omit', signal: ctl ? ctl.signal : undefined })
     .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function (j) {
+      if (leash) clearTimeout(leash);
       var got = { title: j.title, extract: j.extract || '', type: j.type || '',
                   thumb: j.thumbnail && j.thumbnail.source, url: j.content_urls &&
                   j.content_urls.desktop && j.content_urls.desktop.page };
       DB.summaries[title] = got; commit();
       cb(null, got);
     })
-    .catch(function (e) { cb(String(e.message || e)); });
+    .catch(function (e) { if (leash) clearTimeout(leash); cb(String(e.message || e)); });
+}
+/* The card should open already knowing its text. The summaries a reader is
+ * most likely to ask for next — the open council's topics and the largest
+ * settlements — are warmed quietly and spaced out, landing in the same
+ * cache the card reads, so the tap that follows is answered from memory. */
+var PREFETCHED = {};
+function prefetchSummaries(titles) {
+  var want = [];
+  titles.forEach(function (t) {
+    if (t && !PREFETCHED[t] && !(DB.summaries || {})[t] && want.length < 8) {
+      PREFETCHED[t] = 1; want.push(t);
+    }
+  });
+  want.forEach(function (t, i) {
+    setTimeout(function () { summaryOf(t, function () {}); }, 300 * i);
+  });
 }
 function openCard(o, sx, sy) {
   if (!elCard) elCard = document.getElementById('card');
@@ -5984,8 +6025,9 @@ function runBlock(cell, seat, world) {
       ? '<p style="color:var(--muted);font-size:9px;letter-spacing:.06em">sources: ' +
         esc(sourceNote().join(' · ')) + '</p>' : '') +
     '<button class="go" id="cRun">' + (rounds ? 'CONVENE AGAIN' : 'CONVENE') + '</button> ' +
-    (said.length ? '<button class="go ghost" id="cScript">READ THE TRANSCRIPT</button> ' +
-                   '<button class="go ghost" id="cWipe">CLEAR IT</button>' : '') +
+    (said.length ? '<button class="go ghost" id="cScript">READ THE TRANSCRIPT</button> ' : '') +
+    (said.length || ch ? '<button class="go ghost" id="cCopyRun">COPY THE RUN</button> ' : '') +
+    (said.length ? '<button class="go ghost" id="cWipe">CLEAR IT</button>' : '') +
     (ch ? (ch.opening ? '<div class="topic" style="cursor:default"><b><s>OPENING QUESTION</s>' +
         esc(ch.opening) + '</b></div>' : '') +
       '<details><summary>the charter and agenda for this ground · ' + esc(ch.model) +
@@ -6087,8 +6129,147 @@ function openTranscript(cell, seat) {
     'none of them said any of this.</p>' +
     (ch && ch.opening ? '<div class="topic" style="cursor:default"><b><s>OPENING QUESTION</s>' +
       esc(ch.opening) + '</b></div>' : '') + body +
+    '<button class="go ghost" id="tCopy" style="margin-top:12px">COPY THE RUN</button> ' +
+    '<button class="go ghost" id="tTake" style="margin-top:12px">TAKE IT AS A FILE</button> ' +
     '<button class="go ghost" id="tBack" style="margin-top:12px">BACK TO THE COUNCIL</button>');
+  var isWorld = councilSeat && councilSeat.seating === 'world';
+  document.getElementById('tCopy').onclick = function () {
+    copyText(runExportText(cell, seat, isWorld), document.getElementById('tCopy'));
+  };
+  document.getElementById('tTake').onclick = function () {
+    takeText(runExportText(cell, seat, isWorld), 'syntegration-' + slug + '.md');
+  };
   document.getElementById('tBack').onclick = function () { openCouncil(cell); };
+}
+/* The run leaves whole. One copy carries the system instruction exactly as
+ * every call carried it, the agenda, the bench and the full scored
+ * transcript — so a convening can be logged, kept, or handed to a different
+ * model in a different context window as one document.                    */
+function runExportText(cell, seat, world) {
+  var slug = cellSlug(cell), said = utterances(slug), ch = charterOf(slug);
+  var topics = topicNames(cell, seat, world);
+  var L = [];
+  L.push('# SYNTEGRATION \u00b7 ' + slug);
+  L.push('exported ' + new Date().toISOString() + ' \u00b7 ' + kmLabel(cellEdgeKm(cell)) +
+         ' triangle \u00b7 centre ' + ll(cellCentre(cell)));
+  L.push('');
+  L.push('A rehearsal of the argument this ground would have, written and scored by ' +
+         'models from the compiled state of the Unsettled Atlas. The people named are ' +
+         "the record's nominees; none of them said any of this.");
+  L.push('');
+  L.push('## SYSTEM INSTRUCTION');
+  L.push('The hot prefix, verbatim \u2014 identical across every call on this cell:');
+  L.push('');
+  L.push(lawFor(slug));
+  L.push('');
+  if (ch) {
+    if (ch.opening) { L.push('## OPENING QUESTION'); L.push(ch.opening); L.push(''); }
+    if ((ch.agenda || []).length) {
+      L.push('## AGENDA');
+      ch.agenda.forEach(function (a) {
+        var tp = topics[a.topic] || {};
+        L.push('- TOPIC ' + a.topic + ' \u00b7 ' + a.subject +
+               (tp.title ? ' (at ' + tp.title + ')' : '') + ' \u2014 ' + a.statement);
+      });
+      L.push('');
+    }
+    if ((ch.tensions || []).length) {
+      L.push('## TENSIONS');
+      ch.tensions.forEach(function (tn) { L.push('- ' + tn.title + ' \u2014 ' + tn.why_now); });
+      L.push('');
+    }
+  }
+  L.push('## THE BENCH');
+  seat.struts.forEach(function (st, i) {
+    var held = seatHolder(slug, i), src = seatSource(slug, i);
+    L.push('- SEAT ' + i + (st.register ? ' \u00b7 ' + st.register : '') + ' \u00b7 ' +
+           (held || 'unclaimed') + (src && src.what ? ' (' + src.what + ')' : '') +
+           ' \u00b7 topics ' + st.topics.join(' & ') + ' \u00b7 critiques ' + st.critiques.join(' & '));
+  });
+  L.push('');
+  if (said.length) {
+    L.push('## TRANSCRIPT');
+    var byRound = {};
+    said.forEach(function (n) { (byRound[n.round] = byRound[n.round] || []).push(n); });
+    Object.keys(byRound).sort(function (a, b) { return a - b; }).forEach(function (r) {
+      var iters = {};
+      byRound[r].forEach(function (n) { (iters[n.iter || 1] = iters[n.iter || 1] || []).push(n); });
+      Object.keys(iters).sort(function (a, b) { return a - b; }).forEach(function (it) {
+        var isOutcome = iters[it].every(function (n) { return n.mode === 'outcome'; });
+        L.push('');
+        L.push('### CONVENING ' + r + ' \u00b7 ' +
+               (isOutcome || it > REVERB ? 'OUTCOMES' : 'REVERBERATION ' + it + ' OF ' + REVERB));
+        var byTopic = {};
+        iters[it].forEach(function (n) { (byTopic[n.topic] = byTopic[n.topic] || []).push(n); });
+        Object.keys(byTopic).sort(function (a, b) { return a - b; }).forEach(function (t) {
+          var tp = topics[t] || {};
+          L.push('');
+          L.push('#### TOPIC ' + t + ' \u00b7 ' + (tp.subject || tp.title || '') +
+                 (tp.subject && tp.title ? ' (at ' + tp.title + ')' : ''));
+          if (tp.statement || tp.issue) L.push('> ' + (tp.statement || tp.issue));
+          byTopic[t].forEach(function (n) {
+            if (n.mode === 'outcome') {
+              L.push('- OUTCOME: ' + n.text);
+              if (n.dissent) L.push('  still open: ' + n.dissent);
+              return;
+            }
+            if (n.mode === 'reverb') {
+              L.push('- carried in from room ' + n.from_room + ' \u2014 ' + (n.who || '') + ': ' + n.text);
+              return;
+            }
+            L.push('- ' + (n.who || '') + ' (' +
+                   [n.who_is, n.register, n.mode === 'critique' ? 'answering' : '']
+                     .filter(Boolean).join(' \u00b7 ') + ')' +
+                   (n.tot !== undefined && n.tot !== null
+                     ? ' [' + n.tot + '/12' + (n.att > 1 ? ', second attempt' : '') + ']' : '') +
+                   ': ' + n.text);
+            if (n.jnote && (n.tot < GATE.total || (n.sc && n.sc.g < GATE.grounded)))
+              L.push('  the judge: ' + n.jnote);
+          });
+        });
+      });
+    });
+    L.push('');
+  }
+  var models = {};
+  said.forEach(function (n) { if (n.model) models[n.model] = 1; if (n.jm) models[n.jm] = 1; });
+  if (ch && ch.model) models[ch.model] = 1;
+  L.push('## HOW IT WAS MADE');
+  L.push('models: ' + (Object.keys(models).join(', ') || 'none recorded'));
+  if (DB.spend && DB.spend.calls)
+    L.push('spend, all time on this record: ' + DB.spend.calls + ' calls \u00b7 ' +
+           tok(DB.spend.input) + ' in (' + tok(DB.spend.cached) + ' cached) \u00b7 ' +
+           tok(DB.spend.output) + ' out');
+  L.push('pipeline: charter \u2192 (speak \u2192 critique \u2192 judge) \u00d7 topics \u00d7 ' +
+         REVERB + ' reverberations, claims carried along the struts between rooms \u2192 ' +
+         'outcomes. Scores are grounded/register/specific/engaged, each 0\u20133; the gate is ' +
+         GATE.total + '/12 and ' + GATE.grounded + '/3 grounded, taken on the room.');
+  return L.join('\n');
+}
+function copyText(txt, btn) {
+  function ok() {
+    if (!btn) return;
+    var was = btn.textContent;
+    btn.textContent = 'COPIED';
+    setTimeout(function () { btn.textContent = was; }, 1600);
+  }
+  function fall() {
+    var ta = document.createElement('textarea');
+    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta); ta.select();
+    try { if (document.execCommand('copy')) ok(); } catch (e) {}
+    document.body.removeChild(ta);
+  }
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(txt).then(ok, fall);
+  } else fall();
+}
+function takeText(txt, name) {
+  var blob = new Blob([txt], { type: 'text/markdown' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  a.click();
 }
 function modelBlock(cell, seat, world) {
   var slug = cellSlug(cell), st = INFER_STATE[slug];
@@ -6204,6 +6385,12 @@ function openCouncil(cell, keep) {
   autoSeat(cell, seat, world);
   var topics = topicNames(cell, seat, world);
   var tpts = topicPoints(cell, seat, world);
+  if (!PREFETCHED['@' + slug]) {
+    PREFETCHED['@' + slug] = 1;
+    var inv0 = GAZ_STATE === 'ready' ? cellInventory(cell) : null;
+    prefetchSummaries(topics.map(function (t) { return t.title; })
+      .concat(inv0 ? inv0.places.slice(0, 4).map(function (p) { return p.name; }) : []));
+  }
   var rows = seat.members.map(function (m, t) {
     var kinds = m.map(function (i) { return seat.struts[i].register; }).sort();
     var tp = topics[t];
@@ -6425,6 +6612,8 @@ function openCouncil(cell, keep) {
   };
   var cscr = document.getElementById('cScript');
   if (cscr) cscr.onclick = function () { openTranscript(cell, seat); };
+  var ccr = document.getElementById('cCopyRun');
+  if (ccr) ccr.onclick = function () { copyText(runExportText(cell, seat, world), ccr); };
   var cw = document.getElementById('cWipe');
   if (cw) cw.onclick = function () {
     DB.notes = DB.notes.filter(function (n) { return !(n.kind === 'sim' && n.cell === slug); });

@@ -1061,6 +1061,76 @@ travels with every bench entry, the persona still colours the argument —
 after the claim compiles, never instead of it — and every line is still
 stamped `rehearsal`.
 
+## The seat is a bridge with a mind
+
+The constitution made the seats honest; it did not make them cumulative.
+Reverberation 2 meant "prompt the same operators again" — more talking, not
+more knowing — because nothing persisted between the calls except the
+transcript tail. The fix comes from Park's generative-agents architecture,
+mapped onto Beer's geometry, and the mapping lands on one structural fact:
+in AI Town an agent is a person who talks to people, but here **a seat is a
+memory-bearing edge between two topics**. The most important memory query
+is not "what does this person remember?" It is *"what did this seat
+encounter in its other room that changes what it should say in this room
+now?"* That question **is** syntegration.
+
+So the seat got a mind, in four layers, all owned by the harness:
+
+**Scratch** — working memory for one convening, updated in code, never by
+the model: the seat's last claim and operation, the strongest challenge it
+took, its unresolved question, its commitments and contradictions. It dies
+with the run; what deserves to survive is written down a layer.
+
+**The memory stream** — under the cell record sits a stream of typed
+memories: `UTTERANCE`, `CRITIQUE`, `OPEN_QUESTION`, `CONTRADICTION`,
+`BRIDGE`, `REFLECTION`, `OUTCOME` (and room for `EVIDENCE`, `HEARD_CLAIM`,
+`COMMITMENT`), each stamped with cell, convening, seat, room,
+reverberation, importance (did it alter the argument?) and provenance
+(3 primary evidence · 2 secondary · 1 council inference · 0 rehearsal
+inference). An invalid line is not a memory. The stream is capped and
+evicts the least load-bearing, never the newest convening's.
+
+**Retrieval** — Park's score with the syntegration term added:
+relevance + recency + importance + **bridge value** + provenance. Bridge
+value is the superpower: a memory from this seat's *other* room outranks
+everything local, because the strut is the reason the seat exists. A speak
+call retrieves the top handful per seat, not the transcript.
+
+**Reflection** — after every full pass over the topics, one call asks each
+seat the question only a strut can answer: *what 1–3 implications become
+visible ONLY because you occupy both rooms?* The answer is recorded as a
+`SIMULATED SEAT POSITION` — what the seat's argument now implies, never
+what the person believes; reflection is not allowed to silently invent
+beliefs for real nominees — and its bridge is routed along the strut as
+the privileged payload of the next reverberation. A bridge is a
+consequence, not a quote: claim, *why it matters there* (what that room
+currently assumes that this breaks), and the tension it introduces
+(an ecological boundary is not a jurisdictional boundary).
+
+Context compilation became **perspectival** without giving up the hot
+prefix or the room-level call. LAW and charter still open every request
+unchanged; the room is still one call; but inside it every member seat
+carries its own packet — identity, scratch, retrieved memories, incoming
+bridges — so the context for seat 7 in this room differs from seat 3's
+even though they stand in the same room. Statements cite the memory ids
+they build on, and surface the question the room could not answer, which
+becomes an `OPEN_QUESTION` memory the next retrieval can find. The
+harness remains sovereign: JavaScript owns the order, the budget, the
+gate, the scratch, and the stream — no autonomous-agent soup.
+
+And because memory is addressed the way everything here is, **memory
+inherits geographically**: a memory written at F14.331 is retrievable at
+F14 and at F14.3311, marked `inherited`, scope and provenance intact.
+Semantic zoom is memory zoom — a continental council can retrieve the
+fine-grained lived conflict, and knows exactly where it came from.
+
+The shape of a reverberation is now: rooms speak → critics answer → the
+judge gates → the seats remember → the seats reflect across their rooms →
+bridges cross the struts → the next reverberation runs the same topology
+with different minds. That last phrase is the goal — *same topology,
+different minds* — and it is what makes iteration produce structure a
+single room could not have produced alone.
+
 ## The harness
 
 One model call in a loop is a chatbot. A convening needs a harness:
@@ -1103,8 +1173,8 @@ Multi-step inference with the internet, where the internet is what a
 browser can reach without a key.
 
 **The price is stated before the button.** For an octahedron: charter +
-2 × 6 topics × (speak → critique → judge) + outcomes = **38 calls, up to
-62** if the judge sends rooms back. Lookups between iterations are free and
+2 × 6 topics × (speak → critique → judge) + 2 reflections + outcomes =
+**40 calls, up to 64** if the judge sends rooms back. Lookups between iterations are free and
 say so. Afterwards the spend readout shows each stage's bill.
 
 **The run closes on outcome statements** — one per topic, drawn only from

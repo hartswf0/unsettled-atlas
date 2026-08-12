@@ -31,6 +31,13 @@ async function rig(p){
   await p.route('**/api.openai.com/v1/responses', async r=>{
     const bo=JSON.parse(r.request().postData()||'{}');
     const ctx=JSON.parse(bo.input[0].content[0].text); const op=ctx.operation||{};
+    seen.push({type:op.type, iteration:op.iteration||null,
+      members:(op.members||[]).map(m=>({seat:m.seat,
+        hasScratch:!!m.scratch, hasMemories:Array.isArray(m.memories),
+        memoryCount:(m.memories||[]).length,
+        incoming:(m.incoming||[]).map(x=>({kind:x.kind||null,tension:x.tension||null}))})),
+      seats:(op.seats||[]).map(s=>({seat:s.seat, rooms:(s.two_rooms||[]).map(r=>r.room),
+        hasScratch:!!s.scratch}))});
     let txt;
     if (op.type==='WRITE_CHARTER') txt=JSON.stringify({charter:'CHARTER-BODY: argued from the ground.',
       opening_question:'OPENING-Q: who holds the water?',
@@ -39,16 +46,22 @@ async function rig(p){
       tensions:[{title:'TENSION-A',why_now:'because now'}]});
     else if (op.type==='SPEAK') txt=JSON.stringify({utterances:(op.members||[]).map(m=>({seat:m.seat,
       op:'cite',evidence:['evidence.recent: Local dispute'],
+      memories:(m.memories||[]).slice(0,1).map(x=>x.id),
+      question:'Q-'+m.seat+'?',
       text:'SPOKE-'+m.seat+' at '+op.topic.place+'.'})),needs:[]});
     else if (op.type==='CRITIQUE') txt=JSON.stringify({utterances:(op.critics||[]).map(m=>({seat:m.seat,
-      op:'name-missing',evidence:['evidence.recent'],text:'CRIT-'+m.seat}))});
+      op:'name-missing',evidence:['evidence.recent'],memories:[],question:'',text:'CRIT-'+m.seat}))});
     else if (op.type==='JUDGE'){
       const seats=[...new Set([...(op.said||[]),...(op.critiques||[])].map(u=>u.seat))];
       txt=JSON.stringify({scores:seats.map(sn=>({seat:sn,admissible:true,grounded:3,register:3,specific:2,engaged:2,
         note:'fine',carry:(op.members||[]).some(m=>m.seat===sn)
           ?{claim:'CARRY',evidence:'EV-'+sn,contradiction:'CONTRA-'+sn}
           :{claim:'',evidence:'',contradiction:''}}))});
-    } else if (op.type==='OUTCOME') txt=JSON.stringify({outcomes:(op.topics||[]).map(tp=>({topic:tp.id,
+    } else if (op.type==='REFLECT') txt=JSON.stringify({reflections:(op.seats||[]).map(s=>({
+      seat:s.seat,implication:'IMPL-'+s.seat+' across '+s.two_rooms.map(r=>r.room).join('&'),
+      bridge_to:s.two_rooms[1].room,bridge_claim:'BRIDGE-'+s.seat,
+      why_there:'WHY-'+s.seat,tension:'TENSION-'+s.seat}))});
+    else if (op.type==='OUTCOME') txt=JSON.stringify({outcomes:(op.topics||[]).map(tp=>({topic:tp.id,
       statement:'OUT-'+tp.id+' at '+tp.place+'.',dissent:tp.id%2?'DISSENT-'+tp.id:'',
       needed:'NEEDED-'+tp.id}))});
     else txt='{}';
@@ -60,7 +73,7 @@ async function rig(p){
 }
 const ctx=await b.newContext({viewport:{width:1000,height:900}});
 await ctx.grantPermissions(['clipboard-read','clipboard-write'],{origin:BASE});
-const p=await ctx.newPage(); const errs=[]; p.on('pageerror',e=>errs.push(e.message));
+const p=await ctx.newPage(); const errs=[]; const seen=[]; p.on('pageerror',e=>errs.push(e.message));
 await rig(p);
 await p.addInitScript(()=>{try{localStorage.setItem('icosa.openai.key','sk-t');}catch(e){}});
 await p.goto(BASE+'/icosa-syntegrity.html#F11.1103'); await p.waitForTimeout(3000);
@@ -117,7 +130,37 @@ out.council = {
   claimIsCompiled: doc.includes('claim = operation(register, evidence)'),
   made: doc.includes('## HOW THE LAST RUN WAS MADE') && doc.includes('gpt-5.6-sol'),
   spend: /spend, all time on this record: \d+ calls/.test(doc),
+  reflections: (doc.match(/- SEAT REFLECTION \(simulated seat position, not the person’s belief\)/g)||[]).length,
+  bridgesRouted: (doc.match(/- bridge from room \d/g)||[]).length,
+  bridgeTension: doc.includes('tension: TENSION-'),
+  bridgeWhy: doc.includes('why it matters here: WHY-'),
+  reflectStep: doc.includes('e. after ALL rooms') && doc.includes('Same topology, different minds'),
+  pipelineHasMinds: doc.includes('seats reflect') && doc.includes('memory stream'),
 };
+// the mind between the calls: perspectival packets, scratch continuity, memory
+const speaks = seen.filter(s=>s.type==='SPEAK');
+const r1 = speaks.filter(s=>/^1\//.test(s.iteration||''));
+const r2 = speaks.filter(s=>/^2\//.test(s.iteration||''));
+const reflects = seen.filter(s=>s.type==='REFLECT');
+out.minds = {
+  speakCalls: speaks.length,
+  perspectival: speaks.every(s=>s.members.length && s.members.every(m=>m.hasScratch && m.hasMemories)),
+  r2HasMemories: r2.length>0 && r2.some(s=>s.members.some(m=>m.memoryCount>0)),
+  r2HasBridges: r2.some(s=>s.members.some(m=>m.incoming.some(x=>x.kind==='bridge' && x.tension))),
+  reflectCalls: reflects.length,
+  reflectSeesBothRooms: reflects.every(s=>s.seats.length && s.seats.every(x=>x.rooms.length===2 && x.hasScratch)),
+};
+out.memory = await p.evaluate(()=>{
+  const M = window.ICOSA_MEM.all();
+  const types = {}; M.forEach(m=>{types[m.type]=(types[m.type]||0)+1;});
+  // geographic inheritance: memories written at F11.1103 retrievable at the parent
+  const up = window.ICOSA_MEM.retrieve('F11.110', 0, 0, 'SPOKE dispute', 6);
+  return { total: M.length, types,
+    typed: M.every(m=>['EVIDENCE','HEARD_CLAIM','UTTERANCE','CRITIQUE','BRIDGE','REFLECTION','CONTRADICTION','OPEN_QUESTION','COMMITMENT','OUTCOME'].includes(m.type)),
+    scoped: M.every(m=>m.cell==='F11.1103'),
+    provenanced: M.every(m=>m.prov>=0 && m.prov<=3 && m.imp>=0 && m.imp<=3),
+    inheritedUp: up.length>0 && up.every(x=>x.inherited && x.scope==='F11.1103') };
+});
 // and from the transcript view, with the file button present
 await p.evaluate(()=>document.getElementById('cScript').click());
 await p.waitForTimeout(800);

@@ -2743,18 +2743,34 @@ var HARNESS_STAGE = {
   speak:    { effort: 'medium', who: 'top'    },
   critique: { effort: 'medium', who: 'top'    },
   judge:    { effort: 'medium', who: 'second' },
+  reflect:  { effort: 'high',   who: 'top'    },
   outcome:  { effort: 'high',   who: 'top'    }
 };
 // CLAIM = operation(register, evidence[]) — the compiled form of every
 // utterance. op names the epistemic operation performed; evidence names the
 // context items it stands on. The persona colours text; it never adds facts.
 var SPEAK_ITEM = {
-  type: 'object', additionalProperties: false, required: ['seat', 'op', 'evidence', 'text'],
+  type: 'object', additionalProperties: false,
+  required: ['seat', 'op', 'evidence', 'memories', 'question', 'text'],
   properties: { seat: { type: 'integer' },
     op: { type: 'string', enum: ['cite', 'derive', 'name-missing', 'name-classification',
                                  'trace-return', 'report-record', 'silence'] },
     evidence: { type: 'array', items: { type: 'string' } },
+    memories: { type: 'array', items: { type: 'string' } },
+    question: { type: 'string' },
     text: { type: 'string' } }
+};
+// the reflection: what becomes visible ONLY because a seat occupies two
+// rooms. The bridge it produces is a consequence for the other room, not a
+// quote — claim, why it matters THERE, the tension it introduces.
+var SCHEMA_REFLECT = {
+  type: 'object', additionalProperties: false, required: ['reflections'],
+  properties: { reflections: { type: 'array', items: {
+    type: 'object', additionalProperties: false,
+    required: ['seat', 'implication', 'bridge_to', 'bridge_claim', 'why_there', 'tension'],
+    properties: { seat: { type: 'integer' }, implication: { type: 'string' },
+      bridge_to: { type: 'integer' }, bridge_claim: { type: 'string' },
+      why_there: { type: 'string' }, tension: { type: 'string' } } } } }
 };
 var SCHEMA_SPEAK = {
   type: 'object', additionalProperties: false, required: ['utterances'],
@@ -2875,10 +2891,16 @@ function speakDirective(retry, mayNeed) {
     'Speak to operation.topic.subject; where its standing is QUESTIONED or UNKNOWN the ' +
     'subject is under investigation — do not treat its premise as established. These are ' +
     'incompatible ways of knowing operating on the same evidence: sharpen the ' +
-    'incompatibilities, name the claim you contradict. If operation.carried_in is ' +
-    'present, those are unresolved claims arrived from your seats\' other rooms — operate ' +
-    'on each: test it against this room\'s evidence and say what it decides, breaks, or ' +
-    'fails to decide here; restating or applauding it is a violation. Two sentences per ' +
+    'incompatibilities, name the claim you contradict. Each member carries its own mind: ' +
+    'scratch is that seat\'s working state (its last claim, the strongest challenge it ' +
+    'took, its unresolved question, its commitments — continue that trajectory, do not ' +
+    'reset it), memories are what THIS seat encountered before, retrieved for this room ' +
+    '(cite the ids of any you build on in the memories output field), and incoming is ' +
+    'what crossed the strut from its OTHER room. A bridge in incoming or in ' +
+    'operation.carried_in is a consequence, not a quote — operate on it: test it against ' +
+    'this room\'s evidence and say what it decides, breaks, or fails to decide here; ' +
+    'restating or applauding it is a violation. If a line surfaces a question this room ' +
+    'cannot answer, put it in the question field (empty otherwise). Two sentences per ' +
     'seat, plain, no preamble, and never claim a fact the context does not carry.' +
     (mayNeed ? ' If a seat genuinely needs something the context lacks, put a short plain ' +
       'question in needs — at most two, and an empty list if nothing is needed. The first ' +
@@ -2984,7 +3006,8 @@ function writeCharter(cell, seat, world, cb) {
 // what a convening will cost, before the button
 function harnessPlan(seat) {
   var topics = seat.members.length;
-  var base = REVERB * topics * 3 + 1;         // speak+critique+judge per topic, then outcomes
+  // speak+critique+judge per topic, a reflection per reverberation, outcomes
+  var base = REVERB * topics * 3 + REVERB + 1;
   return { topics: topics, base: base, worst: base + REVERB * topics * 2 };
 }
 // the speakers asked for the world; answer from what a browser can reach
@@ -3047,6 +3070,15 @@ function runHarness(cell, seat, world, onStep, done) {
   var carryNext = {};                          // topic -> claims arriving next iteration
   var carryNow = {};
   var needsAll = [], made = 0;
+  // SCRATCH — each seat's working memory for THIS convening. Park's scratch:
+  // it dies with the run; what deserves to survive is written to the memory
+  // stream. Owned and updated by the harness, in code — never by the model.
+  var SCRATCH = {};
+  seat.struts.forEach(function (st, i) {
+    SCRATCH[i] = { reverberation: 0, last_claim: '', last_op: '',
+                   strongest_challenge: '', unresolved_question: '',
+                   commitments: [], contradictions: [] };
+  });
   var judgeModel = modelFor('judge');
   var frozenLaw = null;                          // set once the charter exists
   delete HARNESS_ERR[slug];
@@ -3143,7 +3175,24 @@ function runHarness(cell, seat, world, onStep, done) {
   function speakOnce(iter, t, retry, cb2) {
     var ctx = baseCtx('SPEAK', iter, t);
     var mayNeed = iter < REVERB;
-    ctx.operation.members = membersOf(t);
+    // PERSPECTIVAL COMPILATION: the room is one call, but each member seat
+    // gets its own packet — identity, scratch, retrieved memories, incoming
+    // bridges — so the context for seat 7 in this room differs from seat 3's
+    // even though they stand in the same room. The harness stays sovereign;
+    // the seats get minds.
+    var query = (topics[t].subject || '') + ' ' + (topics[t].statement || topics[t].issue || '');
+    ctx.operation.members = membersOf(t).map(function (m) {
+      var sc = SCRATCH[m.seat] || {};
+      return Object.assign({}, m, {
+        scratch: { reverberation: sc.reverberation, last_claim: sc.last_claim,
+                   strongest_challenge: sc.strongest_challenge,
+                   unresolved_question: sc.unresolved_question,
+                   commitments: sc.commitments.slice(-3),
+                   contradictions: sc.contradictions.slice(-3) },
+        memories: memRetrieve(slug, m.seat, t, query, 5),
+        incoming: (carryNow[t] || []).filter(function (cy) { return cy.seat === m.seat; })
+      });
+    });
     if (carryNow[t] && carryNow[t].length) ctx.operation.carried_in = carryNow[t];
     if (retry) {
       ctx.operation.judge_notes = retry.notes;
@@ -3274,6 +3323,42 @@ function runHarness(cell, seat, world, onStep, done) {
             }
             said.forEach(function (u) { stamp(u, 'said', { att: attempt }); });
             crit.forEach(function (u) { stamp(u, 'critique', null); });
+            // REMEMBER — the room's experience enters the seats' memory
+            // stream, and the harness updates each seat's scratch in code
+            said.forEach(function (u) {
+              var sc = byseat[u.seat], inv = sc && sc.admissible === false;
+              var s2 = SCRATCH[u.seat];
+              if (s2) {
+                s2.reverberation = iter;
+                s2.last_claim = String(u.text).slice(0, 220);
+                s2.last_op = u.op || '';
+                if (u.question) s2.unresolved_question = String(u.question).slice(0, 160);
+              }
+              if (inv) return;                 // an invalid line is not a memory
+              memAdd({ cell: slug, conv: round, seat: u.seat, type: 'UTTERANCE',
+                room: t, iter: iter, text: u.text,
+                src: (u.evidence || []).slice(0, 4),
+                imp: sc && sc.grounded >= 2 && (sc.specific | 0) >= 2 ? 2 : 1,
+                prov: (u.evidence || []).length ? 2 : 1 });
+              if (u.question) {
+                memAdd({ cell: slug, conv: round, seat: u.seat, type: 'OPEN_QUESTION',
+                  room: t, iter: iter, text: u.question, src: [], imp: 2, prov: 1 });
+              }
+            });
+            crit.forEach(function (u) {
+              var sc = byseat[u.seat];
+              if (sc && sc.admissible === false) return;
+              memAdd({ cell: slug, conv: round, seat: u.seat, type: 'CRITIQUE',
+                room: t, iter: iter, text: u.text, src: (u.evidence || []).slice(0, 4),
+                imp: 1, prov: 1 });
+              // the challenged seats take the strongest critique into scratch
+              membersOf(t).forEach(function (m) {
+                var s3 = SCRATCH[m.seat];
+                if (s3 && !s3.strongest_challenge) {
+                  s3.strongest_challenge = String(u.text).slice(0, 220);
+                }
+              });
+            });
             // GRAPH: passing members' unresolved claims travel the strut to
             // the other room — claim, evidence, contradiction, so the
             // destination has something to operate on, not applaud
@@ -3289,6 +3374,16 @@ function runHarness(cell, seat, world, onStep, done) {
                     { seat: m.seat, who: m.who, register: m.register, from_room: t,
                       claim: cy.claim, evidence: cy.evidence || '',
                       contradiction: cy.contradiction || '' });
+                  var s4 = SCRATCH[m.seat];
+                  if (s4) {
+                    s4.commitments.push(String(cy.claim).slice(0, 160));
+                    if (cy.contradiction) s4.contradictions.push(String(cy.contradiction).slice(0, 160));
+                  }
+                  if (cy.contradiction) {
+                    memAdd({ cell: slug, conv: round, seat: m.seat, type: 'CONTRADICTION',
+                      room: t, other: m.other_room, iter: iter,
+                      text: cy.contradiction, src: [], imp: 2, prov: 1 });
+                  }
                   if (CONVENE_VIS && CONVENE_VIS.slug === slug) {
                     CONVENE_VIS.anims.push({ from: t, to: m.other_room,
                       t0: performance.now() + 240 * launched++, dur: 1700 });
@@ -3302,6 +3397,84 @@ function runHarness(cell, seat, world, onStep, done) {
       });
     });
   }
+  /* REFLECTION — the Park stage, run after every full pass over the topics.
+   * Each seat occupies two rooms; the question is the one only a strut can
+   * answer: what became visible ONLY because you were in both? The answer
+   * is recorded as a SIMULATED SEAT POSITION (what the seat's argument now
+   * implies — never what the person believes), written to the memory
+   * stream, and its bridge — claim, why it matters THERE, the tension it
+   * introduces — is routed along the strut as the privileged payload of the
+   * next reverberation. Same topology, different minds.                  */
+  function reflectPass(iter, cb2) {
+    var ctx = compileContext(cell, seat, world, 'REFLECT');
+    ctx.operation.round = round;
+    ctx.operation.iteration = iter + '/' + REVERB;
+    function roomDigest(t) {
+      var lines = utterances(slug).filter(function (n) {
+        return n.round === round && n.iter === iter && n.topic === t &&
+               (n.mode === 'said' || n.mode === 'critique');
+      }).slice(-8).map(function (n) {
+        return { seat: n.seat, register: n.register, mode: n.mode,
+                 invalid: !!n.inv, text: String(n.text).slice(0, 200) };
+      });
+      return { room: t, subject: (topics[t] || {}).subject || (topics[t] || {}).issue || null,
+               lines: lines };
+    }
+    ctx.operation.seats = seat.struts.map(function (st, i) {
+      var sc = SCRATCH[i] || {};
+      return { seat: i, who: seatHolder(slug, i) || 'seat ' + i, register: st.register,
+               scratch: { last_claim: sc.last_claim, strongest_challenge: sc.strongest_challenge,
+                          unresolved_question: sc.unresolved_question,
+                          commitments: (sc.commitments || []).slice(-3) },
+               two_rooms: [roomDigest(st.topics[0]), roomDigest(st.topics[1])] };
+    });
+    ctx.operation.directive =
+      'Every seat in operation.seats occupies TWO rooms, and operation.seats shows what ' +
+      'each encountered in both during this reverberation, with its scratch state. For ' +
+      'each seat, write the one implication that becomes visible ONLY because it occupies ' +
+      'both rooms — a dependency, an incompatibility, an assumption one room makes that ' +
+      'the other has already broken. This is a SIMULATED SEAT POSITION: what the seat\'s ' +
+      'argument now implies, never what the person believes or would say. Stay inside the ' +
+      'seat\'s register and the evidence on the table; count nothing marked invalid. Then ' +
+      'the bridge: bridge_to is the room of the two that must now face it, bridge_claim ' +
+      'the consequence in one sentence, why_there what that room currently assumes that ' +
+      'this breaks or constrains, tension the incompatibility in a few words (an ' +
+      'ecological boundary is not a jurisdictional boundary). A bridge is a consequence, ' +
+      'not a quote — if nothing crosses, use empty strings for all bridge fields and say ' +
+      'in implication what kept the rooms separate. One implication per seat, two ' +
+      'sentences at most.';
+    tick('reverberation ' + iter + ' · the seats reflect across their rooms', -1, 'reflect');
+    ask('reflect', ctx, SCHEMA_REFLECT, 'seat_reflections', 2600, function (err, j) {
+      if (err) return abort(err);
+      ((j && j.reflections) || []).forEach(function (r) {
+        var st = seat.struts[r.seat];
+        if (!st || !r.implication) return;
+        var toRoom = st.topics.indexOf(r.bridge_to) >= 0 ? r.bridge_to : st.topics[0];
+        var fromRoom = st.topics[0] === toRoom ? st.topics[1] : st.topics[0];
+        rec('reflect', iter, toRoom, { seat: r.seat, text: r.implication },
+            { from_room: fromRoom });
+        memAdd({ cell: slug, conv: round, seat: r.seat, type: 'REFLECTION',
+                 room: toRoom, other: fromRoom, iter: iter,
+                 text: r.implication, src: [], imp: 3, prov: 1 });
+        if (r.bridge_claim) {
+          memAdd({ cell: slug, conv: round, seat: r.seat, type: 'BRIDGE',
+                   room: toRoom, other: fromRoom, iter: iter,
+                   text: r.bridge_claim + (r.why_there ? ' — ' + r.why_there : ''),
+                   src: [], imp: 3, prov: 1 });
+          (carryNext[toRoom] = carryNext[toRoom] || []).push(
+            { seat: r.seat, who: seatHolder(slug, r.seat) || 'seat ' + r.seat,
+              register: st.register, from_room: fromRoom, kind: 'bridge',
+              claim: r.bridge_claim, why_there: r.why_there || '',
+              tension: r.tension || '', evidence: '' });
+          if (CONVENE_VIS && CONVENE_VIS.slug === slug) {
+            CONVENE_VIS.anims.push({ from: fromRoom, to: toRoom,
+              t0: performance.now(), dur: 1700 });
+          }
+        }
+      });
+      commit(); cb2();
+    });
+  }
   function iteration(iter, next) {
     carryNow = carryNext; carryNext = {};
     // record the reverberation itself, so the transcript shows the routing —
@@ -3309,20 +3482,26 @@ function runHarness(cell, seat, world, onStep, done) {
     for (var t in carryNow) {
       carryNow[t].forEach(function (cy) {
         rec('reverb', iter, +t, { seat: cy.seat,
-          text: cy.claim + (cy.contradiction ? ' — undecided: ' + cy.contradiction : '') },
-          { from_room: cy.from_room, cev: cy.evidence || '' });
+          text: cy.claim +
+            (cy.why_there ? ' — why it matters here: ' + cy.why_there : '') +
+            (cy.tension ? ' — tension: ' + cy.tension
+             : cy.contradiction ? ' — undecided: ' + cy.contradiction : '') },
+          { from_room: cy.from_room, cev: cy.evidence || '',
+            bridge: cy.kind === 'bridge' ? 1 : undefined });
       });
     }
     var k = 0;
     (function nextTopic() {
       if (k >= order.length) {
-        if (iter < REVERB && needsAll.length) {
-          var q = needsAll.slice(); needsAll = [];
-          tick('iteration ' + iter + ' · looking things up', -1, 'lookup');
-          ROUND_STATE[slug].at--;            // fetches are free; do not count them
-          return resolveNeeds(cell, q, function () { next(); });
-        }
-        return next();
+        return reflectPass(iter, function () {
+          if (iter < REVERB && needsAll.length) {
+            var q = needsAll.slice(); needsAll = [];
+            tick('iteration ' + iter + ' · looking things up', -1, 'lookup');
+            ROUND_STATE[slug].at--;          // fetches are free; do not count them
+            return resolveNeeds(cell, q, function () { next(); });
+          }
+          return next();
+        });
       }
       var t = order[k]; k++;
       topicPass(iter, t, nextTopic);
@@ -3359,9 +3538,12 @@ function runHarness(cell, seat, world, onStep, done) {
       'research agenda this round discovered: what evidence or institutional answer would ' +
       'make the topic decidable, or empty if it is decided. An outcome may legitimately ' +
       'be that no substantive conclusion is admissible — then the statement names exactly ' +
-      'which evidence is missing, and that is a finding, not a failure. Three sentences ' +
-      'at most per statement. This is what the next convening inherits: what can be said, ' +
-      'what cannot, and what must be learned next.';
+      'which evidence is missing, and that is a finding, not a failure. Lines whose mode ' +
+      'is reflect are the seats\' cross-room reflections — implications visible only from ' +
+      'a strut that stands in two rooms at once — and they are privileged: an outcome ' +
+      'that ignores what the bridges established has missed the syntegration. Three ' +
+      'sentences at most per statement. This is what the next convening inherits: what ' +
+      'can be said, what cannot, and what must be learned next.';
     tick('writing the outcomes', -1, 'outcome');
     ask('outcome', ctx, SCHEMA_OUTCOME, 'outcomes', 2400, function (err, j) {
       if (err) return abort(err);
@@ -3372,6 +3554,10 @@ function runHarness(cell, seat, world, onStep, done) {
           if (o.dissent) x.dissent = o.dissent;
           if (o.needed) x.needed = o.needed;
           rec('outcome', REVERB + 1, o.topic, { seat: -1, text: o.statement }, x);
+          memAdd({ cell: slug, conv: round, seat: -1, type: 'OUTCOME',
+                   room: o.topic, iter: REVERB + 1,
+                   text: o.statement + (o.needed ? ' — must learn: ' + o.needed : ''),
+                   src: [], imp: 3, prov: 1 });
         });
       }
       commit();
@@ -3617,7 +3803,97 @@ if (!DB.topics) DB.topics = {};
 if (!DB.seatSrc) DB.seatSrc = {};
 if (!DB.news) DB.news = {};
 if (!DB.spend) DB.spend = { calls: 0, input: 0, output: 0, cached: 0, reasoning: 0 };
+if (!DB.mem) DB.mem = [];
 function commit() { saveStore(DB); }
+
+/* ------------------------------------------------- the memory stream
+ * A seat is not a chatbot. It is a persistent cognitive edge between two
+ * topics, and what makes it one is memory: what it encountered in its
+ * OTHER room is the most important thing it can know in this one. So
+ * under the cell record sits a stream of typed memories — evidence heard,
+ * claims made, critiques taken, bridges built, reflections reached — each
+ * scored for importance and provenance, each addressed to the ground the
+ * way everything here is. Memory inherits geographically: a memory written
+ * at F14.331 is retrievable at F14, marked inherited, provenance intact —
+ * semantic zoom is memory zoom.                                          */
+var MEM_TYPES = ['EVIDENCE', 'HEARD_CLAIM', 'UTTERANCE', 'CRITIQUE', 'BRIDGE',
+                 'REFLECTION', 'CONTRADICTION', 'OPEN_QUESTION', 'COMMITMENT', 'OUTCOME'];
+var MEM_CAP = 420;
+function memAdd(m) {
+  m.id = 'M' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36);
+  m.t = Date.now(); m.acc = m.t;
+  m.imp = clamp(m.imp | 0, 0, 3);       // did it alter the argument?
+  m.prov = clamp(m.prov | 0, 0, 3);     // 3 primary · 2 secondary · 1 council inference · 0 rehearsal
+  DB.mem.push(m);
+  if (DB.mem.length > MEM_CAP) {
+    // evict the least load-bearing, never the newest convening's
+    var tmax = 0;
+    DB.mem.forEach(function (x) { if (x.t > tmax) tmax = x.t; });
+    DB.mem.sort(function (a, b) {
+      return (a.imp + a.prov + (a.t > tmax - 36e5 ? 9 : 0))
+           - (b.imp + b.prov + (b.t > tmax - 36e5 ? 9 : 0));
+    });
+    DB.mem = DB.mem.slice(DB.mem.length - MEM_CAP);
+  }
+  return m.id;
+}
+function memWords(s) {
+  var out = {}, w = String(s || '').toLowerCase().match(/[a-zà-ÿ]{4,}/g) || [];
+  for (var i = 0; i < w.length; i++) out[w[i]] = 1;
+  return out;
+}
+// every memory of this ground, walking up the address — a parent's memory
+// serves the child, and the child's serves the parent, marked inherited
+function memFor(slug) {
+  var out = [];
+  for (var i = 0; i < DB.mem.length; i++) {
+    var m = DB.mem[i];
+    if (m.cell === slug) out.push({ m: m, inherited: false });
+    else if (m.cell && (slug.indexOf(m.cell) === 0 || m.cell.indexOf(slug) === 0)) {
+      out.push({ m: m, inherited: true });
+    }
+  }
+  return out;
+}
+/* retrieval, Park's score with the syntegration term added:
+ *   relevance + recency + importance + BRIDGE VALUE + provenance
+ * bridge value is the superpower: a memory from this seat's OTHER room
+ * that constrains what it should say here outranks everything local.    */
+function memRetrieve(slug, seatIdx, room, query, k) {
+  var qw = memWords(query), now = Date.now();
+  var scored = [];
+  memFor(slug).forEach(function (e) {
+    var m = e.m;
+    if (m.seat !== undefined && m.seat !== null && m.seat !== -1 &&
+        seatIdx !== undefined && m.seat !== seatIdx &&
+        m.type !== 'OUTCOME' && m.type !== 'EVIDENCE') return;  // another seat's mind
+    var mw = memWords(m.text), hit = 0, nq = 0;
+    for (var w in qw) { nq++; if (mw[w]) hit++; }
+    var rel = nq ? hit / nq : 0;
+    var rec2 = Math.max(0, 1 - (now - m.t) / (36e5 * 6));       // six hours to fade
+    var bridge = (m.type === 'BRIDGE' || m.type === 'REFLECTION') ? 1
+               : (m.room !== undefined && room !== undefined && m.room !== room &&
+                  m.seat === seatIdx) ? 0.7 : 0;
+    scored.push({ m: m, inherited: e.inherited,
+      score: rel * 2 + rec2 + m.imp / 3 + m.prov / 3 + bridge });
+  });
+  scored.sort(function (a, b) { return b.score - a.score; });
+  var top = scored.slice(0, k || 6);
+  top.forEach(function (s) { s.m.acc = now; });
+  return top.map(function (s) {
+    return { id: s.m.id, type: s.m.type, text: String(s.m.text).slice(0, 240),
+             room: s.m.room === undefined ? null : s.m.room,
+             reverberation: s.m.iter || null,
+             importance: s.m.imp, provenance: s.m.prov,
+             scope: s.m.cell, inherited: s.inherited };
+  });
+}
+// the memory stream is a claim about the instrument, so it is checkable
+window.ICOSA_MEM = {
+  all: function () { return DB.mem.slice(); },
+  of: function (slug) { return memFor(slug); },
+  retrieve: memRetrieve
+};
 // an older record may carry a key from before it was session-only; take it
 // off the record and put it where it belongs
 if (DB.key) { if (!OPENAI_KEY) setOpenAIKey(DB.key); scrubKeys(DB); commit(); }
@@ -6425,9 +6701,17 @@ function openTranscript(cell, seat) {
                 }
                 if (n.mode === 'reverb') {
                   return '<div class="said" style="opacity:.8"><b>' + esc((n.who || '').toUpperCase()) +
-                    '</b> <span>carried in from room ' + n.from_room + '</span><p>' + esc(n.text) + '</p>' +
+                    '</b> <span>' + (n.bridge ? 'bridge' : 'carried in') + ' from room ' + n.from_room +
+                    '</span><p>' + esc(n.text) + '</p>' +
                     (n.cev ? '<p style="color:var(--muted);font-size:9px">stands on: ' + esc(n.cev) + '</p>' : '') +
                     '</div>';
+                }
+                if (n.mode === 'reflect') {
+                  return '<div class="said" style="border-left:2px dashed var(--muted);padding-left:7px"><b>' +
+                    esc((n.who || '').toUpperCase()) +
+                    '</b> <span>' + esc(n.register || '') + ' · reflects across rooms ' +
+                    n.from_room + ' &amp; ' + n.topic + ' · simulated seat position, not the person’s belief</span>' +
+                    '<p>' + esc(n.text) + '</p></div>';
                 }
                 return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') + '"><b>' +
                   esc((n.who || '').toUpperCase()) + '</b> <span>' +
@@ -6710,6 +6994,12 @@ function runExportText(cell, seat, world) {
          'evidence, and the contradiction it leaves undecided \u2014 along their strut into ' +
          'their OTHER room \u2014 THE BENCH names both rooms for every seat \u2014 where the next ' +
          'reverberation must operate on it, not applaud it.');
+  L.push('   e. after ALL rooms: each seat reflects across its two rooms \u2014 the one ' +
+         'implication visible only because it occupies both, written as a SIMULATED SEAT ' +
+         'POSITION (what the seat\'s argument implies, never what the person believes) \u2014 ' +
+         'and its bridge (claim \u00b7 why it matters in the other room \u00b7 the tension it ' +
+         'introduces) is routed along the strut as the privileged payload of the next ' +
+         'reverberation. Same topology, different minds.');
   L.push('5. CLOSE. One outcome statement per topic \u2014 what this convening established, ' +
          'from admissible lines only. Consensus is not the goal: record where registers ' +
          'still cannot both be right, and what must be learned next to decide them. ' +
@@ -6847,8 +7137,14 @@ function runExportText(cell, seat, world) {
               return;
             }
             if (n.mode === 'reverb') {
-              L.push('- carried in from room ' + n.from_room + ' \u2014 ' + (n.who || '') + ': ' + n.text +
+              L.push('- ' + (n.bridge ? 'bridge' : 'carried in') + ' from room ' + n.from_room +
+                     ' \u2014 ' + (n.who || '') + ': ' + n.text +
                      (n.cev ? ' [stands on: ' + n.cev + ']' : ''));
+              return;
+            }
+            if (n.mode === 'reflect') {
+              L.push('- SEAT REFLECTION (simulated seat position, not the person\u2019s belief) \u2014 ' +
+                     (n.who || '') + ', across rooms ' + n.from_room + ' & ' + n.topic + ': ' + n.text);
               return;
             }
             L.push('- ' + (n.who || '') + ' (' +
@@ -6876,11 +7172,13 @@ function runExportText(cell, seat, world) {
     L.push('spend, all time on this record: ' + DB.spend.calls + ' calls \u00b7 ' +
            tok(DB.spend.input) + ' in (' + tok(DB.spend.cached) + ' cached) \u00b7 ' +
            tok(DB.spend.output) + ' out');
-  L.push('pipeline: charter \u2192 (speak \u2192 critique \u2192 judge) \u00d7 topics \u00d7 ' + REVERB +
-         ' reverberations, unresolved claims carried along the struts between rooms \u2192 ' +
-         'outcomes. Every utterance compiles as operation(register, evidence); the judge ' +
-         'gates admissibility before quality, and an inadmissible line is INVALID, not ' +
-         'low-scoring.');
+  L.push('pipeline: charter \u2192 ((speak \u2192 critique \u2192 judge) \u00d7 topics \u2192 seats reflect ' +
+         'across their two rooms) \u00d7 ' + REVERB + ' reverberations, bridges and unresolved ' +
+         'claims carried along the struts between rooms \u2192 outcomes. Every utterance ' +
+         'compiles as operation(register, evidence); the judge gates admissibility before ' +
+         'quality, and an inadmissible line is INVALID, not low-scoring. Seats keep ' +
+         'minds between calls: scratch during the run, a typed memory stream across ' +
+         'runs, inherited along the address prefix.');
   return L.join('\n');
 }
 /* Copy has three rungs, because clipboards are the least standard thing a

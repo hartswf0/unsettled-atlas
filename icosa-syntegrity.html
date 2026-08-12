@@ -6141,24 +6141,81 @@ function openTranscript(cell, seat) {
   };
   document.getElementById('tBack').onclick = function () { openCouncil(cell); };
 }
-/* The run leaves whole. One copy carries the system instruction exactly as
- * every call carried it, the agenda, the bench and the full scored
- * transcript — so a convening can be logged, kept, or handed to a different
- * model in a different context window as one document.                    */
+/* The run leaves as a prompt, not a printout. The document COPY THE RUN
+ * produces is written to be given to another model: it binds to the exact
+ * polygon (address, corners, containment), carries the protocol as numbered
+ * instructions the receiver executes, embeds everything already fetched —
+ * bench, agenda, ground, evidence, prior transcript — and tells the
+ * receiver to fetch what is missing. Given to a person instead, the same
+ * document is the complete record of the last convening. The output format
+ * it demands is its own transcript format, so what comes back can travel. */
 function runExportText(cell, seat, world) {
   var slug = cellSlug(cell), said = utterances(slug), ch = charterOf(slug);
   var topics = topicNames(cell, seat, world);
+  var tpts = topicPoints(cell, seat, world);
+  var inv = GAZ_STATE === 'ready' ? cellInventory(cell) : null;
+  var news = newsFor(cell);
+  var unclaimed = [];
+  seat.struts.forEach(function (st, i) { if (!seatHolder(slug, i)) unclaimed.push(i); });
   var L = [];
-  L.push('# SYNTEGRATION \u00b7 ' + slug);
-  L.push('exported ' + new Date().toISOString() + ' \u00b7 ' + kmLabel(cellEdgeKm(cell)) +
-         ' triangle \u00b7 centre ' + ll(cellCentre(cell)));
+  L.push('# RUN A SYNTEGRATION \u00b7 ' + slug);
   L.push('');
-  L.push('A rehearsal of the argument this ground would have, written and scored by ' +
-         'models from the compiled state of the Unsettled Atlas. The people named are ' +
-         "the record's nominees; none of them said any of this.");
+  L.push('This document is a runnable prompt. Given to a capable model, it produces the ' +
+         'next convening of this council; given to a person, it is the complete record of ' +
+         'the last one. It binds to one triangle of an icosahedral Earth \u2014 every line ' +
+         'produced from it must carry the address ' + slug + '. What it stages is a ' +
+         'rehearsal: the people named are nominees drawn from the public record, and ' +
+         'nothing written here was said by them.');
+  L.push('');
+  L.push('## THE POLYGON');
+  L.push('- address: ' + slug + ' (a prefix code \u2014 ancestry is a string-prefix test)');
+  L.push('- depth ' + cell.depth + ' \u00b7 ' + kmLabel(cellEdgeKm(cell)) + ' edge \u00b7 ' +
+         SCALES[scaleOf(cellEdgeKm(cell))].n.toLowerCase() + ' scale');
+  cellCorners(cell).forEach(function (v, i) { L.push('- corner ' + i + ': ' + ll(v)); });
+  L.push('- centre: ' + ll(cellCentre(cell)));
+  var chain = [];
+  for (var d = 0; d < cell.depth; d++) chain.push(cellSlug(makeCell(cell.f, cell.path.slice(0, d))));
+  if (chain.length) L.push('- contained by: ' + chain.join(' \u2192 '));
+  L.push('');
+  L.push('## HOW TO RUN IT \u2014 you are the harness');
+  L.push('1. FETCH FIRST. ' + (unclaimed.length || !ch
+    ? (unclaimed.length ? unclaimed.length + ' seat(s) below are unclaimed. ' : '') +
+      (!ch ? 'No charter has been written yet. ' : '') +
+      'If you can search: find notable people genuinely tied to the settlements in THE ' +
+      'GROUND \u2014 born, died or worked inside this polygon, most local first \u2014 and claim ' +
+      'each empty seat with one; find what is contested on this ground now. If you ' +
+      'cannot search: infer both, and mark every inferred name and issue as inferred, ' +
+      'not cited.'
+    : 'The bench and agenda below were already fetched from the record. Verify them if ' +
+      'you can search; otherwise run with them as given.'));
+  L.push('2. ADOPT THE LAW. The SYSTEM INSTRUCTION section below is your system ' +
+         'instruction for every line you produce. Do not restate it; obey it.');
+  L.push('3. THE CHARTER. ' + (ch
+    ? 'A charter, opening question and agenda exist below \u2014 adopt them.'
+    : 'Write it first: one contested OPENING QUESTION too big for any single room; for ' +
+      'each topic an AGENDA subject \u2014 the live issue at that place, not the place ' +
+      'name \u2014 with a one-sentence statement of importance; then three to six TENSIONS.'));
+  L.push('4. CONVENE. Run ' + REVERB + ' reverberations. In each, take the topic rooms in ' +
+         'order, and for each room:');
+  L.push('   a. every member speaks FIRST PERSON as the named holder of their seat, from ' +
+         "their seat's register, about this room's subject at this place \u2014 concrete, " +
+         'placed, no pleasantries;');
+  L.push('   b. the room\'s critics answer what was just said, register against register;');
+  L.push('   c. judge every line \u2014 grounded, register, specific, engaged, 0\u20133 each. A ' +
+         'room averaging below ' + GATE.total + '/12, or below ' + GATE.grounded + '/3 on ' +
+         'grounded, speaks once more with your notes, and the better attempt is kept;');
+  L.push('   d. carry each passing member\'s strongest claim along their strut into their ' +
+         'OTHER room \u2014 THE BENCH names both rooms for every seat \u2014 where it is read ' +
+         'into the next reverberation.');
+  L.push('5. CLOSE. One outcome statement per topic \u2014 what this convening established \u2014 ' +
+         'and record dissent honestly where a register refused the consensus.');
+  L.push('6. WRITE IT DOWN in exactly the transcript format used below: ' +
+         "'### CONVENING n \u00b7 REVERBERATION i OF " + REVERB + "', '#### TOPIC t \u00b7 SUBJECT " +
+         "(at Place)', then '- Name (description \u00b7 REGISTER) [score/12]: line', " +
+         "'- carried in from room k \u2014 Name: claim', '- OUTCOME: statement'. Head your " +
+         'output with the address ' + slug + ' so the run stays tracked to its polygon.');
   L.push('');
   L.push('## SYSTEM INSTRUCTION');
-  L.push('The hot prefix, verbatim \u2014 identical across every call on this cell:');
   L.push('');
   L.push(lawFor(slug));
   L.push('');
@@ -6179,16 +6236,50 @@ function runExportText(cell, seat, world) {
       L.push('');
     }
   }
+  L.push('## THE GROUND');
+  if (inv && inv.places.length) {
+    L.push('- ' + inv.places.length + ' named settlement(s)' +
+           (inv.pop ? ' \u00b7 at least ' + inv.pop.toLocaleString('en') + ' people' : '') +
+           (inv.countries.length ? ' \u00b7 governed by ' + inv.countries.join(', ') : ''));
+    inv.places.slice(0, 12).forEach(function (p) {
+      L.push('- ' + p.name + (p.pop ? ' \u00b7 ' + p.pop.toLocaleString('en') + ' people' : ''));
+    });
+  } else {
+    L.push('- no compiled settlements at this scale \u2014 the ground is the polygon itself');
+  }
+  if (news && news.list.length) {
+    L.push('');
+    L.push('What is live here now, as last fetched (' + whenLabel(news.t) + '):');
+    news.list.slice(0, 8).forEach(function (x) {
+      L.push('- ' + (x.title || '') + (x.note ? ' \u2014 ' + x.note : '') +
+             (x.source ? ' (' + x.source + ')' : x.from === 'edit' ? ' (wikipedia edit)' : ''));
+    });
+  }
+  L.push('');
+  L.push('## THE TOPICS');
+  topics.forEach(function (tp, t) {
+    L.push('- TOPIC ' + t + ' \u00b7 ' + (tp.subject || tp.title || 'unnamed') +
+           (tp.subject && tp.title ? ' \u00b7 at ' + tp.title : '') +
+           ' \u00b7 ' + ll(tpts[t]) +
+           (tp.issue && !tp.subject ? ' \u2014 ' + tp.issue : ''));
+  });
+  L.push('');
   L.push('## THE BENCH');
+  L.push('Each seat sits in two rooms and answers two others \u2014 the struts are the ' +
+         'routing. A critic\'s register is chosen to be incommensurable with what it answers.');
   seat.struts.forEach(function (st, i) {
     var held = seatHolder(slug, i), src = seatSource(slug, i);
     L.push('- SEAT ' + i + (st.register ? ' \u00b7 ' + st.register : '') + ' \u00b7 ' +
-           (held || 'unclaimed') + (src && src.what ? ' (' + src.what + ')' : '') +
-           ' \u00b7 topics ' + st.topics.join(' & ') + ' \u00b7 critiques ' + st.critiques.join(' & '));
+           (held || 'UNCLAIMED \u2014 fetch or infer a holder') +
+           (src && src.what ? ' (' + src.what + ')' : '') +
+           ' \u00b7 speaks in rooms ' + st.topics.join(' & ') +
+           ' \u00b7 answers rooms ' + st.critiques.join(' & '));
   });
   L.push('');
   if (said.length) {
-    L.push('## TRANSCRIPT');
+    L.push('## THE TRANSCRIPT SO FAR');
+    L.push('What earlier convenings established. Inherit it \u2014 the next convening starts ' +
+           'from these outcomes rather than repeating them.');
     var byRound = {};
     said.forEach(function (n) { (byRound[n.round] = byRound[n.round] || []).push(n); });
     Object.keys(byRound).sort(function (a, b) { return a - b; }).forEach(function (r) {
@@ -6234,16 +6325,14 @@ function runExportText(cell, seat, world) {
   var models = {};
   said.forEach(function (n) { if (n.model) models[n.model] = 1; if (n.jm) models[n.jm] = 1; });
   if (ch && ch.model) models[ch.model] = 1;
-  L.push('## HOW IT WAS MADE');
-  L.push('models: ' + (Object.keys(models).join(', ') || 'none recorded'));
+  L.push('## HOW THE LAST RUN WAS MADE');
+  L.push('models: ' + (Object.keys(models).join(', ') || 'none \u2014 nothing has been convened here yet'));
   if (DB.spend && DB.spend.calls)
     L.push('spend, all time on this record: ' + DB.spend.calls + ' calls \u00b7 ' +
            tok(DB.spend.input) + ' in (' + tok(DB.spend.cached) + ' cached) \u00b7 ' +
            tok(DB.spend.output) + ' out');
-  L.push('pipeline: charter \u2192 (speak \u2192 critique \u2192 judge) \u00d7 topics \u00d7 ' +
-         REVERB + ' reverberations, claims carried along the struts between rooms \u2192 ' +
-         'outcomes. Scores are grounded/register/specific/engaged, each 0\u20133; the gate is ' +
-         GATE.total + '/12 and ' + GATE.grounded + '/3 grounded, taken on the room.');
+  L.push('pipeline: charter \u2192 (speak \u2192 critique \u2192 judge) \u00d7 topics \u00d7 ' + REVERB +
+         ' reverberations, claims carried along the struts between rooms \u2192 outcomes.');
   return L.join('\n');
 }
 function copyText(txt, btn) {

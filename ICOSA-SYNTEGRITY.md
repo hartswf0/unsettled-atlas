@@ -987,17 +987,31 @@ The live region is small on purpose: a breathing dot, `iteration · topic ·
 stage`, a call counter against the priced plan, a thin progress bar, and
 the last three lines said, the newest sliding in. Not a log — a pulse.
 
-And the run leaves whole. **COPY THE RUN** — on the council and on the
-transcript — puts one document on the clipboard: the system instruction
-exactly as every call carried it (LAW plus the charter, verbatim), the
-opening question, the agenda, the tensions, the bench with each seat's
-register and rooms, the full transcript with every score, judge note,
-carry and second attempt, the outcomes with their dissents, and how it was
-made — models, spend, pipeline. **TAKE IT AS A FILE** saves the same thing
-as markdown. The point is portability: a convening can be logged, kept
-outside the browser, or handed to a different model in a different context
-window as a single self-describing document — including the honesty header
-saying it is a rehearsal and that the people named said none of it.
+And the run leaves as a prompt, not a printout. **COPY THE RUN** — on the
+council and on the transcript — puts one document on the clipboard that is
+written to be *given to another model and executed*: paste it into any
+capable AI and it runs the next convening of this council. It opens by
+binding itself to the polygon — the address, the three corners, the centre,
+the containment chain — and demands that every line produced carry that
+address, so the run stays tracked to its triangle no matter whose context
+window it lands in. Then HOW TO RUN IT makes the receiver the harness, in
+six numbered steps: fetch first (if seats are unclaimed or there is no
+agenda, go find people genuinely tied to these settlements and what is
+contested here now — or infer and say so), adopt the law (the system
+instruction is included verbatim, LAW plus charter, exactly as every call
+carried it), adopt or write the charter, convene the reverberations with
+first-person members, answering critics, the four-way judging with the
+gate and the retry, and the carries along the struts (the bench listing
+names both rooms for every seat, so the routing travels with the
+document), close on outcomes with dissent, and write it down *in the
+document's own transcript format*, so what comes back is shaped like what
+went out. Everything already fetched is embedded as state — the ground
+with its settlements and population, the live items, the topics with
+their coordinates, the bench with provenance, the full scored transcript
+of earlier convenings marked "inherit it" — so the receiving model starts
+where this one stopped rather than from nothing. Given to a person
+instead, the same document reads as the complete record of the last run,
+honesty header included. **TAKE IT AS A FILE** saves it as markdown.
 
 The map plays the same run at the other scale. The room currently speaking
 carries an expanding ring at its topic point; when the judge is scoring,

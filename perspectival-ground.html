@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#efeadd">
+<meta name="description" content="Perspectival Ground — a game played on real Atlanta, where becoming something else changes what the ground is.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Perspectival Ground</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23efeadd'/%3E%3Cpath d='M3 22c7 0 5-12 13-12s6 12 13 12' fill='none' stroke='%23bf4526' stroke-width='2.6'/%3E%3Ccircle cx='16' cy='16' r='3' fill='%231d201d'/%3E%3C/svg%3E">
+<style>
+  :root{
+    --paper:#efeadd; --paper-lit:#f6f2e8; --ink:#1d201d;
+    --ink-soft:rgba(29,32,29,.55); --signal:#bf4526;
+    --sat:env(safe-area-inset-top,0px); --sab:env(safe-area-inset-bottom,0px);
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0;height:100%;overflow:hidden;background:var(--paper);color:var(--ink)}
+  body{
+    font-family:Georgia,"Times New Roman",serif;
+    overscroll-behavior:none;touch-action:none;
+    -webkit-user-select:none;user-select:none;
+  }
+  #stage{position:fixed;inset:0;touch-action:none}
+  canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+  #hud{position:fixed;inset:0;pointer-events:none;z-index:5}
+  #hud > *{pointer-events:auto}
+  #boot{
+    position:fixed;inset:0;z-index:20;display:grid;place-items:center;
+    background:var(--paper);transition:opacity .5s ease;
+  }
+  #boot.gone{opacity:0;pointer-events:none}
+  #boot div{font:italic 15px/1.6 Georgia,serif;color:var(--ink-soft);text-align:center}
+  @media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="cv"></canvas></div>
+<div id="hud"></div>
+<div id="boot"><div>Atlanta<br>is being woven</div></div>
+<script type="module" src="./pg/main.js"></script>
+</body>
+</html>

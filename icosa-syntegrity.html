@@ -65,6 +65,30 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   white-space:normal;max-width:min(300px,72vw);cursor:default}
 #wiretbl .wrow b{color:var(--ink);font-weight:700}
 #wiretbl .wnote{margin-top:3px;opacity:.75}
+#panel .deck{display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));
+  gap:8px;margin:12px 0}
+#panel .pcard{border:1.5px solid var(--ink);background:var(--paper);
+  display:flex;flex-direction:column;gap:2px;align-items:center;text-align:center;
+  padding:0 0 6px;overflow:hidden}
+#panel .pcard img{width:100%;height:72px;object-fit:cover;
+  border-bottom:1px solid var(--ink);filter:grayscale(.25) contrast(1.05)}
+#panel .pcard .pface{width:100%;height:72px;display:flex;align-items:center;
+  justify-content:center;font-size:30px;font-weight:700;opacity:.5;
+  border-bottom:1px solid var(--ink)}
+#panel .pcard b{font-size:9px;line-height:1.25;padding:2px 4px 0}
+#panel .pcard em{font-style:normal;font-size:7.5px;color:var(--muted);
+  padding:0 4px;line-height:1.3}
+#panel .pcard i{font-style:normal;font-size:8px;font-weight:700;letter-spacing:.14em}
+#panel .pcard span{font-size:7px;color:var(--muted);padding:0 4px;line-height:1.4}
+#panel .pcard u{text-decoration:none;font-size:6.5px;color:var(--muted);
+  letter-spacing:.08em;opacity:.8}
+#panel .team{border-left:2px solid var(--ink);padding:5px 0 5px 8px;margin:8px 0}
+#panel .team b{display:block;font-size:10px}
+#panel .team b s{text-decoration:none;color:var(--muted);font-size:8px;
+  letter-spacing:.14em;margin-right:6px}
+#panel .team q{display:block;quotes:none;font-size:9px;margin:2px 0;line-height:1.45}
+#panel .team em{display:block;font-style:normal;font-size:8px;
+  color:var(--ink);opacity:.85;line-height:1.5}
 #scaleplate{flex:0 0 auto}
 #cellid{font-weight:700;letter-spacing:.14em}
 #scaleplate{text-align:right}
@@ -1713,6 +1737,8 @@ var SOURCE_STATE = {
  * full table — every source, its state, how often it was asked, what for.
  * The scattered status strings this replaces are gone.                    */
 var WIRE = { n: 0, now: {}, hosts: {}, open: false, fadeT: null, tickT: null };
+// what answers instead, when a host never answers browsers at all
+var COVERED_BY = { 'api.gdeltproject.org': 'news comes from wikinews instead' };
 function shortHost(h) {
   return { 'en.wikipedia.org': 'wikipedia', 'www.wikidata.org': 'wikidata',
            'query.wikidata.org': 'the query service', 'overpass-api.de': 'openstreetmap',
@@ -1760,7 +1786,8 @@ function wireLine() {
   }
   for (var k in SOURCE_STATE) {
     var st = SOURCE_STATE[k];
-    if (st.dead) return { cls: 'warn', txt: shortHost(k) + ' unreachable from this browser' };
+    // a source that never answers browsers is a fact of the medium, not an
+    // alarm — it lives in the table, with what compensates, not on the line
     if (st.deadUntil && Date.now() < st.deadUntil)
       return { cls: 'warn', txt: shortHost(k) + ' resting · ' +
                Math.ceil((st.deadUntil - Date.now()) / 1000) + 's' };
@@ -1780,7 +1807,7 @@ function wireTable() {
     var n = WIRE.hosts[h] || { asked: 0, errs: 0, why: '' };
     var st = SOURCE_STATE[h], state = 'quiet';
     if (WIRE.now[h]) state = 'asking now';
-    else if (st && st.dead) state = 'unreachable';
+    else if (st && st.dead) state = 'not for browsers — ' + (COVERED_BY[h] || 'the ladder routes around it');
     else if (st && st.deadUntil && Date.now() < st.deadUntil)
       state = 'resting ' + Math.ceil((st.deadUntil - Date.now()) / 1000) + 's';
     else if (st && st.gap > 1500) state = 'slowed';
@@ -5877,10 +5904,10 @@ function summaryOf(title, cb) {
  * settlements — are warmed quietly and spaced out, landing in the same
  * cache the card reads, so the tap that follows is answered from memory. */
 var PREFETCHED = {};
-function prefetchSummaries(titles) {
+function prefetchSummaries(titles, cap) {
   var want = [];
   titles.forEach(function (t) {
-    if (t && !PREFETCHED[t] && !(DB.summaries || {})[t] && want.length < 8) {
+    if (t && !PREFETCHED[t] && !(DB.summaries || {})[t] && want.length < (cap || 8)) {
       PREFETCHED[t] = 1; want.push(t);
     }
   });
@@ -6172,9 +6199,11 @@ function runBlock(cell, seat, world) {
       : ' Nothing live has been gathered yet, so they argue from the record alone.') +
     '</p>' +
     '<button class="go" id="cRun">' + (rounds ? 'CONVENE AGAIN' : 'CONVENE') + '</button> ' +
-    (said.length ? '<button class="go ghost" id="cScript">READ THE TRANSCRIPT</button> ' : '') +
-    (said.length || ch ? '<button class="go ghost" id="cCopyRun">COPY THE RUN</button> ' : '') +
-    (said.length ? '<button class="go ghost" id="cWipe">CLEAR IT</button>' : '') +
+    '<button class="go ghost" id="cDeck">SEE THE TEAMS</button> ' +
+    '<button class="go ghost" id="cCopyRun">' +
+    (FLASH.cCopyRun > Date.now() ? 'COPIED' : 'COPY THE RUN') + '</button> ' +
+    (said.length ? '<button class="go ghost" id="cScript">READ THE TRANSCRIPT</button> ' +
+                   '<button class="go ghost" id="cWipe">CLEAR IT</button>' : '') +
     (ch ? (ch.opening ? '<div class="topic" style="cursor:default"><b><s>OPENING QUESTION</s>' +
         esc(ch.opening) + '</b></div>' : '') +
       '<details><summary>the charter and agenda for this ground · ' + esc(ch.model) +
@@ -6276,7 +6305,8 @@ function openTranscript(cell, seat) {
     'none of them said any of this.</p>' +
     (ch && ch.opening ? '<div class="topic" style="cursor:default"><b><s>OPENING QUESTION</s>' +
       esc(ch.opening) + '</b></div>' : '') + body +
-    '<button class="go ghost" id="tCopy" style="margin-top:12px">COPY THE RUN</button> ' +
+    '<button class="go ghost" id="tCopy" style="margin-top:12px">' +
+    (FLASH.tCopy > Date.now() ? 'COPIED' : 'COPY THE RUN') + '</button> ' +
     '<button class="go ghost" id="tTake" style="margin-top:12px">TAKE IT AS A FILE</button> ' +
     '<button class="go ghost" id="tBack" style="margin-top:12px">BACK TO THE COUNCIL</button>');
   var isWorld = councilSeat && councilSeat.seating === 'world';
@@ -6288,6 +6318,101 @@ function openTranscript(cell, seat) {
     takeText(runExportText(cell, seat, isWorld), 'syntegration-' + slug + '.md');
   };
   document.getElementById('tBack').onclick = function () { openCouncil(cell); };
+}
+/* The council as a hand of cards, before anything is convened. Twelve
+ * seats, each a card: the face from Wikipedia where the record has one,
+ * the register as the card's colour, both rooms and both answers as the
+ * card's suit. Below the deck, the six teams — who sits at each topic,
+ * who answers them, and where the subject actually came from, with the
+ * live evidence that feeds it linked in place. A council you can look in
+ * the eye before you spend anything convening it.                        */
+function topicEvidence(cell, tp) {
+  var news = newsFor(cell);
+  if (!news || !news.list) return [];
+  var words = ((tp.title || '') + ' ' + (tp.subject || '')).toLowerCase()
+    .split(/[^a-z\u00c0-\u024f]+/).filter(function (w) { return w.length > 3; });
+  if (!words.length) return [];
+  return news.list.filter(function (x) {
+    var s = ((x.title || '') + ' ' + (x.note || '')).toLowerCase();
+    for (var i = 0; i < words.length; i++) if (s.indexOf(words[i]) >= 0) return true;
+    return false;
+  }).slice(0, 3);
+}
+function openDeck(cell, seat, world) {
+  var slug = cellSlug(cell);
+  var topics = topicNames(cell, seat, world);
+  var ch = charterOf(slug);
+  // warm every face the record can name
+  prefetchSummaries(seat.struts.map(function (st, i) {
+    var src = seatSource(slug, i);
+    return src && src.from !== 'model' ? (src.title || seatHolder(slug, i)) : null;
+  }).filter(Boolean), 14);
+  var cards = seat.struts.map(function (st, i) {
+    var held = seatHolder(slug, i), src = seatSource(slug, i);
+    var sum = held ? (DB.summaries || {})[(src && src.title) || held] : null;
+    var col = REGCOL[st.register] || '#121514';
+    return '<div class="pcard" style="border-top:4px solid ' + col + '">' +
+      (sum && sum.thumb
+        ? '<img src="' + sum.thumb + '" alt="" loading="lazy">'
+        : '<div class="pface" style="color:' + col + '">' +
+          (held ? esc(held.charAt(0)) : '\u00b7') + '</div>') +
+      '<b>' + (held ? esc(held) : 'UNCLAIMED') + '</b>' +
+      (src && src.what ? '<em>' + esc(src.what) + '</em>' : '<em>&nbsp;</em>') +
+      '<i style="color:' + col + '">' + esc(st.register || '') + '</i>' +
+      '<span>seat ' + i + ' \u00b7 rooms ' + st.topics.join(' & ') +
+      ' \u00b7 answers ' + st.critiques.join(' & ') + '</span>' +
+      '<u>' + (src ? (src.from === 'model' ? 'inferred \u2014 not a citation' : 'from the record')
+                   : held ? 'claimed by hand' : 'open seat') + '</u>' +
+      '</div>';
+  }).join('');
+  var teams = seat.members.map(function (m, t) {
+    var tp = topics[t] || {};
+    var members = m.map(function (i) { return seatHolder(slug, i) || 'seat ' + i; });
+    var critics = [];
+    seat.struts.forEach(function (st, i) {
+      if (st.critiques.indexOf(t) >= 0) critics.push(seatHolder(slug, i) || 'seat ' + i);
+    });
+    var srcLine = tp.subject
+      ? 'subject from the charter' + (ch ? ' \u00b7 written by ' + esc(ch.model) : '')
+      : tp.issue
+        ? 'issue ' + (tp.inferred ? 'inferred by the model \u2014 not a citation' : 'from the record')
+        : 'no subject yet \u2014 the place stands in \u00b7 ' + (SOURCE_NAME[tp.from || 'coordinate'] || '');
+    var ev = topicEvidence(cell, tp);
+    return '<div class="team">' +
+      '<b><s>TEAM ' + t + '</s>' + esc(tp.subject || tp.title || 'unnamed') +
+      (tp.subject && tp.title ? ' <span style="color:var(--muted);font-weight:400">at ' +
+        esc(tp.title) + '</span>' : '') + '</b>' +
+      (tp.statement ? '<q>' + esc(tp.statement) + '</q>' : tp.issue ? '<q>' + esc(tp.issue) + '</q>' : '') +
+      '<em>at the table: ' + esc(members.join(', ')) + '</em>' +
+      '<em>answered by: ' + esc(critics.join(', ')) + '</em>' +
+      '<em style="color:var(--muted)">' + srcLine + '</em>' +
+      ev.map(function (x) {
+        return '<em>\u21b3 ' + (x.url ? '<a href="' + x.url + '" target="_blank" rel="noopener">' +
+          esc(x.title || x.note || '') + '</a>' : esc(x.title || x.note || '')) +
+          (x.source ? ' \u00b7 ' + esc(x.source) : x.from === 'edit' ? ' \u00b7 wikipedia edit' : '') +
+          '</em>';
+      }).join('') +
+      '</div>';
+  }).join('');
+  panel('THE DECK \u00b7 ' + slug,
+    '<p>The council as a hand of cards, before anything is spent convening it. Each card is a ' +
+    'seat: its register is the colour, its two rooms and two answers are the suit, and the ' +
+    'face \u2014 where the record has one \u2014 is the article\u2019s own picture. Below, the six ' +
+    'teams, and where each subject actually came from.</p>' +
+    '<div class="deck">' + cards + '</div>' + teams +
+    '<button class="go ghost" id="dBack" style="margin-top:12px">BACK TO THE COUNCIL</button>');
+  PANEL = 'deck';
+  document.getElementById('dBack').onclick = function () { openCouncil(cell); };
+  // faces land asynchronously; give the grid two chances to pick them up
+  [1600, 3600].forEach(function (ms) {
+    setTimeout(function () {
+      if (PANEL === 'deck') {
+        var sc = elPanel.scrollTop;
+        openDeck(cell, seat, world);
+        elPanel.scrollTop = sc;
+      }
+    }, ms);
+  });
 }
 /* The run leaves as a prompt, not a printout. The document COPY THE RUN
  * produces is written to be given to another model: it binds to the exact
@@ -6488,12 +6613,20 @@ function runExportText(cell, seat, world) {
  * on iOS select() selects nothing, setSelectionRange is the one that works;
  * and when both are refused, the document is shown on screen selected,
  * which cannot fail. */
+var FLASH = {};
 function copyText(txt, btn, back) {
   function ok() {
     if (!btn) return;
-    var was = btn.textContent;
-    btn.textContent = 'COPIED';
-    setTimeout(function () { btn.textContent = was; }, 1600);
+    // background answers re-render panels under this button, so the flash
+    // is state the renderer reads, not a mutation a re-render can wipe
+    FLASH[btn.id] = Date.now() + 1600;
+    var el = document.getElementById(btn.id) || btn;
+    var was = 'COPY THE RUN';
+    el.textContent = 'COPIED';
+    setTimeout(function () {
+      var e2 = document.getElementById(btn.id);
+      if (e2 && e2.textContent === 'COPIED') e2.textContent = was;
+    }, 1600);
   }
   function byCommand() {
     var ta = document.createElement('textarea');
@@ -6596,7 +6729,8 @@ function modelBlock(cell, seat, world) {
       'Nothing else to set.</p>' +
       '<p style="color:var(--signal)">The key is kept on this device under its own name. It is ' +
       'never written into the record and never leaves in an export.</p>' +
-      '<input id="cKey" type="password" placeholder="openai api key">';
+      '<form style="display:contents" onsubmit="return false">' +
+      '<input id="cKey" type="password" placeholder="openai api key"></form>';
   }
   return '<p style="margin-top:14px">' +
     (busy ? 'Asking ' + esc(model) + ' what is at issue here…'
@@ -6623,7 +6757,8 @@ function modelBlock(cell, seat, world) {
       ? '<select id="cMode">' + can.modes.map(function (m) {
           return '<option value="' + m + '"' + (m === mode ? ' selected' : '') + '>' +
             m.toUpperCase() + ' MODE</option>'; }).join('') + '</select>' : '') +
-    '<input id="cKey" type="password" placeholder="openai api key" value="' + esc(OPENAI_KEY) + '">' +
+    '<form style="display:contents" onsubmit="return false">' +
+    '<input id="cKey" type="password" placeholder="openai api key" value="' + esc(OPENAI_KEY) + '"></form>' +
     '<button class="go ghost" id="cShowCtx">SHOW THE CONTEXT</button> ' +
     '<button class="go ghost" id="cForget">FORGET THE KEY</button>' +
     '</details>';
@@ -6880,6 +7015,8 @@ function openCouncil(cell, keep) {
   };
   var cscr = document.getElementById('cScript');
   if (cscr) cscr.onclick = function () { openTranscript(cell, seat); };
+  var cdk = document.getElementById('cDeck');
+  if (cdk) cdk.onclick = function () { openDeck(cell, seat, world); };
   var ccr = document.getElementById('cCopyRun');
   if (ccr) ccr.onclick = function () {
     copyText(runExportText(cell, seat, world), ccr, function () { openCouncil(cell); });

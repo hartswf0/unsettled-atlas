@@ -886,6 +886,40 @@ chokepoint (`fetchJSON`), plus the two fetches that bypass it (summaries,
 the model), and the purpose labels are parsed from the URLs, so no call
 site anywhere had to change.
 
+One wording lesson arrived from the live site: *gdelt unreachable from
+this browser* reads as something broken, when it is a fact of the medium —
+GDELT never answers browsers, and the instrument routes around it. A
+permanent fact must not dress as an alarm forever, so a dead-by-design
+source now leaves the collapsed line entirely and the table states the
+arrangement, not the failure: *gdelt · not for browsers — news comes from
+wikinews instead*. Red is reserved for the transient states a reader might
+actually wait out: resting, rate limited.
+
+## The deck
+
+A council you can look in the eye before you spend anything convening it.
+SEE THE TEAMS lays the bench out as a hand of cards — twelve seats, each a
+card: the register is the card's colour, the two rooms it speaks in and
+the two it answers are its suit, the face — where the record has one — is
+the Wikipedia article's own picture, and the bottom edge says where the
+name came from: *from the record*, *claimed by hand*, *inferred — not a
+citation*, *open seat*. Below the deck, the six teams: who sits at each
+topic, who answers them, and — because a subject without a source is just
+a mood — where the subject actually came from (*subject from the charter ·
+written by gpt-5.6-sol*, *issue inferred by the model*, *no subject yet —
+the place stands in*), with the live items that feed it linked in place:
+*↳ Tula arsenal strike continues · en.wikinews.org*. The faces land
+asynchronously and the grid picks them up as they arrive.
+
+And COPY THE RUN is simply always there now. It used to appear only once
+a charter or an utterance existed, which meant a first-time visitor had
+nothing to copy and no way to know why — the worst kind of missing
+button. The exported document was designed for exactly that empty state
+(FETCH FIRST tells the receiving model what to go find), so hiding the
+button was wrong twice. The COPIED flash also survives background
+re-renders now: it is state the renderer reads, not a mutation a
+re-render can wipe.
+
 ## The agenda is produced, not inherited
 
 The live council showed topics named "Kentucky" and "Charlotte" — places,

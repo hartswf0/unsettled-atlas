@@ -41,6 +41,13 @@ const SIGNAL = "#bf4526", PAPER = "#f6f2e8", INK = "#1d201d";
 
 const PAD = { t: 84, b: 132, x: 54 };
 
+/* Some people cannot take a screen that keeps moving. Everything that only
+   breathes or marches on the spot stops; the travelling itself does not. */
+const MOTION = (() => {
+  try { return matchMedia("(prefers-reduced-motion: reduce)").matches ? 0 : 1; }
+  catch { return 1; }
+})();
+
 /* #rrggbb -> rgba(), so a being's own ink can fade out under it */
 function hexA(hex, a) {
   const n = parseInt(hex.slice(1), 16);
@@ -93,7 +100,8 @@ function reseat() {
    ====================================================================== */
 export function onTap(ctx, p) {
   if (ctx.mode !== "travel" || !you) return false;
-  if (trip) return true;                         /* already going */
+  /* already going. the touch is felt but the journey is the journey. */
+  if (trip) { ripple(wx(p.x), wy(p.y)); return true; }
 
   /* tapping the way you were shown means: go */
   if (plan && hitPlan(p)) { go(); return true; }
@@ -121,7 +129,7 @@ function hitPlan(p) {
   if (Math.hypot(sx(plan.tx) - p.x, sy(plan.ty) - p.y - 12) < 42) return true;
   for (let i = 0; i + 3 < pts.length; i += 2) {
     const d = distToSeg(p.x, p.y, sx(pts[i]), sy(pts[i + 1]), sx(pts[i + 2]), sy(pts[i + 3])).d;
-    if (d < 26) return true;
+    if (d < 20) return true;
   }
   return false;
 }
@@ -205,8 +213,8 @@ export function draw(ctx, now) {
   c.lineJoin = "round";
 
   if (balked) drawBalk(c, now, q);
-  if (plan) drawPlan(c, now, q);
-  if (trip) drawTrip(c, now, q);
+  if (plan) drawPlan(c, now);
+  if (trip) drawTrip(c, now);
   drawFx(c, q);
   if (you) drawYou(c, now, q);
 
@@ -321,17 +329,21 @@ function ptAt(sp, cum, d) {
   };
 }
 
-/* stroke only the span [from,to] of a path, without rebuilding it */
+/* Stroke only the span [from,to] of a path, without rebuilding it. The dash is
+   put back afterwards without fail — leaving it set silently swallows every
+   small stroke drawn after this one, chevrons and pin outline included. */
 function span(c, path, from, to, L) {
   const d = Math.max(0, from), e = Math.min(L, to);
   if (e - d < 0.4) return;
   c.setLineDash([e - d, L + d + 8]);
   c.lineDashOffset = -d;
   c.stroke(path);
+  c.setLineDash([]);
+  c.lineDashOffset = 0;
 }
 
 /* the three strokes that make a line read as a route and not as a road */
-function laid(c, path, from, to, L, w, alpha, quality) {
+function laid(c, path, from, to, L, w, alpha) {
   c.globalAlpha = alpha;
   /* the halo is what lifts the way off a busy cloth. it is one more stroke of
      a path we have already built, so it survives every quality drop. */
@@ -346,7 +358,7 @@ function laid(c, path, from, to, L, w, alpha, quality) {
 
 function chevrons(c, sp, cum, from, to, now) {
   const gap = 54;
-  const drift = (now * 0.048) % gap;
+  const drift = MOTION ? (now * 0.048) % gap : 0;
   c.strokeStyle = PAPER;
   c.lineWidth = 1.6;
   c.lineCap = "round";
@@ -364,7 +376,7 @@ function chevrons(c, sp, cum, from, to, now) {
   c.globalAlpha = 1;
 }
 
-function drawPlan(c, now, q) {
+function drawPlan(c, now) {
   const sp = screenOf(plan.pts);
   if (sp.length < 4) return;
   const path = pathOf(sp), cum = cumOf(sp);
@@ -374,8 +386,8 @@ function drawPlan(c, now, q) {
   const age = now - plan.t0;
   const rev = ease(clamp((age - 40) / 400, 0, 1));
 
-  laid(c, path, 0, L * rev, L, 5.6, 1, q);
-  if (q > 0.32 && rev > 0.6) chevrons(c, sp, cum, 0, L * rev, now);
+  laid(c, path, 0, L * rev, L, 5.6, 1);
+  if (rev > 0.6) chevrons(c, sp, cum, 0, L * rev, now);
 
   /* the ground told us it will not carry us all the way. show it now, before
      anybody sets off, as the tail of the intention rather than of the route. */
@@ -387,7 +399,7 @@ function drawPlan(c, now, q) {
 
   /* it is standing there waiting to be pressed, and says so by breathing */
   if (!plan.r.balk && age > 420) {
-    const ph = ((age - 420) / 1900) % 1;
+    const ph = MOTION ? ((age - 420) / 1900) % 1 : 0.45;
     c.globalAlpha = (1 - ph) * 0.26;
     c.strokeStyle = SIGNAL;
     c.lineWidth = 1.8;
@@ -401,7 +413,7 @@ function drawPlan(c, now, q) {
     plan.r.balk ? "wanting" : "solid");
 }
 
-function drawTrip(c, now, q) {
+function drawTrip(c, now) {
   const sp = screenOf(trip.pts);
   if (sp.length < 4) return;
   const path = pathOf(sp), cum = cumOf(sp);
@@ -415,8 +427,8 @@ function drawTrip(c, now, q) {
   span(c, path, 0, d, L);
   c.globalAlpha = 1;
 
-  laid(c, path, d, L, L, 5.6, 1, q);
-  if (q > 0.32) chevrons(c, sp, cum, d, L, now);
+  laid(c, path, d, L, L, 5.6, 1);
+  chevrons(c, sp, cum, d, L, now);
 
   if (!trip.hard) pin(c, sx(trip.tx), sy(trip.ty), 1, now, "solid");
   else {
@@ -431,7 +443,7 @@ function pin(c, X, Y, k, now, mode, a = 1) {
   if (a <= 0.01) return;
   const e = 1 - Math.pow(1 - clamp(k, 0, 1), 3);
   const lift = -34 * (1 - e);
-  const breathe = mode === "solid" ? Math.sin(now * 0.0037) * 0.028 : 0;
+  const breathe = mode === "solid" ? Math.sin(now * 0.0037) * 0.028 * MOTION : 0;
   const s = (0.6 + 0.4 * e) * (1 + breathe);
   const r = 9.4 * s, h = 25 * s;
 
@@ -458,7 +470,7 @@ function pin(c, X, Y, k, now, mode, a = 1) {
     c.strokeStyle = SIGNAL; c.lineWidth = 2;
     c.stroke();
     c.setLineDash([]);
-    const ph = (now * 0.00042) % 1;
+    const ph = MOTION ? (now * 0.00042) % 1 : 0.4;
     c.globalAlpha = (1 - ph) * 0.5 * a;
     c.strokeStyle = SIGNAL; c.lineWidth = 1.5;
     c.beginPath();
@@ -504,16 +516,16 @@ function gapLine(c, ax, ay, bx, by, rev, now, alpha) {
   c.beginPath();
   for (let i = 0; i <= n; i++) {
     const t = (r * i) / n;
-    const w = Math.sin(t * Math.PI) * Math.sin(t * 7.4 + now * 0.0011) * amp;
+    const w = Math.sin(t * Math.PI) * Math.sin(t * 7.4 + now * 0.0011 * MOTION) * amp;
     const X = X0 + dx * t + px * w, Y = Y0 + dy * t + py * w;
     if (i === 0) c.moveTo(X, Y); else c.lineTo(X, Y);
   }
   c.setLineDash([6, 6]);
-  c.lineDashOffset = -((now * 0.036) % 12);
+  c.lineDashOffset = MOTION ? -((now * 0.036) % 12) : 0;
   c.globalAlpha = alpha * 0.30;
   c.lineWidth = 6.5;
   c.stroke();
-  c.globalAlpha = alpha * (0.80 + 0.20 * Math.sin(now * 0.0027));
+  c.globalAlpha = alpha * (0.80 + 0.20 * Math.sin(now * 0.0027) * MOTION);
   c.lineWidth = 2.6;
   c.stroke();
   c.setLineDash([]);
@@ -563,9 +575,9 @@ function drawBalk(c, now, q) {
   pin(c, TX, TY, 1, now, "wanting", dim);
 
   /* it keeps ringing. something is still wrong here. */
-  if (!balked.stale && q > 0.3 && age < 30000) {
+  if (!balked.stale && q > 0.25 && age < 30000) {
     for (let i = 0; i < 2; i++) {
-      const ph = ((age - 120) / 2300 + i * 0.44) % 1;
+      const ph = MOTION ? ((age - 120) / 2300 + i * 0.44) % 1 : 0.3 + i * 0.3;
       if (ph < 0 || ph > 1) continue;
       c.globalAlpha = (1 - ph) * 0.45;
       c.strokeStyle = SIGNAL;
@@ -580,7 +592,7 @@ function drawBalk(c, now, q) {
 
 /* how hard the traveller is leaning on the wall at this instant */
 function pressing(age) {
-  if (age < 760) return 0;
+  if (age < 760 || !MOTION) return 0;
   const t = (age - 760) % 2000;
   return Math.max(0, Math.sin(t / 200)) * Math.exp(-t / 460);
 }
@@ -598,7 +610,7 @@ function drawYou(c, now, q) {
     const k = (1 - dep) * Math.sin(dep * Math.PI) * 0.55;
     sqx = 1 + k; sqy = 1 - k * 0.7;
     /* what you are pushing through */
-    if (q > 0.4) {
+    if (q > 0.3) {
       c.save();
       c.translate(X, Y); c.rotate(you.ang);
       const g = c.createLinearGradient(-30, 0, 4, 0);
@@ -621,9 +633,10 @@ function drawYou(c, now, q) {
     sqx = 1 - s; sqy = 1 + s;
   }
 
-  /* the soft claim on the ground under you */
-  if (q > 0.42) {
-    const b = 0.5 + 0.5 * Math.sin(now * 0.0021);
+  /* the soft claim on the ground under you — and the only thing on screen
+     that is the colour of what you currently are */
+  if (q > 0.3) {
+    const b = 0.5 + 0.5 * Math.sin(now * 0.0021) * MOTION;
     const rr = 17 + b * 4;
     const g = c.createRadialGradient(X, Y, 3, X, Y, rr);
     g.addColorStop(0, hexA(ink.ladder, 0.26));
@@ -639,21 +652,26 @@ function drawYou(c, now, q) {
   if (trip) c.rotate(you.ang);
   else if (balked && !balked.stale) c.rotate(balked.gang);
   c.scale(sqx, sqy);
+  /* paper is nearly the colour of the ground, so the ring needs an edge of
+     its own or the traveller reads as a smudge instead of a body */
   c.beginPath();
-  c.arc(0, 0, 9.4, 0, Math.PI * 2);
+  c.arc(0, 0.9, 10.4, 0, Math.PI * 2);
+  c.fillStyle = "rgba(29,32,29,.20)";
+  c.fill();
+  c.beginPath();
+  c.arc(0, 0, 10.1, 0, Math.PI * 2);
   c.fillStyle = PAPER;
   c.fill();
   c.beginPath();
-  c.arc(0, 0, 6.6, 0, Math.PI * 2);
+  c.arc(0, 0, 6.7, 0, Math.PI * 2);
   c.fillStyle = ink.live;
   c.fill();
-  c.restore();
-
-  c.lineWidth = 1.1;
-  c.strokeStyle = "rgba(29,32,29,.30)";
+  c.lineWidth = 1.3;
+  c.strokeStyle = "rgba(29,32,29,.42)";
   c.beginPath();
-  c.arc(X, Y, 9.9, 0, Math.PI * 2);
+  c.arc(0, 0, 10.1, 0, Math.PI * 2);
   c.stroke();
+  c.restore();
 }
 
 /* ---------- flourishes ---------- */
@@ -689,7 +707,7 @@ function drawFx(c, q) {
       c.scale(1, 1 - ease(k) * 0.9);
       pin(c, 0, 0, 1, 0, "solid", 1 - k * k);
       c.restore();
-    } else if (f.k === "stop" && q > 0.4) {
+    } else if (f.k === "stop" && q > 0.25) {
       c.globalAlpha = (1 - k) * 0.85;
       c.strokeStyle = SIGNAL;
       c.lineWidth = 3.6 * (1 - k) + 0.6;
@@ -706,11 +724,18 @@ function drawFx(c, q) {
    ====================================================================== */
 function camera(ctx, now) {
   /* did a finger move the world since we last wrote to it? */
+  let moved = false;
   if (View.x !== cam.lx || View.y !== cam.ly || View.z !== cam.lz) {
-    if (!Number.isNaN(cam.lx)) { cam.userAt = now; cam.frame = null; cam.zHome = null; }
+    if (!Number.isNaN(cam.lx)) {
+      moved = true;
+      cam.userAt = now; cam.frame = null; cam.zHome = null;
+    }
   }
   const dt = ctx.dt;
   const since = now - cam.userAt;
+
+  /* the map moved under a finger this very frame. do not push back on it. */
+  if (moved) { clampView(); cam.lx = View.x; cam.ly = View.y; cam.lz = View.z; return; }
 
   if (cam.frame) {
     const k = 1 - Math.exp(-dt / 260);
@@ -737,10 +762,12 @@ function camera(ctx, now) {
     const tx = you.x + Math.cos(you.ang) * leadPx / ws;
     const ty = you.y + Math.sin(you.ang) * leadPx / ws;
 
-    /* the leash: slack right after a finger, tightening back over a second */
-    const back = clamp((since - 2200) / 1400, 0, 1);
-    const slack = lerp(Math.min(View.w, View.h) * 0.38, 9, ease(back));
-    const tau = lerp(620, 250, ease(back));
+    /* The leash. Right after a finger it is long and lazy — it will only ever
+       catch a traveller about to walk off the edge of the screen — and then
+       over a second and a half it draws back in to a proper follow. */
+    const back = ease(clamp((since - 1600) / 1500, 0, 1));
+    const slack = lerp(Math.min(View.w, View.h) * 0.42, 9, back);
+    const tau = lerp(1000, 250, back);
 
     const dx = tx - View.x, dy = ty - View.y;
     const dpx = Math.hypot(dx * ws, dy * ws);

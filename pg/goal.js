@@ -40,8 +40,17 @@ const ARRIVE = 260;
 
 const AMBER = "#c98a2e", AMBER_DEEP = "#8a5a12";
 
-let goal = null;        /* {x,y,name} */
-let rival = null;       /* {node,x,y,being,trip,reached} */
+/* Three places. Both of you run the same course, in the same order, and you
+   will be a different body for each of them — so the crossing has to be made
+   by a car AND by whatever cannot use what a car uses. That is the whole
+   argument of the game turned into a win condition. */
+const LEGS = 3;
+
+let course = [];        /* the three places, in order */
+let leg = 0;            /* which one you are on */
+let rivalLeg = 0;
+let goal = null;        /* course[leg] */
+let rival = null;       /* {node,x,y,being,trip} */
 let over = null;        /* {who, turns} */
 let turns = 0;
 let banner = null;      /* {text, t0, life} */
@@ -64,30 +73,41 @@ function start() {
 
   /* a real place, far enough that it is a journey and near enough that it is
      not a joke. the name is real; nothing about it is a legend. */
-  const here = { x: me.x, y: me.y };
-  const cands = (GROUND.places || [])
-    .map((p) => ({ name: p[0], kind: p[1], x: mercX(p[2] / 1e5), y: mercY(p[3] / 1e5) }))
-    .map((p) => ({ ...p, d: metres(Math.hypot(p.x - here.x, p.y - here.y)) }))
-    .filter((p) => p.d > 2600 && p.d < 7000)
-    .sort((a, b) => a.d - b.d);
-  const pick = cands.length ? cands[Math.floor(Math.random() * Math.min(4, cands.length))] : null;
-  if (!pick) { goal = null; return; }
+  const places = (GROUND.places || [])
+    .map((p) => ({ name: p[0], kind: p[1], x: mercX(p[2] / 1e5), y: mercY(p[3] / 1e5) }));
 
-  const gn = nearestNodeFor(pick.x, pick.y, null, units(1200));
-  goal = gn >= 0 ? { x: G.nx[gn], y: G.ny[gn], node: gn, name: pick.name }
-                 : { x: pick.x, y: pick.y, node: -1, name: pick.name };
+  /* a course of three, each a real journey from the last */
+  course = [];
+  let from = { x: me.x, y: me.y };
+  for (let i = 0; i < LEGS; i++) {
+    const cands = places
+      .filter((p) => !course.some((c) => c.name === p.name))
+      .map((p) => ({ ...p, d: metres(Math.hypot(p.x - from.x, p.y - from.y)) }))
+      .filter((p) => p.d > 2200 && p.d < 6500)
+      .sort((a, b) => a.d - b.d);
+    if (!cands.length) break;
+    const pick = cands[Math.floor(Math.random() * Math.min(3, cands.length))];
+    const n = nearestNodeFor(pick.x, pick.y, null, units(1400));
+    course.push(n >= 0
+      ? { x: G.nx[n], y: G.ny[n], node: n, name: pick.name }
+      : { x: pick.x, y: pick.y, node: -1, name: pick.name });
+    from = pick;
+  }
+  if (!course.length) { goal = null; return; }
+
+  leg = 0; rivalLeg = 0;
+  goal = course[0];
 
   /* the other one starts where you start. the ground is the only advantage
      either of you gets. */
-  rival = {
-    x: me.x, y: me.y, node: me.node,
-    being: nextBeing(S.being), trip: null, reached: false,
-  };
+  rival = { x: me.x, y: me.y, node: me.node, being: nextBeing(S.being), trip: null };
   S.rival = rival;
   S.goal = goal;
+  S.course = course;
+  S.leg = 0;
   over = null; turns = 0;
-  say(pick.name.toLowerCase());
-  emit("crossing", { goal, rival });
+  say(goal.name.toLowerCase());
+  emit("crossing", { goal, course, rival });
 }
 
 function say(text) { banner = { text, t0: performance.now(), life: 2400 }; }
@@ -97,14 +117,15 @@ function say(text) { banner = { text, t0: performance.now(), life: 2400 }; }
    effort, it takes what the ground will give it, and it uses whatever anybody
    has drawn. It is not cheating and it is not being kind. */
 function rivalTurn() {
-  if (!rival || !goal || over) return;
+  if (!rival || !course.length || over) return;
   rival.being = nextBeing(rival.being);
 
   const from = nearestNodeFor(rival.x, rival.y, rival.being, units(900));
   if (from < 0) return checkOver();
   rival.node = from;
 
-  const to = goal.node >= 0 ? goal.node : nearestNodeFor(goal.x, goal.y, rival.being, units(1200));
+  const g = course[rivalLeg] || goal;
+  const to = g.node >= 0 ? g.node : nearestNodeFor(g.x, g.y, rival.being, units(1200));
   if (to < 0) return checkOver();
 
   const full = route(from, to, rival.being);
@@ -125,16 +146,37 @@ function rivalTurn() {
 }
 
 function checkOver() {
-  if (over || !goal) return;
+  if (over || !course.length) return;
   const me = S.you;
-  if (me && metres(Math.hypot(me.x - goal.x, me.y - goal.y)) < ARRIVE) {
-    over = { who: "you", turns };
-    say("you crossed first");
-    emit("crossing-over", over);
-  } else if (rival && metres(Math.hypot(rival.x - goal.x, rival.y - goal.y)) < ARRIVE) {
-    over = { who: "rival", turns };
-    say("it crossed first");
-    emit("crossing-over", over);
+
+  if (me && leg < course.length) {
+    const g = course[leg];
+    if (metres(Math.hypot(me.x - g.x, me.y - g.y)) < ARRIVE) {
+      leg++; S.leg = leg;
+      emit("leg", { who: "you", leg, of: course.length });
+      if (leg >= course.length) {
+        over = { who: "you", turns };
+        say("you made every crossing");
+        emit("crossing-over", over);
+        return;
+      }
+      goal = course[leg];
+      S.goal = goal;
+      say(goal.name.toLowerCase());
+    }
+  }
+
+  if (rival && rivalLeg < course.length) {
+    const g = course[rivalLeg];
+    if (metres(Math.hypot(rival.x - g.x, rival.y - g.y)) < ARRIVE) {
+      rivalLeg++;
+      emit("leg", { who: "rival", leg: rivalLeg, of: course.length });
+      if (rivalLeg >= course.length) {
+        over = { who: "rival", turns };
+        say("it made every crossing");
+        emit("crossing-over", over);
+      }
+    }
   }
 }
 
@@ -321,4 +363,4 @@ export function onTap(ctx, p) {
   return true;
 }
 
-export const state = () => ({ goal, rival, over, turns });
+export const state = () => ({ goal, course, leg, rivalLeg, rival, over, turns, legs: LEGS });

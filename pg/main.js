@@ -14,6 +14,7 @@
 import { View, fitCanvas, panBy, zoomAt, clamp } from "./geo.js";
 import { loadGraph, G } from "./graph.js";
 import { S, load, connect, on, emit } from "./state.js";
+import { connect as netConnect } from "./net.js";
 import { CAR } from "./beings.js";
 
 import * as cloth from "./cloth.js";
@@ -44,6 +45,7 @@ const ORGANS = [cloth, traces, draw, travellers, goal, move, become, hud];
 function boot() {
   loadGraph();
   connect();
+  netConnect();
   load();
   for (const o of ORGANS) o.init && o.init(ctx);
   emit("boot");

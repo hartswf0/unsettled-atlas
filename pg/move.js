@@ -29,7 +29,7 @@ import {
   View, sx, sy, wx, wy, centerOn, clampView, alongPath, pathLength, distToSeg,
   lerp, clamp, ease, units, metres, worldSize,
 } from "./geo.js";
-import { G, route, routePoints, nearestNodeFor, wear } from "./graph.js";
+import { G, route, routePoints, nearestNodeFor, wear, afford } from "./graph.js";
 import { S, on, emit, logJourney, logBalk } from "./state.js";
 
 /* The route is the one thing in this world that is not of this world: it is an
@@ -110,12 +110,19 @@ export function onTap(ctx, p) {
   const to = nearestNodeFor(tx, ty, S.being, units(700));
   if (to < 0 || to === you.node) { ripple(tx, ty); return true; }
 
-  const r = route(you.node, to, S.being);
+  const full = route(you.node, to, S.being);
+  if (!full || full.nodes.length < 2) { ripple(tx, ty); return true; }
+
+  /* You get one turn's worth of effort, and a ladder buys more of the city
+     with it than a chute does. Whatever is past that is still drawn — you can
+     see exactly where this body runs out — but you do not get there today. */
+  const { r, cut } = afford(full, S.being, S.allowance);
   if (!r || r.nodes.length < 2) { ripple(tx, ty); return true; }
 
   balked = null;
   plan = {
-    r, to, pts: routePoints(r), t0: performance.now(),
+    r, to, cut, full, restPts: cut ? routePoints(full) : null,
+    pts: routePoints(r), t0: performance.now(),
     tx: G.nx[to], ty: G.ny[to],
   };
   frameFor(plan);

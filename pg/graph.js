@@ -400,6 +400,38 @@ export function route(from, to, being) {
   };
 }
 
+/* ---------- what a turn can afford ----------
+   A turn is not a distance, it is an effort. The same effort carries a car two
+   miles down the interstate and a wheelchair four hundred metres up a hill,
+   because the interstate costs a car almost nothing and the hill costs the
+   chair almost everything. Chutes and ladders were never a separate mechanic:
+   they are what a cost function looks like when you only get so much.
+
+   Returns the part of the route the traveller can pay for, and whether it had
+   to be cut short. */
+export function afford(r, being, budget) {
+  if (!r || !r.edges.length) return { r, cut: false, spent: 0 };
+  let spent = 0, i = 0;
+  for (; i < r.edges.length; i++) {
+    const e = r.edges[i];
+    const forward = G.ea[e] === r.nodes[i];
+    const c = being.cost(e, forward);
+    if (!isFinite(c)) break;
+    if (spent + c > budget && i > 0) break;
+    spent += c;
+  }
+  if (i >= r.edges.length) return { r, cut: false, spent };
+
+  const nodes = r.nodes.slice(0, i + 1);
+  const edges = r.edges.slice(0, i);
+  let dist = 0;
+  for (const e of edges) dist += G.elen[e];
+  return {
+    r: { nodes, edges, dist, cost: spent, balk: null, short: true },
+    cut: true, spent,
+  };
+}
+
 /* the polyline a route draws on the ground */
 export function routePoints(r) {
   const pts = [];

@@ -61,6 +61,11 @@ export const S = {
   /* set when a mark of yours is used by somebody who is not you */
   witness: null,
 
+  /* the crossing */
+  goal: null,
+  rival: null,
+  allowance: 1500,
+
   seq: 0,
   ready: false,
 };

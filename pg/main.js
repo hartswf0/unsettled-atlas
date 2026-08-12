@@ -22,6 +22,7 @@ import * as draw from "./draw.js";
 import * as travellers from "./travellers.js";
 import * as move from "./move.js";
 import * as become from "./become.js";
+import * as goal from "./goal.js";
 import * as hud from "./hud.js";
 
 const cv = document.getElementById("cv");
@@ -37,7 +38,7 @@ export const ctx = {
   arm(on) { ctx.mode = on ? "draw" : "travel"; emit("mode", ctx.mode); },
 };
 
-const ORGANS = [cloth, traces, draw, travellers, move, become, hud];
+const ORGANS = [cloth, traces, draw, travellers, goal, move, become, hud];
 
 /* ---------- boot ---------- */
 function boot() {
@@ -161,6 +162,6 @@ cv.addEventListener("wheel", (e) => {
 /* A handle for the harness: critics drive the real build through this, and
    pg/tools/age.mjs uses it to fast-forward a world so the late game can be
    looked at without playing it for an hour. Not used by the game itself. */
-window.PG = { ctx, View, G, S, on, emit, organs: { cloth, traces, draw, travellers, move, become, hud } };
+window.PG = { ctx, View, G, S, on, emit, organs: { cloth, traces, draw, travellers, move, goal, become, hud } };
 
 boot();

@@ -1544,6 +1544,7 @@ function wktPoint(v) {
 // everything with coordinates inside a real radius, ranked by how many
 // language editions carry it
 function wdPlacesAround(v, km, limit, cb) {
+  km = Math.min(km, 600);
   sparql('SELECT ?x ?xLabel ?xDescription ?links ?coord WHERE {' +
     ' SERVICE wikibase:around { ?x wdt:P625 ?coord .' +
     ' bd:serviceParam wikibase:center "' + wktPoint(v) + '"^^geo:wktLiteral .' +
@@ -1552,7 +1553,8 @@ function wdPlacesAround(v, km, limit, cb) {
     ' SERVICE wikibase:label { bd:serviceParam wikibase:language "en" . } }' +
     ' ORDER BY DESC(?links) LIMIT ' + (limit || 40), function (err, rows) {
     if (err) return cb(err);
-    cb(null, rows.map(function (r) {
+    cb(null, rows.filter(function (r) { return r && r.x && r.x.value; })
+      .map(function (r) {
       var m = /Point\(([-\d.]+) ([-\d.]+)\)/.exec((r.coord && r.coord.value) || '');
       return { qid: (r.x.value || '').split('/').pop(),
                title: r.xLabel ? r.xLabel.value : '',
@@ -1564,6 +1566,7 @@ function wdPlacesAround(v, km, limit, cb) {
 }
 // the same radius, but asking for humans the record ties to anything in it
 function wdPeopleAround(v, km, limit, cb) {
+  km = Math.min(km, 800);
   sparql('SELECT ?p ?pLabel ?pDescription ?links ?coord WHERE {' +
     ' SERVICE wikibase:around { ?place wdt:P625 ?coord .' +
     ' bd:serviceParam wikibase:center "' + wktPoint(v) + '"^^geo:wktLiteral .' +
@@ -1575,7 +1578,9 @@ function wdPeopleAround(v, km, limit, cb) {
     if (err) return cb(err);
     var seen = {}, out = [];
     for (var i = 0; i < rows.length; i++) {
-      var r = rows[i], qid = (r.p.value || '').split('/').pop();
+      var r = rows[i];
+      if (!r || !r.p || !r.p.value) continue;
+      var qid = r.p.value.split('/').pop();
       if (seen[qid]) continue;
       seen[qid] = 1;
       var m = /Point\(([-\d.]+) ([-\d.]+)\)/.exec((r.coord && r.coord.value) || '');
@@ -1637,12 +1642,77 @@ function once(cb) {
     setTimeout(function () { cb(a, b, c); }, 0);
   };
 }
-function getJSON(url, cb) {
-  cb = once(cb);
+/* What the live site taught us. GDELT never answers cross-origin, so from a
+ * browser it is not a source at all — it is marked dead on first contact and
+ * the news rung falls through to Wikinews, which is Wikimedia and answers
+ * like the rest. The Wikidata query service rate-limits, and its 429s carry
+ * no CORS header, so from a page they are indistinguishable from a network
+ * failure — everything that can be throttled therefore goes through a lane:
+ * one request at a time per host, a minimum gap, and on any failure the lane
+ * slows down and retries before giving up. Being told no by a server is a
+ * reason to ask more slowly, not a reason to ask five ways at once.       */
+var SOURCE_STATE = {
+  'query.wikidata.org':   { gap: 400, last: 0, chain: null, dead: '' },
+  'overpass-api.de':      { gap: 900, last: 0, chain: null, dead: '' },
+  'api.gdeltproject.org': { gap: 400, last: 0, chain: null, dead: '' }
+};
+function sourceNote() {
+  var out = [];
+  for (var h in SOURCE_STATE) {
+    if (SOURCE_STATE[h].dead) out.push(h + ' — ' + SOURCE_STATE[h].dead);
+    else if (SOURCE_STATE[h].gap > 1500) out.push(h + ' — rate limited, asking slowly');
+  }
+  return out;
+}
+function fetchJSON(url, cb) {
   fetch(url, { credentials: 'omit' })
     .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(function (j) { cb(null, j); })
     .catch(function (e) { cb(String(e && e.message || e)); });
+}
+function getJSON(url, cb) {
+  cb = once(cb);
+  var host = (url.split('/')[2] || '');
+  var st = SOURCE_STATE[host];
+  if (!st) return fetchJSON(url, cb);
+  if (st.dead) return cb('unreachable from this browser: ' + st.dead);
+  if (st.deadUntil && Date.now() < st.deadUntil) {
+    return cb('resting: ' + host + ' has refused twice; asking again in a minute');
+  }
+  st.chain = (st.chain || Promise.resolve()).then(function () {
+    return new Promise(function (release) {
+      var wait = Math.max(0, st.last + st.gap - Date.now());
+      setTimeout(function () { attempt(0); }, wait);
+      function attempt(n) {
+        st.last = Date.now();
+        fetchJSON(url, function (err, j) {
+          if (!err) { st.fails = 0; release(); return cb(null, j); }
+          var refused = /Failed to fetch|NetworkError|Load failed|TypeError/i.test(err);
+          if (host === 'api.gdeltproject.org' && refused) {
+            st.dead = 'it does not answer cross-origin requests';
+            release(); return cb(err);
+          }
+          // A readable 429/502 is the server asking for patience: slow the
+          // lane and retry. A refusal is unreadable — from a page, a CORS-less
+          // 429 and a dead network look identical — so retry once, and after
+          // two straight refusals rest the host for a minute instead of
+          // hammering something that cannot answer.
+          if (/^(429|502|503)/.test(err) && n < 2) {
+            st.gap = Math.min(5000, st.gap * 3);
+            return setTimeout(function () { attempt(n + 1); }, 1500 * (n + 1) * (n + 1));
+          }
+          if (refused && n < 1) {
+            return setTimeout(function () { attempt(n + 1); }, 1200);
+          }
+          if (refused) {
+            st.fails = (st.fails || 0) + 1;
+            if (st.fails >= 2) st.deadUntil = Date.now() + 60000;
+          }
+          release(); cb(err);
+        });
+      }
+    });
+  });
 }
 // the places inside this cell, with the Wikidata id each one has
 function placesWithIds(cell, cb) {
@@ -2067,10 +2137,18 @@ function loadModels(cb) {
       MODELS.list = ((j && j.data) || [])
         .map(function (m) { return { id: m.id, rank: rankModel(m.id) }; })
         .filter(function (m) {
-          if (!m.rank || seen[m.id] || /audio|realtime|transcribe|tts|image|embed|moderation/.test(m.id)) return false;
+          if (!m.rank || seen[m.id]) return false;
+          if (/audio|realtime|transcribe|tts|image|embed|moderation|codex|chat-latest|search|deep-research|instruct|gpt-3\.5/.test(m.id)) return false;
           seen[m.id] = 1; return true;
         })
         .sort(function (a, b) { return b.rank - a.rank || (a.id < b.id ? -1 : 1); });
+      // a dated snapshot is noise when its base name is present
+      var bases = {};
+      MODELS.list.forEach(function (m) { bases[m.id] = 1; });
+      MODELS.list = MODELS.list.filter(function (m) {
+        var mm = /^(.*)-\d{4}-\d{2}-\d{2}$/.exec(m.id);
+        return !(mm && bases[mm[1]]);
+      }).slice(0, 14);
       MODELS.state = MODELS.list.length ? 'ready' : 'empty';
       MODELS.at = Date.now();
       if (cb) cb(null, MODELS.list);
@@ -2131,8 +2209,19 @@ if (!DB.charter) DB.charter = {};
                          /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})Z$/,
                          '$1-$2-$3T$4:$5:$6Z')) || 0 });
           });
+          return done1();
         }
-        done1();
+        // the browser cannot have GDELT; Wikinews is Wikimedia and answers
+        getJSON('https://en.wikinews.org/w/api.php?origin=*&format=json&formatversion=2' +
+          '&action=query&list=search&srlimit=8&srsearch=' + encodeURIComponent(names.join(' OR ')),
+          function (e2, j2) {
+            if (!e2) ((j2 && j2.query && j2.query.search) || []).forEach(function (h) {
+              out.push({ from: 'news', title: h.title, source: 'en.wikinews.org',
+                url: 'https://en.wikinews.org/wiki/' + encodeURIComponent(h.title.replace(/ /g, '_')),
+                when: '', t: Date.parse(h.timestamp || '') || 0 });
+            });
+            done1();
+          });
       });
   }
   if (!titles.length) done1();
@@ -2221,6 +2310,7 @@ function compileContext(cell, seat, world, op) {
       seats: seat.struts.map(function (st, i) {
         var src = seatSource(slug, i);
         return { id: i, holder: seatHolder(slug, i) || null,
+                 holder_is: src ? src.what : null,
                  holder_source: src ? (src.from === 'model' ? 'model' : 'record')
                                     : (seatHolder(slug, i) ? 'hand' : null),
                  topics: st.topics, critiques: st.critiques, register: st.register };
@@ -2427,9 +2517,16 @@ var SCHEMA_SPEAK_NEEDS = {
     needs: { type: 'array', items: { type: 'string' } } }
 };
 var SCHEMA_CHARTER = {
-  type: 'object', additionalProperties: false, required: ['charter', 'tensions'],
+  type: 'object', additionalProperties: false,
+  required: ['charter', 'opening_question', 'agenda', 'tensions'],
   properties: {
     charter: { type: 'string' },
+    opening_question: { type: 'string' },
+    agenda: { type: 'array', items: {
+      type: 'object', additionalProperties: false,
+      required: ['topic', 'subject', 'statement'],
+      properties: { topic: { type: 'integer' }, subject: { type: 'string' },
+                    statement: { type: 'string' } } } },
     tensions: { type: 'array', items: {
       type: 'object', additionalProperties: false, required: ['title', 'why_now'],
       properties: { title: { type: 'string' }, why_now: { type: 'string' } } } } }
@@ -2497,15 +2594,24 @@ function writeCharter(cell, seat, world, cb) {
   }
   CHARTER_STATE[slug] = 'busy';
   var ctx = compileContext(cell, seat, world, 'WRITE_CHARTER');
+  ctx.operation.topic_points = (seat ? topicNames(cell, seat, world) : []).map(function (t, i) {
+    return { id: i, place: t.title };
+  });
   ctx.operation.directive =
-    'You are writing the charter: the standing instruction under which a syntegration ' +
-    'about this exact triangle will run. From the compiled state — the jurisdiction, the ' +
-    'settlements, the water, what has been said and escalated, and above all ' +
-    'evidence.recent, which is what is unresolved there now — write 150 to 250 words that ' +
-    'tell a room of arguers what this convening is about, what is genuinely contested on ' +
-    'this ground, what each kind of argument should attend to here, and what would count ' +
-    'as progress. Name places and actors from the context only. Then list three to six ' +
-    'tensions: short title, and why it is live now. No pleasantries, no invented facts.';
+    'You are opening a syntegration, the way Beer opens one: the agenda is produced, not ' +
+    'handed down. From the compiled state — the jurisdiction, the settlements, the water, ' +
+    'what has been said and escalated, and above all evidence.recent, which is what is ' +
+    'unresolved there now — do three things. ' +
+    'First, write the OPENING QUESTION: one genuinely contested question about this ground, ' +
+    'too big for one room, that every topic below is an angle on. ' +
+    'Second, write the AGENDA: for every entry in operation.topic_points, a SUBJECT — the ' +
+    'live issue at that place, not the place name — and a one-sentence statement of ' +
+    'importance saying what is at stake and for whom. Subjects must be distinct, concrete ' +
+    'and contestable; a subject that could hang over any city has failed. ' +
+    'Third, write the CHARTER: 150 to 250 words telling a room of arguers what this ' +
+    'convening is about, what each kind of argument should attend to here, and what would ' +
+    'count as progress. Then three to six tensions: short title, why it is live now. ' +
+    'Name places and actors from the context only. No pleasantries, no invented facts.';
   askOpenAI({ op: 'charter', model: modelFor('charter'), reasoning: 'high',
     instructions: LAW + '\n\nYour task is in operation.directive, at the end of the context.',
     context: ctx, schema: SCHEMA_CHARTER, schemaName: 'charter', maxOutputTokens: 2000 },
@@ -2514,7 +2620,9 @@ function writeCharter(cell, seat, world, cb) {
       if (err) return cb(err);
       if (!DB.charter) DB.charter = {};
       DB.charter[slug] = { t: Date.now(), model: modelFor('charter'),
-                          charter: j.charter, tensions: (j.tensions || []).slice(0, 6) };
+                          charter: j.charter, opening: j.opening_question || '',
+                          agenda: (j.agenda || []).slice(0, 24),
+                          tensions: (j.tensions || []).slice(0, 6) };
       commit(); cb(null);
     });
 }
@@ -2543,12 +2651,24 @@ function resolveNeeds(cell, needs, cb) {
   qs.forEach(function (q) {
     getJSON('https://api.gdeltproject.org/api/v2/doc/doc?format=json&mode=artlist' +
       '&maxrecords=3&timespan=1m&query=' + encodeURIComponent(q), function (err, j) {
-        if (!err) ((j && j.articles) || []).slice(0, 2).forEach(function (a) {
-          keep({ from: 'fetched', title: a.title || '', note: 'asked: ' + q,
-                 source: a.domain || '', url: a.url || '', when: a.seendate || '',
-                 t: Date.now() });
-        });
-        done1();
+        if (!err) {
+          ((j && j.articles) || []).slice(0, 2).forEach(function (a) {
+            keep({ from: 'fetched', title: a.title || '', note: 'asked: ' + q,
+                   source: a.domain || '', url: a.url || '', when: a.seendate || '',
+                   t: Date.now() });
+          });
+          return done1();
+        }
+        getJSON('https://en.wikinews.org/w/api.php?origin=*&format=json&formatversion=2' +
+          '&action=query&list=search&srlimit=2&srsearch=' + encodeURIComponent(q),
+          function (e2, j2) {
+            if (!e2) ((j2 && j2.query && j2.query.search) || []).forEach(function (h) {
+              keep({ from: 'fetched', title: h.title, note: 'asked: ' + q,
+                source: 'en.wikinews.org', when: '', t: Date.now(),
+                url: 'https://en.wikinews.org/wiki/' + encodeURIComponent(h.title.replace(/ /g, '_')) });
+            });
+            done1();
+          });
       });
     getJSON(WP + 'action=query&list=search&srlimit=2&srsearch=' + encodeURIComponent(q),
       function (err, j) {
@@ -2590,22 +2710,25 @@ function runHarness(cell, seat, world, onStep, done) {
     try { done(String(err), made); } catch (e) { }
     wake();
   }
+  function benchEntry(i, st, t) {
+    var src = seatSource(slug, i);
+    return { seat: i, who: seatHolder(slug, i) || 'seat ' + i,
+             who_is: src ? src.what : 'a person who typed their own name in',
+             register: st.register,
+             other_room: t !== undefined && st.topics.indexOf(t) >= 0
+               ? (st.topics[0] === t ? st.topics[1] : st.topics[0]) : undefined };
+  }
   function membersOf(t) {
     var out = [];
     seat.struts.forEach(function (st, i) {
-      if (st.topics.indexOf(t) >= 0) {
-        out.push({ seat: i, who: seatHolder(slug, i) || 'seat ' + i, register: st.register,
-                   other_room: st.topics[0] === t ? st.topics[1] : st.topics[0] });
-      }
+      if (st.topics.indexOf(t) >= 0) out.push(benchEntry(i, st, t));
     });
     return out;
   }
   function criticsOf(t) {
     var out = [];
     seat.struts.forEach(function (st, i) {
-      if (st.critiques.indexOf(t) >= 0) {
-        out.push({ seat: i, who: seatHolder(slug, i) || 'seat ' + i, register: st.register });
-      }
+      if (st.critiques.indexOf(t) >= 0) out.push(benchEntry(i, st));
     });
     return out;
   }
@@ -2619,16 +2742,22 @@ function runHarness(cell, seat, world, onStep, done) {
     var ctx = compileContext(cell, seat, world, op);
     ctx.operation.round = round;
     ctx.operation.iteration = iter + '/' + REVERB;
-    ctx.operation.topic = { id: t, place: topics[t].title, issue: topics[t].issue || null };
+    ctx.operation.topic = { id: t, place: topics[t].title,
+      subject: topics[t].subject || topics[t].issue || null,
+      statement: topics[t].statement || null,
+      issue: topics[t].issue || null };
     var ch = charterOf(slug);
+    if (ch && ch.opening) ctx.operation.opening_question = ch.opening;
     if (ch && ch.tensions && ch.tensions.length) ctx.operation.tensions = ch.tensions;
     return ctx;
   }
   function rec(mode, iter, t, u, extra) {
     var st = seat.struts[u.seat];
+    var src = u.seat >= 0 ? seatSource(slug, u.seat) : null;
     var note = { id: 'u' + Date.now().toString(36) + Math.floor(Math.random() * 1e4).toString(36),
       kind: 'sim', mode: mode, cell: slug, topic: t, seat: u.seat, round: round, iter: iter,
       who: u.seat >= 0 && st ? (seatHolder(slug, u.seat) || 'seat ' + u.seat) : 'the convening',
+      who_is: src ? src.what : '',
       register: st ? st.register : '', text: String(u.text).trim(),
       model: mode === 'judge' ? judgeModel : pickModel(), t: Date.now() };
     if (extra) for (var k in extra) note[k] = extra[k];
@@ -2636,11 +2765,14 @@ function runHarness(cell, seat, world, onStep, done) {
     return note;
   }
   function ensureCharter(next) {
-    if (charterOf(slug)) { frozenLaw = lawFor(slug); return next(); }
+    if (charterOf(slug)) { frozenLaw = lawFor(slug); topics = topicNames(cell, seat, world); return next(); }
     tick('writing the charter');
     writeCharter(cell, seat, world, function (err) {
       if (err) return abort(err);
       frozenLaw = lawFor(slug);
+      // the charter just produced the agenda; the rooms must argue the
+      // subjects it named, not the place names captured before it existed
+      topics = topicNames(cell, seat, world);
       next();
     });
   }
@@ -2661,12 +2793,19 @@ function runHarness(cell, seat, world, onStep, done) {
       (retry ? ', RE-RUN: operation.first_attempt is what this team said, it failed the ' +
                'gate, and operation.judge_notes says exactly why, seat by seat. Rewrite ' +
                'the statements to fix what the notes name.' : '.') +
-      ' Write one statement for each seat in operation.members, in that seat\'s register — a ' +
-      'register is a way of arguing, not a personality, and each seat may only do what its ' +
-      'register may do. Speak to the issue from the ground: the settlements, the water, the ' +
-      'jurisdiction, what has escalated from below, and above all evidence.recent. If ' +
+      ' Each seat in operation.members is held by the person named in who — who_is says who ' +
+      'they are. Write one statement per seat IN THE FIRST PERSON, as that person would ' +
+      'actually argue it from their documented life and work, in their own voice — a ' +
+      'president does not argue like a streamer, an astronaut does not argue like a cult ' +
+      'leader, and none of them talk about process. The person is a lens onto the evidence, ' +
+      'not a source of new facts: everything they claim must come from this context. Their ' +
+      'register (rules in council.registers) is the discipline their argument must satisfy, ' +
+      'not their voice. Speak to operation.topic.subject on this ground: the settlements, ' +
+      'the water, the jurisdiction, what has escalated from below, and above all ' +
+      'evidence.recent. These are distinct people with distinct stakes who would not ' +
+      'necessarily get along: take positions, disagree, name each other. If ' +
       'operation.carried_in is present, those claims arrived from your seats\' other rooms — ' +
-      'engage them, do not restate them. Disagree where the registers would disagree. Two ' +
+      'engage them, do not restate them. Two ' +
       'sentences per seat, plain, no preamble, and never claim a fact the context does not ' +
       'carry.' +
       (mayNeed ? ' If a seat genuinely needs something the context lacks, put a short plain ' +
@@ -2718,9 +2857,11 @@ function runHarness(cell, seat, world, onStep, done) {
       ctx2.operation.critics = criticsOf(t);
       ctx2.operation.just_said = saidA;
       ctx2.operation.directive =
-        'You are the critics of operation.topic. Each seat in operation.critics answers what ' +
-        'is in operation.just_said, from a register incommensurable with the one that said it ' +
-        '— that opposition is the mechanism, not rudeness. Name the specific claim you are ' +
+        'You are the critics of operation.topic — each seat in operation.critics is held by ' +
+        'the person named in who, and who_is says who they are. Each answers what is in ' +
+        'operation.just_said IN THE FIRST PERSON, in their own voice, from a register ' +
+        'incommensurable with the one that said it — that opposition is the mechanism, not ' +
+        'rudeness. Address the speaker by name and name the specific claim you are ' +
         'answering. Say what it leaves out, what it assumes, or who it does not speak for. ' +
         'Two sentences per seat, no preamble, and never introduce a fact the context does ' +
         'not carry.';
@@ -5624,11 +5765,21 @@ function openWhere(cell, keep) {
 function topicNames(cell, seat, world) {
   var slug = cellSlug(cell);
   var got = (DB.topics || {})[slug];
+  var ch = charterOf(slug);
   var pts = topicPoints(cell, seat, world), out = [];
   for (var i = 0; i < pts.length; i++) {
     var t = got && got.list[i];
     if (!t) t = offlineTopic(pts[i]);
-    out.push(t || { title: ll(pts[i]), what: '', from: 'coordinate' });
+    t = t || { title: ll(pts[i]), what: '', from: 'coordinate' };
+    // the convening's own agenda outranks an inferred issue: the subject at
+    // this vertex was produced for this ground, Beer's way
+    var ag = ch && ch.agenda && ch.agenda.filter(function (a) { return a.topic === i; })[0];
+    if (ag) {
+      t = { title: t.title, what: t.what, from: t.from, qid: t.qid, sitelinks: t.sitelinks,
+            issue: ag.subject + (ag.statement ? ' — ' + ag.statement : ''),
+            subject: ag.subject, statement: ag.statement, sure: true, agenda: true };
+    }
+    out.push(t);
   }
   return out;
 }
@@ -5676,8 +5827,13 @@ function runBlock(cell, seat, world) {
   var news = newsFor(cell), ch = charterOf(slug);
   var plan = harnessPlan(seat);
   if (run) {
+    var latest = said.slice(-3).map(function (n) {
+      return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') + '"><b>' +
+        esc((n.who || '').toUpperCase()) + '</b> <span>' + esc(n.register || '') + '</span>' +
+        '<p>' + esc(n.text) + '</p></div>';
+    }).join('');
     return '<p style="color:var(--signal)">Convening · call ' + run.at + ' of ' + run.of +
-      ' · ' + esc(run.label || '') + '</p>';
+      ' · ' + esc(run.label || '') + '</p>' + latest;
   }
   var outs = said.filter(function (n) { return n.mode === 'outcome'; });
   return (HARNESS_ERR[slug]
@@ -5700,11 +5856,20 @@ function runBlock(cell, seat, world) {
         (news.list.length === 1 ? '' : 's') + ' about this ground.'
       : ' Nothing live has been gathered yet, so they argue from the record alone.') +
     '</p>' +
+    (sourceNote().length
+      ? '<p style="color:var(--muted);font-size:9px;letter-spacing:.06em">sources: ' +
+        esc(sourceNote().join(' · ')) + '</p>' : '') +
     '<button class="go" id="cRun">' + (rounds ? 'CONVENE AGAIN' : 'CONVENE') + '</button> ' +
     (said.length ? '<button class="go ghost" id="cScript">READ THE TRANSCRIPT</button> ' +
                    '<button class="go ghost" id="cWipe">CLEAR IT</button>' : '') +
-    (ch ? '<details><summary>the charter for this ground · ' + esc(ch.model) +
-      ' · ' + whenLabel(ch.t) + '</summary><p style="white-space:pre-wrap">' + esc(ch.charter) +
+    (ch ? (ch.opening ? '<div class="topic" style="cursor:default"><b><s>OPENING QUESTION</s>' +
+        esc(ch.opening) + '</b></div>' : '') +
+      '<details><summary>the charter and agenda for this ground · ' + esc(ch.model) +
+      ' · ' + whenLabel(ch.t) + '</summary>' +
+      ((ch.agenda || []).length ? (ch.agenda || []).map(function (a) {
+        return '<div class="row"><b>TOPIC ' + a.topic + ' · ' + esc(a.subject.toUpperCase()) +
+          '</b><span>' + esc(a.statement) + '</span></div>'; }).join('') : '') +
+      '<p style="white-space:pre-wrap">' + esc(ch.charter) +
       '</p>' + (ch.tensions || []).map(function (tn) {
         return '<div class="row"><b>' + esc(tn.title.toUpperCase()) + '</b><span>' +
           esc(tn.why_now) + '</span></div>'; }).join('') +
@@ -5735,6 +5900,16 @@ function openTranscript(cell, seat) {
     return ' <span style="color:' + (pass ? 'var(--muted)' : 'var(--signal)') + '">' +
       n.tot + '/12' + (n.att > 1 ? ' · second attempt' : '') + '</span>';
   }
+  var ch = charterOf(slug);
+  var bench = {};
+  seat.struts.forEach(function (st, i) {
+    st.topics.forEach(function (tp) {
+      (bench[tp] = bench[tp] || { m: [], c: [] }).m.push(seatHolder(slug, i) || 'seat ' + i);
+    });
+    st.critiques.forEach(function (tp) {
+      (bench[tp] = bench[tp] || { m: [], c: [] }).c.push(seatHolder(slug, i) || 'seat ' + i);
+    });
+  });
   var body = Object.keys(byRound).sort(function (a, b) { return a - b; }).map(function (r) {
     var rs = byRound[r];
     var iters = {};
@@ -5748,8 +5923,13 @@ function openTranscript(cell, seat) {
           (isOutcome || it > REVERB ? 'OUTCOMES' : 'REVERBERATION ' + it + ' OF ' + REVERB) + '</p>' +
           Object.keys(byTopic).sort(function (a, b) { return a - b; }).map(function (t) {
             return '<div class="topic" style="cursor:default"><b><s>TOPIC ' + t + '</s>' +
-              esc((topics[t] || {}).title || '') + '</b>' +
-              ((topics[t] || {}).issue ? '<q>' + esc(topics[t].issue) + '</q>' : '') + '</div>' +
+              esc((topics[t] || {}).subject || (topics[t] || {}).title || '') +
+              ((topics[t] || {}).subject ? ' <span style="color:var(--muted);font-weight:400">at ' +
+                esc(topics[t].title) + '</span>' : '') + '</b>' +
+              ((topics[t] || {}).statement ? '<q>' + esc(topics[t].statement) + '</q>'
+                : (topics[t] || {}).issue ? '<q>' + esc(topics[t].issue) + '</q>' : '') +
+              (bench[t] ? '<em>at the table: ' + esc(bench[t].m.join(', ')) +
+                ' · answering: ' + esc(bench[t].c.join(', ')) + '</em>' : '') + '</div>' +
               byTopic[t].map(function (n) {
                 if (n.mode === 'outcome') {
                   return '<div class="said" style="border-left:2px solid var(--ink);padding-left:7px">' +
@@ -5762,7 +5942,8 @@ function openTranscript(cell, seat) {
                     '</b> <span>carried in from room ' + n.from_room + '</span><p>' + esc(n.text) + '</p></div>';
                 }
                 return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') + '"><b>' +
-                  esc((n.who || '').toUpperCase()) + '</b> <span>' + esc(n.register || '') +
+                  esc((n.who || '').toUpperCase()) + '</b> <span>' +
+                  (n.who_is ? esc(n.who_is) + ' · ' : '') + esc(n.register || '') +
                   (n.mode === 'critique' ? ' · answering' : '') + '</span>' + chip(n) +
                   '<p>' + esc(n.text) + '</p>' +
                   (n.jnote && (n.tot < GATE.total || (n.sc && n.sc.g < GATE.grounded))
@@ -5779,7 +5960,9 @@ function openTranscript(cell, seat) {
     'line. Written and judged by <b>' + esc(Object.keys(models).join(', ') || pickModel()) + '</b> from ' +
     'the compiled world state — a rehearsal of the argument this ground would have, not a ' +
     'record of one that happened. The people named are the nominees the record supplied; ' +
-    'none of them said any of this.</p>' + body +
+    'none of them said any of this.</p>' +
+    (ch && ch.opening ? '<div class="topic" style="cursor:default"><b><s>OPENING QUESTION</s>' +
+      esc(ch.opening) + '</b></div>' : '') + body +
     '<button class="go ghost" id="tBack" style="margin-top:12px">BACK TO THE COUNCIL</button>');
   document.getElementById('tBack').onclick = function () { openCouncil(cell); };
 }
@@ -5849,7 +6032,6 @@ function modelBlock(cell, seat, world) {
        'of importance, and candidates for empty seats. It proposes; you accept; everything it ' +
        'returns is stamped as inferred.') + '</p>' +
     (failed ? '<button class="go ghost" id="cInfer">TRY AGAIN</button> ' : '') +
-    runBlock(cell, seat, world) +
     '<details><summary>the model, and what it is allowed to know</summary>' +
     spendBlock() +
     '<p>It is not given a paragraph about this place. It is given the compiled world state — the ' +
@@ -6003,6 +6185,7 @@ function openCouncil(cell) {
     'A seat is held by whoever types their name into it — this invents nobody. ' +
     'Your critic is the seat opposite yours, and it is a person, not a category.</p>' +
     recruitBlock(cell, seat, rec) +
+    runBlock(cell, seat, world) +
     modelBlock(cell, seat, world) +
     seats +
     '<details><summary>the ' + DATA.council.registers.length + ' registers, and what each may not do</summary>' +

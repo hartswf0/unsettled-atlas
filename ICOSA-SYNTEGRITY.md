@@ -797,6 +797,69 @@ ranking, the geometric assignment, the caching, the offline floor and the
 failure path all work. Whether Wikimedia answers *your* browser is
 something only your browser can settle.
 
+## What the live site taught
+
+The first deployment produced a console full of failures, each one a lesson
+now built in:
+
+- **GDELT does not answer cross-origin.** From a browser it is not a source
+  at all. It is tried once, marked dead for the session on first refusal,
+  and the news rung falls through to **Wikinews** — Wikimedia, so it answers
+  CORS like the rest. The panel names the dead source rather than failing
+  quietly: *sources: api.gdeltproject.org — it does not answer cross-origin
+  requests.*
+- **The Wikidata query service rate-limits, and its 429s carry no CORS
+  header** — so from a page they are indistinguishable from a network
+  failure. Every throttleable host now goes through a lane: one request at
+  a time, a minimum gap, and on a readable 429/502 the lane slows itself
+  and retries. On an unreadable refusal it retries once, and after two
+  straight refusals **rests the host for a minute** instead of hammering
+  something that cannot answer. Being told no by a server is a reason to
+  ask more slowly, not a reason to ask five ways at once.
+- **Radius discipline.** A 4,373 km `wikibase:around` is how you earn a
+  502. Place queries cap at 600 km, people queries at 800 — above that the
+  planetary seating applies anyway.
+
+## The agenda is produced, not inherited
+
+The live council showed topics named "Kentucky" and "Charlotte" — places,
+not subjects — and the transcript read as process-talk because there was
+nothing at issue to argue about. Beer is explicit about the order: the
+group produces the agenda (Opening Question → Statements of Importance →
+the twelve subjects), and *then* the geometry takes over.
+
+The charter stage now does exactly that. It writes the **Opening
+Question** — one genuinely contested question about this ground that every
+topic is an angle on — and the **agenda**: for each topic vertex, a
+*subject* (the live issue at that place, not the place name) and a
+one-sentence statement of importance saying what is at stake and for whom.
+A subject that could hang over any city has failed, and the directive says
+so. The agenda outranks any inferred issue, flows into every room's
+context, heads every room in the transcript, and shows above the fold as
+`OPENING QUESTION`.
+
+## They speak as themselves
+
+The first transcript read "From BODY: the release schedule serves the
+canal" — register-speak, which is nobody talking. The seats hold real named
+people, so the rooms now run in the first person: each statement is written
+as the seat's holder would actually argue it, from their documented life
+and work (`who_is` travels with every bench entry), in their own voice — a
+president does not argue like a streamer — with the register as the
+*discipline* the argument must satisfy, not the voice. They are distinct
+people with distinct stakes who would not necessarily get along; the
+directive tells them to take positions, disagree, and name each other, and
+critics answer the speaker by name.
+
+The person is a lens onto the evidence, not a source of new facts — every
+claim must still come from the context, the gate still scores it, and every
+line is still stamped `rehearsal`. The transcript is now a room script:
+Opening Question at the top, each room headed by its subject *at* its
+place with its statement of importance and its bench (*at the table: … ·
+answering: …*), and each line carrying who the speaker is. While a
+convening runs, the panel shows the last lines as they land instead of a
+bare counter.
+
 ## The harness
 
 One model call in a loop is a chatbot. A convening needs a harness:

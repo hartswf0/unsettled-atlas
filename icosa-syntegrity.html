@@ -339,6 +339,18 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   font-size:10px;letter-spacing:.24em;color:var(--muted)
 }
 #boot.gone{display:none}
+#boot .bx{display:flex;flex-direction:column;align-items:center;gap:16px}
+#boot svg polygon{fill:none;stroke:var(--ink);stroke-width:1.5;stroke-linejoin:round}
+#boot .b0{stroke-dasharray:346;stroke-dashoffset:346;animation:bdraw .9s ease-out forwards}
+#boot .b1,#boot .b2,#boot .b3,#boot .b4{opacity:0;stroke-width:1}
+#boot .b1{animation:bshow 2s ease-in-out .8s infinite}
+#boot .b2{animation:bshow 2s ease-in-out 1.0s infinite}
+#boot .b3{animation:bshow 2s ease-in-out 1.2s infinite}
+#boot .b4{animation:bshow 2s ease-in-out 1.4s infinite}
+#boot .bl{animation:bbreathe 1.6s ease-in-out infinite}
+@keyframes bdraw{to{stroke-dashoffset:0}}
+@keyframes bshow{0%,100%{opacity:0}35%,65%{opacity:.85}}
+@keyframes bbreathe{0%,100%{opacity:.45}50%{opacity:1}}
 @media (max-width:380px){ .plate{font-size:9px} }
 @media (prefers-reduced-motion:reduce){ #acts button{transition:none} }
 </style>
@@ -382,7 +394,16 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 </div><!-- /stage -->
 
 <div id="panel"></div>
-<div id="boot">COMPILING THE WORLD</div>
+<div id="boot"><div class="bx">
+  <svg viewBox="0 0 120 106" width="108" height="95" aria-hidden="true">
+    <polygon class="b0" points="60,5 5,101 115,101"/>
+    <polygon class="b1" points="32.5,53 87.5,53 60,101"/>
+    <polygon class="b2" points="60,5 32.5,53 87.5,53"/>
+    <polygon class="b3" points="32.5,53 5,101 60,101"/>
+    <polygon class="b4" points="87.5,53 60,101 115,101"/>
+  </svg>
+  <div class="bl">COMPILING THE WORLD</div>
+</div></div>
 
 <script src="icosa-world.data.js"></script>
 <script>
@@ -6260,7 +6281,8 @@ function openTranscript(cell, seat) {
     '<button class="go ghost" id="tBack" style="margin-top:12px">BACK TO THE COUNCIL</button>');
   var isWorld = councilSeat && councilSeat.seating === 'world';
   document.getElementById('tCopy').onclick = function () {
-    copyText(runExportText(cell, seat, isWorld), document.getElementById('tCopy'));
+    copyText(runExportText(cell, seat, isWorld), document.getElementById('tCopy'),
+             function () { openTranscript(cell, seat); });
   };
   document.getElementById('tTake').onclick = function () {
     takeText(runExportText(cell, seat, isWorld), 'syntegration-' + slug + '.md');
@@ -6461,23 +6483,54 @@ function runExportText(cell, seat, world) {
          ' reverberations, claims carried along the struts between rooms \u2192 outcomes.');
   return L.join('\n');
 }
-function copyText(txt, btn) {
+/* Copy has three rungs, because clipboards are the least standard thing a
+ * browser does. The API first; execCommand with a real selection second —
+ * on iOS select() selects nothing, setSelectionRange is the one that works;
+ * and when both are refused, the document is shown on screen selected,
+ * which cannot fail. */
+function copyText(txt, btn, back) {
   function ok() {
     if (!btn) return;
     var was = btn.textContent;
     btn.textContent = 'COPIED';
     setTimeout(function () { btn.textContent = was; }, 1600);
   }
-  function fall() {
+  function byCommand() {
     var ta = document.createElement('textarea');
-    ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    try { if (document.execCommand('copy')) ok(); } catch (e) {}
+    ta.value = txt;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed'; ta.style.left = '-9999px'; ta.style.top = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    try { ta.setSelectionRange(0, ta.value.length); } catch (e) { ta.select(); }
+    var did = false;
+    try { did = document.execCommand('copy'); } catch (e2) {}
     document.body.removeChild(ta);
+    if (did) ok(); else showCopyView(txt, back);
   }
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(txt).then(ok, fall);
-  } else fall();
+  if (navigator.clipboard && navigator.clipboard.writeText && window.isSecureContext) {
+    navigator.clipboard.writeText(txt).then(ok, byCommand);
+  } else byCommand();
+}
+function showCopyView(txt, back) {
+  panel('COPY IT YOURSELF',
+    '<p>This browser refused the clipboard, so the whole document is below, ' +
+    'already selected — copy it by hand. TAKE IT AS A FILE downloads the same ' +
+    'thing, which some phones find easier.</p>' +
+    '<textarea id="cvTxt" readonly style="width:100%;height:50vh;font:inherit;' +
+    'font-size:9px;line-height:1.5;background:var(--paper);color:var(--ink);' +
+    'border:1px solid var(--ink);padding:8px;box-sizing:border-box"></textarea>' +
+    '<button class="go ghost" id="cvTake" style="margin-top:10px">TAKE IT AS A FILE</button> ' +
+    (back ? '<button class="go ghost" id="cvBack" style="margin-top:10px">BACK</button>' : ''));
+  var ta = document.getElementById('cvTxt');
+  ta.value = txt;
+  ta.onclick = function () { try { ta.setSelectionRange(0, ta.value.length); } catch (e) {} };
+  try { ta.focus(); ta.setSelectionRange(0, ta.value.length); } catch (e) {}
+  document.getElementById('cvTake').onclick = function () {
+    takeText(txt, 'syntegration.md');
+  };
+  var bb = document.getElementById('cvBack');
+  if (bb) bb.onclick = back;
 }
 function takeText(txt, name) {
   var blob = new Blob([txt], { type: 'text/markdown' });
@@ -6828,7 +6881,9 @@ function openCouncil(cell, keep) {
   var cscr = document.getElementById('cScript');
   if (cscr) cscr.onclick = function () { openTranscript(cell, seat); };
   var ccr = document.getElementById('cCopyRun');
-  if (ccr) ccr.onclick = function () { copyText(runExportText(cell, seat, world), ccr); };
+  if (ccr) ccr.onclick = function () {
+    copyText(runExportText(cell, seat, world), ccr, function () { openCouncil(cell); });
+  };
   var cw = document.getElementById('cWipe');
   if (cw) cw.onclick = function () {
     DB.notes = DB.notes.filter(function (n) { return !(n.kind === 'sim' && n.cell === slug); });

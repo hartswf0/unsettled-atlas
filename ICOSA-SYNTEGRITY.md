@@ -834,6 +834,26 @@ now built in:
   that follows is answered from memory — with an eight-second leash on the
   fetch so "reading…" can never hang forever.
 
+## Arriving, and leaving with something
+
+The boot screen was a sentence; now it is the instrument's own figure — a
+triangle that draws itself and then subdivides into four, over and over,
+which is the one operation everything here is built from. On a fast
+machine it is gone before it finishes drawing, which is the correct cost:
+the animation exists for the phone that needs a moment, not to make fast
+loads slower.
+
+And copying had to stop trusting the clipboard, because clipboards are the
+least standard thing a browser does — which is why COPY THE RUN could
+fail silently on the deployed site. It now has three rungs: the clipboard
+API where the context is secure; `execCommand` with a real selection where
+it is not — on iOS `select()` selects nothing, `setSelectionRange` is the
+call that works; and when both are refused, the rung that cannot fail —
+the whole document opens on screen, already selected, with TAKE IT AS A
+FILE beside it, and a BACK that returns exactly where you were. A copy
+button that fails must never fail silently; the worst case is now "copy it
+yourself", never nothing.
+
 ## The wire
 
 The instrument talks to the internet constantly — Wikipedia for places and

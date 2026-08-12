@@ -207,6 +207,38 @@ function buildIndex() {
   for (let i = 0; i < G.e; i++) indexEdge(i);
 }
 
+/* Which pieces of ground are on screen right now.
+   The render loop must never walk the whole city to find out what it can see;
+   it asks here and gets back only what falls in the box. Edges straddle cells,
+   so a generation stamp does the de-duplicating without allocating a Set. */
+let vpStamp = null, vpGen = 0;
+export function edgesInBox(x0, y0, x1, y1, out, filter) {
+  out = out || [];
+  out.length = 0;
+  if (!vpStamp || vpStamp.length < G.e) {
+    const next = new Int32Array(Math.max(4096, G.e * 2));
+    if (vpStamp) next.set(vpStamp);
+    vpStamp = next;
+  }
+  const gen = ++vpGen;
+  const cx0 = Math.floor(x0 / CELL), cx1 = Math.floor(x1 / CELL);
+  const cy0 = Math.floor(y0 / CELL), cy1 = Math.floor(y1 / CELL);
+  for (let cx = cx0; cx <= cx1; cx++) {
+    for (let cy = cy0; cy <= cy1; cy++) {
+      const b = edgeCells.get(ckey(cx, cy));
+      if (!b) continue;
+      for (let i = 0; i < b.length; i++) {
+        const e = b[i];
+        if (vpStamp[e] === gen) continue;
+        vpStamp[e] = gen;
+        if (filter && !filter(e)) continue;
+        out.push(e);
+      }
+    }
+  }
+  return out;
+}
+
 export function nearestNode(x, y, tol) {
   const R = Math.max(1, Math.ceil((tol || CELL) / CELL));
   const cx = Math.floor(x / CELL), cy = Math.floor(y / CELL);

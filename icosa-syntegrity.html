@@ -2813,6 +2813,79 @@ function lawFor(slug) {
     '\n\nYour task for this specific call is in operation.directive, at the end of the ' +
     'context. Follow it exactly; everything before it is the world it applies to.';
 }
+/* The words that govern every speaking turn, in one place — the harness
+ * sends them, the seat dossier shows them, the exported prompt carries
+ * them. If the charge cannot be read before the run, it is not a charge,
+ * it is a surprise.                                                       */
+function speakDirective(retry, mayNeed) {
+  return 'This is the working session of the topic team for operation.topic' +
+    (retry ? ', RE-RUN: operation.first_attempt is what this team said, it failed the ' +
+             'gate, and operation.judge_notes says exactly why, seat by seat. Rewrite ' +
+             'the statements to fix what the notes name.' : '.') +
+    ' Each seat in operation.members is held by the person named in who — who_is says who ' +
+    'they are. Write one statement per seat IN THE FIRST PERSON, as that person would ' +
+    'actually argue it from their documented life and work, in their own voice — a ' +
+    'president does not argue like a streamer, an astronaut does not argue like a cult ' +
+    'leader, and none of them talk about process. The person is a lens onto the evidence, ' +
+    'not a source of new facts: everything they claim must come from this context. Their ' +
+    'register (rules in council.registers) is the discipline their argument must satisfy, ' +
+    'not their voice. Speak to operation.topic.subject on this ground: the settlements, ' +
+    'the water, the jurisdiction, what has escalated from below, and above all ' +
+    'evidence.recent. These are distinct people with distinct stakes who would not ' +
+    'necessarily get along: take positions, disagree, name each other. If ' +
+    'operation.carried_in is present, those claims arrived from your seats\' other rooms — ' +
+    'engage them, do not restate them. Two ' +
+    'sentences per seat, plain, no preamble, and never claim a fact the context does not ' +
+    'carry.' +
+    (mayNeed ? ' If a seat genuinely needs something the context lacks, put a short plain ' +
+      'question in needs — at most two, and an empty list if nothing is needed. The first ' +
+      'several questions across the rooms are looked up before the next iteration; the ' +
+      'rest are dropped, so only ask what matters.' : '');
+}
+/* The compiler between the bench and the convening: everything the
+ * instrument knows about one seat, in one object — who holds it and on what
+ * evidence, what its register permits and forbids, what each of its two
+ * rooms is about, whom it answers and who answers it, and the exact words
+ * that will govern its speech.                                            */
+function compileSeat(cell, seat, world, i) {
+  var slug = cellSlug(cell);
+  var st = seat.struts[i];
+  var topics = topicNames(cell, seat, world);
+  var held = seatHolder(slug, i), src = seatSource(slug, i);
+  var reg = null;
+  DATA.council.registers.forEach(function (r) { if (r.id === st.register) reg = r; });
+  var rec = peopleFor(cell), person = null, rank = 0;
+  if (rec && held) rec.list.forEach(function (p, x) {
+    if (p.name === held) { person = p; rank = x + 1; }
+  });
+  var room = function (t) {
+    var tp = topics[t] || {};
+    return { id: t, place: tp.title || '', subject: tp.subject || tp.issue || null,
+             statement: tp.statement || null,
+             bench: seat.members[t].map(function (s) { return seatHolder(slug, s) || 'seat ' + s; }) };
+  };
+  var critic = null;
+  for (var j = 0; j < seat.struts.length; j++) {
+    var o = seat.struts[j];
+    if (o.critiques[0] === st.topics[0] && o.critiques[1] === st.topics[1]) critic = j;
+  }
+  return {
+    seat: i, holder: held || null, register: reg,
+    who_is: (src && src.what) || (person && person.what) || '',
+    source: src ? src.from : (held ? 'hand' : null),
+    evidence: person ? {
+      tied_to: person.where || '', found_at: person.at || '', up: person.up || 0,
+      sitelinks: person.sitelinks || 0, views: person.views || 0,
+      score: person.score, rank: rank, of: rec.list.length
+    } : null,
+    rooms: st.topics.map(room),
+    answers: st.critiques.map(room),
+    answered_by: critic != null ? (seatHolder(slug, critic) || 'seat ' + critic) : null,
+    member_entry: { seat: i, who: held || ('seat ' + i),
+                    who_is: (src && src.what) || '', register: st.register },
+    charge: speakDirective(null, true)
+  };
+}
 function askHarness(cell, stage, ctx, schema, schemaName, maxTok, cb) {
   askOpenAI({ op: stage, model: modelFor(stage),
     reasoning: (HARNESS_STAGE[stage] || {}).effort || 'medium',
@@ -3028,30 +3101,7 @@ function runHarness(cell, seat, world, onStep, done) {
     ctx.operation.said_before = utterances(slug)
       .filter(function (n) { return n.topic === t && n.mode === 'said'; })
       .slice(-6).map(function (n) { return { round: n.round, iter: n.iter, seat: n.seat, text: n.text }; });
-    ctx.operation.directive =
-      'This is the working session of the topic team for operation.topic' +
-      (retry ? ', RE-RUN: operation.first_attempt is what this team said, it failed the ' +
-               'gate, and operation.judge_notes says exactly why, seat by seat. Rewrite ' +
-               'the statements to fix what the notes name.' : '.') +
-      ' Each seat in operation.members is held by the person named in who — who_is says who ' +
-      'they are. Write one statement per seat IN THE FIRST PERSON, as that person would ' +
-      'actually argue it from their documented life and work, in their own voice — a ' +
-      'president does not argue like a streamer, an astronaut does not argue like a cult ' +
-      'leader, and none of them talk about process. The person is a lens onto the evidence, ' +
-      'not a source of new facts: everything they claim must come from this context. Their ' +
-      'register (rules in council.registers) is the discipline their argument must satisfy, ' +
-      'not their voice. Speak to operation.topic.subject on this ground: the settlements, ' +
-      'the water, the jurisdiction, what has escalated from below, and above all ' +
-      'evidence.recent. These are distinct people with distinct stakes who would not ' +
-      'necessarily get along: take positions, disagree, name each other. If ' +
-      'operation.carried_in is present, those claims arrived from your seats\' other rooms — ' +
-      'engage them, do not restate them. Two ' +
-      'sentences per seat, plain, no preamble, and never claim a fact the context does not ' +
-      'carry.' +
-      (mayNeed ? ' If a seat genuinely needs something the context lacks, put a short plain ' +
-        'question in needs — at most two, and an empty list if nothing is needed. The first ' +
-        'several questions across the rooms are looked up before the next iteration; the ' +
-        'rest are dropped, so only ask what matters.' : '');
+    ctx.operation.directive = speakDirective(retry, mayNeed);
     ask('speak', ctx, mayNeed ? SCHEMA_SPEAK_NEEDS : SCHEMA_SPEAK, 'topic_statements', 1800, cb2);
   }
   function judgeOnce(iter, t, said, crit, cb2) {
@@ -6338,6 +6388,76 @@ function topicEvidence(cell, tp) {
     return false;
   }).slice(0, 3);
 }
+function openSeatDossier(cell, seat, world, i) {
+  var slug = cellSlug(cell);
+  var cs = compileSeat(cell, seat, world, i);
+  var src = seatSource(slug, i);
+  var sum = cs.holder ? (DB.summaries || {})[(src && src.title) || cs.holder] : null;
+  var col = REGCOL[(cs.register && cs.register.id) || ''] || '#121514';
+  var link = cs.holder ? (cs.source === 'model'
+    ? 'https://en.wikipedia.org/w/index.php?search=' + encodeURIComponent(cs.holder)
+    : 'https://en.wikipedia.org/wiki/' +
+      encodeURIComponent(((src && src.title) || cs.holder).replace(/ /g, '_'))) : null;
+  var why;
+  if (cs.source === 'model') {
+    why = 'Inferred by the model — not a citation, not checked. The link is a search, not a source.';
+  } else if (cs.source === 'hand') {
+    why = 'Claimed by hand: somebody typed this name in, which invents nobody.';
+  } else if (cs.evidence) {
+    var e = cs.evidence;
+    why = (e.tied_to ? 'Tied by the record to <b>' + esc(e.tied_to) + '</b>. ' : '') +
+      (e.up ? 'Found ' + e.up + ' rung' + (e.up === 1 ? '' : 's') + ' up the ladder — a ' +
+              'borrowed local, visibly borrowed. ' : 'Found on this ground itself. ') +
+      'Carried by <b>' + e.sitelinks + '</b> language edition' + (e.sitelinks === 1 ? '' : 's') +
+      (e.views ? ', read <b>' + e.views.toLocaleString('en') + '</b> times in sixty days' : '') +
+      ' — ranked <b>' + e.rank + '</b> of ' + e.of + ' in the record for this ground.';
+  } else {
+    why = 'From the record.';
+  }
+  function roomBlock(r, role) {
+    return '<div class="team" style="border-left-color:' + col + '">' +
+      '<b><s>' + role + ' ' + r.id + '</s>' + esc(r.subject || r.place || 'unnamed') +
+      (r.subject && r.place ? ' <span style="color:var(--muted);font-weight:400">at ' +
+        esc(r.place) + '</span>' : '') + '</b>' +
+      (r.statement ? '<q>' + esc(r.statement) + '</q>' : '') +
+      (!r.subject ? '<em>no subject yet — the charter writes it when a convening begins, ' +
+        'or the receiving model does under FETCH FIRST</em>' : '') +
+      (role === 'ROOM' && r.bench ? '<em>at the table: ' + esc(r.bench.join(', ')) + '</em>' : '') +
+      '</div>';
+  }
+  panel('SEAT ' + i + ' · ' + (cs.holder || 'UNCLAIMED').toUpperCase(),
+    '<div style="display:flex;gap:10px;align-items:flex-start;margin-top:6px">' +
+    (sum && sum.thumb ? '<img src="' + sum.thumb + '" alt="" style="width:72px;height:88px;' +
+      'object-fit:cover;border:1.5px solid var(--ink);filter:grayscale(.25)">' : '') +
+    '<div><b style="font-size:12px">' +
+    (link ? '<a href="' + link + '" target="_blank" rel="noopener">' + esc(cs.holder || 'unclaimed') + '</a>'
+          : esc(cs.holder || 'unclaimed')) + '</b>' +
+    (cs.who_is ? '<br><span style="color:var(--muted)">' + esc(cs.who_is) + '</span>' : '') +
+    '<br><span style="color:' + col + ';font-weight:700;letter-spacing:.12em;font-size:9px">' +
+    esc((cs.register && cs.register.id) || '') + '</span></div></div>' +
+    '<p><b>Why this seat holds them.</b> ' + why + '</p>' +
+    (cs.register ? '<div class="team" style="border-left-color:' + col + '">' +
+      '<b><s>REGISTER</s>' + esc(cs.register.id) + ' ↔ ' + esc(cs.register.opposite) + '</b>' +
+      '<em>may ' + esc(cs.register.may) + '</em>' +
+      '<em>may not ' + esc(cs.register.mayNot) + '</em>' +
+      '<em>the discipline their argument must satisfy — not their voice</em></div>' : '') +
+    '<p style="margin-top:10px"><b>Their two rooms</b> — where they speak:</p>' +
+    cs.rooms.map(function (r) { return roomBlock(r, 'ROOM'); }).join('') +
+    '<p style="margin-top:10px"><b>They answer</b> rooms ' +
+    cs.answers.map(function (r) { return r.id; }).join(' & ') +
+    (cs.answered_by ? ' — and are answered by <b>' + esc(cs.answered_by) + '</b>' : '') + ':</p>' +
+    cs.answers.map(function (r) { return roomBlock(r, 'ANSWERS'); }).join('') +
+    '<p style="margin-top:10px"><b>The charge.</b> The exact words that will govern their ' +
+    'speech — the harness sends this same text with every speaking turn, over the LAW and ' +
+    'the charter (COPY THE RUN carries both verbatim):</p>' +
+    '<pre style="white-space:pre-wrap;word-break:break-word;font-size:9px;line-height:1.55;' +
+    'background:var(--paper);border:1px solid var(--ink);padding:8px">' +
+    'operation.members[…] = ' + esc(JSON.stringify(cs.member_entry)) + '\n\n' +
+    esc(cs.charge) + '</pre>' +
+    '<button class="go ghost" id="sdBack" style="margin-top:12px">BACK TO THE DECK</button>');
+  PANEL = 'dossier';
+  document.getElementById('sdBack').onclick = function () { openDeck(cell, seat, world); };
+}
 function openDeck(cell, seat, world) {
   var slug = cellSlug(cell);
   var topics = topicNames(cell, seat, world);
@@ -6351,7 +6471,7 @@ function openDeck(cell, seat, world) {
     var held = seatHolder(slug, i), src = seatSource(slug, i);
     var sum = held ? (DB.summaries || {})[(src && src.title) || held] : null;
     var col = REGCOL[st.register] || '#121514';
-    return '<div class="pcard" style="border-top:4px solid ' + col + '">' +
+    return '<div class="pcard" data-seat="' + i + '" style="border-top:4px solid ' + col + ';cursor:pointer">' +
       (sum && sum.thumb
         ? '<img src="' + sum.thumb + '" alt="" loading="lazy">'
         : '<div class="pface" style="color:' + col + '">' +
@@ -6403,6 +6523,9 @@ function openDeck(cell, seat, world) {
     '<button class="go ghost" id="dBack" style="margin-top:12px">BACK TO THE COUNCIL</button>');
   PANEL = 'deck';
   document.getElementById('dBack').onclick = function () { openCouncil(cell); };
+  [].forEach.call(document.querySelectorAll('#panel .pcard'), function (c) {
+    c.onclick = function () { openSeatDossier(cell, seat, world, +c.getAttribute('data-seat')); };
+  });
   // faces land asynchronously; give the grid two chances to pick them up
   [1600, 3600].forEach(function (ms) {
     setTimeout(function () {
@@ -6470,9 +6593,9 @@ function runExportText(cell, seat, world) {
       'name \u2014 with a one-sentence statement of importance; then three to six TENSIONS.'));
   L.push('4. CONVENE. Run ' + REVERB + ' reverberations. In each, take the topic rooms in ' +
          'order, and for each room:');
-  L.push('   a. every member speaks FIRST PERSON as the named holder of their seat, from ' +
-         "their seat's register, about this room's subject at this place \u2014 concrete, " +
-         'placed, no pleasantries;');
+  L.push('   a. every member speaks FIRST PERSON as the named holder of their seat, under ' +
+         'THE SPEAKING DIRECTIVE, in their register as defined in THE REGISTERS \u2014 ' +
+         'concrete, placed, no pleasantries;');
   L.push('   b. the room\'s critics answer what was just said, register against register;');
   L.push('   c. judge every line \u2014 grounded, register, specific, engaged, 0\u20133 each. A ' +
          'room averaging below ' + GATE.total + '/12, or below ' + GATE.grounded + '/3 on ' +
@@ -6489,8 +6612,24 @@ function runExportText(cell, seat, world) {
          'output with the address ' + slug + ' so the run stays tracked to its polygon.');
   L.push('');
   L.push('## SYSTEM INSTRUCTION');
+  L.push('The hot prefix, verbatim \u2014 identical across every call on this cell:');
   L.push('');
   L.push(lawFor(slug));
+  L.push('');
+  L.push('## THE REGISTERS');
+  L.push('The six disciplines of argument. A seat\u2019s register is the discipline its ' +
+         'statements must satisfy \u2014 not its voice \u2014 and every register is answered by ' +
+         'its opposite. These rules bind every line produced under step 4:');
+  DATA.council.registers.forEach(function (r) {
+    L.push('- ' + r.id + ' \u2194 ' + r.opposite + ' \u00b7 may: ' + r.may +
+           ' \u00b7 may not: ' + r.mayNot);
+  });
+  L.push('');
+  L.push('## THE SPEAKING DIRECTIVE');
+  L.push('Verbatim, as the harness sends it with every team\u2019s speaking turn \u2014 step 4a ' +
+         'applies it, THE REGISTERS above are the rules it references:');
+  L.push('');
+  L.push(speakDirective(null, false));
   L.push('');
   if (ch) {
     if (ch.opening) { L.push('## OPENING QUESTION'); L.push(ch.opening); L.push(''); }
@@ -6530,7 +6669,19 @@ function runExportText(cell, seat, world) {
   }
   L.push('');
   L.push('## THE TOPICS');
+  if (world) {
+    L.push('This is the planetary council: its topic anchors are distributed points \u2014 ' +
+           'all at sea by construction \u2014 that spread the argument around the whole ' +
+           'ground. An anchor\u2019s name is NOT its subject; every subject is produced from ' +
+           'THE GROUND (step 3), never from an anchor.');
+  }
   topics.forEach(function (tp, t) {
+    if (world && !tp.subject) {
+      L.push('- TOPIC ' + t + ' \u00b7 anchor ' + ll(tpts[t]) +
+             (tp.title ? ' (nearest named thing: ' + tp.title + ')' : '') +
+             ' \u2014 subject to be produced from THE GROUND');
+      return;
+    }
     L.push('- TOPIC ' + t + ' \u00b7 ' + (tp.subject || tp.title || 'unnamed') +
            (tp.subject && tp.title ? ' \u00b7 at ' + tp.title : '') +
            ' \u00b7 ' + ll(tpts[t]) +
@@ -6539,7 +6690,9 @@ function runExportText(cell, seat, world) {
   L.push('');
   L.push('## THE BENCH');
   L.push('Each seat sits in two rooms and answers two others \u2014 the struts are the ' +
-         'routing. A critic\'s register is chosen to be incommensurable with what it answers.');
+         'routing. A critic\'s register is chosen to be incommensurable with what it answers. ' +
+         'Every line a seat produces is FIRST PERSON as its named holder \u2014 the register ' +
+         'is the discipline, never the voice.');
   seat.struts.forEach(function (st, i) {
     var held = seatHolder(slug, i), src = seatSource(slug, i);
     L.push('- SEAT ' + i + (st.register ? ' \u00b7 ' + st.register : '') + ' \u00b7 ' +

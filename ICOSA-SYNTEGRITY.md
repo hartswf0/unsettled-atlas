@@ -911,6 +911,35 @@ the place stands in*), with the live items that feed it linked in place:
 *↳ Tula arsenal strike continues · en.wikinews.org*. The faces land
 asynchronously and the grid picks them up as they arrive.
 
+Each card opens. The missing layer between the bench and the convening was
+a compiler — the document assigned names to struts and then immediately
+asked them to speak. `compileSeat` is that compiler, and tapping a card
+shows its output as a dossier: **why this seat holds them** with the
+recruit evidence spelled out (tied by the record to which place, found on
+this ground or borrowed from how many rungs up, carried by how many
+language editions, read how many times, ranked what of what in the
+record); **their register** with its may and may-not and the opposite that
+answers it; **their two rooms** — what each one is about, who else sits
+there, and honestly *no subject yet* when the charter hasn't written one;
+whom they answer and who answers them; and **the charge** — the exact
+member entry that will ride in `operation.members` and, verbatim, the
+speaking directive the harness sends with every turn. That directive now
+lives in one function, `speakDirective`, so the dossier, the exported
+prompt and the harness cannot drift apart: what you read before the run
+is what the model is told during it.
+
+The exported prompt learned the same lesson, because a run of it at
+planetary scale showed three gaps. The registers were bare words — a
+receiving model was told a seat speaks as BODY with no rulebook — so THE
+REGISTERS section now carries all six disciplines with their may /
+may-not / opposite. The speaking turn was described but not specified —
+so THE SPEAKING DIRECTIVE carries the harness's own words verbatim. And
+the planetary council's topic anchors — twelve points all at sea by
+construction — were listed by their nearest names as if *Punta Negra* and
+*Weddell Sea* were subjects for a triangle covering Moscow and Delhi; now
+the document says an anchor's name is NOT its subject, and each line
+reads *anchor 16.01°S 92.64°W — subject to be produced from THE GROUND*.
+
 And COPY THE RUN is simply always there now. It used to appear only once
 a charter or an utterance existed, which meant a first-time visitor had
 nothing to copy and no way to know why — the worst kind of missing

@@ -40,6 +40,7 @@ async function rig(p){
   await p.route('**/api.openai.com/v1/models', r=>r.fulfill({status:200,contentType:'application/json',
     headers:{'access-control-allow-origin':'*'},body:JSON.stringify({data:[{id:'gpt-5.6-sol'},{id:'gpt-5.6-terra'}]})}));
   await p.route('**/api.openai.com/v1/responses', async r=>{
+    await new Promise(z=>setTimeout(z,420));   // calls take time, as real ones do
     const bo=JSON.parse(r.request().postData()||'{}');
     const ctx=JSON.parse(bo.input[0].content[0].text); const op=ctx.operation||{};
     seen.push({type:op.type, iteration:op.iteration||null,
@@ -106,25 +107,47 @@ await p.waitForTimeout(4000);
 await p.evaluate(()=>document.getElementById('cRun').click());
 // while the run churns, the RUN BOARD must say where the process is
 const board = { seen:false, live:false, roomChips:0, rows:0, clock:false, done:0 };
-for (let i=0;i<40;i++){ await p.waitForTimeout(800);
+const certainty = { line:false, ops:new Set(), secs:false, bytes:false, watchBtn:false };
+const world = { cards:0, seenSpeech:false, modes:new Set() };
+for (let i=0;i<160;i++){ await p.waitForTimeout(200);
   const b = await p.evaluate(()=>{
     const rb=document.querySelector('#convene .runboard');
-    if (!rb) return null;
-    return { live: !!rb.querySelector('.stg.live'),
-      rooms: rb.querySelectorAll('.stg.rm').length,
-      rows: rb.querySelectorAll('.rbrow').length,
-      done: rb.querySelectorAll('.stg.done').length,
-      clock: !!document.getElementById('cvClock') };
+    const now=document.getElementById('cvNow');
+    const sp=(window.ICOSA_WATCH&&window.ICOSA_WATCH.speech())||[];
+    return { has: !!rb,
+      live: !!(rb&&rb.querySelector('.stg.live')),
+      rooms: rb?rb.querySelectorAll('.stg.rm').length:0,
+      rows: rb?rb.querySelectorAll('.rbrow').length:0,
+      done: rb?rb.querySelectorAll('.stg.done').length:0,
+      clock: !!document.getElementById('cvClock'),
+      nowText: now?now.textContent:'',
+      watch: !!document.getElementById('cvWatch'),
+      speech: sp.length, speechModes: sp.map(s=>s.mode) };
   });
-  if (b){ board.seen=true; board.live=board.live||b.live;
+  if (b.has){ board.seen=true; board.live=board.live||b.live;
     board.roomChips=Math.max(board.roomChips,b.rooms);
     board.rows=Math.max(board.rows,b.rows); board.done=Math.max(board.done,b.done);
     board.clock=board.clock||b.clock; }
+  if (b.nowText){ certainty.line=true;
+    if (/\d+s/.test(b.nowText)) certainty.secs=true;
+    if (/k of context out to/.test(b.nowText)) certainty.bytes=true;
+    for (const op of ['speaking','critics','gate is scoring','charter','souls','reflecting','outcomes','record'])
+      if (b.nowText.includes(op)) certainty.ops.add(op);
+  }
+  certainty.watchBtn = certainty.watchBtn || b.watch;
+  if (b.speech){ world.seenSpeech=true; world.cards=Math.max(world.cards,b.speech);
+    b.speechModes.forEach(m=>world.modes.add(m)); }
   if (await p.evaluate(()=>([...document.querySelectorAll('#panel p')].some(x=>/things said across/.test(x.textContent))))) break; }
 await p.waitForTimeout(500);
 out.board = { seen: board.seen, liveChipSeen: board.live, clock: board.clock,
   roomChipsBothReverbs: board.roomChips===12, rows: board.rows===4,
   progressAccumulated: board.done>=6 };
+out.certainty = { alwaysSaysWhat: certainty.line, perCallSeconds: certainty.secs,
+  saysContextSize: certainty.bytes, namedStages: certainty.ops.size>=3,
+  stages: [...certainty.ops], watchButton: certainty.watchBtn };
+out.world = { talkStaged: world.seenSpeech, cardsAtOnce: world.cards,
+  kinds: [...world.modes], hasSaid: world.modes.has('said'),
+  hasCritique: world.modes.has('critique') };
 
 // copy from the council view
 await p.evaluate(()=>document.getElementById('cCopyRun').click());

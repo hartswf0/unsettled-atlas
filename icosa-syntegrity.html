@@ -248,6 +248,17 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
   letter-spacing:.08em;color:var(--signal)}
 #convene .cvhead b{font-weight:700}
 #convene .cvhead span{margin-left:auto;color:var(--muted)}
+#convene .cvhead a{color:var(--signal);text-decoration:none;border-bottom:1px solid var(--signal);
+  margin-left:6px;font-size:8px;letter-spacing:.12em}
+/* what is in flight, and for how long — never "something, presumably" */
+#convene .cvnow{border-left:2px solid var(--signal);padding:4px 0 4px 7px;margin:0 0 7px;
+  font-size:9px;line-height:1.5}
+#convene .cvnow.slow{border-left-color:var(--muted)}
+#convene .cvnow b{font-weight:700;letter-spacing:.06em}
+#convene .cvnow s{text-decoration:none;color:var(--muted)}
+#convene .cvnow em{font-style:normal;color:var(--signal);font-weight:700}
+#convene .cvnow u{display:block;text-decoration:none;color:var(--muted);font-size:8px;
+  letter-spacing:.06em;margin-top:1px}
 #convene .cvdot{width:7px;height:7px;border-radius:50%;background:var(--signal);
   flex:0 0 auto;animation:cvbreathe 1.2s ease-in-out infinite}
 #convene .cvbar{height:3px;background:rgba(18,21,20,.14);margin:6px 0 8px}
@@ -2285,6 +2296,51 @@ function responseText(j) {
   });
   return out.join('');
 }
+/* ------------------------------------------------------------ in flight
+ * Certainty is cheap and its absence is expensive. Every model call is
+ * registered while it is out — what it is, which room it is for, how much
+ * context it carries, when it left, and whether it came back slow or
+ * failed. The panel reads this, so the answer to "what is happening" is
+ * never "something, presumably".                                        */
+var INFLIGHT = { seq: 0, live: {}, last: null };
+// A call leaving and a call landing are the two moments the reader most
+// needs to see. The panel used to repaint only at stage boundaries, so a
+// forty-second call was displayed as "writing to the record" — the exact
+// uncertainty this exists to remove. Both edges repaint now.
+function inflightStart(op, watch, bytes, model) {
+  var id = ++INFLIGHT.seq;
+  INFLIGHT.live[id] = { id: id, op: op, watch: watch, bytes: bytes,
+                        model: model, t0: Date.now() };
+  try { paintConvene(); } catch (e) {}
+  wake();
+  return id;
+}
+function inflightEnd(id, err) {
+  var f = INFLIGHT.live[id];
+  if (f) {
+    INFLIGHT.last = { op: f.op, watch: f.watch, ms: Date.now() - f.t0, err: !!err,
+                      t: Date.now() };
+    delete INFLIGHT.live[id];
+  }
+  try { paintConvene(); } catch (e) {}
+  wake();
+}
+function inflightList() {
+  var out = [];
+  for (var k in INFLIGHT.live) out.push(INFLIGHT.live[k]);
+  return out.sort(function (a, b) { return a.t0 - b.t0; });
+}
+var OP_SAYS = {
+  charter: 'writing the charter and the agenda',
+  souls: 'compiling the souls',
+  speak: 'the team is speaking',
+  critique: 'the critics are answering',
+  judge: 'the gate is scoring',
+  reflect: 'the seats are reflecting across their rooms',
+  outcome: 'writing the outcomes',
+  chat: 'the seat is thinking',
+  infer: 'filling what the free sources left thin'
+};
 function askOpenAI(opts, cb) {
   cb = once(cb);
   if (!OPENAI_KEY) return cb('no key');
@@ -2315,8 +2371,16 @@ function askOpenAI(opts, cb) {
   send(body, true);
   function send(payload, mayRetry) {
     netStart('api.openai.com', opts.op || 'reasoning');
+    // IN FLIGHT: a wait you cannot see inside is indistinguishable from a
+    // hang. Every call registers what it is, how big it is, and when it
+    // left, so the panel can always say what is being waited on and for
+    // how long — and say when nothing is in flight at all.
+    var fl = inflightStart(opts.op || 'reasoning', opts.watch || '',
+                           JSON.stringify(payload).length, model);
     var ended = false;
-    function end(err) { if (!ended) { ended = true; netEnd('api.openai.com', err); } }
+    function end(err) {
+      if (!ended) { ended = true; netEnd('api.openai.com', err); inflightEnd(fl, err); }
+    }
     fetch('https://api.openai.com/v1/responses', {
       method: 'POST',
       headers: { 'content-type': 'application/json', authorization: 'Bearer ' + OPENAI_KEY },
@@ -2860,10 +2924,34 @@ function conveneHTML(slug) {
     board += row + '</div>';
   }
   board += '<div class="rbrow"><s>CLOSE</s>' + chip('outcome', 'OUTCOMES') + '</div></div>';
+  // WHAT IS HAPPENING RIGHT NOW — never "something, presumably"
+  var fl = inflightList(), nowLine;
+  if (fl.length) {
+    var f0 = fl[0], secs0 = Math.round((Date.now() - f0.t0) / 1000);
+    nowLine = '<div class="cvnow' + (secs0 > 45 ? ' slow' : '') + '" id="cvNow">' +
+      '<b>' + esc(OP_SAYS[f0.op] || ('asking the model — ' + f0.op)) + '</b>' +
+      (f0.watch ? ' <s>' + esc(f0.watch) + '</s>' : '') +
+      ' <em id="cvNowT">' + secs0 + 's</em>' +
+      '<u>' + Math.round(f0.bytes / 1024) + 'k of context out to ' + esc(f0.model) +
+      (fl.length > 1 ? ' · ' + (fl.length - 1) + ' more in flight' : '') +
+      (secs0 > 45 ? ' · slower than usual, still waiting' : '') + '</u></div>';
+  } else if (WIRE.n) {
+    nowLine = '<div class="cvnow" id="cvNow"><b>reading the record</b>' +
+      ' <em id="cvNowT">' + WIRE.n + ' asks in flight</em>' +
+      '<u>fetches are free; the model is not being paid to wait</u></div>';
+  } else {
+    var lastF = INFLIGHT.last;
+    nowLine = '<div class="cvnow' + (lastF && lastF.err ? ' slow' : '') + '" id="cvNow">' +
+      '<b>writing to the record</b> <em id="cvNowT">between calls</em>' +
+      '<u>' + (lastF ? (lastF.err ? 'the last call failed after ' : 'the last answer came back in ') +
+        (lastF.ms / 1000).toFixed(1) + 's' : 'nothing in flight') + '</u></div>';
+  }
   return '<div class="cvhead"><i class="cvdot"></i><b>' + esc(run.label || 'convening') +
-    '</b><span><span id="cvClock">' + clock + '</span> · ' + run.at + ' / ' + run.of + '</span></div>' +
+    '</b><span><span id="cvClock">' + clock + '</span> · ' + run.at + ' / ' + run.of +
+    ' <a href="#" id="cvWatch" title="clear the panel and watch the talk land on the ground">' +
+    'WATCH ON THE WORLD</a></span></div>' +
     '<div class="cvbar"><i class="churn" style="width:' + pct + '%"></i></div>' +
-    board +
+    nowLine + board +
     said.map(function (n, i) {
       return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') +
         (i === said.length - 1 ? ' landin' : '') + '"><b>' +
@@ -2878,7 +2966,12 @@ function Round100(a, b) { return Math.round(100 * Math.min(1, a / Math.max(1, b)
 function paintConvene() {
   if (!CONVENE_VIS) return;
   var el = document.getElementById('convene');
-  if (el) el.innerHTML = conveneHTML(CONVENE_VIS.slug);
+  if (!el) return;
+  el.innerHTML = conveneHTML(CONVENE_VIS.slug);
+  var w = document.getElementById('cvWatch');
+  // WATCH ON THE WORLD: the panel steps aside and the argument plays where
+  // it is about. The run does not pause — it was never the panel's run.
+  if (w) w.onclick = function (ev) { ev.preventDefault(); closePanel(); };
 }
 var REVERB = 2;                              // iterations per convening
 var GATE = { total: 8, grounded: 2 };        // of 12, and of 3
@@ -3261,7 +3354,7 @@ function runHarness(cell, seat, world, onStep, done) {
   var frozenLaw = null;                          // set once the charter exists
   delete HARNESS_ERR[slug];
   CONVENE_VIS = { slug: slug, pts: topicPoints(cell, seat, world),
-                  topic: -1, stage: 'charter', anims: [] };
+                  topic: -1, stage: 'charter', anims: [], speech: [] };
   var haveR = readingsFor(cell);
   ROUND_STATE[slug] = { at: 0, of: plan.base + (charterOf(slug) ? 0 : 1),
     label: 'convening', t0: Date.now(),
@@ -3276,6 +3369,15 @@ function runHarness(cell, seat, world, onStep, done) {
     if (!el2 || !rs) return;
     var s = Math.floor((Date.now() - rs.t0) / 1000);
     el2.textContent = Math.floor(s / 60) + ':' + (s % 60 < 10 ? '0' : '') + (s % 60);
+    // the in-flight clock ticks in place, so a long call visibly IS a long
+    // call rather than a still frame
+    var nt = document.getElementById('cvNowT'), fl2 = inflightList();
+    if (nt && fl2.length) {
+      var sec = Math.round((Date.now() - fl2[0].t0) / 1000);
+      nt.textContent = sec + 's';
+      var box = document.getElementById('cvNow');
+      if (box && sec > 45) box.className = 'cvnow slow';
+    }
   }, 1000);
   function stopClock() { clearInterval(clockT); }
   function tick(label, topic, stage, iter) {
@@ -3342,7 +3444,10 @@ function runHarness(cell, seat, world, onStep, done) {
     return out;
   }
   function ask(stage, ctx, schema, name, maxTok, cb2) {
-    askOpenAI({ op: stage, model: modelFor(stage),
+    var op = ctx.operation || {};
+    var watch = (op.topic ? 'room ' + op.topic.id : '') +
+                (op.iteration ? (op.topic ? ' · ' : '') + 'reverb ' + op.iteration : '');
+    askOpenAI({ op: stage, model: modelFor(stage), watch: watch,
       reasoning: (HARNESS_STAGE[stage] || {}).effort || 'medium',
       instructions: frozenLaw || lawFor(slug), context: ctx, schema: schema,
       schemaName: name, maxOutputTokens: maxTok || 1800 }, cb2);
@@ -3363,6 +3468,26 @@ function runHarness(cell, seat, world, onStep, done) {
     if (ch && ch.tensions && ch.tensions.length) ctx.operation.tensions = ch.tensions;
     return ctx;
   }
+  // THE TALK LANDS ON THE GROUND IT IS ABOUT. A transcript in a panel is a
+  // document; the same words drawn at the topic point they were said about
+  // are a conversation you can watch happening on the world.
+  function stageOnMap(mode, t, u, extra) {
+    if (!CONVENE_VIS || CONVENE_VIS.slug !== slug) return;
+    if (mode !== 'said' && mode !== 'critique' && mode !== 'reverb' &&
+        mode !== 'reflect' && mode !== 'outcome') return;
+    var st2 = u.seat >= 0 ? seat.struts[u.seat] : null;
+    CONVENE_VIS.speech.push({
+      topic: t, mode: mode,
+      who: u.seat >= 0 ? (seatHolder(slug, u.seat) || 'seat ' + u.seat) : 'THE CONVENING',
+      register: st2 ? st2.register : '',
+      move: (extra && extra.move) || '',
+      invalid: !!(extra && extra.inv),
+      text: String(u.text || ''),
+      t0: performance.now(), dur: mode === 'outcome' ? 14000 : 9500
+    });
+    if (CONVENE_VIS.speech.length > 14) CONVENE_VIS.speech.shift();
+    wake();
+  }
   function rec(mode, iter, t, u, extra) {
     var st = seat.struts[u.seat];
     var src = u.seat >= 0 ? seatSource(slug, u.seat) : null;
@@ -3374,6 +3499,7 @@ function runHarness(cell, seat, world, onStep, done) {
       model: mode === 'judge' ? judgeModel : pickModel(), t: Date.now() };
     if (extra) for (var k in extra) note[k] = extra[k];
     DB.notes.push(note); made++;
+    stageOnMap(mode, t, u, extra);
     return note;
   }
   function ensureCharter(next) {
@@ -4305,6 +4431,12 @@ function ensureSouls(cell, seat, world, cb) {
     });
 }
 window.ICOSA_SOULS = { of: function (slug) { return DB.souls[slug] || null; } };
+// what the world is showing, and what is being waited on — both checkable
+window.ICOSA_WATCH = {
+  speech: function () { return (CONVENE_VIS && CONVENE_VIS.speech) || []; },
+  inflight: inflightList,
+  stage: function () { return CONVENE_VIS ? CONVENE_VIS.stage : null; }
+};
 // an older record may carry a key from before it was session-only; take it
 // off the record and put it where it belongs
 if (DB.key) { if (!OPENAI_KEY) setOpenAIKey(DB.key); scrubKeys(DB); commit(); }
@@ -5299,7 +5431,149 @@ function drawConvening(S) {
     ctx.strokeStyle = 'rgba(168,70,42,.5)'; ctx.lineWidth = 1.2; ctx.stroke();
   }
   CONVENE_VIS.anims = keep;
+  drawSpeech(S, screenOf, now);
   wake();                                           // the show runs until the run ends
+}
+/* THE CONVERSATION, ON THE WORLD.
+ * A transcript in a panel is a document. The same words drawn at the point
+ * they were said about — the speaker, their register, the move they made,
+ * and what they actually said — is a conversation you can watch happening
+ * on the ground it concerns. Cards rise from their topic point, hold long
+ * enough to read, and leave. Critics lean on the signal colour, an invalid
+ * line is struck, an outcome sits under the whole cell.                 */
+function wrapText(text, maxW, maxLines) {
+  var words = String(text).split(/\s+/), lines = [], line = '';
+  for (var i = 0; i < words.length; i++) {
+    var trial = line ? line + ' ' + words[i] : words[i];
+    if (ctx.measureText(trial).width > maxW && line) {
+      lines.push(line); line = words[i];
+      if (lines.length === maxLines - 1 && i < words.length - 1) {
+        var rest = words.slice(i).join(' ');
+        while (rest.length && ctx.measureText(rest + '…').width > maxW) rest = rest.slice(0, -1);
+        lines.push(rest.replace(/\s+\S*$/, '') + '…');
+        return lines;
+      }
+    } else line = trial;
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+function drawSpeech(S, screenOf, now) {
+  var sp = CONVENE_VIS.speech;
+  if (!sp || !sp.length) return;
+  var live = [], perTopic = {};
+  for (var i = 0; i < sp.length; i++) {
+    var s = sp[i], age = now - s.t0;
+    if (age > s.dur) continue;
+    live.push(s);
+  }
+  CONVENE_VIS.speech = live;
+  // Cards are placed against every card already on screen, not just against
+  // their own room's: two topic points can sit a centimetre apart on a
+  // folded net, and a card drawn over another card is a card nobody reads.
+  // Oldest first, so the newest line lands on top of the pile.
+  var drawn = 0, placed = [];
+  function fits(r) {
+    for (var q = 0; q < placed.length; q++) {
+      var o = placed[q];
+      if (r.x < o.x + o.w + 4 && r.x + r.w + 4 > o.x &&
+          r.y < o.y + o.h + 4 && r.y + r.h + 4 > o.y) return false;
+    }
+    return r.x >= 4 && r.y >= 4 && r.x + r.w <= W - 4 && r.y + r.h <= H - 4;
+  }
+  for (var k = Math.max(0, live.length - 8); k < live.length; k++) {
+    var c = live[k], a = (now - c.t0) / c.dur;
+    var anchorPt = c.mode === 'outcome' || c.topic < 0
+      ? (councilCell ? cellCentre(councilCell) : CONVENE_VIS.pts[0])
+      : CONVENE_VIS.pts[c.topic];
+    if (!anchorPt) continue;
+    var pt = screenOf(anchorPt);
+    if (!pt) continue;
+    if (drawn >= 7) continue;                        // the world is not a wall of text
+    var fade = a < 0.06 ? a / 0.06 : a > 0.86 ? (1 - a) / 0.14 : 1;
+    var rise = (1 - Math.min(1, a / 0.06)) * 7;
+    var CW = Math.min(232, Math.max(168, W * 0.26));
+    ctx.save();
+    // the map draws its labels centred; a card is set flush left, and a
+    // measurement taken under the wrong alignment draws text off its own box
+    ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.font = '10px ui-monospace,monospace';
+    var lines = wrapText(c.text, CW - 14, 4);
+    var headH = 12, bodyH = lines.length * 13;
+    var CH = headH + bodyH + 10;
+    // try the room's own point first, then step away from it until the card
+    // has clear ground of its own
+    var spot = null;
+    for (var tryI = 0; tryI < 10 && !spot; tryI++) {
+      var side = tryI % 2 ? -1 : 1;                  // right of the point, then left
+      var lift = Math.floor(tryI / 2) * (CH + 8);
+      var cand = { x: side > 0 ? pt[0] + 14 : pt[0] - CW - 14,
+                   y: pt[1] - 26 - lift + rise, w: CW, h: CH };
+      if (cand.x + CW > W - 6) cand.x = pt[0] - CW - 14;
+      if (cand.x < 6) cand.x = pt[0] + 14;
+      if (fits(cand)) spot = cand;
+      else {                                          // or below, if above is taken
+        cand = { x: cand.x, y: pt[1] + 22 + lift, w: CW, h: CH };
+        if (fits(cand)) spot = cand;
+      }
+    }
+    if (!spot) { ctx.restore(); continue; }           // no clear ground: let it pass
+    placed.push(spot); drawn++;
+    var x = spot.x, y = spot.y;
+    ctx.globalAlpha = fade;
+    // the leader: this was said HERE
+    ctx.beginPath();
+    ctx.moveTo(pt[0], pt[1]);
+    ctx.lineTo(x < pt[0] ? x + CW : x, y + CH / 2);
+    ctx.strokeStyle = 'rgba(18,21,20,.35)'; ctx.lineWidth = 1; ctx.stroke();
+    // the card
+    ctx.fillStyle = 'rgba(244,241,232,.94)';
+    ctx.fillRect(x, y, CW, CH);
+    ctx.strokeStyle = c.mode === 'critique' ? COL.signal
+      : c.mode === 'outcome' ? COL.ink : 'rgba(18,21,20,.45)';
+    ctx.lineWidth = c.mode === 'outcome' ? 1.8 : 1.2;
+    ctx.strokeRect(x + 0.5, y + 0.5, CW - 1, CH - 1);
+    if (c.mode === 'critique' || c.mode === 'reverb' || c.mode === 'reflect') {
+      ctx.fillStyle = c.mode === 'critique' ? COL.signal : 'rgba(18,21,20,.5)';
+      ctx.fillRect(x, y, 2.5, CH);
+    }
+    // who, and in what discipline, by what move — the head never spills
+    // past the card, so the tail is measured first and the name gets what
+    // is left
+    var tail = [c.register, c.move ? '· ' + c.move : '',
+                c.mode === 'critique' ? '· answering' : '',
+                c.invalid ? '· INVALID' : ''].filter(Boolean).join(' ');
+    ctx.font = '7px ui-monospace,monospace';
+    var tw = tail ? ctx.measureText(tail).width : 0;
+    if (tw > CW - 60) { tail = c.register || ''; tw = ctx.measureText(tail).width; }
+    var head = c.mode === 'reverb' ? 'CARRIED IN'
+             : c.mode === 'reflect' ? 'REFLECTS'
+             : c.mode === 'outcome' ? 'OUTCOME'
+             : String(c.who).toUpperCase();
+    ctx.font = '700 8px ui-monospace,monospace';
+    var room = CW - 14 - (tw ? tw + 6 : 0);
+    while (head.length > 3 && ctx.measureText(head).width > room) head = head.slice(0, -1);
+    ctx.fillStyle = COL.ink;
+    ctx.fillText(head, x + 7, y + 11);
+    if (tail) {
+      ctx.font = '7px ui-monospace,monospace';
+      ctx.fillStyle = c.invalid ? COL.signal : COL.muted;
+      ctx.fillText(tail, x + CW - 7 - tw, y + 11);
+    }
+    ctx.font = '10px ui-monospace,monospace';
+    ctx.fillStyle = c.invalid ? COL.muted : COL.ink;
+    for (var L = 0; L < lines.length; L++) {
+      ctx.fillText(lines[L], x + 7, y + headH + 11 + L * 13);
+      if (c.invalid) {                               // struck: it did not count
+        var lw = ctx.measureText(lines[L]).width;
+        ctx.beginPath();
+        ctx.moveTo(x + 7, y + headH + 7 + L * 13);
+        ctx.lineTo(x + 7 + lw, y + headH + 7 + L * 13);
+        ctx.strokeStyle = 'rgba(168,70,42,.6)'; ctx.lineWidth = 1; ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
 }
 function drawNorth(S) {
   var np = [0, 0, 1];

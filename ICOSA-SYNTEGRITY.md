@@ -1350,6 +1350,53 @@ The transcript says what it is at the top: a rehearsal of the argument this
 ground would have, not a record of one that happened, and the people named
 are the record's nominees who said none of it.
 
+## Certainty, and the argument on the ground
+
+Two complaints, one cause. *We do a lot of waiting and we are unsure what
+is happening*, and *we cannot see on the world what is happening.* Both
+came from the same place: the instrument knew what it was doing and did
+not say, and the talk it produced lived in a panel while the map showed
+abstract pulses.
+
+**Every call is now registered while it is out.** What it is, which room
+and reverberation it is for, how much context it carries, to which model,
+and how long it has been gone. The panel's top line is therefore never
+"something, presumably": *the gate is scoring · room 2 · reverb 2/2 ·
+14s · 14k of context out to gpt-5.6-sol*. Past forty-five seconds it says
+so rather than looking hung. Between calls it says *writing to the record*
+and reports how long the last answer took — or that it failed and after
+how long. When only the free sources are being read it says that instead,
+and adds that fetches are free.
+
+That line exposed a real bug in the process it was built to describe: the
+panel repainted only at stage boundaries, so a forty-second model call was
+displayed as "writing to the record" for its whole duration. Both edges of
+a call — leaving and landing — now repaint. The elapsed clocks tick in
+place every second, so a long wait visibly *is* a long wait rather than a
+still frame.
+
+**And the argument is drawn on the ground it is about.** A transcript in a
+panel is a document; the same words at the point they were said about are
+a conversation you can watch happen. As each line lands, a card rises from
+its topic point carrying the speaker, their register, the move they made,
+and what they actually said — critics leaning on the signal colour, a line
+the gate ruled INVALID struck through, carried claims and cross-room
+reflections labelled as what they are, outcomes anchored under the whole
+cell. Cards hold long enough to read and leave; each is placed against
+every card already on screen, because two topic points can sit a
+centimetre apart on a folded net and a card over a card is a card nobody
+reads.
+
+**WATCH ON THE WORLD** sits in the convening header: the panel steps
+aside, the run does not pause, and the syntegration plays out across the
+polygon it concerns. That is the difference between reading that a council
+happened and watching one happen.
+
+The map gained motion for the stages that had none, too: a spark orbits
+the room whose call is out, reflection pulses every topic point in a
+staggered wave — for one moment all the rooms are one mind — and reading,
+souls and charter send doubled rings from the cell centre.
+
 ## Watching it without losing your place
 
 The first convening had a bug that was really a doctrine failure: every

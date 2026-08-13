@@ -56,6 +56,7 @@ let stuck = [];
 let ctxRef = null;
 
 let tray = null, bar = null;
+let drag = null;      /* a die in the air, see carry() */
 
 /* ============================================================
    setting out
@@ -96,7 +97,7 @@ function seatOut(start) {
       const n = nearestNodeFor(G.nx[start], G.ny[start], be, units(reach));
       if (n < 0) continue;
       const clear = (i) => !used.some((u) =>
-        metres(Math.hypot(G.nx[u] - G.nx[i], G.ny[u] - G.ny[i])) < 55);
+        metres(Math.hypot(G.nx[u] - G.nx[i], G.ny[u] - G.ny[i])) < 150);
       if (clear(n)) { at = n; break; }
       let alt = -1, best = 1e9;
       for (const e of G.adj[n]) {
@@ -256,7 +257,7 @@ function hoverBody(i) {
   if (i === hover) return;
   hover = i;
   if (i >= 0) select(i);
-  render();
+  if (!drag) render();
 }
 
 /* ---------- the ghost: where this die puts this body ---------- */
@@ -288,6 +289,7 @@ function ghost(di, ti) {
             remain: Math.max(0, full.dist - r.dist),
             balk: full.balk,
             arrives: !cut && !full.balk,
+            runs: runsOf(r, t.being),
           };
         }
       }
@@ -297,6 +299,30 @@ function ghost(di, ti) {
   return g;
 }
 function clearGhosts() { ghosts.clear(); }
+
+/* Where this way carries this body and where it takes from it.
+
+   A ladder and a chute are not marks on the map — they are what this
+   particular ground does to this particular body, so they can only be drawn
+   onto a way once somebody is on it. Consecutive edges of the same kind are
+   gathered into one run so a ladder reads as a ladder and not as forty
+   opinions about forty segments. */
+function runsOf(r, be) {
+  const out = [];
+  let cur = null;
+  for (let i = 0; i < r.edges.length; i++) {
+    const e = r.edges[i];
+    const kind = be.read(e, G.ea[e] === r.nodes[i]).kind;
+    const ax = G.nx[r.nodes[i]], ay = G.ny[r.nodes[i]];
+    const bx = G.nx[r.nodes[i + 1]], by = G.ny[r.nodes[i + 1]];
+    if (kind !== "ladder" && kind !== "chute") { cur = null; continue; }
+    if (cur && cur.kind === kind) { cur.pts.push(bx, by); continue; }
+    cur = { kind, pts: [ax, ay, bx, by] };
+    out.push(cur);
+  }
+  /* a one-segment opinion is noise; a run you would notice is not */
+  return out.filter((run) => run.pts.length >= 6 || run.kind === "chute");
+}
 
 /* ============================================================
    input — tap a die, tap a body, commit
@@ -331,8 +357,8 @@ function allowed(di, ti) {
   return !dice.some((d, i) => i !== di && d.to === ti);
 }
 
-function bodyAt(p) {
-  let best = -1, bd = 46;
+function bodyAt(p, reach) {
+  let best = -1, bd = reach || 56;
   tokens.forEach((t, i) => {
     if (t.home) return;
     if (sel >= 0 && !allowed(sel, i)) return;
@@ -472,6 +498,10 @@ function buildTray(ctx) {
     .pgdie.hand{background:var(--ink);color:var(--paper-lit);transform:translateY(-5px) scale(1.06)}
     .pgdie.spent{opacity:.42;border-style:dashed}
     .pgdie.dead{opacity:.34;border-style:dotted;text-decoration:line-through}
+    .pgdie.lifted{opacity:.2}
+    .pgdie.carrying{
+      position:fixed;z-index:60;pointer-events:none;margin:0;
+      box-shadow:0 6px 18px rgba(29,32,29,.3)}
     .pgdie.roll{font:700 12px/1.3 ui-monospace,monospace;letter-spacing:.13em;width:auto;padding:0 22px}
     #pgbar{
       border:0;border-radius:7px;padding:0 20px;height:56px;
@@ -493,8 +523,22 @@ function buildTray(ctx) {
   ctx.hud.appendChild(tray);
 }
 
+/* the only part of the tray that may change while a die is in the air */
+function refreshBar() {
+  const b = tray && tray.querySelector("#pgbar");
+  if (!b) return;
+  const ready = dice.every((d) => d.to !== null || d.dead);
+  const none = dice.every((d) => d.to === null);
+  b.textContent = !ready ? "PUT A DIE ON A BODY" : none ? "NOTHING FITS · PASS" : "GO";
+  b.disabled = !ready;
+}
+
 function render() {
   if (!tray) return;
+  /* Never rebuild the tray while a die is being carried: the element in the
+     hand is the element holding the pointer, and replacing it drops the die
+     mid-air. This was why a die could not be placed at all. */
+  if (drag) { refreshBar(); return; }
   tray.innerHTML = "";
 
   if (over) {
@@ -530,12 +574,7 @@ function render() {
       + (sel === i ? " hand" : "");
     el.textContent = d.v;
     if (d.to !== null) el.style.borderColor = tokens[d.to].being.ink.ladder;
-    el.addEventListener("click", () => {
-      if (d.to !== null) { d.to = null; }
-      sel = i;
-      hoverBody(preferredFor(i));
-      render();
-    });
+    carry(el, i);
     tray.appendChild(el);
   });
 
@@ -547,6 +586,77 @@ function render() {
   b.disabled = !ready;
   b.addEventListener("click", commit);
   tray.appendChild(b);
+}
+
+/* ============================================================
+   CARRYING A DIE
+
+   You pick the die up and put it on the body you mean. Tapping works, but a
+   die is a physical thing and the hand expects to carry it, so it can be
+   dragged — and while it is in the air over a body, that body's city is the
+   city on screen. You are not previewing a move. You are standing in it, and
+   letting go is the only thing that costs anything.
+   ============================================================ */
+function carry(el, i) {
+  const grab = (e) => {
+    if (phase !== "assign") return;
+    e.preventDefault();
+    try { el.setPointerCapture(e.pointerId); } catch {}
+    if (dice[i].to !== null) { dice[i].to = null; markDead(); }
+    sel = i;
+    const r = el.getBoundingClientRect();
+    const ghostEl = el.cloneNode(true);
+    ghostEl.className = "pgdie hand carrying";
+    ghostEl.style.left = r.left + "px";
+    ghostEl.style.top = r.top + "px";
+    ghostEl.style.width = r.width + "px";
+    ghostEl.style.height = r.height + "px";
+    document.body.appendChild(ghostEl);
+    drag = { i, el, ghostEl, x0: e.clientX, y0: e.clientY, moved: false };
+    el.classList.add("lifted");
+    hoverBody(preferredFor(i));
+    render();
+  };
+  const move = (e) => {
+    if (!drag || drag.i !== i) return;
+    const dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
+    if (Math.hypot(dx, dy) > 6) drag.moved = true;
+    drag.ghostEl.style.transform = `translate(${dx}px,${dy}px)`;
+    const t = bodyAtClient(e.clientX, e.clientY);
+    if (t >= 0 && t !== hover) hoverBody(t);
+  };
+  const drop = (e) => {
+    if (!drag || drag.i !== i) return;
+    const t = bodyAtClient(e.clientX, e.clientY);
+    drag.ghostEl.remove();
+    el.classList.remove("lifted");
+    const wasMoved = drag.moved;
+    drag = null;
+    /* dropped on a body: it is theirs. dropped nowhere after a real drag:
+       nothing happens. tapped without moving: the die is simply in hand, and
+       the next tap on a body places it. */
+    if (t >= 0 && allowed(i, t)) {
+      dice[i].to = t;
+      select(t);
+      markDead();
+      const nxt = firstOpen();
+      sel = nxt;
+      if (nxt >= 0) hoverBody(preferredFor(nxt));
+    } else if (!wasMoved) {
+      sel = i;
+    }
+    render();
+  };
+  el.addEventListener("pointerdown", grab);
+  el.addEventListener("pointermove", move);
+  el.addEventListener("pointerup", drop);
+  el.addEventListener("pointercancel", drop);
+}
+
+/* client coordinates -> which body, with a thumb-sized target */
+function bodyAtClient(cx, cy) {
+  const r = ctxRef.cv.getBoundingClientRect();
+  return bodyAt({ x: cx - r.left, y: cy - r.top }, 64);
 }
 
 /* ============================================================
@@ -649,6 +759,9 @@ function drawGhost(c, g, tok, strong, now, placed) {
     c.stroke();
   }
 
+  /* what the ground does to this body, along the way it would take */
+  if (g.runs && strong) for (const run of g.runs) drawRun(c, run, now);
+
   /* the ground ran out for this body. draw the exact amount of nothing that
      is in the way, and let the hand work out the rest. */
   if (g.balk && strong) {
@@ -668,84 +781,202 @@ function drawGhost(c, g, tok, strong, now, placed) {
   c.restore();
 }
 
+/* ============================================================
+   THE BODIES
+
+   Three shapes you can tell apart at a glance and at arm's length, because
+   the whole decision every turn is WHICH of them, and a decision you cannot
+   see is not a decision. They are drawn, not lettered: a car is a car from
+   the side, a wheelchair is a wheel, a walker is a person mid-stride.
+   ============================================================ */
+function iconCar(c, r) {
+  c.beginPath();
+  c.moveTo(-r, r * 0.25);
+  c.lineTo(-r, -r * 0.1);
+  c.lineTo(-r * 0.45, -r * 0.1);
+  c.lineTo(-r * 0.2, -r * 0.62);
+  c.lineTo(r * 0.4, -r * 0.62);
+  c.lineTo(r * 0.6, -r * 0.1);
+  c.lineTo(r, -r * 0.05);
+  c.lineTo(r, r * 0.25);
+  c.closePath();
+  c.fill();
+  c.beginPath();
+  c.arc(-r * 0.52, r * 0.32, r * 0.3, 0, TAU);
+  c.arc(r * 0.52, r * 0.32, r * 0.3, 0, TAU);
+  c.fill();
+}
+function iconChair(c, r) {
+  /* the wheel, and the back of a seat above it */
+  c.lineWidth = Math.max(1.6, r * 0.19);
+  c.beginPath();
+  c.arc(r * 0.06, r * 0.3, r * 0.62, 0, TAU);
+  c.stroke();
+  c.beginPath();
+  c.moveTo(-r * 0.5, -r * 0.72);
+  c.lineTo(-r * 0.2, r * 0.05);
+  c.stroke();
+  c.beginPath();
+  c.moveTo(-r * 0.34, -r * 0.3);
+  c.lineTo(r * 0.5, -r * 0.3);
+  c.stroke();
+  c.beginPath();
+  c.arc(-r * 0.56, -r * 0.86, r * 0.24, 0, TAU);
+  c.fill();
+}
+function iconFoot(c, r) {
+  /* a person mid-stride: head, spine, two legs */
+  c.lineWidth = Math.max(1.6, r * 0.2);
+  c.lineCap = "round";
+  c.beginPath();
+  c.arc(0, -r * 0.68, r * 0.26, 0, TAU);
+  c.fill();
+  c.beginPath();
+  c.moveTo(0, -r * 0.36);
+  c.lineTo(0, r * 0.1);
+  c.moveTo(0, r * 0.1);
+  c.lineTo(-r * 0.5, r * 0.78);
+  c.moveTo(0, r * 0.1);
+  c.lineTo(r * 0.5, r * 0.7);
+  c.moveTo(-r * 0.42, -r * 0.16);
+  c.lineTo(r * 0.46, -r * 0.28);
+  c.stroke();
+}
+const ICON = { CAR: iconCar, WHEELCHAIR: iconChair, FOOT: iconFoot };
+
 /* Three bodies standing on the same corner are three bodies, not one. They
-   fan just enough to be told apart and touched apart, and the fan closes as
-   soon as the ground itself separates them. */
+   fan just enough to be told apart and touched apart. */
 function seat(t, list) {
   let n = 0, k = 0;
   for (const o of list) {
     if (o === t) { k = n; n++; continue; }
-    if (Math.hypot(o.x - t.x, o.y - t.y) < units(70)) n++;
+    if (Math.hypot(o.x - t.x, o.y - t.y) < units(120)) n++;
   }
   if (n < 2) return { dx: 0, dy: 0 };
   const a = -Math.PI / 2 + (k / n) * TAU;
-  const r = 15;
+  const r = 27;
   return { dx: Math.cos(a) * r, dy: Math.sin(a) * r };
+}
+
+/* A ladder gets rungs and they climb. A chute gets arrows and they fall.
+   Both march along the way itself, so the thing you read is the ground doing
+   something to a traveller rather than a symbol sitting beside it. */
+const LADDER_INK = "#19a08a", CHUTE_INK = "#bf4526";
+
+function drawRun(c, run, now) {
+  const pts = run.pts;
+  const up = run.kind === "ladder";
+  const col = up ? LADDER_INK : CHUTE_INK;
+
+  const S2 = [];
+  for (let i = 0; i + 1 < pts.length; i += 2) S2.push(sx(pts[i]), sy(pts[i + 1]));
+  let L = 0;
+  const seg = [];
+  for (let i = 0; i + 3 < S2.length; i += 2) {
+    const d = Math.hypot(S2[i + 2] - S2[i], S2[i + 3] - S2[i + 1]);
+    seg.push(d); L += d;
+  }
+  if (L < 14) return;
+
+  c.save();
+  c.lineCap = "round";
+  c.lineJoin = "round";
+
+  /* the way itself, restated in the colour of what it is about to do */
+  c.globalAlpha = 0.9;
+  c.strokeStyle = col;
+  c.lineWidth = up ? 7 : 6;
+  c.beginPath();
+  c.moveTo(S2[0], S2[1]);
+  for (let i = 2; i + 1 < S2.length; i += 2) c.lineTo(S2[i], S2[i + 1]);
+  c.stroke();
+
+  /* and the marks that march along it */
+  const STEP = up ? 13 : 20;
+  const flow = (now / (up ? 620 : 420)) % 1;
+  const dir = up ? -1 : 1;
+  let walked = 0, si = 0;
+  for (let d = ((flow * dir * STEP) + STEP * 4) % STEP; d < L; d += STEP) {
+    while (si < seg.length - 1 && walked + seg[si] < d) { walked += seg[si]; si++; }
+    const t = seg[si] > 0 ? (d - walked) / seg[si] : 0;
+    const ax = S2[si * 2], ay = S2[si * 2 + 1];
+    const bx = S2[si * 2 + 2], by = S2[si * 2 + 3];
+    if (bx === undefined) break;
+    const X = ax + (bx - ax) * t, Y = ay + (by - ay) * t;
+    const a = Math.atan2(by - ay, bx - ax);
+    c.save();
+    c.translate(X, Y);
+    c.rotate(a);
+    if (up) {
+      /* a rung */
+      c.strokeStyle = "#f7f3e8";
+      c.lineWidth = 2.6;
+      c.beginPath();
+      c.moveTo(0, -5.5); c.lineTo(0, 5.5);
+      c.stroke();
+    } else {
+      /* falling */
+      c.strokeStyle = "#f7f3e8";
+      c.lineWidth = 2.4;
+      c.beginPath();
+      c.moveTo(-4, -4.4); c.lineTo(2.4, 0); c.lineTo(-4, 4.4);
+      c.stroke();
+    }
+    c.restore();
+  }
+  c.restore();
 }
 
 function drawBody(c, t, rival, lit, now) {
   const off = seat(t, rival ? rivals : tokens);
   const X = sx(t.x) + off.dx, Y = sy(t.y) + off.dy;
-  if (X < -40 || X > View.w + 40 || Y < -40 || Y > View.h + 40) return;
-  c.save();
-  if (t.home) c.globalAlpha = 0.45;
+  if (X < -50 || X > View.w + 50 || Y < -50 || Y > View.h + 50) return;
 
+  const R = rival ? 11 : 15;
+  c.save();
+  if (t.home) c.globalAlpha = 0.5;
+
+  /* the one a die is hovering over lifts off the cloth */
   if (lit) {
-    c.globalAlpha = 0.5 + 0.3 * Math.sin(now / 300);
-    c.beginPath();
-    c.arc(X, Y, 26, 0, TAU);
+    c.save();
+    c.globalAlpha = 0.55 + 0.35 * Math.sin(now / 260);
     c.strokeStyle = t.being.ink.ladder;
-    c.lineWidth = 2;
+    c.lineWidth = 2.4;
+    c.beginPath();
+    c.arc(X, Y, R + 13, 0, TAU);
     c.stroke();
-    c.globalAlpha = 1;
+    c.restore();
   }
 
-  if (rival) {
-    c.fillStyle = AMBER;
-    c.strokeStyle = AMBER_DEEP;
-    c.lineWidth = 2;
+  /* a disc of paper so a body never disappears into a dark road */
+  c.beginPath();
+  c.arc(X, Y, R, 0, TAU);
+  c.fillStyle = rival ? "#f4ecd8" : "#f7f3e8";
+  c.fill();
+  c.lineWidth = rival ? 2 : 2.6;
+  c.strokeStyle = rival ? AMBER_DEEP : t.being.ink.ladder;
+  c.stroke();
+
+  c.save();
+  c.translate(X, Y);
+  const col = rival ? AMBER_DEEP : t.being.ink.ladder;
+  c.fillStyle = col;
+  c.strokeStyle = col;
+  c.lineJoin = "round";
+  (ICON[t.being.name] || iconFoot)(c, R * 0.72);
+  c.restore();
+
+  /* home is a ring it has come to rest inside */
+  if (t.home) {
+    c.globalAlpha = 0.9;
     c.beginPath();
-    c.rect(X - 6, Y - 6, 12, 12);
-    c.fill(); c.stroke();
-  } else {
-    c.fillStyle = t.being.ink.ladder;
-    c.beginPath();
-    c.arc(X, Y, 9, 0, TAU);
-    c.fill();
-    c.strokeStyle = "#f6f2e8";
-    c.lineWidth = 2.6;
+    c.arc(X, Y, R + 6, 0, TAU);
+    c.setLineDash([3, 4]);
+    c.lineWidth = 1.6;
     c.stroke();
-    /* one letter, so three bodies are three bodies at a glance */
-    c.fillStyle = "#f6f2e8";
-    c.font = "700 10px ui-monospace, monospace";
-    c.textAlign = "center";
-    c.textBaseline = "middle";
-    c.fillText(t.being.name[0], X, Y + 0.5);
+    c.setLineDash([]);
   }
   c.restore();
-}
-
-/* how much ground the best available die would win this body — the harness
-   uses it to prove that a drawn line changes what a body can do */
-export function gainFor(ti) {
-  clearGhosts();
-  let best = 0;
-  for (let i = 0; i < dice.length; i++) {
-    const g = ghost(i, ti);
-    if (g && g.gain > best) best = g.gain;
-  }
-  return Math.round(best);
-}
-
-/* the exact wall a body is standing at, for the harness */
-export function wallFor(ti) {
-  clearGhosts();
-  for (let i = 0; i < dice.length; i++) {
-    const g = ghost(i, ti);
-    if (g && g.balk) return { ex: g.ex, ey: g.ey, tx: g.balk.toX, ty: g.balk.toY };
-  }
-  const t = tokens[ti];
-  return t && S.home ? { ex: t.x, ey: t.y, tx: S.home.x, ty: S.home.y } : null;
 }
 
 export const state = () => ({ tokens, rivals, dice, phase, over, turnNo, home: S.home });

@@ -43,7 +43,7 @@ export function init(ctx) {
     .pgrow.rival .pgpip{border-color:#8a5a12}
     .pgrow.rival .pgpip.on{background:#c98a2e}
     #pgkey{
-      position:fixed;right:12px;bottom:calc(34px + var(--sab));
+      position:fixed;right:16px;bottom:calc(152px + var(--sab));
       width:42px;height:42px;border-radius:50%;border:0;padding:0;
       background:var(--paper-lit);color:var(--ink);display:grid;place-items:center;
       box-shadow:inset 0 0 0 1px rgba(29,32,29,.3);

@@ -20,10 +20,14 @@ import { S, ME, apply, on, emit } from "./state.js";
 const BROKERS = (() => {
   const q = new URLSearchParams(location.search).get("broker");
   if (q && /^wss?:\/\//.test(q)) return [q];
+  /* Port 443 first: it is the one port that is open on hotel wifi, on phone
+     networks and behind office firewalls, and a meeting place nobody can
+     reach is not a meeting place. The rest are tried in turn after it. */
   return [
+    "wss://mqtt.eclipseprojects.io/mqtt",
     "wss://broker.emqx.io:8084/mqtt",
-    "wss://test.mosquitto.org:8081/mqtt",
     "wss://broker.hivemq.com:8884/mqtt",
+    "wss://test.mosquitto.org:8081/mqtt",
   ];
 })();
 
@@ -42,14 +46,34 @@ export const GID = (() => {
 })();
 
 export function groundLink() {
-  return location.origin + location.pathname + "#g=" + GID;
+  /* whatever meeting place this ground is using travels with the link */
+  const q = new URLSearchParams(location.search).get("broker");
+  const search = q ? "?broker=" + encodeURIComponent(q) : "";
+  return location.origin + location.pathname + search + "#g=" + GID;
 }
 
 const SITE = ME + Math.random().toString(36).slice(2, 6);
 const TOPIC = "unsettled-atlas/perspectival/" + GID;
 const SNAP = TOPIC + "/cloth";
 
-export const net = { state: "local", tried: 0, peers: new Map(), gotCloth: false };
+export const net = { state: "connecting", tried: 0, peers: new Map(), gotCloth: false };
+
+/* The crossing belongs to the ground, not to whoever opened it first. The
+   first person here publishes it; everybody after inherits it, so a link is a
+   link to one game rather than to three separate ones that happen to share
+   drawings. */
+export let groundCrossing = null;
+let crossingFromNet = false;
+
+export function shareCrossing(home) {
+  /* a crossing we were handed is not ours to overwrite */
+  if (crossingFromNet) return;
+  groundCrossing = home;
+  if (!mqtt || !mqtt.ready) return;
+  try {
+    mqtt.publishRetained(JSON.stringify({ g: GID, from: SITE, cloth: 1, home, ops: cloakOps() }));
+  } catch {}
+}
 
 /* ============================================================
    MQTT over a websocket, by hand
@@ -183,6 +207,15 @@ function onMessage(str) {
   try { m = JSON.parse(str); } catch { return; }
   if (!m || m.g !== GID || m.from === SITE) return;
 
+  /* Whoever was here first named the crossing, and the retained message is
+     the record of it. Anyone arriving adopts it — including someone who has
+     already guessed at one of their own, because a shared link has to be a
+     shared game and not three games with the same drawings in them. */
+  if (m.home != null && !crossingFromNet && m.home !== groundCrossing) {
+    crossingFromNet = true;
+    groundCrossing = m.home;
+    emit("ground", { home: m.home });
+  }
   if (m.ops) {
     for (const op of m.ops) apply(op, { local: false });
     if (m.cloth) net.gotCloth = true;
@@ -197,8 +230,7 @@ function onMessage(str) {
   }
 }
 
-export function publishCloth() {
-  if (!mqtt || !mqtt.ready) return;
+function cloakOps() {
   const ops = [];
   for (const mk of S.marks.slice(-160)) {
     ops.push({ k: "mark", id: mk.id, pts: mk.pts, w: mk.width, by: mk.by, b: mk.being, t: mk.t });
@@ -206,9 +238,17 @@ export function publishCloth() {
   for (const j of S.journeys) {
     if (j.ghost) ops.push({ k: "ghost", id: j.id, pts: j.pts, t: j.t });
   }
-  if (!ops.length) return;
+  return ops;
+}
+
+export function publishCloth() {
+  if (!mqtt || !mqtt.ready) return;
+  const ops = cloakOps();
+  if (!ops.length && groundCrossing == null) return;
   try {
-    mqtt.publishRetained(JSON.stringify({ g: GID, from: SITE, cloth: 1, ops }));
+    mqtt.publishRetained(JSON.stringify({
+      g: GID, from: SITE, cloth: 1, home: groundCrossing, ops,
+    }));
   } catch {}
 }
 
@@ -244,11 +284,12 @@ function dial() {
       emit("net", net);
       send({ g: GID, from: SITE, hello: 1 });
       presence();
+      if (groundCrossing != null) shareCrossing(groundCrossing);
       setTimeout(() => { if (!net.gotCloth) publishCloth(); }, 3200);
     },
     () => {
-      net.state = "local";
       mqtt = null;
+      net.state = net.tried >= BROKERS.length ? "local" : "connecting";
       emit("net", net);
       setTimeout(dial, 700);
     });

@@ -29,9 +29,10 @@ import {
   centerOn, worldSize,
 } from "./geo.js";
 import { G, route, routePoints, nearestNodeFor, afford, wear } from "./graph.js";
-import { CAR, CHAIR, FOOT, BEINGS } from "./beings.js";
+import { CAR, CHAIR, FOOT, BEINGS, LADDER, CHUTE_AT } from "./beings.js";
 import { S, on, emit, become, creditMark, logBalk } from "./state.js";
 import { travelToken, setToken, busy } from "./move.js";
+import { shareCrossing, groundCrossing } from "./net.js";
 
 /* what one pip is worth, in effort */
 const PIP = 300;
@@ -72,6 +73,17 @@ export function init(ctx) {
   buildTray(ctx);
   on("boot", () => setTimeout(setUp, 80));
   on("arrive", () => setTimeout(next, 260));
+  /* somebody else opened this ground first: play THEIR crossing, not one of
+     our own, or a shared link is three separate games sharing drawings */
+  on("ground", ({ home }) => {
+    if (home == null || turnNo > 0 || home >= G.n) return;
+    if (S.home && S.home.node === home) return;
+    S.home = { x: G.nx[home], y: G.ny[home], node: home };
+    S.homeNode = home;
+    clearGhosts();
+    frameAll();
+    render();
+  });
 }
 
 function setUp() {
@@ -82,7 +94,7 @@ function setUp() {
   S.tokens = tokens;
 
   /* home: a real place, far enough to be a journey */
-  S.homeNode = pickHome(start);
+  S.homeNode = groundCrossing != null ? adoptHome(groundCrossing) : pickHome(start);
   rivals = seatOut(start);
 
   select(0);
@@ -138,6 +150,11 @@ function reaches(be, from, to) {
   return !!(r && !r.balk && r.nodes.length > 1);
 }
 
+function adoptHome(node) {
+  S.home = { x: G.nx[node], y: G.ny[node], node };
+  return node;
+}
+
 function pickHome(start) {
   const cands = [];
   for (let k = 0; k < 900 && cands.length < 26; k++) {
@@ -159,6 +176,10 @@ function pickHome(start) {
   if (best < 0) best = fallback;
   if (best < 0) best = start;
   S.home = { x: G.nx[best], y: G.ny[best], node: best };
+  /* First one here names the crossing for everybody who follows — but not
+     instantly: a ground that already has one is still sending it, and the
+     record on the ground beats a guess made a second ago. */
+  setTimeout(() => shareCrossing(best), 1900);
   return best;
 }
 
@@ -295,8 +316,17 @@ function ghost(di, ti) {
             remain: Math.max(0, full.dist - r.dist),
             balk: full.balk,
             arrives: !cut && !full.balk,
-            runs: runsOf(r, t.being),
+            runs: null,   /* filled below, once we know what the die bought */
           };
+          /* What the die actually bought this body, per pip. This is the
+             chute-or-ladder, and it always exists: the same four carries a car
+             most of a mile and a wheelchair to the end of the block. */
+          const perPip = g.gain / Math.max(1, d.v);
+          g.perPip = Math.round(perPip);
+          g.kind = perPip >= LADDER_PER_PIP ? "ladder"
+                 : perPip <= CHUTE_PER_PIP ? "chute" : "plain";
+          g.runs = g.kind === "plain" ? runsOf(r, t.being)
+                                      : [{ kind: g.kind, pts: g.pts }];
         }
       }
     }
@@ -304,6 +334,10 @@ function ghost(di, ti) {
   ghosts.set(k, g);
   return g;
 }
+
+/* metres of ground a single pip is worth. above the first this body is being
+   carried; below the second it is being taken from. */
+const LADDER_PER_PIP = 300, CHUTE_PER_PIP = 130;
 function clearGhosts() { ghosts.clear(); }
 
 /* Where this way carries this body and where it takes from it.
@@ -314,20 +348,50 @@ function clearGhosts() { ghosts.clear(); }
    gathered into one run so a ladder reads as a ladder and not as forty
    opinions about forty segments. */
 function runsOf(r, be) {
+  const n = r.edges.length;
+  if (!n) return [];
+
+  /* Every edge, as what it costs this body per metre of it. */
+  const ratio = new Float64Array(n);
+  for (let i = 0; i < n; i++) {
+    const e = r.edges[i];
+    const c = be.cost(e, G.ea[e] === r.nodes[i]);
+    ratio[i] = G.elen[e] > 0 && isFinite(c) ? c / G.elen[e] : 1;
+  }
+
+  /* A ladder is only a ladder next to something. Absolute thresholds barely
+     ever fire — for a car only the interstate clears them, so a whole journey
+     across arterials reported nothing at all. So the journey is also read
+     against ITSELF: the stretches that carry you further than the rest of this
+     particular way, and the ones that take more out of you than the rest of
+     it. Both readings are true and both are shown. */
+  const sorted = Array.from(ratio).sort((p, q) => p - q);
+  const mid = sorted[sorted.length >> 1] || 1;
+  const fast = Math.min(LADDER, mid * 0.8);
+  const slow = Math.max(CHUTE_AT, mid * 1.35);
+
+  const kinds = new Uint8Array(n);   /* 0 plain, 1 ladder, 2 chute */
+  for (let i = 0; i < n; i++) {
+    if (ratio[i] <= fast) kinds[i] = 1;
+    else if (ratio[i] >= slow) kinds[i] = 2;
+  }
+
   const out = [];
   let cur = null;
-  for (let i = 0; i < r.edges.length; i++) {
-    const e = r.edges[i];
-    const kind = be.read(e, G.ea[e] === r.nodes[i]).kind;
+  for (let i = 0; i < n; i++) {
+    const k = kinds[i];
     const ax = G.nx[r.nodes[i]], ay = G.ny[r.nodes[i]];
     const bx = G.nx[r.nodes[i + 1]], by = G.ny[r.nodes[i + 1]];
-    if (kind !== "ladder" && kind !== "chute") { cur = null; continue; }
+    if (bx === undefined) break;
+    if (!k) { cur = null; continue; }
+    const kind = k === 1 ? "ladder" : "chute";
     if (cur && cur.kind === kind) { cur.pts.push(bx, by); continue; }
     cur = { kind, pts: [ax, ay, bx, by] };
     out.push(cur);
   }
-  /* a one-segment opinion is noise; a run you would notice is not */
-  return out.filter((run) => run.pts.length >= 6 || run.kind === "chute");
+  /* drawRun drops anything too short to read on screen, so nothing else has
+     to guess here */
+  return out;
 }
 
 /* ============================================================
@@ -1123,5 +1187,8 @@ function drawBursts(c, now) {
     c.restore();
   }
 }
+
+/* harness only: what a die would do to a body, runs and all */
+export function probeGhost(di, ti) { return ghost(di, ti); }
 
 export const state = () => ({ tokens, rivals, dice, phase, over, turnNo, home: S.home });

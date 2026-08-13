@@ -18,8 +18,9 @@
 import { G, CLS_MOTORWAY, CLS_PRIMARY, CLS_SECONDARY, CLS_RAIL, CLS_MARK, CLS_GHOST } from "./graph.js";
 
 /* A multiplier on metres. 1 is ordinary going. */
-const LADDER = 0.62;   /* at or below this, the ground is carrying you */
-const CHUTE = 1.85;    /* at or above this, the ground is taking from you */
+export const LADDER = 0.62;    /* at or below this, the ground is carrying you */
+export const CHUTE_AT = 1.85;  /* at or above this, the ground is taking from you */
+const CHUTE = CHUTE_AT;
 
 /* How hard the traffic on an edge presses back. Roads silt up with use; paths
    are worn open by it. The same number, read opposite ways. */

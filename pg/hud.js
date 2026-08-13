@@ -49,7 +49,9 @@ export function init(ctx) {
       box-shadow:inset 0 0 0 1px rgba(29,32,29,.3);
       font:600 9px/1.1 ui-monospace,monospace;letter-spacing:.06em;
       opacity:.8;transition:opacity .2s, background .2s}
-    #pgkey.live{background:#dff0ea;box-shadow:inset 0 0 0 1.5px #2f7d84}
+    #pgkey.live{background:#dff0ea;box-shadow:inset 0 0 0 1.5px #2f7d84;opacity:1}
+    #pgkey.busy{opacity:.55}
+    #pgkey.off{opacity:.5}
     #pgkey b{display:block;font-size:13px;font-weight:700}
     #pgkey.copied{background:var(--signal);color:var(--paper-lit)}
     @media (max-width:380px){#pgwho{font-size:13.5px}}`;
@@ -114,10 +116,23 @@ function render() {
     pips.appendChild(row("rival", st.rivals.filter((t) => t.home).length, st.rivals.length));
   }
 
+  /* Say plainly what is true. A cryptic badge is how "multiplayer does not
+     work" and "nobody else has opened the link yet" look identical. */
   const others = peers().length;
-  const live = net.state === "open";
-  key.classList.toggle("live", live && others > 0);
-  key.innerHTML = live
-    ? `<b>${others}</b>here`
-    : `<b>${GID.slice(0, 3)}</b>link`;
+  const link = net.state;
+  key.classList.toggle("live", link === "open");
+  key.classList.toggle("busy", link === "connecting");
+  key.classList.toggle("off", link === "local");
+  if (link === "open") {
+    key.innerHTML = others ? `<b>${others + 1}</b>here` : `<b>1</b>here`;
+    key.title = others
+      ? `${others + 1} on this ground — tap to copy the link`
+      : "on this ground, alone — tap to copy the link and bring somebody";
+  } else if (link === "connecting") {
+    key.innerHTML = `<b>·</b>join`;
+    key.title = "looking for this ground's meeting point";
+  } else {
+    key.innerHTML = `<b>—</b>solo`;
+    key.title = "no meeting point reachable from this network — playing alone";
+  }
 }

@@ -40,6 +40,12 @@ const HOME = 260;
 
 const AMBER = "#c98a2e", AMBER_DEEP = "#8a5a12";
 
+/* some people cannot take a screen that keeps moving */
+const MOVING = (() => {
+  try { return !matchMedia("(prefers-reduced-motion: reduce)").matches; }
+  catch { return true; }
+})();
+
 /* Your three. They are fixed bodies, not costumes: the wheelchair is always
    the wheelchair, and it is always the one that cannot take the bridge. */
 const BODIES = [CAR, CHAIR, FOOT];
@@ -336,6 +342,7 @@ export function onTap(ctx, p) {
   const ti = bodyAt(p);
   if (ti >= 0 && sel >= 0 && allowed(sel, ti)) {
     dice[sel].to = ti;
+    pop(tokens[ti]);
     select(ti);
     markDead();
     const nxt = firstOpen();
@@ -435,6 +442,7 @@ function checkHome() {
     if (t.home) continue;
     if (metres(Math.hypot(t.x - S.home.x, t.y - S.home.y)) < HOME) {
       t.home = true;
+      burstAt(t.x, t.y);
       emit("leg", { who: "you" });
     }
   }
@@ -500,8 +508,8 @@ function buildTray(ctx) {
     .pgdie.dead{opacity:.34;border-style:dotted;text-decoration:line-through}
     .pgdie.lifted{opacity:.2}
     .pgdie.carrying{
-      position:fixed;z-index:60;pointer-events:none;margin:0;
-      box-shadow:0 6px 18px rgba(29,32,29,.3)}
+      position:fixed;z-index:60;pointer-events:none;margin:0;opacity:.94;
+      box-shadow:0 10px 24px rgba(29,32,29,.34)}
     .pgdie.roll{font:700 12px/1.3 ui-monospace,monospace;letter-spacing:.13em;width:auto;padding:0 22px}
     #pgbar{
       border:0;border-radius:7px;padding:0 20px;height:56px;
@@ -611,6 +619,7 @@ function carry(el, i) {
     ghostEl.style.top = r.top + "px";
     ghostEl.style.width = r.width + "px";
     ghostEl.style.height = r.height + "px";
+    ghostEl.style.transform = "translate(0px,-62px) scale(.86)";
     document.body.appendChild(ghostEl);
     drag = { i, el, ghostEl, x0: e.clientX, y0: e.clientY, moved: false };
     el.classList.add("lifted");
@@ -621,7 +630,8 @@ function carry(el, i) {
     if (!drag || drag.i !== i) return;
     const dx = e.clientX - drag.x0, dy = e.clientY - drag.y0;
     if (Math.hypot(dx, dy) > 6) drag.moved = true;
-    drag.ghostEl.style.transform = `translate(${dx}px,${dy}px)`;
+    /* carried above the thumb, never on top of the body being chosen */
+    drag.ghostEl.style.transform = `translate(${dx}px,${dy - 62}px) scale(.86)`;
     const t = bodyAtClient(e.clientX, e.clientY);
     if (t >= 0 && t !== hover) hoverBody(t);
   };
@@ -637,6 +647,7 @@ function carry(el, i) {
        the next tap on a body places it. */
     if (t >= 0 && allowed(i, t)) {
       dice[i].to = t;
+      pop(tokens[t]);
       select(t);
       markDead();
       const nxt = firstOpen();
@@ -685,6 +696,7 @@ export function draw(ctx, now) {
 
   for (const t of rivals) drawBody(c, t, true, false, now);
   tokens.forEach((t, i) => drawBody(c, t, false, i === hover && phase === "assign", now));
+  drawBursts(c, now);
 
   /* whatever is walled in, and exactly how much nothing is in the way */
   if (phase === "assign") {
@@ -789,63 +801,222 @@ function drawGhost(c, g, tok, strong, now, placed) {
    see is not a decision. They are drawn, not lettered: a car is a car from
    the side, a wheelchair is a wheel, a walker is a person mid-stride.
    ============================================================ */
-function iconCar(c, r) {
+/* A ladder gets rails and rungs and they climb. A chute gets a smooth bed and
+   arrows and they fall. Both are drawn ONTO the way itself, because a ladder
+   is not a thing on the map — it is what this ground does to this body, and it
+   only exists while somebody is on it. */
+const LADDER_INK = "#12907c", CHUTE_INK = "#c0421f";
+
+function drawRun(c, run, now) {
+  const pts = run.pts;
+  const up = run.kind === "ladder";
+  const col = up ? LADDER_INK : CHUTE_INK;
+
+  const P = [];
+  for (let i = 0; i + 1 < pts.length; i += 2) P.push(sx(pts[i]), sy(pts[i + 1]));
+  const seg = [];
+  let L = 0;
+  for (let i = 0; i + 3 < P.length; i += 2) {
+    const d = Math.hypot(P[i + 2] - P[i], P[i + 3] - P[i + 1]);
+    seg.push(d); L += d;
+  }
+  if (L < 16) return;
+
+  const trace = () => {
+    c.beginPath();
+    c.moveTo(P[0], P[1]);
+    for (let i = 2; i + 1 < P.length; i += 2) c.lineTo(P[i], P[i + 1]);
+  };
+
+  c.save();
+  c.lineCap = "round";
+  c.lineJoin = "round";
+
+  /* paper cleared either side, so the mark never fights the city under it */
+  c.strokeStyle = "#f9f6ee";
+  c.globalAlpha = 0.95;
+  c.lineWidth = up ? 17 : 15;
+  trace(); c.stroke();
+
+  c.globalAlpha = 1;
+  c.strokeStyle = col;
+  c.lineWidth = up ? 11 : 9;
+  trace(); c.stroke();
+
+  /* rails, only on the ladder */
+  if (up) {
+    c.globalAlpha = 0.92;
+    c.strokeStyle = "#f9f6ee";
+    c.lineWidth = 1.6;
+    for (const d of [-3.4, 3.4]) {
+      c.beginPath();
+      for (let i = 0; i + 3 < P.length; i += 2) {
+        const ax = P[i], ay = P[i + 1], bx = P[i + 2], by = P[i + 3];
+        const L2 = Math.hypot(bx - ax, by - ay) || 1;
+        const nx = -(by - ay) / L2 * d, ny = (bx - ax) / L2 * d;
+        if (i === 0) c.moveTo(ax + nx, ay + ny);
+        c.lineTo(bx + nx, by + ny);
+      }
+      c.stroke();
+    }
+  }
+
+  /* the marks that march: rungs climb toward you, arrows fall away */
+  const STEP = up ? 15 : 22;
+  const speed = up ? 700 : 460;
+  const flow = MOVING ? ((now / speed) % 1) * (up ? -1 : 1) : 0;
+  let walked = 0, si = 0;
+  c.globalAlpha = 1;
+  for (let d = ((flow * STEP) % STEP + STEP) % STEP; d < L; d += STEP) {
+    while (si < seg.length - 1 && walked + seg[si] < d) { walked += seg[si]; si++; }
+    const bx = P[si * 2 + 2];
+    if (bx === undefined) break;
+    const t = seg[si] > 0 ? (d - walked) / seg[si] : 0;
+    const ax = P[si * 2], ay = P[si * 2 + 1], by = P[si * 2 + 3];
+    const X = ax + (bx - ax) * t, Y = ay + (by - ay) * t;
+    c.save();
+    c.translate(X, Y);
+    c.rotate(Math.atan2(by - ay, bx - ax));
+    c.strokeStyle = "#f9f6ee";
+    if (up) {
+      c.lineWidth = 3.2;
+      c.beginPath();
+      c.moveTo(0, -4.4); c.lineTo(0, 4.4);
+      c.stroke();
+    } else {
+      c.lineWidth = 3;
+      c.beginPath();
+      c.moveTo(-4.6, -5); c.lineTo(2.6, 0); c.lineTo(-4.6, 5);
+      c.stroke();
+    }
+    c.restore();
+  }
+  c.restore();
+}
+
+/* Side elevation, because that is how a car is a car: a roof line that drops
+   at the bonnet, glass you can see through, and two wheels carrying it. */
+function iconCar(c, r, ink, paper) {
+  c.lineJoin = "round";
+  c.fillStyle = ink;
   c.beginPath();
-  c.moveTo(-r, r * 0.25);
-  c.lineTo(-r, -r * 0.1);
-  c.lineTo(-r * 0.45, -r * 0.1);
-  c.lineTo(-r * 0.2, -r * 0.62);
-  c.lineTo(r * 0.4, -r * 0.62);
-  c.lineTo(r * 0.6, -r * 0.1);
-  c.lineTo(r, -r * 0.05);
-  c.lineTo(r, r * 0.25);
+  c.moveTo(-r, r * 0.30);
+  c.lineTo(-r, -r * 0.06);
+  c.quadraticCurveTo(-r * 0.98, -r * 0.20, -r * 0.72, -r * 0.24);
+  c.lineTo(-r * 0.40, -r * 0.66);
+  c.quadraticCurveTo(-r * 0.32, -r * 0.80, -r * 0.14, -r * 0.80);
+  c.lineTo(r * 0.30, -r * 0.80);
+  c.quadraticCurveTo(r * 0.46, -r * 0.80, r * 0.54, -r * 0.66);
+  c.lineTo(r * 0.76, -r * 0.24);
+  c.quadraticCurveTo(r, -r * 0.20, r, -r * 0.02);
+  c.lineTo(r, r * 0.30);
   c.closePath();
   c.fill();
+  /* glass */
+  c.fillStyle = paper;
   c.beginPath();
-  c.arc(-r * 0.52, r * 0.32, r * 0.3, 0, TAU);
-  c.arc(r * 0.52, r * 0.32, r * 0.3, 0, TAU);
+  c.moveTo(-r * 0.34, -r * 0.30);
+  c.lineTo(-r * 0.12, -r * 0.66);
+  c.lineTo(r * 0.24, -r * 0.66);
+  c.lineTo(r * 0.40, -r * 0.30);
+  c.closePath();
+  c.fill();
+  /* wheels, with hubs so they read as wheels and not as dots */
+  c.fillStyle = ink;
+  c.beginPath();
+  c.arc(-r * 0.52, r * 0.40, r * 0.34, 0, TAU);
+  c.arc(r * 0.56, r * 0.40, r * 0.34, 0, TAU);
+  c.fill();
+  c.fillStyle = paper;
+  c.beginPath();
+  c.arc(-r * 0.52, r * 0.40, r * 0.13, 0, TAU);
+  c.fill();
+  c.beginPath();
+  c.arc(r * 0.56, r * 0.40, r * 0.13, 0, TAU);
   c.fill();
 }
-function iconChair(c, r) {
-  /* the wheel, and the back of a seat above it */
-  c.lineWidth = Math.max(1.6, r * 0.19);
-  c.beginPath();
-  c.arc(r * 0.06, r * 0.3, r * 0.62, 0, TAU);
-  c.stroke();
-  c.beginPath();
-  c.moveTo(-r * 0.5, -r * 0.72);
-  c.lineTo(-r * 0.2, r * 0.05);
-  c.stroke();
-  c.beginPath();
-  c.moveTo(-r * 0.34, -r * 0.3);
-  c.lineTo(r * 0.5, -r * 0.3);
-  c.stroke();
-  c.beginPath();
-  c.arc(-r * 0.56, -r * 0.86, r * 0.24, 0, TAU);
-  c.fill();
-}
-function iconFoot(c, r) {
-  /* a person mid-stride: head, spine, two legs */
-  c.lineWidth = Math.max(1.6, r * 0.2);
+
+/* The big rear wheel with its handrim, a seated figure, and the small castor
+   in front — the shape everybody already knows, drawn properly. */
+function iconChair(c, r, ink, paper) {
   c.lineCap = "round";
+  c.lineJoin = "round";
+  c.strokeStyle = ink;
+  c.fillStyle = ink;
+
+  const wx = r * 0.10, wy = r * 0.30, wr = r * 0.60;
+  c.lineWidth = r * 0.15;
   c.beginPath();
-  c.arc(0, -r * 0.68, r * 0.26, 0, TAU);
+  c.arc(wx, wy, wr, 0, TAU);
+  c.stroke();
+  c.lineWidth = r * 0.08;
+  c.beginPath();
+  c.arc(wx, wy, wr * 0.66, 0, TAU);
+  c.stroke();
+  /* castor */
+  c.beginPath();
+  c.arc(-r * 0.72, r * 0.72, r * 0.18, 0, TAU);
   c.fill();
+
+  /* the person */
   c.beginPath();
-  c.moveTo(0, -r * 0.36);
-  c.lineTo(0, r * 0.1);
-  c.moveTo(0, r * 0.1);
-  c.lineTo(-r * 0.5, r * 0.78);
-  c.moveTo(0, r * 0.1);
-  c.lineTo(r * 0.5, r * 0.7);
-  c.moveTo(-r * 0.42, -r * 0.16);
-  c.lineTo(r * 0.46, -r * 0.28);
+  c.arc(-r * 0.18, -r * 0.74, r * 0.26, 0, TAU);
+  c.fill();
+  c.lineWidth = r * 0.18;
+  c.beginPath();
+  c.moveTo(-r * 0.16, -r * 0.44);
+  c.lineTo(-r * 0.04, r * 0.02);
+  c.stroke();
+  c.beginPath();
+  c.moveTo(-r * 0.04, r * 0.02);
+  c.lineTo(-r * 0.62, r * 0.16);
+  c.stroke();
+  c.beginPath();
+  c.moveTo(-r * 0.14, -r * 0.28);
+  c.lineTo(r * 0.46, -r * 0.14);
+  c.stroke();
+}
+
+/* Mid-stride, arms swinging: a walker has to look like it is going somewhere
+   or it reads as a pin. */
+function iconFoot(c, r, ink, paper) {
+  c.lineCap = "round";
+  c.lineJoin = "round";
+  c.strokeStyle = ink;
+  c.fillStyle = ink;
+  c.beginPath();
+  c.arc(-r * 0.04, -r * 0.72, r * 0.27, 0, TAU);
+  c.fill();
+  c.lineWidth = r * 0.20;
+  c.beginPath();
+  c.moveTo(-r * 0.02, -r * 0.40);
+  c.lineTo(r * 0.06, r * 0.10);
+  c.stroke();
+  /* legs */
+  c.beginPath();
+  c.moveTo(r * 0.06, r * 0.10);
+  c.lineTo(-r * 0.44, r * 0.52);
+  c.lineTo(-r * 0.56, r * 0.86);
+  c.stroke();
+  c.beginPath();
+  c.moveTo(r * 0.06, r * 0.10);
+  c.lineTo(r * 0.50, r * 0.50);
+  c.lineTo(r * 0.66, r * 0.86);
+  c.stroke();
+  /* arms */
+  c.lineWidth = r * 0.15;
+  c.beginPath();
+  c.moveTo(-r * 0.02, -r * 0.24);
+  c.lineTo(-r * 0.52, -r * 0.02);
+  c.stroke();
+  c.beginPath();
+  c.moveTo(-r * 0.02, -r * 0.24);
+  c.lineTo(r * 0.48, -r * 0.34);
   c.stroke();
 }
 const ICON = { CAR: iconCar, WHEELCHAIR: iconChair, FOOT: iconFoot };
 
-/* Three bodies standing on the same corner are three bodies, not one. They
-   fan just enough to be told apart and touched apart. */
+/* Three bodies standing on the same corner are three bodies, not one. */
 function seat(t, list) {
   let n = 0, k = 0;
   for (const o of list) {
@@ -858,125 +1029,99 @@ function seat(t, list) {
   return { dx: Math.cos(a) * r, dy: Math.sin(a) * r };
 }
 
-/* A ladder gets rungs and they climb. A chute gets arrows and they fall.
-   Both march along the way itself, so the thing you read is the ground doing
-   something to a traveller rather than a symbol sitting beside it. */
-const LADDER_INK = "#19a08a", CHUTE_INK = "#bf4526";
+/* ---------- motion ----------
+   Nothing here is decoration. A body breathes so you can tell it is a body
+   and not a marker; it takes the die with a jolt so you know the die landed;
+   and it rings out when it gets home so an arrival is felt rather than
+   noticed later in a row of pips. */
+const bursts = [];
+function pop(t) { t.popAt = performance.now(); }
+export function burstAt(x, y) { bursts.push({ x, y, t0: performance.now() }); }
 
-function drawRun(c, run, now) {
-  const pts = run.pts;
-  const up = run.kind === "ladder";
-  const col = up ? LADDER_INK : CHUTE_INK;
-
-  const S2 = [];
-  for (let i = 0; i + 1 < pts.length; i += 2) S2.push(sx(pts[i]), sy(pts[i + 1]));
-  let L = 0;
-  const seg = [];
-  for (let i = 0; i + 3 < S2.length; i += 2) {
-    const d = Math.hypot(S2[i + 2] - S2[i], S2[i + 3] - S2[i + 1]);
-    seg.push(d); L += d;
-  }
-  if (L < 14) return;
-
-  c.save();
-  c.lineCap = "round";
-  c.lineJoin = "round";
-
-  /* the way itself, restated in the colour of what it is about to do */
-  c.globalAlpha = 0.9;
-  c.strokeStyle = col;
-  c.lineWidth = up ? 7 : 6;
-  c.beginPath();
-  c.moveTo(S2[0], S2[1]);
-  for (let i = 2; i + 1 < S2.length; i += 2) c.lineTo(S2[i], S2[i + 1]);
-  c.stroke();
-
-  /* and the marks that march along it */
-  const STEP = up ? 13 : 20;
-  const flow = (now / (up ? 620 : 420)) % 1;
-  const dir = up ? -1 : 1;
-  let walked = 0, si = 0;
-  for (let d = ((flow * dir * STEP) + STEP * 4) % STEP; d < L; d += STEP) {
-    while (si < seg.length - 1 && walked + seg[si] < d) { walked += seg[si]; si++; }
-    const t = seg[si] > 0 ? (d - walked) / seg[si] : 0;
-    const ax = S2[si * 2], ay = S2[si * 2 + 1];
-    const bx = S2[si * 2 + 2], by = S2[si * 2 + 3];
-    if (bx === undefined) break;
-    const X = ax + (bx - ax) * t, Y = ay + (by - ay) * t;
-    const a = Math.atan2(by - ay, bx - ax);
-    c.save();
-    c.translate(X, Y);
-    c.rotate(a);
-    if (up) {
-      /* a rung */
-      c.strokeStyle = "#f7f3e8";
-      c.lineWidth = 2.6;
-      c.beginPath();
-      c.moveTo(0, -5.5); c.lineTo(0, 5.5);
-      c.stroke();
-    } else {
-      /* falling */
-      c.strokeStyle = "#f7f3e8";
-      c.lineWidth = 2.4;
-      c.beginPath();
-      c.moveTo(-4, -4.4); c.lineTo(2.4, 0); c.lineTo(-4, 4.4);
-      c.stroke();
-    }
-    c.restore();
-  }
-  c.restore();
+function spring(k) {
+  if (k >= 1) return 1;
+  return 1 + Math.sin(k * Math.PI * 2.2) * 0.26 * (1 - k);
 }
 
 function drawBody(c, t, rival, lit, now) {
   const off = seat(t, rival ? rivals : tokens);
-  const X = sx(t.x) + off.dx, Y = sy(t.y) + off.dy;
-  if (X < -50 || X > View.w + 50 || Y < -50 || Y > View.h + 50) return;
+  const idle = MOVING ? Math.sin(now / 1100 + (t.being.name.length * 1.7)) * 1.1 : 0;
+  const X = sx(t.x) + off.dx, Y = sy(t.y) + off.dy + idle;
+  if (X < -60 || X > View.w + 60 || Y < -60 || Y > View.h + 60) return;
 
-  const R = rival ? 11 : 15;
+  const base = rival ? 13 : 19;
+  const k = t.popAt ? clamp((now - t.popAt) / 420, 0, 1) : 1;
+  const R = base * (t.popAt ? spring(k) : 1);
+
   c.save();
-  if (t.home) c.globalAlpha = 0.5;
+  if (t.home) c.globalAlpha = 0.55;
 
-  /* the one a die is hovering over lifts off the cloth */
+  /* it sits on the cloth, so it casts a little */
+  c.globalAlpha *= 1;
+  c.beginPath();
+  c.ellipse(X, Y + R * 0.92, R * 0.72, R * 0.26, 0, 0, TAU);
+  c.fillStyle = "rgba(29,32,29,.16)";
+  c.fill();
+
   if (lit) {
+    const b = 0.5 + 0.5 * Math.sin(now / 300);
     c.save();
-    c.globalAlpha = 0.55 + 0.35 * Math.sin(now / 260);
+    c.globalAlpha = 0.28 + b * 0.4;
     c.strokeStyle = t.being.ink.ladder;
-    c.lineWidth = 2.4;
+    c.lineWidth = 3;
     c.beginPath();
-    c.arc(X, Y, R + 13, 0, TAU);
+    c.arc(X, Y, R + 11 + b * 4, 0, TAU);
     c.stroke();
     c.restore();
   }
 
-  /* a disc of paper so a body never disappears into a dark road */
+  const ink = rival ? AMBER_DEEP : t.being.ink.ladder;
+  const paper = rival ? "#f6efdc" : "#f9f6ee";
+
   c.beginPath();
   c.arc(X, Y, R, 0, TAU);
-  c.fillStyle = rival ? "#f4ecd8" : "#f7f3e8";
+  c.fillStyle = paper;
   c.fill();
-  c.lineWidth = rival ? 2 : 2.6;
-  c.strokeStyle = rival ? AMBER_DEEP : t.being.ink.ladder;
+  c.lineWidth = rival ? 2.2 : 3;
+  c.strokeStyle = ink;
   c.stroke();
 
   c.save();
   c.translate(X, Y);
-  const col = rival ? AMBER_DEEP : t.being.ink.ladder;
-  c.fillStyle = col;
-  c.strokeStyle = col;
-  c.lineJoin = "round";
-  (ICON[t.being.name] || iconFoot)(c, R * 0.72);
+  (ICON[t.being.name] || iconFoot)(c, R * 0.62, ink, paper);
   c.restore();
 
-  /* home is a ring it has come to rest inside */
   if (t.home) {
-    c.globalAlpha = 0.9;
+    c.globalAlpha = 0.95;
+    c.setLineDash([3.5, 4]);
+    c.lineWidth = 1.8;
     c.beginPath();
-    c.arc(X, Y, R + 6, 0, TAU);
-    c.setLineDash([3, 4]);
-    c.lineWidth = 1.6;
+    c.arc(X, Y, R + 7, 0, TAU);
     c.stroke();
     c.setLineDash([]);
   }
   c.restore();
+}
+
+function drawBursts(c, now) {
+  for (let i = bursts.length - 1; i >= 0; i--) {
+    const b = bursts[i];
+    const k = (now - b.t0) / 1100;
+    if (k >= 1) { bursts.splice(i, 1); continue; }
+    const X = sx(b.x), Y = sy(b.y);
+    c.save();
+    for (let ring = 0; ring < 2; ring++) {
+      const kk = clamp(k - ring * 0.16, 0, 1);
+      if (kk <= 0) continue;
+      c.globalAlpha = (1 - kk) * 0.7;
+      c.strokeStyle = "#1d201d";
+      c.lineWidth = 2.4 * (1 - kk) + 0.6;
+      c.beginPath();
+      c.arc(X, Y, 12 + ease(kk) * 52, 0, TAU);
+      c.stroke();
+    }
+    c.restore();
+  }
 }
 
 export const state = () => ({ tokens, rivals, dice, phase, over, turnNo, home: S.home });

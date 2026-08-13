@@ -256,6 +256,26 @@ canvas{position:absolute;inset:0;width:100%;height:100%;display:block;touch-acti
 #convene .said.landin{animation:cvland .5s ease}
 @keyframes cvbreathe{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.55}}
 @keyframes cvland{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+/* the run board: the whole shape of the run, each unit wearing its state.
+   Waiting is legible when you can see WHAT is being waited on. */
+#convene .cvbar i.churn{background:repeating-linear-gradient(115deg,var(--signal) 0 7px,
+  rgba(168,70,42,.55) 7px 14px);background-size:20px 100%;animation:cvchurn 1s linear infinite}
+@keyframes cvchurn{from{background-position:0 0}to{background-position:20px 0}}
+#convene .runboard{margin:2px 0 8px;font-size:8px;letter-spacing:.08em}
+#convene .rbrow{display:flex;flex-wrap:wrap;align-items:center;gap:3px;margin:3px 0}
+#convene .rbrow>s{text-decoration:none;color:var(--muted);font-size:7px;letter-spacing:.14em;
+  flex:0 0 58px}
+#convene .stg{font-style:normal;border:1px solid rgba(18,21,20,.3);color:var(--muted);
+  padding:2px 5px;white-space:nowrap;transition:all .3s ease}
+#convene .stg.done{background:var(--ink);color:var(--ground);border-color:var(--ink)}
+#convene .stg.live{border-color:var(--signal);color:var(--signal);
+  background:linear-gradient(100deg,transparent 20%,rgba(168,70,42,.18) 45%,transparent 70%);
+  background-size:220% 100%;animation:cvsheen 1.1s linear infinite}
+#convene .stg.retry{border-style:dashed}
+@keyframes cvsheen{from{background-position:180% 0}to{background-position:-80% 0}}
+#convene .stg.rm u{text-decoration:none;opacity:.25;margin-left:2px;font-weight:700}
+#convene .stg.rm u.on{opacity:1}
+#convene .stg.rm u.now{animation:cvbreathe .8s ease-in-out infinite;display:inline-block}
 /* a guess must not look like a citation. Dashed, grey, and it says so. */
 #panel .nom.guess{border-left:2px dashed var(--muted);background:rgba(18,21,20,.04)}
 #panel .nom.guess a{color:var(--ink)}
@@ -2805,19 +2825,56 @@ function conveneHTML(slug) {
   var run = ROUND_STATE[slug];
   if (!run) return '';
   var said = utterances(slug).slice(-3);
-  var pct = Math.round(100 * Math.min(1, run.at / Math.max(1, run.of)));
+  var pct = Round100(run.at, run.of);
+  var mins = Math.floor((Date.now() - (run.t0 || Date.now())) / 60000);
+  var secs = Math.floor(((Date.now() - (run.t0 || Date.now())) / 1000) % 60);
+  var clock = mins + ':' + (secs < 10 ? '0' : '') + secs;
+  // THE RUN BOARD — the whole shape of the run, each unit wearing its state,
+  // so "where is the process" is answered by looking, not by waiting
+  function chip(key, label) {
+    var u = (run.prog || {})[key];
+    var cls = !u ? 'wait' : u.done ? 'done' : 'live';
+    return '<i class="stg ' + cls + '">' + label + '</i>';
+  }
+  function roomChip(iter, t) {
+    var u = (run.prog || {})['r' + iter + ':' + t];
+    var cls = !u ? 'wait' : u.done ? 'done' : (u.phase === 'retry' || u.phase === 'rejudge') ? 'retry live' : 'live';
+    var ph = u ? u.phase : '';
+    var seg = function (want, dot) {
+      var reach = { speak: 1, critique: 2, judge: 3, retry: 3, rejudge: 3 }[ph] || 0;
+      var on = u && (u.done || reach >= want);
+      var now = !u || u.done ? false : reach === want;
+      return '<u class="' + (on ? 'on' : '') + (now ? ' now' : '') + '">' + dot + '</u>';
+    };
+    return '<i class="stg rm ' + cls + '" title="room ' + t + '">' + t +
+      seg(1, '·') + seg(2, '·') + seg(3, '·') + '</i>';
+  }
+  var board = '<div class="runboard">' +
+    '<div class="rbrow"><s>THE TABLE</s>' +
+      chip('read', 'READ') + chip('charter', 'CHARTER') + chip('souls', 'SOULS') + '</div>';
+  for (var it = 1; it <= (run.reverb || REVERB); it++) {
+    var row = '<div class="rbrow"><s>REVERB ' + it + '</s>';
+    for (var t2 = 0; t2 < (run.topics || 0); t2++) row += roomChip(it, t2);
+    row += chip('f' + it, '◇ REFLECT');
+    if ((run.prog || {})['l' + it]) row += chip('l' + it, 'LOOKUP');
+    board += row + '</div>';
+  }
+  board += '<div class="rbrow"><s>CLOSE</s>' + chip('outcome', 'OUTCOMES') + '</div></div>';
   return '<div class="cvhead"><i class="cvdot"></i><b>' + esc(run.label || 'convening') +
-    '</b><span>' + run.at + ' / ' + run.of + '</span></div>' +
-    '<div class="cvbar"><i style="width:' + pct + '%"></i></div>' +
+    '</b><span><span id="cvClock">' + clock + '</span> · ' + run.at + ' / ' + run.of + '</span></div>' +
+    '<div class="cvbar"><i class="churn" style="width:' + pct + '%"></i></div>' +
+    board +
     said.map(function (n, i) {
       return '<div class="said' + (n.mode === 'critique' ? ' crit' : '') +
         (i === said.length - 1 ? ' landin' : '') + '"><b>' +
         esc((n.who || '').toUpperCase()) + '</b> <span>' +
         (n.who_is ? esc(n.who_is) + ' · ' : '') + esc(n.register || '') +
+        (n.move ? ' · move: ' + esc(n.move) : '') +
         (n.mode === 'critique' ? ' · answering' : '') + '</span>' +
         '<p>' + esc(n.text) + '</p></div>';
     }).join('');
 }
+function Round100(a, b) { return Math.round(100 * Math.min(1, a / Math.max(1, b))); }
 function paintConvene() {
   if (!CONVENE_VIS) return;
   var el = document.getElementById('convene');
@@ -3205,11 +3262,47 @@ function runHarness(cell, seat, world, onStep, done) {
   delete HARNESS_ERR[slug];
   CONVENE_VIS = { slug: slug, pts: topicPoints(cell, seat, world),
                   topic: -1, stage: 'charter', anims: [] };
-  ROUND_STATE[slug] = { at: 0, of: plan.base + (charterOf(slug) ? 0 : 1), label: 'charter' };
-  function tick(label, topic, stage) {
-    if (!ROUND_STATE[slug]) return;
-    ROUND_STATE[slug].at++;
-    ROUND_STATE[slug].label = label;
+  var haveR = readingsFor(cell);
+  ROUND_STATE[slug] = { at: 0, of: plan.base + (charterOf(slug) ? 0 : 1),
+    label: 'convening', t0: Date.now(),
+    topics: topics.length, reverb: REVERB, prog: {}, begun: false };
+  // what is already on the record starts the board done, honestly
+  if (haveR && haveR.list.length) ROUND_STATE[slug].prog.read = { phase: 'lookup', done: true };
+  if (charterOf(slug)) ROUND_STATE[slug].prog.charter = { phase: 'charter', done: true };
+  if (soulsFor(slug, seat)) ROUND_STATE[slug].prog.souls = { phase: 'souls', done: true };
+  // the clock ticks between calls too — waiting should at least be measured
+  var clockT = setInterval(function () {
+    var el2 = document.getElementById('cvClock'), rs = ROUND_STATE[slug];
+    if (!el2 || !rs) return;
+    var s = Math.floor((Date.now() - rs.t0) / 1000);
+    el2.textContent = Math.floor(s / 60) + ':' + (s % 60 < 10 ? '0' : '') + (s % 60);
+  }, 1000);
+  function stopClock() { clearInterval(clockT); }
+  function tick(label, topic, stage, iter) {
+    var rs = ROUND_STATE[slug];
+    if (!rs) return;
+    rs.at++;
+    rs.label = label;
+    // THE RUN BOARD — every stage of the run is a unit with a state, so the
+    // panel can always show where the process IS, not just that it is
+    var key = stage === 'speak' || stage === 'critique' || stage === 'judge'
+      ? 'r' + (iter || 1) + ':' + topic
+      : stage === 'reflect' ? 'f' + (iter || 1)
+      : stage === 'lookup' ? (rs.begun ? 'l' + (iter || 1) : 'read')
+      : stage;                                    // charter · souls · outcome
+    if (stage !== 'lookup' || rs.begun || key === 'read') {
+      if (rs.curKey && rs.curKey !== key && rs.prog[rs.curKey]) {
+        rs.prog[rs.curKey].done = true;           // a new unit closes the last
+      }
+      var u = rs.prog[key] || (rs.prog[key] = {});
+      // a room sent back after judging is a RETRY, and it reads differently
+      if (stage === 'speak' && u.phase === 'judge') u.phase = 'retry';
+      else if (stage === 'judge' && u.phase === 'retry') u.phase = 'rejudge';
+      else u.phase = stage;
+      u.done = false;
+      rs.curKey = key;
+    }
+    if (stage === 'speak') rs.begun = true;
     if (CONVENE_VIS && CONVENE_VIS.slug === slug) {
       CONVENE_VIS.topic = topic === undefined ? -1 : topic;
       CONVENE_VIS.stage = stage || '';
@@ -3218,6 +3311,7 @@ function runHarness(cell, seat, world, onStep, done) {
     wake();
   }
   function abort(err) {
+    stopClock();
     ROUND_STATE[slug] = null;
     if (CONVENE_VIS && CONVENE_VIS.slug === slug) CONVENE_VIS = null;
     HARNESS_ERR[slug] = String(err);
@@ -3401,7 +3495,7 @@ function runHarness(cell, seat, world, onStep, done) {
   }
   function topicPass(iter, t, cb2) {
     var mem = membersOf(t).map(function (m) { return m.seat; });
-    tick('iteration ' + iter + ' · topic ' + t + ' · the team speaks', t, 'speak');
+    tick('iteration ' + iter + ' · topic ' + t + ' · the team speaks', t, 'speak', iter);
     speakOnce(iter, t, null, function (e1, first) {
       if (e1) return abort(e1);
       var saidA = (first && first.utterances) || [];
@@ -3422,11 +3516,11 @@ function runHarness(cell, seat, world, onStep, done) {
         'doing silent work, the body that bears it, the description feeding back, the ' +
         'record it overreads. Two sentences per seat, no preamble, and never introduce a ' +
         'fact the context does not carry.';
-      tick('iteration ' + iter + ' · topic ' + t + ' · the critics answer', t, 'critique');
+      tick('iteration ' + iter + ' · topic ' + t + ' · the critics answer', t, 'critique', iter);
         ask('critique', ctx2, SCHEMA_SPEAK, 'critic_responses', 1800, function (e2, cr) {
         if (e2) return abort(e2);
         var critA = (cr && cr.utterances) || [];
-        tick('iteration ' + iter + ' · topic ' + t + ' · the judge scores', t, 'judge');
+        tick('iteration ' + iter + ' · topic ' + t + ' · the judge scores', t, 'judge', iter);
         judgeOnce(iter, t, saidA, critA, function (e3, j1) {
           if (e3) return abort(e3);
           var scoresA = (j1 && j1.scores) || [];
@@ -3436,11 +3530,11 @@ function runHarness(cell, seat, world, onStep, done) {
             ROUND_STATE[slug].of += 2;
             var notes = scoresA.filter(function (sc) { return mem.indexOf(sc.seat) >= 0; })
               .map(function (sc) { return { seat: sc.seat, note: sc.note }; });
-            tick('iteration ' + iter + ' · topic ' + t + ' · sent back', t, 'speak');
+            tick('iteration ' + iter + ' · topic ' + t + ' · sent back', t, 'speak', iter);
             speakOnce(iter, t, { notes: notes, first: saidA }, function (e4, second) {
               var saidB = (!e4 && second && second.utterances) || [];
               (second && second.needs || []).forEach(function (q) { needsAll.push(q); });
-              tick('iteration ' + iter + ' · topic ' + t + ' · re-scored', t, 'judge');
+              tick('iteration ' + iter + ' · topic ' + t + ' · re-scored', t, 'judge', iter);
               judgeOnce(iter, t, saidB, critA, function (e5, j2) {
                 var scoresB = (!e5 && j2 && j2.scores) || [];
                 var gB = gate(scoresB, mem);
@@ -3605,7 +3699,7 @@ function runHarness(cell, seat, world, onStep, done) {
       'not a quote — if nothing crosses, use empty strings for all bridge fields and say ' +
       'in implication what kept the rooms separate. One implication per seat, two ' +
       'sentences at most.';
-    tick('reverberation ' + iter + ' · the seats reflect across their rooms', -1, 'reflect');
+    tick('reverberation ' + iter + ' · the seats reflect across their rooms', -1, 'reflect', iter);
     ask('reflect', ctx, SCHEMA_REFLECT, 'seat_reflections', 2600, function (err, j) {
       if (err) return abort(err);
       ((j && j.reflections) || []).forEach(function (r) {
@@ -3660,7 +3754,7 @@ function runHarness(cell, seat, world, onStep, done) {
         return reflectPass(iter, function () {
           if (iter < REVERB && needsAll.length) {
             var q = needsAll.slice(); needsAll = [];
-            tick('iteration ' + iter + ' · looking things up', -1, 'lookup');
+            tick('iteration ' + iter + ' · looking things up', -1, 'lookup', iter);
             ROUND_STATE[slug].at--;          // fetches are free; do not count them
             return resolveNeeds(cell, q, function () { next(); });
           }
@@ -3725,6 +3819,7 @@ function runHarness(cell, seat, world, onStep, done) {
         });
       }
       commit();
+      stopClock();
       ROUND_STATE[slug] = null;
       if (CONVENE_VIS && CONVENE_VIS.slug === slug) CONVENE_VIS = null;
       done(null, made); wake();
@@ -5130,7 +5225,7 @@ function drawConvening(S) {
     if (dot(qApply(view.q, faceNormal(f)), sub([0, 0, CAM_D], vv)) <= 0) return null;
     return project(vv, S);
   }
-  // the active room breathes
+  // the active room breathes, and a spark orbits it while its call is out
   if (CONVENE_VIS.topic >= 0 && pts[CONVENE_VIS.topic]) {
     var sp = screenOf(pts[CONVENE_VIS.topic]);
     if (sp) {
@@ -5138,6 +5233,13 @@ function drawConvening(S) {
       ctx.beginPath(); ctx.arc(sp[0], sp[1], 9 + 13 * ph, 0, TAU);
       ctx.strokeStyle = 'rgba(168,70,42,' + (0.75 * (1 - ph)).toFixed(3) + ')';
       ctx.lineWidth = 2.2; ctx.stroke();
+      var oa = (now % 1100) / 1100 * TAU;
+      ctx.beginPath();
+      ctx.arc(sp[0] + Math.cos(oa) * 16, sp[1] + Math.sin(oa) * 16, 2.1, 0, TAU);
+      ctx.fillStyle = COL.signal; ctx.fill();
+      ctx.beginPath();
+      ctx.arc(sp[0] + Math.cos(oa + 2.4) * 16, sp[1] + Math.sin(oa + 2.4) * 16, 1.3, 0, TAU);
+      ctx.fillStyle = 'rgba(168,70,42,.5)'; ctx.fill();
       if (CONVENE_VIS.stage === 'judge') {          // the gate reads differently
         ctx.setLineDash([3, 4]);
         ctx.beginPath(); ctx.arc(sp[0], sp[1], 14, 0, TAU);
@@ -5145,8 +5247,20 @@ function drawConvening(S) {
         ctx.setLineDash([]);
       }
     }
-  } else if (CONVENE_VIS.stage === 'charter' || CONVENE_VIS.stage === 'outcome') {
-    // the whole ground is being written about; the pulse sits on the cell
+  } else if (CONVENE_VIS.stage === 'reflect') {
+    // the seats reflect across their rooms: every topic point pulses in a
+    // staggered wave, because for one moment ALL the rooms are one mind
+    for (var rp = 0; rp < pts.length; rp++) {
+      var rs2 = screenOf(pts[rp]);
+      if (!rs2) continue;
+      var ph3 = ((now + rp * 180) % 1600) / 1600;
+      ctx.beginPath(); ctx.arc(rs2[0], rs2[1], 5 + 11 * ph3, 0, TAU);
+      ctx.strokeStyle = 'rgba(168,70,42,' + (0.55 * (1 - ph3)).toFixed(3) + ')';
+      ctx.lineWidth = 1.6; ctx.stroke();
+    }
+  } else if (CONVENE_VIS.stage === 'charter' || CONVENE_VIS.stage === 'outcome' ||
+             CONVENE_VIS.stage === 'souls' || CONVENE_VIS.stage === 'lookup') {
+    // the whole ground is being read or written; the pulse sits on the cell
     var cc = councilCell && cellSlug(councilCell) === CONVENE_VIS.slug
       ? cellCentre(councilCell) : null;
     if (cc) {
@@ -5156,6 +5270,9 @@ function drawConvening(S) {
         ctx.beginPath(); ctx.arc(sc2[0], sc2[1], 12 + 20 * ph2, 0, TAU);
         ctx.strokeStyle = 'rgba(18,21,20,' + (0.5 * (1 - ph2)).toFixed(3) + ')';
         ctx.lineWidth = 1.6; ctx.stroke();
+        ctx.beginPath(); ctx.arc(sc2[0], sc2[1], 12 + 20 * ((ph2 + 0.5) % 1), 0, TAU);
+        ctx.strokeStyle = 'rgba(18,21,20,' + (0.3 * (1 - (ph2 + 0.5) % 1)).toFixed(3) + ')';
+        ctx.lineWidth = 1.2; ctx.stroke();
       }
     }
   }

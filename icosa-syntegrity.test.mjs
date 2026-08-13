@@ -104,9 +104,27 @@ await p.click('#cellplate'); await p.waitForTimeout(600);
 await p.evaluate(()=>{const x=[...document.querySelectorAll('#panel button')].find(y=>/COUNCIL/.test(y.textContent)); if(x)x.click();});
 await p.waitForTimeout(4000);
 await p.evaluate(()=>document.getElementById('cRun').click());
+// while the run churns, the RUN BOARD must say where the process is
+const board = { seen:false, live:false, roomChips:0, rows:0, clock:false, done:0 };
 for (let i=0;i<40;i++){ await p.waitForTimeout(800);
+  const b = await p.evaluate(()=>{
+    const rb=document.querySelector('#convene .runboard');
+    if (!rb) return null;
+    return { live: !!rb.querySelector('.stg.live'),
+      rooms: rb.querySelectorAll('.stg.rm').length,
+      rows: rb.querySelectorAll('.rbrow').length,
+      done: rb.querySelectorAll('.stg.done').length,
+      clock: !!document.getElementById('cvClock') };
+  });
+  if (b){ board.seen=true; board.live=board.live||b.live;
+    board.roomChips=Math.max(board.roomChips,b.rooms);
+    board.rows=Math.max(board.rows,b.rows); board.done=Math.max(board.done,b.done);
+    board.clock=board.clock||b.clock; }
   if (await p.evaluate(()=>([...document.querySelectorAll('#panel p')].some(x=>/things said across/.test(x.textContent))))) break; }
 await p.waitForTimeout(500);
+out.board = { seen: board.seen, liveChipSeen: board.live, clock: board.clock,
+  roomChipsBothReverbs: board.roomChips===12, rows: board.rows===4,
+  progressAccumulated: board.done>=6 };
 
 // copy from the council view
 await p.evaluate(()=>document.getElementById('cCopyRun').click());

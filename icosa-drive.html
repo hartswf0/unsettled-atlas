@@ -394,11 +394,14 @@ async function fetchPack(win) {
   var ec = document.createElement('canvas');
   ec.width = (ex1 - ex0 + 1) * 256; ec.height = (ey1 - ey0 + 1) * 256;
   var eq = ec.getContext('2d', { willReadFrequently: true });
-  var ejobs = [];
+  var ejobs = [], eDone = 0, eAll = (ex1 - ex0 + 1) * (ey1 - ey0 + 1);
   for (var j = ey0; j <= ey1; j++) for (var i = ex0; i <= ex1; i++) {
     ejobs.push(img('https://s3.amazonaws.com/elevation-tiles-prod/terrarium/' + ez + '/' + i + '/' + j + '.png')
       .then((function (ii, jj) {
-        return function (im) { eq.drawImage(im, (ii - ex0) * 256, (jj - ey0) * 256); };
+        return function (im) {
+          eq.drawImage(im, (ii - ex0) * 256, (jj - ey0) * 256);
+          wire('raising ' + win.slug + ' — how high is the land · tile ' + (++eDone) + '/' + eAll, 'busy');
+        };
       })(i, j)));
   }
   await Promise.all(ejobs);
@@ -425,11 +428,14 @@ async function fetchPack(win) {
   var cc = document.createElement('canvas');
   cc.width = (ix1 - ix0 + 1) * 256; cc.height = (iy1 - iy0 + 1) * 256;
   var cq = cc.getContext('2d');
-  var ijobs = [];
+  var ijobs = [], iDone = 0, iAll = (ix1 - ix0 + 1) * (iy1 - iy0 + 1);
   for (var j3 = iy0; j3 <= iy1; j3++) for (var i3 = ix0; i3 <= ix1; i3++) {
     ijobs.push(img('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/' + iz + '/' + j3 + '/' + i3)
       .then((function (ii, jj) {
-        return function (im) { cq.drawImage(im, (ii - ix0) * 256, (jj - iy0) * 256); };
+        return function (im) {
+          cq.drawImage(im, (ii - ix0) * 256, (jj - iy0) * 256);
+          wire('raising ' + win.slug + ' — what it looks like · tile ' + (++iDone) + '/' + iAll, 'busy');
+        };
       })(i3, j3)).catch(function () {}));
   }
   await Promise.all(ijobs);
@@ -634,7 +640,10 @@ function renderDrive() {
   g.clearColor(FOG[0], FOG[1], FOG[2], 1);
   g.clear(g.COLOR_BUFFER_BIT | g.DEPTH_BUFFER_BIT);
   var proj = mPersp(60 * D2R, w / h, 0.3, 400);
-  var fx = Math.sin(CAR.yaw), fz = -Math.cos(CAR.yaw);
+  // while a crossing fetches, the camera drifts around the waiting car —
+  // motion instead of a frozen frame
+  var drift = MODE === 'drive' ? 0 : (performance.now() / 2600) % TAU;
+  var fx = Math.sin(CAR.yaw + drift), fz = -Math.cos(CAR.yaw + drift);
   var tgt = [CAR.x, CAR.y + 1.2, CAR.z];
   CAM.x += (CAR.x - fx * 9 - CAM.x) * 0.08;
   CAM.y += (CAR.y + 4.5 - CAM.y) * 0.08;
@@ -917,11 +926,27 @@ function drawGlobe() {
   // the selected cell and its four children
   if (CELL) {
     var corners = cellCorners(CELL);
+    var landing = MODE === 'landing' || MODE === 'crossing';
+    var lph = (performance.now() % 1500) / 1500;
     g2.beginPath();
     drawArc(corners[0], corners[1], cx, cy, R, 16);
     drawArc(corners[1], corners[2], cx, cy, R, 16);
     drawArc(corners[2], corners[0], cx, cy, R, 16);
-    g2.strokeStyle = '#ffd75e'; g2.lineWidth = 2; g2.stroke();
+    g2.strokeStyle = '#ffd75e';
+    g2.lineWidth = landing ? 2 + 1.6 * Math.sin(lph * TAU) * Math.sin(lph * TAU) : 2;
+    g2.stroke();
+    if (landing) {
+      // the ground is being raised: rings fall INTO the cell, like descent
+      var cp2 = project(cellCentre(CELL), cx, cy, R);
+      if (cp2.front) {
+        for (var ring = 0; ring < 2; ring++) {
+          var rp = (lph + ring * 0.5) % 1;
+          g2.beginPath(); g2.arc(cp2.x, cp2.y, 26 * (1 - rp) + 3, 0, TAU);
+          g2.strokeStyle = 'rgba(255,215,94,' + (0.7 * rp).toFixed(3) + ')';
+          g2.lineWidth = 1.4; g2.stroke();
+        }
+      }
+    }
     if (CELL.depth < MAX_DEPTH) {
       var m01 = baryPoint(CELL.f, mid(CELL.tri[0], CELL.tri[1]));
       var m12 = baryPoint(CELL.f, mid(CELL.tri[1], CELL.tri[2]));
@@ -1142,13 +1167,16 @@ var lastT = 0;
 function frame(now) {
   var dt = Math.min(0.05, (now - lastT) / 1000 || 0.016);
   lastT = now;
-  if (MODE === 'select' || MODE === 'landing') drawGlobe();
+  if (globe.style.display !== 'none') drawGlobe();
   if (MODE === 'drive') {
     stepCar(dt);
     // law 5, tested every frame with the grid's own membership function
     var p = fromLonLat(CAR.lon, CAR.lat);
     if (!cellContains(CELL, p)) crossInto(p);
     if (MODE === 'drive') { renderDrive(); updateDriveHUD(); }
+  } else if ((MODE === 'crossing' || MODE === 'landing') &&
+             TERRA_MESH && glCanvas.style.display === 'block') {
+    renderDrive();                             // the world keeps moving while it loads
   }
   requestAnimationFrame(frame);
 }

@@ -62,7 +62,7 @@ let turnNo = 0;
 let stuck = [];
 let ctxRef = null;
 
-let tray = null, bar = null;
+let tray = null, bar = null, endCard = null;
 let drag = null;      /* a die in the air, see carry() */
 
 /* ============================================================
@@ -514,8 +514,18 @@ function checkHome() {
     if (t.home) continue;
     if (metres(Math.hypot(t.x - S.home.x, t.y - S.home.y)) < HOME) t.home = true;
   }
-  if (tokens.every((t) => t.home)) { over = { who: "you", turnNo }; emit("crossing-over", over); }
-  else if (rivals.every((t) => t.home)) { over = { who: "rival", turnNo }; emit("crossing-over", over); }
+  /* An ending has to be shown the moment it happens. checkHome runs inside
+     the draw loop, which never calls render on its own, so a game could be
+     won and nothing on screen would ever say so. */
+  if (!over && tokens.every((t) => t.home)) {
+    over = { who: "you", turnNo };
+    emit("crossing-over", over);
+    render();
+  } else if (!over && rivals.every((t) => t.home)) {
+    over = { who: "rival", turnNo };
+    emit("crossing-over", over);
+    render();
+  }
 }
 
 /* the other three, same dice, same ground, same marks */
@@ -581,6 +591,28 @@ function buildTray(ctx) {
       background:var(--ink);color:var(--paper-lit)}
     #pgbar[disabled]{background:transparent;color:var(--ink);opacity:.4;
       box-shadow:inset 0 0 0 2px rgba(29,32,29,.3)}
+    #pgend{
+      position:fixed;inset:0;z-index:40;display:none;
+      align-items:center;justify-content:center;padding:26px;
+      background:rgba(239,234,221,.93);backdrop-filter:blur(3px);
+      -webkit-backdrop-filter:blur(3px)}
+    #pgend.show{display:flex;animation:pgfade .5s ease}
+    @keyframes pgfade{from{opacity:0}to{opacity:1}}
+    #pgend .card{max-width:31ch;text-align:center;display:grid;gap:18px;justify-items:center}
+    #pgend h1{
+      font:400 clamp(26px,8vw,38px)/1.12 Georgia,serif;margin:0;letter-spacing:-.01em}
+    #pgend .sub{font:italic 15px/1.65 Georgia,serif;color:var(--ink-soft);margin:0}
+    #pgend .tally{
+      display:flex;gap:0;border:1px solid rgba(29,32,29,.2);border-radius:5px;overflow:hidden}
+    #pgend .tally div{padding:9px 14px;border-right:1px solid rgba(29,32,29,.15)}
+    #pgend .tally div:last-child{border-right:0}
+    #pgend .tally dt{
+      font:600 9.5px/1.4 ui-monospace,monospace;letter-spacing:.11em;
+      text-transform:uppercase;color:var(--ink-soft)}
+    #pgend .tally dd{margin:2px 0 0;font:19px/1 Georgia,serif;font-variant-numeric:tabular-nums}
+    #pgend button{
+      border:0;border-radius:7px;padding:15px 30px;background:var(--ink);
+      color:var(--paper-lit);font:700 12px/1 ui-monospace,monospace;letter-spacing:.16em}
     /* the pip steps aside for the tray */
     #pip{bottom:calc(84px + var(--sab)) !important;left:auto !important;right:14px !important;
       transform:none !important;width:58px !important;height:58px !important}
@@ -593,6 +625,10 @@ function buildTray(ctx) {
   tray = document.createElement("div");
   tray.id = "pgtray";
   ctx.hud.appendChild(tray);
+
+  endCard = document.createElement("div");
+  endCard.id = "pgend";
+  ctx.hud.appendChild(endCard);
 }
 
 /* the only part of the tray that may change while a die is in the air */
@@ -605,7 +641,36 @@ function refreshBar() {
   b.disabled = !ready;
 }
 
+function showEnd() {
+  if (!endCard) return;
+  if (!over) { endCard.classList.remove("show"); endCard.innerHTML = ""; return; }
+  const won = over.who === "you";
+  const ghosts = S.journeys.filter((j) => j.ghost).length;
+  const built = S.marks.length;
+  endCard.innerHTML = `
+    <div class="card">
+      <h1>${won ? "All three got home." : "It got all three home first."}</h1>
+      <p class="sub">${won
+        ? (built
+          ? "The car was always going to make it. The other two got there on ground you put down."
+          : "The city already carried all three of them. Not every ground does.")
+        : "Somewhere out there is a body that could not follow the one in front."}</p>
+      <dl class="tally">
+        <div><dt>turns</dt><dd>${over.turnNo}</dd></div>
+        <div><dt>you laid</dt><dd>${built}</dd></div>
+        <div><dt>ghost roads</dt><dd>${ghosts}</dd></div>
+      </dl>
+      <button type="button">CROSS AGAIN</button>
+    </div>`;
+  endCard.querySelector("button").addEventListener("click", () => {
+    endCard.classList.remove("show");
+    setUp();
+  });
+  endCard.classList.add("show");
+}
+
 function render() {
+  showEnd();
   if (!tray) return;
   /* Never rebuild the tray while a die is being carried: the element in the
      hand is the element holding the pointer, and replacing it drops the die
@@ -613,14 +678,7 @@ function render() {
   if (drag) { refreshBar(); return; }
   tray.innerHTML = "";
 
-  if (over) {
-    const b = document.createElement("button");
-    b.id = "pgbar";
-    b.textContent = over.who === "you" ? "ALL THREE HOME · AGAIN" : "IT GOT ALL THREE HOME · AGAIN";
-    b.addEventListener("click", setUp);
-    tray.appendChild(b);
-    return;
-  }
+  if (over) { tray.innerHTML = ""; return; }
 
   if (phase === "roll") {
     const d = document.createElement("button");
@@ -1190,5 +1248,27 @@ function drawBursts(c, now) {
 
 /* harness only: what a die would do to a body, runs and all */
 export function probeGhost(di, ti) { return ghost(di, ti); }
+
+/* the wall a body is standing at, for the harness */
+export function wallFor(ti) {
+  clearGhosts();
+  for (let i = 0; i < dice.length; i++) {
+    const g = ghost(i, ti);
+    if (g && g.balk) return { ex: g.ex, ey: g.ey, tx: g.balk.toX, ty: g.balk.toY };
+  }
+  const t = tokens[ti];
+  return t && S.home ? { ex: t.x, ey: t.y, tx: S.home.x, ty: S.home.y } : null;
+}
+
+/* how much ground the best die on the table would win this body */
+export function gainFor(ti) {
+  clearGhosts();
+  let best = 0;
+  for (let i = 0; i < dice.length; i++) {
+    const g = ghost(i, ti);
+    if (g && g.gain > best) best = g.gain;
+  }
+  return Math.round(best);
+}
 
 export const state = () => ({ tokens, rivals, dice, phase, over, turnNo, home: S.home });

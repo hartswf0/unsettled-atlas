@@ -147,18 +147,67 @@ export function heightAt(x, y) {
 export function addWay(pts, cls, mark) {
   const out = [];
   if (pts.length < 4) return out;
+  const ends = [];
   let prev = snapOrAdd(pts[0], pts[1]);
+  ends.push(prev);
   for (let i = 2; i + 1 < pts.length; i += 2) {
     const cur = snapOrAdd(pts[i], pts[i + 1]);
     if (cur === prev) continue;
     const e = pushEdge(prev, cur, cls, 0, mark || null);
-    /* a drawn line's pitch is read against the same city as everything else */
-    G.epitch[e] = pitchOf(Math.abs(G.egrade[e]));
+    gradeBuilt(e);
     indexEdge(e);
     out.push(e);
     prev = cur;
   }
+  ends.push(prev);
+
+  /* TIE IT IN.
+
+     A line that touches nothing is not infrastructure, it is a doodle. Welding
+     only where a vertex happens to land within a few metres of an existing
+     node leaves a way stranded exactly when it matters most — drawn out of a
+     body that is stuck precisely because there is no ground near it. So both
+     ends reach for the nearest real ground and, if it is within a walk, run a
+     short connector out to meet it. */
+  for (const end of ends) {
+    const near = nearestNodeOther(G.nx[end], G.ny[end], units(REACH), ends);
+    if (near < 0) continue;
+    const d = metres(Math.hypot(G.nx[near] - G.nx[end], G.ny[near] - G.ny[end]));
+    if (d < 1) continue;
+    const e = pushEdge(end, near, cls, 0, mark || null);
+    gradeBuilt(e);
+    indexEdge(e);
+    out.push(e);
+  }
   return out;
+}
+
+/* how far a drawn way will reach to find ground to join */
+const REACH = 260;
+
+/* A built way is built: somebody laid it, so it is graded, and it is not read
+   against the ranked steepness of ground that simply happened. This is why a
+   ramp you draw is a ramp and not another hill. */
+function gradeBuilt(e) {
+  G.egrade[e] = Math.max(-4, Math.min(4, G.egrade[e]));
+  G.epitch[e] = 0.2;
+}
+
+/* nearest node that is not part of the way we just laid */
+function nearestNodeOther(x, y, tol, exclude) {
+  const R = Math.max(1, Math.ceil(tol / CELL));
+  const cx = Math.floor(x / CELL), cy = Math.floor(y / CELL);
+  let best = -1, bd = tol;
+  for (let dx = -R; dx <= R; dx++) for (let dy = -R; dy <= R; dy++) {
+    const b = nodeCells.get(ckey(cx + dx, cy + dy));
+    if (!b) continue;
+    for (const i of b) {
+      if (exclude.includes(i)) continue;
+      const d = Math.hypot(G.nx[i] - x, G.ny[i] - y);
+      if (d < bd) { bd = d; best = i; }
+    }
+  }
+  return best;
 }
 let pitchTable = null;
 function pitchOf(v) {
@@ -170,7 +219,7 @@ function pitchOf(v) {
 
 /* A drawn line that ends near existing ground joins it. This is why what you
    draw becomes infrastructure and not graffiti. */
-const JOIN = units(26);
+const JOIN = units(45);
 function snapOrAdd(x, y) {
   const n = nearestNode(x, y, JOIN);
   if (n >= 0) return n;

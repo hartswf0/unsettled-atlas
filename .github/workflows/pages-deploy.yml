@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  workflow_run:
+    workflows: ['Compile Geonosis system ground']
+    types: [completed]
 
 permissions:
   contents: read
@@ -16,10 +19,13 @@ concurrency:
 
 jobs:
   build:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: Checkout latest main
         uses: actions/checkout@v4
+        with:
+          ref: main
 
       - name: Configure Pages
         uses: actions/configure-pages@v5
@@ -40,6 +46,8 @@ jobs:
           test -f _site/icosa-syntegrity-live.html
           test -f _site/geonosis.html
           test -f _site/geonosis-startup.js
+          test -f _site/geonosis-map/index.html
+          test -f _site/geonosis/system-data/index.json
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

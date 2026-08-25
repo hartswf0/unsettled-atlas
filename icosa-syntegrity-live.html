@@ -1,0 +1,102 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>ICOSA SYNTEGRITY · live data</title>
+<style>
+html,body{margin:0;width:100%;height:100%;background:#f1eee4;color:#121514;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{display:grid;place-items:center}
+#boot{font-size:10px;letter-spacing:.18em}
+</style>
+<div id="boot">COMPILING LIVE WORLD</div>
+<script>
+(function () {
+  'use strict';
+  Promise.all([
+    fetch('icosa-syntegrity.html',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-syntegrity.html '+r.status);return r.text();}),
+    fetch('icosa-live-inject.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-inject.js '+r.status);return r.text();}),
+    fetch('geonosis-source-registry.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-source-registry.js '+r.status);return r.text();}),
+    fetch('geonosis-signal-core.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-signal-core.js '+r.status);return r.text();}),
+    fetch('icosa-live-sources.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-sources.js '+r.status);return r.text();}),
+    fetch('icosa-live-motion.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-motion.js '+r.status);return r.text();}),
+    fetch('geonosis-live-public.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-public.js '+r.status);return r.text();}),
+    fetch('geonosis-live-311.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-311.js '+r.status);return r.text();}),
+    fetch('geonosis-live-nfhl.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-nfhl.js '+r.status);return r.text();}),
+    fetch('geonosis-live-epa.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-epa.js '+r.status);return r.text();}),
+    fetch('geonosis-live-weather-terrain.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-weather-terrain.js '+r.status);return r.text();}),
+    fetch('geonosis-live-airnow.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-airnow.js '+r.status);return r.text();}),
+    fetch('geonosis-inference.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-inference.js '+r.status);return r.text();}),
+    fetch('icosa-live-context.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-context.js '+r.status);return r.text();}),
+    fetch('geonosis-live-context.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-context.js '+r.status);return r.text();}),
+    fetch('geonosis-source-controls.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-source-controls.js '+r.status);return r.text();})
+  ]).then(function(parts){
+    var html=parts[0],inject=parts[1],registry=parts[2],signalCore=parts[3],sources=parts[4],motion=parts[5],geoPublic=parts[6],geo311=parts[7],geoNfhl=parts[8],geoEpa=parts[9],geoWeatherTerrain=parts[10],geoAir=parts[11],geoInference=parts[12],modelContext=parts[13],geoContext=parts[14],geoControls=parts[15];
+    var preconfig=[
+      'window.ICOSA_LIVE_CONFIG = window.ICOSA_LIVE_CONFIG || {};',
+      'if (!window.ICOSA_LIVE_CONFIG.datacenterUrl) window.ICOSA_LIVE_CONFIG.datacenterUrl =',
+      '  "https://raw.githubusercontent.com/bilawalsidhu/gods-eye-view/880a672b5e16ad3e41d318801d3a5203f9201923/src/data/local_data/datacenters/datacenters.geojsonl";'
+    ].join('\n');
+    var cull=[
+      'var liveVisibleBinsUnculled = liveVisibleBins;',
+      'liveVisibleBins = function (depth) {',
+      '  var bins = liveVisibleBinsUnculled(depth);',
+      '  Object.keys(bins).forEach(function (slug) {',
+      '    var c = cellFromSlug(slug);',
+      '    if (!c || !facingCamera(cellCentre(c))) delete bins[slug];',
+      '  });',
+      '  return bins;',
+      '};'
+    ].join('\n');
+    var guards=[
+      'var live2DrawFiresCoverageGuard = live2DrawFires;',
+      'live2DrawFires = function (S) {',
+      '  var s = LIVE.sources[FIRMS_SOURCE];',
+      '  if (!FIRMS_TARGET || !s || !s.meta || s.meta.coverageCell !== FIRMS_TARGET.slug) return;',
+      '  live2DrawFiresCoverageGuard(S);',
+      '};',
+      'var drawAircraftCoverageGuard = drawAircraft;',
+      'drawAircraft = function (S) {',
+      '  var s = LIVE.sources[AIR_SOURCE];',
+      '  if (!AIR_TARGET || !s || !s.meta || s.meta.coverageCell !== AIR_TARGET.slug) return;',
+      '  drawAircraftCoverageGuard(S);',
+      '};',
+      'var live2RequestFirmsTimerGuard = live2RequestFirms;',
+      'live2RequestFirms = function (cell) {',
+      '  if (cell && cellEdgeKm(cell) > FIRMS_MAX_KM) {',
+      '    var s = LIVE.sources[FIRMS_SOURCE];',
+      '    if (s && s.timer) { clearTimeout(s.timer); s.timer = null; }',
+      '  }',
+      '  return live2RequestFirmsTimerGuard(cell);',
+      '};',
+      'var requestAircraftTimerGuard = requestAircraft;',
+      'requestAircraft = function (cell) {',
+      '  if (cell && cellEdgeKm(cell) > AIR_MAX_CELL_KM) {',
+      '    var s = LIVE.sources[AIR_SOURCE];',
+      '    if (s && s.timer) { clearTimeout(s.timer); s.timer = null; }',
+      '  }',
+      '  return requestAircraftTimerGuard(cell);',
+      '};'
+    ].join('\n');
+    var needle='})();',at=html.lastIndexOf(needle);if(at<0)throw new Error('main ICOSA closure not found');
+    html=html.slice(0,at)+
+      '\n/* --- ICOSA LIVE DATA HARNESS --- */\n'+inject+
+      '\n/* keep live observations on the visible side of the folded world */\n'+cull+
+      '\n/* --- VERIFIED GEONOSIS SOURCE REGISTRY --- */\n'+registry+
+      '\n/* stable upstream defaults before source adapters evaluate */\n'+preconfig+
+      '\n/* --- GEONOSIS SIGNAL CONTRACT --- */\n'+signalCore+
+      '\n/* --- ICOSA LIVE SOURCE ADAPTERS --- */\n'+sources+
+      '\n/* --- ICOSA LIVE MOTION ADAPTER --- */\n'+motion+
+      '\n/* --- GEONOSIS PUBLIC SIGNAL ADAPTERS --- */\n'+geoPublic+
+      '\n/* --- GEONOSIS NYC 311 ADAPTER --- */\n'+geo311+
+      '\n/* --- GEONOSIS FEMA NFHL ADAPTER --- */\n'+geoNfhl+
+      '\n/* --- GEONOSIS EPA ECHO/FRS ADAPTER --- */\n'+geoEpa+
+      '\n/* --- GEONOSIS NWS WEATHER + 3DEP TERRAIN --- */\n'+geoWeatherTerrain+
+      '\n/* --- GEONOSIS BYOK AIR QUALITY ADAPTER --- */\n'+geoAir+
+      '\n/* --- GEONOSIS DIFFERENCE + STATEMENT ENGINE --- */\n'+geoInference+
+      '\n/* scoped observations only paint the ground they actually queried */\n'+guards+
+      '\n/* --- ICOSA LIVE → MODEL CONTEXT BRIDGE --- */\n'+modelContext+
+      '\n/* --- GEONOSIS → MODEL CONTEXT BRIDGE --- */\n'+geoContext+
+      '\n/* --- GEONOSIS LABELED SOURCE SETUP --- */\n'+geoControls+'\n'+html.slice(at);
+    document.open();document.write(html);document.close();
+  }).catch(function(err){document.getElementById('boot').textContent='LIVE WORLD FAILED · '+String(err&&err.message||err);});
+})();
+</script>

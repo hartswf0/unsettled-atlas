@@ -1,0 +1,108 @@
+name: Geonosis live validation
+
+on:
+  pull_request:
+    paths:
+      - 'icosa-live-*.js'
+      - 'geonosis-*.js'
+      - 'icosa-syntegrity-live.html'
+      - 'tests/geonosis-provider-smoke.mjs'
+      - '.github/workflows/geonosis-live-validate.yml'
+  push:
+    branches:
+      - feature/icosa-live-data
+    paths:
+      - 'icosa-live-*.js'
+      - 'geonosis-*.js'
+      - 'icosa-syntegrity-live.html'
+      - 'tests/geonosis-provider-smoke.mjs'
+      - '.github/workflows/geonosis-live-validate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Syntax check injected JavaScript
+        shell: bash
+        run: |
+          set -euo pipefail
+          files=(
+            icosa-live-inject.js
+            geonosis-source-registry.js
+            geonosis-signal-core.js
+            icosa-live-sources.js
+            icosa-live-motion.js
+            geonosis-live-public.js
+            geonosis-live-311.js
+            geonosis-live-nfhl.js
+            geonosis-live-epa.js
+            geonosis-live-weather-terrain.js
+            geonosis-live-airnow.js
+            geonosis-inference.js
+            icosa-live-context.js
+            geonosis-live-context.js
+            geonosis-source-controls.js
+          )
+          for f in "${files[@]}"; do
+            echo "node --check $f"
+            node --check "$f"
+          done
+
+      - name: Verify live harness references every module
+        shell: bash
+        run: |
+          set -euo pipefail
+          for f in \
+            icosa-live-inject.js \
+            geonosis-source-registry.js \
+            geonosis-signal-core.js \
+            icosa-live-sources.js \
+            icosa-live-motion.js \
+            geonosis-live-public.js \
+            geonosis-live-311.js \
+            geonosis-live-nfhl.js \
+            geonosis-live-epa.js \
+            geonosis-live-weather-terrain.js \
+            geonosis-live-airnow.js \
+            geonosis-inference.js \
+            icosa-live-context.js \
+            geonosis-live-context.js \
+            geonosis-source-controls.js
+          do
+            grep -F "fetch('$f'" icosa-syntegrity-live.html >/dev/null || {
+              echo "Harness does not load $f" >&2
+              exit 1
+            }
+          done
+
+      - name: Verify aircraft transport cannot silently use non-CORS upstream
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F "var AIR_UPSTREAM_URL = 'https://api.adsb.lol/v2';" icosa-live-motion.js >/dev/null
+          grep -F "var AIR_BASE_URL = (window.ICOSA_LIVE_CONFIG" icosa-live-motion.js >/dev/null
+          grep -F "|| null;" icosa-live-motion.js >/dev/null
+          grep -F "aircraft proxy/base URL not configured" icosa-live-motion.js >/dev/null
+
+      - name: Verify source setup controls remain explicit and local
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'NASA FIRMS MAP KEY' geonosis-source-controls.js >/dev/null
+          grep -F 'AIRNOW API KEY' geonosis-source-controls.js >/dev/null
+          grep -F 'AIRCRAFT CORS BASE URL' geonosis-source-controls.js >/dev/null
+          grep -F 'localStorage' geonosis-source-controls.js >/dev/null
+
+      - name: Smoke public provider contracts
+        run: node tests/geonosis-provider-smoke.mjs

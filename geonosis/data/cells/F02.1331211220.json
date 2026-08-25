@@ -1,0 +1,228 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211220",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 2,
+    "relations": 2,
+    "statements": 0,
+    "direct_signals": 2,
+    "direct_entities": 2,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "money.bank_branch": 2
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2
+  },
+  "statement_kinds": {},
+  "signals": [
+    {
+      "id": "sig_9bd357f3f63c11c96a49",
+      "source": "fdic-locations",
+      "source_record_id": "191825",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4194,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "SHANNON SOUTHPARK BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "6737 Londonderry Way",
+        "city": "Union City",
+        "state": "GA",
+        "zip": "30291",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.53784298363041,
+          33.57165599873832
+        ]
+      },
+      "atlas_address": "F02.1331211220",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.53784298363041,
+          33.57165599873832
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ce2c5eb1dedfe4b96b84",
+      "source": "fdic-locations",
+      "source_record_id": "186335",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3245,
+        "institution_name": "Truist Bank",
+        "branch_name": "UNION STATION MALL BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4601 Jonesboro Rd",
+        "city": "Union City",
+        "state": "GA",
+        "zip": "30291",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.53722800339443,
+          33.56854300180848
+        ]
+      },
+      "atlas_address": "F02.1331211220",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.53722800339443,
+          33.56854300180848
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3510:4194",
+      "type": "bank_branch",
+      "name": "SHANNON SOUTHPARK BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4194"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.53784298363041,
+          33.57165599873832
+        ]
+      },
+      "atlas_address": "F02.1331211220",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_9bd357f3f63c11c96a49"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3245",
+      "type": "bank_branch",
+      "name": "UNION STATION MALL BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3245"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.53722800339443,
+          33.56854300180848
+        ]
+      },
+      "atlas_address": "F02.1331211220",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ce2c5eb1dedfe4b96b84"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_9af1c0d9851e211c17b2",
+      "subject": "fdic-branch:3510:4194",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_9bd357f3f63c11c96a49"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_e78e82348c47f64069f9",
+      "subject": "fdic-branch:9846:3245",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ce2c5eb1dedfe4b96b84"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [],
+  "generated_at": "2026-08-25T12:26:10.098Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

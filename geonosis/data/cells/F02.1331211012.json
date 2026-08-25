@@ -1,0 +1,991 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211012",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 9,
+    "entities": 3,
+    "relations": 4,
+    "statements": 4,
+    "direct_signals": 9,
+    "direct_entities": 3,
+    "direct_statements": 4
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 2,
+    "money.branch_deposits": 1,
+    "claim.map_note": 5
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "branch_of": 3,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_1d01b15baf54e7adecd5",
+      "source": "epa-echo",
+      "source_record_id": "110070162412",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "TACKETT FARMS LOT 16",
+        "address": "3929 O'BRYANT CIRCLE, SMYRNA, GA, 30082",
+        "county": "COBB COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 99999999,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5489997567318,
+          33.8567997447022
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5489997567318,
+          33.8567997447022
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070162412",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 5604
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_811d5314b74e5cb88747",
+      "source": "fdic-locations",
+      "source_record_id": "249204",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3271,
+        "institution_name": "Truist Bank",
+        "branch_name": "SMYRNA BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3379 S Cobb Dr Se",
+        "city": "Smyrna",
+        "state": "GA",
+        "zip": "30080",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.52791797208037,
+          33.871586981169685
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.52791797208037,
+          33.871586981169685
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f273f745c662a1bdac16",
+      "source": "fdic-locations",
+      "source_record_id": "10631",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 9069,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "ATLANTA ROAD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2890 Atlanta Rd Se",
+        "city": "Smyrna",
+        "state": "GA",
+        "zip": "30080",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.514294026659,
+          33.882713999544606
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.514294026659,
+          33.882713999544606
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4102c2a906f53f3618b7",
+      "source": "osm-notes",
+      "source_record_id": "4877277",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Unable to answer \"This shop has been vacant. What’s here now?\" – house number 3209 F2: Building Part – https://osm.org/way/1014114463 via StreetComplete 61.1:\n\nThis is two shops, 3209 F1 and F2. The hair place us F3, unsure if the places are all shifted over by one?\n\nAttached photo(s):\nhttps://streetcomplete.app/p/293868.jpg\nhttps://streetcomplete.app/p/293869.jpg"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5290149,
+          33.8758196
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5290149,
+          33.8758196
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-07-27 00:40:34 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4877277",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-07-27 00:40:34 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "Unable to answer \"This shop has been vacant. What’s here now?\" – house number 3209 F2: Building Part – https://osm.org/way/1014114463 via StreetComplete 61.1:\n\nThis is two shops, 3209 F1 and F2. The hair place us F3, unsure if the places are all shifted over by one?\n\nAttached photo(s):\nhttps://streetcomplete.app/p/293868.jpg\nhttps://streetcomplete.app/p/293869.jpg",
+            "html": "<p dir=\"auto\">Unable to answer \"This shop has been vacant. What’s here now?\" – house number 3209 F2: Building Part – <a href=\"https://osm.org/way/1014114463\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">way/1014114463</a> via StreetComplete 61.1:</p>\n\n<p dir=\"auto\">This is two shops, 3209 F1 and F2. The hair place us F3, unsure if the places are all shifted over by one?</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://streetcomplete.app/p/293868.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://streetcomplete.app/p/293868.jpg</a>\n<br /><a href=\"https://streetcomplete.app/p/293869.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://streetcomplete.app/p/293869.jpg</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ab7fbcbdb7e7058bd2e0",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:493",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 493,
+        "institution_name": "Regions Bank",
+        "branch_name": "Smyrna Georgia Main Branch",
+        "deposits_usd": 66029000,
+        "address": "3262 S Cobb Dr Se",
+        "city": "Smyrna",
+        "state": "GA",
+        "zip": "30080"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5309656168348,
+          33.8744117551671
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5309656168348,
+          33.8744117551671
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ea033ed7070205b96636",
+      "source": "osm-notes",
+      "source_record_id": "4213720",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 3,
+        "latest": "Yah it's weird, can't decide if it's parking or a road. No idea how to map it. Oh well, probably doesn't matter, no one will use it anyways."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5293624,
+          33.871742
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5293624,
+          33.871742
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2024-04-25 00:17:00 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4213720",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2024-04-25 00:17:00 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "Concrete blocks, unsure what they are for.\n\nvia StreetComplete 57.2\n\nAttached photo(s):\nhttps://westnordost.de/p/208558.jpg\n\nGPS Trace: https://www.openstreetmap.org/user/SamWhited/traces/11334505\n",
+            "html": "<p dir=\"auto\">Concrete blocks, unsure what they are for.</p>\n\n<p dir=\"auto\">via StreetComplete 57.2</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://westnordost.de/p/208558.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://westnordost.de/p/208558.jpg</a></p>\n\n<p dir=\"auto\">GPS Trace: <a href=\"https://www.openstreetmap.org/user/SamWhited/traces/11334505\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">@SamWhited/traces/11334505</a>\n</p>"
+          },
+          {
+            "date": "2024-05-27 05:36:31 UTC",
+            "uid": 9637872,
+            "user": "gpserror",
+            "user_url": "https://api.openstreetmap.org/user/gpserror",
+            "action": "commented",
+            "text": "dunno, more parking for furniture store (that's going out of business?)",
+            "html": "<p dir=\"auto\">dunno, more parking for furniture store (that's going out of business?)</p>"
+          },
+          {
+            "date": "2024-05-27 15:27:42 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "commented",
+            "text": "Yah it's weird, can't decide if it's parking or a road. No idea how to map it. Oh well, probably doesn't matter, no one will use it anyways.",
+            "html": "<p dir=\"auto\">Yah it's weird, can't decide if it's parking or a road. No idea how to map it. Oh well, probably doesn't matter, no one will use it anyways.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b56c159d13df4323265d",
+      "source": "osm-notes",
+      "source_record_id": "4196216",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 6,
+        "latest": "Unless they've taken this down very recently, it's still there just like the picture. I'll check next time I walk by, but unless the aerial imagery is updated *very* frequently it was still there whenever I last walked by (a week or so ago, I forget)"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5251925,
+          33.88539
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5251925,
+          33.88539
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2024-04-13 13:03:15 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4196216",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2024-04-13 13:03:15 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "Creek and bridge missing here\n\nvia StreetComplete 57.1\n\nAttached photo(s):\nhttps://westnordost.de/p/206727.jpg",
+            "html": "<p dir=\"auto\">Creek and bridge missing here</p>\n\n<p dir=\"auto\">via StreetComplete 57.1</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://westnordost.de/p/206727.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://westnordost.de/p/206727.jpg</a></p>"
+          },
+          {
+            "date": "2025-02-05 11:31:20 UTC",
+            "uid": 83188,
+            "user": "dannmer",
+            "user_url": "https://api.openstreetmap.org/user/dannmer",
+            "action": "commented",
+            "text": "Stream is mapped. Is the bridge located at the note location? It's not visible on aerial imagery. Looking at the attached photo it seems like it should be further south.",
+            "html": "<p dir=\"auto\">Stream is mapped. Is the bridge located at the note location? It's not visible on aerial imagery. Looking at the attached photo it seems like it should be further south.</p>"
+          },
+          {
+            "date": "2025-02-05 12:07:57 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "commented",
+            "text": "Oops, yah, looks like the stream got added at some point or just wasn't showing up in my editor for some reason. I'll take a look and mark the exact point of the bridge next time I'm there.",
+            "html": "<p dir=\"auto\">Oops, yah, looks like the stream got added at some point or just wasn't showing up in my editor for some reason. I'll take a look and mark the exact point of the bridge next time I'm there.</p>"
+          },
+          {
+            "date": "2025-10-09 12:19:37 UTC",
+            "uid": 83188,
+            "user": "dannmer",
+            "user_url": "https://api.openstreetmap.org/user/dannmer",
+            "action": "closed",
+            "text": "No bridge visible on Bing imagery, no heat map activity suggesting a bridge located here. IF there's additional info, please reactivate the note and provide the necessary info",
+            "html": "<p dir=\"auto\">No bridge visible on Bing imagery, no heat map activity suggesting a bridge located here. IF there's additional info, please reactivate the note and provide the necessary info</p>"
+          },
+          {
+            "date": "2025-10-09 12:24:37 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "reopened",
+            "text": "",
+            "html": "<p dir=\"auto\"></p>"
+          },
+          {
+            "date": "2025-10-09 12:25:14 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "commented",
+            "text": "Unless they've taken this down very recently, it's still there just like the picture. I'll check next time I walk by, but unless the aerial imagery is updated *very* frequently it was still there whenever I last walked by (a week or so ago, I forget)",
+            "html": "<p dir=\"auto\">Unless they've taken this down very recently, it's still there just like the picture. I'll check next time I walk by, but unless the aerial imagery is updated *very* frequently it was still there whenever I last walked by (a week or so ago, I forget)</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_5e6b1d53cd036d369247",
+      "source": "osm-notes",
+      "source_record_id": "4196187",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Same here, 6 more tables plus 9 recliners that can be moved.\n\nvia StreetComplete 57.1\n\nAttached photo(s):\nhttps://westnordost.de/p/206714.jpg"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5166085,
+          33.8851989
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5166085,
+          33.8851989
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2024-04-13 12:40:51 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4196187",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2024-04-13 12:40:51 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "Same here, 6 more tables plus 9 recliners that can be moved.\n\nvia StreetComplete 57.1\n\nAttached photo(s):\nhttps://westnordost.de/p/206714.jpg",
+            "html": "<p dir=\"auto\">Same here, 6 more tables plus 9 recliners that can be moved.</p>\n\n<p dir=\"auto\">via StreetComplete 57.1</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://westnordost.de/p/206714.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://westnordost.de/p/206714.jpg</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f87208a87339d1c9d3d5",
+      "source": "osm-notes",
+      "source_record_id": "3572832",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 9,
+        "latest": "Ah yah, that makes sense; I haven't really figured out how to do road editing without breaking everything, so I'll give it a shot later, but no promises that I'll actually save any changes"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.514409,
+          33.8839844
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.514409,
+          33.8839844
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2023-02-24 13:37:15 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/3572832",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2023-02-24 13:37:15 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "Merge crossings in this intersection, they are showing up as two crossings per road but are one button/light combo per direction.\n\nvia StreetComplete 51.0",
+            "html": "<p dir=\"auto\">Merge crossings in this intersection, they are showing up as two crossings per road but are one button/light combo per direction.</p>\n\n<p dir=\"auto\">via StreetComplete 51.0</p>"
+          },
+          {
+            "date": "2023-02-24 14:30:39 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "closed",
+            "text": "",
+            "html": "<p dir=\"auto\"></p>"
+          },
+          {
+            "date": "2023-02-24 14:31:59 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "reopened",
+            "text": "",
+            "html": "<p dir=\"auto\"></p>"
+          },
+          {
+            "date": "2023-02-24 14:32:36 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "commented",
+            "text": "I went and looked, but it seems this has another way to add crossings and I'm not sure what the best way to fix it is though. Having two crossings seems wrong though and gives funny navigation directions.",
+            "html": "<p dir=\"auto\">I went and looked, but it seems this has another way to add crossings and I'm not sure what the best way to fix it is though. Having two crossings seems wrong though and gives funny navigation directions.</p>"
+          },
+          {
+            "date": "2023-07-27 11:28:15 UTC",
+            "uid": 9637872,
+            "user": "gpserror",
+            "user_url": "https://api.openstreetmap.org/user/gpserror",
+            "action": "commented",
+            "text": "seems atlanta road se isn't truly dual carriageway at this segment, is this what you're referring to?",
+            "html": "<p dir=\"auto\">seems atlanta road se isn't truly dual carriageway at this segment, is this what you're referring to?</p>"
+          },
+          {
+            "date": "2023-07-27 11:39:18 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "commented",
+            "text": "It's not divided, if that's what you mean?\n\nThe problem is that this is a single crossing controlled by a single button on either side, so when navigating by foot the directions tell you to cross the road, then cross the road again as if there's an island in the middle or something for you to stand on, but this seems incorrect and dangerous. Shouldn't this just be a single crossing all the way across both lanes?",
+            "html": "<p dir=\"auto\">It's not divided, if that's what you mean?</p>\n\n<p dir=\"auto\">The problem is that this is a single crossing controlled by a single button on either side, so when navigating by foot the directions tell you to cross the road, then cross the road again as if there's an island in the middle or something for you to stand on, but this seems incorrect and dangerous. Shouldn't this just be a single crossing all the way across both lanes?</p>"
+          },
+          {
+            "date": "2023-07-27 12:06:53 UTC",
+            "uid": 9637872,
+            "user": "gpserror",
+            "user_url": "https://api.openstreetmap.org/user/gpserror",
+            "action": "commented",
+            "text": "yeah dual carriageway = \"divided highway\" so if it's merged back to single carriageway at this point to match real life, it would also fix the dual crossing when trying to walk east/west across atlanta road SE?",
+            "html": "<p dir=\"auto\">yeah dual carriageway = \"divided highway\" so if it's merged back to single carriageway at this point to match real life, it would also fix the dual crossing when trying to walk east/west across atlanta road SE?</p>"
+          },
+          {
+            "date": "2023-07-27 12:19:52 UTC",
+            "uid": 9637872,
+            "user": "gpserror",
+            "user_url": "https://api.openstreetmap.org/user/gpserror",
+            "action": "commented",
+            "text": "BTW, it's some work to merge this small section back to single carriageway due to fixing up relations and generating correct turn lanes, not hard but not a quick fix either (probably half hour of work?).  I'm unfortunately lazy right now...\n\n",
+            "html": "<p dir=\"auto\">BTW, it's some work to merge this small section back to single carriageway due to fixing up relations and generating correct turn lanes, not hard but not a quick fix either (probably half hour of work?).  I'm unfortunately lazy right now...</p>"
+          },
+          {
+            "date": "2023-07-27 12:50:35 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "commented",
+            "text": "Ah yah, that makes sense; I haven't really figured out how to do road editing without breaking everything, so I'll give it a shot later, but no promises that I'll actually save any changes",
+            "html": "<p dir=\"auto\">Ah yah, that makes sense; I haven't really figured out how to do road editing without breaking everything, so I'll give it a shot later, but no promises that I'll actually save any changes</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:493",
+      "type": "bank_branch",
+      "name": "Smyrna Georgia Main Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "493"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5309656168348,
+          33.8744117551671
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ab7fbcbdb7e7058bd2e0"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:9069",
+      "type": "bank_branch",
+      "name": "ATLANTA ROAD BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "9069"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.514294026659,
+          33.882713999544606
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f273f745c662a1bdac16"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3271",
+      "type": "bank_branch",
+      "name": "SMYRNA BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3271"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.52791797208037,
+          33.871586981169685
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_811d5314b74e5cb88747"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_977d7bf4af6f1722d623",
+      "subject": "fdic-branch:12368:493",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 66029000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ab7fbcbdb7e7058bd2e0"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_0c0cf55438b6a108e2a2",
+      "subject": "fdic-branch:9846:3271",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_811d5314b74e5cb88747"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_104899ab7f9a9503e31a",
+      "subject": "fdic-branch:3511:9069",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f273f745c662a1bdac16"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_33a8920e4a73fc2f9b25",
+      "subject": "fdic-branch:12368:493",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ab7fbcbdb7e7058bd2e0"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_b6cc590618f0c6e37344",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331211012",
+      "text": "4 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_1d01b15baf54e7adecd5",
+        "sig_811d5314b74e5cb88747",
+        "sig_f273f745c662a1bdac16",
+        "sig_ab7fbcbdb7e7058bd2e0",
+        "sig_4102c2a906f53f3618b7",
+        "sig_5e6b1d53cd036d369247",
+        "sig_b56c159d13df4323265d",
+        "sig_ea033ed7070205b96636",
+        "sig_f87208a87339d1c9d3d5"
+      ],
+      "derived_from": [
+        "sig_1d01b15baf54e7adecd5",
+        "sig_811d5314b74e5cb88747",
+        "sig_f273f745c662a1bdac16",
+        "sig_ab7fbcbdb7e7058bd2e0",
+        "sig_4102c2a906f53f3618b7",
+        "sig_5e6b1d53cd036d369247",
+        "sig_b56c159d13df4323265d",
+        "sig_ea033ed7070205b96636",
+        "sig_f87208a87339d1c9d3d5"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.8,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1813
+    },
+    {
+      "id": "stmt_069c10c9929e408d0f04",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331211012",
+      "text": "5 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4102c2a906f53f3618b7",
+        "sig_5e6b1d53cd036d369247",
+        "sig_b56c159d13df4323265d",
+        "sig_ea033ed7070205b96636",
+        "sig_f87208a87339d1c9d3d5"
+      ],
+      "derived_from": [
+        "sig_4102c2a906f53f3618b7",
+        "sig_5e6b1d53cd036d369247",
+        "sig_b56c159d13df4323265d",
+        "sig_ea033ed7070205b96636",
+        "sig_f87208a87339d1c9d3d5"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.8333333333333334,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1729
+    },
+    {
+      "id": "stmt_2a671ffbf68fcf37c86a",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331211012",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_1d01b15baf54e7adecd5"
+      ],
+      "derived_from": [
+        "sig_1d01b15baf54e7adecd5"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_dcb7b23f42d036d99f9f",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211012",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $66,029,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ab7fbcbdb7e7058bd2e0"
+      ],
+      "derived_from": [
+        "sig_ab7fbcbdb7e7058bd2e0"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.094Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

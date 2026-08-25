@@ -1,0 +1,374 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213123",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 2,
+    "relations": 3,
+    "statements": 2,
+    "direct_signals": 3,
+    "direct_entities": 2,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 1,
+    "ecology.occurrence": 1
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "holds_reported_deposits": 1,
+    "branch_of": 2
+  },
+  "statement_kinds": {
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_727a63c65aaf8b869800",
+      "source": "fdic-locations",
+      "source_record_id": "242502",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4537,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "TARA BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "825 Spur 138",
+        "city": "Jonesboro",
+        "state": "GA",
+        "zip": "30236",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.36431403475083,
+          33.53720101226922
+        ]
+      },
+      "atlas_address": "F02.1331213123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.36431403475083,
+          33.53720101226922
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_897b9d4ce405dc715fe8",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938312222",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Harmonia axyridis (Pallas, 1773)",
+        "species": "Harmonia axyridis",
+        "vernacular_name": null,
+        "taxon_key": 4989904,
+        "species_key": 4989904,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.313939,
+          33.525761
+        ]
+      },
+      "atlas_address": "F02.1331213123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.313939,
+          33.525761
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T15:12:40.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938312222",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8d2e822792845b948990",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:378",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 378,
+        "institution_name": "Renasant Bank",
+        "branch_name": "Jonesboro Branch",
+        "deposits_usd": 63901000,
+        "address": "101 N Main St",
+        "city": "Jonesboro",
+        "state": "GA",
+        "zip": "30236"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.35478297265,
+          33.5216700162374
+        ]
+      },
+      "atlas_address": "F02.1331213123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.35478297265,
+          33.5216700162374
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.327Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12437:378",
+      "type": "bank_branch",
+      "name": "Jonesboro Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "378"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.35478297265,
+          33.5216700162374
+        ]
+      },
+      "atlas_address": "F02.1331213123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_8d2e822792845b948990"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4537",
+      "type": "bank_branch",
+      "name": "TARA BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4537"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.36431403475083,
+          33.53720101226922
+        ]
+      },
+      "atlas_address": "F02.1331213123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_727a63c65aaf8b869800"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_0bdda713720123d52cf0",
+      "subject": "fdic-branch:12437:378",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 63901000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8d2e822792845b948990"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_4afe9462669a8da8fbd1",
+      "subject": "fdic-branch:12437:378",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8d2e822792845b948990"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_746d3bc2684f76c6f75e",
+      "subject": "fdic-branch:3510:4537",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_727a63c65aaf8b869800"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_b3adef453b2928d366f2",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213123",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, fdic-sod, gbif-occurrences.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_727a63c65aaf8b869800",
+        "sig_8d2e822792845b948990",
+        "sig_897b9d4ce405dc715fe8"
+      ],
+      "derived_from": [
+        "sig_727a63c65aaf8b869800",
+        "sig_8d2e822792845b948990",
+        "sig_897b9d4ce405dc715fe8"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_6f039b25fae861689f18",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331213123",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $63,901,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_8d2e822792845b948990"
+      ],
+      "derived_from": [
+        "sig_8d2e822792845b948990"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.108Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

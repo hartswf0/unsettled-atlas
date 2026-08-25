@@ -1,0 +1,519 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213020",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 5,
+    "entities": 3,
+    "relations": 3,
+    "statements": 2,
+    "direct_signals": 5,
+    "direct_entities": 3,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 3,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "branch_of": 3
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1
+  },
+  "signals": [
+    {
+      "id": "sig_a6a6bcda260bccf2f57b",
+      "source": "epa-echo",
+      "source_record_id": "110001417137",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BRADSHAWS SERVICE CENTER",
+        "address": "5517 MEMORIAL DRIVE, STONE MOUNTAIN, GA, 30083",
+        "county": "DEKALB",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2124800715173,
+          33.8006201518119
+        ]
+      },
+      "atlas_address": "F02.1331213020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2124800715173,
+          33.8006201518119
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110001417137",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 2113
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_07594e01185ff7cc3163",
+      "source": "fdic-locations",
+      "source_record_id": "191398",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8450,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "MEMORIAL DEKALB BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4820 Memorial Dr",
+        "city": "Stone Mountain",
+        "state": "GA",
+        "zip": "30083",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23401500295569,
+          33.787254013022064
+        ]
+      },
+      "atlas_address": "F02.1331213020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.23401500295569,
+          33.787254013022064
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_18393a089dec6a19ade6",
+      "source": "fdic-locations",
+      "source_record_id": "191826",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4195,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "DEKALB COLLEGE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3819 N Decatur Rd",
+        "city": "Decatur",
+        "state": "GA",
+        "zip": "30032",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23721102263649,
+          33.785342981007574
+        ]
+      },
+      "atlas_address": "F02.1331213020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.23721102263649,
+          33.785342981007574
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_787e15ead06e4c90c447",
+      "source": "fdic-locations",
+      "source_record_id": "186316",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3236,
+        "institution_name": "Truist Bank",
+        "branch_name": "ROCKBRIDGE MEMORIAL BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3850 Rockbridge Rd",
+        "city": "Stone Mountain",
+        "state": "GA",
+        "zip": "30083",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23528502892484,
+          33.78676400696243
+        ]
+      },
+      "atlas_address": "F02.1331213020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.23528502892484,
+          33.78676400696243
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_3e17398b733cc3ea737f",
+      "source": "osm-notes",
+      "source_record_id": "4806262",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Name of the place: all that is visible is an AT&T sign on the front.\n\nvia StreetComplete 61.1\n\nAttached photo(s):\nhttps://streetcomplete.app/p/284433.jpg"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1628011,
+          33.7887082
+        ]
+      },
+      "atlas_address": "F02.1331213020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1628011,
+          33.7887082
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-06-14 23:39:32 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4806262",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-06-14 23:39:33 UTC",
+            "uid": 22604963,
+            "user": "hyperdimension",
+            "user_url": "https://api.openstreetmap.org/user/hyperdimension",
+            "action": "opened",
+            "text": "Name of the place: all that is visible is an AT&T sign on the front.\n\nvia StreetComplete 61.1\n\nAttached photo(s):\nhttps://streetcomplete.app/p/284433.jpg",
+            "html": "<p dir=\"auto\">Name of the place: all that is visible is an AT&amp;T sign on the front.</p>\n\n<p dir=\"auto\">via StreetComplete 61.1</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://streetcomplete.app/p/284433.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://streetcomplete.app/p/284433.jpg</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3510:4195",
+      "type": "bank_branch",
+      "name": "DEKALB COLLEGE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4195"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23721102263649,
+          33.785342981007574
+        ]
+      },
+      "atlas_address": "F02.1331213020",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_18393a089dec6a19ade6"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8450",
+      "type": "bank_branch",
+      "name": "MEMORIAL DEKALB BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8450"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23401500295569,
+          33.787254013022064
+        ]
+      },
+      "atlas_address": "F02.1331213020",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_07594e01185ff7cc3163"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3236",
+      "type": "bank_branch",
+      "name": "ROCKBRIDGE MEMORIAL BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3236"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23528502892484,
+          33.78676400696243
+        ]
+      },
+      "atlas_address": "F02.1331213020",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_787e15ead06e4c90c447"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_141ee5c9fa5446b4e90f",
+      "subject": "fdic-branch:9846:3236",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_787e15ead06e4c90c447"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_9025058c51446e96e546",
+      "subject": "fdic-branch:3510:4195",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_18393a089dec6a19ade6"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_d68e36caa9c5d5e33aba",
+      "subject": "fdic-branch:3511:8450",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_07594e01185ff7cc3163"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_d1ec84776e8a266291c3",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213020",
+      "text": "3 independent source channels address signals to this ground: epa-echo, fdic-locations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_a6a6bcda260bccf2f57b",
+        "sig_07594e01185ff7cc3163",
+        "sig_18393a089dec6a19ade6",
+        "sig_787e15ead06e4c90c447",
+        "sig_3e17398b733cc3ea737f"
+      ],
+      "derived_from": [
+        "sig_a6a6bcda260bccf2f57b",
+        "sig_07594e01185ff7cc3163",
+        "sig_18393a089dec6a19ade6",
+        "sig_787e15ead06e4c90c447",
+        "sig_3e17398b733cc3ea737f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_bdd7f8c76967ee55c322",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331213020",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_a6a6bcda260bccf2f57b"
+      ],
+      "derived_from": [
+        "sig_a6a6bcda260bccf2f57b"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.106Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

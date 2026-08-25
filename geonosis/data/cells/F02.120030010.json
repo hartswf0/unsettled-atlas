@@ -1,0 +1,1421 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.120030010",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 16,
+    "entities": 4,
+    "relations": 10,
+    "statements": 4,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 4,
+    "money.bank_branch": 4,
+    "money.branch_deposits": 3,
+    "ecology.occurrence": 3,
+    "ecology.inaturalist_observation": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 4
+  },
+  "relation_predicates": {
+    "branch_of": 7,
+    "holds_reported_deposits": 3
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 2,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_7f82b499835e41dc90b8",
+      "source": "epa-echo",
+      "source_record_id": "110030993129",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "AQUATERRA CONTRACTING INC.",
+        "address": "40 ARPENT CANAL -, CHALMETTE, LA, 70000",
+        "county": "ST. BERNARD",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 64278,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9552776305466,
+          29.9586111391604
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9552776305466,
+          29.9586111391604
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110030993129",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 57584
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_0bcc80ed09fa4c39ffa9",
+      "source": "epa-echo",
+      "source_record_id": "110003266340",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "OLIVIER-CELCURE WOOD PRESERVING CORP",
+        "address": "4300 MICHOUD BLVD, NEW ORLEANS, LA, 70129",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 1,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": "2024-03-06T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9270597508418,
+          30.0235901665102
+        ]
+      },
+      "atlas_address": "F02.1200300101",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9270597508418,
+          30.0235901665102
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003266340",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 36969
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_bea2062f8467f04efc0d",
+      "source": "epa-echo",
+      "source_record_id": "110003327506",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "U HAUL 187",
+        "address": "4445 MICHOUD BLVD, NEW ORLEANS, LA, 70129",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9274047039109,
+          30.0282621740389
+        ]
+      },
+      "atlas_address": "F02.1200300101",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9274047039109,
+          30.0282621740389
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003327506",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 42404
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_68c3827f001d5366ebc4",
+      "source": "epa-echo",
+      "source_record_id": "110071644502",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "TOMMY'S SEAFOOD INC - TOMMY'S SEAFOOD: DOLPHIN",
+        "address": "301 DOLPHIN DRIVE, CHALMETTE, LA, 70043",
+        "county": "ST. BERNARD",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 4,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9847801011076,
+          29.9355096429424
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9847801011076,
+          29.9355096429424
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071644502",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 4676
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_8562ae7ce8440a046ee0",
+      "source": "osm-notes",
+      "source_record_id": "5476187",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "There is no bridge over this canal. Charles Court stops on one side and continues separately on the other side."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.943609,
+          29.945608
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.943609,
+          29.945608
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25 03:05:20 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.354Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5476187",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-08-25 03:05:20 UTC",
+            "uid": 22529581,
+            "user": "Coco Lewie",
+            "user_url": "https://api.openstreetmap.org/user/Coco%20Lewie",
+            "action": "opened",
+            "text": "There is no bridge over this canal. Charles Court stops on one side and continues separately on the other side.",
+            "html": "<p dir=\"auto\">There is no bridge over this canal. Charles Court stops on one side and continues separately on the other side.</p>"
+          }
+        ]
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_37f7d2928542efa96384",
+      "source": "fdic-locations",
+      "source_record_id": "245635",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12441",
+        "branch_id": 273,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "PARIS ROAD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3131 Paris Rd",
+        "city": "Chalmette",
+        "state": "LA",
+        "zip": "70043",
+        "fi_uninum": 7921
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.96030502485125,
+          29.947873014001118
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.96030502485125,
+          29.947873014001118
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_639dd18be8423ca24a19",
+      "source": "fdic-locations",
+      "source_record_id": "247426",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12368",
+        "branch_id": 390,
+        "institution_name": "Regions Bank",
+        "branch_name": "PARIS RD CHALMETTE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3101 Paris Rd",
+        "city": "Chalmette",
+        "state": "LA",
+        "zip": "70043",
+        "fi_uninum": 7866
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.96051599735418,
+          29.94729001072575
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.96051599735418,
+          29.94729001072575
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_8d838be8c26ecbc727c5",
+      "source": "fdic-locations",
+      "source_record_id": "466259",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "32974",
+        "branch_id": 24,
+        "institution_name": "Gulf Coast Bank and Trust Company",
+        "branch_name": "BUSINESS CENTER BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1801 E Judge Perez Dr",
+        "city": "Chalmette",
+        "state": "LA",
+        "zip": "70043",
+        "fi_uninum": 46153
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.94703596921033,
+          29.938001017988654
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.94703596921033,
+          29.938001017988654
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_fb24a6af89ea5d01eb2e",
+      "source": "fdic-locations",
+      "source_record_id": "244761",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "628",
+        "branch_id": 2170,
+        "institution_name": "JPMorgan Chase Bank, National Association",
+        "branch_name": "WEST JUDGE PEREZ BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "9109 W Judge Perez Dr",
+        "city": "Chalmette",
+        "state": "LA",
+        "zip": "70043",
+        "fi_uninum": 417
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.97099102939059,
+          29.94866698977941
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.97099102939059,
+          29.94866698977941
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_0d738e7cd64487705704",
+      "source": "inaturalist-observations",
+      "source_record_id": "393797562",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Ludwigia",
+        "common_name": "Primrose-willows",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "casual",
+        "captive": false,
+        "obscured": false,
+        "photos": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9733519925,
+          29.9460954686
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9733519925,
+          29.9460954686
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-23T14:17:24.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.605Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393797562",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "E Claiborne Square, Chalmette, LA, US",
+        "positional_accuracy": 7
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_285b9344f83b12a44090",
+      "source": "gbif-occurrences",
+      "source_record_id": "6129932750",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Menemerus bivittatus (Dufour, 1831)",
+        "species": "Menemerus bivittatus",
+        "vernacular_name": null,
+        "taxon_key": 2169064,
+        "species_key": 2169064,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 1373,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.911431,
+          29.942108
+        ]
+      },
+      "atlas_address": "F02.1200300103",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.911431,
+          29.942108
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-22T10:04:04.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.629Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6129932750",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ec00788b4a328ead1db8",
+      "source": "gbif-occurrences",
+      "source_record_id": "6129854798",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Geothlypis trichas (Linnaeus, 1766)",
+        "species": "Geothlypis trichas",
+        "vernacular_name": null,
+        "taxon_key": 2489670,
+        "species_key": 2489670,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 1371,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.910052,
+          29.942569
+        ]
+      },
+      "atlas_address": "F02.1200300103",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.910052,
+          29.942569
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-22T09:43:43.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.628Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6129854798",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_b94bf75579a3413abffa",
+      "source": "gbif-occurrences",
+      "source_record_id": "6130057840",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Poecile carolinensis (Audubon, 1834)",
+        "species": "Poecile carolinensis",
+        "vernacular_name": null,
+        "taxon_key": 2487844,
+        "species_key": 2487844,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 29433,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.928775,
+          29.932194
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.928775,
+          29.932194
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-09T10:50:35.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.630Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6130057840",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_2ebfb303e56cc1a93844",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12441:273",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12441,
+        "branch_id": 273,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "Paris Road Branch",
+        "deposits_usd": 80692000,
+        "address": "3131 Paris Rd",
+        "city": "Chalmette",
+        "state": "LA",
+        "zip": "70043"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9603050248513,
+          29.9478730140011
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9603050248513,
+          29.9478730140011
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.772Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_c1f28395979d4c385eb0",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:390",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 390,
+        "institution_name": "Regions Bank",
+        "branch_name": "Paris Rd Chalmette Branch",
+        "deposits_usd": 156784000,
+        "address": "3101 Paris Rd",
+        "city": "Chalmette",
+        "state": "LA",
+        "zip": "70043"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9605159973542,
+          29.9472900107258
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9605159973542,
+          29.9472900107258
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.771Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f00ba0bf11e76e143db9",
+      "source": "fdic-sod",
+      "source_record_id": "2025:32974:24",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 32974,
+        "branch_id": 24,
+        "institution_name": "Gulf Coast Bank and Trust Company",
+        "branch_name": "Business Center Branch",
+        "deposits_usd": 75638000,
+        "address": "1801 E Judge Perez Dr",
+        "city": "Chalmette",
+        "state": "LA",
+        "zip": "70043"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9470359692103,
+          29.9380010179887
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9470359692103,
+          29.9380010179887
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.776Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:390",
+      "type": "bank_branch",
+      "name": "PARIS RD CHALMETTE BRANCH",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "390"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.96051599735418,
+          29.94729001072575
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_639dd18be8423ca24a19",
+        "sig_c1f28395979d4c385eb0"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:12441:273",
+      "type": "bank_branch",
+      "name": "PARIS ROAD BRANCH",
+      "identifiers": {
+        "fdic_cert": "12441",
+        "branch_id": "273"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.96030502485125,
+          29.947873014001118
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_37f7d2928542efa96384",
+        "sig_2ebfb303e56cc1a93844"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:32974:24",
+      "type": "bank_branch",
+      "name": "BUSINESS CENTER BRANCH",
+      "identifiers": {
+        "fdic_cert": "32974",
+        "branch_id": "24"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.94703596921033,
+          29.938001017988654
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_8d838be8c26ecbc727c5",
+        "sig_f00ba0bf11e76e143db9"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:628:2170",
+      "type": "bank_branch",
+      "name": "WEST JUDGE PEREZ BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "2170"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.97099102939059,
+          29.94866698977941
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_fb24a6af89ea5d01eb2e"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_54c351c542ba61135950",
+      "subject": "fdic-branch:12368:390",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 156784000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c1f28395979d4c385eb0"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_986630c27027e6255ab9",
+      "subject": "fdic-branch:32974:24",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:32974",
+      "value": {
+        "amount_usd": 75638000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f00ba0bf11e76e143db9"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_ed4482af5032438ef86a",
+      "subject": "fdic-branch:12441:273",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12441",
+      "value": {
+        "amount_usd": 80692000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_2ebfb303e56cc1a93844"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_54854f2a39e6e8fc74bf",
+      "subject": "fdic-branch:32974:24",
+      "predicate": "branch_of",
+      "object": "fdic:32974",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f00ba0bf11e76e143db9"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_7a8f88a97f47b84e4f3b",
+      "subject": "fdic-branch:12441:273",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_37f7d2928542efa96384"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_9bfe5b1a12ffd79b646a",
+      "subject": "fdic-branch:628:2170",
+      "predicate": "branch_of",
+      "object": "fdic:628",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_fb24a6af89ea5d01eb2e"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_af926c30ed0f30e96ddd",
+      "subject": "fdic-branch:12368:390",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_639dd18be8423ca24a19"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_c75e0e0c514e953565b3",
+      "subject": "fdic-branch:12368:390",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c1f28395979d4c385eb0"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_d27bb014f6b7774069e8",
+      "subject": "fdic-branch:12441:273",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_2ebfb303e56cc1a93844"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_e1616d4cd31a62d3794c",
+      "subject": "fdic-branch:32974:24",
+      "predicate": "branch_of",
+      "object": "fdic:32974",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8d838be8c26ecbc727c5"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_12129319e39882180bfe",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200300102",
+      "text": "6 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_68c3827f001d5366ebc4",
+        "sig_7f82b499835e41dc90b8",
+        "sig_37f7d2928542efa96384",
+        "sig_639dd18be8423ca24a19",
+        "sig_8d838be8c26ecbc727c5",
+        "sig_fb24a6af89ea5d01eb2e",
+        "sig_2ebfb303e56cc1a93844",
+        "sig_c1f28395979d4c385eb0",
+        "sig_f00ba0bf11e76e143db9",
+        "sig_b94bf75579a3413abffa",
+        "sig_0d738e7cd64487705704",
+        "sig_8562ae7ce8440a046ee0"
+      ],
+      "derived_from": [
+        "sig_68c3827f001d5366ebc4",
+        "sig_7f82b499835e41dc90b8",
+        "sig_37f7d2928542efa96384",
+        "sig_639dd18be8423ca24a19",
+        "sig_8d838be8c26ecbc727c5",
+        "sig_fb24a6af89ea5d01eb2e",
+        "sig_2ebfb303e56cc1a93844",
+        "sig_c1f28395979d4c385eb0",
+        "sig_f00ba0bf11e76e143db9",
+        "sig_b94bf75579a3413abffa",
+        "sig_0d738e7cd64487705704",
+        "sig_8562ae7ce8440a046ee0"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_9ae5190e1c05ba2d995a",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200300102",
+      "text": "2 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_68c3827f001d5366ebc4",
+        "sig_7f82b499835e41dc90b8"
+      ],
+      "derived_from": [
+        "sig_68c3827f001d5366ebc4",
+        "sig_7f82b499835e41dc90b8"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.41000000000000003,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1638
+    },
+    {
+      "id": "stmt_cda10e2c3268320ff848",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200300101",
+      "text": "2 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_0bcc80ed09fa4c39ffa9",
+        "sig_bea2062f8467f04efc0d"
+      ],
+      "derived_from": [
+        "sig_0bcc80ed09fa4c39ffa9",
+        "sig_bea2062f8467f04efc0d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.41000000000000003,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1638
+    },
+    {
+      "id": "stmt_cb7a1634bced067327db",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200300102",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $313,114,000 held across 3 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_c1f28395979d4c385eb0",
+        "sig_f00ba0bf11e76e143db9",
+        "sig_2ebfb303e56cc1a93844"
+      ],
+      "derived_from": [
+        "sig_c1f28395979d4c385eb0",
+        "sig_f00ba0bf11e76e143db9",
+        "sig_2ebfb303e56cc1a93844"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.4,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1437
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.057Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

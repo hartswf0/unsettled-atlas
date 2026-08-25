@@ -1,0 +1,1401 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211000",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "nps-national-register",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 13,
+    "entities": 10,
+    "relations": 18,
+    "statements": 2,
+    "direct_signals": 13,
+    "direct_entities": 10,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "money.bank_branch": 4,
+    "money.branch_deposits": 7,
+    "memory.national_register_resource": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 10
+  },
+  "relation_predicates": {
+    "branch_of": 11,
+    "holds_reported_deposits": 7
+  },
+  "statement_kinds": {
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_4612b340a733a0c45e4e",
+      "source": "fdic-locations",
+      "source_record_id": "1406",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12368",
+        "branch_id": 423,
+        "institution_name": "Regions Bank",
+        "branch_name": "DUNWOODY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1457 Mount Vernon Rd",
+        "city": "Dunwoody",
+        "state": "GA",
+        "zip": "30338",
+        "fi_uninum": 7866
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.338419988909,
+          33.94285801050387
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.338419988909,
+          33.94285801050387
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_559b1447d8f7051d8833",
+      "source": "fdic-locations",
+      "source_record_id": "191815",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4190,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "PERIMETER CENTER BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1 Perimeter Ctr E",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30346",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.33654202350255,
+          33.92591701071984
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.33654202350255,
+          33.92591701071984
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_68d44f4857861128da54",
+      "source": "fdic-locations",
+      "source_record_id": "186353",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3276,
+        "institution_name": "Truist Bank",
+        "branch_name": "DUNWOODY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5490 Chamblee Dunwoody Rd",
+        "city": "Dunwoody",
+        "state": "GA",
+        "zip": "30338",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.33626097828908,
+          33.94815202054947
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.33626097828908,
+          33.94815202054947
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a4ad07682aa1b8dac1c1",
+      "source": "fdic-locations",
+      "source_record_id": "186339",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3252,
+        "institution_name": "Truist Bank",
+        "branch_name": "PERIMETER CENTER REGIONAL BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "121 Perimeter Ctr W",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30346",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.34287103095225,
+          33.927548003349244
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.34287103095225,
+          33.927548003349244
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f2168c27c7d3a6f3aba4",
+      "source": "osm-notes",
+      "source_record_id": "5464675",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Is this one pointed at the neighborhood?"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3493486,
+          33.9363471
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3493486,
+          33.9363471
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-19 00:25:02 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5464675",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-08-19 00:25:02 UTC",
+            "action": "opened",
+            "text": "Is this one pointed at the neighborhood?",
+            "html": "<p dir=\"auto\">Is this one pointed at the neighborhood?</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_04cf387328e5f2f97652",
+      "source": "fdic-sod",
+      "source_record_id": "2025:11063:776",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 11063,
+        "branch_id": 776,
+        "institution_name": "First-Citizens Bank & Trust Company",
+        "branch_name": "Atlanta Dunwoody Branch",
+        "deposits_usd": 126147000,
+        "address": "5571 Chamblee Dunwoody Rd",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30338"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3358139713927,
+          33.9497690154006
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3358139713927,
+          33.9497690154006
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.324Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1542ee09a16e65cf354d",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:200",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 200,
+        "institution_name": "Renasant Bank",
+        "branch_name": "Dunwoody Branch",
+        "deposits_usd": 38921000,
+        "address": "1449 Dunwoody Village Pkwy",
+        "city": "Dunwoody",
+        "state": "GA",
+        "zip": "30338"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3327760344058,
+          33.9486999874696
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3327760344058,
+          33.9486999874696
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_3d72d9fd5189be178b1e",
+      "source": "fdic-sod",
+      "source_record_id": "2025:22858:390",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 22858,
+        "branch_id": 390,
+        "institution_name": "United Bank",
+        "branch_name": "Dunwoody Branch",
+        "deposits_usd": 109908000,
+        "address": "1725 Mount Vernon Rd",
+        "city": "Dunwoody",
+        "state": "GA",
+        "zip": "30338"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3294839581146,
+          33.9467809926471
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3294839581146,
+          33.9467809926471
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.330Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6ce991dcecd1606f89de",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20845:17",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20845,
+        "branch_id": 17,
+        "institution_name": "Wallis Bank",
+        "branch_name": "Dunwoody Branch",
+        "deposits_usd": 86870000,
+        "address": "1710 Mount Vernon Rd",
+        "city": "Dunwoody",
+        "state": "GA",
+        "zip": "30338"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3313159906917,
+          33.9472979884349
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3313159906917,
+          33.9472979884349
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.330Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_72479339d59d0f434861",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:210",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 210,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Dunwoody Branch",
+        "deposits_usd": 116626000,
+        "address": "1425 Dunwoody Village Pkwy",
+        "city": "Dunwoody",
+        "state": "GA",
+        "zip": "30338"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3334409707847,
+          33.9492430090668
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3334409707847,
+          33.9492430090668
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_d16ef2ae8ab0d2215cba",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:423",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 423,
+        "institution_name": "Regions Bank",
+        "branch_name": "Dunwoody Branch",
+        "deposits_usd": 52424000,
+        "address": "1457 Mount Vernon Rd",
+        "city": "Dunwoody",
+        "state": "GA",
+        "zip": "30338"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.338419988909,
+          33.9428580105039
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.338419988909,
+          33.9428580105039
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f79dd34fc030d724eca4",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:221",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 221,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Perimeter Center West Branch",
+        "deposits_usd": 466692000,
+        "address": "135 Perimeter Ctr W",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30346"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3469629922635,
+          33.9300170186581
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3469629922635,
+          33.9300170186581
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0424ae93e30486c2cfd2",
+      "source": "nps-national-register",
+      "source_record_id": "00000639",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Cheek--Spruill House",
+        "resource_type": "building",
+        "address": "5455 Chamblee--Dunwoody Rd.",
+        "city": "Dunwoody",
+        "county": "De Kalb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.33411910499996,
+          33.94829856400003
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.33411910499996,
+          33.94829856400003
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "2000-06-09T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.067Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{9C27CF47-C1E6-403A-8297-AEBF67B2F8CA}",
+        "src_date": 960508800000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:11063:776",
+      "type": "bank_branch",
+      "name": "Atlanta Dunwoody Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "776"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3358139713927,
+          33.9497690154006
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_04cf387328e5f2f97652"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12368:423",
+      "type": "bank_branch",
+      "name": "DUNWOODY BRANCH",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "423"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.338419988909,
+          33.94285801050387
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4612b340a733a0c45e4e",
+        "sig_d16ef2ae8ab0d2215cba"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12437:200",
+      "type": "bank_branch",
+      "name": "Dunwoody Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "200"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3327760344058,
+          33.9486999874696
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_1542ee09a16e65cf354d"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:210",
+      "type": "bank_branch",
+      "name": "Dunwoody Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "210"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3334409707847,
+          33.9492430090668
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_72479339d59d0f434861"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:221",
+      "type": "bank_branch",
+      "name": "Perimeter Center West Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "221"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3469629922635,
+          33.9300170186581
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f79dd34fc030d724eca4"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20845:17",
+      "type": "bank_branch",
+      "name": "Dunwoody Branch",
+      "identifiers": {
+        "fdic_cert": "20845",
+        "branch_id": "17"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3313159906917,
+          33.9472979884349
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_6ce991dcecd1606f89de"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:22858:390",
+      "type": "bank_branch",
+      "name": "Dunwoody Branch",
+      "identifiers": {
+        "fdic_cert": "22858",
+        "branch_id": "390"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3294839581146,
+          33.9467809926471
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_3d72d9fd5189be178b1e"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4190",
+      "type": "bank_branch",
+      "name": "PERIMETER CENTER BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4190"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.33654202350255,
+          33.92591701071984
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_559b1447d8f7051d8833"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3252",
+      "type": "bank_branch",
+      "name": "PERIMETER CENTER REGIONAL BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3252"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.34287103095225,
+          33.927548003349244
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_a4ad07682aa1b8dac1c1"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3276",
+      "type": "bank_branch",
+      "name": "DUNWOODY BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3276"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.33626097828908,
+          33.94815202054947
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_68d44f4857861128da54"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_36276ac02d77408a4e05",
+      "subject": "fdic-branch:11063:776",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:11063",
+      "value": {
+        "amount_usd": 126147000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_04cf387328e5f2f97652"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_5922a5fdec725346b865",
+      "subject": "fdic-branch:20845:17",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20845",
+      "value": {
+        "amount_usd": 86870000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_6ce991dcecd1606f89de"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_999746a91ac143b06c32",
+      "subject": "fdic-branch:22858:390",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:22858",
+      "value": {
+        "amount_usd": 109908000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_3d72d9fd5189be178b1e"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_a12d2601aebfa5f4db53",
+      "subject": "fdic-branch:20504:221",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 466692000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f79dd34fc030d724eca4"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_aaa6b693d2a80590770e",
+      "subject": "fdic-branch:20504:210",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 116626000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_72479339d59d0f434861"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_e137f8b064a3c030c359",
+      "subject": "fdic-branch:12437:200",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 38921000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1542ee09a16e65cf354d"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f9a1963c4548652682bc",
+      "subject": "fdic-branch:12368:423",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 52424000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d16ef2ae8ab0d2215cba"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_0076aeef7e1c69c32f65",
+      "subject": "fdic-branch:3510:4190",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_559b1447d8f7051d8833"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_1f8f8f2d49189e991862",
+      "subject": "fdic-branch:20504:221",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f79dd34fc030d724eca4"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_201c08821f0809eb775d",
+      "subject": "fdic-branch:11063:776",
+      "predicate": "branch_of",
+      "object": "fdic:11063",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_04cf387328e5f2f97652"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_344915b2bb329559721b",
+      "subject": "fdic-branch:9846:3252",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a4ad07682aa1b8dac1c1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_5fb7d4804cc749c701a3",
+      "subject": "fdic-branch:12437:200",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1542ee09a16e65cf354d"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_7114144774ebbebd94ff",
+      "subject": "fdic-branch:9846:3276",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_68d44f4857861128da54"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_867a2d4abdc67a2f4f8c",
+      "subject": "fdic-branch:12368:423",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d16ef2ae8ab0d2215cba"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_a315f31578d3fb73e202",
+      "subject": "fdic-branch:20845:17",
+      "predicate": "branch_of",
+      "object": "fdic:20845",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_6ce991dcecd1606f89de"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_a43f8bb957e638eebf7d",
+      "subject": "fdic-branch:22858:390",
+      "predicate": "branch_of",
+      "object": "fdic:22858",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_3d72d9fd5189be178b1e"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_ea3e0221913f73f89ec4",
+      "subject": "fdic-branch:12368:423",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4612b340a733a0c45e4e"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f47d15c2f52918b1f84a",
+      "subject": "fdic-branch:20504:210",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_72479339d59d0f434861"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_9b53d00ef6d21d401a11",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331211000",
+      "text": "4 independent source channels address signals to this ground: fdic-locations, fdic-sod, nps-national-register, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4612b340a733a0c45e4e",
+        "sig_559b1447d8f7051d8833",
+        "sig_68d44f4857861128da54",
+        "sig_a4ad07682aa1b8dac1c1",
+        "sig_04cf387328e5f2f97652",
+        "sig_1542ee09a16e65cf354d",
+        "sig_3d72d9fd5189be178b1e",
+        "sig_6ce991dcecd1606f89de",
+        "sig_72479339d59d0f434861",
+        "sig_d16ef2ae8ab0d2215cba",
+        "sig_f79dd34fc030d724eca4",
+        "sig_0424ae93e30486c2cfd2",
+        "sig_f2168c27c7d3a6f3aba4"
+      ],
+      "derived_from": [
+        "sig_4612b340a733a0c45e4e",
+        "sig_559b1447d8f7051d8833",
+        "sig_68d44f4857861128da54",
+        "sig_a4ad07682aa1b8dac1c1",
+        "sig_04cf387328e5f2f97652",
+        "sig_1542ee09a16e65cf354d",
+        "sig_3d72d9fd5189be178b1e",
+        "sig_6ce991dcecd1606f89de",
+        "sig_72479339d59d0f434861",
+        "sig_d16ef2ae8ab0d2215cba",
+        "sig_f79dd34fc030d724eca4",
+        "sig_0424ae93e30486c2cfd2",
+        "sig_f2168c27c7d3a6f3aba4"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.8,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1813
+    },
+    {
+      "id": "stmt_34b573e2d1d707071a28",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211000",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $997,588,000 held across 7 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_04cf387328e5f2f97652",
+        "sig_6ce991dcecd1606f89de",
+        "sig_3d72d9fd5189be178b1e",
+        "sig_f79dd34fc030d724eca4",
+        "sig_72479339d59d0f434861",
+        "sig_1542ee09a16e65cf354d",
+        "sig_d16ef2ae8ab0d2215cba"
+      ],
+      "derived_from": [
+        "sig_04cf387328e5f2f97652",
+        "sig_6ce991dcecd1606f89de",
+        "sig_3d72d9fd5189be178b1e",
+        "sig_f79dd34fc030d724eca4",
+        "sig_72479339d59d0f434861",
+        "sig_1542ee09a16e65cf354d",
+        "sig_d16ef2ae8ab0d2215cba"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.6000000000000001,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1688
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.093Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

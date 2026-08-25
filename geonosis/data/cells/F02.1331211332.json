@@ -1,0 +1,311 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211332",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "gbif-occurrences",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 1,
+    "relations": 1,
+    "statements": 1,
+    "direct_signals": 3,
+    "direct_entities": 1,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "ecology.occurrence": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 1
+  },
+  "statement_kinds": {
+    "multi_source_activity": 1
+  },
+  "signals": [
+    {
+      "id": "sig_e6daf921909033b4b95e",
+      "source": "fdic-locations",
+      "source_record_id": "191713",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4590,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "MABLETON BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5353 Floyd Rd Sw",
+        "city": "Mableton",
+        "state": "GA",
+        "zip": "30126",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.57485403147287,
+          33.823027011855984
+        ]
+      },
+      "atlas_address": "F02.1331211332",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.57485403147287,
+          33.823027011855984
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f1c223a680fd991f05dd",
+      "source": "osm-notes",
+      "source_record_id": "5133722",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 3,
+        "latest": "Some houses are visible on Esri now"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5722318,
+          33.8067253
+        ]
+      },
+      "atlas_address": "F02.1331211332",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5722318,
+          33.8067253
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-18 12:13:42 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5133722",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-01-18 12:13:43 UTC",
+            "action": "opened",
+            "text": "This is a new development and this part of Knickerbocker is missing from the map. This 6072 Knickerbocker St., Mableton, GA 30126.",
+            "html": "<p dir=\"auto\">This is a new development and this part of Knickerbocker is missing from the map. This 6072 Knickerbocker St., Mableton, GA 30126.</p>"
+          },
+          {
+            "date": "2026-01-18 17:06:35 UTC",
+            "uid": 23082099,
+            "user": "weblogdryads",
+            "user_url": "https://api.openstreetmap.org/user/weblogdryads",
+            "action": "commented",
+            "text": "development not avalible yet on imagery",
+            "html": "<p dir=\"auto\">development not avalible yet on imagery</p>"
+          },
+          {
+            "date": "2026-08-22 21:15:41 UTC",
+            "uid": 83188,
+            "user": "dannmer",
+            "user_url": "https://api.openstreetmap.org/user/dannmer",
+            "action": "commented",
+            "text": "Some houses are visible on Esri now",
+            "html": "<p dir=\"auto\">Some houses are visible on Esri now</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ea229121e661cdeadcbe",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938331520",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Halyomorpha halys (Stål, 1855)",
+        "species": "Halyomorpha halys",
+        "vernacular_name": null,
+        "taxon_key": 4485843,
+        "species_key": 4485843,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 28902,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.606238,
+          33.818849
+        ]
+      },
+      "atlas_address": "F02.1331211332",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.606238,
+          33.818849
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T11:18:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938331520",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3510:4590",
+      "type": "bank_branch",
+      "name": "MABLETON BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4590"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.57485403147287,
+          33.823027011855984
+        ]
+      },
+      "atlas_address": "F02.1331211332",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_e6daf921909033b4b95e"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_ba338f55ada4b03aba2c",
+      "subject": "fdic-branch:3510:4590",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e6daf921909033b4b95e"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_9951467db6f4074c52d7",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331211332",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, gbif-occurrences, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_e6daf921909033b4b95e",
+        "sig_ea229121e661cdeadcbe",
+        "sig_f1c223a680fd991f05dd"
+      ],
+      "derived_from": [
+        "sig_e6daf921909033b4b95e",
+        "sig_ea229121e661cdeadcbe",
+        "sig_f1c223a680fd991f05dd"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.099Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

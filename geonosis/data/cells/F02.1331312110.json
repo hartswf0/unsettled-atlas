@@ -1,0 +1,579 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331312110",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "inaturalist-observations"
+  ],
+  "counts": {
+    "signals": 5,
+    "entities": 4,
+    "relations": 6,
+    "statements": 2,
+    "direct_signals": 5,
+    "direct_entities": 4,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "money.bank_branch": 2,
+    "money.branch_deposits": 2,
+    "ecology.inaturalist_observation": 1
+  },
+  "entity_types": {
+    "bank_branch": 4
+  },
+  "relation_predicates": {
+    "branch_of": 4,
+    "holds_reported_deposits": 2
+  },
+  "statement_kinds": {
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_31c4fef6b98c726bd10a",
+      "source": "inaturalist-observations",
+      "source_record_id": "394270596",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Spodoptera dolichos",
+        "common_name": "Sweet Potato Armyworm Moth",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2213134766,
+          34.0511932373
+        ]
+      },
+      "atlas_address": "F02.1331312110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2213134766,
+          34.0511932373
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T23:43:13.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394270596",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Johns Creek",
+        "positional_accuracy": null
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_2cf5fea2ce43523f298b",
+      "source": "fdic-locations",
+      "source_record_id": "191904",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4289,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "JONES BRIDGE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "10950 Jones Bridge Rd",
+        "city": "Alpharetta",
+        "state": "GA",
+        "zip": "30022",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.22271762239873,
+          34.048149047441854
+        ]
+      },
+      "atlas_address": "F02.1331312110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.22271762239873,
+          34.048149047441854
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b8fabf5ce801a834c471",
+      "source": "fdic-locations",
+      "source_record_id": "186346",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3273,
+        "institution_name": "Truist Bank",
+        "branch_name": "HAYNES BRIDGE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "9919 Haynes Bridge Rd",
+        "city": "Alpharetta",
+        "state": "GA",
+        "zip": "30022",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.26943164517611,
+          34.02258382366159
+        ]
+      },
+      "atlas_address": "F02.1331312110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.26943164517611,
+          34.02258382366159
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1304a1afb6a43ed29403",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:198",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 198,
+        "institution_name": "Renasant Bank",
+        "branch_name": "Alpharetta Haynes Bridge Village Branch",
+        "deposits_usd": 80918000,
+        "address": "9925 Haynes Bridge Rd, Ste 100",
+        "city": "Johns Creek",
+        "state": "GA",
+        "zip": "30022"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2677069847787,
+          34.0227116057755
+        ]
+      },
+      "atlas_address": "F02.1331312110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2677069847787,
+          34.0227116057755
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f61656ad1c1ebdf3d673",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:229",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 229,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Jones Bridge Branch",
+        "deposits_usd": 60836000,
+        "address": "10905 Jones Bridge Rd",
+        "city": "Johns Creek",
+        "state": "GA",
+        "zip": "30022"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2224259321682,
+          34.0466519976252
+        ]
+      },
+      "atlas_address": "F02.1331312110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2224259321682,
+          34.0466519976252
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12437:198",
+      "type": "bank_branch",
+      "name": "Alpharetta Haynes Bridge Village Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "198"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2677069847787,
+          34.0227116057755
+        ]
+      },
+      "atlas_address": "F02.1331312110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_1304a1afb6a43ed29403"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:229",
+      "type": "bank_branch",
+      "name": "Jones Bridge Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "229"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2224259321682,
+          34.0466519976252
+        ]
+      },
+      "atlas_address": "F02.1331312110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f61656ad1c1ebdf3d673"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4289",
+      "type": "bank_branch",
+      "name": "JONES BRIDGE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4289"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.22271762239873,
+          34.048149047441854
+        ]
+      },
+      "atlas_address": "F02.1331312110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_2cf5fea2ce43523f298b"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3273",
+      "type": "bank_branch",
+      "name": "HAYNES BRIDGE BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3273"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.26943164517611,
+          34.02258382366159
+        ]
+      },
+      "atlas_address": "F02.1331312110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b8fabf5ce801a834c471"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_3f94fa9eccde76bd99a2",
+      "subject": "fdic-branch:20504:229",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 60836000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f61656ad1c1ebdf3d673"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_6009b9734672b7b54c3c",
+      "subject": "fdic-branch:12437:198",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 80918000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1304a1afb6a43ed29403"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_2c85ad0d51e8c42be0a5",
+      "subject": "fdic-branch:9846:3273",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b8fabf5ce801a834c471"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_49fc5ca5709848f1eb33",
+      "subject": "fdic-branch:20504:229",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f61656ad1c1ebdf3d673"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_561c8b77e847ea998592",
+      "subject": "fdic-branch:3510:4289",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_2cf5fea2ce43523f298b"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_63e76910bc90489e1d2d",
+      "subject": "fdic-branch:12437:198",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1304a1afb6a43ed29403"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_54c79370a8781b624e02",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331312110",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, fdic-sod, inaturalist-observations.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_2cf5fea2ce43523f298b",
+        "sig_b8fabf5ce801a834c471",
+        "sig_1304a1afb6a43ed29403",
+        "sig_f61656ad1c1ebdf3d673",
+        "sig_31c4fef6b98c726bd10a"
+      ],
+      "derived_from": [
+        "sig_2cf5fea2ce43523f298b",
+        "sig_b8fabf5ce801a834c471",
+        "sig_1304a1afb6a43ed29403",
+        "sig_f61656ad1c1ebdf3d673",
+        "sig_31c4fef6b98c726bd10a"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_24873d4ccc7c3ecec6eb",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331312110",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $141,754,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_f61656ad1c1ebdf3d673",
+        "sig_1304a1afb6a43ed29403"
+      ],
+      "derived_from": [
+        "sig_f61656ad1c1ebdf3d673",
+        "sig_1304a1afb6a43ed29403"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1375
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.113Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

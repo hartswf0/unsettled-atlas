@@ -1,0 +1,350 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.133121320",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 4,
+    "entities": 0,
+    "relations": 0,
+    "statements": 2,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "ecology.inaturalist_observation": 1,
+    "memory.national_register_resource": 1,
+    "ecology.occurrence": 1
+  },
+  "entity_types": {},
+  "relation_predicates": {},
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1
+  },
+  "signals": [
+    {
+      "id": "sig_56fc4f5e0f22d25dfb73",
+      "source": "epa-echo",
+      "source_record_id": "110070544925",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "THE PARKS OF STONECREST PODE  LOT 28A",
+        "address": "7372 WATER WILLOW WAY, CONYERS, GA, 30094",
+        "county": "ROCKDALE COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 99999999,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0895492181466,
+          33.6716978667053
+        ]
+      },
+      "atlas_address": "F02.1331213200",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0895492181466,
+          33.6716978667053
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070544925",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 6389
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8027e9e5374b8d8603f2",
+      "source": "inaturalist-observations",
+      "source_record_id": "394294857",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Meleagris gallopavo",
+        "common_name": "Wild Turkey",
+        "iconic_taxon": "Aves",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1123583333,
+          33.68372
+        ]
+      },
+      "atlas_address": "F02.1331213200",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1123583333,
+          33.68372
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25T01:38:06.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394294857",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Plunkett Rd, Stonecrest, GA, US",
+        "positional_accuracy": 20
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ebf7d96fe17d8d49d6b6",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938233698",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Diphasiastrum digitatum (Dill. ex A.Braun) Holub",
+        "species": "Diphasiastrum digitatum",
+        "vernacular_name": null,
+        "taxon_key": 2688379,
+        "species_key": 2688379,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 28930,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.119422,
+          33.632692
+        ]
+      },
+      "atlas_address": "F02.1331213201",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.119422,
+          33.632692
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T10:38:47.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938233698",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_cc1787ab24ef52fed678",
+      "source": "nps-national-register",
+      "source_record_id": "78003097",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Seminary, The",
+        "resource_type": "building",
+        "address": "6886 Main St.",
+        "city": "Lithonia",
+        "county": "De Kalb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.10958158099999,
+          33.71001563600004
+        ]
+      },
+      "atlas_address": "F02.1331213200",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.10958158099999,
+          33.71001563600004
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1978-11-15T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.064Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{FA846C34-4A65-46B2-A1E8-EA6FF789B478}",
+        "src_date": 279936000000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [],
+  "relations": [],
+  "statements": [
+    {
+      "id": "stmt_b43acd7c6d1180f11ab9",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213200",
+      "text": "3 independent source channels address signals to this ground: epa-echo, inaturalist-observations, nps-national-register.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_56fc4f5e0f22d25dfb73",
+        "sig_8027e9e5374b8d8603f2",
+        "sig_cc1787ab24ef52fed678"
+      ],
+      "derived_from": [
+        "sig_56fc4f5e0f22d25dfb73",
+        "sig_8027e9e5374b8d8603f2",
+        "sig_cc1787ab24ef52fed678"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_f44ead57ed3ac3bce0c0",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331213200",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_56fc4f5e0f22d25dfb73"
+      ],
+      "derived_from": [
+        "sig_56fc4f5e0f22d25dfb73"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.073Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

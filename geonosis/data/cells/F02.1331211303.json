@@ -1,0 +1,876 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211303",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 10,
+    "entities": 2,
+    "relations": 3,
+    "statements": 3,
+    "direct_signals": 10,
+    "direct_entities": 2,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 1,
+    "ecology.occurrence": 6,
+    "ecology.inaturalist_observation": 1,
+    "memory.national_register_resource": 1
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "ecological_observation_density": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_cd8a5c359bd113091dd9",
+      "source": "inaturalist-observations",
+      "source_record_id": "394250188",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Trichonephila clavata",
+        "common_name": "Joro Spider",
+        "iconic_taxon": "Arachnida",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.613494873,
+          33.8744850159
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.613494873,
+          33.8744850159
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:30:46.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394250188",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Marietta",
+        "positional_accuracy": 5
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_af99ae2951bb79a56c67",
+      "source": "fdic-locations",
+      "source_record_id": "247150",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 7085,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "AUSTELL ROAD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4046 Austell Rd",
+        "city": "Austell",
+        "state": "GA",
+        "zip": "30106",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6028309802538,
+          33.85574501653004
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.6028309802538,
+          33.85574501653004
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a630ff998a98930e6b4a",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938223633",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Spizella passerina (Bechstein, 1798)",
+        "species": "Spizella passerina",
+        "vernacular_name": null,
+        "taxon_key": 2492109,
+        "species_key": 2492109,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.604358,
+          33.873694
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.604358,
+          33.873694
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T15:53:02.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938223633",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_83591c58e9e97ad58e8c",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938236646",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Sialia sialis (Linnaeus, 1758)",
+        "species": "Sialia sialis",
+        "vernacular_name": null,
+        "taxon_key": 2490941,
+        "species_key": 2490941,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.600078,
+          33.874919
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.600078,
+          33.874919
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T10:04:43.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938236646",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_41b50e92f8d7e0a0760a",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938028350",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Baeolophus bicolor (Linnaeus, 1766)",
+        "species": "Baeolophus bicolor",
+        "vernacular_name": null,
+        "taxon_key": 2487887,
+        "species_key": 2487887,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.600064,
+          33.874908
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.600064,
+          33.874908
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T12:11:06.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.828Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938028350",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_745db4d9081501d79c2e",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938271651",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Dryobates pubescens (Linnaeus, 1766)",
+        "species": "Dryobates pubescens",
+        "vernacular_name": null,
+        "taxon_key": 9149595,
+        "species_key": 9149595,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.600064,
+          33.874908
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.600064,
+          33.874908
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T12:11:06.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938271651",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_358addcab159824967ef",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938263745",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Spizella passerina (Bechstein, 1798)",
+        "species": "Spizella passerina",
+        "vernacular_name": null,
+        "taxon_key": 2492109,
+        "species_key": 2492109,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.604417,
+          33.873739
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.604417,
+          33.873739
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-02T15:41:43.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938263745",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4002a1f9e5d2a309286b",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938204471",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Buteo lineatus (Gmelin, 1788)",
+        "species": "Buteo lineatus",
+        "vernacular_name": null,
+        "taxon_key": 2480529,
+        "species_key": 2480529,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.600108,
+          33.874956
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.600108,
+          33.874956
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-02T09:43:53.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938204471",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e848bb73451ceaf27348",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:494",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 494,
+        "institution_name": "Regions Bank",
+        "branch_name": "Austell Branch",
+        "deposits_usd": 53506000,
+        "address": "1593 Mulkey Rd",
+        "city": "Austell",
+        "state": "GA",
+        "zip": "30106"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6013379956602,
+          33.8581660035337
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.6013379956602,
+          33.8581660035337
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f7686b59fcfe2125ed79",
+      "source": "nps-national-register",
+      "source_record_id": "79000713",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Cheney, Andrew J., House",
+        "resource_type": "building",
+        "address": "SW of Marietta at Powder Springs and Bankstone Rds.",
+        "city": "Marietta",
+        "county": "Cobb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.61844770599998,
+          33.88515883200006
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.61844770599998,
+          33.88515883200006
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1979-07-22T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.064Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{FDA65B2F-7570-4F62-A3F6-C6BEA4FD86AA}",
+        "src_date": 301449600000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:494",
+      "type": "bank_branch",
+      "name": "Austell Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "494"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6013379956602,
+          33.8581660035337
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_e848bb73451ceaf27348"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:7085",
+      "type": "bank_branch",
+      "name": "AUSTELL ROAD BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "7085"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6028309802538,
+          33.85574501653004
+        ]
+      },
+      "atlas_address": "F02.1331211303",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_af99ae2951bb79a56c67"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_47cbccb553af1217a88d",
+      "subject": "fdic-branch:12368:494",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 53506000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e848bb73451ceaf27348"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_32fe10c764ff5db29522",
+      "subject": "fdic-branch:12368:494",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e848bb73451ceaf27348"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_7a28baa20857e96cbc8e",
+      "subject": "fdic-branch:3511:7085",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_af99ae2951bb79a56c67"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_1e68bc973dbb37fcc364",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331211303",
+      "text": "5 independent source channels address signals to this ground: fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nps-national-register.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_af99ae2951bb79a56c67",
+        "sig_e848bb73451ceaf27348",
+        "sig_358addcab159824967ef",
+        "sig_4002a1f9e5d2a309286b",
+        "sig_41b50e92f8d7e0a0760a",
+        "sig_745db4d9081501d79c2e",
+        "sig_83591c58e9e97ad58e8c",
+        "sig_a630ff998a98930e6b4a",
+        "sig_cd8a5c359bd113091dd9",
+        "sig_f7686b59fcfe2125ed79"
+      ],
+      "derived_from": [
+        "sig_af99ae2951bb79a56c67",
+        "sig_e848bb73451ceaf27348",
+        "sig_358addcab159824967ef",
+        "sig_4002a1f9e5d2a309286b",
+        "sig_41b50e92f8d7e0a0760a",
+        "sig_745db4d9081501d79c2e",
+        "sig_83591c58e9e97ad58e8c",
+        "sig_a630ff998a98930e6b4a",
+        "sig_cd8a5c359bd113091dd9",
+        "sig_f7686b59fcfe2125ed79"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_53fd182be113a840dd01",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331211303",
+      "text": "7 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_358addcab159824967ef",
+        "sig_4002a1f9e5d2a309286b",
+        "sig_41b50e92f8d7e0a0760a",
+        "sig_745db4d9081501d79c2e",
+        "sig_83591c58e9e97ad58e8c",
+        "sig_a630ff998a98930e6b4a",
+        "sig_cd8a5c359bd113091dd9"
+      ],
+      "derived_from": [
+        "sig_358addcab159824967ef",
+        "sig_4002a1f9e5d2a309286b",
+        "sig_41b50e92f8d7e0a0760a",
+        "sig_745db4d9081501d79c2e",
+        "sig_83591c58e9e97ad58e8c",
+        "sig_a630ff998a98930e6b4a",
+        "sig_cd8a5c359bd113091dd9"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 0.35
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1833
+    },
+    {
+      "id": "stmt_efa737541c781da1ecc2",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211303",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $53,506,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_e848bb73451ceaf27348"
+      ],
+      "derived_from": [
+        "sig_e848bb73451ceaf27348"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.098Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

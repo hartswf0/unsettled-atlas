@@ -1,0 +1,1225 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213030",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "atlanta-rezoning-cases",
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 13,
+    "entities": 5,
+    "relations": 6,
+    "statements": 4,
+    "direct_signals": 13,
+    "direct_entities": 5,
+    "direct_statements": 4
+  },
+  "signal_predicates": {
+    "change.rezoning_case": 2,
+    "money.bank_branch": 4,
+    "money.branch_deposits": 1,
+    "ecology.occurrence": 3,
+    "ecology.inaturalist_observation": 2,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 5
+  },
+  "relation_predicates": {
+    "branch_of": 5,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "ecological_observation_density": 1,
+    "building_change_activity": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_f891a89e9f58718df944",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{D2F82B38-6373-4FA4-AB60-B41B94410042}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-06-039",
+        "from_zone": "R3",
+        "to_zone": "RG-2-C",
+        "status": "COMPLETE",
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": "06-O-0952",
+        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/06o0952.pdf",
+        "acres": 3.57609805
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.36006349491879,
+              33.829945627089884
+            ],
+            [
+              -84.35999422041671,
+              33.829648011758
+            ],
+            [
+              -84.35991858842145,
+              33.829573699539694
+            ],
+            [
+              -84.35960962472082,
+              33.82946539990585
+            ],
+            [
+              -84.3582094481537,
+              33.82867900598054
+            ],
+            [
+              -84.35820509617595,
+              33.82890272343934
+            ],
+            [
+              -84.35819262250297,
+              33.82995422464668
+            ],
+            [
+              -84.36006349491879,
+              33.829945627089884
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.35891819035962,
+          33.82951380237576
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ecb0621d90ae26eeb657",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{B621DB23-3087-4C45-A95D-86686ADBF4AB}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-06-041",
+        "from_zone": "RLC",
+        "to_zone": "RLC-C",
+        "status": "COMPLETE",
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": "06-O-0954",
+        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/06o0954.pdf",
+        "acres": 0.31406778
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.35333240866784,
+              33.81960566856602
+            ],
+            [
+              -84.35357868841567,
+              33.81913116307959
+            ],
+            [
+              -84.35360597272273,
+              33.81907871443739
+            ],
+            [
+              -84.35340729494588,
+              33.81901300678758
+            ],
+            [
+              -84.35338057468044,
+              33.819063582714946
+            ],
+            [
+              -84.35313019426883,
+              33.81953750433567
+            ],
+            [
+              -84.35333240866784,
+              33.81960566856602
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.35336851586327,
+          33.819309636775294
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.217Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_bc4dc5aab9aa6b8f1960",
+      "source": "inaturalist-observations",
+      "source_record_id": "394380030",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Teucrium canadense",
+        "common_name": "American germander",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.307969254,
+          33.8161952826
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.307969254,
+          33.8161952826
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25T12:16:57.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.677Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394380030",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "N Druid Hills Rd NE @ 2960, North Druid Hills, GA 30329, USA",
+        "positional_accuracy": 3
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_2026e9c971bcf72ed890",
+      "source": "inaturalist-observations",
+      "source_record_id": "394245769",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Abacidus",
+        "common_name": null,
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3247472222,
+          33.7914444444
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3247472222,
+          33.7914444444
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:28:46.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394245769",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Atlanta, GA 30307, USA",
+        "positional_accuracy": null
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0f62c7b4d03edb937ba8",
+      "source": "fdic-locations",
+      "source_record_id": "186326",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3243,
+        "institution_name": "Truist Bank",
+        "branch_name": "EMORY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1685 N Decatur Rd Ne",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30307",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.32145803436705,
+          33.78828901042617
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.32145803436705,
+          33.78828901042617
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4e23834c2ea27c6cd3fc",
+      "source": "fdic-locations",
+      "source_record_id": "191417",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8456,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "BRIARCLIFF - CLAIRMONT BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2725 Clairmont Rd Ne",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30329",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.31097797318873,
+          33.83640700198542
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.31097797318873,
+          33.83640700198542
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_bd2acc23ff2e51bfe447",
+      "source": "fdic-locations",
+      "source_record_id": "191383",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8444,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "CHESHIRE BRIDGE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2349 Cheshire Bridge Rd Ne",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30324",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.35088304074057,
+          33.81923998418229
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.35088304074057,
+          33.81923998418229
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c6b877b90638f993fa90",
+      "source": "fdic-locations",
+      "source_record_id": "239917",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4205,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "EMORY VILLAGE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1615 N Decatur Rd Ne",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30307",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.32429203964969,
+          33.78789698881465
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.32429203964969,
+          33.78789698881465
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_99ec4acde051bb56f86a",
+      "source": "osm-notes",
+      "source_record_id": "5350391",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Unable to answer \"What’s the surface here?\" – South Kilgo Circle (Foot Path) – https://osm.org/way/124304015 via StreetComplete 63.1:\n\nDifferent in the center (pavers) and right/left (concrete)"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3237818,
+          33.7905376
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3237818,
+          33.7905376
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-06-18 14:05:51 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5350391",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-06-18 14:05:51 UTC",
+            "uid": 22838380,
+            "user": "Benjaminbikes",
+            "user_url": "https://api.openstreetmap.org/user/Benjaminbikes",
+            "action": "opened",
+            "text": "Unable to answer \"What’s the surface here?\" – South Kilgo Circle (Foot Path) – https://osm.org/way/124304015 via StreetComplete 63.1:\n\nDifferent in the center (pavers) and right/left (concrete)",
+            "html": "<p dir=\"auto\">Unable to answer \"What’s the surface here?\" – South&nbsp;Kilgo&nbsp;Circle (Foot&nbsp;Path) – <a href=\"https://osm.org/way/124304015\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">way/124304015</a> via StreetComplete 63.1:</p>\n\n<p dir=\"auto\">Different in the center (pavers) and right/left (concrete)</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e4ae5537ca8b25f6ac6b",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938324202",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Leuconotopicus villosus (Linnaeus, 1766)",
+        "species": "Leuconotopicus villosus",
+        "vernacular_name": null,
+        "taxon_key": 9192501,
+        "species_key": 9192501,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 3,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.314367,
+          33.800968
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.314367,
+          33.800968
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T11:19:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938324202",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/publicdomain/zero/1.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4d1d10414d948f758b16",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938323998",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Dryocopus pileatus (Linnaeus, 1758)",
+        "species": "Dryocopus pileatus",
+        "vernacular_name": null,
+        "taxon_key": 5228824,
+        "species_key": 5228824,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.314367,
+          33.800968
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.314367,
+          33.800968
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T11:03:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938323998",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/publicdomain/zero/1.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_31782d25126c1df02254",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938302584",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Stereum lobatum (Kunze ex Fr.) Fr.",
+        "species": "Stereum lobatum",
+        "vernacular_name": null,
+        "taxon_key": 2553040,
+        "species_key": 2553040,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.314367,
+          33.800968
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.314367,
+          33.800968
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T10:06:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938302584",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/publicdomain/zero/1.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c618a85dab32ba19799b",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:216",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 216,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Toco Hills Branch",
+        "deposits_usd": 78696000,
+        "address": "2936 N Druid Hills Rd Ne",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30329"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.309820013265,
+          33.8161670108401
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.309820013265,
+          33.8161670108401
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:20504:216",
+      "type": "bank_branch",
+      "name": "Toco Hills Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "216"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.309820013265,
+          33.8161670108401
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c618a85dab32ba19799b"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4205",
+      "type": "bank_branch",
+      "name": "EMORY VILLAGE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4205"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.32429203964969,
+          33.78789698881465
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c6b877b90638f993fa90"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8444",
+      "type": "bank_branch",
+      "name": "CHESHIRE BRIDGE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8444"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.35088304074057,
+          33.81923998418229
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_bd2acc23ff2e51bfe447"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8456",
+      "type": "bank_branch",
+      "name": "BRIARCLIFF - CLAIRMONT BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8456"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.31097797318873,
+          33.83640700198542
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4e23834c2ea27c6cd3fc"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3243",
+      "type": "bank_branch",
+      "name": "EMORY BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3243"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.32145803436705,
+          33.78828901042617
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0f62c7b4d03edb937ba8"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_b5f58a8f8196efd48bae",
+      "subject": "fdic-branch:20504:216",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 78696000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c618a85dab32ba19799b"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_07fb5e693a90ae3b137a",
+      "subject": "fdic-branch:20504:216",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c618a85dab32ba19799b"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_54e0be46579ef9c5bc82",
+      "subject": "fdic-branch:3510:4205",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c6b877b90638f993fa90"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_a09cd93ec4414c15bb92",
+      "subject": "fdic-branch:3511:8444",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_bd2acc23ff2e51bfe447"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_e3dfffc8d9175f88ff50",
+      "subject": "fdic-branch:9846:3243",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0f62c7b4d03edb937ba8"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f1f6d7fd023dba96f15d",
+      "subject": "fdic-branch:3511:8456",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4e23834c2ea27c6cd3fc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_e2c923e384b1e46fd1e3",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213030",
+      "text": "6 independent source channels address signals to this ground: atlanta-rezoning-cases, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ecb0621d90ae26eeb657",
+        "sig_f891a89e9f58718df944",
+        "sig_0f62c7b4d03edb937ba8",
+        "sig_4e23834c2ea27c6cd3fc",
+        "sig_bd2acc23ff2e51bfe447",
+        "sig_c6b877b90638f993fa90",
+        "sig_c618a85dab32ba19799b",
+        "sig_31782d25126c1df02254",
+        "sig_4d1d10414d948f758b16",
+        "sig_e4ae5537ca8b25f6ac6b",
+        "sig_2026e9c971bcf72ed890",
+        "sig_bc4dc5aab9aa6b8f1960",
+        "sig_99ec4acde051bb56f86a"
+      ],
+      "derived_from": [
+        "sig_ecb0621d90ae26eeb657",
+        "sig_f891a89e9f58718df944",
+        "sig_0f62c7b4d03edb937ba8",
+        "sig_4e23834c2ea27c6cd3fc",
+        "sig_bd2acc23ff2e51bfe447",
+        "sig_c6b877b90638f993fa90",
+        "sig_c618a85dab32ba19799b",
+        "sig_31782d25126c1df02254",
+        "sig_4d1d10414d948f758b16",
+        "sig_e4ae5537ca8b25f6ac6b",
+        "sig_2026e9c971bcf72ed890",
+        "sig_bc4dc5aab9aa6b8f1960",
+        "sig_99ec4acde051bb56f86a"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_c54cebf6e236f257fc2d",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331213030",
+      "text": "5 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_31782d25126c1df02254",
+        "sig_4d1d10414d948f758b16",
+        "sig_e4ae5537ca8b25f6ac6b",
+        "sig_2026e9c971bcf72ed890",
+        "sig_bc4dc5aab9aa6b8f1960"
+      ],
+      "derived_from": [
+        "sig_31782d25126c1df02254",
+        "sig_4d1d10414d948f758b16",
+        "sig_e4ae5537ca8b25f6ac6b",
+        "sig_2026e9c971bcf72ed890",
+        "sig_bc4dc5aab9aa6b8f1960"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 0.25
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1708
+    },
+    {
+      "id": "stmt_60f6f1b410cd10f7bf46",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331213030",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $78,696,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_c618a85dab32ba19799b"
+      ],
+      "derived_from": [
+        "sig_c618a85dab32ba19799b"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    },
+    {
+      "id": "stmt_1a35a3f729a496f4ebab",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1331213030",
+      "text": "2 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred. At least one polygon is indexed by a representative address; its preserved geometry may span other cells.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ecb0621d90ae26eeb657",
+        "sig_f891a89e9f58718df944"
+      ],
+      "derived_from": [
+        "sig_ecb0621d90ae26eeb657",
+        "sig_f891a89e9f58718df944"
+      ],
+      "importance": {
+        "change": 0.25,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.55,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1292
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.106Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

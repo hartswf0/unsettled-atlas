@@ -1,0 +1,1202 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331311213",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "nps-national-register",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 12,
+    "entities": 6,
+    "relations": 10,
+    "statements": 3,
+    "direct_signals": 12,
+    "direct_entities": 6,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "money.bank_branch": 2,
+    "money.branch_deposits": 4,
+    "ecology.occurrence": 2,
+    "memory.national_register_resource": 1,
+    "claim.map_note": 3
+  },
+  "entity_types": {
+    "bank_branch": 6
+  },
+  "relation_predicates": {
+    "branch_of": 6,
+    "holds_reported_deposits": 4
+  },
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_859318fa143bfa1b0fb9",
+      "source": "fdic-locations",
+      "source_record_id": "1413",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4588,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "MARIETTA SQUARE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "140 Cherokee St Ne",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30060",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.54852496485623,
+          33.954937003531924
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.54852496485623,
+          33.954937003531924
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_d3545996eb3d713823d1",
+      "source": "fdic-locations",
+      "source_record_id": "191463",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8495,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "BARRETT PARKWAY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "850 Barrett Pkwy",
+        "city": "Kennesaw",
+        "state": "GA",
+        "zip": "30144",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5758061223563,
+          34.005334654251826
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5758061223563,
+          34.005334654251826
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a87a92e56baa3e76df12",
+      "source": "osm-notes",
+      "source_record_id": "5407803",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 4,
+        "latest": "Can confirm this to be true, although current label is Ernest West Barrett Pkwy is incorrect and needs to be fixed to Ernest W. Barrett"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.58387,
+          34.00041
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.58387,
+          34.00041
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-07-20 20:43:56 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5407803",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-07-20 20:43:56 UTC",
+            "uid": 24332492,
+            "user": "creekway",
+            "user_url": "https://api.openstreetmap.org/user/creekway",
+            "action": "opened",
+            "text": "This street is labeled \"Barrett Parkway\" after crossing Cobb Parkway/US 41 heading east. \"Barrett Parkway\" is one of the commonly used names for the street, however the official name is “Ernest W. Barrett Parkway.” ",
+            "html": "<p dir=\"auto\">This street is labeled \"Barrett Parkway\" after crossing Cobb Parkway/US 41 heading east. \"Barrett Parkway\" is one of the commonly used names for the street, however the official name is “Ernest W. Barrett Parkway.” </p>"
+          },
+          {
+            "date": "2026-08-15 17:51:55 UTC",
+            "uid": 24420709,
+            "user": "grazerquart",
+            "user_url": "https://api.openstreetmap.org/user/grazerquart",
+            "action": "closed",
+            "text": "",
+            "html": "<p dir=\"auto\"></p>"
+          },
+          {
+            "date": "2026-08-15 17:52:50 UTC",
+            "uid": 24420709,
+            "user": "grazerquart",
+            "user_url": "https://api.openstreetmap.org/user/grazerquart",
+            "action": "reopened",
+            "text": "",
+            "html": "<p dir=\"auto\"></p>"
+          },
+          {
+            "date": "2026-08-15 17:53:27 UTC",
+            "uid": 24420709,
+            "user": "grazerquart",
+            "user_url": "https://api.openstreetmap.org/user/grazerquart",
+            "action": "commented",
+            "text": "Can confirm this to be true, although current label is Ernest West Barrett Pkwy is incorrect and needs to be fixed to Ernest W. Barrett",
+            "html": "<p dir=\"auto\">Can confirm this to be true, although current label is Ernest West Barrett Pkwy is incorrect and needs to be fixed to Ernest W. Barrett</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_7482f35d640772821a3c",
+      "source": "osm-notes",
+      "source_record_id": "5279512",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Hi, after the South Barrett Reliever ribbon-cutting in April 2026, Greers Chapel Dr is now the road name from Barrett Lakes Blvd to Roberts Ct; this section is also now meadianed; the realigned intersection of Shiloh Valley Dr/Greers Chapel Dr is now signaled; Greers Chapel Dr north of Shiloh Valley Dr is now medianed and so is all of Roberts Ct.\n\nIf you'd like documentation of these notes, please feel free to message me.\n\nThank you for reviewing."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5702434,
+          34.0034307
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5702434,
+          34.0034307
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-05-05 11:24:26 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5279512",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-05-05 11:24:26 UTC",
+            "uid": 21511390,
+            "user": "RossBrewer",
+            "user_url": "https://api.openstreetmap.org/user/RossBrewer",
+            "action": "opened",
+            "text": "Hi, after the South Barrett Reliever ribbon-cutting in April 2026, Greers Chapel Dr is now the road name from Barrett Lakes Blvd to Roberts Ct; this section is also now meadianed; the realigned intersection of Shiloh Valley Dr/Greers Chapel Dr is now signaled; Greers Chapel Dr north of Shiloh Valley Dr is now medianed and so is all of Roberts Ct.\n\nIf you'd like documentation of these notes, please feel free to message me.\n\nThank you for reviewing.",
+            "html": "<p dir=\"auto\">Hi, after the South Barrett Reliever ribbon-cutting in April 2026, Greers Chapel Dr is now the road name from Barrett Lakes Blvd to Roberts Ct; this section is also now meadianed; the realigned intersection of Shiloh Valley Dr/Greers Chapel Dr is now signaled; Greers Chapel Dr north of Shiloh Valley Dr is now medianed and so is all of Roberts Ct.</p>\n\n<p dir=\"auto\">If you'd like documentation of these notes, please feel free to message me.</p>\n\n<p dir=\"auto\">Thank you for reviewing.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1fb53a6bfa4a9a0b2ac1",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938156988",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Costaconvexa centrostrigaria (Wollaston, 1858)",
+        "species": "Costaconvexa centrostrigaria",
+        "vernacular_name": null,
+        "taxon_key": 4524223,
+        "species_key": 4524223,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 195,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.575874,
+          34.000095
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.575874,
+          34.000095
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T10:13:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938156988",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9c834e7b58a9ffed898e",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938112282",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Myrmekiaphila foliata Atkinson, 1886",
+        "species": "Myrmekiaphila foliata",
+        "vernacular_name": null,
+        "taxon_key": 6717713,
+        "species_key": 6717713,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 96,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.585514,
+          34.003191
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.585514,
+          34.003191
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T17:01:22.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938112282",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_2956c6ff42937a9c1aa1",
+      "source": "fdic-sod",
+      "source_record_id": "2025:11813:617",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 11813,
+        "branch_id": 617,
+        "institution_name": "Cadence Bank",
+        "branch_name": "Marietta  Branch",
+        "deposits_usd": 48425000,
+        "address": "250 Church St Ne",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30060"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5498900416074,
+          33.9578630002019
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5498900416074,
+          33.9578630002019
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.325Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_890d4cf9ef75169abd28",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16889:72",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16889,
+        "branch_id": 72,
+        "institution_name": "United Community Bank",
+        "branch_name": "Southern National Bank Branch",
+        "deposits_usd": 405427000,
+        "address": "200 Cherokee St Ne",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30060"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5487149826012,
+          33.9566290164164
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5487149826012,
+          33.9566290164164
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.328Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b0dc374ecdf8a784bbca",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:231",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 231,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Bells Ferry Branch",
+        "deposits_usd": 75960000,
+        "address": "1220 Cobb Pkwy N",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30062"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.557358987889,
+          33.9815930062819
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.557358987889,
+          33.9815930062819
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ce6887a16455479a241c",
+      "source": "fdic-sod",
+      "source_record_id": "2025:110:249",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 110,
+        "branch_id": 249,
+        "institution_name": "Bank OZK",
+        "branch_name": "North Marietta Branch",
+        "deposits_usd": 146935000,
+        "address": "1350 Church Street Ext Ne, Ste 100",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30060"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.551852999512,
+          33.9740160172684
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.551852999512,
+          33.9740160172684
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.324Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_35f2c93e415789272bd9",
+      "source": "osm-notes",
+      "source_record_id": "4567517",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "onosm.org submitted note from a business:\nName: Newman Web Solutions Agency\naddr:housenumber=531\naddr:street= Roselane St NW Suite 400-104\naddr:city=Marietta\naddr:postcode=30060\nPhone number: 770-575-4611\nWebsite: https://www.newmanwebsolutions.com/marietta-web-design-seo/\nSocial Network: https://www.facebook.com/newmanwebsolutions/\nOpening Hours: Monday-Friday 9 AM - 7 PM  \nCategory: Web Design\nDescription: Located in Marietta, GA, Newman Web Solutions is a reputable digital marketing agency offering expertise in WordPress web design, SEO, website hosting, and social media marketing. Backed by over 15 years of industry experience, our team of 10 skilled professionals delivers tailored solutions to help small businesses thrive. We provide a wide range of services, including local SEO, content creation, logo design, and marketing automation, to ensure your business stands out. Renowned for our attention to detail and outstanding customer service, Newman Web Solutions is committed to supporting the growth and success of local businesses in Marietta.\nAccepted payment methods: \n"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5553407,
+          33.9741288
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5553407,
+          33.9741288
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2024-12-29 07:52:28 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4567517",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2024-12-29 07:52:28 UTC",
+            "action": "opened",
+            "text": "onosm.org submitted note from a business:\nName: Newman Web Solutions Agency\naddr:housenumber=531\naddr:street= Roselane St NW Suite 400-104\naddr:city=Marietta\naddr:postcode=30060\nPhone number: 770-575-4611\nWebsite: https://www.newmanwebsolutions.com/marietta-web-design-seo/\nSocial Network: https://www.facebook.com/newmanwebsolutions/\nOpening Hours: Monday-Friday 9 AM - 7 PM  \nCategory: Web Design\nDescription: Located in Marietta, GA, Newman Web Solutions is a reputable digital marketing agency offering expertise in WordPress web design, SEO, website hosting, and social media marketing. Backed by over 15 years of industry experience, our team of 10 skilled professionals delivers tailored solutions to help small businesses thrive. We provide a wide range of services, including local SEO, content creation, logo design, and marketing automation, to ensure your business stands out. Renowned for our attention to detail and outstanding customer service, Newman Web Solutions is committed to supporting the growth and success of local businesses in Marietta.\nAccepted payment methods: \n",
+            "html": "<p dir=\"auto\">onosm.org submitted note from a business:\n<br />Name: Newman Web Solutions Agency\n<br /><a href=\"https://wiki.openstreetmap.org/wiki/Tag:addr:housenumber=531\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">addr:housenumber=531</a>\n<br />addr:street= Roselane St NW Suite 400-104\n<br /><a href=\"https://wiki.openstreetmap.org/wiki/Tag:addr:city=Marietta\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">addr:city=Marietta</a>\n<br /><a href=\"https://wiki.openstreetmap.org/wiki/Tag:addr:postcode=30060\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">addr:postcode=30060</a>\n<br />Phone number: 770-575-4611\n<br />Website: <a href=\"https://www.newmanwebsolutions.com/marietta-web-design-seo/\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://www.newmanwebsolutions.com/marietta-web-design-seo/</a>\n<br />Social Network: <a href=\"https://www.facebook.com/newmanwebsolutions/\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://www.facebook.com/newmanwebsolutions/</a>\n<br />Opening Hours: Monday-Friday 9 AM - 7 PM  \n<br />Category: Web Design\n<br />Description: Located in Marietta, GA, Newman Web Solutions is a reputable digital marketing agency offering expertise in WordPress web design, SEO, website hosting, and social media marketing. Backed by over 15 years of industry experience, our team of 10 skilled professionals delivers tailored solutions to help small businesses thrive. We provide a wide range of services, including local SEO, content creation, logo design, and marketing automation, to ensure your business stands out. Renowned for our attention to detail and outstanding customer service, Newman Web Solutions is committed to supporting the growth and success of local businesses in Marietta.\n<br />Accepted payment methods: \n</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e4f7fe69611f66ed6506",
+      "source": "nps-national-register",
+      "source_record_id": "90001026",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Zion Baptist Church",
+        "resource_type": "building",
+        "address": "149 Haynes St.",
+        "city": "Marietta",
+        "county": "Cobb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.54736563499995,
+          33.95507943800004
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.54736563499995,
+          33.95507943800004
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1990-07-11T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.066Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{D412898E-D43A-4F2E-AAC5-120F121AD775}",
+        "src_date": 647654400000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:110:249",
+      "type": "bank_branch",
+      "name": "North Marietta Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "249"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.551852999512,
+          33.9740160172684
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ce6887a16455479a241c"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11813:617",
+      "type": "bank_branch",
+      "name": "Marietta  Branch",
+      "identifiers": {
+        "fdic_cert": "11813",
+        "branch_id": "617"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5498900416074,
+          33.9578630002019
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_2956c6ff42937a9c1aa1"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:16889:72",
+      "type": "bank_branch",
+      "name": "Southern National Bank Branch",
+      "identifiers": {
+        "fdic_cert": "16889",
+        "branch_id": "72"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5487149826012,
+          33.9566290164164
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_890d4cf9ef75169abd28"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:231",
+      "type": "bank_branch",
+      "name": "Bells Ferry Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "231"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.557358987889,
+          33.9815930062819
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b0dc374ecdf8a784bbca"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4588",
+      "type": "bank_branch",
+      "name": "MARIETTA SQUARE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4588"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.54852496485623,
+          33.954937003531924
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_859318fa143bfa1b0fb9"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8495",
+      "type": "bank_branch",
+      "name": "BARRETT PARKWAY BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8495"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5758061223563,
+          34.005334654251826
+        ]
+      },
+      "atlas_address": "F02.1331311213",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_d3545996eb3d713823d1"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_26ac4b6293c8313bff8b",
+      "subject": "fdic-branch:16889:72",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16889",
+      "value": {
+        "amount_usd": 405427000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_890d4cf9ef75169abd28"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_95421d77859699aeb5b1",
+      "subject": "fdic-branch:11813:617",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:11813",
+      "value": {
+        "amount_usd": 48425000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_2956c6ff42937a9c1aa1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_9c41e730c4a8cce33687",
+      "subject": "fdic-branch:20504:231",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 75960000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b0dc374ecdf8a784bbca"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_b00d4301d19c5caee469",
+      "subject": "fdic-branch:110:249",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:110",
+      "value": {
+        "amount_usd": 146935000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ce6887a16455479a241c"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_14ca461fb9219c114118",
+      "subject": "fdic-branch:16889:72",
+      "predicate": "branch_of",
+      "object": "fdic:16889",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_890d4cf9ef75169abd28"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_2591b092ca3534f20183",
+      "subject": "fdic-branch:11813:617",
+      "predicate": "branch_of",
+      "object": "fdic:11813",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_2956c6ff42937a9c1aa1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_738c7df4fbf9fd1fb4c7",
+      "subject": "fdic-branch:20504:231",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b0dc374ecdf8a784bbca"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f53350037bd3aaa80924",
+      "subject": "fdic-branch:3511:8495",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d3545996eb3d713823d1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f96c4e9823c1abe36db7",
+      "subject": "fdic-branch:3510:4588",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_859318fa143bfa1b0fb9"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_fbb9dee79662b8afbfcb",
+      "subject": "fdic-branch:110:249",
+      "predicate": "branch_of",
+      "object": "fdic:110",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ce6887a16455479a241c"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_a188ad0a8fbc5756186e",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331311213",
+      "text": "5 independent source channels address signals to this ground: fdic-locations, fdic-sod, gbif-occurrences, nps-national-register, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_859318fa143bfa1b0fb9",
+        "sig_d3545996eb3d713823d1",
+        "sig_2956c6ff42937a9c1aa1",
+        "sig_890d4cf9ef75169abd28",
+        "sig_b0dc374ecdf8a784bbca",
+        "sig_ce6887a16455479a241c",
+        "sig_1fb53a6bfa4a9a0b2ac1",
+        "sig_9c834e7b58a9ffed898e",
+        "sig_e4f7fe69611f66ed6506",
+        "sig_35f2c93e415789272bd9",
+        "sig_7482f35d640772821a3c",
+        "sig_a87a92e56baa3e76df12"
+      ],
+      "derived_from": [
+        "sig_859318fa143bfa1b0fb9",
+        "sig_d3545996eb3d713823d1",
+        "sig_2956c6ff42937a9c1aa1",
+        "sig_890d4cf9ef75169abd28",
+        "sig_b0dc374ecdf8a784bbca",
+        "sig_ce6887a16455479a241c",
+        "sig_1fb53a6bfa4a9a0b2ac1",
+        "sig_9c834e7b58a9ffed898e",
+        "sig_e4f7fe69611f66ed6506",
+        "sig_35f2c93e415789272bd9",
+        "sig_7482f35d640772821a3c",
+        "sig_a87a92e56baa3e76df12"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_08bff8ed1f190b053a13",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331311213",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $676,747,000 held across 4 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_890d4cf9ef75169abd28",
+        "sig_2956c6ff42937a9c1aa1",
+        "sig_b0dc374ecdf8a784bbca",
+        "sig_ce6887a16455479a241c"
+      ],
+      "derived_from": [
+        "sig_890d4cf9ef75169abd28",
+        "sig_2956c6ff42937a9c1aa1",
+        "sig_b0dc374ecdf8a784bbca",
+        "sig_ce6887a16455479a241c"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.45,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.15
+    },
+    {
+      "id": "stmt_e9fe4a6b218de98ceb93",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331311213",
+      "text": "3 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_35f2c93e415789272bd9",
+        "sig_7482f35d640772821a3c",
+        "sig_a87a92e56baa3e76df12"
+      ],
+      "derived_from": [
+        "sig_35f2c93e415789272bd9",
+        "sig_7482f35d640772821a3c",
+        "sig_a87a92e56baa3e76df12"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.5,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.111Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

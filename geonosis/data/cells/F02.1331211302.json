@@ -1,0 +1,925 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211302",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "nps-national-register",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 10,
+    "entities": 4,
+    "relations": 6,
+    "statements": 2,
+    "direct_signals": 10,
+    "direct_entities": 4,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "money.bank_branch": 2,
+    "money.branch_deposits": 2,
+    "ecology.occurrence": 3,
+    "ecology.inaturalist_observation": 1,
+    "memory.national_register_resource": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 4
+  },
+  "relation_predicates": {
+    "holds_reported_deposits": 2,
+    "branch_of": 4
+  },
+  "statement_kinds": {
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_ba11df7a6ffaed6f82fd",
+      "source": "inaturalist-observations",
+      "source_record_id": "394269852",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Trichonephila clavata",
+        "common_name": "Joro Spider",
+        "iconic_taxon": "Arachnida",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5702126997,
+          33.8386797
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5702126997,
+          33.8386797
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T23:39:45.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394269852",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Mableton, GA 30126, USA",
+        "positional_accuracy": null
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_734bbcb6d605d9877aee",
+      "source": "fdic-locations",
+      "source_record_id": "12882",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 7084,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "MABLETON BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5010 Floyd Rd Sw",
+        "city": "Mableton",
+        "state": "GA",
+        "zip": "30126",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.57654700827624,
+          33.832728017043664
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.57654700827624,
+          33.832728017043664
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b25ef5df90bf2f767d09",
+      "source": "fdic-locations",
+      "source_record_id": "186348",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3274,
+        "institution_name": "Truist Bank",
+        "branch_name": "BROOKWOOD SQUARE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1661 E West Connector",
+        "city": "Austell",
+        "state": "GA",
+        "zip": "30106",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.600545486715,
+          33.855153966628
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.600545486715,
+          33.855153966628
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_df7187afb47fb3ecbed4",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938173871",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Apis mellifera Linnaeus, 1758",
+        "species": "Apis mellifera",
+        "vernacular_name": null,
+        "taxon_key": 1341976,
+        "species_key": 1341976,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.571703,
+          33.836228
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.571703,
+          33.836228
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-05T15:49:34.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938173871",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_13d88eeb468b24264278",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938059403",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Chimaphila maculata (L.) Pursh",
+        "species": "Chimaphila maculata",
+        "vernacular_name": null,
+        "taxon_key": 2888304,
+        "species_key": 2888304,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.571898,
+          33.8372
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.571898,
+          33.8372
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-05T15:27:48.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.828Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938059403",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6a0152fb4e2bcad43fcb",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938194086",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Sphyrapicus varius (Linnaeus, 1766)",
+        "species": "Sphyrapicus varius",
+        "vernacular_name": null,
+        "taxon_key": 2478605,
+        "species_key": 2478605,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.570094,
+          33.83716
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.570094,
+          33.83716
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-02T10:01:12.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938194086",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_7fc2a8c9dab8a45af789",
+      "source": "fdic-sod",
+      "source_record_id": "2025:22858:386",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 22858,
+        "branch_id": 386,
+        "institution_name": "United Bank",
+        "branch_name": "Mableton Branch",
+        "deposits_usd": 160369000,
+        "address": "4901 Floyd Rd Sw",
+        "city": "Mableton",
+        "state": "GA",
+        "zip": "30126"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5753810017255,
+          33.8336850208387
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5753810017255,
+          33.8336850208387
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.330Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f14a6be012e4c1887f94",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2786",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2786,
+        "institution_name": "Regions Bank",
+        "branch_name": "Mableton Branch",
+        "deposits_usd": 19216000,
+        "address": "750 Nickajack Rd Sw",
+        "city": "Mableton",
+        "state": "GA",
+        "zip": "30126"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5752546302762,
+          33.8341573045635
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5752546302762,
+          33.8341573045635
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.325Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_031b5faa5a0f36c74e26",
+      "source": "osm-notes",
+      "source_record_id": "4781307",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 2,
+        "latest": "photo didn't load, can't add inscription\n\n#softremindme 2026-09-17"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5584749,
+          33.8521119
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5584749,
+          33.8521119
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-05-30 00:18:28 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4781307",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-05-30 00:18:28 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "In context of overlay \"Things\" – Commemorative Plaque – https://osm.org/node/12874372142 via StreetComplete 60.3:\n\nText\n\nAttached photo(s):\nhttps://streetcomplete.app/p/281221.jpg",
+            "html": "<p dir=\"auto\">In context of overlay \"Things\" – Commemorative Plaque – <a href=\"https://osm.org/node/12874372142\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">node/12874372142</a> via StreetComplete 60.3:</p>\n\n<p dir=\"auto\">Text</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://streetcomplete.app/p/281221.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://streetcomplete.app/p/281221.jpg</a></p>"
+          },
+          {
+            "date": "2026-08-22 21:14:33 UTC",
+            "uid": 83188,
+            "user": "dannmer",
+            "user_url": "https://api.openstreetmap.org/user/dannmer",
+            "action": "commented",
+            "text": "photo didn't load, can't add inscription\n\n#softremindme 2026-09-17",
+            "html": "<p dir=\"auto\">photo didn't load, can't add inscription</p>\n\n<p dir=\"auto\">#softremindme 2026-09-17</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_5a88ac54e5f3cedba462",
+      "source": "nps-national-register",
+      "source_record_id": "83000189",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Rice, John W., Summer Cottage",
+        "resource_type": "building",
+        "address": "254 Concord Rd.",
+        "city": "Smyrna",
+        "county": "Cobb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.55902382199997,
+          33.84982446300006
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.55902382199997,
+          33.84982446300006
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1983-04-08T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.064Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{9716DF02-5B55-41BC-864B-B204F3D5197D}",
+        "src_date": 418608000000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:2786",
+      "type": "bank_branch",
+      "name": "Mableton Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2786"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5752546302762,
+          33.8341573045635
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f14a6be012e4c1887f94"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:22858:386",
+      "type": "bank_branch",
+      "name": "Mableton Branch",
+      "identifiers": {
+        "fdic_cert": "22858",
+        "branch_id": "386"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5753810017255,
+          33.8336850208387
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_7fc2a8c9dab8a45af789"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:7084",
+      "type": "bank_branch",
+      "name": "MABLETON BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "7084"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.57654700827624,
+          33.832728017043664
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_734bbcb6d605d9877aee"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3274",
+      "type": "bank_branch",
+      "name": "BROOKWOOD SQUARE BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3274"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.600545486715,
+          33.855153966628
+        ]
+      },
+      "atlas_address": "F02.1331211302",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b25ef5df90bf2f767d09"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_308da937b527fdcc7e19",
+      "subject": "fdic-branch:22858:386",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:22858",
+      "value": {
+        "amount_usd": 160369000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7fc2a8c9dab8a45af789"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_7ccb8c215109d18b4bc4",
+      "subject": "fdic-branch:12368:2786",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 19216000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f14a6be012e4c1887f94"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_3e075658bf220bdf7f4c",
+      "subject": "fdic-branch:3511:7084",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_734bbcb6d605d9877aee"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_a4ba7cc378050cedd25c",
+      "subject": "fdic-branch:12368:2786",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f14a6be012e4c1887f94"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_b5d72957465e30f6fb59",
+      "subject": "fdic-branch:9846:3274",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b25ef5df90bf2f767d09"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_bdff323009cd12f25ef8",
+      "subject": "fdic-branch:22858:386",
+      "predicate": "branch_of",
+      "object": "fdic:22858",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7fc2a8c9dab8a45af789"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_098ed598629222ecac7c",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331211302",
+      "text": "6 independent source channels address signals to this ground: fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nps-national-register, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_734bbcb6d605d9877aee",
+        "sig_b25ef5df90bf2f767d09",
+        "sig_7fc2a8c9dab8a45af789",
+        "sig_f14a6be012e4c1887f94",
+        "sig_13d88eeb468b24264278",
+        "sig_6a0152fb4e2bcad43fcb",
+        "sig_df7187afb47fb3ecbed4",
+        "sig_ba11df7a6ffaed6f82fd",
+        "sig_5a88ac54e5f3cedba462",
+        "sig_031b5faa5a0f36c74e26"
+      ],
+      "derived_from": [
+        "sig_734bbcb6d605d9877aee",
+        "sig_b25ef5df90bf2f767d09",
+        "sig_7fc2a8c9dab8a45af789",
+        "sig_f14a6be012e4c1887f94",
+        "sig_13d88eeb468b24264278",
+        "sig_6a0152fb4e2bcad43fcb",
+        "sig_df7187afb47fb3ecbed4",
+        "sig_ba11df7a6ffaed6f82fd",
+        "sig_5a88ac54e5f3cedba462",
+        "sig_031b5faa5a0f36c74e26"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_58f03c46806296a1aacf",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211302",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $179,585,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_7fc2a8c9dab8a45af789",
+        "sig_f14a6be012e4c1887f94"
+      ],
+      "derived_from": [
+        "sig_7fc2a8c9dab8a45af789",
+        "sig_f14a6be012e4c1887f94"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1375
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.098Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

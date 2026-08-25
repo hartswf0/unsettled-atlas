@@ -1,0 +1,2989 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200300121",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "nps-national-register",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 80,
+    "entities": 10,
+    "relations": 24,
+    "statements": 5,
+    "direct_signals": 80,
+    "direct_entities": 10,
+    "direct_statements": 5
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 7,
+    "money.bank_branch": 8,
+    "money.branch_deposits": 8,
+    "ecology.occurrence": 8,
+    "ecology.inaturalist_observation": 38,
+    "memory.national_register_resource": 10,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 10
+  },
+  "relation_predicates": {
+    "branch_of": 16,
+    "holds_reported_deposits": 8
+  },
+  "statement_kinds": {
+    "ecological_observation_density": 1,
+    "regulated_environment_presence": 1,
+    "institutional_memory_density": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_489c260759a685727c9a",
+      "source": "epa-echo",
+      "source_record_id": "110003292758",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "J & J AUTOMOTIVE INC",
+        "address": "5022 BIENVILLE AVE, NEW ORLEANS, LA, 70119",
+        "county": "ORLEANS",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1085499809536,
+          29.9827102430292
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1085499809536,
+          29.9827102430292
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003292758",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 60115
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_972224f841ad5b756736",
+      "source": "epa-echo",
+      "source_record_id": "110001317361",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "ALESSI DRY CLEANERS",
+        "address": "4133 BIENVILLE STREET, NEW ORLEANS, LA, 70119",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0998300344907,
+          29.9767303694224
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0998300344907,
+          29.9767303694224
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110001317361",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 59389
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_8940f1127a518b959ac3",
+      "source": "epa-echo",
+      "source_record_id": "110071081304",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BOH BROS CONSTRUCTION CO., LLC - FLOOD GATE REPAIRS 2-33 & E-07",
+        "address": "ALMONASTER RD @ JOURDAN RD;, NEW ORLEANS, LA, 70119",
+        "county": "ORLEANS",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 10000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.08784471197,
+          29.9757522348211
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.08784471197,
+          29.9757522348211
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071081304",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 50586
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f44f0f95bd1c98c33bb2",
+      "source": "epa-echo",
+      "source_record_id": "110071376927",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "HIGH POINT GAS TRANSMISSION LLC - TOCA JUNCTION & SEPARATOR STATION",
+        "address": "2402 BAYOU RD, NEW ORLEANS, LA, 70000",
+        "county": "ORLEANS",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0752961457661,
+          29.9746511409898
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0752961457661,
+          29.9746511409898
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071376927",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 54355
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_82ac2fb1217ebce346a2",
+      "source": "epa-echo",
+      "source_record_id": "110037249554",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "RALPH'S ON THE PARK",
+        "address": "900 CITY PARK AVE. BOURBON, NEW ORLEANS, LA, 70130",
+        "county": "ORLEANS",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": "2008-09-25T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0980001662569,
+          29.9835700391005
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0980001662569,
+          29.9835700391005
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110037249554",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 20066
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_50f093f273e4090f487b",
+      "source": "epa-echo",
+      "source_record_id": "110003316377",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "RAYTECH AUTOMOTIVE",
+        "address": "2901 LAFITTE ST, NEW ORLEANS, LA, 70119",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0865897655181,
+          29.9705501399857
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0865897655181,
+          29.9705501399857
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003316377",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 16215
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ab90fcfdbc5a15c9cdb9",
+      "source": "epa-echo",
+      "source_record_id": "110070053302",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "AMERICAN LUXURY LIMOUSINES LLC",
+        "address": "503 NORTH ST PATRICK ST., NEW ORLEANS, LA, 70179",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1040054039313,
+          29.9819819393572
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1040054039313,
+          29.9819819393572
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070053302",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 7954
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_3f762437a58e54de31fc",
+      "source": "inaturalist-observations",
+      "source_record_id": "394380793",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Synanthedon",
+        "common_name": null,
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 4
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0797853432,
+          29.9997568363
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0797853432,
+          29.9997568363
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25T12:14:12.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.603Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394380793",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Harrison Ave, New Orleans, LA, US",
+        "positional_accuracy": 20
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_0e2a775ca5553f33dbeb",
+      "source": "inaturalist-observations",
+      "source_record_id": "394188092",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Tineoidea",
+        "common_name": "Bagworms, Clothes Moths, and Allies",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0975888333,
+          29.9950633333
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0975888333,
+          29.9950633333
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T18:19:17.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394188092",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_52f23a8f2ea37a1cdb54",
+      "source": "inaturalist-observations",
+      "source_record_id": "394166256",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Phyla nodiflora",
+        "common_name": "turkey tangle frogfruit",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0948111667,
+          30.0250361667
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0948111667,
+          30.0250361667
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T16:51:50.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394166256",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Thrasher St, New Orleans, LA, US",
+        "positional_accuracy": 6
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_2ebc8b89cf4f288d2e00",
+      "source": "inaturalist-observations",
+      "source_record_id": "394165363",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Bubo virginianus",
+        "common_name": "Great Horned Owl",
+        "iconic_taxon": "Aves",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.094375,
+          30.0246555
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.094375,
+          30.0246555
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T16:49:33.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394165363",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "N Wren St, New Orleans, LA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_88466b62a65d65d53faa",
+      "source": "inaturalist-observations",
+      "source_record_id": "394151454",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Viburnum odoratissimum",
+        "common_name": "Sweet viburnum",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0947387445,
+          30.0039574006
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0947387445,
+          30.0039574006
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:59:23.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394151454",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_802695b306134a758551",
+      "source": "inaturalist-observations",
+      "source_record_id": "394148797",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Ligustrum lucidum",
+        "common_name": "tree privet",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0938383988,
+          30.0046703497
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0938383988,
+          30.0046703497
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:50:18.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394148797",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 5
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_9d009126dd4975a6cbfc",
+      "source": "inaturalist-observations",
+      "source_record_id": "394148332",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Ulmus parvifolia",
+        "common_name": "Chinese elm",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0937678345,
+          30.0046856949
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0937678345,
+          30.0046856949
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:47:48.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394148332",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 3
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_4c6322523dc4156d14b6",
+      "source": "inaturalist-observations",
+      "source_record_id": "394147386",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Sabal mexicana",
+        "common_name": "Mexican Palmetto",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0938503432,
+          30.0048991446
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0938503432,
+          30.0048991446
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:45:24.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394147386",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_081cc4319c18d4c40441",
+      "source": "inaturalist-observations",
+      "source_record_id": "394147051",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Trametes aesculi",
+        "common_name": null,
+        "iconic_taxon": "Fungi",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0942772269,
+          30.0048634624
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0942772269,
+          30.0048634624
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:36:17.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394147051",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_2d0034f784f50df02c07",
+      "source": "inaturalist-observations",
+      "source_record_id": "394143844",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Cuscuta",
+        "common_name": "dodders",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1015166667,
+          29.9941533333
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1015166667,
+          29.9941533333
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:27:06.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394143844",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Orleans Ave, New Orleans, LA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_11b4ce7a1040a7a667f3",
+      "source": "inaturalist-observations",
+      "source_record_id": "394143031",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Strophostyles helvola",
+        "common_name": "trailing fuzzy-bean",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 4
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.101525,
+          29.9941716667
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.101525,
+          29.9941716667
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:26:29.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394143031",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Orleans Ave, New Orleans, LA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_5693bf00ce95a30269f5",
+      "source": "inaturalist-observations",
+      "source_record_id": "394143335",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Verbena brasiliensis",
+        "common_name": "Brazilian Vervain",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1015333333,
+          29.99417
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1015333333,
+          29.99417
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:26:17.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394143335",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Orleans Ave, New Orleans, LA, US",
+        "positional_accuracy": 3
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_b7b27f1946bbabfc13b4",
+      "source": "inaturalist-observations",
+      "source_record_id": "394140123",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Pontederia crassipes",
+        "common_name": "common water hyacinth",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0947785523,
+          30.0035809427
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0947785523,
+          30.0035809427
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:16:45.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394140123",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ac5594af3fee138a1c9e",
+      "source": "inaturalist-observations",
+      "source_record_id": "394137575",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Sporobolus indicus",
+        "common_name": "smut grass",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 5
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0893751435,
+          29.9990271081
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0893751435,
+          29.9990271081
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:00:53.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394137575",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 9
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_10b07c8dc9ba28cc2291",
+      "source": "inaturalist-observations",
+      "source_record_id": "394178425",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Dione vanillae",
+        "common_name": "Gulf Fritillary",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0880857814,
+          29.9984122537
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0880857814,
+          29.9984122537
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T15:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394178425",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "City Park, New Orleans, LA, USA",
+        "positional_accuracy": 74
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_c3cfac433eed55424c76",
+      "source": "inaturalist-observations",
+      "source_record_id": "394137369",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Eudocimus albus",
+        "common_name": "White Ibis",
+        "iconic_taxon": "Aves",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0898264785,
+          29.9987767151
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0898264785,
+          29.9987767151
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:58:08.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394137369",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Lagoon No 6, New Orleans, LA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_731a82c8136210182fa9",
+      "source": "inaturalist-observations",
+      "source_record_id": "394133644",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Digitaria ciliaris",
+        "common_name": "Tropical Finger-grass",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.090219481,
+          29.9987962471
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.090219481,
+          29.9987962471
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:46:14.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394133644",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_541534db9ec62e6993c6",
+      "source": "inaturalist-observations",
+      "source_record_id": "394133561",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Sida rhombifolia",
+        "common_name": "Cuban jute",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0902555671,
+          29.9987583086
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0902555671,
+          29.9987583086
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:44:39.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394133561",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_500606683e9862daf6c7",
+      "source": "inaturalist-observations",
+      "source_record_id": "394133308",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Bidens alba",
+        "common_name": "White beggarticks",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0902419428,
+          29.9987598847
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0902419428,
+          29.9987598847
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:44:04.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394133308",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_3f2fd3b3f7fa051c2cf8",
+      "source": "inaturalist-observations",
+      "source_record_id": "394133070",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Brunnichia ovata",
+        "common_name": "American Buckwheat Vine",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.090323574,
+          29.9987468116
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.090323574,
+          29.9987468116
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:43:09.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394133070",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_6f3d71e256b0f5d04520",
+      "source": "inaturalist-observations",
+      "source_record_id": "394129710",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Digitaria ciliaris",
+        "common_name": "Tropical Finger-grass",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 4
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0903052153,
+          29.9987334246
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0903052153,
+          29.9987334246
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:39:55.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394129710",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_10b5e742d1768b7a4710",
+      "source": "inaturalist-observations",
+      "source_record_id": "394129565",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Alternanthera philoxeroides",
+        "common_name": "Alligatorweed",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0902796806,
+          29.9986004129
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0902796806,
+          29.9986004129
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:38:43.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394129565",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f155664715fef98e86be",
+      "source": "inaturalist-observations",
+      "source_record_id": "394128457",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Salvinia minima",
+        "common_name": "water spangles",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0902837109,
+          29.9986092454
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0902837109,
+          29.9986092454
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:38:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394128457",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_1821210ae4cdff953169",
+      "source": "inaturalist-observations",
+      "source_record_id": "394127750",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Setaria parviflora",
+        "common_name": "knotroot bristlegrass",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0901535918,
+          29.9980556412
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0901535918,
+          29.9980556412
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:26:55.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394127750",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_b08f753ae5d92e80e306",
+      "source": "inaturalist-observations",
+      "source_record_id": "394127525",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Lactuca floridana",
+        "common_name": "woodland lettuce",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0899841039,
+          29.9981009906
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0899841039,
+          29.9981009906
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T14:25:33.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394127525",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "New Orleans City Park, New Orleans, LA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12441:222",
+      "type": "bank_branch",
+      "name": "LAKEVIEW BRANCH",
+      "identifiers": {
+        "fdic_cert": "12441",
+        "branch_id": "222"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.10396799543126,
+          30.004709986972017
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_a4d5eacef2601275c0f7",
+        "sig_5e32885f6c2e48012451"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:12441:300",
+      "type": "bank_branch",
+      "name": "MID CITY BRANCH",
+      "identifiers": {
+        "fdic_cert": "12441",
+        "branch_id": "300"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.09303899951887,
+          29.97000199275557
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_599bed2d9d85d3dcf250",
+        "sig_73329bdcdcf2b97ba019"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:17388:13",
+      "type": "bank_branch",
+      "name": "Lakeview Branch",
+      "identifiers": {
+        "fdic_cert": "17388",
+        "branch_id": "13"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1044780342395,
+          30.0047280080639
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_40bd0777e23ab9ed148c"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:28094:22",
+      "type": "bank_branch",
+      "name": "CANEL STREET BRANCH",
+      "identifiers": {
+        "fdic_cert": "28094",
+        "branch_id": "22"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.09866904006277,
+          29.973681019606857
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_89d7e7e3899b1339a5ab",
+        "sig_24cb26d87c0f13e85efa"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:32974:18",
+      "type": "bank_branch",
+      "name": "LAKEVIEW BRANCH",
+      "identifiers": {
+        "fdic_cert": "32974",
+        "branch_id": "18"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.10453603700945,
+          30.004117009231877
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_78eaa523c7cd7de63d15",
+        "sig_d36001c57c5ed2df76e3"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:32974:33",
+      "type": "bank_branch",
+      "name": "CARROLLTON BRANCH",
+      "identifiers": {
+        "fdic_cert": "32974",
+        "branch_id": "33"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0997829949948,
+          29.975716019969298
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_11353bb19871a1b0118f",
+        "sig_a470b0f6be2c93b3c497"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:4297:7",
+      "type": "bank_branch",
+      "name": "MID CITY BRANCH",
+      "identifiers": {
+        "fdic_cert": "4297",
+        "branch_id": "7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.10082503319757,
+          29.975177985604475
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_07d7201cb21484bfd457",
+        "sig_e1650973298f9064a55b"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:4977:1089",
+      "type": "bank_branch",
+      "name": "Mid City Canal Street Branch",
+      "identifiers": {
+        "fdic_cert": "4977",
+        "branch_id": "1089"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.099260970065,
+          29.9743429804101
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f0978798063a861ffdb7"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:628:2116",
+      "type": "bank_branch",
+      "name": "BROAD-DESOTO BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "2116"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.07797495931293,
+          29.976835004043224
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_792fae6c02884acba9be"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:628:2137",
+      "type": "bank_branch",
+      "name": "HARRISON AVENUE BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "2137"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.10711799846362,
+          30.004981015811197
+        ]
+      },
+      "atlas_address": "F02.1200300121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_550a231925ae3fe8ad32"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_167d8331c21d6b6b4e7a",
+      "subject": "fdic-branch:12441:300",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12441",
+      "value": {
+        "amount_usd": 145557000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_73329bdcdcf2b97ba019"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_50c48987f82cdea6063a",
+      "subject": "fdic-branch:12441:222",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12441",
+      "value": {
+        "amount_usd": 225080000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_5e32885f6c2e48012451"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_8b66c8c5e37c96d6a129",
+      "subject": "fdic-branch:28094:22",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:28094",
+      "value": {
+        "amount_usd": 25663000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_24cb26d87c0f13e85efa"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_92e47e901d480139ac82",
+      "subject": "fdic-branch:4297:7",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4297",
+      "value": {
+        "amount_usd": 261269000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e1650973298f9064a55b"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_b196529353298b70da80",
+      "subject": "fdic-branch:32974:18",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:32974",
+      "value": {
+        "amount_usd": 150134000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d36001c57c5ed2df76e3"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_b4eed1144d9ca46db86f",
+      "subject": "fdic-branch:4977:1089",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4977",
+      "value": {
+        "amount_usd": 41587000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f0978798063a861ffdb7"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_d70803bf2047e9d5a20f",
+      "subject": "fdic-branch:17388:13",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:17388",
+      "value": {
+        "amount_usd": 58148000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_40bd0777e23ab9ed148c"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_fd36f98131e99b4d1198",
+      "subject": "fdic-branch:32974:33",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:32974",
+      "value": {
+        "amount_usd": 68350000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a470b0f6be2c93b3c497"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_02649f94182579b26f6b",
+      "subject": "fdic-branch:32974:33",
+      "predicate": "branch_of",
+      "object": "fdic:32974",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_11353bb19871a1b0118f"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_03c2612dae0144351cf7",
+      "subject": "fdic-branch:4297:7",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_07d7201cb21484bfd457"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_1160ba21fe49bab5e8dd",
+      "subject": "fdic-branch:17388:13",
+      "predicate": "branch_of",
+      "object": "fdic:17388",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_40bd0777e23ab9ed148c"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_17c2f3f7609b2329930c",
+      "subject": "fdic-branch:4297:7",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e1650973298f9064a55b"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_58fa13f7ec857e7ab75f",
+      "subject": "fdic-branch:4977:1089",
+      "predicate": "branch_of",
+      "object": "fdic:4977",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f0978798063a861ffdb7"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_85678980335d2ffbacb1",
+      "subject": "fdic-branch:12441:222",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_5e32885f6c2e48012451"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_8960ef8af52215c72880",
+      "subject": "fdic-branch:32974:33",
+      "predicate": "branch_of",
+      "object": "fdic:32974",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a470b0f6be2c93b3c497"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_91a09caa95cb36bd7379",
+      "subject": "fdic-branch:12441:222",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a4d5eacef2601275c0f7"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_9354a98ab5f065ebc618",
+      "subject": "fdic-branch:12441:300",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_599bed2d9d85d3dcf250"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_a040b78eb558203f8d0a",
+      "subject": "fdic-branch:28094:22",
+      "predicate": "branch_of",
+      "object": "fdic:28094",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_24cb26d87c0f13e85efa"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_bb903080bfd2ef75615e",
+      "subject": "fdic-branch:32974:18",
+      "predicate": "branch_of",
+      "object": "fdic:32974",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_78eaa523c7cd7de63d15"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_bece00078bbecc6e7070",
+      "subject": "fdic-branch:28094:22",
+      "predicate": "branch_of",
+      "object": "fdic:28094",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_89d7e7e3899b1339a5ab"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_cde940f763430f5e6d56",
+      "subject": "fdic-branch:628:2116",
+      "predicate": "branch_of",
+      "object": "fdic:628",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_792fae6c02884acba9be"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_ceaf958fc4626daafb1c",
+      "subject": "fdic-branch:628:2137",
+      "predicate": "branch_of",
+      "object": "fdic:628",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_550a231925ae3fe8ad32"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_e71f95ffe396340fa3de",
+      "subject": "fdic-branch:12441:300",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_73329bdcdcf2b97ba019"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_ed2faf4ace4df606e603",
+      "subject": "fdic-branch:32974:18",
+      "predicate": "branch_of",
+      "object": "fdic:32974",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d36001c57c5ed2df76e3"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_71a955936ee0d9dcff4f",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1200300121",
+      "text": "46 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_11cc147975e3bea9f9c6",
+        "sig_1b35d8f85106b58c9e3d",
+        "sig_4e8cf98e9868c0733e97",
+        "sig_6c276ec049d446b800aa",
+        "sig_b84021d1bab8b19e9807",
+        "sig_ba56542d70412de0833d",
+        "sig_bf4035ba9cd0c4ce30d3",
+        "sig_e9dc4c7a22053212c50c",
+        "sig_081cc4319c18d4c40441",
+        "sig_0e2a775ca5553f33dbeb",
+        "sig_10b07c8dc9ba28cc2291",
+        "sig_10b5e742d1768b7a4710",
+        "sig_11b4ce7a1040a7a667f3",
+        "sig_158e3a936b3cdca359c9",
+        "sig_1821210ae4cdff953169",
+        "sig_229cc2ab0f6b3d2c761c",
+        "sig_2d0034f784f50df02c07",
+        "sig_2ebc8b89cf4f288d2e00",
+        "sig_3f2fd3b3f7fa051c2cf8",
+        "sig_3f762437a58e54de31fc",
+        "sig_4c6322523dc4156d14b6",
+        "sig_500606683e9862daf6c7",
+        "sig_52f23a8f2ea37a1cdb54",
+        "sig_541534db9ec62e6993c6",
+        "sig_5693bf00ce95a30269f5",
+        "sig_59d72839b267730e8f73",
+        "sig_6f3d71e256b0f5d04520",
+        "sig_731a82c8136210182fa9",
+        "sig_7a554527840f998afbd1",
+        "sig_7dc6ed0e561543959b0a",
+        "sig_802695b306134a758551",
+        "sig_88466b62a65d65d53faa",
+        "sig_91f05a2f9ae7e23c50c2",
+        "sig_9d009126dd4975a6cbfc",
+        "sig_ac5594af3fee138a1c9e",
+        "sig_b08f753ae5d92e80e306",
+        "sig_b0e8b35974dfd694579b",
+        "sig_b7b27f1946bbabfc13b4",
+        "sig_c012aa72824e2ef2ab33",
+        "sig_c3453287e890a9a5cf40",
+        "sig_c3cfac433eed55424c76",
+        "sig_d395c10f02ed38e2bc63",
+        "sig_d69c3949c0e8fb77ba65",
+        "sig_e130400f8ec92f36d3a8",
+        "sig_f155664715fef98e86be",
+        "sig_f2920f1997ffd440bb8d"
+      ],
+      "derived_from": [
+        "sig_11cc147975e3bea9f9c6",
+        "sig_1b35d8f85106b58c9e3d",
+        "sig_4e8cf98e9868c0733e97",
+        "sig_6c276ec049d446b800aa",
+        "sig_b84021d1bab8b19e9807",
+        "sig_ba56542d70412de0833d",
+        "sig_bf4035ba9cd0c4ce30d3",
+        "sig_e9dc4c7a22053212c50c",
+        "sig_081cc4319c18d4c40441",
+        "sig_0e2a775ca5553f33dbeb",
+        "sig_10b07c8dc9ba28cc2291",
+        "sig_10b5e742d1768b7a4710",
+        "sig_11b4ce7a1040a7a667f3",
+        "sig_158e3a936b3cdca359c9",
+        "sig_1821210ae4cdff953169",
+        "sig_229cc2ab0f6b3d2c761c",
+        "sig_2d0034f784f50df02c07",
+        "sig_2ebc8b89cf4f288d2e00",
+        "sig_3f2fd3b3f7fa051c2cf8",
+        "sig_3f762437a58e54de31fc",
+        "sig_4c6322523dc4156d14b6",
+        "sig_500606683e9862daf6c7",
+        "sig_52f23a8f2ea37a1cdb54",
+        "sig_541534db9ec62e6993c6",
+        "sig_5693bf00ce95a30269f5",
+        "sig_59d72839b267730e8f73",
+        "sig_6f3d71e256b0f5d04520",
+        "sig_731a82c8136210182fa9",
+        "sig_7a554527840f998afbd1",
+        "sig_7dc6ed0e561543959b0a",
+        "sig_802695b306134a758551",
+        "sig_88466b62a65d65d53faa",
+        "sig_91f05a2f9ae7e23c50c2",
+        "sig_9d009126dd4975a6cbfc",
+        "sig_ac5594af3fee138a1c9e",
+        "sig_b08f753ae5d92e80e306",
+        "sig_b0e8b35974dfd694579b",
+        "sig_b7b27f1946bbabfc13b4",
+        "sig_c012aa72824e2ef2ab33",
+        "sig_c3453287e890a9a5cf40",
+        "sig_c3cfac433eed55424c76",
+        "sig_d395c10f02ed38e2bc63",
+        "sig_d69c3949c0e8fb77ba65",
+        "sig_e130400f8ec92f36d3a8",
+        "sig_f155664715fef98e86be",
+        "sig_f2920f1997ffd440bb8d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 1
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2646
+    },
+    {
+      "id": "stmt_6c79fe102b9605548e29",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200300121",
+      "text": "7 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_489c260759a685727c9a",
+        "sig_50f093f273e4090f487b",
+        "sig_82ac2fb1217ebce346a2",
+        "sig_8940f1127a518b959ac3",
+        "sig_972224f841ad5b756736",
+        "sig_ab90fcfdbc5a15c9cdb9",
+        "sig_f44f0f95bd1c98c33bb2"
+      ],
+      "derived_from": [
+        "sig_489c260759a685727c9a",
+        "sig_50f093f273e4090f487b",
+        "sig_82ac2fb1217ebce346a2",
+        "sig_8940f1127a518b959ac3",
+        "sig_972224f841ad5b756736",
+        "sig_ab90fcfdbc5a15c9cdb9",
+        "sig_f44f0f95bd1c98c33bb2"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.81,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2137
+    },
+    {
+      "id": "stmt_a048eb46a421bf0cb3cb",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200300121",
+      "text": "7 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nps-national-register, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_489c260759a685727c9a",
+        "sig_50f093f273e4090f487b",
+        "sig_82ac2fb1217ebce346a2",
+        "sig_8940f1127a518b959ac3",
+        "sig_972224f841ad5b756736",
+        "sig_ab90fcfdbc5a15c9cdb9",
+        "sig_f44f0f95bd1c98c33bb2",
+        "sig_07d7201cb21484bfd457",
+        "sig_11353bb19871a1b0118f",
+        "sig_550a231925ae3fe8ad32",
+        "sig_599bed2d9d85d3dcf250",
+        "sig_78eaa523c7cd7de63d15",
+        "sig_792fae6c02884acba9be",
+        "sig_89d7e7e3899b1339a5ab",
+        "sig_a4d5eacef2601275c0f7",
+        "sig_24cb26d87c0f13e85efa",
+        "sig_40bd0777e23ab9ed148c",
+        "sig_5e32885f6c2e48012451",
+        "sig_73329bdcdcf2b97ba019",
+        "sig_a470b0f6be2c93b3c497",
+        "sig_d36001c57c5ed2df76e3",
+        "sig_e1650973298f9064a55b",
+        "sig_f0978798063a861ffdb7",
+        "sig_11cc147975e3bea9f9c6",
+        "sig_1b35d8f85106b58c9e3d",
+        "sig_4e8cf98e9868c0733e97",
+        "sig_6c276ec049d446b800aa",
+        "sig_b84021d1bab8b19e9807",
+        "sig_ba56542d70412de0833d",
+        "sig_bf4035ba9cd0c4ce30d3",
+        "sig_e9dc4c7a22053212c50c",
+        "sig_081cc4319c18d4c40441",
+        "sig_0e2a775ca5553f33dbeb",
+        "sig_10b07c8dc9ba28cc2291",
+        "sig_10b5e742d1768b7a4710",
+        "sig_11b4ce7a1040a7a667f3",
+        "sig_158e3a936b3cdca359c9",
+        "sig_1821210ae4cdff953169",
+        "sig_229cc2ab0f6b3d2c761c",
+        "sig_2d0034f784f50df02c07",
+        "sig_2ebc8b89cf4f288d2e00",
+        "sig_3f2fd3b3f7fa051c2cf8",
+        "sig_3f762437a58e54de31fc",
+        "sig_4c6322523dc4156d14b6",
+        "sig_500606683e9862daf6c7",
+        "sig_52f23a8f2ea37a1cdb54",
+        "sig_541534db9ec62e6993c6",
+        "sig_5693bf00ce95a30269f5",
+        "sig_59d72839b267730e8f73",
+        "sig_6f3d71e256b0f5d04520",
+        "sig_731a82c8136210182fa9",
+        "sig_7a554527840f998afbd1",
+        "sig_7dc6ed0e561543959b0a",
+        "sig_802695b306134a758551",
+        "sig_88466b62a65d65d53faa",
+        "sig_91f05a2f9ae7e23c50c2",
+        "sig_9d009126dd4975a6cbfc",
+        "sig_ac5594af3fee138a1c9e",
+        "sig_b08f753ae5d92e80e306",
+        "sig_b0e8b35974dfd694579b",
+        "sig_b7b27f1946bbabfc13b4",
+        "sig_c012aa72824e2ef2ab33",
+        "sig_c3453287e890a9a5cf40",
+        "sig_c3cfac433eed55424c76",
+        "sig_d395c10f02ed38e2bc63",
+        "sig_d69c3949c0e8fb77ba65",
+        "sig_e130400f8ec92f36d3a8",
+        "sig_f155664715fef98e86be",
+        "sig_f2920f1997ffd440bb8d",
+        "sig_08372154987a96429153",
+        "sig_3b936be671a581f92300",
+        "sig_430c1fb026dfaab6e2e7",
+        "sig_51fd5f9e2a0f4e91cbb9",
+        "sig_5bb398de420b20aa82ab",
+        "sig_8de03d980476e2ff7fac",
+        "sig_956d7c92faaae0468d4f",
+        "sig_a386470a58f9a918e924",
+        "sig_b671c45785cc241e771f",
+        "sig_c794029b6832449cfc34",
+        "sig_8974e9461039cb66d9bc"
+      ],
+      "derived_from": [
+        "sig_489c260759a685727c9a",
+        "sig_50f093f273e4090f487b",
+        "sig_82ac2fb1217ebce346a2",
+        "sig_8940f1127a518b959ac3",
+        "sig_972224f841ad5b756736",
+        "sig_ab90fcfdbc5a15c9cdb9",
+        "sig_f44f0f95bd1c98c33bb2",
+        "sig_07d7201cb21484bfd457",
+        "sig_11353bb19871a1b0118f",
+        "sig_550a231925ae3fe8ad32",
+        "sig_599bed2d9d85d3dcf250",
+        "sig_78eaa523c7cd7de63d15",
+        "sig_792fae6c02884acba9be",
+        "sig_89d7e7e3899b1339a5ab",
+        "sig_a4d5eacef2601275c0f7",
+        "sig_24cb26d87c0f13e85efa",
+        "sig_40bd0777e23ab9ed148c",
+        "sig_5e32885f6c2e48012451",
+        "sig_73329bdcdcf2b97ba019",
+        "sig_a470b0f6be2c93b3c497",
+        "sig_d36001c57c5ed2df76e3",
+        "sig_e1650973298f9064a55b",
+        "sig_f0978798063a861ffdb7",
+        "sig_11cc147975e3bea9f9c6",
+        "sig_1b35d8f85106b58c9e3d",
+        "sig_4e8cf98e9868c0733e97",
+        "sig_6c276ec049d446b800aa",
+        "sig_b84021d1bab8b19e9807",
+        "sig_ba56542d70412de0833d",
+        "sig_bf4035ba9cd0c4ce30d3",
+        "sig_e9dc4c7a22053212c50c",
+        "sig_081cc4319c18d4c40441",
+        "sig_0e2a775ca5553f33dbeb",
+        "sig_10b07c8dc9ba28cc2291",
+        "sig_10b5e742d1768b7a4710",
+        "sig_11b4ce7a1040a7a667f3",
+        "sig_158e3a936b3cdca359c9",
+        "sig_1821210ae4cdff953169",
+        "sig_229cc2ab0f6b3d2c761c",
+        "sig_2d0034f784f50df02c07",
+        "sig_2ebc8b89cf4f288d2e00",
+        "sig_3f2fd3b3f7fa051c2cf8",
+        "sig_3f762437a58e54de31fc",
+        "sig_4c6322523dc4156d14b6",
+        "sig_500606683e9862daf6c7",
+        "sig_52f23a8f2ea37a1cdb54",
+        "sig_541534db9ec62e6993c6",
+        "sig_5693bf00ce95a30269f5",
+        "sig_59d72839b267730e8f73",
+        "sig_6f3d71e256b0f5d04520",
+        "sig_731a82c8136210182fa9",
+        "sig_7a554527840f998afbd1",
+        "sig_7dc6ed0e561543959b0a",
+        "sig_802695b306134a758551",
+        "sig_88466b62a65d65d53faa",
+        "sig_91f05a2f9ae7e23c50c2",
+        "sig_9d009126dd4975a6cbfc",
+        "sig_ac5594af3fee138a1c9e",
+        "sig_b08f753ae5d92e80e306",
+        "sig_b0e8b35974dfd694579b",
+        "sig_b7b27f1946bbabfc13b4",
+        "sig_c012aa72824e2ef2ab33",
+        "sig_c3453287e890a9a5cf40",
+        "sig_c3cfac433eed55424c76",
+        "sig_d395c10f02ed38e2bc63",
+        "sig_d69c3949c0e8fb77ba65",
+        "sig_e130400f8ec92f36d3a8",
+        "sig_f155664715fef98e86be",
+        "sig_f2920f1997ffd440bb8d",
+        "sig_08372154987a96429153",
+        "sig_3b936be671a581f92300",
+        "sig_430c1fb026dfaab6e2e7",
+        "sig_51fd5f9e2a0f4e91cbb9",
+        "sig_5bb398de420b20aa82ab",
+        "sig_8de03d980476e2ff7fac",
+        "sig_956d7c92faaae0468d4f",
+        "sig_a386470a58f9a918e924",
+        "sig_b671c45785cc241e771f",
+        "sig_c794029b6832449cfc34",
+        "sig_8974e9461039cb66d9bc"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_e5334b003451234803bf",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200300121",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $975,788,000 held across 8 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_73329bdcdcf2b97ba019",
+        "sig_5e32885f6c2e48012451",
+        "sig_24cb26d87c0f13e85efa",
+        "sig_e1650973298f9064a55b",
+        "sig_d36001c57c5ed2df76e3",
+        "sig_f0978798063a861ffdb7",
+        "sig_40bd0777e23ab9ed148c",
+        "sig_a470b0f6be2c93b3c497"
+      ],
+      "derived_from": [
+        "sig_73329bdcdcf2b97ba019",
+        "sig_5e32885f6c2e48012451",
+        "sig_24cb26d87c0f13e85efa",
+        "sig_e1650973298f9064a55b",
+        "sig_d36001c57c5ed2df76e3",
+        "sig_f0978798063a861ffdb7",
+        "sig_40bd0777e23ab9ed148c",
+        "sig_a470b0f6be2c93b3c497"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.65,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.175
+    },
+    {
+      "id": "stmt_ac7d4c3d4535f55d1d28",
+      "kind": "institutional_memory_density",
+      "atlas_address": "F02.1200300121",
+      "text": "10 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_08372154987a96429153",
+        "sig_3b936be671a581f92300",
+        "sig_430c1fb026dfaab6e2e7",
+        "sig_51fd5f9e2a0f4e91cbb9",
+        "sig_5bb398de420b20aa82ab",
+        "sig_8de03d980476e2ff7fac",
+        "sig_956d7c92faaae0468d4f",
+        "sig_a386470a58f9a918e924",
+        "sig_b671c45785cc241e771f",
+        "sig_c794029b6832449cfc34"
+      ],
+      "derived_from": [
+        "sig_08372154987a96429153",
+        "sig_3b936be671a581f92300",
+        "sig_430c1fb026dfaab6e2e7",
+        "sig_51fd5f9e2a0f4e91cbb9",
+        "sig_5bb398de420b20aa82ab",
+        "sig_8de03d980476e2ff7fac",
+        "sig_956d7c92faaae0468d4f",
+        "sig_a386470a58f9a918e924",
+        "sig_b671c45785cc241e771f",
+        "sig_c794029b6832449cfc34"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.15,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1417
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.083Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

@@ -1,0 +1,281 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331312130",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 0,
+    "relations": 0,
+    "statements": 2,
+    "direct_signals": 3,
+    "direct_entities": 0,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "ecology.inaturalist_observation": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {},
+  "relation_predicates": {},
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1
+  },
+  "signals": [
+    {
+      "id": "sig_aea8b1edd693f0523b8e",
+      "source": "epa-echo",
+      "source_record_id": "110070205414",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "QUIET LINK, LLC",
+        "address": "155 HIGHLAND GLEN COURT, ALPHARETTA, GA, 30005",
+        "county": "FULTON COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2045299812528,
+          34.074079978134
+        ]
+      },
+      "atlas_address": "F02.1331312130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2045299812528,
+          34.074079978134
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070205414",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 1326
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_834ebb1561396c16e808",
+      "source": "inaturalist-observations",
+      "source_record_id": "394378568",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Sedum sarmentosum",
+        "common_name": "Stringy Stonecrop",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2093734741,
+          34.0491409302
+        ]
+      },
+      "atlas_address": "F02.1331312130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2093734741,
+          34.0491409302
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25T12:08:47.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.677Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394378568",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Johns Creek",
+        "positional_accuracy": 8
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_7052f8e1062f67ecb791",
+      "source": "osm-notes",
+      "source_record_id": "5458542",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "\"The location is off by 200ft\"\nOSM snapshot date: 2026-07-14T00:42:02Z\nPOI has no name\nPOI types: building\n #organicmaps android 2026.07.23-6-Google"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1938823,
+          34.0722368
+        ]
+      },
+      "atlas_address": "F02.1331312130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1938823,
+          34.0722368
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-16 01:41:02 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5458542",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-08-16 01:41:02 UTC",
+            "uid": 24398473,
+            "user": "Optimus_23",
+            "user_url": "https://api.openstreetmap.org/user/Optimus_23",
+            "action": "opened",
+            "text": "\"The location is off by 200ft\"\nOSM snapshot date: 2026-07-14T00:42:02Z\nPOI has no name\nPOI types: building\n #organicmaps android 2026.07.23-6-Google",
+            "html": "<p dir=\"auto\">\"The location is off by 200ft\"\n<br />OSM snapshot date: 2026-07-14T00:42:02Z\n<br />POI has no name\n<br />POI types: building\n<br /> #organicmaps android 2026.07.23-6-Google</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [],
+  "relations": [],
+  "statements": [
+    {
+      "id": "stmt_f476835f773d5b57e370",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331312130",
+      "text": "3 independent source channels address signals to this ground: epa-echo, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_aea8b1edd693f0523b8e",
+        "sig_834ebb1561396c16e808",
+        "sig_7052f8e1062f67ecb791"
+      ],
+      "derived_from": [
+        "sig_aea8b1edd693f0523b8e",
+        "sig_834ebb1561396c16e808",
+        "sig_7052f8e1062f67ecb791"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_85f26f4e696e3f1c1bda",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331312130",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_aea8b1edd693f0523b8e"
+      ],
+      "derived_from": [
+        "sig_aea8b1edd693f0523b8e"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.113Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

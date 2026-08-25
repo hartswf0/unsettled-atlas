@@ -1,0 +1,2422 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213002",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 36,
+    "entities": 6,
+    "relations": 8,
+    "statements": 4,
+    "direct_signals": 36,
+    "direct_entities": 6,
+    "direct_statements": 4
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 2,
+    "money.bank_branch": 4,
+    "money.branch_deposits": 2,
+    "ecology.occurrence": 5,
+    "ecology.inaturalist_observation": 22,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 6
+  },
+  "relation_predicates": {
+    "branch_of": 6,
+    "holds_reported_deposits": 2
+  },
+  "statement_kinds": {
+    "ecological_observation_density": 1,
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_5a6ac13f6b4ce6bad1fe",
+      "source": "epa-echo",
+      "source_record_id": "110071920988",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SAREN COURT SUBDIVISION",
+        "address": "2157 SAREN COURT, TUCKER, GA, 30084",
+        "county": "DEKALB COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2343297941729,
+          33.8478899180907
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2343297941729,
+          33.8478899180907
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071920988",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10634
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_052a9bf205905777a0cc",
+      "source": "epa-echo",
+      "source_record_id": "110071671612",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "COPY PREPARATION",
+        "address": "2200 NORTHLAKE PKWY, STE 355, TUCKER, GA, 30084",
+        "county": "DEKALB COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2446101142844,
+          33.8495402047821
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2446101142844,
+          33.8495402047821
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071671612",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 5987
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_95200be80ab1c79373de",
+      "source": "inaturalist-observations",
+      "source_record_id": "394372799",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Animalia",
+        "common_name": "Animals",
+        "iconic_taxon": "Animalia",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2455507989,
+          33.847301743
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2455507989,
+          33.847301743
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25T11:34:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.677Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394372799",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Lavista Rd, Tucker, GA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_14a4363566209ffa0f04",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309722",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Chrysopini",
+        "common_name": null,
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2487429645,
+          33.8507106582
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2487429645,
+          33.8507106582
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:44:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309722",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Northlake, Tucker, GA, USA",
+        "positional_accuracy": 80
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_be07c51e3ebff01482a0",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309721",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Kocakina fidelis",
+        "common_name": "Intractable Quaker",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 8
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2506467041,
+          33.8700789497
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2506467041,
+          33.8700789497
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:33:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309721",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "DeKalb County, GA, USA",
+        "positional_accuracy": 743
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_493785e281708761bb5c",
+      "source": "inaturalist-observations",
+      "source_record_id": "394249263",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Insecta",
+        "common_name": "Insects",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2360277778,
+          33.8623777778
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2360277778,
+          33.8623777778
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:08:16.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394249263",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA 30084, USA",
+        "positional_accuracy": null
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_24c9dee1e8acf22970a1",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309692",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Helianthus microcephalus",
+        "common_name": "Small Woodland Sunflower",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2278239379,
+          33.8675762221
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2278239379,
+          33.8675762221
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:43:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309692",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 69
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_d808c085831b97fd2a6d",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309690",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Ruellia",
+        "common_name": "Ruellias",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2281272279,
+          33.8674894578
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2281272279,
+          33.8674894578
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:41:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309690",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 34
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ec81fdd122c0a410c47a",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309691",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Pinus",
+        "common_name": "pines",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2282291469,
+          33.8679754206
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2282291469,
+          33.8679754206
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:41:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309691",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 45
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1ac2d1b22678ced92661",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309687",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Prunella vulgaris",
+        "common_name": "common selfheal",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2279935236,
+          33.867544562
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2279935236,
+          33.867544562
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:39:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309687",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 105
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6f9749c4adb7aef0d5f2",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309689",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Phyllanthus",
+        "common_name": null,
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2284963498,
+          33.8677594005
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2284963498,
+          33.8677594005
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:39:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309689",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 91
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b5eb875483e2cd5b67ca",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309688",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Trifolium repens",
+        "common_name": "white clover",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2283901983,
+          33.8677513066
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2283901983,
+          33.8677513066
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:39:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309688",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 95
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_942aa0391dd12b457fe2",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309684",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Helicoidea",
+        "common_name": null,
+        "iconic_taxon": "Mollusca",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.228712891,
+          33.8680556202
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.228712891,
+          33.8680556202
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:37:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309684",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 48
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_3d67852ba04ee1e8fe66",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309682",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Eupatoriinae",
+        "common_name": null,
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2281394061,
+          33.8677113365
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2281394061,
+          33.8677113365
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:36:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309682",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 101
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a449cec57282eb4c3e5a",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309680",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Stereum fasciatum",
+        "common_name": null,
+        "iconic_taxon": "Fungi",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2280163379,
+          33.8673582148
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2280163379,
+          33.8673582148
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:36:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309680",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 41
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_41f451c96b10763b62d1",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309679",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Phegopteris",
+        "common_name": "beech ferns",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2284213362,
+          33.867818523
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2284213362,
+          33.867818523
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:35:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309679",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 17
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_89244e92aaf40bb6e4b5",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309678",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Pinus",
+        "common_name": "pines",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2282788145,
+          33.8676777567
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2282788145,
+          33.8676777567
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:34:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309678",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 30
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1978e87ca80c75b045d5",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309674",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Liriodendron tulipifera",
+        "common_name": "American tuliptree",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2278416449,
+          33.8672154927
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2278416449,
+          33.8672154927
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:31:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309674",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 49
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_cff5f728dfabf9067993",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309677",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Smilax",
+        "common_name": "greenbriers",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.227620253,
+          33.8671251021
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.227620253,
+          33.8671251021
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:31:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309677",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 27
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0b536cbd64dc46fce1a8",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309715",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Nandina domestica",
+        "common_name": "Heavenly bamboo",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2285291149,
+          33.8679429906
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2285291149,
+          33.8679429906
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:29:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309715",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 70
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8aebcc5bcfb1cf6caabc",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309714",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Polystichum",
+        "common_name": "shield ferns",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2271920484,
+          33.8669225603
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2271920484,
+          33.8669225603
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:28:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309714",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 34
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_10d8a977a5a841443ec7",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309709",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Hedera",
+        "common_name": "ivies",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2275349007,
+          33.8668919038
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2275349007,
+          33.8668919038
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:26:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309709",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 40
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a746404059e6b136f7d8",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309710",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Tacuina",
+        "common_name": null,
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2274044246,
+          33.8669835903
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2274044246,
+          33.8669835903
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:25:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309710",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 58
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_2bd1ec50a5befc7559a2",
+      "source": "inaturalist-observations",
+      "source_record_id": "394309720",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Liquidambar styraciflua",
+        "common_name": "American sweetgum",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2274084065,
+          33.8670617239
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2274084065,
+          33.8670617239
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:21:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394309720",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Tucker, GA, USA",
+        "positional_accuracy": 99
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0bebfafafba9cab54082",
+      "source": "fdic-locations",
+      "source_record_id": "186319",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3240,
+        "institution_name": "Truist Bank",
+        "branch_name": "NORTHLAKE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4098 Lavista Rd",
+        "city": "Tucker",
+        "state": "GA",
+        "zip": "30084",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25129303906638,
+          33.84686598267726
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.25129303906638,
+          33.84686598267726
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_54f1c0dafe14c1744e65",
+      "source": "fdic-locations",
+      "source_record_id": "191404",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8453,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "NORTHLAKE FESTIVAL BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4099 Lavista Rd",
+        "city": "Tucker",
+        "state": "GA",
+        "zip": "30084",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25117099855615,
+          33.846047992746364
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.25117099855615,
+          33.846047992746364
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_81cd0dd32e7d65d1ce7c",
+      "source": "fdic-locations",
+      "source_record_id": "244347",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3247,
+        "institution_name": "Truist Bank",
+        "branch_name": "EMBRY HILLS BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3603 Chamblee Tucker Rd",
+        "city": "Chamblee",
+        "state": "GA",
+        "zip": "30341",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.24689396482282,
+          33.88427898468649
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.24689396482282,
+          33.88427898468649
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c69e82d148debb83381f",
+      "source": "fdic-locations",
+      "source_record_id": "218597",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4210,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "NORTHLAKE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4144 Lavista Rd",
+        "city": "Tucker",
+        "state": "GA",
+        "zip": "30084",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.24940702703289,
+          33.846802992674895
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.24940702703289,
+          33.846802992674895
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_04ac1629ac0426c48c45",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938070725",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Zonotrichia albicollis (J.F.Gmelin, 1789)",
+        "species": "Zonotrichia albicollis",
+        "vernacular_name": null,
+        "taxon_key": 5231140,
+        "species_key": 5231140,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 7035,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.21734,
+          33.850794
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.21734,
+          33.850794
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T12:39:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938070725",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_645375ab46b1175964c7",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938270127",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Cyanocitta cristata (Linnaeus, 1758)",
+        "species": "Cyanocitta cristata",
+        "vernacular_name": null,
+        "taxon_key": 2482593,
+        "species_key": 2482593,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 7035,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.21734,
+          33.850794
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.21734,
+          33.850794
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T12:39:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938270127",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c1703580d90319102636",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938165066",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Cathartes aura (Linnaeus, 1758)",
+        "species": "Cathartes aura",
+        "vernacular_name": null,
+        "taxon_key": 2481930,
+        "species_key": 2481930,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 7035,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.21734,
+          33.850794
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.21734,
+          33.850794
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T12:39:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938165066",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_3e6666c8ab6d2ddf9bdc",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938353006",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Physcia pumilior R.C.Harris",
+        "species": "Physcia pumilior",
+        "vernacular_name": null,
+        "taxon_key": 3428420,
+        "species_key": 3428420,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.271241,
+          33.843724
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.271241,
+          33.843724
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T14:56:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938353006",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/publicdomain/zero/1.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:16889:84",
+      "type": "bank_branch",
+      "name": "Embry Hills Branch",
+      "identifiers": {
+        "fdic_cert": "16889",
+        "branch_id": "84"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2460440398408,
+          33.8821560162502
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ccc2f08b82ddbd4aa233"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:207",
+      "type": "bank_branch",
+      "name": "Northlake Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "207"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2451060210565,
+          33.851371004177
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_899381e5271a4a2600af"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4210",
+      "type": "bank_branch",
+      "name": "NORTHLAKE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4210"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.24940702703289,
+          33.846802992674895
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c69e82d148debb83381f"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8453",
+      "type": "bank_branch",
+      "name": "NORTHLAKE FESTIVAL BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8453"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25117099855615,
+          33.846047992746364
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_54f1c0dafe14c1744e65"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3240",
+      "type": "bank_branch",
+      "name": "NORTHLAKE BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3240"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25129303906638,
+          33.84686598267726
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0bebfafafba9cab54082"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3247",
+      "type": "bank_branch",
+      "name": "EMBRY HILLS BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3247"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.24689396482282,
+          33.88427898468649
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_81cd0dd32e7d65d1ce7c"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_da2b4f0f91f3f95e0d7e",
+      "subject": "fdic-branch:16889:84",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16889",
+      "value": {
+        "amount_usd": 101814000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ccc2f08b82ddbd4aa233"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f7f6eb7ec75b738dce05",
+      "subject": "fdic-branch:20504:207",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 124914000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_899381e5271a4a2600af"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_1805fc2c00b7463749b6",
+      "subject": "fdic-branch:20504:207",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_899381e5271a4a2600af"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_446b89866937419e353b",
+      "subject": "fdic-branch:9846:3240",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0bebfafafba9cab54082"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_7f3fed1a961b081ffb0a",
+      "subject": "fdic-branch:3510:4210",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c69e82d148debb83381f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_b439cb2ce94cffdb1963",
+      "subject": "fdic-branch:9846:3247",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_81cd0dd32e7d65d1ce7c"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_b9c067c8440d2194361b",
+      "subject": "fdic-branch:3511:8453",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_54f1c0dafe14c1744e65"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f00332f0f3fb8f388b78",
+      "subject": "fdic-branch:16889:84",
+      "predicate": "branch_of",
+      "object": "fdic:16889",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ccc2f08b82ddbd4aa233"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_77bb759197c10f14f5a2",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331213002",
+      "text": "27 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_04ac1629ac0426c48c45",
+        "sig_3e6666c8ab6d2ddf9bdc",
+        "sig_645375ab46b1175964c7",
+        "sig_c1703580d90319102636",
+        "sig_fc9838b73026f8d7a03d",
+        "sig_0b536cbd64dc46fce1a8",
+        "sig_10d8a977a5a841443ec7",
+        "sig_14a4363566209ffa0f04",
+        "sig_1978e87ca80c75b045d5",
+        "sig_1ac2d1b22678ced92661",
+        "sig_24c9dee1e8acf22970a1",
+        "sig_2bd1ec50a5befc7559a2",
+        "sig_3d67852ba04ee1e8fe66",
+        "sig_41f451c96b10763b62d1",
+        "sig_493785e281708761bb5c",
+        "sig_6f9749c4adb7aef0d5f2",
+        "sig_89244e92aaf40bb6e4b5",
+        "sig_8aebcc5bcfb1cf6caabc",
+        "sig_942aa0391dd12b457fe2",
+        "sig_95200be80ab1c79373de",
+        "sig_a449cec57282eb4c3e5a",
+        "sig_a746404059e6b136f7d8",
+        "sig_b5eb875483e2cd5b67ca",
+        "sig_be07c51e3ebff01482a0",
+        "sig_cff5f728dfabf9067993",
+        "sig_d808c085831b97fd2a6d",
+        "sig_ec81fdd122c0a410c47a"
+      ],
+      "derived_from": [
+        "sig_04ac1629ac0426c48c45",
+        "sig_3e6666c8ab6d2ddf9bdc",
+        "sig_645375ab46b1175964c7",
+        "sig_c1703580d90319102636",
+        "sig_fc9838b73026f8d7a03d",
+        "sig_0b536cbd64dc46fce1a8",
+        "sig_10d8a977a5a841443ec7",
+        "sig_14a4363566209ffa0f04",
+        "sig_1978e87ca80c75b045d5",
+        "sig_1ac2d1b22678ced92661",
+        "sig_24c9dee1e8acf22970a1",
+        "sig_2bd1ec50a5befc7559a2",
+        "sig_3d67852ba04ee1e8fe66",
+        "sig_41f451c96b10763b62d1",
+        "sig_493785e281708761bb5c",
+        "sig_6f9749c4adb7aef0d5f2",
+        "sig_89244e92aaf40bb6e4b5",
+        "sig_8aebcc5bcfb1cf6caabc",
+        "sig_942aa0391dd12b457fe2",
+        "sig_95200be80ab1c79373de",
+        "sig_a449cec57282eb4c3e5a",
+        "sig_a746404059e6b136f7d8",
+        "sig_b5eb875483e2cd5b67ca",
+        "sig_be07c51e3ebff01482a0",
+        "sig_cff5f728dfabf9067993",
+        "sig_d808c085831b97fd2a6d",
+        "sig_ec81fdd122c0a410c47a"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 1
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2646
+    },
+    {
+      "id": "stmt_7c421ec802a7a2f9df6f",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213002",
+      "text": "6 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_052a9bf205905777a0cc",
+        "sig_5a6ac13f6b4ce6bad1fe",
+        "sig_0bebfafafba9cab54082",
+        "sig_54f1c0dafe14c1744e65",
+        "sig_81cd0dd32e7d65d1ce7c",
+        "sig_c69e82d148debb83381f",
+        "sig_899381e5271a4a2600af",
+        "sig_ccc2f08b82ddbd4aa233",
+        "sig_04ac1629ac0426c48c45",
+        "sig_3e6666c8ab6d2ddf9bdc",
+        "sig_645375ab46b1175964c7",
+        "sig_c1703580d90319102636",
+        "sig_fc9838b73026f8d7a03d",
+        "sig_0b536cbd64dc46fce1a8",
+        "sig_10d8a977a5a841443ec7",
+        "sig_14a4363566209ffa0f04",
+        "sig_1978e87ca80c75b045d5",
+        "sig_1ac2d1b22678ced92661",
+        "sig_24c9dee1e8acf22970a1",
+        "sig_2bd1ec50a5befc7559a2",
+        "sig_3d67852ba04ee1e8fe66",
+        "sig_41f451c96b10763b62d1",
+        "sig_493785e281708761bb5c",
+        "sig_6f9749c4adb7aef0d5f2",
+        "sig_89244e92aaf40bb6e4b5",
+        "sig_8aebcc5bcfb1cf6caabc",
+        "sig_942aa0391dd12b457fe2",
+        "sig_95200be80ab1c79373de",
+        "sig_a449cec57282eb4c3e5a",
+        "sig_a746404059e6b136f7d8",
+        "sig_b5eb875483e2cd5b67ca",
+        "sig_be07c51e3ebff01482a0",
+        "sig_cff5f728dfabf9067993",
+        "sig_d808c085831b97fd2a6d",
+        "sig_ec81fdd122c0a410c47a",
+        "sig_9b2624c7eec0375db73c"
+      ],
+      "derived_from": [
+        "sig_052a9bf205905777a0cc",
+        "sig_5a6ac13f6b4ce6bad1fe",
+        "sig_0bebfafafba9cab54082",
+        "sig_54f1c0dafe14c1744e65",
+        "sig_81cd0dd32e7d65d1ce7c",
+        "sig_c69e82d148debb83381f",
+        "sig_899381e5271a4a2600af",
+        "sig_ccc2f08b82ddbd4aa233",
+        "sig_04ac1629ac0426c48c45",
+        "sig_3e6666c8ab6d2ddf9bdc",
+        "sig_645375ab46b1175964c7",
+        "sig_c1703580d90319102636",
+        "sig_fc9838b73026f8d7a03d",
+        "sig_0b536cbd64dc46fce1a8",
+        "sig_10d8a977a5a841443ec7",
+        "sig_14a4363566209ffa0f04",
+        "sig_1978e87ca80c75b045d5",
+        "sig_1ac2d1b22678ced92661",
+        "sig_24c9dee1e8acf22970a1",
+        "sig_2bd1ec50a5befc7559a2",
+        "sig_3d67852ba04ee1e8fe66",
+        "sig_41f451c96b10763b62d1",
+        "sig_493785e281708761bb5c",
+        "sig_6f9749c4adb7aef0d5f2",
+        "sig_89244e92aaf40bb6e4b5",
+        "sig_8aebcc5bcfb1cf6caabc",
+        "sig_942aa0391dd12b457fe2",
+        "sig_95200be80ab1c79373de",
+        "sig_a449cec57282eb4c3e5a",
+        "sig_a746404059e6b136f7d8",
+        "sig_b5eb875483e2cd5b67ca",
+        "sig_be07c51e3ebff01482a0",
+        "sig_cff5f728dfabf9067993",
+        "sig_d808c085831b97fd2a6d",
+        "sig_ec81fdd122c0a410c47a",
+        "sig_9b2624c7eec0375db73c"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_eda77c46dddcca1bedd9",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331213002",
+      "text": "2 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_052a9bf205905777a0cc",
+        "sig_5a6ac13f6b4ce6bad1fe"
+      ],
+      "derived_from": [
+        "sig_052a9bf205905777a0cc",
+        "sig_5a6ac13f6b4ce6bad1fe"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.41000000000000003,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1638
+    },
+    {
+      "id": "stmt_a04d4b02a3dbf8c0ac34",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331213002",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $226,728,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ccc2f08b82ddbd4aa233",
+        "sig_899381e5271a4a2600af"
+      ],
+      "derived_from": [
+        "sig_ccc2f08b82ddbd4aa233",
+        "sig_899381e5271a4a2600af"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1375
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.102Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

@@ -1,0 +1,133 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331210101",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations"
+  ],
+  "counts": {
+    "signals": 1,
+    "entities": 1,
+    "relations": 1,
+    "statements": 0,
+    "direct_signals": 1,
+    "direct_entities": 1,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 1
+  },
+  "statement_kinds": {},
+  "signals": [
+    {
+      "id": "sig_0ee07d9417eb8a141560",
+      "source": "fdic-locations",
+      "source_record_id": "191847",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4240,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "GWINNETT PLACE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3542 Satellite Blvd",
+        "city": "Duluth",
+        "state": "GA",
+        "zip": "30096",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.13267502753654,
+          33.95946499144634
+        ]
+      },
+      "atlas_address": "F02.1331210101",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.13267502753654,
+          33.95946499144634
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3510:4240",
+      "type": "bank_branch",
+      "name": "GWINNETT PLACE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4240"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.13267502753654,
+          33.95946499144634
+        ]
+      },
+      "atlas_address": "F02.1331210101",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0ee07d9417eb8a141560"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_3e633d2ae351072a5916",
+      "subject": "fdic-branch:3510:4240",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0ee07d9417eb8a141560"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [],
+  "generated_at": "2026-08-25T12:26:10.091Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

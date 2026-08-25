@@ -1,0 +1,1265 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.13312102",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 11,
+    "entities": 8,
+    "relations": 13,
+    "statements": 6,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 3,
+    "money.branch_deposits": 5,
+    "memory.national_register_resource": 2
+  },
+  "entity_types": {
+    "bank_branch": 8
+  },
+  "relation_predicates": {
+    "branch_of": 8,
+    "holds_reported_deposits": 5
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "institutional_memory_density": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 3
+  },
+  "signals": [
+    {
+      "id": "sig_ac51e5586e3b967a2e08",
+      "source": "epa-echo",
+      "source_record_id": "110005676492",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "JASPER CONSTRUCTION CO",
+        "address": "7800 OLD COVINGTON HWY, LITHONIA, GA, 30058",
+        "county": "DE KALB",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0888063114067,
+          33.7022253090199
+        ]
+      },
+      "atlas_address": "F02.1331210211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0888063114067,
+          33.7022253090199
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110005676492",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 2460
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b0448962d91140fe925e",
+      "source": "fdic-locations",
+      "source_record_id": "13885",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4561,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "CONYERS SOUTHSIDE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1540 Highway 138 Se",
+        "city": "Conyers",
+        "state": "GA",
+        "zip": "30013",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.00990101695521,
+          33.64915499167944
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.00990101695521,
+          33.64915499167944
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b299ca6af17c0d6ce99a",
+      "source": "fdic-locations",
+      "source_record_id": "217742",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3265,
+        "institution_name": "Truist Bank",
+        "branch_name": "BANK STREET BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "930 S Main St Ne",
+        "city": "Conyers",
+        "state": "GA",
+        "zip": "30012",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.016870988541,
+          33.667475988002
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.016870988541,
+          33.667475988002
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e2abddd11720980cec3e",
+      "source": "fdic-locations",
+      "source_record_id": "185961",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8625,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "ROCKDALE MAIN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1903 Georgia Highway 20 Se",
+        "city": "Conyers",
+        "state": "GA",
+        "zip": "30013",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.01505999454066,
+          33.63774500025332
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.01505999454066,
+          33.63774500025332
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_37d47a07d9a2dfe241bf",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:224",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 224,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Conyers Branch",
+        "deposits_usd": 47922000,
+        "address": "1945 Highway 138 Ne",
+        "city": "Conyers",
+        "state": "GA",
+        "zip": "30013"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.9811329841526,
+          33.6722550139168
+        ]
+      },
+      "atlas_address": "F02.1331210233",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -83.9811329841526,
+          33.6722550139168
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_3c03d57300ac5a1e452f",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16416:104",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16416,
+        "branch_id": 104,
+        "institution_name": "FSNB, National Association",
+        "branch_name": "Conyers Branch",
+        "deposits_usd": 398000,
+        "address": "1436 Dogwood Dr Se",
+        "city": "Conyers",
+        "state": "GA",
+        "zip": "30013"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.9970300178961,
+          33.6522389872243
+        ]
+      },
+      "atlas_address": "F02.1331210231",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -83.9970300178961,
+          33.6522389872243
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.327Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_57c97951361fa2c35908",
+      "source": "fdic-sod",
+      "source_record_id": "2025:110:258",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 110,
+        "branch_id": 258,
+        "institution_name": "Bank OZK",
+        "branch_name": "Eastside Commercial Bank Branch",
+        "deposits_usd": 94879000,
+        "address": "895 Iris Dr Se",
+        "city": "Conyers",
+        "state": "GA",
+        "zip": "30094"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0198070015851,
+          33.6574449872866
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0198070015851,
+          33.6574449872866
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.324Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e7f25e0ad66262299b50",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16889:51",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16889,
+        "branch_id": 51,
+        "institution_name": "United Community Bank",
+        "branch_name": "Liberty National Bank Conyers Branch",
+        "deposits_usd": 258806000,
+        "address": "1000 Georgia Highway 138 Se",
+        "city": "Conyers",
+        "state": "GA",
+        "zip": "30013"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0192220285624,
+          33.635998002084
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0192220285624,
+          33.635998002084
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.328Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ff2e858e3b26c95d3d5c",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:474",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 474,
+        "institution_name": "Regions Bank",
+        "branch_name": "Conyers Main Branch",
+        "deposits_usd": 62142000,
+        "address": "1848 Highway 138 Se",
+        "city": "Conyers",
+        "state": "GA",
+        "zip": "30013"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0182489734228,
+          33.6367460031233
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0182489734228,
+          33.6367460031233
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a630bdff66e26fcf6435",
+      "source": "nps-national-register",
+      "source_record_id": "97001647",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Almand--O'Kelley--Walker House",
+        "resource_type": "building",
+        "address": "981 Green St.",
+        "city": "Conyers",
+        "county": "Rockdale",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.01571167299994,
+          33.66397130300004
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.01571167299994,
+          33.66397130300004
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1998-02-02T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.067Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{D60F7717-3E8D-4CF0-80F4-59890C8BC9A1}",
+        "src_date": 886377600000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_d4452c3de415d6191254",
+      "source": "nps-national-register",
+      "source_record_id": "82002462",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Rockdale County Jail",
+        "resource_type": "building",
+        "address": "967 Milstead Ave.",
+        "city": "Conyers",
+        "county": "Rockdale",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.01728273599997,
+          33.668426459000045
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.01728273599997,
+          33.668426459000045
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1982-08-26T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.064Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{1800089A-A248-4B0F-9242-FDC3C4BD0798}",
+        "src_date": 399168000000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:110:258",
+      "type": "bank_branch",
+      "name": "Eastside Commercial Bank Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "258"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0198070015851,
+          33.6574449872866
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_57c97951361fa2c35908"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12368:474",
+      "type": "bank_branch",
+      "name": "Conyers Main Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "474"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0182489734228,
+          33.6367460031233
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ff2e858e3b26c95d3d5c"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:16416:104",
+      "type": "bank_branch",
+      "name": "Conyers Branch",
+      "identifiers": {
+        "fdic_cert": "16416",
+        "branch_id": "104"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.9970300178961,
+          33.6522389872243
+        ]
+      },
+      "atlas_address": "F02.1331210231",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:16889:51",
+      "type": "bank_branch",
+      "name": "Liberty National Bank Conyers Branch",
+      "identifiers": {
+        "fdic_cert": "16889",
+        "branch_id": "51"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0192220285624,
+          33.635998002084
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_e7f25e0ad66262299b50"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:224",
+      "type": "bank_branch",
+      "name": "Conyers Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "224"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.9811329841526,
+          33.6722550139168
+        ]
+      },
+      "atlas_address": "F02.1331210233",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_37d47a07d9a2dfe241bf"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4561",
+      "type": "bank_branch",
+      "name": "CONYERS SOUTHSIDE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4561"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.00990101695521,
+          33.64915499167944
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b0448962d91140fe925e"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8625",
+      "type": "bank_branch",
+      "name": "ROCKDALE MAIN BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8625"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.01505999454066,
+          33.63774500025332
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_e2abddd11720980cec3e"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3265",
+      "type": "bank_branch",
+      "name": "BANK STREET BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3265"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.016870988541,
+          33.667475988002
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b299ca6af17c0d6ce99a"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_5dafa5de80b6fc6c0969",
+      "subject": "fdic-branch:16889:51",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16889",
+      "value": {
+        "amount_usd": 258806000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e7f25e0ad66262299b50"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_7debd1bf3eecd8f95c41",
+      "subject": "fdic-branch:110:258",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:110",
+      "value": {
+        "amount_usd": 94879000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_57c97951361fa2c35908"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_924b1b8443370485a8b3",
+      "subject": "fdic-branch:20504:224",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 47922000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_37d47a07d9a2dfe241bf"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_a023904e11b65cf57e82",
+      "subject": "fdic-branch:12368:474",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 62142000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ff2e858e3b26c95d3d5c"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f75d380cd5f33d5279b7",
+      "subject": "fdic-branch:16416:104",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16416",
+      "value": {
+        "amount_usd": 398000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_00eb5fa2e9eb3ace5757",
+      "subject": "fdic-branch:12368:474",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ff2e858e3b26c95d3d5c"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_207bf59f91e4914cd5f0",
+      "subject": "fdic-branch:9846:3265",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b299ca6af17c0d6ce99a"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_460f3bb48d6765e1faa1",
+      "subject": "fdic-branch:16889:51",
+      "predicate": "branch_of",
+      "object": "fdic:16889",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e7f25e0ad66262299b50"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_55e922c52d4e56f180c1",
+      "subject": "fdic-branch:110:258",
+      "predicate": "branch_of",
+      "object": "fdic:110",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_57c97951361fa2c35908"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_89c6be1dd7dfac442c38",
+      "subject": "fdic-branch:3511:8625",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e2abddd11720980cec3e"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_91f8914edca7e1ab24db",
+      "subject": "fdic-branch:16416:104",
+      "predicate": "branch_of",
+      "object": "fdic:16416",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_a345bda29d495dadb4f2",
+      "subject": "fdic-branch:20504:224",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_37d47a07d9a2dfe241bf"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_cfa0ccb69f7a6710ad14",
+      "subject": "fdic-branch:3510:4561",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b0448962d91140fe925e"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_0928f871affe6f39b90d",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331210212",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, fdic-sod, nps-national-register.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_b0448962d91140fe925e",
+        "sig_b299ca6af17c0d6ce99a",
+        "sig_e2abddd11720980cec3e",
+        "sig_57c97951361fa2c35908",
+        "sig_e7f25e0ad66262299b50",
+        "sig_ff2e858e3b26c95d3d5c",
+        "sig_a630bdff66e26fcf6435",
+        "sig_d4452c3de415d6191254"
+      ],
+      "derived_from": [
+        "sig_b0448962d91140fe925e",
+        "sig_b299ca6af17c0d6ce99a",
+        "sig_e2abddd11720980cec3e",
+        "sig_57c97951361fa2c35908",
+        "sig_e7f25e0ad66262299b50",
+        "sig_ff2e858e3b26c95d3d5c",
+        "sig_a630bdff66e26fcf6435",
+        "sig_d4452c3de415d6191254"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_d5b84e44a07ec5e1149e",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331210211",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ac51e5586e3b967a2e08"
+      ],
+      "derived_from": [
+        "sig_ac51e5586e3b967a2e08"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_33ef58a0047524477bcb",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331210212",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $415,827,000 held across 3 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_e7f25e0ad66262299b50",
+        "sig_57c97951361fa2c35908",
+        "sig_ff2e858e3b26c95d3d5c"
+      ],
+      "derived_from": [
+        "sig_e7f25e0ad66262299b50",
+        "sig_57c97951361fa2c35908",
+        "sig_ff2e858e3b26c95d3d5c"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.4,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1437
+    },
+    {
+      "id": "stmt_0c1f7ea5d987ddeca42e",
+      "kind": "institutional_memory_density",
+      "atlas_address": "F02.1331210212",
+      "text": "2 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_a630bdff66e26fcf6435",
+        "sig_d4452c3de415d6191254"
+      ],
+      "derived_from": [
+        "sig_a630bdff66e26fcf6435",
+        "sig_d4452c3de415d6191254"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.15,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1417
+    },
+    {
+      "id": "stmt_c863b3353633287eb58d",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331210231",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $398,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "derived_from": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    },
+    {
+      "id": "stmt_ffe4e6e0856227408762",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331210233",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $47,922,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_37d47a07d9a2dfe241bf"
+      ],
+      "derived_from": [
+        "sig_37d47a07d9a2dfe241bf"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.046Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

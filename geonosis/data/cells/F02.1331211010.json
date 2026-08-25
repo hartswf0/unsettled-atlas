@@ -1,0 +1,839 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211010",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "inaturalist-observations",
+    "nps-national-register",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 10,
+    "entities": 2,
+    "relations": 3,
+    "statements": 3,
+    "direct_signals": 10,
+    "direct_entities": 2,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 1,
+    "ecology.inaturalist_observation": 2,
+    "memory.national_register_resource": 1,
+    "claim.map_note": 5
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_84a92568f24d9d896e84",
+      "source": "inaturalist-observations",
+      "source_record_id": "394252792",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Pterygota",
+        "common_name": "Winged and Once-winged Insects",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5010452101,
+          33.9416630509
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5010452101,
+          33.9416630509
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:23:46.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394252792",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Meadowbrook Dr SE, Marietta, GA, US",
+        "positional_accuracy": 788
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a6afb81013cb4f2ac287",
+      "source": "inaturalist-observations",
+      "source_record_id": "394288296",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Corvus",
+        "common_name": "Crows and Ravens",
+        "iconic_taxon": "Aves",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": true,
+        "photos": 5
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4774107631,
+          33.9539145838
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4774107631,
+          33.9539145838
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:06:11.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394288296",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Georgia, US",
+        "positional_accuracy": 398
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4e18a0bdba4fcd98b7cc",
+      "source": "fdic-locations",
+      "source_record_id": "191710",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4589,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "EAST MARIETTA BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1430 Roswell Rd",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30062",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.51062501618202,
+          33.950000020652084
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.51062501618202,
+          33.950000020652084
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_09987b838b17298a3af1",
+      "source": "osm-notes",
+      "source_record_id": "5309535",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 0,
+        "latest": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.542372,
+          33.9483951
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.542372,
+          33.9483951
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-05-25 15:43:57 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5309535",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": []
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4bf60de8aebd80406ba8",
+      "source": "osm-notes",
+      "source_record_id": "5185392",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "This lot has been partially demolished and is being redeveloped. Should be updated when imagery is available."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5133932,
+          33.9487717
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5133932,
+          33.9487717
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-02-28 19:38:07 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5185392",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-02-28 19:38:08 UTC",
+            "uid": 8289326,
+            "user": "Jared Brand",
+            "user_url": "https://api.openstreetmap.org/user/Jared%20Brand",
+            "action": "opened",
+            "text": "This lot has been partially demolished and is being redeveloped. Should be updated when imagery is available.",
+            "html": "<p dir=\"auto\">This lot has been partially demolished and is being redeveloped. Should be updated when imagery is available.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ff28b84030be1b7382e2",
+      "source": "osm-notes",
+      "source_record_id": "5185389",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "New apartment complex here, no up to date satellite imagery though. Should be updated when available."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5251426,
+          33.9390589
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5251426,
+          33.9390589
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-02-28 19:36:33 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5185389",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-02-28 19:36:33 UTC",
+            "uid": 8289326,
+            "user": "Jared Brand",
+            "user_url": "https://api.openstreetmap.org/user/Jared%20Brand",
+            "action": "opened",
+            "text": "New apartment complex here, no up to date satellite imagery though. Should be updated when available.",
+            "html": "<p dir=\"auto\">New apartment complex here, no up to date satellite imagery though. Should be updated when available.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e8e654ec2c9538880890",
+      "source": "osm-notes",
+      "source_record_id": "5185388",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "New building here, no up to date satellite imagery though. Should be updated when available."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5191231,
+          33.9400018
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5191231,
+          33.9400018
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-02-28 19:36:12 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5185388",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-02-28 19:36:12 UTC",
+            "uid": 8289326,
+            "user": "Jared Brand",
+            "user_url": "https://api.openstreetmap.org/user/Jared%20Brand",
+            "action": "opened",
+            "text": "New building here, no up to date satellite imagery though. Should be updated when available.",
+            "html": "<p dir=\"auto\">New building here, no up to date satellite imagery though. Should be updated when available.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f5c9cdc0e74ba0a9b3b3",
+      "source": "osm-notes",
+      "source_record_id": "4924072",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Unable to answer \"What are the opening hours here?\" – Pawn Club (Pawnshop) – https://osm.org/way/264392190 via StreetComplete 61.2:\n\nSplit into guns and gold and a liqueur store\n\nAttached photo(s):\nhttps://streetcomplete.app/p/300141.jpg"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.514289,
+          33.9380702
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.514289,
+          33.9380702
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-08-22 16:52:29 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4924072",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-08-22 16:52:29 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "Unable to answer \"What are the opening hours here?\" – Pawn Club (Pawnshop) – https://osm.org/way/264392190 via StreetComplete 61.2:\n\nSplit into guns and gold and a liqueur store\n\nAttached photo(s):\nhttps://streetcomplete.app/p/300141.jpg",
+            "html": "<p dir=\"auto\">Unable to answer \"What are the opening hours here?\" – Pawn&nbsp;Club (Pawnshop) – <a href=\"https://osm.org/way/264392190\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">way/264392190</a> via StreetComplete 61.2:</p>\n\n<p dir=\"auto\">Split into guns and gold and a liqueur store</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://streetcomplete.app/p/300141.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://streetcomplete.app/p/300141.jpg</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4768c4219d1a931ac3ab",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:246",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 246,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Marietta Square Branch",
+        "deposits_usd": 56977000,
+        "address": "214 Roswell St Se",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30060"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5463220330637,
+          33.9511700086068
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5463220330637,
+          33.9511700086068
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_d3f7a903060d26314713",
+      "source": "nps-national-register",
+      "source_record_id": "94001387",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Bankston, J. C., Rock House",
+        "resource_type": "building",
+        "address": "901 Industrial Dr., Dobbins Air Reserve Base",
+        "city": "Marietta",
+        "county": "Cobb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.52680092999998,
+          33.92545634800007
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.52680092999998,
+          33.92545634800007
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1994-11-25T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.067Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{8FF41895-6387-4BBB-A13F-C14A2203DF04}",
+        "src_date": 785721600000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:20504:246",
+      "type": "bank_branch",
+      "name": "Marietta Square Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "246"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5463220330637,
+          33.9511700086068
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4768c4219d1a931ac3ab"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4589",
+      "type": "bank_branch",
+      "name": "EAST MARIETTA BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4589"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.51062501618202,
+          33.950000020652084
+        ]
+      },
+      "atlas_address": "F02.1331211010",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4e18a0bdba4fcd98b7cc"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_362d2389e757350c230e",
+      "subject": "fdic-branch:20504:246",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 56977000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4768c4219d1a931ac3ab"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_11b410a603cbb6926b5b",
+      "subject": "fdic-branch:3510:4589",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4e18a0bdba4fcd98b7cc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_5f30122de3f32c8cc1ce",
+      "subject": "fdic-branch:20504:246",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4768c4219d1a931ac3ab"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_39175c37ca1b53e4ba30",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331211010",
+      "text": "5 independent source channels address signals to this ground: fdic-locations, fdic-sod, inaturalist-observations, nps-national-register, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4e18a0bdba4fcd98b7cc",
+        "sig_4768c4219d1a931ac3ab",
+        "sig_84a92568f24d9d896e84",
+        "sig_a6afb81013cb4f2ac287",
+        "sig_d3f7a903060d26314713",
+        "sig_09987b838b17298a3af1",
+        "sig_4bf60de8aebd80406ba8",
+        "sig_e8e654ec2c9538880890",
+        "sig_f5c9cdc0e74ba0a9b3b3",
+        "sig_ff28b84030be1b7382e2"
+      ],
+      "derived_from": [
+        "sig_4e18a0bdba4fcd98b7cc",
+        "sig_4768c4219d1a931ac3ab",
+        "sig_84a92568f24d9d896e84",
+        "sig_a6afb81013cb4f2ac287",
+        "sig_d3f7a903060d26314713",
+        "sig_09987b838b17298a3af1",
+        "sig_4bf60de8aebd80406ba8",
+        "sig_e8e654ec2c9538880890",
+        "sig_f5c9cdc0e74ba0a9b3b3",
+        "sig_ff28b84030be1b7382e2"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_9a016435c86d42f65845",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331211010",
+      "text": "5 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_09987b838b17298a3af1",
+        "sig_4bf60de8aebd80406ba8",
+        "sig_e8e654ec2c9538880890",
+        "sig_f5c9cdc0e74ba0a9b3b3",
+        "sig_ff28b84030be1b7382e2"
+      ],
+      "derived_from": [
+        "sig_09987b838b17298a3af1",
+        "sig_4bf60de8aebd80406ba8",
+        "sig_e8e654ec2c9538880890",
+        "sig_f5c9cdc0e74ba0a9b3b3",
+        "sig_ff28b84030be1b7382e2"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.8333333333333334,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1729
+    },
+    {
+      "id": "stmt_1e2562b2fb73a613cc61",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211010",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $56,977,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4768c4219d1a931ac3ab"
+      ],
+      "derived_from": [
+        "sig_4768c4219d1a931ac3ab"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.093Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

@@ -1,0 +1,879 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200303312",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 9,
+    "entities": 3,
+    "relations": 7,
+    "statements": 3,
+    "direct_signals": 9,
+    "direct_entities": 3,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 3,
+    "money.bank_branch": 3,
+    "money.branch_deposits": 2,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "branch_of": 5,
+    "holds_reported_deposits": 2
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_4e6ac378127f4d1bc62b",
+      "source": "epa-echo",
+      "source_record_id": "110024403947",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SOMMES' LUCKY 7 TRUCK STOP",
+        "address": "UNKNOWN, ALLEMANDS, LA, 00000",
+        "county": "ST. CHARLES",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.3578549301789,
+          29.9057217437048
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.3578549301789,
+          29.9057217437048
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110024403947",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 25844
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_6b982aec4604338358fb",
+      "source": "epa-echo",
+      "source_record_id": "110041925815",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "TETRA TECH EC",
+        "address": "10090 HWY 90, LULING, LA, 70000",
+        "county": "ST. CHARLES PARISH",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 20000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.3531899789085,
+          29.8983549515941
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.3531899789085,
+          29.8983549515941
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110041925815",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 33259
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_e28a7bdf52605c065bdb",
+      "source": "epa-echo",
+      "source_record_id": "110008387263",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "ST CHARLES PARISH COUNCIL",
+        "address": "3RD ST 3 BLKS NE OF HWY 18, LULING, LA, 70070",
+        "county": "ST CHARLES",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 4530,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.3516331985211,
+          29.9117222396276
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.3516331985211,
+          29.9117222396276
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110008387263",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 6212
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_370bfe8755053c4376d7",
+      "source": "fdic-locations",
+      "source_record_id": "15298",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "22046",
+        "branch_id": 0,
+        "institution_name": "First National Bank USA",
+        "branch_name": "First National Bank USA",
+        "main_office": 1,
+        "service_type": "Full Service - Brick and Mortar",
+        "address": "13386 Highway 90",
+        "city": "Boutte",
+        "state": "LA",
+        "zip": "70039",
+        "fi_uninum": 15298
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.3842590052561,
+          29.9027440091142
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.3842590052561,
+          29.9027440091142
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7e4b80ed780498d3eb6a",
+      "source": "fdic-locations",
+      "source_record_id": "247991",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "4297",
+        "branch_id": 210,
+        "institution_name": "Capital One, National Association",
+        "branch_name": "BOUTTE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "12269 Highway 90",
+        "city": "Luling",
+        "state": "LA",
+        "zip": "70070",
+        "fi_uninum": 2818
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.34906900969756,
+          29.91152401078098
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.34906900969756,
+          29.91152401078098
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_d4bb2dab45c2ad18ac2c",
+      "source": "fdic-locations",
+      "source_record_id": "225547",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "8149",
+        "branch_id": 7,
+        "institution_name": "First American Bank and Trust",
+        "branch_name": "BOUTTE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "13355 Highway 90",
+        "city": "Boutte",
+        "state": "LA",
+        "zip": "70039",
+        "fi_uninum": 5194
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.38274297042878,
+          29.902328979178492
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.38274297042878,
+          29.902328979178492
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_27bcac37aaf8c3e82230",
+      "source": "osm-notes",
+      "source_record_id": "5008436",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Unsure if this is officially the Cousin Canal or the Cousins Canal (with an s). Both names seem to be in common use."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.356761,
+          29.89083
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.356761,
+          29.89083
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-10-16 05:42:24 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.355Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5008436",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-10-16 05:42:24 UTC",
+            "uid": 23338946,
+            "user": "map_dat",
+            "user_url": "https://api.openstreetmap.org/user/map_dat",
+            "action": "opened",
+            "text": "Unsure if this is officially the Cousin Canal or the Cousins Canal (with an s). Both names seem to be in common use.",
+            "html": "<p dir=\"auto\">Unsure if this is officially the Cousin Canal or the Cousins Canal (with an s). Both names seem to be in common use.</p>"
+          }
+        ]
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_621a785db36db35f4758",
+      "source": "fdic-sod",
+      "source_record_id": "2025:22046:0",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 22046,
+        "branch_id": 0,
+        "institution_name": "First National Bank USA",
+        "branch_name": "First National Bank Usa",
+        "deposits_usd": 150929000,
+        "address": "13386 Highway 90",
+        "city": "Boutte",
+        "state": "LA",
+        "zip": "70039"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.3842590052561,
+          29.9027440091142
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.3842590052561,
+          29.9027440091142
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.774Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_e3a050ee7f826e32d3e6",
+      "source": "fdic-sod",
+      "source_record_id": "2025:4297:210",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 4297,
+        "branch_id": 210,
+        "institution_name": "Capital One, National Association",
+        "branch_name": "Boutte Branch",
+        "deposits_usd": 185273000,
+        "address": "12269 Highway 90",
+        "city": "Luling",
+        "state": "LA",
+        "zip": "70070"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.3490690096976,
+          29.911524010781
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.3490690096976,
+          29.911524010781
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.777Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:22046:0",
+      "type": "bank_branch",
+      "name": "First National Bank USA",
+      "identifiers": {
+        "fdic_cert": "22046",
+        "branch_id": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.3842590052561,
+          29.9027440091142
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_370bfe8755053c4376d7",
+        "sig_621a785db36db35f4758"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:4297:210",
+      "type": "bank_branch",
+      "name": "BOUTTE BRANCH",
+      "identifiers": {
+        "fdic_cert": "4297",
+        "branch_id": "210"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.34906900969756,
+          29.91152401078098
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_7e4b80ed780498d3eb6a",
+        "sig_e3a050ee7f826e32d3e6"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:8149:7",
+      "type": "bank_branch",
+      "name": "BOUTTE BRANCH",
+      "identifiers": {
+        "fdic_cert": "8149",
+        "branch_id": "7"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.38274297042878,
+          29.902328979178492
+        ]
+      },
+      "atlas_address": "F02.1200303312",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_d4bb2dab45c2ad18ac2c"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_8f37efc275e12bd80107",
+      "subject": "fdic-branch:22046:0",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:22046",
+      "value": {
+        "amount_usd": 150929000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_621a785db36db35f4758"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_b6a0459c8548fc9c2634",
+      "subject": "fdic-branch:4297:210",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4297",
+      "value": {
+        "amount_usd": 185273000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e3a050ee7f826e32d3e6"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_61695479149d4e02309b",
+      "subject": "fdic-branch:8149:7",
+      "predicate": "branch_of",
+      "object": "fdic:8149",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d4bb2dab45c2ad18ac2c"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_64a779676d9a240fb20c",
+      "subject": "fdic-branch:4297:210",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e3a050ee7f826e32d3e6"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_78a01e6ef226a84b9a8b",
+      "subject": "fdic-branch:22046:0",
+      "predicate": "branch_of",
+      "object": "fdic:22046",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_621a785db36db35f4758"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_a4996d07322fbca9ca98",
+      "subject": "fdic-branch:22046:0",
+      "predicate": "branch_of",
+      "object": "fdic:22046",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_370bfe8755053c4376d7"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_eee10f0842b8be9ba6a3",
+      "subject": "fdic-branch:4297:210",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7e4b80ed780498d3eb6a"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_f52035d74892d37b38c0",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200303312",
+      "text": "4 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4e6ac378127f4d1bc62b",
+        "sig_6b982aec4604338358fb",
+        "sig_e28a7bdf52605c065bdb",
+        "sig_370bfe8755053c4376d7",
+        "sig_7e4b80ed780498d3eb6a",
+        "sig_d4bb2dab45c2ad18ac2c",
+        "sig_621a785db36db35f4758",
+        "sig_e3a050ee7f826e32d3e6",
+        "sig_27bcac37aaf8c3e82230"
+      ],
+      "derived_from": [
+        "sig_4e6ac378127f4d1bc62b",
+        "sig_6b982aec4604338358fb",
+        "sig_e28a7bdf52605c065bdb",
+        "sig_370bfe8755053c4376d7",
+        "sig_7e4b80ed780498d3eb6a",
+        "sig_d4bb2dab45c2ad18ac2c",
+        "sig_621a785db36db35f4758",
+        "sig_e3a050ee7f826e32d3e6",
+        "sig_27bcac37aaf8c3e82230"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.8,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1813
+    },
+    {
+      "id": "stmt_4912372542fd5680244d",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200303312",
+      "text": "3 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4e6ac378127f4d1bc62b",
+        "sig_6b982aec4604338358fb",
+        "sig_e28a7bdf52605c065bdb"
+      ],
+      "derived_from": [
+        "sig_4e6ac378127f4d1bc62b",
+        "sig_6b982aec4604338358fb",
+        "sig_e28a7bdf52605c065bdb"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.49,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1738
+    },
+    {
+      "id": "stmt_9dd688157d8750330bde",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200303312",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $336,202,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_621a785db36db35f4758",
+        "sig_e3a050ee7f826e32d3e6"
+      ],
+      "derived_from": [
+        "sig_621a785db36db35f4758",
+        "sig_e3a050ee7f826e32d3e6"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1375
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.089Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

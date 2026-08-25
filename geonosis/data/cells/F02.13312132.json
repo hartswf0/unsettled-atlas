@@ -1,0 +1,1184 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.13312132",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 12,
+    "entities": 5,
+    "relations": 9,
+    "statements": 5,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 2,
+    "ecology.inaturalist_observation": 1,
+    "memory.national_register_resource": 1,
+    "ecology.occurrence": 3,
+    "money.bank_branch": 1,
+    "money.branch_deposits": 4
+  },
+  "entity_types": {
+    "bank_branch": 5
+  },
+  "relation_predicates": {
+    "branch_of": 5,
+    "holds_reported_deposits": 4
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 2,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 2
+  },
+  "signals": [
+    {
+      "id": "sig_56fc4f5e0f22d25dfb73",
+      "source": "epa-echo",
+      "source_record_id": "110070544925",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "THE PARKS OF STONECREST PODE  LOT 28A",
+        "address": "7372 WATER WILLOW WAY, CONYERS, GA, 30094",
+        "county": "ROCKDALE COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 99999999,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0895492181466,
+          33.6716978667053
+        ]
+      },
+      "atlas_address": "F02.1331213200",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0895492181466,
+          33.6716978667053
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070544925",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 6389
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_abbe0cb6e5d31bbde513",
+      "source": "epa-echo",
+      "source_record_id": "110070893800",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "MORGAN'S PARK 28",
+        "address": "2619 MORGAN PARK DR., STOCKBRIDGE, GA, 30281",
+        "county": "ROCKDALE COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.119909579804,
+          33.5917696519047
+        ]
+      },
+      "atlas_address": "F02.1331213230",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.119909579804,
+          33.5917696519047
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070893800",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 8260
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8027e9e5374b8d8603f2",
+      "source": "inaturalist-observations",
+      "source_record_id": "394294857",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Meleagris gallopavo",
+        "common_name": "Wild Turkey",
+        "iconic_taxon": "Aves",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1123583333,
+          33.68372
+        ]
+      },
+      "atlas_address": "F02.1331213200",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1123583333,
+          33.68372
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25T01:38:06.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394294857",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Plunkett Rd, Stonecrest, GA, US",
+        "positional_accuracy": 20
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8b655ff78f5637b0dae4",
+      "source": "fdic-locations",
+      "source_record_id": "235423",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 5205,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "HUDSON BRIDGE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1550 Hudson Bridge Rd",
+        "city": "Stockbridge",
+        "state": "GA",
+        "zip": "30281",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23693701822168,
+          33.50496601476566
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.23693701822168,
+          33.50496601476566
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e1f12b41f3e2f16c5d9a",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938257551",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Solanum carolinense L.",
+        "species": "Solanum carolinense",
+        "vernacular_name": null,
+        "taxon_key": 2932011,
+        "species_key": 2932011,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 10,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.170113,
+          33.582647
+        ]
+      },
+      "atlas_address": "F02.1331213210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.170113,
+          33.582647
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T15:38:43.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938257551",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ebf7d96fe17d8d49d6b6",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938233698",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Diphasiastrum digitatum (Dill. ex A.Braun) Holub",
+        "species": "Diphasiastrum digitatum",
+        "vernacular_name": null,
+        "taxon_key": 2688379,
+        "species_key": 2688379,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 28930,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.119422,
+          33.632692
+        ]
+      },
+      "atlas_address": "F02.1331213201",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.119422,
+          33.632692
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T10:38:47.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938233698",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_5ae4d5384fccfb631cbc",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938241554",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Sturnus vulgaris Linnaeus, 1758",
+        "species": "Sturnus vulgaris",
+        "vernacular_name": null,
+        "taxon_key": 9809229,
+        "species_key": 9809229,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 858,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.070834,
+          33.584519
+        ]
+      },
+      "atlas_address": "F02.1331213232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.070834,
+          33.584519
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T08:17:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938241554",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_61c5abca832b5402dafc",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16889:49",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16889,
+        "branch_id": 49,
+        "institution_name": "United Community Bank",
+        "branch_name": "Eagle National Stockbridge Branch",
+        "deposits_usd": 140199000,
+        "address": "850 Eagles Landing Pkwy",
+        "city": "Stockbridge",
+        "state": "GA",
+        "zip": "30281"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2176690344781,
+          33.513237989281
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2176690344781,
+          33.513237989281
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.328Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_965721f6d1500e2041ae",
+      "source": "fdic-sod",
+      "source_record_id": "2025:23220:839",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 23220,
+        "branch_id": 839,
+        "institution_name": "Woodforest National Bank",
+        "branch_name": "8289 Ga Stockbridge",
+        "deposits_usd": 1064000,
+        "address": "1400 Hudson Bridge Rd",
+        "city": "Stockbridge",
+        "state": "GA",
+        "zip": "30281"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2356239930892,
+          33.5074919851066
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2356239930892,
+          33.5074919851066
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.331Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b6ff6df467df371a849c",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:195",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 195,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Crumbley Road Branch",
+        "deposits_usd": 77789000,
+        "address": "2318 Highway 155 N",
+        "city": "Mcdonough",
+        "state": "GA",
+        "zip": "30252"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1386578964023,
+          33.5124523365744
+        ]
+      },
+      "atlas_address": "F02.1331213212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1386578964023,
+          33.5124523365744
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ef1f9b693ebdedcba7bc",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:321",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 321,
+        "institution_name": "Renasant Bank",
+        "branch_name": "Stockbridge Eagles Landing Branch",
+        "deposits_usd": 60623000,
+        "address": "830 Eagles Landing Pkwy, Ste 100",
+        "city": "Stockbridge",
+        "state": "GA",
+        "zip": "30281"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2158540171645,
+          33.5135269973024
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2158540171645,
+          33.5135269973024
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.327Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_cc1787ab24ef52fed678",
+      "source": "nps-national-register",
+      "source_record_id": "78003097",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Seminary, The",
+        "resource_type": "building",
+        "address": "6886 Main St.",
+        "city": "Lithonia",
+        "county": "De Kalb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.10958158099999,
+          33.71001563600004
+        ]
+      },
+      "atlas_address": "F02.1331213200",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.10958158099999,
+          33.71001563600004
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1978-11-15T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.064Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{FA846C34-4A65-46B2-A1E8-EA6FF789B478}",
+        "src_date": 279936000000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12437:321",
+      "type": "bank_branch",
+      "name": "Stockbridge Eagles Landing Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "321"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2158540171645,
+          33.5135269973024
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:16889:49",
+      "type": "bank_branch",
+      "name": "Eagle National Stockbridge Branch",
+      "identifiers": {
+        "fdic_cert": "16889",
+        "branch_id": "49"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2176690344781,
+          33.513237989281
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_61c5abca832b5402dafc"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:195",
+      "type": "bank_branch",
+      "name": "Crumbley Road Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "195"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1386578964023,
+          33.5124523365744
+        ]
+      },
+      "atlas_address": "F02.1331213212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b6ff6df467df371a849c"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:23220:839",
+      "type": "bank_branch",
+      "name": "8289 Ga Stockbridge",
+      "identifiers": {
+        "fdic_cert": "23220",
+        "branch_id": "839"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2356239930892,
+          33.5074919851066
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_965721f6d1500e2041ae"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:5205",
+      "type": "bank_branch",
+      "name": "HUDSON BRIDGE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "5205"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23693701822168,
+          33.50496601476566
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_8b655ff78f5637b0dae4"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_3868be1521906d5805fd",
+      "subject": "fdic-branch:20504:195",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 77789000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b6ff6df467df371a849c"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_69e40999f002c3878657",
+      "subject": "fdic-branch:16889:49",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16889",
+      "value": {
+        "amount_usd": 140199000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_61c5abca832b5402dafc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_ae2b66dc56f97aec64c5",
+      "subject": "fdic-branch:23220:839",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:23220",
+      "value": {
+        "amount_usd": 1064000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_965721f6d1500e2041ae"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f68b449a6512344916d7",
+      "subject": "fdic-branch:12437:321",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 60623000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_249674558138e14cd1ca",
+      "subject": "fdic-branch:20504:195",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b6ff6df467df371a849c"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_8118f4eab62befe77a53",
+      "subject": "fdic-branch:3510:5205",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8b655ff78f5637b0dae4"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_ab666bee97cdf9327cb5",
+      "subject": "fdic-branch:16889:49",
+      "predicate": "branch_of",
+      "object": "fdic:16889",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_61c5abca832b5402dafc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_c8163e833fca40d826d2",
+      "subject": "fdic-branch:12437:321",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_dae8820c0430b967e593",
+      "subject": "fdic-branch:23220:839",
+      "predicate": "branch_of",
+      "object": "fdic:23220",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_965721f6d1500e2041ae"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_b43acd7c6d1180f11ab9",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213200",
+      "text": "3 independent source channels address signals to this ground: epa-echo, inaturalist-observations, nps-national-register.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_56fc4f5e0f22d25dfb73",
+        "sig_8027e9e5374b8d8603f2",
+        "sig_cc1787ab24ef52fed678"
+      ],
+      "derived_from": [
+        "sig_56fc4f5e0f22d25dfb73",
+        "sig_8027e9e5374b8d8603f2",
+        "sig_cc1787ab24ef52fed678"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_cfeab3d137f398a721e7",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331213230",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_abbe0cb6e5d31bbde513"
+      ],
+      "derived_from": [
+        "sig_abbe0cb6e5d31bbde513"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_f44ead57ed3ac3bce0c0",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331213200",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_56fc4f5e0f22d25dfb73"
+      ],
+      "derived_from": [
+        "sig_56fc4f5e0f22d25dfb73"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_994564bc35bac808746d",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331213211",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $201,886,000 held across 3 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_61c5abca832b5402dafc",
+        "sig_965721f6d1500e2041ae",
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "derived_from": [
+        "sig_61c5abca832b5402dafc",
+        "sig_965721f6d1500e2041ae",
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.4,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1437
+    },
+    {
+      "id": "stmt_5c2e32ace9dcd00b3d94",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331213212",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $77,789,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_b6ff6df467df371a849c"
+      ],
+      "derived_from": [
+        "sig_b6ff6df467df371a849c"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.052Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

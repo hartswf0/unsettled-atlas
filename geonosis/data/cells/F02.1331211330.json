@@ -1,0 +1,255 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211330",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 1,
+    "relations": 3,
+    "statements": 1,
+    "direct_signals": 2,
+    "direct_entities": 1,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 2,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_570be58f3b0328caaf38",
+      "source": "fdic-locations",
+      "source_record_id": "235726",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12368",
+        "branch_id": 467,
+        "institution_name": "Regions Bank",
+        "branch_name": "LITHIA SPRINGS BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "10565 Veterans Memorial Hwy",
+        "city": "Lithia Springs",
+        "state": "GA",
+        "zip": "30122",
+        "fi_uninum": 7866
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.65946800292444,
+          33.79430499570179
+        ]
+      },
+      "atlas_address": "F02.1331211330",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.65946800292444,
+          33.79430499570179
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_7f549ed60130c5e731c4",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:467",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 467,
+        "institution_name": "Regions Bank",
+        "branch_name": "Lithia Springs Branch",
+        "deposits_usd": 58599000,
+        "address": "10565 Veterans Memorial Hwy",
+        "city": "Lithia Springs",
+        "state": "GA",
+        "zip": "30122"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6594680029244,
+          33.7943049957018
+        ]
+      },
+      "atlas_address": "F02.1331211330",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.6594680029244,
+          33.7943049957018
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:467",
+      "type": "bank_branch",
+      "name": "LITHIA SPRINGS BRANCH",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "467"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.65946800292444,
+          33.79430499570179
+        ]
+      },
+      "atlas_address": "F02.1331211330",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_570be58f3b0328caaf38",
+        "sig_7f549ed60130c5e731c4"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_5d1bdad773c7ad3a1e3f",
+      "subject": "fdic-branch:12368:467",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 58599000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7f549ed60130c5e731c4"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_3a33176cdb0b8828dd72",
+      "subject": "fdic-branch:12368:467",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7f549ed60130c5e731c4"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_bb4f5b87c0acee9c2420",
+      "subject": "fdic-branch:12368:467",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_570be58f3b0328caaf38"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_1cd8f08c7f90961f897b",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211330",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $58,599,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_7f549ed60130c5e731c4"
+      ],
+      "derived_from": [
+        "sig_7f549ed60130c5e731c4"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.099Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

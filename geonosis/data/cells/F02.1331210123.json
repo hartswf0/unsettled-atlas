@@ -1,0 +1,578 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331210123",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 5,
+    "entities": 3,
+    "relations": 4,
+    "statements": 3,
+    "direct_signals": 5,
+    "direct_entities": 3,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "money.bank_branch": 2,
+    "money.branch_deposits": 1,
+    "claim.map_note": 2
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "branch_of": 3,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_831494ea2d9b567f531f",
+      "source": "fdic-locations",
+      "source_record_id": "217750",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4225,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "STONE MOUNTAIN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5330 Stone Mountain Hwy",
+        "city": "Stone Mountain",
+        "state": "GA",
+        "zip": "30087",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1144719645914,
+          33.8225250196748
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1144719645914,
+          33.8225250196748
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b61d4b83b09b40f00579",
+      "source": "fdic-locations",
+      "source_record_id": "191462",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8494,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "STONE MOUTAIN FESTIVAL BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1815 Rockbridge Rd",
+        "city": "Stone Mountain",
+        "state": "GA",
+        "zip": "30087",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.12354202201755,
+          33.82528501275242
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.12354202201755,
+          33.82528501275242
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4d111765c29e18acae80",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16416:109",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16416,
+        "branch_id": 109,
+        "institution_name": "FSNB, National Association",
+        "branch_name": "Stone Mountain Branch",
+        "deposits_usd": 855000,
+        "address": "1825 Rockbridge Rd",
+        "city": "Stone Mountain",
+        "state": "GA",
+        "zip": "30087"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.123758442758,
+          33.82357292521
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.123758442758,
+          33.82357292521
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.327Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6d25edf3cee5bf2d207d",
+      "source": "osm-notes",
+      "source_record_id": "4718110",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Smart Food Mart 2 - an Exxon-branded gas station/convenience store\n\nvia StreetComplete 60.3\n\nAttached photo(s):\nhttps://streetcomplete.app/p/272494.jpg"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0961931,
+          33.8080962
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0961931,
+          33.8080962
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-04-19 23:05:37 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4718110",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-04-19 23:05:37 UTC",
+            "uid": 22604963,
+            "user": "hyperdimension",
+            "user_url": "https://api.openstreetmap.org/user/hyperdimension",
+            "action": "opened",
+            "text": "Smart Food Mart 2 - an Exxon-branded gas station/convenience store\n\nvia StreetComplete 60.3\n\nAttached photo(s):\nhttps://streetcomplete.app/p/272494.jpg",
+            "html": "<p dir=\"auto\">Smart Food Mart 2 - an Exxon-branded gas station/convenience store</p>\n\n<p dir=\"auto\">via StreetComplete 60.3</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://streetcomplete.app/p/272494.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://streetcomplete.app/p/272494.jpg</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_29c015e916007882f850",
+      "source": "osm-notes",
+      "source_record_id": "3977402",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 3,
+        "latest": "Thanks. A theme park multipolygon (with multiple outers) maybe, for everything that can only accessed with the ticket?\n\nWe could also use access=customers s important to show that some amenities are not accessible without a ticket."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1448021,
+          33.8121096
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1448021,
+          33.8121096
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2023-11-07 18:49:37 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/3977402",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2023-11-07 18:49:37 UTC",
+            "uid": 14047157,
+            "user": "osmuser63783",
+            "user_url": "https://api.openstreetmap.org/user/osmuser63783",
+            "action": "opened",
+            "text": "The mapping here could be improved. At the moment the whole park is mapped as a leisure=park and a tourism=theme_park.\n\nThe park itself is free if you arrive on foot or by bike. You can then hike up the mountain, use the trails, picnic areas, etc.\nIf you come by car you have to pay for parking.\n\nAnd then there are ticketed attractions. The tickets can be bought at the \"ticket plaza\", that is roughly where this note is if I remember correctly. There is a small area with restaurants that is only accessible to ticket holders, you cannot go there without buying a ticket for the attractions. \n\nMaybe it would be better to have the whole park as leisure=park and then the area for ticket holders only as tourism=theme_park? Unfortunately this would require another survey, I am not sure what exactly the boundaries of this area are.",
+            "html": "<p dir=\"auto\">The mapping here could be improved. At the moment the whole park is mapped as a <a href=\"https://wiki.openstreetmap.org/wiki/Tag:leisure=park\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">leisure=park</a> and a <a href=\"https://wiki.openstreetmap.org/wiki/Tag:tourism=theme_park\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">tourism=theme_park</a>.</p>\n\n<p dir=\"auto\">The park itself is free if you arrive on foot or by bike. You can then hike up the mountain, use the trails, picnic areas, etc.\n<br />If you come by car you have to pay for parking.</p>\n\n<p dir=\"auto\">And then there are ticketed attractions. The tickets can be bought at the \"ticket plaza\", that is roughly where this note is if I remember correctly. There is a small area with restaurants that is only accessible to ticket holders, you cannot go there without buying a ticket for the attractions. </p>\n\n<p dir=\"auto\">Maybe it would be better to have the whole park as <a href=\"https://wiki.openstreetmap.org/wiki/Tag:leisure=park\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">leisure=park</a> and then the area for ticket holders only as <a href=\"https://wiki.openstreetmap.org/wiki/Tag:tourism=theme_park\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">tourism=theme_park</a>? Unfortunately this would require another survey, I am not sure what exactly the boundaries of this area are.</p>"
+          },
+          {
+            "date": "2024-05-24 15:21:22 UTC",
+            "uid": 7596709,
+            "user": "MooPoo7",
+            "user_url": "https://api.openstreetmap.org/user/MooPoo7",
+            "action": "commented",
+            "text": "I removed the theme park tag from the park, since the entire park obviously is not a theme park. Not sure how to tag the rest though, since the \"attractions\" ticket covers this pedestrian area below the note, as well as the Skyride and Historic Squares which are elsewhere.\n\nhttps://stonemountainpark.com/activities/attractions/",
+            "html": "<p dir=\"auto\">I removed the theme park tag from the park, since the entire park obviously is not a theme park. Not sure how to tag the rest though, since the \"attractions\" ticket covers this pedestrian area below the note, as well as the Skyride and Historic Squares which are elsewhere.</p>\n\n<p dir=\"auto\"><a href=\"https://stonemountainpark.com/activities/attractions/\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://stonemountainpark.com/activities/attractions/</a></p>"
+          },
+          {
+            "date": "2024-05-24 16:49:38 UTC",
+            "uid": 14047157,
+            "user": "osmuser63783",
+            "user_url": "https://api.openstreetmap.org/user/osmuser63783",
+            "action": "commented",
+            "text": "Thanks. A theme park multipolygon (with multiple outers) maybe, for everything that can only accessed with the ticket?\n\nWe could also use access=customers s important to show that some amenities are not accessible without a ticket.",
+            "html": "<p dir=\"auto\">Thanks. A theme park multipolygon (with multiple outers) maybe, for everything that can only accessed with the ticket?</p>\n\n<p dir=\"auto\">We could also use <a href=\"https://wiki.openstreetmap.org/wiki/Tag:access=customers\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">access=customers</a> s important to show that some amenities are not accessible without a ticket.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:16416:109",
+      "type": "bank_branch",
+      "name": "Stone Mountain Branch",
+      "identifiers": {
+        "fdic_cert": "16416",
+        "branch_id": "109"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.123758442758,
+          33.82357292521
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4225",
+      "type": "bank_branch",
+      "name": "STONE MOUNTAIN BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4225"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1144719645914,
+          33.8225250196748
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_831494ea2d9b567f531f"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8494",
+      "type": "bank_branch",
+      "name": "STONE MOUTAIN FESTIVAL BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8494"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.12354202201755,
+          33.82528501275242
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b61d4b83b09b40f00579"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_8fb003e9392cd0834cb2",
+      "subject": "fdic-branch:16416:109",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16416",
+      "value": {
+        "amount_usd": 855000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_097155e7d9dafea27f80",
+      "subject": "fdic-branch:3511:8494",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b61d4b83b09b40f00579"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_27ff7f7c4a3771b007ba",
+      "subject": "fdic-branch:16416:109",
+      "predicate": "branch_of",
+      "object": "fdic:16416",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_49e198473a8210070da4",
+      "subject": "fdic-branch:3510:4225",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_831494ea2d9b567f531f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_e0397b03a6757c85a214",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331210123",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, fdic-sod, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_831494ea2d9b567f531f",
+        "sig_b61d4b83b09b40f00579",
+        "sig_4d111765c29e18acae80",
+        "sig_29c015e916007882f850",
+        "sig_6d25edf3cee5bf2d207d"
+      ],
+      "derived_from": [
+        "sig_831494ea2d9b567f531f",
+        "sig_b61d4b83b09b40f00579",
+        "sig_4d111765c29e18acae80",
+        "sig_29c015e916007882f850",
+        "sig_6d25edf3cee5bf2d207d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_060c4fedb02837b0851f",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331210123",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $855,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "derived_from": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    },
+    {
+      "id": "stmt_5519397a638862798cdf",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331210123",
+      "text": "2 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_29c015e916007882f850",
+        "sig_6d25edf3cee5bf2d207d"
+      ],
+      "derived_from": [
+        "sig_29c015e916007882f850",
+        "sig_6d25edf3cee5bf2d207d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.3333333333333333,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1104
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.092Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

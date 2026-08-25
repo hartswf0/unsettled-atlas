@@ -1,0 +1,2893 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200300310",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 33,
+    "entities": 16,
+    "relations": 39,
+    "statements": 4,
+    "direct_signals": 33,
+    "direct_entities": 16,
+    "direct_statements": 4
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 4,
+    "money.bank_branch": 13,
+    "money.branch_deposits": 13,
+    "ecology.inaturalist_observation": 1,
+    "claim.map_note": 2
+  },
+  "entity_types": {
+    "bank_branch": 16
+  },
+  "relation_predicates": {
+    "branch_of": 26,
+    "holds_reported_deposits": 13
+  },
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_a5e67de7be2f83832e3d",
+      "source": "epa-echo",
+      "source_record_id": "110070126055",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BIG LOTS 5269",
+        "address": "1600 WESTBANK EXPY, HARVEY, LA, 70058",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.066250110855,
+          29.9035896351503
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.066250110855,
+          29.9035896351503
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070126055",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 52794
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_540dbfa80666dcc034e0",
+      "source": "epa-echo",
+      "source_record_id": "110003311611",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "MEADOWCRESI IMAGING CNTR",
+        "address": "2600 BELLE CHASSE HWY STE B, GRETNA, LA, 70056",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0256004459333,
+          29.8844196344716
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0256004459333,
+          29.8844196344716
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003311611",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 26130
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_bef02d8ef4aabb8df5ca",
+      "source": "epa-echo",
+      "source_record_id": "110014392282",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "CINABAR SALON & SPA",
+        "address": "145 BRIANT ST, GRETNA, LA, 70056",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": "2006-01-25T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0360604291016,
+          29.8910397955517
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0360604291016,
+          29.8910397955517
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110014392282",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 20686
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_86cceaf452d91495868e",
+      "source": "epa-echo",
+      "source_record_id": "110040952948",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "KARSTEIN # 1 PRODUCTION FACILITY",
+        "address": "1800 CAROL SUE AVE STE 4, GRETNA, LA, 70056",
+        "county": "ST. JAMES",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": null,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0379199417397,
+          29.8998003186618
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0379199417397,
+          29.8998003186618
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110040952948",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 3848
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_30099e5e75892954ae38",
+      "source": "fdic-locations",
+      "source_record_id": "202859",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "628",
+        "branch_id": 2151,
+        "institution_name": "JPMorgan Chase Bank, National Association",
+        "branch_name": "MANHATTAN BOULEVARD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2340 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058",
+        "fi_uninum": 417
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05111196546402,
+          29.878707015830415
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.05111196546402,
+          29.878707015830415
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_32be665a63de0ce76338",
+      "source": "fdic-locations",
+      "source_record_id": "491995",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "28094",
+        "branch_id": 24,
+        "institution_name": "Home Bank, National Association",
+        "branch_name": "MANHATTAN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1800 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058",
+        "fi_uninum": 40928
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05679900294952,
+          29.887853013299335
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.05679900294952,
+          29.887853013299335
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_45b34779fa1d44fbc980",
+      "source": "fdic-locations",
+      "source_record_id": "532044",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "4977",
+        "branch_id": 1065,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "MANHATTAN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1720 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058",
+        "fi_uninum": 3319
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05738003647764,
+          29.888748996839283
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.05738003647764,
+          29.888748996839283
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_46b901b610538fcbd75d",
+      "source": "fdic-locations",
+      "source_record_id": "267691",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12368",
+        "branch_id": 354,
+        "institution_name": "Regions Bank",
+        "branch_name": "MANHATTAN BOULEVARD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1749 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058",
+        "fi_uninum": 7866
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05546099974562,
+          29.888050993852346
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.05546099974562,
+          29.888050993852346
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_4e15efbd34fd5d6830a3",
+      "source": "fdic-locations",
+      "source_record_id": "531592",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "32974",
+        "branch_id": 36,
+        "institution_name": "Gulf Coast Bank and Trust Company",
+        "branch_name": "MANHATTAN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1901 Manhattan Blvd Bldg F",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058",
+        "fi_uninum": 46153
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0535989599552,
+          29.88506498275561
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0535989599552,
+          29.88506498275561
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_58bc773dc5d9bbf75194",
+      "source": "fdic-locations",
+      "source_record_id": "418524",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "28316",
+        "branch_id": 107,
+        "institution_name": "FIDELITY BANK",
+        "branch_name": "GRETNA BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1888 Belle Chasse Hwy",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70056",
+        "fi_uninum": 41150
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.03900003155647,
+          29.893841003018352
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.03900003155647,
+          29.893841003018352
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_73d11812e990072cba43",
+      "source": "fdic-locations",
+      "source_record_id": "247344",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "17878",
+        "branch_id": 6,
+        "institution_name": "Bank of Louisiana",
+        "branch_name": "LAPALCO BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "605 Lapalco Blvd",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70056",
+        "fi_uninum": 11817
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.03554601689594,
+          29.877380998748066
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.03554601689594,
+          29.877380998748066
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7a188993c3807898459c",
+      "source": "fdic-locations",
+      "source_record_id": "17395",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "8149",
+        "branch_id": 21,
+        "institution_name": "First American Bank and Trust",
+        "branch_name": "HARVEY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1701 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058",
+        "fi_uninum": 5194
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05678299351446,
+          29.89000301337336
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.05678299351446,
+          29.89000301337336
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_9736711410e0eb401d47",
+      "source": "fdic-locations",
+      "source_record_id": "239907",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12368",
+        "branch_id": 2281,
+        "institution_name": "Regions Bank",
+        "branch_name": "WALL BLVD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "101 Wall Blvd",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70056",
+        "fi_uninum": 7866
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.03085198347962,
+          29.887587013602058
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.03085198347962,
+          29.887587013602058
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_de4206860e4a59d03641",
+      "source": "fdic-locations",
+      "source_record_id": "277529",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "32974",
+        "branch_id": 5,
+        "institution_name": "Gulf Coast Bank and Trust Company",
+        "branch_name": "737 TERRY PARKWAY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "737 Terry Pkwy",
+        "city": "Terrytown",
+        "state": "LA",
+        "zip": "70056",
+        "fi_uninum": 46153
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.02988697496703,
+          29.899267991957842
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.02988697496703,
+          29.899267991957842
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_e0b770c5747f4e22fd8c",
+      "source": "fdic-locations",
+      "source_record_id": "277724",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "628",
+        "branch_id": 2156,
+        "institution_name": "JPMorgan Chase Bank, National Association",
+        "branch_name": "TERRYTOWN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2320 Belle Chasse Hwy",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70053",
+        "fi_uninum": 417
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.04962597410668,
+          29.90235165999228
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.04962597410668,
+          29.90235165999228
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f03991d067b5a704a3fd",
+      "source": "fdic-locations",
+      "source_record_id": "241886",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12441",
+        "branch_id": 237,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "GRETNA BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2100 Belle Chasse Hwy",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70053",
+        "fi_uninum": 7921
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05173599815542,
+          29.90375800985086
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.05173599815542,
+          29.90375800985086
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f619580c6859e193b4e4",
+      "source": "fdic-locations",
+      "source_record_id": "515972",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12441",
+        "branch_id": 333,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "MANHATTAN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1855 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058",
+        "fi_uninum": 7921
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05486697426758,
+          29.887050990893997
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.05486697426758,
+          29.887050990893997
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_b52eedb280626e69d58b",
+      "source": "inaturalist-observations",
+      "source_record_id": "393830753",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Hemidactylus parvimaculatus",
+        "common_name": "Spotted House Gecko",
+        "iconic_taxon": "Reptilia",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0352166667,
+          29.8760916667
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0352166667,
+          29.8760916667
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-23T02:39:11.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.606Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393830753",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Jefferson County, US-LA, US",
+        "positional_accuracy": 9
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_1350fc158ee6fa8171f3",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2281",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2281,
+        "institution_name": "Regions Bank",
+        "branch_name": "Wall Blvd Branch",
+        "deposits_usd": 115226000,
+        "address": "101 Wall Blvd",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70056"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0308519834796,
+          29.8875870136021
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0308519834796,
+          29.8875870136021
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.771Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_22da74e294d1657c085f",
+      "source": "fdic-sod",
+      "source_record_id": "2025:23220:899",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 23220,
+        "branch_id": 899,
+        "institution_name": "Woodforest National Bank",
+        "branch_name": "Harvey (Walmart) - La - Branch",
+        "deposits_usd": 1707000,
+        "address": "1501 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0573210278793,
+          29.8953779926036
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0573210278793,
+          29.8953779926036
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.774Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_246bfb0ece8702300192",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:354",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 354,
+        "institution_name": "Regions Bank",
+        "branch_name": "Manhattan Boulevard Branch",
+        "deposits_usd": 66497000,
+        "address": "1749 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0554609997456,
+          29.8880509938523
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0554609997456,
+          29.8880509938523
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.771Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_33a94c1e08d6afd42d15",
+      "source": "fdic-sod",
+      "source_record_id": "2025:26381:26",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 26381,
+        "branch_id": 26,
+        "institution_name": "Bonvenu Bank, National Association",
+        "branch_name": "Gretna Branch",
+        "deposits_usd": 18994000,
+        "address": "2000 Belle Chasse Highway",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70056"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.03559496721,
+          29.891380998255
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.03559496721,
+          29.891380998255
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_4395c90c5b5e79ea31c2",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12441:237",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12441,
+        "branch_id": 237,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "Gretna Branch",
+        "deposits_usd": 233759000,
+        "address": "2100 Belle Chasse Hwy",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70053"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0517359981554,
+          29.9037580098509
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0517359981554,
+          29.9037580098509
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.772Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_54b0b31d97321fe1ef26",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12441:333",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12441,
+        "branch_id": 333,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "Manhattan Branch",
+        "deposits_usd": 405255000,
+        "address": "1855 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0548669742676,
+          29.887050990894
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0548669742676,
+          29.887050990894
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.772Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7d789ec895bb8ab2f85e",
+      "source": "fdic-sod",
+      "source_record_id": "2025:28094:24",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 28094,
+        "branch_id": 24,
+        "institution_name": "Home Bank, National Association",
+        "branch_name": "Manhattan Branch",
+        "deposits_usd": 38212000,
+        "address": "1800 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0567990029495,
+          29.8878530132993
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0567990029495,
+          29.8878530132993
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_98a86972a80e0dbb77c4",
+      "source": "fdic-sod",
+      "source_record_id": "2025:4977:1065",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 4977,
+        "branch_id": 1065,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "Manhattan Branch",
+        "deposits_usd": 114930000,
+        "address": "1720 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0573800364776,
+          29.8887489968393
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0573800364776,
+          29.8887489968393
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.778Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_a645dbd6638dbb6364d5",
+      "source": "fdic-sod",
+      "source_record_id": "2025:17878:6",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 17878,
+        "branch_id": 6,
+        "institution_name": "Bank of Louisiana",
+        "branch_name": "Lapalco Branch",
+        "deposits_usd": 16990000,
+        "address": "605 Lapalco Blvd",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70056"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0355460168959,
+          29.8773809987481
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0355460168959,
+          29.8773809987481
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.774Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_c575334871edbc0a0ee2",
+      "source": "fdic-sod",
+      "source_record_id": "2025:19234:5",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 19234,
+        "branch_id": 5,
+        "institution_name": "American Bank",
+        "branch_name": "American Bank And Trust Company, Inc., Terrytown Branch",
+        "deposits_usd": 43976000,
+        "address": "2021 Carol Sue Ave",
+        "city": "Terrytown",
+        "state": "LA",
+        "zip": "70056"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.029215584523,
+          29.901017798065
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.029215584523,
+          29.901017798065
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.774Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_d33f7e855d65e5d57e9c",
+      "source": "fdic-sod",
+      "source_record_id": "2025:32974:36",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 32974,
+        "branch_id": 36,
+        "institution_name": "Gulf Coast Bank and Trust Company",
+        "branch_name": "Manhattan Branch",
+        "deposits_usd": 197781000,
+        "address": "1901 Manhattan Blvd Bldg F, Ste 103",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0535989599552,
+          29.8850649827556
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0535989599552,
+          29.8850649827556
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.776Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_dd58829368b1f9505630",
+      "source": "fdic-sod",
+      "source_record_id": "2025:28316:107",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 28316,
+        "branch_id": 107,
+        "institution_name": "FIDELITY BANK",
+        "branch_name": "Gretna Branch",
+        "deposits_usd": 28554000,
+        "address": "1888 Belle Chasse Hwy",
+        "city": "Gretna",
+        "state": "LA",
+        "zip": "70056"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0390000315565,
+          29.8938410030184
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0390000315565,
+          29.8938410030184
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f0e931e2ed3796dad986",
+      "source": "fdic-sod",
+      "source_record_id": "2025:32974:5",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 32974,
+        "branch_id": 5,
+        "institution_name": "Gulf Coast Bank and Trust Company",
+        "branch_name": "737 Terry Parkway Branch",
+        "deposits_usd": 99591000,
+        "address": "737 Terry Pkwy",
+        "city": "Terrytown",
+        "state": "LA",
+        "zip": "70056"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.029886974967,
+          29.8992679919578
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.029886974967,
+          29.8992679919578
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.776Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_78be3aaa3cad2737b93f",
+      "source": "osm-notes",
+      "source_record_id": "4550733",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 2,
+        "latest": "The address in this note does not match the address on the business's website "
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0528669,
+          29.8854396
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0528669,
+          29.8854396
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2024-12-11 19:36:30 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.355Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4550733",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2024-12-11 19:36:30 UTC",
+            "action": "opened",
+            "text": "onosm.org submitted note from a business:\nNombre: Law Office of Jonathan M. Williams\naddr:housenumber=1901\naddr:street=Manhattan Boulevard\naddr:city=Harvey\naddr:postcode=70058\nNúmero de teléfono: (504) 688-2300 \nSitio web: https://louisianacreditlaw.com\nHorario de apertura: Mon to Thurs  9am to 6pm   Friday    9am to 1pm\nCategoría: Business Law\nDescripción: Louisiana consumers have rights when it comes to debt collection, debt defense, and debt settlement. The Fair Debt Collection Practices Act (FDCPA) and the Fair Credit Reporting Act (FCRA) both provide consumers with legal protection from debt collectors and creditors. A consumer credit attorney can help individuals understand their rights and protect them when violations happen. For instance, if a consumer is being harassed by a debt collector, they can seek legal assistance to defend their rights. Additionally, if a consumer is looking to settle their debt, they can work with a consumer credit attorney to negotiate a fair settlement. Finally, if a consumer is renting an apartment, they should be aware of their rights under the FDCPA and FCRA and state laws. We help Louisiana consumers resolve debt lawsuits, judgments, liens, apartment collections, medical collections, auto repo collections.\nMétodos de pago aceptados: \n",
+            "html": "<p dir=\"auto\">onosm.org submitted note from a business:\n<br />Nombre: Law Office of Jonathan M. Williams\n<br /><a href=\"https://wiki.openstreetmap.org/wiki/Tag:addr:housenumber=1901\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">addr:housenumber=1901</a>\n<br /><a href=\"https://wiki.openstreetmap.org/wiki/Tag:addr:street=Manhattan\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">addr:street=Manhattan</a> Boulevard\n<br /><a href=\"https://wiki.openstreetmap.org/wiki/Tag:addr:city=Harvey\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">addr:city=Harvey</a>\n<br /><a href=\"https://wiki.openstreetmap.org/wiki/Tag:addr:postcode=70058\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">addr:postcode=70058</a>\n<br />Número de teléfono: (504) 688-2300 \n<br />Sitio web: <a href=\"https://louisianacreditlaw.com\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://louisianacreditlaw.com</a>\n<br />Horario de apertura: Mon to Thurs  9am to 6pm   Friday    9am to 1pm\n<br />Categoría: Business Law\n<br />Descripción: Louisiana consumers have rights when it comes to debt collection, debt defense, and debt settlement. The Fair Debt Collection Practices Act (FDCPA) and the Fair Credit Reporting Act (FCRA) both provide consumers with legal protection from debt collectors and creditors. A consumer credit attorney can help individuals understand their rights and protect them when violations happen. For instance, if a consumer is being harassed by a debt collector, they can seek legal assistance to defend their rights. Additionally, if a consumer is looking to settle their debt, they can work with a consumer credit attorney to negotiate a fair settlement. Finally, if a consumer is renting an apartment, they should be aware of their rights under the FDCPA and FCRA and state laws. We help Louisiana consumers resolve debt lawsuits, judgments, liens, apartment collections, medical collections, auto repo collections.\n<br />Métodos de pago aceptados: \n</p>"
+          },
+          {
+            "date": "2024-12-19 22:46:51 UTC",
+            "uid": 193835,
+            "user": "brendan77",
+            "user_url": "https://api.openstreetmap.org/user/brendan77",
+            "action": "commented",
+            "text": "The address in this note does not match the address on the business's website ",
+            "html": "<p dir=\"auto\">The address in this note does not match the address on the business's website </p>"
+          }
+        ]
+      },
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:2281",
+      "type": "bank_branch",
+      "name": "WALL BLVD BRANCH",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2281"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.03085198347962,
+          29.887587013602058
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_9736711410e0eb401d47",
+        "sig_1350fc158ee6fa8171f3"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:12368:354",
+      "type": "bank_branch",
+      "name": "MANHATTAN BOULEVARD BRANCH",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "354"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05546099974562,
+          29.888050993852346
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_46b901b610538fcbd75d",
+        "sig_246bfb0ece8702300192"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:12441:237",
+      "type": "bank_branch",
+      "name": "GRETNA BRANCH",
+      "identifiers": {
+        "fdic_cert": "12441",
+        "branch_id": "237"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05173599815542,
+          29.90375800985086
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f03991d067b5a704a3fd",
+        "sig_4395c90c5b5e79ea31c2"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:12441:333",
+      "type": "bank_branch",
+      "name": "MANHATTAN BRANCH",
+      "identifiers": {
+        "fdic_cert": "12441",
+        "branch_id": "333"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05486697426758,
+          29.887050990893997
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f619580c6859e193b4e4",
+        "sig_54b0b31d97321fe1ef26"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:17878:6",
+      "type": "bank_branch",
+      "name": "LAPALCO BRANCH",
+      "identifiers": {
+        "fdic_cert": "17878",
+        "branch_id": "6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.03554601689594,
+          29.877380998748066
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_73d11812e990072cba43",
+        "sig_a645dbd6638dbb6364d5"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:19234:5",
+      "type": "bank_branch",
+      "name": "American Bank And Trust Company, Inc., Terrytown Branch",
+      "identifiers": {
+        "fdic_cert": "19234",
+        "branch_id": "5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.029215584523,
+          29.901017798065
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c575334871edbc0a0ee2"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:23220:899",
+      "type": "bank_branch",
+      "name": "Harvey (Walmart) - La - Branch",
+      "identifiers": {
+        "fdic_cert": "23220",
+        "branch_id": "899"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0573210278793,
+          29.8953779926036
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_22da74e294d1657c085f"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:26381:26",
+      "type": "bank_branch",
+      "name": "Gretna Branch",
+      "identifiers": {
+        "fdic_cert": "26381",
+        "branch_id": "26"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.03559496721,
+          29.891380998255
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_33a94c1e08d6afd42d15"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:28094:24",
+      "type": "bank_branch",
+      "name": "MANHATTAN BRANCH",
+      "identifiers": {
+        "fdic_cert": "28094",
+        "branch_id": "24"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05679900294952,
+          29.887853013299335
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_32be665a63de0ce76338",
+        "sig_7d789ec895bb8ab2f85e"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:28316:107",
+      "type": "bank_branch",
+      "name": "GRETNA BRANCH",
+      "identifiers": {
+        "fdic_cert": "28316",
+        "branch_id": "107"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.03900003155647,
+          29.893841003018352
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_58bc773dc5d9bbf75194",
+        "sig_dd58829368b1f9505630"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:32974:36",
+      "type": "bank_branch",
+      "name": "MANHATTAN BRANCH",
+      "identifiers": {
+        "fdic_cert": "32974",
+        "branch_id": "36"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0535989599552,
+          29.88506498275561
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4e15efbd34fd5d6830a3",
+        "sig_d33f7e855d65e5d57e9c"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:32974:5",
+      "type": "bank_branch",
+      "name": "737 TERRY PARKWAY BRANCH",
+      "identifiers": {
+        "fdic_cert": "32974",
+        "branch_id": "5"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.02988697496703,
+          29.899267991957842
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_de4206860e4a59d03641",
+        "sig_f0e931e2ed3796dad986"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:4977:1065",
+      "type": "bank_branch",
+      "name": "MANHATTAN BRANCH",
+      "identifiers": {
+        "fdic_cert": "4977",
+        "branch_id": "1065"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05738003647764,
+          29.888748996839283
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_45b34779fa1d44fbc980",
+        "sig_98a86972a80e0dbb77c4"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:628:2151",
+      "type": "bank_branch",
+      "name": "MANHATTAN BOULEVARD BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "2151"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05111196546402,
+          29.878707015830415
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_30099e5e75892954ae38"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:628:2156",
+      "type": "bank_branch",
+      "name": "TERRYTOWN BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "2156"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.04962597410668,
+          29.90235165999228
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_e0b770c5747f4e22fd8c"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:8149:21",
+      "type": "bank_branch",
+      "name": "HARVEY BRANCH",
+      "identifiers": {
+        "fdic_cert": "8149",
+        "branch_id": "21"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05678299351446,
+          29.89000301337336
+        ]
+      },
+      "atlas_address": "F02.1200300310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_7a188993c3807898459c"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_07cebad3e5be4c40263d",
+      "subject": "fdic-branch:26381:26",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:26381",
+      "value": {
+        "amount_usd": 18994000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_33a94c1e08d6afd42d15"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_144508a6eb2e2f71fc7e",
+      "subject": "fdic-branch:19234:5",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:19234",
+      "value": {
+        "amount_usd": 43976000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c575334871edbc0a0ee2"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_3ce70a40dc5939b23488",
+      "subject": "fdic-branch:23220:899",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:23220",
+      "value": {
+        "amount_usd": 1707000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_22da74e294d1657c085f"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_46dfb5cd766761365b51",
+      "subject": "fdic-branch:12441:333",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12441",
+      "value": {
+        "amount_usd": 405255000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_54b0b31d97321fe1ef26"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_6b4a20e37944d41f1210",
+      "subject": "fdic-branch:4977:1065",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4977",
+      "value": {
+        "amount_usd": 114930000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_98a86972a80e0dbb77c4"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_a646fa588c46ee91d43e",
+      "subject": "fdic-branch:17878:6",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:17878",
+      "value": {
+        "amount_usd": 16990000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a645dbd6638dbb6364d5"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_a7d03ecfb8b22169ab87",
+      "subject": "fdic-branch:12441:237",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12441",
+      "value": {
+        "amount_usd": 233759000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4395c90c5b5e79ea31c2"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_b87a829871de745a025f",
+      "subject": "fdic-branch:32974:36",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:32974",
+      "value": {
+        "amount_usd": 197781000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d33f7e855d65e5d57e9c"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_d2de7543a69d326c3dba",
+      "subject": "fdic-branch:32974:5",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:32974",
+      "value": {
+        "amount_usd": 99591000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f0e931e2ed3796dad986"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_d9f5ed0f959798e65cd7",
+      "subject": "fdic-branch:12368:2281",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 115226000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1350fc158ee6fa8171f3"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_f151fbde0ad1fe91512b",
+      "subject": "fdic-branch:28094:24",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:28094",
+      "value": {
+        "amount_usd": 38212000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7d789ec895bb8ab2f85e"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_f22423cae1c98a1a34cf",
+      "subject": "fdic-branch:12368:354",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 66497000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_246bfb0ece8702300192"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_f3d98ee1ba3d585dbce7",
+      "subject": "fdic-branch:28316:107",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:28316",
+      "value": {
+        "amount_usd": 28554000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_dd58829368b1f9505630"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_005d0efb787a02fb016b",
+      "subject": "fdic-branch:12441:333",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_54b0b31d97321fe1ef26"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_0391b50675c5b74c23e8",
+      "subject": "fdic-branch:28094:24",
+      "predicate": "branch_of",
+      "object": "fdic:28094",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7d789ec895bb8ab2f85e"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_1693e93436a43be08d5a",
+      "subject": "fdic-branch:17878:6",
+      "predicate": "branch_of",
+      "object": "fdic:17878",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a645dbd6638dbb6364d5"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_24a31cd95770a76dc1e5",
+      "subject": "fdic-branch:628:2151",
+      "predicate": "branch_of",
+      "object": "fdic:628",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_30099e5e75892954ae38"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_27009ebafa87b345a014",
+      "subject": "fdic-branch:12368:2281",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_9736711410e0eb401d47"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_29d19beade0d5201f46c",
+      "subject": "fdic-branch:32974:5",
+      "predicate": "branch_of",
+      "object": "fdic:32974",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_de4206860e4a59d03641"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_2acccb9488cc9d0b9549",
+      "subject": "fdic-branch:17878:6",
+      "predicate": "branch_of",
+      "object": "fdic:17878",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_73d11812e990072cba43"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_3accc8c413108f435957",
+      "subject": "fdic-branch:28316:107",
+      "predicate": "branch_of",
+      "object": "fdic:28316",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_58bc773dc5d9bbf75194"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_40aed58d10e30e254053",
+      "subject": "fdic-branch:4977:1065",
+      "predicate": "branch_of",
+      "object": "fdic:4977",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_98a86972a80e0dbb77c4"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_420c6bc1ea93bebb7a0a",
+      "subject": "fdic-branch:12441:237",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f03991d067b5a704a3fd"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_61006e51e33e4dc9f8c2",
+      "subject": "fdic-branch:8149:21",
+      "predicate": "branch_of",
+      "object": "fdic:8149",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7a188993c3807898459c"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_7c01dcc7084ec516447a",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200300310",
+      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_540dbfa80666dcc034e0",
+        "sig_86cceaf452d91495868e",
+        "sig_a5e67de7be2f83832e3d",
+        "sig_bef02d8ef4aabb8df5ca",
+        "sig_30099e5e75892954ae38",
+        "sig_32be665a63de0ce76338",
+        "sig_45b34779fa1d44fbc980",
+        "sig_46b901b610538fcbd75d",
+        "sig_4e15efbd34fd5d6830a3",
+        "sig_58bc773dc5d9bbf75194",
+        "sig_73d11812e990072cba43",
+        "sig_7a188993c3807898459c",
+        "sig_9736711410e0eb401d47",
+        "sig_de4206860e4a59d03641",
+        "sig_e0b770c5747f4e22fd8c",
+        "sig_f03991d067b5a704a3fd",
+        "sig_f619580c6859e193b4e4",
+        "sig_1350fc158ee6fa8171f3",
+        "sig_22da74e294d1657c085f",
+        "sig_246bfb0ece8702300192",
+        "sig_33a94c1e08d6afd42d15",
+        "sig_4395c90c5b5e79ea31c2",
+        "sig_54b0b31d97321fe1ef26",
+        "sig_7d789ec895bb8ab2f85e",
+        "sig_98a86972a80e0dbb77c4",
+        "sig_a645dbd6638dbb6364d5",
+        "sig_c575334871edbc0a0ee2",
+        "sig_d33f7e855d65e5d57e9c",
+        "sig_dd58829368b1f9505630",
+        "sig_f0e931e2ed3796dad986",
+        "sig_b52eedb280626e69d58b",
+        "sig_3018e02c172ea9e477c6",
+        "sig_78be3aaa3cad2737b93f"
+      ],
+      "derived_from": [
+        "sig_540dbfa80666dcc034e0",
+        "sig_86cceaf452d91495868e",
+        "sig_a5e67de7be2f83832e3d",
+        "sig_bef02d8ef4aabb8df5ca",
+        "sig_30099e5e75892954ae38",
+        "sig_32be665a63de0ce76338",
+        "sig_45b34779fa1d44fbc980",
+        "sig_46b901b610538fcbd75d",
+        "sig_4e15efbd34fd5d6830a3",
+        "sig_58bc773dc5d9bbf75194",
+        "sig_73d11812e990072cba43",
+        "sig_7a188993c3807898459c",
+        "sig_9736711410e0eb401d47",
+        "sig_de4206860e4a59d03641",
+        "sig_e0b770c5747f4e22fd8c",
+        "sig_f03991d067b5a704a3fd",
+        "sig_f619580c6859e193b4e4",
+        "sig_1350fc158ee6fa8171f3",
+        "sig_22da74e294d1657c085f",
+        "sig_246bfb0ece8702300192",
+        "sig_33a94c1e08d6afd42d15",
+        "sig_4395c90c5b5e79ea31c2",
+        "sig_54b0b31d97321fe1ef26",
+        "sig_7d789ec895bb8ab2f85e",
+        "sig_98a86972a80e0dbb77c4",
+        "sig_a645dbd6638dbb6364d5",
+        "sig_c575334871edbc0a0ee2",
+        "sig_d33f7e855d65e5d57e9c",
+        "sig_dd58829368b1f9505630",
+        "sig_f0e931e2ed3796dad986",
+        "sig_b52eedb280626e69d58b",
+        "sig_3018e02c172ea9e477c6",
+        "sig_78be3aaa3cad2737b93f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_aa01e72ca3821ca5624c",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200300310",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $1,381,472,000 held across 13 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_33a94c1e08d6afd42d15",
+        "sig_c575334871edbc0a0ee2",
+        "sig_22da74e294d1657c085f",
+        "sig_54b0b31d97321fe1ef26",
+        "sig_98a86972a80e0dbb77c4",
+        "sig_a645dbd6638dbb6364d5",
+        "sig_4395c90c5b5e79ea31c2",
+        "sig_d33f7e855d65e5d57e9c",
+        "sig_f0e931e2ed3796dad986",
+        "sig_1350fc158ee6fa8171f3",
+        "sig_7d789ec895bb8ab2f85e",
+        "sig_246bfb0ece8702300192",
+        "sig_dd58829368b1f9505630"
+      ],
+      "derived_from": [
+        "sig_33a94c1e08d6afd42d15",
+        "sig_c575334871edbc0a0ee2",
+        "sig_22da74e294d1657c085f",
+        "sig_54b0b31d97321fe1ef26",
+        "sig_98a86972a80e0dbb77c4",
+        "sig_a645dbd6638dbb6364d5",
+        "sig_4395c90c5b5e79ea31c2",
+        "sig_d33f7e855d65e5d57e9c",
+        "sig_f0e931e2ed3796dad986",
+        "sig_1350fc158ee6fa8171f3",
+        "sig_7d789ec895bb8ab2f85e",
+        "sig_246bfb0ece8702300192",
+        "sig_dd58829368b1f9505630"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.9,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_dfb6dc052a8ff8de8a3f",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200300310",
+      "text": "4 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_540dbfa80666dcc034e0",
+        "sig_86cceaf452d91495868e",
+        "sig_a5e67de7be2f83832e3d",
+        "sig_bef02d8ef4aabb8df5ca"
+      ],
+      "derived_from": [
+        "sig_540dbfa80666dcc034e0",
+        "sig_86cceaf452d91495868e",
+        "sig_a5e67de7be2f83832e3d",
+        "sig_bef02d8ef4aabb8df5ca"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.5700000000000001,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1838
+    },
+    {
+      "id": "stmt_83ffc981c5417a5e3a10",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1200300310",
+      "text": "2 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_3018e02c172ea9e477c6",
+        "sig_78be3aaa3cad2737b93f"
+      ],
+      "derived_from": [
+        "sig_3018e02c172ea9e477c6",
+        "sig_78be3aaa3cad2737b93f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.3333333333333333,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1104
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.086Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

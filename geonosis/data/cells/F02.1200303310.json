@@ -1,0 +1,489 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200303310",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 5,
+    "entities": 1,
+    "relations": 1,
+    "statements": 3,
+    "direct_signals": 5,
+    "direct_entities": 1,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 1,
+    "memory.national_register_resource": 3
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 1
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "institutional_memory_density": 1,
+    "multi_source_activity": 1
+  },
+  "signals": [
+    {
+      "id": "sig_57744b667026be65d513",
+      "source": "epa-echo",
+      "source_record_id": "110070948765",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "COBALT CONSTRUCTION & DEVELOPMENT LLC - RIVER ROAD ESTATES",
+        "address": "RIVER RD, HAHNVILLE, LA, 70000",
+        "county": "ST. CHARLES",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 20000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.420309401992,
+          29.9619530521362
+        ]
+      },
+      "atlas_address": "F02.1200303310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.420309401992,
+          29.9619530521362
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070948765",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 7444
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7849d36691458de34977",
+      "source": "fdic-locations",
+      "source_record_id": "225552",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "8149",
+        "branch_id": 11,
+        "institution_name": "First American Bank and Trust",
+        "branch_name": "LULING BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "13919 River Rd",
+        "city": "Luling",
+        "state": "LA",
+        "zip": "70070",
+        "fi_uninum": 5194
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.383443026982,
+          29.940595007473874
+        ]
+      },
+      "atlas_address": "F02.1200303310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.383443026982,
+          29.940595007473874
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_219e615eac2cc02e3c29",
+      "source": "nps-national-register",
+      "source_record_id": "90001748",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Ormond Plantation House",
+        "resource_type": "building",
+        "address": "Jct. of LA 48 and Oak Ave.",
+        "city": "Destrehan",
+        "county": "St. Charles",
+        "state": "LOUISIANA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.38690264099995,
+          29.95437398300004
+        ]
+      },
+      "atlas_address": "F02.1200303310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.38690264099995,
+          29.95437398300004
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1990-11-08T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:24.836Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{7B1678F2-C544-4193-A332-48040D0A6B88}",
+        "src_date": 658022400000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_4589ad636a7b4cf91252",
+      "source": "nps-national-register",
+      "source_record_id": "90001748",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Ormond Plantation",
+        "resource_type": "building",
+        "address": "Jct. of LA 48 and Oak Ave.",
+        "city": "Destrehan",
+        "county": "St. Charles",
+        "state": "LOUISIANA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "Unknown"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.38680499999998,
+          29.95438100000007
+        ]
+      },
+      "atlas_address": "F02.1200303310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.38680499999998,
+          29.95438100000007
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1990-11-08T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:24.838Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{D5904DDF-E41A-41AE-97BB-AFE7CFB0717F}",
+        "src_date": -27106617600000,
+        "src_scale": "Unknown"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_467528c0bf7354dff791",
+      "source": "nps-national-register",
+      "source_record_id": "90000799",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Dorvin House",
+        "resource_type": "building",
+        "address": "SR 18 NW of Hahnville",
+        "city": "Hahnville",
+        "county": "St. Charles",
+        "state": "LOUISIANA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.42082207299995,
+          29.988597584000047
+        ]
+      },
+      "atlas_address": "F02.1200303310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.42082207299995,
+          29.988597584000047
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1990-05-24T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:24.836Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{97A4FF47-5804-4948-97D8-B29E3A23BEEF}",
+        "src_date": 643507200000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:8149:11",
+      "type": "bank_branch",
+      "name": "LULING BRANCH",
+      "identifiers": {
+        "fdic_cert": "8149",
+        "branch_id": "11"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.383443026982,
+          29.940595007473874
+        ]
+      },
+      "atlas_address": "F02.1200303310",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_7849d36691458de34977"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_d14dd8b7382afb0d0e35",
+      "subject": "fdic-branch:8149:11",
+      "predicate": "branch_of",
+      "object": "fdic:8149",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7849d36691458de34977"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_051bd0ae6cd94f468932",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200303310",
+      "text": "3 independent source channels address signals to this ground: epa-echo, fdic-locations, nps-national-register.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_57744b667026be65d513",
+        "sig_7849d36691458de34977",
+        "sig_219e615eac2cc02e3c29",
+        "sig_4589ad636a7b4cf91252",
+        "sig_467528c0bf7354dff791"
+      ],
+      "derived_from": [
+        "sig_57744b667026be65d513",
+        "sig_7849d36691458de34977",
+        "sig_219e615eac2cc02e3c29",
+        "sig_4589ad636a7b4cf91252",
+        "sig_467528c0bf7354dff791"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_46b112e6f590778d09a0",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200303310",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_57744b667026be65d513"
+      ],
+      "derived_from": [
+        "sig_57744b667026be65d513"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_1e2377ec73f1637feff1",
+      "kind": "institutional_memory_density",
+      "atlas_address": "F02.1200303310",
+      "text": "3 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_219e615eac2cc02e3c29",
+        "sig_4589ad636a7b4cf91252",
+        "sig_467528c0bf7354dff791"
+      ],
+      "derived_from": [
+        "sig_219e615eac2cc02e3c29",
+        "sig_4589ad636a7b4cf91252",
+        "sig_467528c0bf7354dff791"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.15,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1417
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.089Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

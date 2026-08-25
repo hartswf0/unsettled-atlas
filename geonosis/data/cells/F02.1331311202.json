@@ -1,0 +1,239 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331311202",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-sod",
+    "inaturalist-observations"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 1,
+    "relations": 2,
+    "statements": 1,
+    "direct_signals": 2,
+    "direct_entities": 1,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.branch_deposits": 1,
+    "ecology.inaturalist_observation": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "holds_reported_deposits": 1,
+    "branch_of": 1
+  },
+  "statement_kinds": {
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_8bbbc1dabe3dc2680fbf",
+      "source": "inaturalist-observations",
+      "source_record_id": "394251984",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Antheraea polyphemus",
+        "common_name": "Polyphemus Moth",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4075722222,
+          34.0840416667
+        ]
+      },
+      "atlas_address": "F02.1331311202",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4075722222,
+          34.0840416667
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:20:52.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394251984",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Mountain Park, GA, USA",
+        "positional_accuracy": null
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4cd0a17d9fed3682b000",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:100",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 100,
+        "institution_name": "Renasant Bank",
+        "branch_name": "East Woodstock Branch",
+        "deposits_usd": 45283000,
+        "address": "190 Village Ctr E",
+        "city": "Woodstock",
+        "state": "GA",
+        "zip": "30188"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4663610237028,
+          34.0876229918039
+        ]
+      },
+      "atlas_address": "F02.1331311202",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4663610237028,
+          34.0876229918039
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12437:100",
+      "type": "bank_branch",
+      "name": "East Woodstock Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "100"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4663610237028,
+          34.0876229918039
+        ]
+      },
+      "atlas_address": "F02.1331311202",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_8bf9d73993a5eeab599c",
+      "subject": "fdic-branch:12437:100",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 45283000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_ffea8a9750b831e8457a",
+      "subject": "fdic-branch:12437:100",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_4a0fa7b04a1fbd19a621",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331311202",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $45,283,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "derived_from": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.110Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

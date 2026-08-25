@@ -1,0 +1,287 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213000",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "inaturalist-observations"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 2,
+    "relations": 2,
+    "statements": 0,
+    "direct_signals": 3,
+    "direct_entities": 2,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "money.bank_branch": 2,
+    "ecology.inaturalist_observation": 1
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2
+  },
+  "statement_kinds": {},
+  "signals": [
+    {
+      "id": "sig_665f52eb61d59234d9aa",
+      "source": "inaturalist-observations",
+      "source_record_id": "394263998",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Acalypha",
+        "common_name": "three-seeded mercuries",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2947505,
+          33.9481253
+        ]
+      },
+      "atlas_address": "F02.1331213000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2947505,
+          33.9481253
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T23:13:40.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394263998",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Sandy Springs, GA 30338, USA",
+        "positional_accuracy": 57
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_31a17707445687b42852",
+      "source": "fdic-locations",
+      "source_record_id": "244348",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3248,
+        "institution_name": "Truist Bank",
+        "branch_name": "GEORGETOWN CENTER BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4525 Chamblee Dunwoody Rd",
+        "city": "Dunwoody",
+        "state": "GA",
+        "zip": "30338",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.31437083256768,
+          33.923032776384886
+        ]
+      },
+      "atlas_address": "F02.1331213000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.31437083256768,
+          33.923032776384886
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_5fe6faf124c2661b446a",
+      "source": "fdic-locations",
+      "source_record_id": "191855",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4261,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "DUNWOODY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2454 Jett Ferry Rd",
+        "city": "Dunwoody",
+        "state": "GA",
+        "zip": "30338",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.30348203717894,
+          33.957442019114936
+        ]
+      },
+      "atlas_address": "F02.1331213000",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.30348203717894,
+          33.957442019114936
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3510:4261",
+      "type": "bank_branch",
+      "name": "DUNWOODY BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4261"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.30348203717894,
+          33.957442019114936
+        ]
+      },
+      "atlas_address": "F02.1331213000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_5fe6faf124c2661b446a"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3248",
+      "type": "bank_branch",
+      "name": "GEORGETOWN CENTER BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3248"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.31437083256768,
+          33.923032776384886
+        ]
+      },
+      "atlas_address": "F02.1331213000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_31a17707445687b42852"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_1dc014a9122e1a79b1de",
+      "subject": "fdic-branch:3510:4261",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_5fe6faf124c2661b446a"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_679e013d16016fdccd6a",
+      "subject": "fdic-branch:9846:3248",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_31a17707445687b42852"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [],
+  "generated_at": "2026-08-25T12:26:10.101Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

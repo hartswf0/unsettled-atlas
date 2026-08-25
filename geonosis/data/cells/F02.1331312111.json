@@ -1,0 +1,271 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331312111",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-sod",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 1,
+    "relations": 2,
+    "statements": 1,
+    "direct_signals": 2,
+    "direct_entities": 1,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.branch_deposits": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 1,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_dc8aa62347ab1f91af35",
+      "source": "fdic-sod",
+      "source_record_id": "2025:11063:813",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 11063,
+        "branch_id": 813,
+        "institution_name": "First-Citizens Bank & Trust Company",
+        "branch_name": "Rivermont Station Branch",
+        "deposits_usd": 104603000,
+        "address": "8479 Holcomb Bridge Rd",
+        "city": "Alpharetta",
+        "state": "GA",
+        "zip": "30022"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2715239358468,
+          33.9874828439148
+        ]
+      },
+      "atlas_address": "F02.1331312111",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2715239358468,
+          33.9874828439148
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.324Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_91d2fa1a3e2b0acbab7a",
+      "source": "osm-notes",
+      "source_record_id": "2319862",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 4,
+        "latest": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.266052,
+          33.974496
+        ]
+      },
+      "atlas_address": "F02.1331312111",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.266052,
+          33.974496
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2020-08-24 01:22:11 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/2319862",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2020-08-24 01:22:11 UTC",
+            "uid": 11533545,
+            "user": "HoldenRohrer",
+            "user_url": "https://api.openstreetmap.org/user/HoldenRohrer",
+            "action": "opened",
+            "text": "GPS track these trails",
+            "html": "<p dir=\"auto\">GPS track these trails</p>"
+          },
+          {
+            "date": "2020-08-28 01:13:12 UTC",
+            "uid": 11533545,
+            "user": "HoldenRohrer",
+            "user_url": "https://api.openstreetmap.org/user/HoldenRohrer",
+            "action": "commented",
+            "text": "Traced one! But there are some bins and benches and paths I missed",
+            "html": "<p dir=\"auto\">Traced one! But there are some bins and benches and paths I missed</p>"
+          },
+          {
+            "date": "2025-01-03 02:37:45 UTC",
+            "uid": 83188,
+            "user": "dannmer",
+            "user_url": "https://api.openstreetmap.org/user/dannmer",
+            "action": "closed",
+            "text": "Strava heat map shows that there are still some trails that need to be mapped",
+            "html": "<p dir=\"auto\">Strava heat map shows that there are still some trails that need to be mapped</p>"
+          },
+          {
+            "date": "2025-01-03 02:37:48 UTC",
+            "uid": 83188,
+            "user": "dannmer",
+            "user_url": "https://api.openstreetmap.org/user/dannmer",
+            "action": "reopened",
+            "text": "",
+            "html": "<p dir=\"auto\"></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:11063:813",
+      "type": "bank_branch",
+      "name": "Rivermont Station Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "813"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2715239358468,
+          33.9874828439148
+        ]
+      },
+      "atlas_address": "F02.1331312111",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_dc8aa62347ab1f91af35"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_886d2541ec34ebb414e1",
+      "subject": "fdic-branch:11063:813",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:11063",
+      "value": {
+        "amount_usd": 104603000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_dc8aa62347ab1f91af35"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_398f0c8dffd15377a844",
+      "subject": "fdic-branch:11063:813",
+      "predicate": "branch_of",
+      "object": "fdic:11063",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_dc8aa62347ab1f91af35"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_96033087672d6d0ef2fd",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331312111",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $104,603,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_dc8aa62347ab1f91af35"
+      ],
+      "derived_from": [
+        "sig_dc8aa62347ab1f91af35"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.113Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

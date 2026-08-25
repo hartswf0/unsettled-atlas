@@ -1,0 +1,2339 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200300311",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations"
+  ],
+  "counts": {
+    "signals": 27,
+    "entities": 7,
+    "relations": 21,
+    "statements": 4,
+    "direct_signals": 27,
+    "direct_entities": 7,
+    "direct_statements": 4
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 5,
+    "money.bank_branch": 7,
+    "money.branch_deposits": 7,
+    "ecology.occurrence": 1,
+    "ecology.inaturalist_observation": 7
+  },
+  "entity_types": {
+    "bank_branch": 7
+  },
+  "relation_predicates": {
+    "holds_reported_deposits": 7,
+    "branch_of": 14
+  },
+  "statement_kinds": {
+    "ecological_observation_density": 1,
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_a420283d3a0ae424c29f",
+      "source": "epa-echo",
+      "source_record_id": "110003295461",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "MANUEL TRUCK & AUTO RPR",
+        "address": "1053 VICTOR DR, WESTWEGO, LA, 70094",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1360797511508,
+          29.8900000699429
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1360797511508,
+          29.8900000699429
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003295461",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 44539
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7579f68dd72f23800d74",
+      "source": "epa-echo",
+      "source_record_id": "110070124665",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "DOLLAR GENERAL #14037",
+        "address": "3958 WEST WESTBANK EXPRESSWAY, HARVEY, LA, 70058",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0892901012621,
+          29.8956697528123
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0892901012621,
+          29.8956697528123
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070124665",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 21434
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_274827182470bf4b0eab",
+      "source": "epa-echo",
+      "source_record_id": "110041920339",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "MARRERO COASTAL WASTE SERVICES FACILITY",
+        "address": "6025 RIVER RD, MARRERO, LA, 70000",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1158901151402,
+          29.9033100748012
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1158901151402,
+          29.9033100748012
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110041920339",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 13513
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_76d2e1f270e3b811edae",
+      "source": "epa-echo",
+      "source_record_id": "110003360924",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "WESTCARE MEDICAL CTR",
+        "address": "1220 BARATARIA BLVD, MARRERO, LA, 70072",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0996997787745,
+          29.8889097093399
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0996997787745,
+          29.8889097093399
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003360924",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 19107
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f1718538082ccdd5583c",
+      "source": "epa-echo",
+      "source_record_id": "110003314413",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SIDNEYS COLLISION RPR",
+        "address": "1670 BARATARIA BLVD, MARRERO, LA, 70072",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0986999538633,
+          29.8796403838006
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0986999538633,
+          29.8796403838006
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003314413",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 17670
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7945e7493889e60bdb7f",
+      "source": "inaturalist-observations",
+      "source_record_id": "394244140",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Carya illinoinensis",
+        "common_name": "pecan",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1014166667,
+          29.8664383333
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1014166667,
+          29.8664383333
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:09:59.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.605Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394244140",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Highland Dr, Marrero, LA, US",
+        "positional_accuracy": 3
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_6a00fec351b21e8f6162",
+      "source": "inaturalist-observations",
+      "source_record_id": "394244254",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Phylloxera notabilis",
+        "common_name": "Pecan Leaf Phylloxera",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1014166667,
+          29.86643
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1014166667,
+          29.86643
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:09:55.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.605Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394244254",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Highland Dr, Marrero, LA, US",
+        "positional_accuracy": 5
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_0376ab883e218e192283",
+      "source": "fdic-locations",
+      "source_record_id": "239908",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12368",
+        "branch_id": 2282,
+        "institution_name": "Regions Bank",
+        "branch_name": "WESTWEGO BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "900 Westbank Expy",
+        "city": "Westwego",
+        "state": "LA",
+        "zip": "70094",
+        "fi_uninum": 7866
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.14380299027255,
+          29.89766398905668
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.14380299027255,
+          29.89766398905668
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_421db6ff68bea6f32377",
+      "source": "fdic-locations",
+      "source_record_id": "202753",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "4297",
+        "branch_id": 62,
+        "institution_name": "Capital One, National Association",
+        "branch_name": "BELLE PROMENADE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1867 Barataria Blvd",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072",
+        "fi_uninum": 2818
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.09794903458001,
+          29.87677699880524
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.09794903458001,
+          29.87677699880524
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_5761924873d07923d249",
+      "source": "fdic-locations",
+      "source_record_id": "281383",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "4977",
+        "branch_id": 1010,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "MARRERO BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1820 Barataria Blvd",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072",
+        "fi_uninum": 3319
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.09886098564549,
+          29.877099995444112
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.09886098564549,
+          29.877099995444112
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_9268d6e559bbd5346822",
+      "source": "fdic-locations",
+      "source_record_id": "239909",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12368",
+        "branch_id": 2283,
+        "institution_name": "Regions Bank",
+        "branch_name": "BARATARIA BLVD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2098 Barataria Blvd",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072",
+        "fi_uninum": 7866
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.09812103123316,
+          29.868964981226696
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.09812103123316,
+          29.868964981226696
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_9da86c5ab7bb57f434cd",
+      "source": "fdic-locations",
+      "source_record_id": "262882",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "27697",
+        "branch_id": 101,
+        "institution_name": "Fifth District Savings Bank",
+        "branch_name": "1317 WESTBANK EXPRESSWAY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1317 Westbank Expy",
+        "city": "Westwego",
+        "state": "LA",
+        "zip": "70094",
+        "fi_uninum": 40531
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.13794697361902,
+          29.89746399684691
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.13794697361902,
+          29.89746399684691
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ae7a32b237f50686169c",
+      "source": "fdic-locations",
+      "source_record_id": "262881",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "27697",
+        "branch_id": 100,
+        "institution_name": "Fifth District Savings Bank",
+        "branch_name": "2701 BARATARIA BLVD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2476 Barataria Blvd",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072",
+        "fi_uninum": 40531
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.10266402275425,
+          29.85774199006042
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.10266402275425,
+          29.85774199006042
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f5ed98452752e7808692",
+      "source": "fdic-locations",
+      "source_record_id": "262880",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "27697",
+        "branch_id": 1,
+        "institution_name": "Fifth District Savings Bank",
+        "branch_name": "FIFTH DIST SVG BK - MARRERO BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "850 Avenue D",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072",
+        "fi_uninum": 40531
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.096814041071,
+          29.896175991695
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.096814041071,
+          29.896175991695
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_c3b42b5ae5489fa345c8",
+      "source": "inaturalist-observations",
+      "source_record_id": "393836695",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Haemorhous mexicanus",
+        "common_name": "House Finch",
+        "iconic_taxon": "Aves",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1013863889,
+          29.8662626905
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1013863889,
+          29.8662626905
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-23T15:21:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.605Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393836695",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Marrero, LA 70072, USA",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f7a58086ada04250cc3f",
+      "source": "inaturalist-observations",
+      "source_record_id": "393629716",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Cotinis nitida",
+        "common_name": "Common Green June Beetle",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1013568846,
+          29.8662635082
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1013568846,
+          29.8662635082
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-22T21:45:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.606Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393629716",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Marrero, LA 70072, USA",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_719795c04d98a7ecf0ea",
+      "source": "inaturalist-observations",
+      "source_record_id": "393627785",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Neotibicen pruinosus",
+        "common_name": "Scissor Grinder",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1013998,
+          29.8662728122
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1013998,
+          29.8662728122
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-22T21:41:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.606Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393627785",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Marrero, LA 70072, USA",
+        "positional_accuracy": 4
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_d07dc15e808ae77bc6d0",
+      "source": "inaturalist-observations",
+      "source_record_id": "393816064",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Cotinis nitida",
+        "common_name": "Common Green June Beetle",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1013416667,
+          29.8663583333
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1013416667,
+          29.8663583333
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-22T21:36:06.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.606Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393816064",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Highland Dr, Marrero, LA, US",
+        "positional_accuracy": 5
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_4e6bd3ab7ec6c5e8933d",
+      "source": "inaturalist-observations",
+      "source_record_id": "393506184",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Anolis sagrei",
+        "common_name": "Brown Anole",
+        "iconic_taxon": "Reptilia",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1014111667,
+          29.8664116667
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1014111667,
+          29.8664116667
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-22T15:47:58.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.607Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393506184",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Highland Dr, Marrero, LA, US",
+        "positional_accuracy": 3
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_26d746cc4fda8cfee9d0",
+      "source": "gbif-occurrences",
+      "source_record_id": "6129962144",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Bidens alba (L.) DC.",
+        "species": "Bidens alba",
+        "vernacular_name": null,
+        "taxon_key": 5391861,
+        "species_key": 5391861,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 4,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.123115,
+          29.89221
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.123115,
+          29.89221
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-11T14:04:23.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.629Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6129962144",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_1c81509d74fc601ddaca",
+      "source": "fdic-sod",
+      "source_record_id": "2025:27697:100",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 27697,
+        "branch_id": 100,
+        "institution_name": "Fifth District Savings Bank",
+        "branch_name": "2701 Barataria Blvd Branch",
+        "deposits_usd": 61813000,
+        "address": "2476 Barataria Blvd",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1026640227543,
+          29.8577419900604
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1026640227543,
+          29.8577419900604
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_4a906ee5bc9833c3e36b",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2282",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2282,
+        "institution_name": "Regions Bank",
+        "branch_name": "Westwego Branch",
+        "deposits_usd": 56678000,
+        "address": "900 Westbank Expy",
+        "city": "Westwego",
+        "state": "LA",
+        "zip": "70094"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1438029902725,
+          29.8976639890567
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1438029902725,
+          29.8976639890567
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.771Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_68ebd76f92209802fcab",
+      "source": "fdic-sod",
+      "source_record_id": "2025:4977:1010",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 4977,
+        "branch_id": 1010,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "Marrero Branch",
+        "deposits_usd": 112277000,
+        "address": "1820 Barataria Blvd",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0988609856455,
+          29.8770999954441
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0988609856455,
+          29.8770999954441
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.778Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7fa92c8b614b67f6b432",
+      "source": "fdic-sod",
+      "source_record_id": "2025:4297:62",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 4297,
+        "branch_id": 62,
+        "institution_name": "Capital One, National Association",
+        "branch_name": "Belle Promenade Branch",
+        "deposits_usd": 186344000,
+        "address": "1867 Barataria Blvd",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.09794903458,
+          29.8767769988052
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.09794903458,
+          29.8767769988052
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.777Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_895809ab0385cd211b33",
+      "source": "fdic-sod",
+      "source_record_id": "2025:27697:101",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 27697,
+        "branch_id": 101,
+        "institution_name": "Fifth District Savings Bank",
+        "branch_name": "1317 Westbank Expressway Branch",
+        "deposits_usd": 46246000,
+        "address": "1317 Westbank Expy",
+        "city": "Westwego",
+        "state": "LA",
+        "zip": "70094"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.137946973619,
+          29.8974639968469
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.137946973619,
+          29.8974639968469
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_8b955932c9c2f47a5e07",
+      "source": "fdic-sod",
+      "source_record_id": "2025:27697:1",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 27697,
+        "branch_id": 1,
+        "institution_name": "Fifth District Savings Bank",
+        "branch_name": "Fifth Dist Svg Bk - Marrero Branch",
+        "deposits_usd": 77027000,
+        "address": "850 Avenue D",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.096814041071,
+          29.896175991695
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.096814041071,
+          29.896175991695
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f798044226f49a68a82a",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2283",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2283,
+        "institution_name": "Regions Bank",
+        "branch_name": "Barataria Blvd Branch",
+        "deposits_usd": 655056000,
+        "address": "2098 Barataria Blvd",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0981210312332,
+          29.8689649812267
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0981210312332,
+          29.8689649812267
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.771Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:2282",
+      "type": "bank_branch",
+      "name": "WESTWEGO BRANCH",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2282"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.14380299027255,
+          29.89766398905668
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0376ab883e218e192283",
+        "sig_4a906ee5bc9833c3e36b"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:12368:2283",
+      "type": "bank_branch",
+      "name": "BARATARIA BLVD BRANCH",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2283"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.09812103123316,
+          29.868964981226696
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_9268d6e559bbd5346822",
+        "sig_f798044226f49a68a82a"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:27697:1",
+      "type": "bank_branch",
+      "name": "FIFTH DIST SVG BK - MARRERO BRANCH",
+      "identifiers": {
+        "fdic_cert": "27697",
+        "branch_id": "1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.096814041071,
+          29.896175991695
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f5ed98452752e7808692",
+        "sig_8b955932c9c2f47a5e07"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:27697:100",
+      "type": "bank_branch",
+      "name": "2701 BARATARIA BLVD BRANCH",
+      "identifiers": {
+        "fdic_cert": "27697",
+        "branch_id": "100"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.10266402275425,
+          29.85774199006042
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ae7a32b237f50686169c",
+        "sig_1c81509d74fc601ddaca"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:27697:101",
+      "type": "bank_branch",
+      "name": "1317 WESTBANK EXPRESSWAY BRANCH",
+      "identifiers": {
+        "fdic_cert": "27697",
+        "branch_id": "101"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.13794697361902,
+          29.89746399684691
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_9da86c5ab7bb57f434cd",
+        "sig_895809ab0385cd211b33"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:4297:62",
+      "type": "bank_branch",
+      "name": "BELLE PROMENADE BRANCH",
+      "identifiers": {
+        "fdic_cert": "4297",
+        "branch_id": "62"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.09794903458001,
+          29.87677699880524
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_421db6ff68bea6f32377",
+        "sig_7fa92c8b614b67f6b432"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:4977:1010",
+      "type": "bank_branch",
+      "name": "MARRERO BRANCH",
+      "identifiers": {
+        "fdic_cert": "4977",
+        "branch_id": "1010"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.09886098564549,
+          29.877099995444112
+        ]
+      },
+      "atlas_address": "F02.1200300311",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_5761924873d07923d249",
+        "sig_68ebd76f92209802fcab"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_046639c6d84ac94ce0f5",
+      "subject": "fdic-branch:12368:2283",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 655056000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f798044226f49a68a82a"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_3dd4794d8f1c2a35b4eb",
+      "subject": "fdic-branch:12368:2282",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 56678000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4a906ee5bc9833c3e36b"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_422d42370783958bc423",
+      "subject": "fdic-branch:4977:1010",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4977",
+      "value": {
+        "amount_usd": 112277000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_68ebd76f92209802fcab"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_90cb6bb9011a19555864",
+      "subject": "fdic-branch:27697:101",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:27697",
+      "value": {
+        "amount_usd": 46246000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_895809ab0385cd211b33"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_98fb98011479ed8372b6",
+      "subject": "fdic-branch:27697:100",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:27697",
+      "value": {
+        "amount_usd": 61813000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1c81509d74fc601ddaca"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_b43094a40d8f30096003",
+      "subject": "fdic-branch:27697:1",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:27697",
+      "value": {
+        "amount_usd": 77027000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8b955932c9c2f47a5e07"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_c88f0576527c0d15be13",
+      "subject": "fdic-branch:4297:62",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4297",
+      "value": {
+        "amount_usd": 186344000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7fa92c8b614b67f6b432"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_061f0dc53066a15eba92",
+      "subject": "fdic-branch:27697:101",
+      "predicate": "branch_of",
+      "object": "fdic:27697",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_9da86c5ab7bb57f434cd"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_084b502d738f553d2906",
+      "subject": "fdic-branch:4977:1010",
+      "predicate": "branch_of",
+      "object": "fdic:4977",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_68ebd76f92209802fcab"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_12485f4554a7d69fc0c3",
+      "subject": "fdic-branch:27697:100",
+      "predicate": "branch_of",
+      "object": "fdic:27697",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ae7a32b237f50686169c"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_1d9500538779a8349eb4",
+      "subject": "fdic-branch:4297:62",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7fa92c8b614b67f6b432"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_256f2e882c0dbc64f756",
+      "subject": "fdic-branch:27697:101",
+      "predicate": "branch_of",
+      "object": "fdic:27697",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_895809ab0385cd211b33"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_29457fd622d2b8700590",
+      "subject": "fdic-branch:27697:100",
+      "predicate": "branch_of",
+      "object": "fdic:27697",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1c81509d74fc601ddaca"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_4146b7d2cf1d447355e1",
+      "subject": "fdic-branch:27697:1",
+      "predicate": "branch_of",
+      "object": "fdic:27697",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f5ed98452752e7808692"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_69ddb654d5e2601997fe",
+      "subject": "fdic-branch:12368:2283",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_9268d6e559bbd5346822"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_8d3e0eb01cfb4ea52d96",
+      "subject": "fdic-branch:12368:2282",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0376ab883e218e192283"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_91fe019e6b7fd6bf3ef9",
+      "subject": "fdic-branch:12368:2283",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f798044226f49a68a82a"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_9beaeb14bebce451906d",
+      "subject": "fdic-branch:27697:1",
+      "predicate": "branch_of",
+      "object": "fdic:27697",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8b955932c9c2f47a5e07"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_a4e39939f4127c8106ad",
+      "subject": "fdic-branch:4297:62",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_421db6ff68bea6f32377"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_ee9357717a2da494b52d",
+      "subject": "fdic-branch:4977:1010",
+      "predicate": "branch_of",
+      "object": "fdic:4977",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_5761924873d07923d249"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_f2245d577610d44b21ae",
+      "subject": "fdic-branch:12368:2282",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4a906ee5bc9833c3e36b"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_ae52dbd27c554457e304",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200300311",
+      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_274827182470bf4b0eab",
+        "sig_7579f68dd72f23800d74",
+        "sig_76d2e1f270e3b811edae",
+        "sig_a420283d3a0ae424c29f",
+        "sig_f1718538082ccdd5583c",
+        "sig_0376ab883e218e192283",
+        "sig_421db6ff68bea6f32377",
+        "sig_5761924873d07923d249",
+        "sig_9268d6e559bbd5346822",
+        "sig_9da86c5ab7bb57f434cd",
+        "sig_ae7a32b237f50686169c",
+        "sig_f5ed98452752e7808692",
+        "sig_1c81509d74fc601ddaca",
+        "sig_4a906ee5bc9833c3e36b",
+        "sig_68ebd76f92209802fcab",
+        "sig_7fa92c8b614b67f6b432",
+        "sig_895809ab0385cd211b33",
+        "sig_8b955932c9c2f47a5e07",
+        "sig_f798044226f49a68a82a",
+        "sig_26d746cc4fda8cfee9d0",
+        "sig_4e6bd3ab7ec6c5e8933d",
+        "sig_6a00fec351b21e8f6162",
+        "sig_719795c04d98a7ecf0ea",
+        "sig_7945e7493889e60bdb7f",
+        "sig_c3b42b5ae5489fa345c8",
+        "sig_d07dc15e808ae77bc6d0",
+        "sig_f7a58086ada04250cc3f"
+      ],
+      "derived_from": [
+        "sig_274827182470bf4b0eab",
+        "sig_7579f68dd72f23800d74",
+        "sig_76d2e1f270e3b811edae",
+        "sig_a420283d3a0ae424c29f",
+        "sig_f1718538082ccdd5583c",
+        "sig_0376ab883e218e192283",
+        "sig_421db6ff68bea6f32377",
+        "sig_5761924873d07923d249",
+        "sig_9268d6e559bbd5346822",
+        "sig_9da86c5ab7bb57f434cd",
+        "sig_ae7a32b237f50686169c",
+        "sig_f5ed98452752e7808692",
+        "sig_1c81509d74fc601ddaca",
+        "sig_4a906ee5bc9833c3e36b",
+        "sig_68ebd76f92209802fcab",
+        "sig_7fa92c8b614b67f6b432",
+        "sig_895809ab0385cd211b33",
+        "sig_8b955932c9c2f47a5e07",
+        "sig_f798044226f49a68a82a",
+        "sig_26d746cc4fda8cfee9d0",
+        "sig_4e6bd3ab7ec6c5e8933d",
+        "sig_6a00fec351b21e8f6162",
+        "sig_719795c04d98a7ecf0ea",
+        "sig_7945e7493889e60bdb7f",
+        "sig_c3b42b5ae5489fa345c8",
+        "sig_d07dc15e808ae77bc6d0",
+        "sig_f7a58086ada04250cc3f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_b6f2333263df16b1da5c",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200300311",
+      "text": "5 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_274827182470bf4b0eab",
+        "sig_7579f68dd72f23800d74",
+        "sig_76d2e1f270e3b811edae",
+        "sig_a420283d3a0ae424c29f",
+        "sig_f1718538082ccdd5583c"
+      ],
+      "derived_from": [
+        "sig_274827182470bf4b0eab",
+        "sig_7579f68dd72f23800d74",
+        "sig_76d2e1f270e3b811edae",
+        "sig_a420283d3a0ae424c29f",
+        "sig_f1718538082ccdd5583c"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.65,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1938
+    },
+    {
+      "id": "stmt_166d9b72dacf930f3a42",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1200300311",
+      "text": "8 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_26d746cc4fda8cfee9d0",
+        "sig_4e6bd3ab7ec6c5e8933d",
+        "sig_6a00fec351b21e8f6162",
+        "sig_719795c04d98a7ecf0ea",
+        "sig_7945e7493889e60bdb7f",
+        "sig_c3b42b5ae5489fa345c8",
+        "sig_d07dc15e808ae77bc6d0",
+        "sig_f7a58086ada04250cc3f"
+      ],
+      "derived_from": [
+        "sig_26d746cc4fda8cfee9d0",
+        "sig_4e6bd3ab7ec6c5e8933d",
+        "sig_6a00fec351b21e8f6162",
+        "sig_719795c04d98a7ecf0ea",
+        "sig_7945e7493889e60bdb7f",
+        "sig_c3b42b5ae5489fa345c8",
+        "sig_d07dc15e808ae77bc6d0",
+        "sig_f7a58086ada04250cc3f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 0.4
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1896
+    },
+    {
+      "id": "stmt_f602967b44b83ea912e2",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200300311",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $1,195,441,000 held across 7 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_f798044226f49a68a82a",
+        "sig_4a906ee5bc9833c3e36b",
+        "sig_68ebd76f92209802fcab",
+        "sig_895809ab0385cd211b33",
+        "sig_1c81509d74fc601ddaca",
+        "sig_8b955932c9c2f47a5e07",
+        "sig_7fa92c8b614b67f6b432"
+      ],
+      "derived_from": [
+        "sig_f798044226f49a68a82a",
+        "sig_4a906ee5bc9833c3e36b",
+        "sig_68ebd76f92209802fcab",
+        "sig_895809ab0385cd211b33",
+        "sig_1c81509d74fc601ddaca",
+        "sig_8b955932c9c2f47a5e07",
+        "sig_7fa92c8b614b67f6b432"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.6000000000000001,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1688
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.086Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

@@ -1,0 +1,955 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331311232",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 12,
+    "entities": 0,
+    "relations": 0,
+    "statements": 4,
+    "direct_signals": 12,
+    "direct_entities": 0,
+    "direct_statements": 4
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "ecology.occurrence": 8,
+    "ecology.inaturalist_observation": 1,
+    "claim.map_note": 2
+  },
+  "entity_types": {},
+  "relation_predicates": {},
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "ecological_observation_density": 1,
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1
+  },
+  "signals": [
+    {
+      "id": "sig_d6dd10dd4e69bc559080",
+      "source": "epa-echo",
+      "source_record_id": "110071240224",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "CHAPEL HEIGHTS LOT 11",
+        "address": "3918 CHAPEL HEIGHTS DRIVE, MARIETTA, GA, 30062",
+        "county": "COBB COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 17431,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4338321440466,
+          34.0440879644767
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4338321440466,
+          34.0440879644767
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071240224",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 4025
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_90d296c22bf941986a50",
+      "source": "inaturalist-observations",
+      "source_record_id": "394286137",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Rattus rattus",
+        "common_name": "Black Rat",
+        "iconic_taxon": "Mammalia",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4229133333,
+          34.0624166667
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4229133333,
+          34.0624166667
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25T00:51:34.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394286137",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Woodstock Rd, Roswell, GA, US",
+        "positional_accuracy": 5
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_babbaafdfc6dc2aa7e9d",
+      "source": "osm-notes",
+      "source_record_id": "5407824",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "The road name changes here. This road is officially \"Mountain Road\" to the east of this point and \"North Mountain Road Northwest\" to the west of thsi point. The name changes upon entering the Highland Point Neighborhood from \"Mountain Road\" to the east, when it changes to \"North Mountain Road NW.\"\nThe USPS address of the last house BEFORE entering Highland Point is:\n3635 MOUNTAIN RD NE\nMARIETTA GA 30066-2445\nThe USPS address of the first house AFTER entering Highland Point:\n4266 N MOUNTAIN RD NE\nMARIETTA GA 30066-2463. In addition to the address verification via USPS.com, Google street view will confirm these street names."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.445225,
+          34.05957
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.445225,
+          34.05957
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-07-20 21:02:05 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5407824",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-07-20 21:02:05 UTC",
+            "uid": 24332492,
+            "user": "creekway",
+            "user_url": "https://api.openstreetmap.org/user/creekway",
+            "action": "opened",
+            "text": "The road name changes here. This road is officially \"Mountain Road\" to the east of this point and \"North Mountain Road Northwest\" to the west of thsi point. The name changes upon entering the Highland Point Neighborhood from \"Mountain Road\" to the east, when it changes to \"North Mountain Road NW.\"\nThe USPS address of the last house BEFORE entering Highland Point is:\n3635 MOUNTAIN RD NE\nMARIETTA GA 30066-2445\nThe USPS address of the first house AFTER entering Highland Point:\n4266 N MOUNTAIN RD NE\nMARIETTA GA 30066-2463. In addition to the address verification via USPS.com, Google street view will confirm these street names.",
+            "html": "<p dir=\"auto\">The road name changes here. This road is officially \"Mountain Road\" to the east of this point and \"North Mountain Road Northwest\" to the west of thsi point. The name changes upon entering the Highland Point Neighborhood from \"Mountain Road\" to the east, when it changes to \"North Mountain Road NW.\"\n<br />The USPS address of the last house BEFORE entering Highland Point is:\n<br />3635 MOUNTAIN RD NE\n<br />MARIETTA GA 30066-2445\n<br />The USPS address of the first house AFTER entering Highland Point:\n<br />4266 N MOUNTAIN RD NE\n<br />MARIETTA GA 30066-2463. In addition to the address verification via USPS.com, Google street view will confirm these street names.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_587faa7f95b44dd9ba5b",
+      "source": "osm-notes",
+      "source_record_id": "5407819",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "This road is officially \"Mountain Road\" and not \"North Mountain Road Northwest\" until it enters the Highland Point Neighborhood, when it changes to \"North Mountain Road NW.\"\nThe USPS address of the last house BEFORE entering Highland Point is:\n3635 MOUNTAIN RD NE\nMARIETTA GA 30066-2445\nThe USPS address of the first house AFTER entering Highland Point:\n4266 N MOUNTAIN RD NE\nMARIETTA GA 30066-2463"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.439078,
+          34.059126
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.439078,
+          34.059126
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-07-20 20:58:52 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5407819",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-07-20 20:58:52 UTC",
+            "uid": 24332492,
+            "user": "creekway",
+            "user_url": "https://api.openstreetmap.org/user/creekway",
+            "action": "opened",
+            "text": "This road is officially \"Mountain Road\" and not \"North Mountain Road Northwest\" until it enters the Highland Point Neighborhood, when it changes to \"North Mountain Road NW.\"\nThe USPS address of the last house BEFORE entering Highland Point is:\n3635 MOUNTAIN RD NE\nMARIETTA GA 30066-2445\nThe USPS address of the first house AFTER entering Highland Point:\n4266 N MOUNTAIN RD NE\nMARIETTA GA 30066-2463",
+            "html": "<p dir=\"auto\">This road is officially \"Mountain Road\" and not \"North Mountain Road Northwest\" until it enters the Highland Point Neighborhood, when it changes to \"North Mountain Road NW.\"\n<br />The USPS address of the last house BEFORE entering Highland Point is:\n<br />3635 MOUNTAIN RD NE\n<br />MARIETTA GA 30066-2445\n<br />The USPS address of the first house AFTER entering Highland Point:\n<br />4266 N MOUNTAIN RD NE\n<br />MARIETTA GA 30066-2463</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e13000606984103c86a0",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938167059",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Tremella mesenterica (Schaeff.) Pers.",
+        "species": "Tremella mesenterica",
+        "vernacular_name": null,
+        "taxon_key": 11945016,
+        "species_key": 11945016,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 5,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.421822,
+          34.067944
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.421822,
+          34.067944
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T13:23:43.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938167059",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8bfb4b55525dfe373932",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938385566",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Plestiodon fasciatus (Linnaeus, 1758)",
+        "species": "Plestiodon fasciatus",
+        "vernacular_name": null,
+        "taxon_key": 5789613,
+        "species_key": 5789613,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 14,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.42186,
+          34.068211
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.42186,
+          34.068211
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T12:32:45.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.832Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938385566",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_666282a4fe617137f488",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938377799",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Druon pattoni (Bassett, 1881) Cuesta-Porta, Melika, Nicholls, Stone & Pujade-Villar, 2022",
+        "species": "Druon pattoni",
+        "vernacular_name": null,
+        "taxon_key": 12370407,
+        "species_key": 12370407,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 5,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.421822,
+          34.068108
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.421822,
+          34.068108
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T12:15:55.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.832Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938377799",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6723edb48e666cdef0b7",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938031707",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Neuroterus quercusverrucarum",
+        "species": "Neuroterus quercusverrucarum",
+        "vernacular_name": null,
+        "taxon_key": 12202450,
+        "species_key": 12202450,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 20,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_MATCH_HIGHERRANK",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.421638,
+          34.068176
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.421638,
+          34.068176
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T11:55:59.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.828Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938031707",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e4706a312c302dbe6d33",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938125047",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Stereum complicatum (Fr.) Fr.",
+        "species": "Stereum complicatum",
+        "vernacular_name": null,
+        "taxon_key": 2553087,
+        "species_key": 2553087,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 11,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.421646,
+          34.067947
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.421646,
+          34.067947
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T11:50:54.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938125047",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_38329fca0641f44f3650",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938141419",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Armadillidium vulgare (Latreille, 1804)",
+        "species": "Armadillidium vulgare",
+        "vernacular_name": null,
+        "taxon_key": 2203611,
+        "species_key": 2203611,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 4,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.421806,
+          34.067944
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.421806,
+          34.067944
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T11:43:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938141419",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_832031110ca72c3f4251",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938211902",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Disholcaspis quercusglobulus (Fitch, 1859)",
+        "species": "Disholcaspis quercusglobulus",
+        "vernacular_name": null,
+        "taxon_key": 1309645,
+        "species_key": 1309645,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 4,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.421738,
+          34.067924
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.421738,
+          34.067924
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T11:33:24.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938211902",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_16133d0357ff750eeedb",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938192912",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Exidia",
+        "species": null,
+        "vernacular_name": null,
+        "taxon_key": 2512856,
+        "species_key": null,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 21,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_MATCH_HIGHERRANK",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.421669,
+          34.068005
+        ]
+      },
+      "atlas_address": "F02.1331311232",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.421669,
+          34.068005
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T11:31:24.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938192912",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [],
+  "relations": [],
+  "statements": [
+    {
+      "id": "stmt_64521d083317063a1234",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331311232",
+      "text": "9 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_16133d0357ff750eeedb",
+        "sig_38329fca0641f44f3650",
+        "sig_666282a4fe617137f488",
+        "sig_6723edb48e666cdef0b7",
+        "sig_832031110ca72c3f4251",
+        "sig_8bfb4b55525dfe373932",
+        "sig_e13000606984103c86a0",
+        "sig_e4706a312c302dbe6d33",
+        "sig_90d296c22bf941986a50"
+      ],
+      "derived_from": [
+        "sig_16133d0357ff750eeedb",
+        "sig_38329fca0641f44f3650",
+        "sig_666282a4fe617137f488",
+        "sig_6723edb48e666cdef0b7",
+        "sig_832031110ca72c3f4251",
+        "sig_8bfb4b55525dfe373932",
+        "sig_e13000606984103c86a0",
+        "sig_e4706a312c302dbe6d33",
+        "sig_90d296c22bf941986a50"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 0.45
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1958
+    },
+    {
+      "id": "stmt_94014886465ca7944420",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331311232",
+      "text": "4 independent source channels address signals to this ground: epa-echo, gbif-occurrences, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_d6dd10dd4e69bc559080",
+        "sig_16133d0357ff750eeedb",
+        "sig_38329fca0641f44f3650",
+        "sig_666282a4fe617137f488",
+        "sig_6723edb48e666cdef0b7",
+        "sig_832031110ca72c3f4251",
+        "sig_8bfb4b55525dfe373932",
+        "sig_e13000606984103c86a0",
+        "sig_e4706a312c302dbe6d33",
+        "sig_90d296c22bf941986a50",
+        "sig_587faa7f95b44dd9ba5b",
+        "sig_babbaafdfc6dc2aa7e9d"
+      ],
+      "derived_from": [
+        "sig_d6dd10dd4e69bc559080",
+        "sig_16133d0357ff750eeedb",
+        "sig_38329fca0641f44f3650",
+        "sig_666282a4fe617137f488",
+        "sig_6723edb48e666cdef0b7",
+        "sig_832031110ca72c3f4251",
+        "sig_8bfb4b55525dfe373932",
+        "sig_e13000606984103c86a0",
+        "sig_e4706a312c302dbe6d33",
+        "sig_90d296c22bf941986a50",
+        "sig_587faa7f95b44dd9ba5b",
+        "sig_babbaafdfc6dc2aa7e9d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.8,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1813
+    },
+    {
+      "id": "stmt_b9758890c5274e035ddb",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331311232",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_d6dd10dd4e69bc559080"
+      ],
+      "derived_from": [
+        "sig_d6dd10dd4e69bc559080"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_197d49c1e865f7c9be3a",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331311232",
+      "text": "2 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_587faa7f95b44dd9ba5b",
+        "sig_babbaafdfc6dc2aa7e9d"
+      ],
+      "derived_from": [
+        "sig_587faa7f95b44dd9ba5b",
+        "sig_babbaafdfc6dc2aa7e9d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.3333333333333333,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1104
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.112Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

@@ -1,0 +1,1768 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213012",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "atlanta-rezoning-cases",
+    "epa-echo",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "nps-national-register",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 18,
+    "entities": 0,
+    "relations": 0,
+    "statements": 7,
+    "direct_signals": 18,
+    "direct_entities": 0,
+    "direct_statements": 7
+  },
+  "signal_predicates": {
+    "change.rezoning_case": 6,
+    "environment.regulated_facility": 1,
+    "ecology.occurrence": 5,
+    "ecology.inaturalist_observation": 1,
+    "memory.national_register_resource": 3,
+    "claim.map_note": 2
+  },
+  "entity_types": {},
+  "relation_predicates": {},
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "ecological_observation_density": 1,
+    "regulated_environment_presence": 1,
+    "institutional_memory_density": 1,
+    "building_change_activity": 1,
+    "heritage_change_coaddress": 1,
+    "multi_source_activity": 1
+  },
+  "signals": [
+    {
+      "id": "sig_f547ea5720cfebd05971",
+      "source": "epa-echo",
+      "source_record_id": "110016751228",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SOUTHEASTERN CHEMICAL CO",
+        "address": "1959 HOSEA WILLIAMS DR, ATLANTA, GA, 30317",
+        "county": "DEKALB",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03070103",
+        "last_inspection": "2002-10-02T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3235558580834,
+          33.7520029997667
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3235558580834,
+          33.7520029997667
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110016751228",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 4488
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_d6e38f877ae2bd21e384",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{63F0C06A-A428-457E-A9F2-ED54B4754534}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-06-128",
+        "from_zone": "R-4",
+        "to_zone": "MR-3",
+        "status": "FILED",
+        "status_type": "Filed",
+        "final_update": null,
+        "ordinance": null,
+        "ordinance_url": null,
+        "acres": 1.92038018
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.31887613032093,
+              33.76399970241239
+            ],
+            [
+              -84.32008762320642,
+              33.76331317372683
+            ],
+            [
+              -84.32014310950417,
+              33.76324688539565
+            ],
+            [
+              -84.31995036573524,
+              33.762797671462934
+            ],
+            [
+              -84.31863227097662,
+              33.76356803348369
+            ],
+            [
+              -84.3186645788358,
+              33.763623700657895
+            ],
+            [
+              -84.31887613032093,
+              33.76399970241239
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.3194061091184,
+          33.763406338479804
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.224Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_83a9e4a9c7c13852a406",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{0ADD03D6-7D1E-42F0-9153-2763B53BBB6D}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-06-011",
+        "from_zone": "R-4",
+        "to_zone": "R-4A",
+        "status": "DENIED",
+        "status_type": "Denied",
+        "final_update": null,
+        "ordinance": null,
+        "ordinance_url": null,
+        "acres": 0.50732029
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.31609147035837,
+              33.75231996084859
+            ],
+            [
+              -84.31616783040764,
+              33.7523206798916
+            ],
+            [
+              -84.31616734747863,
+              33.75204242018158
+            ],
+            [
+              -84.31608949797024,
+              33.75204412118416
+            ],
+            [
+              -84.31543781140977,
+              33.752046502366355
+            ],
+            [
+              -84.31543940533784,
+              33.75231816512453
+            ],
+            [
+              -84.31609147035837,
+              33.75231996084859
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.31580426051217,
+          33.752182108071594
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_32a3e2f7f5b327542410",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{99AA4613-E5B8-474C-BDA1-48F6102EECFD}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-06-009",
+        "from_zone": "R-5",
+        "to_zone": "C-1-C",
+        "status": "COMPLETE",
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": "06-O-0498",
+        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/06o0498.pdf",
+        "acres": 1.92625774
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.32317639543487,
+              33.760464548402375
+            ],
+            [
+              -84.3231758015881,
+              33.760311835771184
+            ],
+            [
+              -84.32311011700621,
+              33.76029195548196
+            ],
+            [
+              -84.32278295733713,
+              33.760194206450166
+            ],
+            [
+              -84.32275539114457,
+              33.76018659166548
+            ],
+            [
+              -84.32275418282256,
+              33.760243575115176
+            ],
+            [
+              -84.32272586585228,
+              33.76027916770228
+            ],
+            [
+              -84.32267587058837,
+              33.760309091023636
+            ],
+            [
+              -84.3226594221354,
+              33.76028173123919
+            ],
+            [
+              -84.32255184416555,
+              33.760075907386515
+            ],
+            [
+              -84.32253625925927,
+              33.76004608136782
+            ],
+            [
+              -84.32245856900477,
+              33.75989747120194
+            ],
+            [
+              -84.32244204749638,
+              33.759880965608076
+            ],
+            [
+              -84.32244445156093,
+              33.75977235365524
+            ],
+            [
+              -84.32227797215099,
+              33.75975084185137
+            ],
+            [
+              -84.32237099487644,
+              33.760327895886284
+            ],
+            [
+              -84.32180418370373,
+              33.76066257011298
+            ],
+            [
+              -84.3219221995145,
+              33.76118688943135
+            ],
+            [
+              -84.32317639543487,
+              33.760464548402375
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.32243105083583,
+          33.76054272851664
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.222Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_52015d59985eef23fdd6",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{6625061A-12AA-45C8-852D-7B3DD4C33644}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-06-038",
+        "from_zone": "R-4",
+        "to_zone": "PD-H",
+        "status": "COMPLETE",
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": "06-O-0777",
+        "ordinance_url": null,
+        "acres": 6.43940429
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.34122498922378,
+              33.74901277967753
+            ],
+            [
+              -84.34122631805246,
+              33.7486138388331
+            ],
+            [
+              -84.34122587624337,
+              33.74855986267141
+            ],
+            [
+              -84.34008545907291,
+              33.74855019551817
+            ],
+            [
+              -84.34008441554172,
+              33.748497216526616
+            ],
+            [
+              -84.3400874682541,
+              33.74808499813503
+            ],
+            [
+              -84.34008756027796,
+              33.74806958598338
+            ],
+            [
+              -84.34008784042888,
+              33.7480575493711
+            ],
+            [
+              -84.34009497783852,
+              33.74763160920569
+            ],
+            [
+              -84.34009681575048,
+              33.747560717446746
+            ],
+            [
+              -84.33969488893891,
+              33.74756052850795
+            ],
+            [
+              -84.33968560903564,
+              33.74881193406109
+            ],
+            [
+              -84.33965196137538,
+              33.74881008051853
+            ],
+            [
+              -84.33934760977442,
+              33.748811841038645
+            ],
+            [
+              -84.33918906090614,
+              33.748812757874624
+            ],
+            [
+              -84.33920267661479,
+              33.749061489741806
+            ],
+            [
+              -84.3392233718497,
+              33.74916786533963
+            ],
+            [
+              -84.3393506340073,
+              33.7495715746385
+            ],
+            [
+              -84.33956956582884,
+              33.749535179406955
+            ],
+            [
+              -84.33965427739092,
+              33.74960442068463
+            ],
+            [
+              -84.33969625425544,
+              33.749603251018904
+            ],
+            [
+              -84.33969413388932,
+              33.74995502634184
+            ],
+            [
+              -84.34032117285744,
+              33.74976291447707
+            ],
+            [
+              -84.34089740858312,
+              33.749606283701056
+            ],
+            [
+              -84.34106570285633,
+              33.74956878060771
+            ],
+            [
+              -84.3410586653369,
+              33.74948241453928
+            ],
+            [
+              -84.3410524032047,
+              33.749011772076344
+            ],
+            [
+              -84.34120314464037,
+              33.74901265187004
+            ],
+            [
+              -84.34122498922378,
+              33.74901277967753
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.34017044588178,
+          33.74896953201827
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.220Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_7e2f27749e450f4286fa",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{AABDCF9A-C24B-4DA0-8744-741E50C7DBB6}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-07-066",
+        "from_zone": "R-4",
+        "to_zone": "PD-H",
+        "status": "FILED",
+        "status_type": "Filed",
+        "final_update": null,
+        "ordinance": null,
+        "ordinance_url": null,
+        "acres": 6.38379591
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.34185713297013,
+              33.73390718954227
+            ],
+            [
+              -84.34185768597403,
+              33.733483145730766
+            ],
+            [
+              -84.3428411084917,
+              33.733488782272374
+            ],
+            [
+              -84.34283540123278,
+              33.733063413813646
+            ],
+            [
+              -84.34350121497278,
+              33.73306618330549
+            ],
+            [
+              -84.34350093870795,
+              33.73282155817576
+            ],
+            [
+              -84.34276382903204,
+              33.73281701942703
+            ],
+            [
+              -84.34276454915312,
+              33.73263491661291
+            ],
+            [
+              -84.34276510046507,
+              33.732495380462794
+            ],
+            [
+              -84.34276572611961,
+              33.73233729617194
+            ],
+            [
+              -84.34160292808218,
+              33.73233406730671
+            ],
+            [
+              -84.34061526114216,
+              33.733897904339834
+            ],
+            [
+              -84.3406132693914,
+              33.73397512342021
+            ],
+            [
+              -84.3418586106093,
+              33.73396306145029
+            ],
+            [
+              -84.34185713297013,
+              33.73390718954227
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.34192717332778,
+          33.73312926411807
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.217Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_85ec1b28d5ac0f0578e4",
+      "source": "inaturalist-observations",
+      "source_record_id": "394269816",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Euonymus",
+        "common_name": "spindles",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3349697699,
+          33.7331921648
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3349697699,
+          33.7331921648
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:59:07.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394269816",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Jobeth Ave SE, Atlanta, GA, US",
+        "positional_accuracy": 30
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e0be5593f5e2859cb08b",
+      "source": "osm-notes",
+      "source_record_id": "5426913",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 2,
+        "latest": "i've adjusted the gardens boundaries and added a pin for the frazer center. need to survey the buildings to confirm what's still here, adjust the forest boundaries, and update some of the trails."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.328131,
+          33.769723
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.328131,
+          33.769723
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-07-30 18:45:11 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5426913",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-07-30 18:45:11 UTC",
+            "uid": 23776844,
+            "user": "b_georgeous",
+            "user_url": "https://api.openstreetmap.org/user/b_georgeous",
+            "action": "opened",
+            "text": "Frazer Center needs an overhaul.",
+            "html": "<p dir=\"auto\">Frazer Center needs an overhaul.</p>"
+          },
+          {
+            "date": "2026-08-02 14:30:33 UTC",
+            "uid": 23776844,
+            "user": "b_georgeous",
+            "user_url": "https://api.openstreetmap.org/user/b_georgeous",
+            "action": "commented",
+            "text": "i've adjusted the gardens boundaries and added a pin for the frazer center. need to survey the buildings to confirm what's still here, adjust the forest boundaries, and update some of the trails.",
+            "html": "<p dir=\"auto\">i've adjusted the gardens boundaries and added a pin for the frazer center. need to survey the buildings to confirm what's still here, adjust the forest boundaries, and update some of the trails.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6373f1349f3b3d31b491",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938067945",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Setophaga coronata (Linnaeus, 1766)",
+        "species": "Setophaga coronata",
+        "vernacular_name": null,
+        "taxon_key": 7341805,
+        "species_key": 7341805,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 3,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.333458,
+          33.750338
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.333458,
+          33.750338
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T13:00:46.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938067945",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6a18d1be63945d2561b1",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938103205",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Stereum lobatum (Kunze ex Fr.) Fr.",
+        "species": "Stereum lobatum",
+        "vernacular_name": null,
+        "taxon_key": 2553040,
+        "species_key": 2553040,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 132,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.329812,
+          33.769333
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.329812,
+          33.769333
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T15:01:01.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938103205",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e2d98c574ad2ba3b403d",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938355105",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Apioperdon pyriforme (Schaeff.) Vizzini",
+        "species": "Apioperdon pyriforme",
+        "vernacular_name": null,
+        "taxon_key": 10852503,
+        "species_key": 10852503,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 18,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.329282,
+          33.768956
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.329282,
+          33.768956
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T14:11:50.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938355105",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_768ebf7f26c062b94920",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938044990",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Trametes lactinea Berk.",
+        "species": "Trametes lactinea",
+        "vernacular_name": null,
+        "taxon_key": 9259588,
+        "species_key": 9259588,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 39,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.329398,
+          33.76928
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.329398,
+          33.76928
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T13:46:25.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.828Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938044990",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_881c824806fc46c35b67",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938092942",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Blattidae",
+        "species": null,
+        "vernacular_name": null,
+        "taxon_key": 5107,
+        "species_key": null,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 8,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_MATCH_HIGHERRANK",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.327362,
+          33.774229
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.327362,
+          33.774229
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T11:35:48.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938092942",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_757ab9ab8a430ea05e3f",
+      "source": "osm-notes",
+      "source_record_id": "3947261",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 3,
+        "latest": "More of a deck thad a treehouse, but this whole area is under construction to rebuild the playground. Needs to be rechecked after completion."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3209973,
+          33.7537204
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3209973,
+          33.7537204
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2023-10-18 18:44:07 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/3947261",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2023-10-18 18:44:07 UTC",
+            "uid": 14809411,
+            "user": "chuho",
+            "user_url": "https://api.openstreetmap.org/user/chuho",
+            "action": "opened",
+            "text": "Unable to answer \"What kind of building is this?\" for https://osm.org/way/51301771 via StreetComplete 54.1:\n\nTree house",
+            "html": "<p dir=\"auto\">Unable to answer \"What kind of building is this?\" for <a href=\"https://osm.org/way/51301771\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">way/51301771</a> via StreetComplete 54.1:</p>\n\n<p dir=\"auto\">Tree house</p>"
+          },
+          {
+            "date": "2025-10-09 02:49:12 UTC",
+            "uid": 10698999,
+            "user": "eddp",
+            "user_url": "https://api.openstreetmap.org/user/eddp",
+            "action": "commented",
+            "text": "This whole park/playground is currently under construction and needs to be rechecked after completion.",
+            "html": "<p dir=\"auto\">This whole park/playground is currently under construction and needs to be rechecked after completion.</p>"
+          },
+          {
+            "date": "2025-10-16 18:24:20 UTC",
+            "uid": 10698999,
+            "user": "eddp",
+            "user_url": "https://api.openstreetmap.org/user/eddp",
+            "action": "commented",
+            "text": "More of a deck thad a treehouse, but this whole area is under construction to rebuild the playground. Needs to be rechecked after completion.",
+            "html": "<p dir=\"auto\">More of a deck thad a treehouse, but this whole area is under construction to rebuild the playground. Needs to be rechecked after completion.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ed2a263c5d5f5640a4fc",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{64ADF75A-5372-46DE-8DBE-11E4AC5DF982}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-06-011",
+        "from_zone": "R-4",
+        "to_zone": "R-4A",
+        "status": "CORRECTION",
+        "status_type": "Correction",
+        "final_update": 1201046400000,
+        "ordinance": "06-O-0499",
+        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/06o0499.pdf",
+        "acres": 0.50732029
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.31609147035837,
+              33.75231996084859
+            ],
+            [
+              -84.31616783040764,
+              33.7523206798916
+            ],
+            [
+              -84.31616734747863,
+              33.75204242018158
+            ],
+            [
+              -84.31608949797024,
+              33.75204412118416
+            ],
+            [
+              -84.31543781140977,
+              33.752046502366355
+            ],
+            [
+              -84.31543940533784,
+              33.75231816512453
+            ],
+            [
+              -84.31609147035837,
+              33.75231996084859
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.31580426051217,
+          33.752182108071594
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2008-01-23T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.220Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9309c59b05dd72bc8a91",
+      "source": "nps-national-register",
+      "source_record_id": "04000683",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Alston, Robert A., House",
+        "resource_type": "building",
+        "address": "2420 Alston Dr., SE off Eastlake Rd.",
+        "city": "Atlanta",
+        "county": "De Kalb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.30794234299998,
+          33.747523745000024
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.30794234299998,
+          33.747523745000024
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "2004-07-14T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.068Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{83C4C5EA-B808-45C1-A88F-0BADD414944D}",
+        "src_date": 1089763200000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b1c63d82dcd7dbae905f",
+      "source": "nps-national-register",
+      "source_record_id": "97001194",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Zuber--Jarrell House",
+        "resource_type": "building",
+        "address": "810 Flat Shoals Ave., SE",
+        "city": "Atlanta",
+        "county": "De Kalb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.33784510399994,
+          33.73435193900008
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.33784510399994,
+          33.73435193900008
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1997-09-30T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.067Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{679237C3-36A7-4882-A84B-1473F5FB2C73}",
+        "src_date": 875577600000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6c3cffa0e4d826378b85",
+      "source": "nps-national-register",
+      "source_record_id": "85000935",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Gentry, William T., House",
+        "resource_type": "building",
+        "address": "132 E. Lake Dr., SE",
+        "city": "Atlanta",
+        "county": "De Kalb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.30114996399999,
+          33.74833995500006
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.30114996399999,
+          33.74833995500006
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1985-05-02T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.064Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{8FEC1A4F-473F-4689-A802-5372CC9FBE10}",
+        "src_date": 483840000000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [],
+  "relations": [],
+  "statements": [
+    {
+      "id": "stmt_90ad7e7d30c16159fb16",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331213012",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_6c3cffa0e4d826378b85",
+        "sig_9309c59b05dd72bc8a91",
+        "sig_b1c63d82dcd7dbae905f",
+        "sig_32a3e2f7f5b327542410",
+        "sig_52015d59985eef23fdd6",
+        "sig_7e2f27749e450f4286fa",
+        "sig_83a9e4a9c7c13852a406",
+        "sig_d6e38f877ae2bd21e384",
+        "sig_ed2a263c5d5f5640a4fc"
+      ],
+      "derived_from": [
+        "sig_6c3cffa0e4d826378b85",
+        "sig_9309c59b05dd72bc8a91",
+        "sig_b1c63d82dcd7dbae905f",
+        "sig_32a3e2f7f5b327542410",
+        "sig_52015d59985eef23fdd6",
+        "sig_7e2f27749e450f4286fa",
+        "sig_83a9e4a9c7c13852a406",
+        "sig_d6e38f877ae2bd21e384",
+        "sig_ed2a263c5d5f5640a4fc"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
+      "id": "stmt_7c1716b532283aafcb32",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213012",
+      "text": "6 independent source channels address signals to this ground: atlanta-rezoning-cases, epa-echo, gbif-occurrences, inaturalist-observations, nps-national-register, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_32a3e2f7f5b327542410",
+        "sig_52015d59985eef23fdd6",
+        "sig_7e2f27749e450f4286fa",
+        "sig_83a9e4a9c7c13852a406",
+        "sig_d6e38f877ae2bd21e384",
+        "sig_ed2a263c5d5f5640a4fc",
+        "sig_f547ea5720cfebd05971",
+        "sig_6373f1349f3b3d31b491",
+        "sig_6a18d1be63945d2561b1",
+        "sig_768ebf7f26c062b94920",
+        "sig_881c824806fc46c35b67",
+        "sig_e2d98c574ad2ba3b403d",
+        "sig_85ec1b28d5ac0f0578e4",
+        "sig_6c3cffa0e4d826378b85",
+        "sig_9309c59b05dd72bc8a91",
+        "sig_b1c63d82dcd7dbae905f",
+        "sig_757ab9ab8a430ea05e3f",
+        "sig_e0be5593f5e2859cb08b"
+      ],
+      "derived_from": [
+        "sig_32a3e2f7f5b327542410",
+        "sig_52015d59985eef23fdd6",
+        "sig_7e2f27749e450f4286fa",
+        "sig_83a9e4a9c7c13852a406",
+        "sig_d6e38f877ae2bd21e384",
+        "sig_ed2a263c5d5f5640a4fc",
+        "sig_f547ea5720cfebd05971",
+        "sig_6373f1349f3b3d31b491",
+        "sig_6a18d1be63945d2561b1",
+        "sig_768ebf7f26c062b94920",
+        "sig_881c824806fc46c35b67",
+        "sig_e2d98c574ad2ba3b403d",
+        "sig_85ec1b28d5ac0f0578e4",
+        "sig_6c3cffa0e4d826378b85",
+        "sig_9309c59b05dd72bc8a91",
+        "sig_b1c63d82dcd7dbae905f",
+        "sig_757ab9ab8a430ea05e3f",
+        "sig_e0be5593f5e2859cb08b"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_2a6b7cc1d26c8fe94a8c",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1331213012",
+      "text": "6 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred. At least one polygon is indexed by a representative address; its preserved geometry may span other cells.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_32a3e2f7f5b327542410",
+        "sig_52015d59985eef23fdd6",
+        "sig_7e2f27749e450f4286fa",
+        "sig_83a9e4a9c7c13852a406",
+        "sig_d6e38f877ae2bd21e384",
+        "sig_ed2a263c5d5f5640a4fc"
+      ],
+      "derived_from": [
+        "sig_32a3e2f7f5b327542410",
+        "sig_52015d59985eef23fdd6",
+        "sig_7e2f27749e450f4286fa",
+        "sig_83a9e4a9c7c13852a406",
+        "sig_d6e38f877ae2bd21e384",
+        "sig_ed2a263c5d5f5640a4fc"
+      ],
+      "importance": {
+        "change": 0.75,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.55,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1917
+    },
+    {
+      "id": "stmt_92456bbfc3589a405d3f",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331213012",
+      "text": "6 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_6373f1349f3b3d31b491",
+        "sig_6a18d1be63945d2561b1",
+        "sig_768ebf7f26c062b94920",
+        "sig_881c824806fc46c35b67",
+        "sig_e2d98c574ad2ba3b403d",
+        "sig_85ec1b28d5ac0f0578e4"
+      ],
+      "derived_from": [
+        "sig_6373f1349f3b3d31b491",
+        "sig_6a18d1be63945d2561b1",
+        "sig_768ebf7f26c062b94920",
+        "sig_881c824806fc46c35b67",
+        "sig_e2d98c574ad2ba3b403d",
+        "sig_85ec1b28d5ac0f0578e4"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 0.3
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1771
+    },
+    {
+      "id": "stmt_348ae32d589d26bb52bb",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331213012",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_f547ea5720cfebd05971"
+      ],
+      "derived_from": [
+        "sig_f547ea5720cfebd05971"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_a3eba437801012fa488e",
+      "kind": "institutional_memory_density",
+      "atlas_address": "F02.1331213012",
+      "text": "3 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_6c3cffa0e4d826378b85",
+        "sig_9309c59b05dd72bc8a91",
+        "sig_b1c63d82dcd7dbae905f"
+      ],
+      "derived_from": [
+        "sig_6c3cffa0e4d826378b85",
+        "sig_9309c59b05dd72bc8a91",
+        "sig_b1c63d82dcd7dbae905f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.15,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1417
+    },
+    {
+      "id": "stmt_db838102bb8a983cdcd8",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331213012",
+      "text": "2 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_757ab9ab8a430ea05e3f",
+        "sig_e0be5593f5e2859cb08b"
+      ],
+      "derived_from": [
+        "sig_757ab9ab8a430ea05e3f",
+        "sig_e0be5593f5e2859cb08b"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.3333333333333333,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1104
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.105Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

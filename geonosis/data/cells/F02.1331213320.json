@@ -1,0 +1,194 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213320",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 1,
+    "relations": 1,
+    "statements": 0,
+    "direct_signals": 2,
+    "direct_entities": 1,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 1
+  },
+  "statement_kinds": {},
+  "signals": [
+    {
+      "id": "sig_860e9233e6b71c824f76",
+      "source": "fdic-locations",
+      "source_record_id": "13877",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 7072,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "CHAPEL SQUARE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4825 Flat Shoals Pkwy",
+        "city": "Decatur",
+        "state": "GA",
+        "zip": "30034",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23130102652651,
+          33.68124900557159
+        ]
+      },
+      "atlas_address": "F02.1331213320",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.23130102652651,
+          33.68124900557159
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_cde91a92ee643e3fa2ec",
+      "source": "osm-notes",
+      "source_record_id": "5470507",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Ross Moore Law\n\nSince 2012, Ross Moore Law has served Decatur and beyond, representing clients with catastrophic injuries caused by negligence. Our attorneys provide personalized attention and are prepared to take cases to trial. Free case reviews, 24/7 legal support, and no fees unless we win your case.\n\nContact Information\n3013 Rainbow Dr Ste 300, Decatur, GA 30034 United States\n(706) 890-7541\nhttps://rossmoorelaw.com/decatur/"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.224999,
+          33.7043002
+        ]
+      },
+      "atlas_address": "F02.1331213320",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.224999,
+          33.7043002
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-22 04:15:22 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5470507",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-08-22 04:15:22 UTC",
+            "action": "opened",
+            "text": "Ross Moore Law\n\nSince 2012, Ross Moore Law has served Decatur and beyond, representing clients with catastrophic injuries caused by negligence. Our attorneys provide personalized attention and are prepared to take cases to trial. Free case reviews, 24/7 legal support, and no fees unless we win your case.\n\nContact Information\n3013 Rainbow Dr Ste 300, Decatur, GA 30034 United States\n(706) 890-7541\nhttps://rossmoorelaw.com/decatur/",
+            "html": "<p dir=\"auto\">Ross Moore Law</p>\n\n<p dir=\"auto\">Since 2012, Ross Moore Law has served Decatur and beyond, representing clients with catastrophic injuries caused by negligence. Our attorneys provide personalized attention and are prepared to take cases to trial. Free case reviews, 24/7 legal support, and no fees unless we win your case.</p>\n\n<p dir=\"auto\">Contact Information\n<br />3013 Rainbow Dr Ste 300, Decatur, GA 30034 United States\n<br />(706) 890-7541\n<br /><a href=\"https://rossmoorelaw.com/decatur/\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://rossmoorelaw.com/decatur/</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3511:7072",
+      "type": "bank_branch",
+      "name": "CHAPEL SQUARE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "7072"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23130102652651,
+          33.68124900557159
+        ]
+      },
+      "atlas_address": "F02.1331213320",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_860e9233e6b71c824f76"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_b881a813a78c7d1e6606",
+      "subject": "fdic-branch:3511:7072",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_860e9233e6b71c824f76"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [],
+  "generated_at": "2026-08-25T12:26:10.109Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

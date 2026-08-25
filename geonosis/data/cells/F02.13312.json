@@ -1,0 +1,4379 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.13312",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "atlanta-rezoning-cases",
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "nps-national-register",
+    "osm-notes",
+    "wikipedia-geosearch"
+  ],
+  "counts": {
+    "signals": 1135,
+    "entities": 225,
+    "relations": 347,
+    "statements": 259,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "claim.map_note": 83,
+    "money.bank_branch": 127,
+    "ecology.occurrence": 131,
+    "ecology.inaturalist_observation": 108,
+    "environment.regulated_facility": 108,
+    "money.branch_deposits": 110,
+    "memory.national_register_resource": 148,
+    "change.rezoning_case": 160,
+    "attention.wikipedia_entity": 160
+  },
+  "entity_types": {
+    "bank_branch": 225
+  },
+  "relation_predicates": {
+    "branch_of": 237,
+    "holds_reported_deposits": 110
+  },
+  "statement_kinds": {
+    "multi_source_activity": 61,
+    "regulated_environment_presence": 69,
+    "ecological_observation_density": 15,
+    "representation_contestation": 14,
+    "institutional_memory_density": 11,
+    "building_change_activity": 19,
+    "heritage_change_coaddress": 8,
+    "attention_density": 2,
+    "reported_deposit_stock": 60
+  },
+  "signals": [
+    {
+      "id": "sig_04efc870e97c86e18079",
+      "source": "epa-echo",
+      "source_record_id": "110070076639",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "1902 MAIN STREET",
+        "address": "1902 MAIN ST NW, ATLANTA, GA, 30318",
+        "county": "FULTON COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4661921555264,
+          33.8071441439296
+        ]
+      },
+      "atlas_address": "F02.1331211023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4661921555264,
+          33.8071441439296
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070076639",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10261
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0db3343d5156ee9f417a",
+      "source": "epa-echo",
+      "source_record_id": "110070693325",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "HIRAM PARK LOTS 49-51",
+        "address": "40, 34, 30 STANFORD COURT, HIRAM, GA, 30141",
+        "county": "PAULDING COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7634895988058,
+          33.8856602139091
+        ]
+      },
+      "atlas_address": "F02.1331211130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.7634895988058,
+          33.8856602139091
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070693325",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10890
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0f16e280379c843134dd",
+      "source": "epa-echo",
+      "source_record_id": "110038646258",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SOUTHERN RAILWAY CO P",
+        "address": "793 WINDSOR ST SW, ATLANTA, GA, 30315",
+        "county": "FULTON",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03070103",
+        "last_inspection": "2009-07-30T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3982588587954,
+          33.7331109596165
+        ]
+      },
+      "atlas_address": "F02.1331213011",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3982588587954,
+          33.7331109596165
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110038646258",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 9890
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1146d61da0320d4e5b13",
+      "source": "epa-echo",
+      "source_record_id": "110005673789",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "S & L QUALITY CLEANERS",
+        "address": "3342 CLIFTON CHURCH RD, ATLANTA, GA, 30316",
+        "county": "FULTON",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.308406669132,
+          33.6889097079923
+        ]
+      },
+      "atlas_address": "F02.1331213302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.308406669132,
+          33.6889097079923
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110005673789",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10949
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_18bb3c713cfec029c955",
+      "source": "epa-echo",
+      "source_record_id": "110014375318",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "AFFORDABLE BODY SHOP",
+        "address": "1416 MUNICIPAL PKWY, DOUGLASVILLE, GA, 30134",
+        "county": "DOUGLAS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.721179847239,
+          33.7680801034124
+        ]
+      },
+      "atlas_address": "F02.1331211310",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.721179847239,
+          33.7680801034124
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110014375318",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10911
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1f36c400f1f49fce4fbb",
+      "source": "epa-echo",
+      "source_record_id": "110070012117",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "MARBY OAKS -LOT 1",
+        "address": "1010 MABRY OAKS DR NE, ATLANTA, GA, 30319",
+        "county": "DEKALB COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3432002167165,
+          33.8644502783061
+        ]
+      },
+      "atlas_address": "F02.1331213001",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3432002167165,
+          33.8644502783061
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070012117",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10312
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_33c1fb08ba4bf816985a",
+      "source": "epa-echo",
+      "source_record_id": "110071645359",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "RIVER LINE PARK ? TURF FIELD CONVERSION",
+        "address": "6043 OAKDALE RD SE, MABLETON, GA, 30126",
+        "county": "COBB COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 17431,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5087821814618,
+          33.8046219409628
+        ]
+      },
+      "atlas_address": "F02.1331211021",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5087821814618,
+          33.8046219409628
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071645359",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 9915
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_3f8d214743627e7f4ac0",
+      "source": "epa-echo",
+      "source_record_id": "110071816706",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "OVERLOOK AT PALISADES LOT 61",
+        "address": "116 WHITAKER MILL, DALLAS, GA, 30157",
+        "county": null,
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 34811,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7937295862151,
+          33.9014497565052
+        ]
+      },
+      "atlas_address": "F02.1331211130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.7937295862151,
+          33.9014497565052
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071816706",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10290
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_5a6ac13f6b4ce6bad1fe",
+      "source": "epa-echo",
+      "source_record_id": "110071920988",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SAREN COURT SUBDIVISION",
+        "address": "2157 SAREN COURT, TUCKER, GA, 30084",
+        "county": "DEKALB COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2343297941729,
+          33.8478899180907
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2343297941729,
+          33.8478899180907
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071920988",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10634
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_638d835443c3408e2f09",
+      "source": "epa-echo",
+      "source_record_id": "110070076223",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "LAKESIDE PRESERVE LOT 412",
+        "address": "4064 LAKE MANOR WAY, ATLANTA, GA, 00000",
+        "county": "FULTON COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5283995906364,
+          33.6494500564415
+        ]
+      },
+      "atlas_address": "F02.1331211202",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5283995906364,
+          33.6494500564415
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070076223",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10945
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6c12036775aedac79d3a",
+      "source": "epa-echo",
+      "source_record_id": "110070816089",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "PRATT RETAIL SPECIALTIES, LLC",
+        "address": "3760 SOUTHSIDE INDUSTRIAL PARKWAY, ATLANTA, GA, 30354",
+        "county": "FULTON COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3773900964301,
+          33.6521398386207
+        ]
+      },
+      "atlas_address": "F02.1331213301",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3773900964301,
+          33.6521398386207
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070816089",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10444
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8ea91fe0be619a4899a7",
+      "source": "epa-echo",
+      "source_record_id": "110007084886",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "T & S METAL FINISHING",
+        "address": "6889 BANKHEAD HWY, AUSTELL, GA, 30001",
+        "county": "COBB",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6083703121746,
+          33.8175598530678
+        ]
+      },
+      "atlas_address": "F02.1331211333",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.6083703121746,
+          33.8175598530678
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110007084886",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10908
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8ef3b29474d7d569c75b",
+      "source": "epa-echo",
+      "source_record_id": "110070215778",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "NORTH VALLEY, LOT 50",
+        "address": "240 RANKIN CIRCLE, MCDONOUGH, GA, 30253",
+        "county": "HENRY COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1569004065735,
+          33.4619001426036
+        ]
+      },
+      "atlas_address": "F02.1331212013",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1569004065735,
+          33.4619001426036
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070215778",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 9900
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_943c433258fc7ec840f7",
+      "source": "epa-echo",
+      "source_record_id": "110070625204",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "CAMP CREEK VILLAGE",
+        "address": "BUTNER ROAD, SOUTH FULTON, GA, 30336",
+        "county": "FULTON COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 35931,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5493716592595,
+          33.6656779549356
+        ]
+      },
+      "atlas_address": "F02.1331211201",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5493716592595,
+          33.6656779549356
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070625204",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10892
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9c299c3e7e14ddaa0a8a",
+      "source": "epa-echo",
+      "source_record_id": "110070791379",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "MACLAND MILL   LOT 34",
+        "address": "70 MACLAND MILL COURT, DALLAS, GA, 30157",
+        "county": "PAULDING COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 35931,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7620442095136,
+          33.9098209427842
+        ]
+      },
+      "atlas_address": "F02.1331211101",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.7620442095136,
+          33.9098209427842
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070791379",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10251
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e0381f76d139f9a25f92",
+      "source": "epa-echo",
+      "source_record_id": "110070103991",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "AMBERLY MILL F/K/A ARNOLD MILL LOT -  124-A",
+        "address": "29 BRAEMORE MILL DRIVE, LAWRENCEVILLE, GA, 30044",
+        "county": "GWINNETT COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 10000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0688726952521,
+          33.9215018021281
+        ]
+      },
+      "atlas_address": "F02.1331210103",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0688726952521,
+          33.9215018021281
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070103991",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10364
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e6bd56bf6054d33595b4",
+      "source": "epa-echo",
+      "source_record_id": "110070503571",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "GPC JEFFERSON STREET OPERATING HEADQUARTERS",
+        "address": "755 JEFFERSON STREET NW, ATLANTA, GA, 30318",
+        "county": "FULTON COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41227976375,
+          33.7761500055538
+        ]
+      },
+      "atlas_address": "F02.1331211022",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41227976375,
+          33.7761500055538
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070503571",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 9715
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_fa577cb8206c653416ea",
+      "source": "epa-echo",
+      "source_record_id": "110070218197",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BALLENTINE POINTE LOT 57",
+        "address": "BOULDER RUN, DALLAS, GA, 30141",
+        "county": "PAULDING COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 10000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7698469760715,
+          33.8604438294731
+        ]
+      },
+      "atlas_address": "F02.1331211133",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.7698469760715,
+          33.8604438294731
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070218197",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 9981
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_052a9bf205905777a0cc",
+      "source": "epa-echo",
+      "source_record_id": "110071671612",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "COPY PREPARATION",
+        "address": "2200 NORTHLAKE PKWY, STE 355, TUCKER, GA, 30084",
+        "county": "DEKALB COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2446101142844,
+          33.8495402047821
+        ]
+      },
+      "atlas_address": "F02.1331213002",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2446101142844,
+          33.8495402047821
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071671612",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 5987
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_089653e1ef7eaa14f2ec",
+      "source": "epa-echo",
+      "source_record_id": "110070219104",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "LAKEMONT LOT 143",
+        "address": "721 MELANIE JEAN DRIVE, MCDONOUGH, GA, 30252",
+        "county": "HENRY COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1235603331187,
+          33.4486598441897
+        ]
+      },
+      "atlas_address": "F02.1331212010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1235603331187,
+          33.4486598441897
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070219104",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 6894
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_09424fe86c9e563ea571",
+      "source": "epa-echo",
+      "source_record_id": "110070073946",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "RENAISSANCE HOTEL @ GATEWAY CENTER",
+        "address": "2081 CONVENTION CENTER CONCOURSE, COLLEGE PARK, GA, 30337",
+        "county": "CLAYTON COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4547961278321,
+          33.6438959922568
+        ]
+      },
+      "atlas_address": "F02.1331213103",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4547961278321,
+          33.6438959922568
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070073946",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 7225
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0c2b3cccf7abf78b201e",
+      "source": "epa-echo",
+      "source_record_id": "110071849817",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "MILLENNIUM PARK",
+        "address": "5795 MCCLURE ROAD, UNION CITY, GA, 30213",
+        "county": "FULTON COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 17431,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6252541479396,
+          33.6016286534264
+        ]
+      },
+      "atlas_address": "F02.1331211231",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.6252541479396,
+          33.6016286534264
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071849817",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 7925
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_18638bdea641b958cc4d",
+      "source": "epa-echo",
+      "source_record_id": "110072151579",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "FARRIS RD",
+        "address": "FARRIS RD, MCDONOUGH, GA, 30253",
+        "county": null,
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 1000,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1733997633969,
+          33.4020696523213
+        ]
+      },
+      "atlas_address": "F02.1331212012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1733997633969,
+          33.4020696523213
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110072151579",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 7239
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_187c5a7f6b26355238c8",
+      "source": "epa-echo",
+      "source_record_id": "110070014856",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "ANNELIE PARK SUBDIVISION LOT  -26",
+        "address": "220 ANNELISE PARK DR, FAYETTEVILLE, GA, 30214",
+        "county": "FAYETTE COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130005",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5217197181837,
+          33.4741403358353
+        ]
+      },
+      "atlas_address": "F02.1331212111",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5217197181837,
+          33.4741403358353
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070014856",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 7793
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_18ee6e663a137f69b874",
+      "source": "epa-echo",
+      "source_record_id": "110071816072",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SALEM OAKS LOT 25",
+        "address": "200 AGEE LANE, MCDONOUGH, GA, 30253",
+        "county": null,
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 17431,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1417584041444,
+          33.4625521372166
+        ]
+      },
+      "atlas_address": "F02.1331212010",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1417584041444,
+          33.4625521372166
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071816072",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 9699
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_194c6be17d74f01e1533",
+      "source": "epa-echo",
+      "source_record_id": "110071907186",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "NOEL SEATON",
+        "address": "4659 PEEKSVILLE RD, MCDONOUGH, GA, 30252",
+        "county": "HENRY COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 17431,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0148713702625,
+          33.4016669342887
+        ]
+      },
+      "atlas_address": "F02.1331212032",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0148713702625,
+          33.4016669342887
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071907186",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 5795
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1d01b15baf54e7adecd5",
+      "source": "epa-echo",
+      "source_record_id": "110070162412",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "TACKETT FARMS LOT 16",
+        "address": "3929 O'BRYANT CIRCLE, SMYRNA, GA, 30082",
+        "county": "COBB COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 99999999,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5489997567318,
+          33.8567997447022
+        ]
+      },
+      "atlas_address": "F02.1331211012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5489997567318,
+          33.8567997447022
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070162412",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 5604
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1f4ab73c83f00afca8ad",
+      "source": "epa-echo",
+      "source_record_id": "110070279816",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SMITH IRONWORKS OF ATLANTA",
+        "address": "3110 PLANT STREET, ATLANTA, GA, 30344",
+        "county": "FULTON",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130005",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4402703696879,
+          33.6707798050546
+        ]
+      },
+      "atlas_address": "F02.1331213100",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4402703696879,
+          33.6707798050546
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070279816",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 9444
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_205d5ad2aaa61d8d0679",
+      "source": "epa-echo",
+      "source_record_id": "110005721004",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SWIFT TRANSPORTATION CO",
+        "address": "5250 TRUMAN DR, DECATUR, GA, 30035",
+        "county": "DE KALB",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "Significant Violation",
+        "significant_noncompliance": "Y",
+        "programs_with_significant_noncompliance": 1,
+        "quarters_noncompliance_3y": 9,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03070103",
+        "last_inspection": "2009-03-12T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1755296689356,
+          33.7144097866627
+        ]
+      },
+      "atlas_address": "F02.1331213322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1755296689356,
+          33.7144097866627
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110005721004",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 7734
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_2407637f8d5147b574fe",
+      "source": "epa-echo",
+      "source_record_id": "110070160974",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BROOKWOOD VILLAGE LOT 5D",
+        "address": "2453 TURNBURY GLEN WALK, SNELLVILLE, GA, 30078",
+        "county": "GWINNETT COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0451796296334,
+          33.8538299057619
+        ]
+      },
+      "atlas_address": "F02.1331210301",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0451796296334,
+          33.8538299057619
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070160974",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 8978
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_264dd29be7f6ffe209c1",
+      "source": "epa-echo",
+      "source_record_id": "110017844788",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "ATLANTA COMMISSARY #1",
+        "address": "4938 SOUTH ATLANTA RD, SMYRNA, GA, 30080",
+        "county": "COBB",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 180,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.465688200652,
+          33.8338462703694
+        ]
+      },
+      "atlas_address": "F02.1331211021",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.465688200652,
+          33.8338462703694
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110017844788",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 7513
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_2c9bd7e135dde1069ed5",
+      "source": "epa-echo",
+      "source_record_id": "110070230780",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "THE OAKS LOT - 4",
+        "address": "4571 CLAIRBORNER COURT, CITY OF DULUTH, GA, 33096",
+        "county": null,
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 99999999,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1737519029883,
+          33.9531488878631
+        ]
+      },
+      "atlas_address": "F02.1331210110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1737519029883,
+          33.9531488878631
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070230780",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 8200
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:110:121",
+      "type": "bank_branch",
+      "name": "Dallas Ga Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "121"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7676099765895,
+          33.9174129832151
+        ]
+      },
+      "atlas_address": "F02.1331211101",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_75f659a0b662e1f44535"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:110:127",
+      "type": "bank_branch",
+      "name": "Douglasville- Hospital Drive Office Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "127"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7342130377582,
+          33.7379180052029
+        ]
+      },
+      "atlas_address": "F02.1331211311",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_068fef75c3ff1d109c88"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:110:229",
+      "type": "bank_branch",
+      "name": "Chapel Hill Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "229"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7378139871814,
+          33.7284159863966
+        ]
+      },
+      "atlas_address": "F02.1331211311",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_33d4b7caaabc89c0ef0d"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:110:255",
+      "type": "bank_branch",
+      "name": "SNELLVILLE BRANCH",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "255"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.005164990204,
+          33.85458097972655
+        ]
+      },
+      "atlas_address": "F02.1331210301",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_712a7c291a9370e411d4",
+        "sig_8d85386628c3294df76c"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:110:258",
+      "type": "bank_branch",
+      "name": "Eastside Commercial Bank Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "258"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0198070015851,
+          33.6574449872866
+        ]
+      },
+      "atlas_address": "F02.1331210212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_57c97951361fa2c35908"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:110:336",
+      "type": "bank_branch",
+      "name": "East Point (Cleveland Ave) Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "336"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4156709613352,
+          33.6807069898027
+        ]
+      },
+      "atlas_address": "F02.1331213100",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_2714a4760aaa6cbd23ea"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:110:338",
+      "type": "bank_branch",
+      "name": "Brookhaven-Clairmont Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "338"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3152779733368,
+          33.8429460180192
+        ]
+      },
+      "atlas_address": "F02.1331213001",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_d4371d9a8735635dc2de"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:110:339",
+      "type": "bank_branch",
+      "name": "Decatur Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "339"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.266437964638,
+          33.7551309977449
+        ]
+      },
+      "atlas_address": "F02.1331213031",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c01d0f50d8c4bd40e905"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:110:345",
+      "type": "bank_branch",
+      "name": "Atlanta Peachtree - Buckhead Branch",
+      "identifiers": {
+        "fdic_cert": "110",
+        "branch_id": "345"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3737259900075,
+          33.8417459809416
+        ]
+      },
+      "atlas_address": "F02.1331211002",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0e5262f2e00c516c5507"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11063:1002",
+      "type": "bank_branch",
+      "name": "Cumberland Boulevard Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "1002"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4593759646916,
+          33.8752279960901
+        ]
+      },
+      "atlas_address": "F02.1331211033",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_72db3192cd33298f6f6f"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11063:1005",
+      "type": "bank_branch",
+      "name": "Buckhead Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "1005"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.382446019157,
+          33.840796981864
+        ]
+      },
+      "atlas_address": "F02.1331211032",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ac9e0cc59e0122aa5726"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11063:1006",
+      "type": "bank_branch",
+      "name": "Powder Springs Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "1006"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7038619987219,
+          33.8756809960472
+        ]
+      },
+      "atlas_address": "F02.1331211102",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0ee2723f7a5a8012b038"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11063:1190",
+      "type": "bank_branch",
+      "name": "South Dekalb Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "1190"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2706530170101,
+          33.7117012050875
+        ]
+      },
+      "atlas_address": "F02.1331213332",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b5913b341bbafc81a9e8"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11063:776",
+      "type": "bank_branch",
+      "name": "Atlanta Dunwoody Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "776"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3358139713927,
+          33.9497690154006
+        ]
+      },
+      "atlas_address": "F02.1331211000",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_04cf387328e5f2f97652"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11813:648",
+      "type": "bank_branch",
+      "name": "Norcross Branch",
+      "identifiers": {
+        "fdic_cert": "11813",
+        "branch_id": "648"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.234511965995,
+          33.9495810093123
+        ]
+      },
+      "atlas_address": "F02.1331210111",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_1919038a7c07c20c099e"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11813:656",
+      "type": "bank_branch",
+      "name": "Atlanta Buckhead Branch",
+      "identifiers": {
+        "fdic_cert": "11813",
+        "branch_id": "656"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3766719775166,
+          33.8372819888579
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0de657267a0513332271"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11813:679",
+      "type": "bank_branch",
+      "name": "Atlanta Camp Creek Branch",
+      "identifiers": {
+        "fdic_cert": "11813",
+        "branch_id": "679"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.502401328901,
+          33.6585662644404
+        ]
+      },
+      "atlas_address": "F02.1331211203",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_9a78645c74d483d13525"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:11813:689",
+      "type": "bank_branch",
+      "name": "Atlanta Midtown Branch",
+      "identifiers": {
+        "fdic_cert": "11813",
+        "branch_id": "689"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.382994027987,
+          33.781160998056
+        ]
+      },
+      "atlas_address": "F02.1331213010",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c93377ae7cc11bd0cd75"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12368:1030",
+      "type": "bank_branch",
+      "name": "Ansley Mall Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "1030"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3712779713661,
+          33.798191013652
+        ]
+      },
+      "atlas_address": "F02.1331213010",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_5808f2a9cb57b97e0539"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12368:1819",
+      "type": "bank_branch",
+      "name": "Snellville Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "1819"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0132759902688,
+          33.8744519994941
+        ]
+      },
+      "atlas_address": "F02.1331210301",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_7389f2f2fe002eaa5b99"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12368:1825",
+      "type": "bank_branch",
+      "name": "Lavista Northlake Mall Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "1825"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2593099941776,
+          33.8432030071706
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_00125074d1bec8c2f982"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12368:2544",
+      "type": "bank_branch",
+      "name": "Buckhead Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2544"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.384752970368,
+          33.8424149825435
+        ]
+      },
+      "atlas_address": "F02.1331211032",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f724e5c9099ff4bf951a"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12368:2635",
+      "type": "bank_branch",
+      "name": "Vinings Smyrna Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2635"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4924160020856,
+          33.8483699894735
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c6d30c407b1e63da7d5e"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12368:2644",
+      "type": "bank_branch",
+      "name": "Morrow Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2644"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3391219732999,
+          33.5874620050134
+        ]
+      },
+      "atlas_address": "F02.1331213120",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f178b675456af9441490"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_01aa926ea447073c6059",
+      "subject": "fdic-branch:20504:233",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 241610000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a9921bc6bb02666a4023"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_01abbbe2dbf4fc601da4",
+      "subject": "fdic-branch:110:121",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:110",
+      "value": {
+        "amount_usd": 198523000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_75f659a0b662e1f44535"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_042b9dc26edd49adfcf4",
+      "subject": "fdic-branch:11813:648",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:11813",
+      "value": {
+        "amount_usd": 43736000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1919038a7c07c20c099e"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_0bdda713720123d52cf0",
+      "subject": "fdic-branch:12437:378",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 63901000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8d2e822792845b948990"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_0cfdee38dd33570b0750",
+      "subject": "fdic-branch:12368:496",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 116815000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1df5f2fa892cc60e9eb0"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_0f468f5f7a78c03db536",
+      "subject": "fdic-branch:20504:206",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 0
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_68c931b6bda224904b29"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_0fe16806f4dae6938cfa",
+      "subject": "fdic-branch:20504:259",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 91437000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1dabdaf2cf759a5221bc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_125d0dbff1b53bf46bb9",
+      "subject": "fdic-branch:17281:177",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:17281",
+      "value": {
+        "amount_usd": 69016000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_55b609e9267384468bed"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_12c8da28008150f118de",
+      "subject": "fdic-branch:20504:198",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 33675000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_2e6dff43a4c8de0b9203"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_1330d7beea455bb5bed7",
+      "subject": "fdic-branch:20504:276",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 125161000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0aebd11530fca06cee21"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_141b2a7b6e24fbb87424",
+      "subject": "fdic-branch:16418:10",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16418",
+      "value": {
+        "amount_usd": 172129000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_33f692aaa8a24f85d71f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_170ddb593c5472226e66",
+      "subject": "fdic-branch:20504:213",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 95637000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_35c4aa61db7371daead8"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_1c8a4a13d86dc71856a6",
+      "subject": "fdic-branch:20504:230",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 57174000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c6370778e20132ea4954"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_1eaf9d0cbaafd3e4a0c6",
+      "subject": "fdic-branch:23220:809",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:23220",
+      "value": {
+        "amount_usd": 3265000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7a673613d931ac403d9c"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_28506540b4913729d36c",
+      "subject": "fdic-branch:20504:249",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 32425000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d0aea91becb88e96e834"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_2ea3d733127f9018f0ba",
+      "subject": "fdic-branch:20504:190",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 207884000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_08d7baeb6ac86cc4bfe9"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_2f7a6cb6444822141b97",
+      "subject": "fdic-branch:12368:816",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 45701000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a67df29094966e9c2cc3"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_308da937b527fdcc7e19",
+      "subject": "fdic-branch:22858:386",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:22858",
+      "value": {
+        "amount_usd": 160369000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7fc2a8c9dab8a45af789"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_310d0a55c78d64290d30",
+      "subject": "fdic-branch:110:338",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:110",
+      "value": {
+        "amount_usd": 124242000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d4371d9a8735635dc2de"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_33571a9bec94247331f0",
+      "subject": "fdic-branch:20504:220",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 34422000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c42b904228c5c58728b3"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_35b7d6855e94993f3e2c",
+      "subject": "fdic-branch:11813:656",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:11813",
+      "value": {
+        "amount_usd": 72142000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0de657267a0513332271"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_36276ac02d77408a4e05",
+      "subject": "fdic-branch:11063:776",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:11063",
+      "value": {
+        "amount_usd": 126147000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_04cf387328e5f2f97652"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_362d2389e757350c230e",
+      "subject": "fdic-branch:20504:246",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 56977000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4768c4219d1a931ac3ab"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_37b5b84e414f00d38a27",
+      "subject": "fdic-branch:12437:317",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 83092000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_211495a81dfa01c45845"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_08e40bd2cf08a95c6131",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331213011",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_0985a4a1a97291a62fab",
+        "sig_0aa0022170bf72927fec",
+        "sig_23780b1bcf783b26112d",
+        "sig_2be8e192dd9b844657ed",
+        "sig_38bf4867306d43d46e98",
+        "sig_4b882129fa70d08e387b",
+        "sig_554b8f10dae2e00a03e6",
+        "sig_5e23bedd12b8e20fa4c4",
+        "sig_765c0857b4a8cd395f23",
+        "sig_86b969ebd0e42d3b2ba4",
+        "sig_926a23124af6f190e27f",
+        "sig_9a204406041788f8f044",
+        "sig_9bfaf9c4049ed612f47c",
+        "sig_b6070a4e25c13cc9c53c",
+        "sig_b745f6fa6da5573796bf",
+        "sig_b99c26dfb294873a7dd7",
+        "sig_c062e0cf8e51c1db117f",
+        "sig_c1eb84382491a5978d72",
+        "sig_c5ab9094c7a6efe1dbce",
+        "sig_c77263453270e87cc05d",
+        "sig_c9c9f2eb7370ff57a8ee",
+        "sig_cbf71caca1ff7a5580eb",
+        "sig_dfc18b15daf2c1ee06ac",
+        "sig_e9ce79120cac5fa2ea94",
+        "sig_f33c33063e57de532877",
+        "sig_f6600e2de1a672aa1b4e",
+        "sig_fe33bd6da669df325810",
+        "sig_100b26bb6c55b1827221",
+        "sig_185a685687a98e818491",
+        "sig_1db17f10cf88eb72c8f5",
+        "sig_23d4d639b3e70cb367b2",
+        "sig_281ff0112e9d851241f6",
+        "sig_284e463dcf80c134f5dd",
+        "sig_3be61ec0773be3c51814",
+        "sig_3e7e29461e9f879c9d7b",
+        "sig_65806f6c75f78deca9ee",
+        "sig_77af539329fb81a77277",
+        "sig_7d138fb0b0ffa1a99d61",
+        "sig_8307aa77433e9f8f6fbe",
+        "sig_87df11a9f9a7e06c1b40",
+        "sig_8ae640697a2005813f47",
+        "sig_8d15427421d518637d94",
+        "sig_a47a0323cf407aeff4f8",
+        "sig_aaeddbc98a9e9a256bb2",
+        "sig_b18c6f0ffbea39d1f30c",
+        "sig_b298adf45514ab535c32",
+        "sig_b4a6efa32abb2705b644",
+        "sig_b94d7d8fbb873c98623f",
+        "sig_c1423c05d653247a99a4",
+        "sig_ce369080badb418e4fd7",
+        "sig_d3b20bd37a2be607f1fa",
+        "sig_d8df27df65cd8cf5a58e",
+        "sig_e9e890f83435170d2e85",
+        "sig_f3359c4aa19880be763d",
+        "sig_fd5457ec71deb218a628"
+      ],
+      "derived_from": [
+        "sig_0985a4a1a97291a62fab",
+        "sig_0aa0022170bf72927fec",
+        "sig_23780b1bcf783b26112d",
+        "sig_2be8e192dd9b844657ed",
+        "sig_38bf4867306d43d46e98",
+        "sig_4b882129fa70d08e387b",
+        "sig_554b8f10dae2e00a03e6",
+        "sig_5e23bedd12b8e20fa4c4",
+        "sig_765c0857b4a8cd395f23",
+        "sig_86b969ebd0e42d3b2ba4",
+        "sig_926a23124af6f190e27f",
+        "sig_9a204406041788f8f044",
+        "sig_9bfaf9c4049ed612f47c",
+        "sig_b6070a4e25c13cc9c53c",
+        "sig_b745f6fa6da5573796bf",
+        "sig_b99c26dfb294873a7dd7",
+        "sig_c062e0cf8e51c1db117f",
+        "sig_c1eb84382491a5978d72",
+        "sig_c5ab9094c7a6efe1dbce",
+        "sig_c77263453270e87cc05d",
+        "sig_c9c9f2eb7370ff57a8ee",
+        "sig_cbf71caca1ff7a5580eb",
+        "sig_dfc18b15daf2c1ee06ac",
+        "sig_e9ce79120cac5fa2ea94",
+        "sig_f33c33063e57de532877",
+        "sig_f6600e2de1a672aa1b4e",
+        "sig_fe33bd6da669df325810",
+        "sig_100b26bb6c55b1827221",
+        "sig_185a685687a98e818491",
+        "sig_1db17f10cf88eb72c8f5",
+        "sig_23d4d639b3e70cb367b2",
+        "sig_281ff0112e9d851241f6",
+        "sig_284e463dcf80c134f5dd",
+        "sig_3be61ec0773be3c51814",
+        "sig_3e7e29461e9f879c9d7b",
+        "sig_65806f6c75f78deca9ee",
+        "sig_77af539329fb81a77277",
+        "sig_7d138fb0b0ffa1a99d61",
+        "sig_8307aa77433e9f8f6fbe",
+        "sig_87df11a9f9a7e06c1b40",
+        "sig_8ae640697a2005813f47",
+        "sig_8d15427421d518637d94",
+        "sig_a47a0323cf407aeff4f8",
+        "sig_aaeddbc98a9e9a256bb2",
+        "sig_b18c6f0ffbea39d1f30c",
+        "sig_b298adf45514ab535c32",
+        "sig_b4a6efa32abb2705b644",
+        "sig_b94d7d8fbb873c98623f",
+        "sig_c1423c05d653247a99a4",
+        "sig_ce369080badb418e4fd7",
+        "sig_d3b20bd37a2be607f1fa",
+        "sig_d8df27df65cd8cf5a58e",
+        "sig_e9e890f83435170d2e85",
+        "sig_f3359c4aa19880be763d",
+        "sig_fd5457ec71deb218a628"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
+      "id": "stmt_0f7a3f5a04c61ccf6003",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331211032",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_078a1cf2ada62996b46a",
+        "sig_2a087a59fa638b658a68",
+        "sig_89d3b66efe1e55a5466d",
+        "sig_d663dd566abbe803849d",
+        "sig_de79b851cf80c10d6edb",
+        "sig_0a243b16dc505ec31dde",
+        "sig_52d320753e81cee51019",
+        "sig_c498a285789e64d8e8d5"
+      ],
+      "derived_from": [
+        "sig_078a1cf2ada62996b46a",
+        "sig_2a087a59fa638b658a68",
+        "sig_89d3b66efe1e55a5466d",
+        "sig_d663dd566abbe803849d",
+        "sig_de79b851cf80c10d6edb",
+        "sig_0a243b16dc505ec31dde",
+        "sig_52d320753e81cee51019",
+        "sig_c498a285789e64d8e8d5"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
+      "id": "stmt_1a392e14285c8d0841d1",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331213013",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_0209ecb5786d2d8b6b92",
+        "sig_14e212875bf91332257a",
+        "sig_23fca7ebe4886d5a4c0c",
+        "sig_2ceaba6e5b816014b3e2",
+        "sig_3034cfbd61780b64f82a",
+        "sig_3a719a05ac5d586f9c51",
+        "sig_3b41b33e80752016890c",
+        "sig_406693896f403be70e82",
+        "sig_4a70473b29a4cfc893cf",
+        "sig_4cb2d3fd5ebafc80d0e7",
+        "sig_4f7aef20c29420cc9bcb",
+        "sig_4f91f81deb7d107954bd",
+        "sig_505426e3baf256108c6f",
+        "sig_58a9cf24ef08836081a5",
+        "sig_5d542bcbbcad34cea610",
+        "sig_5e73bf46b6d1e084f892",
+        "sig_60b1f1cf06a8cf3564e2",
+        "sig_6e5768551afdbd42ed45",
+        "sig_70bd3dba35632205106e",
+        "sig_74c72b58c7fd4ee2cc4c",
+        "sig_78cbc1497811fe573a58",
+        "sig_7cc3addc44a36eee39b4",
+        "sig_84aa727c65ce07d7c229",
+        "sig_8725d359832c1dd796bd",
+        "sig_902da0311fd8780be6ee",
+        "sig_9b1b82ad9054dd0cbbaa",
+        "sig_9e7b07d090118eb47690",
+        "sig_a1a622c12f4f781d03b3",
+        "sig_a5b6690d1b6ecd795003",
+        "sig_ad12e614f7263eb34eaf",
+        "sig_ad6f7d722701bb7974c2",
+        "sig_b4ab94b927320c8fcf5b",
+        "sig_b5303bfed1984d175313",
+        "sig_c007bf8f67c441c8c04a",
+        "sig_c8fde9a83082a0dae8e4",
+        "sig_ca6d6248f5875c70f19e",
+        "sig_d27006d480e5cd2971c0",
+        "sig_d4a40e4707a24c58edaf",
+        "sig_d6b1e0f2a6fca8588d47",
+        "sig_dde883089c760e014ce1",
+        "sig_dfb44bce2d7985966009",
+        "sig_e8a110fd83f2b6886b83",
+        "sig_f270e7085ceedcfd0345",
+        "sig_f413ace5bf30f1507043",
+        "sig_fe65cf44d0602de9fe9d",
+        "sig_03db49785a006fa772bb",
+        "sig_0e96cb8fa034dafc1b28",
+        "sig_2053112614ae8b950489",
+        "sig_3131b8fb95ccf7ebb5ba",
+        "sig_353a495a361a9e760abe",
+        "sig_36fdda057136668258c4",
+        "sig_487f4a6dc39b286274df",
+        "sig_511d95ce435d5a1c6bbc",
+        "sig_5724bbe59f1c7ae9da59",
+        "sig_68a24cb65429b4125cc6",
+        "sig_7462a03cbb62c4046785",
+        "sig_769ea8989192834629d7",
+        "sig_8bcc9319fc8a0ca455c2",
+        "sig_9203da8e401ab75063dc",
+        "sig_ab0067d93e4fd7400927",
+        "sig_c43a6c7012ec272c4565",
+        "sig_c9ae3a04c8c235474479",
+        "sig_d58f0aa6932d71d4bd45",
+        "sig_d66288eb3dd288c93f36",
+        "sig_d85a534f74f094e9082a",
+        "sig_d9aa457e689a9bd9fe4f",
+        "sig_dd94844ae59ff5dd0250",
+        "sig_f18241c78f0e1f3eb15c",
+        "sig_fc35738b6ff5871cc64a",
+        "sig_fdfc5768d5692f24f3ea"
+      ],
+      "derived_from": [
+        "sig_0209ecb5786d2d8b6b92",
+        "sig_14e212875bf91332257a",
+        "sig_23fca7ebe4886d5a4c0c",
+        "sig_2ceaba6e5b816014b3e2",
+        "sig_3034cfbd61780b64f82a",
+        "sig_3a719a05ac5d586f9c51",
+        "sig_3b41b33e80752016890c",
+        "sig_406693896f403be70e82",
+        "sig_4a70473b29a4cfc893cf",
+        "sig_4cb2d3fd5ebafc80d0e7",
+        "sig_4f7aef20c29420cc9bcb",
+        "sig_4f91f81deb7d107954bd",
+        "sig_505426e3baf256108c6f",
+        "sig_58a9cf24ef08836081a5",
+        "sig_5d542bcbbcad34cea610",
+        "sig_5e73bf46b6d1e084f892",
+        "sig_60b1f1cf06a8cf3564e2",
+        "sig_6e5768551afdbd42ed45",
+        "sig_70bd3dba35632205106e",
+        "sig_74c72b58c7fd4ee2cc4c",
+        "sig_78cbc1497811fe573a58",
+        "sig_7cc3addc44a36eee39b4",
+        "sig_84aa727c65ce07d7c229",
+        "sig_8725d359832c1dd796bd",
+        "sig_902da0311fd8780be6ee",
+        "sig_9b1b82ad9054dd0cbbaa",
+        "sig_9e7b07d090118eb47690",
+        "sig_a1a622c12f4f781d03b3",
+        "sig_a5b6690d1b6ecd795003",
+        "sig_ad12e614f7263eb34eaf",
+        "sig_ad6f7d722701bb7974c2",
+        "sig_b4ab94b927320c8fcf5b",
+        "sig_b5303bfed1984d175313",
+        "sig_c007bf8f67c441c8c04a",
+        "sig_c8fde9a83082a0dae8e4",
+        "sig_ca6d6248f5875c70f19e",
+        "sig_d27006d480e5cd2971c0",
+        "sig_d4a40e4707a24c58edaf",
+        "sig_d6b1e0f2a6fca8588d47",
+        "sig_dde883089c760e014ce1",
+        "sig_dfb44bce2d7985966009",
+        "sig_e8a110fd83f2b6886b83",
+        "sig_f270e7085ceedcfd0345",
+        "sig_f413ace5bf30f1507043",
+        "sig_fe65cf44d0602de9fe9d",
+        "sig_03db49785a006fa772bb",
+        "sig_0e96cb8fa034dafc1b28",
+        "sig_2053112614ae8b950489",
+        "sig_3131b8fb95ccf7ebb5ba",
+        "sig_353a495a361a9e760abe",
+        "sig_36fdda057136668258c4",
+        "sig_487f4a6dc39b286274df",
+        "sig_511d95ce435d5a1c6bbc",
+        "sig_5724bbe59f1c7ae9da59",
+        "sig_68a24cb65429b4125cc6",
+        "sig_7462a03cbb62c4046785",
+        "sig_769ea8989192834629d7",
+        "sig_8bcc9319fc8a0ca455c2",
+        "sig_9203da8e401ab75063dc",
+        "sig_ab0067d93e4fd7400927",
+        "sig_c43a6c7012ec272c4565",
+        "sig_c9ae3a04c8c235474479",
+        "sig_d58f0aa6932d71d4bd45",
+        "sig_d66288eb3dd288c93f36",
+        "sig_d85a534f74f094e9082a",
+        "sig_d9aa457e689a9bd9fe4f",
+        "sig_dd94844ae59ff5dd0250",
+        "sig_f18241c78f0e1f3eb15c",
+        "sig_fc35738b6ff5871cc64a",
+        "sig_fdfc5768d5692f24f3ea"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
+      "id": "stmt_5728eb6766fc2f51ead3",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331213300",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_3a757f8a9f65cc5807c1",
+        "sig_5b1c9adae5ca536223d4",
+        "sig_df42c18213446e20646e",
+        "sig_ef4afffc1682d39d0e49",
+        "sig_059fe86c4b3d23ccbccc",
+        "sig_553c6926430480eac447",
+        "sig_55bba5fb02eab47e5858",
+        "sig_68574c5fcc0370393656",
+        "sig_7abed5856bfad3bb3373",
+        "sig_9c41fc95618ae8763902",
+        "sig_acbd8432cbb52032daaf",
+        "sig_b46ced8f55d7c02d8ab8",
+        "sig_fcea238891b2b0ce7972"
+      ],
+      "derived_from": [
+        "sig_3a757f8a9f65cc5807c1",
+        "sig_5b1c9adae5ca536223d4",
+        "sig_df42c18213446e20646e",
+        "sig_ef4afffc1682d39d0e49",
+        "sig_059fe86c4b3d23ccbccc",
+        "sig_553c6926430480eac447",
+        "sig_55bba5fb02eab47e5858",
+        "sig_68574c5fcc0370393656",
+        "sig_7abed5856bfad3bb3373",
+        "sig_9c41fc95618ae8763902",
+        "sig_acbd8432cbb52032daaf",
+        "sig_b46ced8f55d7c02d8ab8",
+        "sig_fcea238891b2b0ce7972"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
+      "id": "stmt_6ce954a2cc1746332e39",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331213010",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_07ccc3326dc0c6af3878",
+        "sig_0a752893e328d4f8348f",
+        "sig_1362929249581c2cea1e",
+        "sig_18ef63a8304fb5a48f58",
+        "sig_2648747d2696821a9e84",
+        "sig_3f7c98c426b19b6bec1e",
+        "sig_5106a9ae1befa93d9aae",
+        "sig_58ab9125a60f75ce85d4",
+        "sig_5d6604652da37189d975",
+        "sig_6a10588bcc6faac8e713",
+        "sig_7f89be4844cd6f8ab4a2",
+        "sig_ac3a75ea3eef714456f9",
+        "sig_c1f30645c3dc0cf26b68",
+        "sig_cd6788528719c248fb49",
+        "sig_f5ce08d47f85718f02f0",
+        "sig_fed62ec8dd3f3065cada",
+        "sig_fee39c41aa2c71e82e20",
+        "sig_26efac65ef7c6009b6fd",
+        "sig_2b828169dcb37dbb1233",
+        "sig_3696567b98d465906768",
+        "sig_49ad4d8f0b2bd44a875f",
+        "sig_5b4e439a2c4d1dbd223f",
+        "sig_b885748b36d556e39724",
+        "sig_bd42f6a35a4d24c53c1d",
+        "sig_be61d637ce3ac62ff81d",
+        "sig_d0382d91408fe669fdf1",
+        "sig_d8544248974257730a14",
+        "sig_f61b6b4b4bdc977841ef",
+        "sig_fb64b208a364aef7cf6e"
+      ],
+      "derived_from": [
+        "sig_07ccc3326dc0c6af3878",
+        "sig_0a752893e328d4f8348f",
+        "sig_1362929249581c2cea1e",
+        "sig_18ef63a8304fb5a48f58",
+        "sig_2648747d2696821a9e84",
+        "sig_3f7c98c426b19b6bec1e",
+        "sig_5106a9ae1befa93d9aae",
+        "sig_58ab9125a60f75ce85d4",
+        "sig_5d6604652da37189d975",
+        "sig_6a10588bcc6faac8e713",
+        "sig_7f89be4844cd6f8ab4a2",
+        "sig_ac3a75ea3eef714456f9",
+        "sig_c1f30645c3dc0cf26b68",
+        "sig_cd6788528719c248fb49",
+        "sig_f5ce08d47f85718f02f0",
+        "sig_fed62ec8dd3f3065cada",
+        "sig_fee39c41aa2c71e82e20",
+        "sig_26efac65ef7c6009b6fd",
+        "sig_2b828169dcb37dbb1233",
+        "sig_3696567b98d465906768",
+        "sig_49ad4d8f0b2bd44a875f",
+        "sig_5b4e439a2c4d1dbd223f",
+        "sig_b885748b36d556e39724",
+        "sig_bd42f6a35a4d24c53c1d",
+        "sig_be61d637ce3ac62ff81d",
+        "sig_d0382d91408fe669fdf1",
+        "sig_d8544248974257730a14",
+        "sig_f61b6b4b4bdc977841ef",
+        "sig_fb64b208a364aef7cf6e"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
+      "id": "stmt_90ad7e7d30c16159fb16",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331213012",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_6c3cffa0e4d826378b85",
+        "sig_9309c59b05dd72bc8a91",
+        "sig_b1c63d82dcd7dbae905f",
+        "sig_32a3e2f7f5b327542410",
+        "sig_52015d59985eef23fdd6",
+        "sig_7e2f27749e450f4286fa",
+        "sig_83a9e4a9c7c13852a406",
+        "sig_d6e38f877ae2bd21e384",
+        "sig_ed2a263c5d5f5640a4fc"
+      ],
+      "derived_from": [
+        "sig_6c3cffa0e4d826378b85",
+        "sig_9309c59b05dd72bc8a91",
+        "sig_b1c63d82dcd7dbae905f",
+        "sig_32a3e2f7f5b327542410",
+        "sig_52015d59985eef23fdd6",
+        "sig_7e2f27749e450f4286fa",
+        "sig_83a9e4a9c7c13852a406",
+        "sig_d6e38f877ae2bd21e384",
+        "sig_ed2a263c5d5f5640a4fc"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
+      "id": "stmt_b0e0892b3fc1dbbb0764",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331211020",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_1f62735a7f45f22279b4",
+        "sig_2d9d5360cc323f20667c",
+        "sig_4c50287f490136de4857",
+        "sig_7a21c8fb3ec7e759c145",
+        "sig_a254468af41d5cf25334",
+        "sig_b2c8f68f15c19528e394",
+        "sig_c0c90915063b8678b88f",
+        "sig_39a95d328643e3f083e8",
+        "sig_6e8dd09a0a4948cd19a7",
+        "sig_807663e0ccbc5d5451dd",
+        "sig_82821a10e242a2cb5c88",
+        "sig_8b1fc5c9dfaa09713948",
+        "sig_8b28ac839e6b149cb8f7",
+        "sig_8b657d311cc65a58e544",
+        "sig_aa8d67780267d3f5e8e2",
+        "sig_b6179d5c3adc50955e3f",
+        "sig_cfa9555e3c035fe9cc42",
+        "sig_dd3bc7f684efefb94cac",
+        "sig_deffb7eced69e4211160",
+        "sig_e080a3ffe28b2ff397de",
+        "sig_ed517192a5094b8d338d",
+        "sig_f9ca2b15499e7db01d56"
+      ],
+      "derived_from": [
+        "sig_1f62735a7f45f22279b4",
+        "sig_2d9d5360cc323f20667c",
+        "sig_4c50287f490136de4857",
+        "sig_7a21c8fb3ec7e759c145",
+        "sig_a254468af41d5cf25334",
+        "sig_b2c8f68f15c19528e394",
+        "sig_c0c90915063b8678b88f",
+        "sig_39a95d328643e3f083e8",
+        "sig_6e8dd09a0a4948cd19a7",
+        "sig_807663e0ccbc5d5451dd",
+        "sig_82821a10e242a2cb5c88",
+        "sig_8b1fc5c9dfaa09713948",
+        "sig_8b28ac839e6b149cb8f7",
+        "sig_8b657d311cc65a58e544",
+        "sig_aa8d67780267d3f5e8e2",
+        "sig_b6179d5c3adc50955e3f",
+        "sig_cfa9555e3c035fe9cc42",
+        "sig_dd3bc7f684efefb94cac",
+        "sig_deffb7eced69e4211160",
+        "sig_e080a3ffe28b2ff397de",
+        "sig_ed517192a5094b8d338d",
+        "sig_f9ca2b15499e7db01d56"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
+      "id": "stmt_d5f5749815210af05698",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331211023",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_0518df75f07129817af3",
+        "sig_019645d920184be92cc0",
+        "sig_12530b1fd3dd313cfd44",
+        "sig_222ec702ccad01df4003",
+        "sig_23fda9cd66e045a3dd2f",
+        "sig_5b31a0c4d6d95a90730f",
+        "sig_7bc0b87a7de5ad2bf8f7",
+        "sig_8af3a9b4266a1c70bd7e",
+        "sig_8b51992bf4f14dca5401",
+        "sig_906da4816fda0ceccb02",
+        "sig_b29ae7c84016ad5bd8a7",
+        "sig_b5a002aca0f8ed9e5444",
+        "sig_c7101e6bc2a52b2e02cc",
+        "sig_d4d38ae479b09064aea4",
+        "sig_dedd0cdf2b330f2dc912",
+        "sig_e6053dba49192a6e6dc7",
+        "sig_f1940ada92810cd86ace",
+        "sig_f37f131ac8dc506e371e"
+      ],
+      "derived_from": [
+        "sig_0518df75f07129817af3",
+        "sig_019645d920184be92cc0",
+        "sig_12530b1fd3dd313cfd44",
+        "sig_222ec702ccad01df4003",
+        "sig_23fda9cd66e045a3dd2f",
+        "sig_5b31a0c4d6d95a90730f",
+        "sig_7bc0b87a7de5ad2bf8f7",
+        "sig_8af3a9b4266a1c70bd7e",
+        "sig_8b51992bf4f14dca5401",
+        "sig_906da4816fda0ceccb02",
+        "sig_b29ae7c84016ad5bd8a7",
+        "sig_b5a002aca0f8ed9e5444",
+        "sig_c7101e6bc2a52b2e02cc",
+        "sig_d4d38ae479b09064aea4",
+        "sig_dedd0cdf2b330f2dc912",
+        "sig_e6053dba49192a6e6dc7",
+        "sig_f1940ada92810cd86ace",
+        "sig_f37f131ac8dc506e371e"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
+      "id": "stmt_77bb759197c10f14f5a2",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331213002",
+      "text": "27 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_04ac1629ac0426c48c45",
+        "sig_3e6666c8ab6d2ddf9bdc",
+        "sig_645375ab46b1175964c7",
+        "sig_c1703580d90319102636",
+        "sig_fc9838b73026f8d7a03d",
+        "sig_0b536cbd64dc46fce1a8",
+        "sig_10d8a977a5a841443ec7",
+        "sig_14a4363566209ffa0f04",
+        "sig_1978e87ca80c75b045d5",
+        "sig_1ac2d1b22678ced92661",
+        "sig_24c9dee1e8acf22970a1",
+        "sig_2bd1ec50a5befc7559a2",
+        "sig_3d67852ba04ee1e8fe66",
+        "sig_41f451c96b10763b62d1",
+        "sig_493785e281708761bb5c",
+        "sig_6f9749c4adb7aef0d5f2",
+        "sig_89244e92aaf40bb6e4b5",
+        "sig_8aebcc5bcfb1cf6caabc",
+        "sig_942aa0391dd12b457fe2",
+        "sig_95200be80ab1c79373de",
+        "sig_a449cec57282eb4c3e5a",
+        "sig_a746404059e6b136f7d8",
+        "sig_b5eb875483e2cd5b67ca",
+        "sig_be07c51e3ebff01482a0",
+        "sig_cff5f728dfabf9067993",
+        "sig_d808c085831b97fd2a6d",
+        "sig_ec81fdd122c0a410c47a"
+      ],
+      "derived_from": [
+        "sig_04ac1629ac0426c48c45",
+        "sig_3e6666c8ab6d2ddf9bdc",
+        "sig_645375ab46b1175964c7",
+        "sig_c1703580d90319102636",
+        "sig_fc9838b73026f8d7a03d",
+        "sig_0b536cbd64dc46fce1a8",
+        "sig_10d8a977a5a841443ec7",
+        "sig_14a4363566209ffa0f04",
+        "sig_1978e87ca80c75b045d5",
+        "sig_1ac2d1b22678ced92661",
+        "sig_24c9dee1e8acf22970a1",
+        "sig_2bd1ec50a5befc7559a2",
+        "sig_3d67852ba04ee1e8fe66",
+        "sig_41f451c96b10763b62d1",
+        "sig_493785e281708761bb5c",
+        "sig_6f9749c4adb7aef0d5f2",
+        "sig_89244e92aaf40bb6e4b5",
+        "sig_8aebcc5bcfb1cf6caabc",
+        "sig_942aa0391dd12b457fe2",
+        "sig_95200be80ab1c79373de",
+        "sig_a449cec57282eb4c3e5a",
+        "sig_a746404059e6b136f7d8",
+        "sig_b5eb875483e2cd5b67ca",
+        "sig_be07c51e3ebff01482a0",
+        "sig_cff5f728dfabf9067993",
+        "sig_d808c085831b97fd2a6d",
+        "sig_ec81fdd122c0a410c47a"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 1
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2646
+    },
+    {
+      "id": "stmt_978c6a9a17465c653c03",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331213010",
+      "text": "40 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_00dfbc70ac991c17ba0e",
+        "sig_242a98f0c8c43537be63",
+        "sig_26deb738fb22bddb04ed",
+        "sig_2d332cee21d70f7b3d83",
+        "sig_3257479b8d4cb8453fe8",
+        "sig_43af7f692d327a7bee60",
+        "sig_473a82f941238fc2174d",
+        "sig_4821d401d2c5893cb1e9",
+        "sig_50588349f6657cbb9c78",
+        "sig_633e587bc29f264c1b9d",
+        "sig_6f1932cd8ff4d257f830",
+        "sig_88e303da28098bc35d1a",
+        "sig_8d3ca80848bb32e95ea6",
+        "sig_935252b36bc691cf2170",
+        "sig_a0d75d7c5e3a63b30f40",
+        "sig_a8a8abdc90e51a9203e5",
+        "sig_b7f44b91dab4a70f77c9",
+        "sig_c851407c223bbfcf5078",
+        "sig_c9c60bfa80debff74603",
+        "sig_ce916b38780e12469085",
+        "sig_d378b5be6869067dc8ee",
+        "sig_d39d1591083f211ea7de",
+        "sig_f31389216c9f5c06a939",
+        "sig_03670c0ab9d7ead3c338",
+        "sig_0a1566b0aff473db1b4c",
+        "sig_194801ddd8e039ad586c",
+        "sig_1a0698533166cd2d313f",
+        "sig_1f961e3d17265c1ff140",
+        "sig_24325e92013bf636fb18",
+        "sig_3f55ac485f121076aca0",
+        "sig_454f099ce66d05c1164d",
+        "sig_6cfbbdbc3e6a7308c02d",
+        "sig_9c09639463e32eac6f98",
+        "sig_a0fc9a0283f5730762fd",
+        "sig_cd7fd56367db640f14a5",
+        "sig_dbfe3654752f0532f7f6",
+        "sig_f04c8d8418d8b0c24983",
+        "sig_f7c5cb5b62c5e4aaf9f3",
+        "sig_faf0df5b5344a6001c77",
+        "sig_fb1476d85314cd968a02"
+      ],
+      "derived_from": [
+        "sig_00dfbc70ac991c17ba0e",
+        "sig_242a98f0c8c43537be63",
+        "sig_26deb738fb22bddb04ed",
+        "sig_2d332cee21d70f7b3d83",
+        "sig_3257479b8d4cb8453fe8",
+        "sig_43af7f692d327a7bee60",
+        "sig_473a82f941238fc2174d",
+        "sig_4821d401d2c5893cb1e9",
+        "sig_50588349f6657cbb9c78",
+        "sig_633e587bc29f264c1b9d",
+        "sig_6f1932cd8ff4d257f830",
+        "sig_88e303da28098bc35d1a",
+        "sig_8d3ca80848bb32e95ea6",
+        "sig_935252b36bc691cf2170",
+        "sig_a0d75d7c5e3a63b30f40",
+        "sig_a8a8abdc90e51a9203e5",
+        "sig_b7f44b91dab4a70f77c9",
+        "sig_c851407c223bbfcf5078",
+        "sig_c9c60bfa80debff74603",
+        "sig_ce916b38780e12469085",
+        "sig_d378b5be6869067dc8ee",
+        "sig_d39d1591083f211ea7de",
+        "sig_f31389216c9f5c06a939",
+        "sig_03670c0ab9d7ead3c338",
+        "sig_0a1566b0aff473db1b4c",
+        "sig_194801ddd8e039ad586c",
+        "sig_1a0698533166cd2d313f",
+        "sig_1f961e3d17265c1ff140",
+        "sig_24325e92013bf636fb18",
+        "sig_3f55ac485f121076aca0",
+        "sig_454f099ce66d05c1164d",
+        "sig_6cfbbdbc3e6a7308c02d",
+        "sig_9c09639463e32eac6f98",
+        "sig_a0fc9a0283f5730762fd",
+        "sig_cd7fd56367db640f14a5",
+        "sig_dbfe3654752f0532f7f6",
+        "sig_f04c8d8418d8b0c24983",
+        "sig_f7c5cb5b62c5e4aaf9f3",
+        "sig_faf0df5b5344a6001c77",
+        "sig_fb1476d85314cd968a02"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 1
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2646
+    },
+    {
+      "id": "stmt_e9d0f6fe79da28361669",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331213013",
+      "text": "17 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_0334f382fa1b0a7aef5a",
+        "sig_042eeac31812a8a5811c",
+        "sig_09b7e91eedd84e9afcf9",
+        "sig_1ce458ad7eb723931808",
+        "sig_27933520747ec6b41361",
+        "sig_519aaf755d92973e6a00",
+        "sig_6a92cdf31d9200e3dcfd",
+        "sig_825f0a91077e0e87b67d",
+        "sig_91c38aae4d0db0f8bdd3",
+        "sig_ab150f5e19289fe9a1f1",
+        "sig_c76ef7593d5a58428a41",
+        "sig_cb69700ccde4b8b62a1c",
+        "sig_d642633bfbd9dc312068",
+        "sig_e4c70566563c675b8ecb",
+        "sig_4b31ca9ba27733d01aaa",
+        "sig_be7579eb1843a047cadf",
+        "sig_eaa4cf8dd4281a30b689"
+      ],
+      "derived_from": [
+        "sig_0334f382fa1b0a7aef5a",
+        "sig_042eeac31812a8a5811c",
+        "sig_09b7e91eedd84e9afcf9",
+        "sig_1ce458ad7eb723931808",
+        "sig_27933520747ec6b41361",
+        "sig_519aaf755d92973e6a00",
+        "sig_6a92cdf31d9200e3dcfd",
+        "sig_825f0a91077e0e87b67d",
+        "sig_91c38aae4d0db0f8bdd3",
+        "sig_ab150f5e19289fe9a1f1",
+        "sig_c76ef7593d5a58428a41",
+        "sig_cb69700ccde4b8b62a1c",
+        "sig_d642633bfbd9dc312068",
+        "sig_e4c70566563c675b8ecb",
+        "sig_4b31ca9ba27733d01aaa",
+        "sig_be7579eb1843a047cadf",
+        "sig_eaa4cf8dd4281a30b689"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 0.85
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2458
+    },
+    {
+      "id": "stmt_ffde76d2c3e09f0c1952",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331213033",
+      "text": "14 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_1e95cea94b21c73989e6",
+        "sig_469eaff2c4d7cb43cc75",
+        "sig_5a635f71eca26937b877",
+        "sig_5bf9b0f4d5a30ebc0e70",
+        "sig_73312b3f56aaf40bfda0",
+        "sig_7973c6ddd164ed5bfd5a",
+        "sig_8d91372d97694ffd506c",
+        "sig_b82038b0b5851c1b33be",
+        "sig_daf56d038dadce8f9f1c",
+        "sig_e14219ec7f4f375ebd0a",
+        "sig_ebec8d0cbacc48260cb9",
+        "sig_ef7aca8fa6a57c7e3cb1",
+        "sig_70a1126e066e20c6882d",
+        "sig_c43181a64f1ed4ce998c"
+      ],
+      "derived_from": [
+        "sig_1e95cea94b21c73989e6",
+        "sig_469eaff2c4d7cb43cc75",
+        "sig_5a635f71eca26937b877",
+        "sig_5bf9b0f4d5a30ebc0e70",
+        "sig_73312b3f56aaf40bfda0",
+        "sig_7973c6ddd164ed5bfd5a",
+        "sig_8d91372d97694ffd506c",
+        "sig_b82038b0b5851c1b33be",
+        "sig_daf56d038dadce8f9f1c",
+        "sig_e14219ec7f4f375ebd0a",
+        "sig_ebec8d0cbacc48260cb9",
+        "sig_ef7aca8fa6a57c7e3cb1",
+        "sig_70a1126e066e20c6882d",
+        "sig_c43181a64f1ed4ce998c"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 0.7
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2271
+    },
+    {
+      "id": "stmt_0bd1f4667eaca51241ef",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1331213013",
+      "text": "25 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred. At least one polygon is indexed by a representative address; its preserved geometry may span other cells.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_03db49785a006fa772bb",
+        "sig_0e96cb8fa034dafc1b28",
+        "sig_2053112614ae8b950489",
+        "sig_3131b8fb95ccf7ebb5ba",
+        "sig_353a495a361a9e760abe",
+        "sig_36fdda057136668258c4",
+        "sig_487f4a6dc39b286274df",
+        "sig_511d95ce435d5a1c6bbc",
+        "sig_5724bbe59f1c7ae9da59",
+        "sig_68a24cb65429b4125cc6",
+        "sig_7462a03cbb62c4046785",
+        "sig_769ea8989192834629d7",
+        "sig_8bcc9319fc8a0ca455c2",
+        "sig_9203da8e401ab75063dc",
+        "sig_ab0067d93e4fd7400927",
+        "sig_c43a6c7012ec272c4565",
+        "sig_c9ae3a04c8c235474479",
+        "sig_d58f0aa6932d71d4bd45",
+        "sig_d66288eb3dd288c93f36",
+        "sig_d85a534f74f094e9082a",
+        "sig_d9aa457e689a9bd9fe4f",
+        "sig_dd94844ae59ff5dd0250",
+        "sig_f18241c78f0e1f3eb15c",
+        "sig_fc35738b6ff5871cc64a",
+        "sig_fdfc5768d5692f24f3ea"
+      ],
+      "derived_from": [
+        "sig_03db49785a006fa772bb",
+        "sig_0e96cb8fa034dafc1b28",
+        "sig_2053112614ae8b950489",
+        "sig_3131b8fb95ccf7ebb5ba",
+        "sig_353a495a361a9e760abe",
+        "sig_36fdda057136668258c4",
+        "sig_487f4a6dc39b286274df",
+        "sig_511d95ce435d5a1c6bbc",
+        "sig_5724bbe59f1c7ae9da59",
+        "sig_68a24cb65429b4125cc6",
+        "sig_7462a03cbb62c4046785",
+        "sig_769ea8989192834629d7",
+        "sig_8bcc9319fc8a0ca455c2",
+        "sig_9203da8e401ab75063dc",
+        "sig_ab0067d93e4fd7400927",
+        "sig_c43a6c7012ec272c4565",
+        "sig_c9ae3a04c8c235474479",
+        "sig_d58f0aa6932d71d4bd45",
+        "sig_d66288eb3dd288c93f36",
+        "sig_d85a534f74f094e9082a",
+        "sig_d9aa457e689a9bd9fe4f",
+        "sig_dd94844ae59ff5dd0250",
+        "sig_f18241c78f0e1f3eb15c",
+        "sig_fc35738b6ff5871cc64a",
+        "sig_fdfc5768d5692f24f3ea"
+      ],
+      "importance": {
+        "change": 1,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.55,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2229
+    },
+    {
+      "id": "stmt_11ad94e7d68a3bf10dbd",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1331213010",
+      "text": "12 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred. At least one polygon is indexed by a representative address; its preserved geometry may span other cells.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_26efac65ef7c6009b6fd",
+        "sig_2b828169dcb37dbb1233",
+        "sig_3696567b98d465906768",
+        "sig_49ad4d8f0b2bd44a875f",
+        "sig_5b4e439a2c4d1dbd223f",
+        "sig_b885748b36d556e39724",
+        "sig_bd42f6a35a4d24c53c1d",
+        "sig_be61d637ce3ac62ff81d",
+        "sig_d0382d91408fe669fdf1",
+        "sig_d8544248974257730a14",
+        "sig_f61b6b4b4bdc977841ef",
+        "sig_fb64b208a364aef7cf6e"
+      ],
+      "derived_from": [
+        "sig_26efac65ef7c6009b6fd",
+        "sig_2b828169dcb37dbb1233",
+        "sig_3696567b98d465906768",
+        "sig_49ad4d8f0b2bd44a875f",
+        "sig_5b4e439a2c4d1dbd223f",
+        "sig_b885748b36d556e39724",
+        "sig_bd42f6a35a4d24c53c1d",
+        "sig_be61d637ce3ac62ff81d",
+        "sig_d0382d91408fe669fdf1",
+        "sig_d8544248974257730a14",
+        "sig_f61b6b4b4bdc977841ef",
+        "sig_fb64b208a364aef7cf6e"
+      ],
+      "importance": {
+        "change": 1,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.55,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2229
+    },
+    {
+      "id": "stmt_3dd3f111efde91fb40aa",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1331213011",
+      "text": "28 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred. At least one polygon is indexed by a representative address; its preserved geometry may span other cells.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_100b26bb6c55b1827221",
+        "sig_185a685687a98e818491",
+        "sig_1db17f10cf88eb72c8f5",
+        "sig_23d4d639b3e70cb367b2",
+        "sig_281ff0112e9d851241f6",
+        "sig_284e463dcf80c134f5dd",
+        "sig_3be61ec0773be3c51814",
+        "sig_3e7e29461e9f879c9d7b",
+        "sig_65806f6c75f78deca9ee",
+        "sig_77af539329fb81a77277",
+        "sig_7d138fb0b0ffa1a99d61",
+        "sig_8307aa77433e9f8f6fbe",
+        "sig_87df11a9f9a7e06c1b40",
+        "sig_8ae640697a2005813f47",
+        "sig_8d15427421d518637d94",
+        "sig_a47a0323cf407aeff4f8",
+        "sig_aaeddbc98a9e9a256bb2",
+        "sig_b18c6f0ffbea39d1f30c",
+        "sig_b298adf45514ab535c32",
+        "sig_b4a6efa32abb2705b644",
+        "sig_b94d7d8fbb873c98623f",
+        "sig_c1423c05d653247a99a4",
+        "sig_ce369080badb418e4fd7",
+        "sig_d3b20bd37a2be607f1fa",
+        "sig_d8df27df65cd8cf5a58e",
+        "sig_e9e890f83435170d2e85",
+        "sig_f3359c4aa19880be763d",
+        "sig_fd5457ec71deb218a628"
+      ],
+      "derived_from": [
+        "sig_100b26bb6c55b1827221",
+        "sig_185a685687a98e818491",
+        "sig_1db17f10cf88eb72c8f5",
+        "sig_23d4d639b3e70cb367b2",
+        "sig_281ff0112e9d851241f6",
+        "sig_284e463dcf80c134f5dd",
+        "sig_3be61ec0773be3c51814",
+        "sig_3e7e29461e9f879c9d7b",
+        "sig_65806f6c75f78deca9ee",
+        "sig_77af539329fb81a77277",
+        "sig_7d138fb0b0ffa1a99d61",
+        "sig_8307aa77433e9f8f6fbe",
+        "sig_87df11a9f9a7e06c1b40",
+        "sig_8ae640697a2005813f47",
+        "sig_8d15427421d518637d94",
+        "sig_a47a0323cf407aeff4f8",
+        "sig_aaeddbc98a9e9a256bb2",
+        "sig_b18c6f0ffbea39d1f30c",
+        "sig_b298adf45514ab535c32",
+        "sig_b4a6efa32abb2705b644",
+        "sig_b94d7d8fbb873c98623f",
+        "sig_c1423c05d653247a99a4",
+        "sig_ce369080badb418e4fd7",
+        "sig_d3b20bd37a2be607f1fa",
+        "sig_d8df27df65cd8cf5a58e",
+        "sig_e9e890f83435170d2e85",
+        "sig_f3359c4aa19880be763d",
+        "sig_fd5457ec71deb218a628"
+      ],
+      "importance": {
+        "change": 1,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.55,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2229
+    },
+    {
+      "id": "stmt_4cfe76e3f8644f545186",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1331211023",
+      "text": "17 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred. At least one polygon is indexed by a representative address; its preserved geometry may span other cells.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_019645d920184be92cc0",
+        "sig_12530b1fd3dd313cfd44",
+        "sig_222ec702ccad01df4003",
+        "sig_23fda9cd66e045a3dd2f",
+        "sig_5b31a0c4d6d95a90730f",
+        "sig_7bc0b87a7de5ad2bf8f7",
+        "sig_8af3a9b4266a1c70bd7e",
+        "sig_8b51992bf4f14dca5401",
+        "sig_906da4816fda0ceccb02",
+        "sig_b29ae7c84016ad5bd8a7",
+        "sig_b5a002aca0f8ed9e5444",
+        "sig_c7101e6bc2a52b2e02cc",
+        "sig_d4d38ae479b09064aea4",
+        "sig_dedd0cdf2b330f2dc912",
+        "sig_e6053dba49192a6e6dc7",
+        "sig_f1940ada92810cd86ace",
+        "sig_f37f131ac8dc506e371e"
+      ],
+      "derived_from": [
+        "sig_019645d920184be92cc0",
+        "sig_12530b1fd3dd313cfd44",
+        "sig_222ec702ccad01df4003",
+        "sig_23fda9cd66e045a3dd2f",
+        "sig_5b31a0c4d6d95a90730f",
+        "sig_7bc0b87a7de5ad2bf8f7",
+        "sig_8af3a9b4266a1c70bd7e",
+        "sig_8b51992bf4f14dca5401",
+        "sig_906da4816fda0ceccb02",
+        "sig_b29ae7c84016ad5bd8a7",
+        "sig_b5a002aca0f8ed9e5444",
+        "sig_c7101e6bc2a52b2e02cc",
+        "sig_d4d38ae479b09064aea4",
+        "sig_dedd0cdf2b330f2dc912",
+        "sig_e6053dba49192a6e6dc7",
+        "sig_f1940ada92810cd86ace",
+        "sig_f37f131ac8dc506e371e"
+      ],
+      "importance": {
+        "change": 1,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.55,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2229
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.031Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

@@ -1,0 +1,255 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200300333",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 1,
+    "relations": 3,
+    "statements": 1,
+    "direct_signals": 2,
+    "direct_entities": 1,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 2,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_8b383bd11b3735dea1df",
+      "source": "fdic-locations",
+      "source_record_id": "16275",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12203",
+        "branch_id": 22,
+        "institution_name": "Merchants & Marine Bank",
+        "branch_name": "MRB BELLE CHASSE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "8435 Highway 23",
+        "city": "Belle Chasse",
+        "state": "LA",
+        "zip": "70037",
+        "fi_uninum": 7751
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.985866979689,
+          29.852584982222
+        ]
+      },
+      "atlas_address": "F02.1200300333",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.985866979689,
+          29.852584982222
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_a881dcb51b37639d9fed",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12203:22",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12203,
+        "branch_id": 22,
+        "institution_name": "Merchants & Marine Bank",
+        "branch_name": "Mrb Belle Chasse Branch",
+        "deposits_usd": 87663000,
+        "address": "8435 Highway 23",
+        "city": "Belle Chasse",
+        "state": "LA",
+        "zip": "70037"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.985866979689,
+          29.852584982222
+        ]
+      },
+      "atlas_address": "F02.1200300333",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.985866979689,
+          29.852584982222
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.770Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12203:22",
+      "type": "bank_branch",
+      "name": "MRB BELLE CHASSE BRANCH",
+      "identifiers": {
+        "fdic_cert": "12203",
+        "branch_id": "22"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.985866979689,
+          29.852584982222
+        ]
+      },
+      "atlas_address": "F02.1200300333",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_8b383bd11b3735dea1df",
+        "sig_a881dcb51b37639d9fed"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_5c73fbe41e0a43d0b500",
+      "subject": "fdic-branch:12203:22",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12203",
+      "value": {
+        "amount_usd": 87663000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a881dcb51b37639d9fed"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_47a7036a7c592208fa50",
+      "subject": "fdic-branch:12203:22",
+      "predicate": "branch_of",
+      "object": "fdic:12203",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8b383bd11b3735dea1df"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_c7cc7ea007db90f92834",
+      "subject": "fdic-branch:12203:22",
+      "predicate": "branch_of",
+      "object": "fdic:12203",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a881dcb51b37639d9fed"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_76d5a291a942955b9498",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200300333",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $87,663,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_a881dcb51b37639d9fed"
+      ],
+      "derived_from": [
+        "sig_a881dcb51b37639d9fed"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.087Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

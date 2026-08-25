@@ -1,0 +1,1073 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.120030303",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "inaturalist-observations"
+  ],
+  "counts": {
+    "signals": 11,
+    "entities": 5,
+    "relations": 13,
+    "statements": 2,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "money.bank_branch": 5,
+    "money.branch_deposits": 4,
+    "ecology.inaturalist_observation": 2
+  },
+  "entity_types": {
+    "bank_branch": 5
+  },
+  "relation_predicates": {
+    "branch_of": 9,
+    "holds_reported_deposits": 4
+  },
+  "statement_kinds": {
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_317ee60ab3ca855eb35a",
+      "source": "fdic-locations",
+      "source_record_id": "267693",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12368",
+        "branch_id": 353,
+        "institution_name": "Regions Bank",
+        "branch_name": "WILLIAMS BLVD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3525 Williams Blvd",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065",
+        "fi_uninum": 7866
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2394728654835,
+          30.02061557125619
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.2394728654835,
+          30.02061557125619
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_74440dd0f01dd26694a7",
+      "source": "fdic-locations",
+      "source_record_id": "202863",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "628",
+        "branch_id": 2155,
+        "institution_name": "JPMorgan Chase Bank, National Association",
+        "branch_name": "KENNER BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3540 Williams Blvd",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065",
+        "fi_uninum": 417
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.23875101014913,
+          30.021276986236344
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.23875101014913,
+          30.021276986236344
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_850793bb1ec75f84f581",
+      "source": "fdic-locations",
+      "source_record_id": "202775",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "4297",
+        "branch_id": 142,
+        "institution_name": "Capital One, National Association",
+        "branch_name": "CHATEAU ESTATES BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1000 W Esplanade Ave",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065",
+        "fi_uninum": 2818
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.25464896590199,
+          30.021307999278093
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.25464896590199,
+          30.021307999278093
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_c11ed8bbae49a82a03c5",
+      "source": "fdic-locations",
+      "source_record_id": "241885",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12441",
+        "branch_id": 236,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "DRIFTWOOD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3509 Williams Blvd",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065",
+        "fi_uninum": 7921
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.23949365249774,
+          30.02041526946515
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.23949365249774,
+          30.02041526946515
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_c498a5f687080b1110c7",
+      "source": "fdic-locations",
+      "source_record_id": "426741",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "32974",
+        "branch_id": 16,
+        "institution_name": "Gulf Coast Bank and Trust Company",
+        "branch_name": "WILLIAMS BOULEVARD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3410 Williams Blvd",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065",
+        "fi_uninum": 46153
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.23864196158883,
+          30.01905699727081
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.23864196158883,
+          30.01905699727081
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_32e8cd0437819619b9cf",
+      "source": "inaturalist-observations",
+      "source_record_id": "393791079",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Parasola",
+        "common_name": null,
+        "iconic_taxon": "Fungi",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2321256221,
+          30.0285322596
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.2321256221,
+          30.0285322596
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-23T13:55:38.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.605Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393791079",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Granada Dr, Kenner, LA, US",
+        "positional_accuracy": 6
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_1b122e8fa4c473fda7a5",
+      "source": "inaturalist-observations",
+      "source_record_id": "393702131",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Manduca sexta",
+        "common_name": "Carolina Sphinx",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.232125,
+          30.0286445
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.232125,
+          30.0286445
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-23T05:01:45.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.606Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393702131",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Granada Dr, Kenner, LA, US",
+        "positional_accuracy": 3
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_09bc0c6ed963d0c58bb1",
+      "source": "fdic-sod",
+      "source_record_id": "2025:4297:142",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 4297,
+        "branch_id": 142,
+        "institution_name": "Capital One, National Association",
+        "branch_name": "Chateau Estates Branch",
+        "deposits_usd": 196932000,
+        "address": "1000 W Esplanade Ave",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.254648965902,
+          30.0213079992781
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.254648965902,
+          30.0213079992781
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.777Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_191d38dfe702c065d585",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:353",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 353,
+        "institution_name": "Regions Bank",
+        "branch_name": "Williams Blvd Branch",
+        "deposits_usd": 131818000,
+        "address": "3525 Williams Blvd",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2394728654835,
+          30.0206155712562
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.2394728654835,
+          30.0206155712562
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.771Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_83c97203ff6965ea48c6",
+      "source": "fdic-sod",
+      "source_record_id": "2025:32974:16",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 32974,
+        "branch_id": 16,
+        "institution_name": "Gulf Coast Bank and Trust Company",
+        "branch_name": "Williams Boulevard Branch",
+        "deposits_usd": 163769000,
+        "address": "3410 Williams Blvd",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2386419615888,
+          30.0190569972708
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.2386419615888,
+          30.0190569972708
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.776Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_87dd35aac6af6e2ab63e",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12441:236",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12441,
+        "branch_id": 236,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "Driftwood Branch",
+        "deposits_usd": 164734000,
+        "address": "3509 Williams Blvd",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2394936524977,
+          30.0204152694652
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.2394936524977,
+          30.0204152694652
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.772Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:353",
+      "type": "bank_branch",
+      "name": "WILLIAMS BLVD BRANCH",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "353"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2394728654835,
+          30.02061557125619
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_317ee60ab3ca855eb35a",
+        "sig_191d38dfe702c065d585"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:12441:236",
+      "type": "bank_branch",
+      "name": "DRIFTWOOD BRANCH",
+      "identifiers": {
+        "fdic_cert": "12441",
+        "branch_id": "236"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.23949365249774,
+          30.02041526946515
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c11ed8bbae49a82a03c5",
+        "sig_87dd35aac6af6e2ab63e"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:32974:16",
+      "type": "bank_branch",
+      "name": "WILLIAMS BOULEVARD BRANCH",
+      "identifiers": {
+        "fdic_cert": "32974",
+        "branch_id": "16"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.23864196158883,
+          30.01905699727081
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c498a5f687080b1110c7",
+        "sig_83c97203ff6965ea48c6"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:4297:142",
+      "type": "bank_branch",
+      "name": "CHATEAU ESTATES BRANCH",
+      "identifiers": {
+        "fdic_cert": "4297",
+        "branch_id": "142"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.25464896590199,
+          30.021307999278093
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_850793bb1ec75f84f581",
+        "sig_09bc0c6ed963d0c58bb1"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:628:2155",
+      "type": "bank_branch",
+      "name": "KENNER BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "2155"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.23875101014913,
+          30.021276986236344
+        ]
+      },
+      "atlas_address": "F02.1200303031",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_74440dd0f01dd26694a7"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_8ec9c476de5d36372646",
+      "subject": "fdic-branch:12368:353",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 131818000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_191d38dfe702c065d585"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_8ed725d036e3ddab59cc",
+      "subject": "fdic-branch:32974:16",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:32974",
+      "value": {
+        "amount_usd": 163769000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_83c97203ff6965ea48c6"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_9015891a9b1de552a650",
+      "subject": "fdic-branch:12441:236",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12441",
+      "value": {
+        "amount_usd": 164734000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_87dd35aac6af6e2ab63e"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_969d23c214baac276fb2",
+      "subject": "fdic-branch:4297:142",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4297",
+      "value": {
+        "amount_usd": 196932000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_09bc0c6ed963d0c58bb1"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_7b15692a1a21b5846579",
+      "subject": "fdic-branch:628:2155",
+      "predicate": "branch_of",
+      "object": "fdic:628",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_74440dd0f01dd26694a7"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_81d3f6baccd75bfba743",
+      "subject": "fdic-branch:12441:236",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c11ed8bbae49a82a03c5"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_96d5d564cbf9234c4417",
+      "subject": "fdic-branch:12368:353",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_317ee60ab3ca855eb35a"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_9e039b2ec47b317a468c",
+      "subject": "fdic-branch:12368:353",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_191d38dfe702c065d585"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_ad78410f2ea5b4965075",
+      "subject": "fdic-branch:12441:236",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_87dd35aac6af6e2ab63e"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_cd14afb62d917fb68fb8",
+      "subject": "fdic-branch:4297:142",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_09bc0c6ed963d0c58bb1"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_e1a783913c0ceedfc5d8",
+      "subject": "fdic-branch:32974:16",
+      "predicate": "branch_of",
+      "object": "fdic:32974",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c498a5f687080b1110c7"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_f2ac6d9663806a9c2fd1",
+      "subject": "fdic-branch:4297:142",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_850793bb1ec75f84f581"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_f8298ebbff4ed0681bcb",
+      "subject": "fdic-branch:32974:16",
+      "predicate": "branch_of",
+      "object": "fdic:32974",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_83c97203ff6965ea48c6"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_4d8d620d1a462b8a9bcd",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200303031",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, fdic-sod, inaturalist-observations.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_317ee60ab3ca855eb35a",
+        "sig_74440dd0f01dd26694a7",
+        "sig_850793bb1ec75f84f581",
+        "sig_c11ed8bbae49a82a03c5",
+        "sig_c498a5f687080b1110c7",
+        "sig_09bc0c6ed963d0c58bb1",
+        "sig_191d38dfe702c065d585",
+        "sig_83c97203ff6965ea48c6",
+        "sig_87dd35aac6af6e2ab63e",
+        "sig_1b122e8fa4c473fda7a5",
+        "sig_32e8cd0437819619b9cf"
+      ],
+      "derived_from": [
+        "sig_317ee60ab3ca855eb35a",
+        "sig_74440dd0f01dd26694a7",
+        "sig_850793bb1ec75f84f581",
+        "sig_c11ed8bbae49a82a03c5",
+        "sig_c498a5f687080b1110c7",
+        "sig_09bc0c6ed963d0c58bb1",
+        "sig_191d38dfe702c065d585",
+        "sig_83c97203ff6965ea48c6",
+        "sig_87dd35aac6af6e2ab63e",
+        "sig_1b122e8fa4c473fda7a5",
+        "sig_32e8cd0437819619b9cf"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_454eff781a67785d998a",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200303031",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $657,253,000 held across 4 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_191d38dfe702c065d585",
+        "sig_83c97203ff6965ea48c6",
+        "sig_87dd35aac6af6e2ab63e",
+        "sig_09bc0c6ed963d0c58bb1"
+      ],
+      "derived_from": [
+        "sig_191d38dfe702c065d585",
+        "sig_83c97203ff6965ea48c6",
+        "sig_87dd35aac6af6e2ab63e",
+        "sig_09bc0c6ed963d0c58bb1"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.45,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.15
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.061Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

@@ -1,0 +1,2901 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200303023",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 35,
+    "entities": 16,
+    "relations": 38,
+    "statements": 3,
+    "direct_signals": 35,
+    "direct_entities": 16,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 7,
+    "money.bank_branch": 12,
+    "money.branch_deposits": 13,
+    "ecology.inaturalist_observation": 2,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 16
+  },
+  "relation_predicates": {
+    "holds_reported_deposits": 13,
+    "branch_of": 25
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_2f3df3dac180f06c5d11",
+      "source": "epa-echo",
+      "source_record_id": "110009579385",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "COSTA AUTOMOTIVE",
+        "address": "3201 JOHNSON ST, METAIRIE, LA, 70004",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1567904100261,
+          29.9756899824918
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1567904100261,
+          29.9756899824918
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110009579385",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 55329
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_054b52331f609682486e",
+      "source": "epa-echo",
+      "source_record_id": "110003300954",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "MAKITA USA INC",
+        "address": "1508 EDWARDS AVE SUITE DD, HARAHAN, LA, 70123",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1954000009376,
+          29.9619398216823
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1954000009376,
+          29.9619398216823
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003300954",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 49716
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_eab7c0b54b65fae1da86",
+      "source": "epa-echo",
+      "source_record_id": "110000448588",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "METAIRIE BLENDING FACILITY",
+        "address": "3000 AIRLINE DRIVE, METAIRIE, LA, 70001",
+        "county": "JEFFERSON PARISH",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 4,
+        "inspections_5y": 4,
+        "formal_actions_5y": 1,
+        "penalties_5y": 1,
+        "penalty_total_5y_usd": 33100,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": "2025-05-23T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1526096506938,
+          29.9743103052313
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1526096506938,
+          29.9743103052313
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110000448588",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 47787
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_819ee03ac8daf2c8b9bc",
+      "source": "epa-echo",
+      "source_record_id": "110003305931",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "DAVID W AIKEN JR MD",
+        "address": "4224 HOUMA BLVD STE 650, METAIRIE, LA, 70006",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1816234377403,
+          30.0149790028379
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1816234377403,
+          30.0149790028379
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003305931",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 40302
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_c232a31e131e25597948",
+      "source": "epa-echo",
+      "source_record_id": "110003312371",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "JEFFERSON PARISH SHERIFF OFFICE",
+        "address": "3300 METAIRIE RD, METAIRIE, LA, 70001",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1582798167672,
+          29.9758697359863
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1582798167672,
+          29.9758697359863
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003312371",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 17643
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_14b31031a95ae6dbd087",
+      "source": "epa-echo",
+      "source_record_id": "110071432200",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "FLOOR & DECOR #312",
+        "address": "3609 VETERANS MEMORIAL BLVD, METAIRIE, LA, 70002",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 150,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1626600020926,
+          30.0039843124379
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1626600020926,
+          30.0039843124379
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071432200",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 10827
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_cc2fb801e6d4389e9818",
+      "source": "epa-echo",
+      "source_record_id": "110003334785",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "FLEET AUTOMOTIVE",
+        "address": "3917 FORD ST, METAIRIE, LA, 70002",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1724103161864,
+          30.0006500372069
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1724103161864,
+          30.0006500372069
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003334785",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 11152
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f4b9fcb8512cb1c1a7b1",
+      "source": "inaturalist-observations",
+      "source_record_id": "394218370",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Evania",
+        "common_name": null,
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": true,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1859988967,
+          29.9775744033
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1859988967,
+          29.9775744033
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T20:03:36.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.603Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394218370",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Louisiana, US",
+        "positional_accuracy": 70
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_02d715b881d845593364",
+      "source": "fdic-locations",
+      "source_record_id": "430853",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12368",
+        "branch_id": 2401,
+        "institution_name": "Regions Bank",
+        "branch_name": "OLD METAIRIE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2030 Metairie Rd",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70005",
+        "fi_uninum": 7866
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.14544802258976,
+          29.985144990489417
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.14544802258976,
+          29.985144990489417
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_05a8a6ba51a76a333833",
+      "source": "fdic-locations",
+      "source_record_id": "202860",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "628",
+        "branch_id": 2152,
+        "institution_name": "JPMorgan Chase Bank, National Association",
+        "branch_name": "VETERANS BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3783 Veterans Boulevard",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70002",
+        "fi_uninum": 417
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.167914,
+          30.004337
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.167914,
+          30.004337
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_10034d2d29b4bd34f44e",
+      "source": "fdic-locations",
+      "source_record_id": "245623",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "12441",
+        "branch_id": 259,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "CLEARVIEW BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2200 Clearview Pkwy",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70001",
+        "fi_uninum": 7921
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.18226301771693,
+          29.99437899794168
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.18226301771693,
+          29.99437899794168
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_18638251cdf702ade514",
+      "source": "fdic-locations",
+      "source_record_id": "257881",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "8149",
+        "branch_id": 22,
+        "institution_name": "First American Bank and Trust",
+        "branch_name": "VETERANS/DIVISION BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3620 Veterans Memorial Blvd",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70002",
+        "fi_uninum": 5194
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.16292697291958,
+          30.003027990461803
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.16292697291958,
+          30.003027990461803
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_2de02173c42cddeda06d",
+      "source": "fdic-locations",
+      "source_record_id": "266644",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "28316",
+        "branch_id": 1,
+        "institution_name": "FIDELITY BANK",
+        "branch_name": "VETERANS BLVD. BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3829 Veterans Boulevard",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70002",
+        "fi_uninum": 41150
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.169406,
+          30.004429
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.169406,
+          30.004429
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_470c9586ee673b175a6e",
+      "source": "fdic-locations",
+      "source_record_id": "40550",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "27716",
+        "branch_id": 0,
+        "institution_name": "Mutual Savings and Loan Association",
+        "branch_name": "Mutual Savings and Loan Association",
+        "main_office": 1,
+        "service_type": "Full Service - Brick and Mortar",
+        "address": "2900 Clearview Pkwy",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70006",
+        "fi_uninum": 40550
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1862419909734,
+          30.0014630053199
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1862419909734,
+          30.0014630053199
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_4bb30c4cc9f7ac0d5323",
+      "source": "fdic-locations",
+      "source_record_id": "42703",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "5903",
+        "branch_id": 130,
+        "institution_name": "BankPlus",
+        "branch_name": "VETERANS BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3929 Veterans Memorial Blvd",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70002",
+        "fi_uninum": 4024
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.17369101297749,
+          30.005207997749196
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.17369101297749,
+          30.005207997749196
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_6cb6879bc7db6912988f",
+      "source": "fdic-locations",
+      "source_record_id": "238283",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "16539",
+        "branch_id": 2,
+        "institution_name": "Metairie Bank & Trust Company",
+        "branch_name": "JEFFERSON HIGHWAY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3639 Jefferson Hwy",
+        "city": "Jefferson",
+        "state": "LA",
+        "zip": "70121",
+        "fi_uninum": 10691
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.16348897952749,
+          29.963822015544324
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.16348897952749,
+          29.963822015544324
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ab5e617757bd3f7a2ac9",
+      "source": "fdic-locations",
+      "source_record_id": "10691",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "16539",
+        "branch_id": 0,
+        "institution_name": "Metairie Bank & Trust Company",
+        "branch_name": "Metairie Bank & Trust Company",
+        "main_office": 1,
+        "service_type": "Full Service - Brick and Mortar",
+        "address": "3344 Metairie Rd",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70001",
+        "fi_uninum": 10691
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1589260390768,
+          29.975454001676
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1589260390768,
+          29.975454001676
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.736Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_aeb590cfbf042d4c492f",
+      "source": "fdic-locations",
+      "source_record_id": "238284",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "16539",
+        "branch_id": 3,
+        "institution_name": "Metairie Bank & Trust Company",
+        "branch_name": "VETERANS HIGHWAY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3922 Veterans Blvd.",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70002",
+        "fi_uninum": 10691
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.173547,
+          30.004125
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.173547,
+          30.004125
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_dfe182fcd5c1aca9dda0",
+      "source": "fdic-locations",
+      "source_record_id": "281384",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "4977",
+        "branch_id": 1011,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "VETERANS BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3801 Veterans Memorial Blvd",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70002",
+        "fi_uninum": 3319
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.16881601427161,
+          30.00471300445716
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.16881601427161,
+          30.00471300445716
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_e1852fe9594640b91d7c",
+      "source": "fdic-locations",
+      "source_record_id": "334357",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "4977",
+        "branch_id": 1095,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "ELMWOOD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5120 Citrus Blvd",
+        "city": "Harahan",
+        "state": "LA",
+        "zip": "70123",
+        "fi_uninum": 3319
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.18813001466363,
+          29.964319984411972
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.18813001466363,
+          29.964319984411972
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_828a99beb59cfd1b4182",
+      "source": "inaturalist-observations",
+      "source_record_id": "393867489",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Eudocimus albus",
+        "common_name": "White Ibis",
+        "iconic_taxon": "Aves",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.163811557,
+          29.9834379303
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.163811557,
+          29.9834379303
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-23T16:57:34.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.605Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/393867489",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Metairie, LA 70001, USA",
+        "positional_accuracy": 6489
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_37c5eb7cd71d92a60289",
+      "source": "osm-notes",
+      "source_record_id": "4976944",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Needs accurate drive-thru here once satellite imagery gets updated or if someone decides to use GPS."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1848766,
+          30.0046144
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1848766,
+          30.0046144
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-09-24 04:01:49 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.355Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4976944",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-09-24 04:01:49 UTC",
+            "uid": 23320701,
+            "user": "camthehaxman",
+            "user_url": "https://api.openstreetmap.org/user/camthehaxman",
+            "action": "opened",
+            "text": "Needs accurate drive-thru here once satellite imagery gets updated or if someone decides to use GPS.",
+            "html": "<p dir=\"auto\">Needs accurate drive-thru here once satellite imagery gets updated or if someone decides to use GPS.</p>"
+          }
+        ]
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_3009d31518affb2d0d91",
+      "source": "fdic-sod",
+      "source_record_id": "2025:4977:1011",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 4977,
+        "branch_id": 1011,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "Veterans Branch",
+        "deposits_usd": 70966000,
+        "address": "3801 Veterans Memorial Blvd",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70002"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1688160142716,
+          30.0047130044572
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1688160142716,
+          30.0047130044572
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.778Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_3692c6f99e4bdcf37ad8",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16539:2",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16539,
+        "branch_id": 2,
+        "institution_name": "Metairie Bank & Trust Company",
+        "branch_name": "Jefferson Highway Branch",
+        "deposits_usd": 37219000,
+        "address": "3639 Jefferson Hwy",
+        "city": "Jefferson",
+        "state": "LA",
+        "zip": "70121"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1634889795275,
+          29.9638220155443
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1634889795275,
+          29.9638220155443
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.773Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_4302d89afe0ddd6db27f",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2401",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2401,
+        "institution_name": "Regions Bank",
+        "branch_name": "Old Metairie Branch",
+        "deposits_usd": 332568000,
+        "address": "2030 Metairie Rd",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70005"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1454480225898,
+          29.9851449904894
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1454480225898,
+          29.9851449904894
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.771Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_51ceac18fb6b8c097f1e",
+      "source": "fdic-sod",
+      "source_record_id": "2025:58228:20",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 58228,
+        "branch_id": 20,
+        "institution_name": "b1BANK",
+        "branch_name": "Metairie Banking Center Branch",
+        "deposits_usd": 165659000,
+        "address": "2929 Metairie Rd",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70001"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.154299982895,
+          29.978254018341
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.154299982895,
+          29.978254018341
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.778Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_529f66bf274c646fd063",
+      "source": "fdic-sod",
+      "source_record_id": "2025:4977:1095",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 4977,
+        "branch_id": 1095,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "Elmwood Branch",
+        "deposits_usd": 87803000,
+        "address": "5120 Citrus Blvd",
+        "city": "Harahan",
+        "state": "LA",
+        "zip": "70123"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1881300146636,
+          29.964319984412
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1881300146636,
+          29.964319984412
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.778Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_5906fbf43517a64acfad",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16539:0",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16539,
+        "branch_id": 0,
+        "institution_name": "Metairie Bank & Trust Company",
+        "branch_name": "Metairie Bank & Trust Company",
+        "deposits_usd": 183424000,
+        "address": "3344 Metairie Rd",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70001"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1589260390768,
+          29.975454001676
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1589260390768,
+          29.975454001676
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.773Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_6113fc451e2b7c56d84e",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2797",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2797,
+        "institution_name": "Regions Bank",
+        "branch_name": "Clearview Branch",
+        "deposits_usd": 117699000,
+        "address": "4400 Veterans Boulevard",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70006"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1816517403731,
+          30.0046181397044
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1816517403731,
+          30.0046181397044
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.771Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_73b948f6188474814e34",
+      "source": "fdic-sod",
+      "source_record_id": "2025:28316:1",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 28316,
+        "branch_id": 1,
+        "institution_name": "FIDELITY BANK",
+        "branch_name": "Veterans Blvd. Branch",
+        "deposits_usd": 153309000,
+        "address": "3829 Veterans Boulevard",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70002"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.169406,
+          30.004429
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.169406,
+          30.004429
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ac83dfd8f8eab11229ab",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12441:259",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12441,
+        "branch_id": 259,
+        "institution_name": "Hancock Whitney Bank",
+        "branch_name": "Clearview Branch",
+        "deposits_usd": 101821000,
+        "address": "2200 Clearview Pkwy",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70001"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1822630177169,
+          29.9943789979417
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1822630177169,
+          29.9943789979417
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.772Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_b746c18db612493eb59b",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16539:3",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16539,
+        "branch_id": 3,
+        "institution_name": "Metairie Bank & Trust Company",
+        "branch_name": "Veterans Highway Branch",
+        "deposits_usd": 59094000,
+        "address": "3922 Veterans Blvd.",
+        "city": "Metairie",
+        "state": "LA",
+        "zip": "70002"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.173547,
+          30.004125
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.173547,
+          30.004125
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.773Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:2401",
+      "type": "bank_branch",
+      "name": "OLD METAIRIE BRANCH",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2401"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.14544802258976,
+          29.985144990489417
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_02d715b881d845593364",
+        "sig_4302d89afe0ddd6db27f"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:12368:2797",
+      "type": "bank_branch",
+      "name": "Clearview Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2797"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1816517403731,
+          30.0046181397044
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_6113fc451e2b7c56d84e"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:12441:259",
+      "type": "bank_branch",
+      "name": "CLEARVIEW BRANCH",
+      "identifiers": {
+        "fdic_cert": "12441",
+        "branch_id": "259"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.18226301771693,
+          29.99437899794168
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_10034d2d29b4bd34f44e",
+        "sig_ac83dfd8f8eab11229ab"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:16539:0",
+      "type": "bank_branch",
+      "name": "Metairie Bank & Trust Company",
+      "identifiers": {
+        "fdic_cert": "16539",
+        "branch_id": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1589260390768,
+          29.975454001676
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ab5e617757bd3f7a2ac9",
+        "sig_5906fbf43517a64acfad"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:16539:2",
+      "type": "bank_branch",
+      "name": "JEFFERSON HIGHWAY BRANCH",
+      "identifiers": {
+        "fdic_cert": "16539",
+        "branch_id": "2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.16348897952749,
+          29.963822015544324
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_6cb6879bc7db6912988f",
+        "sig_3692c6f99e4bdcf37ad8"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:16539:3",
+      "type": "bank_branch",
+      "name": "VETERANS HIGHWAY BRANCH",
+      "identifiers": {
+        "fdic_cert": "16539",
+        "branch_id": "3"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.173547,
+          30.004125
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_aeb590cfbf042d4c492f",
+        "sig_b746c18db612493eb59b"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:26381:23",
+      "type": "bank_branch",
+      "name": "Veterans Branch",
+      "identifiers": {
+        "fdic_cert": "26381",
+        "branch_id": "23"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1732890169012,
+          30.0032690120876
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f191c87cbec3a2845a17"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:27716:0",
+      "type": "bank_branch",
+      "name": "Mutual Savings and Loan Association",
+      "identifiers": {
+        "fdic_cert": "27716",
+        "branch_id": "0"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1862419909734,
+          30.0014630053199
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_470c9586ee673b175a6e",
+        "sig_d41e5ea07c43db59908f"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:28316:1",
+      "type": "bank_branch",
+      "name": "VETERANS BLVD. BRANCH",
+      "identifiers": {
+        "fdic_cert": "28316",
+        "branch_id": "1"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.169406,
+          30.004429
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_2de02173c42cddeda06d",
+        "sig_73b948f6188474814e34"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:32974:56",
+      "type": "bank_branch",
+      "name": "Elmwood Branch",
+      "identifiers": {
+        "fdic_cert": "32974",
+        "branch_id": "56"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.189860290936,
+          29.963054275123
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c4bfaaae39553c1bf3b4"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:4977:1011",
+      "type": "bank_branch",
+      "name": "VETERANS BRANCH",
+      "identifiers": {
+        "fdic_cert": "4977",
+        "branch_id": "1011"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.16881601427161,
+          30.00471300445716
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_dfe182fcd5c1aca9dda0",
+        "sig_3009d31518affb2d0d91"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:4977:1095",
+      "type": "bank_branch",
+      "name": "ELMWOOD BRANCH",
+      "identifiers": {
+        "fdic_cert": "4977",
+        "branch_id": "1095"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.18813001466363,
+          29.964319984411972
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_e1852fe9594640b91d7c",
+        "sig_529f66bf274c646fd063"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:58228:20",
+      "type": "bank_branch",
+      "name": "Metairie Banking Center Branch",
+      "identifiers": {
+        "fdic_cert": "58228",
+        "branch_id": "20"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.154299982895,
+          29.978254018341
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_51ceac18fb6b8c097f1e"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:5903:130",
+      "type": "bank_branch",
+      "name": "VETERANS BRANCH",
+      "identifiers": {
+        "fdic_cert": "5903",
+        "branch_id": "130"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.17369101297749,
+          30.005207997749196
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4bb30c4cc9f7ac0d5323"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:628:2152",
+      "type": "bank_branch",
+      "name": "VETERANS BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "2152"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.167914,
+          30.004337
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_05a8a6ba51a76a333833"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:8149:22",
+      "type": "bank_branch",
+      "name": "VETERANS/DIVISION BRANCH",
+      "identifiers": {
+        "fdic_cert": "8149",
+        "branch_id": "22"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.16292697291958,
+          30.003027990461803
+        ]
+      },
+      "atlas_address": "F02.1200303023",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_18638251cdf702ade514"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_0197fdd43a76a5d1bacf",
+      "subject": "fdic-branch:28316:1",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:28316",
+      "value": {
+        "amount_usd": 153309000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_73b948f6188474814e34"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_6adb2cd5436a2223f678",
+      "subject": "fdic-branch:32974:56",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:32974",
+      "value": {
+        "amount_usd": 43800000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c4bfaaae39553c1bf3b4"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_6bd3cb6fac80c42fe44c",
+      "subject": "fdic-branch:26381:23",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:26381",
+      "value": {
+        "amount_usd": 62286000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f191c87cbec3a2845a17"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_7541bf9423e0eacfa95b",
+      "subject": "fdic-branch:4977:1011",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4977",
+      "value": {
+        "amount_usd": 70966000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_3009d31518affb2d0d91"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_7aaa0abf3bba9f314b64",
+      "subject": "fdic-branch:58228:20",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:58228",
+      "value": {
+        "amount_usd": 165659000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_51ceac18fb6b8c097f1e"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_a1ab95c980fe3192cc66",
+      "subject": "fdic-branch:12441:259",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12441",
+      "value": {
+        "amount_usd": 101821000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ac83dfd8f8eab11229ab"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_af268c9ae89f4eef1833",
+      "subject": "fdic-branch:16539:3",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16539",
+      "value": {
+        "amount_usd": 59094000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b746c18db612493eb59b"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_afe1d75df57513cd68c0",
+      "subject": "fdic-branch:16539:2",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16539",
+      "value": {
+        "amount_usd": 37219000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_3692c6f99e4bdcf37ad8"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_b8ba7c7f724902369184",
+      "subject": "fdic-branch:27716:0",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:27716",
+      "value": {
+        "amount_usd": 14940000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d41e5ea07c43db59908f"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_c3ed5cec91dc29dd0b79",
+      "subject": "fdic-branch:16539:0",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16539",
+      "value": {
+        "amount_usd": 183424000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_5906fbf43517a64acfad"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_e3cd3837ce1c54ea336a",
+      "subject": "fdic-branch:12368:2401",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 332568000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4302d89afe0ddd6db27f"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_ec41241edba8771e9e60",
+      "subject": "fdic-branch:12368:2797",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 117699000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_6113fc451e2b7c56d84e"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_ec8d12a5bf1496b32e09",
+      "subject": "fdic-branch:4977:1095",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4977",
+      "value": {
+        "amount_usd": 87803000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_529f66bf274c646fd063"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_13cb0cb0d9ab5dc5da8e",
+      "subject": "fdic-branch:28316:1",
+      "predicate": "branch_of",
+      "object": "fdic:28316",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_73b948f6188474814e34"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_17255386bc3b6cb178a5",
+      "subject": "fdic-branch:12368:2797",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_6113fc451e2b7c56d84e"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_196be228f9e7987c32a3",
+      "subject": "fdic-branch:16539:3",
+      "predicate": "branch_of",
+      "object": "fdic:16539",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b746c18db612493eb59b"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_1d27322900e05da2c164",
+      "subject": "fdic-branch:16539:0",
+      "predicate": "branch_of",
+      "object": "fdic:16539",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_5906fbf43517a64acfad"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_2e93d692193a2bf19a14",
+      "subject": "fdic-branch:27716:0",
+      "predicate": "branch_of",
+      "object": "fdic:27716",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d41e5ea07c43db59908f"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_3741e0952b095c46712a",
+      "subject": "fdic-branch:628:2152",
+      "predicate": "branch_of",
+      "object": "fdic:628",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_05a8a6ba51a76a333833"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_3ff3b3d6e6fbb3f0b68c",
+      "subject": "fdic-branch:16539:0",
+      "predicate": "branch_of",
+      "object": "fdic:16539",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ab5e617757bd3f7a2ac9"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_41623cd7d465f0635d21",
+      "subject": "fdic-branch:4977:1095",
+      "predicate": "branch_of",
+      "object": "fdic:4977",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e1852fe9594640b91d7c"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_452c254897a321b6101e",
+      "subject": "fdic-branch:16539:2",
+      "predicate": "branch_of",
+      "object": "fdic:16539",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_3692c6f99e4bdcf37ad8"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_5125ca0b5ae9c4154b63",
+      "subject": "fdic-branch:12441:259",
+      "predicate": "branch_of",
+      "object": "fdic:12441",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ac83dfd8f8eab11229ab"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_62a7f08c043275018e61",
+      "subject": "fdic-branch:16539:3",
+      "predicate": "branch_of",
+      "object": "fdic:16539",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_aeb590cfbf042d4c492f"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_8a17145aef9be4ae3318",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200303023",
+      "text": "7 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_054b52331f609682486e",
+        "sig_14b31031a95ae6dbd087",
+        "sig_2f3df3dac180f06c5d11",
+        "sig_819ee03ac8daf2c8b9bc",
+        "sig_c232a31e131e25597948",
+        "sig_cc2fb801e6d4389e9818",
+        "sig_eab7c0b54b65fae1da86"
+      ],
+      "derived_from": [
+        "sig_054b52331f609682486e",
+        "sig_14b31031a95ae6dbd087",
+        "sig_2f3df3dac180f06c5d11",
+        "sig_819ee03ac8daf2c8b9bc",
+        "sig_c232a31e131e25597948",
+        "sig_cc2fb801e6d4389e9818",
+        "sig_eab7c0b54b65fae1da86"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.81,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2137
+    },
+    {
+      "id": "stmt_2a0c9718f397dd3b1da7",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200303023",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $1,430,588,000 held across 13 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_73b948f6188474814e34",
+        "sig_c4bfaaae39553c1bf3b4",
+        "sig_f191c87cbec3a2845a17",
+        "sig_3009d31518affb2d0d91",
+        "sig_51ceac18fb6b8c097f1e",
+        "sig_ac83dfd8f8eab11229ab",
+        "sig_b746c18db612493eb59b",
+        "sig_3692c6f99e4bdcf37ad8",
+        "sig_d41e5ea07c43db59908f",
+        "sig_5906fbf43517a64acfad",
+        "sig_4302d89afe0ddd6db27f",
+        "sig_6113fc451e2b7c56d84e",
+        "sig_529f66bf274c646fd063"
+      ],
+      "derived_from": [
+        "sig_73b948f6188474814e34",
+        "sig_c4bfaaae39553c1bf3b4",
+        "sig_f191c87cbec3a2845a17",
+        "sig_3009d31518affb2d0d91",
+        "sig_51ceac18fb6b8c097f1e",
+        "sig_ac83dfd8f8eab11229ab",
+        "sig_b746c18db612493eb59b",
+        "sig_3692c6f99e4bdcf37ad8",
+        "sig_d41e5ea07c43db59908f",
+        "sig_5906fbf43517a64acfad",
+        "sig_4302d89afe0ddd6db27f",
+        "sig_6113fc451e2b7c56d84e",
+        "sig_529f66bf274c646fd063"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.9,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_5a99024ed8843b8a236b",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200303023",
+      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_054b52331f609682486e",
+        "sig_14b31031a95ae6dbd087",
+        "sig_2f3df3dac180f06c5d11",
+        "sig_819ee03ac8daf2c8b9bc",
+        "sig_c232a31e131e25597948",
+        "sig_cc2fb801e6d4389e9818",
+        "sig_eab7c0b54b65fae1da86",
+        "sig_02d715b881d845593364",
+        "sig_05a8a6ba51a76a333833",
+        "sig_10034d2d29b4bd34f44e",
+        "sig_18638251cdf702ade514",
+        "sig_2de02173c42cddeda06d",
+        "sig_470c9586ee673b175a6e",
+        "sig_4bb30c4cc9f7ac0d5323",
+        "sig_6cb6879bc7db6912988f",
+        "sig_ab5e617757bd3f7a2ac9",
+        "sig_aeb590cfbf042d4c492f",
+        "sig_dfe182fcd5c1aca9dda0",
+        "sig_e1852fe9594640b91d7c",
+        "sig_3009d31518affb2d0d91",
+        "sig_3692c6f99e4bdcf37ad8",
+        "sig_4302d89afe0ddd6db27f",
+        "sig_51ceac18fb6b8c097f1e",
+        "sig_529f66bf274c646fd063",
+        "sig_5906fbf43517a64acfad",
+        "sig_6113fc451e2b7c56d84e",
+        "sig_73b948f6188474814e34",
+        "sig_ac83dfd8f8eab11229ab",
+        "sig_b746c18db612493eb59b",
+        "sig_c4bfaaae39553c1bf3b4",
+        "sig_d41e5ea07c43db59908f",
+        "sig_f191c87cbec3a2845a17",
+        "sig_828a99beb59cfd1b4182",
+        "sig_f4b9fcb8512cb1c1a7b1",
+        "sig_37c5eb7cd71d92a60289"
+      ],
+      "derived_from": [
+        "sig_054b52331f609682486e",
+        "sig_14b31031a95ae6dbd087",
+        "sig_2f3df3dac180f06c5d11",
+        "sig_819ee03ac8daf2c8b9bc",
+        "sig_c232a31e131e25597948",
+        "sig_cc2fb801e6d4389e9818",
+        "sig_eab7c0b54b65fae1da86",
+        "sig_02d715b881d845593364",
+        "sig_05a8a6ba51a76a333833",
+        "sig_10034d2d29b4bd34f44e",
+        "sig_18638251cdf702ade514",
+        "sig_2de02173c42cddeda06d",
+        "sig_470c9586ee673b175a6e",
+        "sig_4bb30c4cc9f7ac0d5323",
+        "sig_6cb6879bc7db6912988f",
+        "sig_ab5e617757bd3f7a2ac9",
+        "sig_aeb590cfbf042d4c492f",
+        "sig_dfe182fcd5c1aca9dda0",
+        "sig_e1852fe9594640b91d7c",
+        "sig_3009d31518affb2d0d91",
+        "sig_3692c6f99e4bdcf37ad8",
+        "sig_4302d89afe0ddd6db27f",
+        "sig_51ceac18fb6b8c097f1e",
+        "sig_529f66bf274c646fd063",
+        "sig_5906fbf43517a64acfad",
+        "sig_6113fc451e2b7c56d84e",
+        "sig_73b948f6188474814e34",
+        "sig_ac83dfd8f8eab11229ab",
+        "sig_b746c18db612493eb59b",
+        "sig_c4bfaaae39553c1bf3b4",
+        "sig_d41e5ea07c43db59908f",
+        "sig_f191c87cbec3a2845a17",
+        "sig_828a99beb59cfd1b4182",
+        "sig_f4b9fcb8512cb1c1a7b1",
+        "sig_37c5eb7cd71d92a60289"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.088Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

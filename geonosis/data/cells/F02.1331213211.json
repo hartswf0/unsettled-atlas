@@ -1,0 +1,505 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213211",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 4,
+    "entities": 4,
+    "relations": 7,
+    "statements": 1,
+    "direct_signals": 4,
+    "direct_entities": 4,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 3
+  },
+  "entity_types": {
+    "bank_branch": 4
+  },
+  "relation_predicates": {
+    "holds_reported_deposits": 3,
+    "branch_of": 4
+  },
+  "statement_kinds": {
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_8b655ff78f5637b0dae4",
+      "source": "fdic-locations",
+      "source_record_id": "235423",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 5205,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "HUDSON BRIDGE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1550 Hudson Bridge Rd",
+        "city": "Stockbridge",
+        "state": "GA",
+        "zip": "30281",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23693701822168,
+          33.50496601476566
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.23693701822168,
+          33.50496601476566
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_61c5abca832b5402dafc",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16889:49",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16889,
+        "branch_id": 49,
+        "institution_name": "United Community Bank",
+        "branch_name": "Eagle National Stockbridge Branch",
+        "deposits_usd": 140199000,
+        "address": "850 Eagles Landing Pkwy",
+        "city": "Stockbridge",
+        "state": "GA",
+        "zip": "30281"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2176690344781,
+          33.513237989281
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2176690344781,
+          33.513237989281
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.328Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_965721f6d1500e2041ae",
+      "source": "fdic-sod",
+      "source_record_id": "2025:23220:839",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 23220,
+        "branch_id": 839,
+        "institution_name": "Woodforest National Bank",
+        "branch_name": "8289 Ga Stockbridge",
+        "deposits_usd": 1064000,
+        "address": "1400 Hudson Bridge Rd",
+        "city": "Stockbridge",
+        "state": "GA",
+        "zip": "30281"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2356239930892,
+          33.5074919851066
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2356239930892,
+          33.5074919851066
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.331Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ef1f9b693ebdedcba7bc",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:321",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 321,
+        "institution_name": "Renasant Bank",
+        "branch_name": "Stockbridge Eagles Landing Branch",
+        "deposits_usd": 60623000,
+        "address": "830 Eagles Landing Pkwy, Ste 100",
+        "city": "Stockbridge",
+        "state": "GA",
+        "zip": "30281"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2158540171645,
+          33.5135269973024
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2158540171645,
+          33.5135269973024
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.327Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12437:321",
+      "type": "bank_branch",
+      "name": "Stockbridge Eagles Landing Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "321"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2158540171645,
+          33.5135269973024
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:16889:49",
+      "type": "bank_branch",
+      "name": "Eagle National Stockbridge Branch",
+      "identifiers": {
+        "fdic_cert": "16889",
+        "branch_id": "49"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2176690344781,
+          33.513237989281
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_61c5abca832b5402dafc"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:23220:839",
+      "type": "bank_branch",
+      "name": "8289 Ga Stockbridge",
+      "identifiers": {
+        "fdic_cert": "23220",
+        "branch_id": "839"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2356239930892,
+          33.5074919851066
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_965721f6d1500e2041ae"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:5205",
+      "type": "bank_branch",
+      "name": "HUDSON BRIDGE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "5205"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23693701822168,
+          33.50496601476566
+        ]
+      },
+      "atlas_address": "F02.1331213211",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_8b655ff78f5637b0dae4"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_69e40999f002c3878657",
+      "subject": "fdic-branch:16889:49",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16889",
+      "value": {
+        "amount_usd": 140199000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_61c5abca832b5402dafc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_ae2b66dc56f97aec64c5",
+      "subject": "fdic-branch:23220:839",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:23220",
+      "value": {
+        "amount_usd": 1064000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_965721f6d1500e2041ae"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f68b449a6512344916d7",
+      "subject": "fdic-branch:12437:321",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 60623000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_8118f4eab62befe77a53",
+      "subject": "fdic-branch:3510:5205",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8b655ff78f5637b0dae4"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_ab666bee97cdf9327cb5",
+      "subject": "fdic-branch:16889:49",
+      "predicate": "branch_of",
+      "object": "fdic:16889",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_61c5abca832b5402dafc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_c8163e833fca40d826d2",
+      "subject": "fdic-branch:12437:321",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_dae8820c0430b967e593",
+      "subject": "fdic-branch:23220:839",
+      "predicate": "branch_of",
+      "object": "fdic:23220",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_965721f6d1500e2041ae"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_994564bc35bac808746d",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331213211",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $201,886,000 held across 3 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_61c5abca832b5402dafc",
+        "sig_965721f6d1500e2041ae",
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "derived_from": [
+        "sig_61c5abca832b5402dafc",
+        "sig_965721f6d1500e2041ae",
+        "sig_ef1f9b693ebdedcba7bc"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.4,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1437
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.108Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

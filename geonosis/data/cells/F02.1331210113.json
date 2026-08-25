@@ -1,0 +1,785 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331210113",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 7,
+    "entities": 5,
+    "relations": 7,
+    "statements": 3,
+    "direct_signals": 7,
+    "direct_entities": 5,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 2,
+    "money.bank_branch": 3,
+    "money.branch_deposits": 2
+  },
+  "entity_types": {
+    "bank_branch": 5
+  },
+  "relation_predicates": {
+    "branch_of": 5,
+    "holds_reported_deposits": 2
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_70cbe2e7d91984ddee34",
+      "source": "epa-echo",
+      "source_record_id": "110032649356",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "HOME DEPOT USA  HD5049",
+        "address": "6375 BEST FRIEND RD  STE 126, NORCROSS, GA, 30071",
+        "county": "GWINNETT",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2223399800758,
+          33.9195502580601
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2223399800758,
+          33.9195502580601
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110032649356",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 8635
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_750dba486ecddbecc509",
+      "source": "epa-echo",
+      "source_record_id": "110005680343",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "USPS-NORCROSS VMF",
+        "address": "250 MITCHELL RD, NORCROSS, GA, 30071",
+        "county": "GWINNETT",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03070103",
+        "last_inspection": "2004-06-18T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2096979890823,
+          33.9424188307062
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2096979890823,
+          33.9424188307062
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110005680343",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 8620
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1ff937d571ad648d1736",
+      "source": "fdic-locations",
+      "source_record_id": "217747",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4224,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "JIMMY CARTER BOULEVARD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5813 Jimmy Carter Blvd",
+        "city": "Norcross",
+        "state": "GA",
+        "zip": "30071",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.20947103025833,
+          33.9184359944977
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.20947103025833,
+          33.9184359944977
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a4922b488254d49692c7",
+      "source": "fdic-locations",
+      "source_record_id": "13587",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 7077,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "NORCROSS BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "6155 Buford Hwy",
+        "city": "Norcross",
+        "state": "GA",
+        "zip": "30071",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.22338700118632,
+          33.93256901480842
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.22338700118632,
+          33.93256901480842
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_d223a34607b77f785fc7",
+      "source": "fdic-locations",
+      "source_record_id": "249548",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 7081,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "JIMMY CARTER BOULEVARD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5405 Jimmy Carter Blvd",
+        "city": "Norcross",
+        "state": "GA",
+        "zip": "30093",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.20544201703996,
+          33.906985015565056
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.20544201703996,
+          33.906985015565056
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0aeb8f31fb83ddaa6ae2",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:193",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 193,
+        "institution_name": "Renasant Bank",
+        "branch_name": "Ga-Norcross Branch",
+        "deposits_usd": 96708000,
+        "address": "3169 Holcomb Bridge Rd, Ste 202",
+        "city": "Norcross",
+        "state": "GA",
+        "zip": "30071"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2317350414729,
+          33.9481749869642
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2317350414729,
+          33.9481749869642
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0bc053465eb8c6ef76b1",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:475",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 475,
+        "institution_name": "Regions Bank",
+        "branch_name": "Norcross Branch",
+        "deposits_usd": 154128000,
+        "address": "5935 Buford Hwy",
+        "city": "Norcross",
+        "state": "GA",
+        "zip": "30071"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.21520601223,
+          33.9363469900267
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.21520601223,
+          33.9363469900267
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:475",
+      "type": "bank_branch",
+      "name": "Norcross Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "475"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.21520601223,
+          33.9363469900267
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0bc053465eb8c6ef76b1"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12437:193",
+      "type": "bank_branch",
+      "name": "Ga-Norcross Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "193"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2317350414729,
+          33.9481749869642
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0aeb8f31fb83ddaa6ae2"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4224",
+      "type": "bank_branch",
+      "name": "JIMMY CARTER BOULEVARD BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4224"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.20947103025833,
+          33.9184359944977
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_1ff937d571ad648d1736"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:7077",
+      "type": "bank_branch",
+      "name": "NORCROSS BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "7077"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.22338700118632,
+          33.93256901480842
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_a4922b488254d49692c7"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:7081",
+      "type": "bank_branch",
+      "name": "JIMMY CARTER BOULEVARD BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "7081"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.20544201703996,
+          33.906985015565056
+        ]
+      },
+      "atlas_address": "F02.1331210113",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_d223a34607b77f785fc7"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_43d2a8ff1f0b36b7840d",
+      "subject": "fdic-branch:12368:475",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 154128000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0bc053465eb8c6ef76b1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_a1d99df0b8ad51420bff",
+      "subject": "fdic-branch:12437:193",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 96708000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0aeb8f31fb83ddaa6ae2"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_0210057e44e044966bb7",
+      "subject": "fdic-branch:3511:7081",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_d223a34607b77f785fc7"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_67e81b4d62341c8679ed",
+      "subject": "fdic-branch:12368:475",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0bc053465eb8c6ef76b1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_c7029d60220393f4ca07",
+      "subject": "fdic-branch:3511:7077",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a4922b488254d49692c7"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_e5bcde5b10aec9952810",
+      "subject": "fdic-branch:3510:4224",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1ff937d571ad648d1736"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_edfaf6af6ab7298ea61d",
+      "subject": "fdic-branch:12437:193",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0aeb8f31fb83ddaa6ae2"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_e787da8f2c88d06f7748",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331210113",
+      "text": "2 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_70cbe2e7d91984ddee34",
+        "sig_750dba486ecddbecc509"
+      ],
+      "derived_from": [
+        "sig_70cbe2e7d91984ddee34",
+        "sig_750dba486ecddbecc509"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.41000000000000003,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1638
+    },
+    {
+      "id": "stmt_f035b515a0ec422f3c27",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331210113",
+      "text": "3 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_70cbe2e7d91984ddee34",
+        "sig_750dba486ecddbecc509",
+        "sig_1ff937d571ad648d1736",
+        "sig_a4922b488254d49692c7",
+        "sig_d223a34607b77f785fc7",
+        "sig_0aeb8f31fb83ddaa6ae2",
+        "sig_0bc053465eb8c6ef76b1"
+      ],
+      "derived_from": [
+        "sig_70cbe2e7d91984ddee34",
+        "sig_750dba486ecddbecc509",
+        "sig_1ff937d571ad648d1736",
+        "sig_a4922b488254d49692c7",
+        "sig_d223a34607b77f785fc7",
+        "sig_0aeb8f31fb83ddaa6ae2",
+        "sig_0bc053465eb8c6ef76b1"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_d77a52bcd4fa8951fefc",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331210113",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $250,836,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_0bc053465eb8c6ef76b1",
+        "sig_0aeb8f31fb83ddaa6ae2"
+      ],
+      "derived_from": [
+        "sig_0bc053465eb8c6ef76b1",
+        "sig_0aeb8f31fb83ddaa6ae2"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1375
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.092Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

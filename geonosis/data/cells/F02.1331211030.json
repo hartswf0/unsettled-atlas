@@ -1,0 +1,1106 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211030",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 11,
+    "entities": 7,
+    "relations": 9,
+    "statements": 3,
+    "direct_signals": 11,
+    "direct_entities": 7,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "money.bank_branch": 5,
+    "money.branch_deposits": 2,
+    "ecology.occurrence": 1,
+    "ecology.inaturalist_observation": 1,
+    "claim.map_note": 2
+  },
+  "entity_types": {
+    "bank_branch": 7
+  },
+  "relation_predicates": {
+    "branch_of": 7,
+    "holds_reported_deposits": 2
+  },
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_3801af1d4c16db16a006",
+      "source": "inaturalist-observations",
+      "source_record_id": "394264931",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Odocoileus virginianus",
+        "common_name": "White-tailed Deer",
+        "iconic_taxon": "Mammalia",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.45273,
+          33.9087359722
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.45273,
+          33.9087359722
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T23:05:43.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394264931",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Cumberland, Atlanta, GA, USA",
+        "positional_accuracy": null
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_03b7c80ab7c21d398528",
+      "source": "fdic-locations",
+      "source_record_id": "249193",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3267,
+        "institution_name": "Truist Bank",
+        "branch_name": "TERRELL MILL BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1380 Powers Ferry Rd Se",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30067",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.46700802280894,
+          33.91701299879561
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.46700802280894,
+          33.91701299879561
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_19d55b78528593508eaf",
+      "source": "fdic-locations",
+      "source_record_id": "230984",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 7082,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "WILDWOOD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1547 Powers Ferry Rd Se",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30067",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.46482202246078,
+          33.91438699044026
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.46482202246078,
+          33.91438699044026
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_2706cd298646b9a112d4",
+      "source": "fdic-locations",
+      "source_record_id": "191418",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8457,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "POWERS FERRY CROSSING BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5555 New Northside Dr",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30339",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.42890498062079,
+          33.90678699310254
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.42890498062079,
+          33.90678699310254
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4d5f391f04c982967039",
+      "source": "fdic-locations",
+      "source_record_id": "191946",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4627,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "POWERS FERRY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3030 Windy Hill Rd Se",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30067",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.464365963109,
+          33.90516400519067
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.464365963109,
+          33.90516400519067
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_cd9f70f5fc4dc135bdc3",
+      "source": "fdic-locations",
+      "source_record_id": "186324",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3241,
+        "institution_name": "Truist Bank",
+        "branch_name": "NORTHSIDE DRIVE & 285 BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5550 Northside Dr",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30327",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4317689931168,
+          33.90531999240878
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4317689931168,
+          33.90531999240878
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_aad7127610f0f0ad838f",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938381579",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Pleopeltis michauxiana (Weath.) Hickey & Sprunt",
+        "species": "Pleopeltis michauxiana",
+        "vernacular_name": null,
+        "taxon_key": 7386390,
+        "species_key": 7386390,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 4,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.445083,
+          33.9066
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.445083,
+          33.9066
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T15:12:18.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.832Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938381579",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_cbb61289375c2546852c",
+      "source": "osm-notes",
+      "source_record_id": "5014058",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 2,
+        "latest": "Could also  be addr:unit= or just ref= \nSometimes gated communities have just one street number. Maybe the country or the city has a public GIS with address points to check what the numbers are."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4816077,
+          33.9060944
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4816077,
+          33.9060944
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-10-19 18:36:57 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5014058",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-10-19 18:36:57 UTC",
+            "uid": 18862646,
+            "user": "ICT_maps",
+            "user_url": "https://api.openstreetmap.org/user/ICT_maps",
+            "action": "opened",
+            "text": "all of the apartment buildings here appear to have been added with the address number as a \"name\"... and no street information.",
+            "html": "<p dir=\"auto\">all of the apartment buildings here appear to have been added with the address number as a \"name\"... and no street information.</p>"
+          },
+          {
+            "date": "2025-10-20 19:08:07 UTC",
+            "uid": 544235,
+            "user": "cuzi",
+            "user_url": "https://api.openstreetmap.org/user/cuzi",
+            "action": "commented",
+            "text": "Could also  be addr:unit= or just ref= \nSometimes gated communities have just one street number. Maybe the country or the city has a public GIS with address points to check what the numbers are.",
+            "html": "<p dir=\"auto\">Could also  be addr:unit= or just ref= \n<br />Sometimes gated communities have just one street number. Maybe the country or the city has a public GIS with address points to check what the numbers are.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4bfff63bc8847c52b20a",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2784",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2784,
+        "institution_name": "Regions Bank",
+        "branch_name": "Terrell Mill Branch",
+        "deposits_usd": 29519000,
+        "address": "1314 Powers Ferry Rd Se",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30067"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4673946954473,
+          33.9197528739838
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4673946954473,
+          33.9197528739838
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.325Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ce4e4400eb1d94c07ee1",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:212",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 212,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Powers Ferry Branch",
+        "deposits_usd": 258469000,
+        "address": "2401 Windy Ridge Pkwy Se",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30339"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4585569689323,
+          33.9033750136864
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4585569689323,
+          33.9033750136864
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a08f0b60e1048b5d67b2",
+      "source": "osm-notes",
+      "source_record_id": "4210298",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "I put this in as 2540, but realized that it may only be part of the building. Need to check the addresses on the sign and see if different parts have a different street address.\n\nvia StreetComplete 57.2"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4796707,
+          33.8995788
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4796707,
+          33.8995788
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2024-04-22 18:29:35 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4210298",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2024-04-22 18:29:35 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "I put this in as 2540, but realized that it may only be part of the building. Need to check the addresses on the sign and see if different parts have a different street address.\n\nvia StreetComplete 57.2",
+            "html": "<p dir=\"auto\">I put this in as 2540, but realized that it may only be part of the building. Need to check the addresses on the sign and see if different parts have a different street address.</p>\n\n<p dir=\"auto\">via StreetComplete 57.2</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:2784",
+      "type": "bank_branch",
+      "name": "Terrell Mill Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2784"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4673946954473,
+          33.9197528739838
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4bfff63bc8847c52b20a"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:212",
+      "type": "bank_branch",
+      "name": "Powers Ferry Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "212"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4585569689323,
+          33.9033750136864
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_ce4e4400eb1d94c07ee1"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4627",
+      "type": "bank_branch",
+      "name": "POWERS FERRY BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4627"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.464365963109,
+          33.90516400519067
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4d5f391f04c982967039"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:7082",
+      "type": "bank_branch",
+      "name": "WILDWOOD BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "7082"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.46482202246078,
+          33.91438699044026
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_19d55b78528593508eaf"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8457",
+      "type": "bank_branch",
+      "name": "POWERS FERRY CROSSING BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8457"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.42890498062079,
+          33.90678699310254
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_2706cd298646b9a112d4"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3241",
+      "type": "bank_branch",
+      "name": "NORTHSIDE DRIVE & 285 BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3241"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4317689931168,
+          33.90531999240878
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_cd9f70f5fc4dc135bdc3"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3267",
+      "type": "bank_branch",
+      "name": "TERRELL MILL BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3267"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.46700802280894,
+          33.91701299879561
+        ]
+      },
+      "atlas_address": "F02.1331211030",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_03b7c80ab7c21d398528"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_87c8cd1752cab684a732",
+      "subject": "fdic-branch:20504:212",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 258469000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ce4e4400eb1d94c07ee1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_cba5f1418964226a5619",
+      "subject": "fdic-branch:12368:2784",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 29519000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4bfff63bc8847c52b20a"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_118907fac031395655cb",
+      "subject": "fdic-branch:12368:2784",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4bfff63bc8847c52b20a"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_138083a6c0d9ca835f2c",
+      "subject": "fdic-branch:3510:4627",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4d5f391f04c982967039"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_1cbb619ac1e090694f38",
+      "subject": "fdic-branch:3511:8457",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_2706cd298646b9a112d4"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_53af7f5e1d18b89cd1b0",
+      "subject": "fdic-branch:9846:3267",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_03b7c80ab7c21d398528"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_64ea395fcb0fb409f02a",
+      "subject": "fdic-branch:9846:3241",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_cd9f70f5fc4dc135bdc3"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_a55e9822ebb36ff95bff",
+      "subject": "fdic-branch:3511:7082",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_19d55b78528593508eaf"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_fd112d86bbd2aef63423",
+      "subject": "fdic-branch:20504:212",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_ce4e4400eb1d94c07ee1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_293cc18c27d92920e74b",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331211030",
+      "text": "5 independent source channels address signals to this ground: fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_03b7c80ab7c21d398528",
+        "sig_19d55b78528593508eaf",
+        "sig_2706cd298646b9a112d4",
+        "sig_4d5f391f04c982967039",
+        "sig_cd9f70f5fc4dc135bdc3",
+        "sig_4bfff63bc8847c52b20a",
+        "sig_ce4e4400eb1d94c07ee1",
+        "sig_aad7127610f0f0ad838f",
+        "sig_3801af1d4c16db16a006",
+        "sig_a08f0b60e1048b5d67b2",
+        "sig_cbb61289375c2546852c"
+      ],
+      "derived_from": [
+        "sig_03b7c80ab7c21d398528",
+        "sig_19d55b78528593508eaf",
+        "sig_2706cd298646b9a112d4",
+        "sig_4d5f391f04c982967039",
+        "sig_cd9f70f5fc4dc135bdc3",
+        "sig_4bfff63bc8847c52b20a",
+        "sig_ce4e4400eb1d94c07ee1",
+        "sig_aad7127610f0f0ad838f",
+        "sig_3801af1d4c16db16a006",
+        "sig_a08f0b60e1048b5d67b2",
+        "sig_cbb61289375c2546852c"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_99d3f2309708c34dc852",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211030",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $287,988,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ce4e4400eb1d94c07ee1",
+        "sig_4bfff63bc8847c52b20a"
+      ],
+      "derived_from": [
+        "sig_ce4e4400eb1d94c07ee1",
+        "sig_4bfff63bc8847c52b20a"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1375
+    },
+    {
+      "id": "stmt_76a0a1052721839301a3",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331211030",
+      "text": "2 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_a08f0b60e1048b5d67b2",
+        "sig_cbb61289375c2546852c"
+      ],
+      "derived_from": [
+        "sig_a08f0b60e1048b5d67b2",
+        "sig_cbb61289375c2546852c"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.3333333333333333,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1104
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.095Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

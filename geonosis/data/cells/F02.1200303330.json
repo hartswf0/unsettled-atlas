@@ -1,0 +1,326 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200303330",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 2,
+    "relations": 2,
+    "statements": 1,
+    "direct_signals": 3,
+    "direct_entities": 2,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 2
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1
+  },
+  "signals": [
+    {
+      "id": "sig_c1d990499fb2bc5c90b6",
+      "source": "epa-echo",
+      "source_record_id": "110044317691",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "HPC INDUSTRIAL SERVICES LLC",
+        "address": "15526 RIVER RD, NORCO, LA, 70079",
+        "county": "ST CHARLES",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 1,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090100",
+        "last_inspection": "2024-10-10T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.4070242172552,
+          29.9942137756808
+        ]
+      },
+      "atlas_address": "F02.1200303330",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.4070242172552,
+          29.9942137756808
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110044317691",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 54767
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_1ccf70235a3a25341938",
+      "source": "fdic-locations",
+      "source_record_id": "202857",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "628",
+        "branch_id": 2149,
+        "institution_name": "JPMorgan Chase Bank, National Association",
+        "branch_name": "ORMOND BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "12515 Airline Hwy",
+        "city": "Destrehan",
+        "state": "LA",
+        "zip": "70047",
+        "fi_uninum": 417
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.36110802104749,
+          29.986399007023493
+        ]
+      },
+      "atlas_address": "F02.1200303330",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.36110802104749,
+          29.986399007023493
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_bb61d562f271b456860d",
+      "source": "fdic-locations",
+      "source_record_id": "225548",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "8149",
+        "branch_id": 8,
+        "institution_name": "First American Bank and Trust",
+        "branch_name": "NORCO BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "941 1st St",
+        "city": "Norco",
+        "state": "LA",
+        "zip": "70079",
+        "fi_uninum": 5194
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.411986005684,
+          29.998869015835
+        ]
+      },
+      "atlas_address": "F02.1200303330",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.411986005684,
+          29.998869015835
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:628:2149",
+      "type": "bank_branch",
+      "name": "ORMOND BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "2149"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.36110802104749,
+          29.986399007023493
+        ]
+      },
+      "atlas_address": "F02.1200303330",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_1ccf70235a3a25341938"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:8149:8",
+      "type": "bank_branch",
+      "name": "NORCO BRANCH",
+      "identifiers": {
+        "fdic_cert": "8149",
+        "branch_id": "8"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.411986005684,
+          29.998869015835
+        ]
+      },
+      "atlas_address": "F02.1200303330",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_bb61d562f271b456860d"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_939a02b48d0570b89d7b",
+      "subject": "fdic-branch:628:2149",
+      "predicate": "branch_of",
+      "object": "fdic:628",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1ccf70235a3a25341938"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_e0de55351a7e4e317f85",
+      "subject": "fdic-branch:8149:8",
+      "predicate": "branch_of",
+      "object": "fdic:8149",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_bb61d562f271b456860d"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_abe10eea4cef413155e0",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200303330",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_c1d990499fb2bc5c90b6"
+      ],
+      "derived_from": [
+        "sig_c1d990499fb2bc5c90b6"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1537
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.090Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

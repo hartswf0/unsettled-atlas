@@ -1,0 +1,988 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331212110",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 9,
+    "entities": 6,
+    "relations": 10,
+    "statements": 3,
+    "direct_signals": 9,
+    "direct_entities": 6,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 2,
+    "money.bank_branch": 2,
+    "money.branch_deposits": 4,
+    "memory.national_register_resource": 1
+  },
+  "entity_types": {
+    "bank_branch": 6
+  },
+  "relation_predicates": {
+    "branch_of": 6,
+    "holds_reported_deposits": 4
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_3a1864c95779b32c3156",
+      "source": "epa-echo",
+      "source_record_id": "110070153162",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "THE VILLAGES @ LAFAYETTE PARK LOT- 107",
+        "address": "145 MANSFIELD DRIVE, FAYETTEVILLE, GA, 30214",
+        "county": "FAYETTE COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130005",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4642302349459,
+          33.4501296725261
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4642302349459,
+          33.4501296725261
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070153162",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 8729
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a78db3ccb9b7a90e68bf",
+      "source": "epa-echo",
+      "source_record_id": "110070370155",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "LONGBOAT 3",
+        "address": "CREEKRISE DRIVE, FAYETTEVILLE, GA, 30215",
+        "county": "FAYETTE COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 34811,
+        "huc": "03130005",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4549263835483,
+          33.4487258033638
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4549263835483,
+          33.4487258033638
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070370155",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 8034
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_06a92bbdc37a1e44ae75",
+      "source": "fdic-locations",
+      "source_record_id": "17619",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8492,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "FAYETTEVILLE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "620 Jeff Davis Drive",
+        "city": "Fayetteville",
+        "state": "GA",
+        "zip": "30214",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4511609999999,
+          33.46025
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4511609999999,
+          33.46025
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_69fdcb6d2205a85042fd",
+      "source": "fdic-locations",
+      "source_record_id": "247340",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4242,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "FAYETTEVILLE BANKS STATION BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "219 Banks Sta",
+        "city": "Fayetteville",
+        "state": "GA",
+        "zip": "30214",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.44625602310815,
+          33.467938999397646
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.44625602310815,
+          33.467938999397646
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_5be828d4042bc408d8f6",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16889:112",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16889,
+        "branch_id": 112,
+        "institution_name": "United Community Bank",
+        "branch_name": "Southern Community Bank Branch",
+        "deposits_usd": 181373000,
+        "address": "525 N Jeff Davis Dr",
+        "city": "Fayetteville",
+        "state": "GA",
+        "zip": "30214"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4497670347103,
+          33.457704988987
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4497670347103,
+          33.457704988987
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.328Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_7ed710fefd868ed626c1",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:319",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 319,
+        "institution_name": "Renasant Bank",
+        "branch_name": "Fayetteville Branch",
+        "deposits_usd": 148776000,
+        "address": "440 N Jeff Davis Dr",
+        "city": "Fayetteville",
+        "state": "GA",
+        "zip": "30214"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4507890401645,
+          33.4566969813112
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4507890401645,
+          33.4566969813112
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.327Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8a7d7d61ce39a1a237a0",
+      "source": "fdic-sod",
+      "source_record_id": "2025:178:6",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 178,
+        "branch_id": 6,
+        "institution_name": "Talbot State Bank",
+        "branch_name": "Fayetteville Branch",
+        "deposits_usd": 32857000,
+        "address": "710 Glynn St N",
+        "city": "Fayetteville",
+        "state": "GA",
+        "zip": "30214"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4515859915184,
+          33.4618119958145
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4515859915184,
+          33.4618119958145
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.328Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a67df29094966e9c2cc3",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:816",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 816,
+        "institution_name": "Regions Bank",
+        "branch_name": "Fayetteville Ga Branch",
+        "deposits_usd": 45701000,
+        "address": "320 Lanier Ave W, Ste 100",
+        "city": "Fayetteville",
+        "state": "GA",
+        "zip": "30214"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4616300260935,
+          33.4481549837851
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4616300260935,
+          33.4481549837851
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_46094ec4c4e898c22a6f",
+      "source": "nps-national-register",
+      "source_record_id": "80001020",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Fayette County Courthouse",
+        "resource_type": "building",
+        "address": "GA 85",
+        "city": "Fayetteville",
+        "county": "Fayette",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.45460654399994,
+          33.44821176900007
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.45460654399994,
+          33.44821176900007
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1980-09-18T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.064Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{01223AD0-0D4F-45D1-B2AB-9244C9AE9923}",
+        "src_date": 338083200000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:816",
+      "type": "bank_branch",
+      "name": "Fayetteville Ga Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "816"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4616300260935,
+          33.4481549837851
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_a67df29094966e9c2cc3"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12437:319",
+      "type": "bank_branch",
+      "name": "Fayetteville Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "319"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4507890401645,
+          33.4566969813112
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_7ed710fefd868ed626c1"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:16889:112",
+      "type": "bank_branch",
+      "name": "Southern Community Bank Branch",
+      "identifiers": {
+        "fdic_cert": "16889",
+        "branch_id": "112"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4497670347103,
+          33.457704988987
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_5be828d4042bc408d8f6"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:178:6",
+      "type": "bank_branch",
+      "name": "Fayetteville Branch",
+      "identifiers": {
+        "fdic_cert": "178",
+        "branch_id": "6"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4515859915184,
+          33.4618119958145
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_8a7d7d61ce39a1a237a0"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4242",
+      "type": "bank_branch",
+      "name": "FAYETTEVILLE BANKS STATION BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4242"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.44625602310815,
+          33.467938999397646
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_69fdcb6d2205a85042fd"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8492",
+      "type": "bank_branch",
+      "name": "FAYETTEVILLE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8492"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4511609999999,
+          33.46025
+        ]
+      },
+      "atlas_address": "F02.1331212110",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_06a92bbdc37a1e44ae75"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_2f7a6cb6444822141b97",
+      "subject": "fdic-branch:12368:816",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 45701000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a67df29094966e9c2cc3"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_403e11e6d953083187c9",
+      "subject": "fdic-branch:178:6",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:178",
+      "value": {
+        "amount_usd": 32857000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8a7d7d61ce39a1a237a0"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_6c6e0425f07d692dbe64",
+      "subject": "fdic-branch:16889:112",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16889",
+      "value": {
+        "amount_usd": 181373000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_5be828d4042bc408d8f6"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_94a186c26f3e99258c49",
+      "subject": "fdic-branch:12437:319",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 148776000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7ed710fefd868ed626c1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_1bd350125a9664e61997",
+      "subject": "fdic-branch:3511:8492",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_06a92bbdc37a1e44ae75"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_3a8d6c7db63284d2d92a",
+      "subject": "fdic-branch:12368:816",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_a67df29094966e9c2cc3"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_47c8b30d75f9152a7771",
+      "subject": "fdic-branch:16889:112",
+      "predicate": "branch_of",
+      "object": "fdic:16889",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_5be828d4042bc408d8f6"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_d2a251c123b4b35bf805",
+      "subject": "fdic-branch:12437:319",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7ed710fefd868ed626c1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f1353a84a16f57edaeaa",
+      "subject": "fdic-branch:3510:4242",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_69fdcb6d2205a85042fd"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_fc9d184e47b8d85a97ae",
+      "subject": "fdic-branch:178:6",
+      "predicate": "branch_of",
+      "object": "fdic:178",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8a7d7d61ce39a1a237a0"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_91897f8c1ba959a4482d",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331212110",
+      "text": "4 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, nps-national-register.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_3a1864c95779b32c3156",
+        "sig_a78db3ccb9b7a90e68bf",
+        "sig_06a92bbdc37a1e44ae75",
+        "sig_69fdcb6d2205a85042fd",
+        "sig_5be828d4042bc408d8f6",
+        "sig_7ed710fefd868ed626c1",
+        "sig_8a7d7d61ce39a1a237a0",
+        "sig_a67df29094966e9c2cc3",
+        "sig_46094ec4c4e898c22a6f"
+      ],
+      "derived_from": [
+        "sig_3a1864c95779b32c3156",
+        "sig_a78db3ccb9b7a90e68bf",
+        "sig_06a92bbdc37a1e44ae75",
+        "sig_69fdcb6d2205a85042fd",
+        "sig_5be828d4042bc408d8f6",
+        "sig_7ed710fefd868ed626c1",
+        "sig_8a7d7d61ce39a1a237a0",
+        "sig_a67df29094966e9c2cc3",
+        "sig_46094ec4c4e898c22a6f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.8,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1813
+    },
+    {
+      "id": "stmt_2e006bfd8360d027fabd",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331212110",
+      "text": "2 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_3a1864c95779b32c3156",
+        "sig_a78db3ccb9b7a90e68bf"
+      ],
+      "derived_from": [
+        "sig_3a1864c95779b32c3156",
+        "sig_a78db3ccb9b7a90e68bf"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.41000000000000003,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1638
+    },
+    {
+      "id": "stmt_0df8ac9d48ea355d775e",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331212110",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $408,707,000 held across 4 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_a67df29094966e9c2cc3",
+        "sig_8a7d7d61ce39a1a237a0",
+        "sig_5be828d4042bc408d8f6",
+        "sig_7ed710fefd868ed626c1"
+      ],
+      "derived_from": [
+        "sig_a67df29094966e9c2cc3",
+        "sig_8a7d7d61ce39a1a237a0",
+        "sig_5be828d4042bc408d8f6",
+        "sig_7ed710fefd868ed626c1"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.45,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.15
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.100Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

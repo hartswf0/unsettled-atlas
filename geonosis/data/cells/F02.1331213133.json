@@ -1,0 +1,597 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213133",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 5,
+    "entities": 4,
+    "relations": 5,
+    "statements": 3,
+    "direct_signals": 5,
+    "direct_entities": 4,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 3,
+    "money.branch_deposits": 1
+  },
+  "entity_types": {
+    "bank_branch": 4
+  },
+  "relation_predicates": {
+    "branch_of": 4,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_ee134efd0cf042de91c9",
+      "source": "epa-echo",
+      "source_record_id": "110005682975",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "ECONO LUBE N TUNE",
+        "address": "7178 GEORGIA HWY 85, RIVERDALE, GA, 30274",
+        "county": "CLAYTON",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 10000,
+        "huc": null,
+        "last_inspection": "1994-08-10T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4005082402669,
+          33.5572640050528
+        ]
+      },
+      "atlas_address": "F02.1331213133",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4005082402669,
+          33.5572640050528
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110005682975",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 1587
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_13b6a60c2ce0abbe4a08",
+      "source": "fdic-locations",
+      "source_record_id": "247832",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4221,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "RIVERDALE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "6656 Church St",
+        "city": "Riverdale",
+        "state": "GA",
+        "zip": "30274",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41499697250082,
+          33.573132009977996
+        ]
+      },
+      "atlas_address": "F02.1331213133",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41499697250082,
+          33.573132009977996
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_32cd32ca8710a0c02f8a",
+      "source": "fdic-locations",
+      "source_record_id": "13712",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 9070,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "RIVERDALE PLAZA BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "6626 Highway 85",
+        "city": "Riverdale",
+        "state": "GA",
+        "zip": "30274",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41188804079401,
+          33.57352499550838
+        ]
+      },
+      "atlas_address": "F02.1331213133",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41188804079401,
+          33.57352499550838
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_34f4e695bbf08f5373fc",
+      "source": "fdic-locations",
+      "source_record_id": "17331",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 737,
+        "institution_name": "Truist Bank",
+        "branch_name": "ADAMS DRIVE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "6375 Highway 85",
+        "city": "Riverdale",
+        "state": "GA",
+        "zip": "30274",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41233404186197,
+          33.58092298897958
+        ]
+      },
+      "atlas_address": "F02.1331213133",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41233404186197,
+          33.58092298897958
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_19dc7f26cab842c14824",
+      "source": "fdic-sod",
+      "source_record_id": "2025:23220:810",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 23220,
+        "branch_id": 810,
+        "institution_name": "Woodforest National Bank",
+        "branch_name": "8108 Riverdale Georgia Walmart Branch",
+        "deposits_usd": 4303000,
+        "address": "7050 Highway 85",
+        "city": "Riverdale",
+        "state": "GA",
+        "zip": "30274"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4106719942813,
+          33.5637149836699
+        ]
+      },
+      "atlas_address": "F02.1331213133",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4106719942813,
+          33.5637149836699
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.331Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:23220:810",
+      "type": "bank_branch",
+      "name": "8108 Riverdale Georgia Walmart Branch",
+      "identifiers": {
+        "fdic_cert": "23220",
+        "branch_id": "810"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4106719942813,
+          33.5637149836699
+        ]
+      },
+      "atlas_address": "F02.1331213133",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_19dc7f26cab842c14824"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4221",
+      "type": "bank_branch",
+      "name": "RIVERDALE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4221"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41499697250082,
+          33.573132009977996
+        ]
+      },
+      "atlas_address": "F02.1331213133",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_13b6a60c2ce0abbe4a08"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:9070",
+      "type": "bank_branch",
+      "name": "RIVERDALE PLAZA BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "9070"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41188804079401,
+          33.57352499550838
+        ]
+      },
+      "atlas_address": "F02.1331213133",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_32cd32ca8710a0c02f8a"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:737",
+      "type": "bank_branch",
+      "name": "ADAMS DRIVE BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "737"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41233404186197,
+          33.58092298897958
+        ]
+      },
+      "atlas_address": "F02.1331213133",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_34f4e695bbf08f5373fc"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_f368396cd48bb2dcfc20",
+      "subject": "fdic-branch:23220:810",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:23220",
+      "value": {
+        "amount_usd": 4303000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_19dc7f26cab842c14824"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_1fe8696be673f9f7fbab",
+      "subject": "fdic-branch:9846:737",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_34f4e695bbf08f5373fc"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_22bae1199e256bf1b6d5",
+      "subject": "fdic-branch:23220:810",
+      "predicate": "branch_of",
+      "object": "fdic:23220",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_19dc7f26cab842c14824"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_5b0debc8f0056b31ed9b",
+      "subject": "fdic-branch:3511:9070",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_32cd32ca8710a0c02f8a"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_cbeff39236685928017d",
+      "subject": "fdic-branch:3510:4221",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_13b6a60c2ce0abbe4a08"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_44c2fe501ab74420b582",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213133",
+      "text": "3 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ee134efd0cf042de91c9",
+        "sig_13b6a60c2ce0abbe4a08",
+        "sig_32cd32ca8710a0c02f8a",
+        "sig_34f4e695bbf08f5373fc",
+        "sig_19dc7f26cab842c14824"
+      ],
+      "derived_from": [
+        "sig_ee134efd0cf042de91c9",
+        "sig_13b6a60c2ce0abbe4a08",
+        "sig_32cd32ca8710a0c02f8a",
+        "sig_34f4e695bbf08f5373fc",
+        "sig_19dc7f26cab842c14824"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_5f3bf351af948d217961",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331213133",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ee134efd0cf042de91c9"
+      ],
+      "derived_from": [
+        "sig_ee134efd0cf042de91c9"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_6d84904790364befb558",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331213133",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $4,303,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_19dc7f26cab842c14824"
+      ],
+      "derived_from": [
+        "sig_19dc7f26cab842c14824"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.108Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

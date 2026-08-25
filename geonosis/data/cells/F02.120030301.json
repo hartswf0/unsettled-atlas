@@ -1,0 +1,325 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.120030301",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "gbif-occurrences"
+  ],
+  "counts": {
+    "signals": 4,
+    "entities": 0,
+    "relations": 0,
+    "statements": 1,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "ecology.occurrence": 3
+  },
+  "entity_types": {},
+  "relation_predicates": {},
+  "statement_kinds": {
+    "regulated_environment_presence": 1
+  },
+  "signals": [
+    {
+      "id": "sig_755818099a88382a7806",
+      "source": "epa-echo",
+      "source_record_id": "110071864445",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "CLOVELLY OIL CO., LLC - WEST LAKE PONTCHARTRAIN EAST BLOCK 41 OIL & GAS FIELD",
+        "address": "1MI NORTH OF KENNER, KENNER, LA, 70000",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 81658,
+        "huc": "08090202",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2730557639886,
+          30.0608333300341
+        ]
+      },
+      "atlas_address": "F02.1200303012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.2730557639886,
+          30.0608333300341
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.015Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071864445",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 2118
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_b67a4aecc7f9a80bfae9",
+      "source": "gbif-occurrences",
+      "source_record_id": "6129959134",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Butorides virescens (Linnaeus, 1758)",
+        "species": "Butorides virescens",
+        "vernacular_name": null,
+        "taxon_key": 9539567,
+        "species_key": 9539567,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 222,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.266097,
+          30.026864
+        ]
+      },
+      "atlas_address": "F02.1200303012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.266097,
+          30.026864
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-08T08:26:10.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.629Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6129959134",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_1422f9bd831683d47a00",
+      "source": "gbif-occurrences",
+      "source_record_id": "6129836054",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Anas platyrhynchos Linnaeus, 1758",
+        "species": "Anas platyrhynchos",
+        "vernacular_name": null,
+        "taxon_key": 9761484,
+        "species_key": 9761484,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 425,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.268325,
+          30.028665
+        ]
+      },
+      "atlas_address": "F02.1200303012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.268325,
+          30.028665
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-07T13:51:54.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.628Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6129836054",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_513671f13c840ce94f8b",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938199765",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Poecile carolinensis (Audubon, 1834)",
+        "species": "Poecile carolinensis",
+        "vernacular_name": null,
+        "taxon_key": 2487844,
+        "species_key": 2487844,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 101,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.265975,
+          30.027404
+        ]
+      },
+      "atlas_address": "F02.1200303012",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.265975,
+          30.027404
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-02T16:05:18.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.624Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938199765",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [],
+  "relations": [],
+  "statements": [
+    {
+      "id": "stmt_de80a1c0469446a0c6fd",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200303012",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_755818099a88382a7806"
+      ],
+      "derived_from": [
+        "sig_755818099a88382a7806"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1537
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.060Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

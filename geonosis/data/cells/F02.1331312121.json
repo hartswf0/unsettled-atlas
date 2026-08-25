@@ -1,0 +1,408 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331312121",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 3,
+    "relations": 6,
+    "statements": 1,
+    "direct_signals": 3,
+    "direct_entities": 3,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.branch_deposits": 3
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "branch_of": 3,
+    "holds_reported_deposits": 3
+  },
+  "statement_kinds": {
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_04089f6db2a616678ac6",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20845:21",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20845,
+        "branch_id": 21,
+        "institution_name": "Wallis Bank",
+        "branch_name": "Sugarloaf Branch",
+        "deposits_usd": 31373000,
+        "address": "1970 Satellite Blvd",
+        "city": "Duluth",
+        "state": "GA",
+        "zip": "30097"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.086542960297,
+          33.990298995744
+        ]
+      },
+      "atlas_address": "F02.1331312121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.086542960297,
+          33.990298995744
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.330Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4dffdc6c2012e671baee",
+      "source": "fdic-sod",
+      "source_record_id": "2025:18143:9",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 18143,
+        "branch_id": 9,
+        "institution_name": "Oconee State Bank",
+        "branch_name": "Gwinnett Financial Center Branch",
+        "deposits_usd": 75632000,
+        "address": "2055 Sugarloaf Cir, Ste 50",
+        "city": "Duluth",
+        "state": "GA",
+        "zip": "30097"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0896890238345,
+          33.9865480102536
+        ]
+      },
+      "atlas_address": "F02.1331312121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0896890238345,
+          33.9865480102536
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.328Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_625f3817fb5cdd1ae764",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:199",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 199,
+        "institution_name": "Renasant Bank",
+        "branch_name": "Ga-Sugarloaf-Revel Branch",
+        "deposits_usd": 123888000,
+        "address": "6515 Sugarloaf Pkwy",
+        "city": "Duluth",
+        "state": "GA",
+        "zip": "30097"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0907149687832,
+          33.9959530085306
+        ]
+      },
+      "atlas_address": "F02.1331312121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0907149687832,
+          33.9959530085306
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12437:199",
+      "type": "bank_branch",
+      "name": "Ga-Sugarloaf-Revel Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "199"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0907149687832,
+          33.9959530085306
+        ]
+      },
+      "atlas_address": "F02.1331312121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_625f3817fb5cdd1ae764"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:18143:9",
+      "type": "bank_branch",
+      "name": "Gwinnett Financial Center Branch",
+      "identifiers": {
+        "fdic_cert": "18143",
+        "branch_id": "9"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0896890238345,
+          33.9865480102536
+        ]
+      },
+      "atlas_address": "F02.1331312121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4dffdc6c2012e671baee"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20845:21",
+      "type": "bank_branch",
+      "name": "Sugarloaf Branch",
+      "identifiers": {
+        "fdic_cert": "20845",
+        "branch_id": "21"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.086542960297,
+          33.990298995744
+        ]
+      },
+      "atlas_address": "F02.1331312121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_04089f6db2a616678ac6"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_4e0078a10a269d18060e",
+      "subject": "fdic-branch:12437:199",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 123888000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_625f3817fb5cdd1ae764"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_5c55dd9cbf67501c2b46",
+      "subject": "fdic-branch:18143:9",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:18143",
+      "value": {
+        "amount_usd": 75632000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4dffdc6c2012e671baee"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_ac44242fdb88438cb492",
+      "subject": "fdic-branch:20845:21",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20845",
+      "value": {
+        "amount_usd": 31373000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_04089f6db2a616678ac6"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_42fe9e2e4a658a113656",
+      "subject": "fdic-branch:20845:21",
+      "predicate": "branch_of",
+      "object": "fdic:20845",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_04089f6db2a616678ac6"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_4ce4a11f422e301ba5fa",
+      "subject": "fdic-branch:12437:199",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_625f3817fb5cdd1ae764"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_6e8f6528681eef69007a",
+      "subject": "fdic-branch:18143:9",
+      "predicate": "branch_of",
+      "object": "fdic:18143",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4dffdc6c2012e671baee"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_a9d5d02e75a9405b6295",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331312121",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $230,893,000 held across 3 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_625f3817fb5cdd1ae764",
+        "sig_4dffdc6c2012e671baee",
+        "sig_04089f6db2a616678ac6"
+      ],
+      "derived_from": [
+        "sig_625f3817fb5cdd1ae764",
+        "sig_4dffdc6c2012e671baee",
+        "sig_04089f6db2a616678ac6"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.4,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1437
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.113Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

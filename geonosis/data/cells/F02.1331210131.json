@@ -1,0 +1,228 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331210131",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 2,
+    "relations": 2,
+    "statements": 0,
+    "direct_signals": 2,
+    "direct_entities": 2,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "money.bank_branch": 2
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2
+  },
+  "statement_kinds": {},
+  "signals": [
+    {
+      "id": "sig_71c95e0a350e3086cf23",
+      "source": "fdic-locations",
+      "source_record_id": "249544",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 7078,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "LILBURN CROSSING BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5505 Lawrenceville Hwy Nw",
+        "city": "Lilburn",
+        "state": "GA",
+        "zip": "30047",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.16214545107404,
+          33.88268415672446
+        ]
+      },
+      "atlas_address": "F02.1331210131",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.16214545107404,
+          33.88268415672446
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_96b621d9a318bca65ac9",
+      "source": "fdic-locations",
+      "source_record_id": "191416",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8455,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "TUCKER BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2200 Mountain Industrial Blvd",
+        "city": "Tucker",
+        "state": "GA",
+        "zip": "30084",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.20134896608133,
+          33.84860799361421
+        ]
+      },
+      "atlas_address": "F02.1331210131",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.20134896608133,
+          33.84860799361421
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3511:7078",
+      "type": "bank_branch",
+      "name": "LILBURN CROSSING BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "7078"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.16214545107404,
+          33.88268415672446
+        ]
+      },
+      "atlas_address": "F02.1331210131",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_71c95e0a350e3086cf23"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8455",
+      "type": "bank_branch",
+      "name": "TUCKER BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8455"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.20134896608133,
+          33.84860799361421
+        ]
+      },
+      "atlas_address": "F02.1331210131",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_96b621d9a318bca65ac9"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_b1a20d7b849f547fea2f",
+      "subject": "fdic-branch:3511:7078",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_71c95e0a350e3086cf23"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_c91f735472bf804326e2",
+      "subject": "fdic-branch:3511:8455",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_96b621d9a318bca65ac9"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [],
+  "generated_at": "2026-08-25T12:26:10.092Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

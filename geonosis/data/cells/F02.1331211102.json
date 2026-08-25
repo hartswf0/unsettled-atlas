@@ -1,0 +1,276 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211102",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 1,
+    "relations": 2,
+    "statements": 2,
+    "direct_signals": 2,
+    "direct_entities": 1,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.branch_deposits": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 1,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_c589440b44996b266727",
+      "source": "epa-echo",
+      "source_record_id": "110070390580",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "RESERVE AT LOST MOUNTAIN LOT 2",
+        "address": "2638 JUPITER DRIVE, POWDER SPRINGS, GA, 30127",
+        "county": "COBB COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 99999999,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6838243044642,
+          33.8595486746432
+        ]
+      },
+      "atlas_address": "F02.1331211102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.6838243044642,
+          33.8595486746432
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070390580",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 2631
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0ee2723f7a5a8012b038",
+      "source": "fdic-sod",
+      "source_record_id": "2025:11063:1006",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 11063,
+        "branch_id": 1006,
+        "institution_name": "First-Citizens Bank & Trust Company",
+        "branch_name": "Powder Springs Branch",
+        "deposits_usd": 122668000,
+        "address": "3270 Florence Rd",
+        "city": "Powder Springs",
+        "state": "GA",
+        "zip": "30127"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7038619987219,
+          33.8756809960472
+        ]
+      },
+      "atlas_address": "F02.1331211102",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.7038619987219,
+          33.8756809960472
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.324Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:11063:1006",
+      "type": "bank_branch",
+      "name": "Powder Springs Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "1006"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.7038619987219,
+          33.8756809960472
+        ]
+      },
+      "atlas_address": "F02.1331211102",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0ee2723f7a5a8012b038"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_5f08fa144dadd3c0136f",
+      "subject": "fdic-branch:11063:1006",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:11063",
+      "value": {
+        "amount_usd": 122668000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0ee2723f7a5a8012b038"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_0aa7a3189987467213ae",
+      "subject": "fdic-branch:11063:1006",
+      "predicate": "branch_of",
+      "object": "fdic:11063",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0ee2723f7a5a8012b038"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_9259aaf15b05fa423f58",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331211102",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_c589440b44996b266727"
+      ],
+      "derived_from": [
+        "sig_c589440b44996b266727"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_9e0fff40f35158479fff",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211102",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $122,668,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_0ee2723f7a5a8012b038"
+      ],
+      "derived_from": [
+        "sig_0ee2723f7a5a8012b038"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.097Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

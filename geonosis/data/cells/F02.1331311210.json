@@ -1,0 +1,691 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331311210",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 6,
+    "entities": 4,
+    "relations": 6,
+    "statements": 3,
+    "direct_signals": 6,
+    "direct_entities": 4,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 2,
+    "money.branch_deposits": 2,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 4
+  },
+  "relation_predicates": {
+    "branch_of": 4,
+    "holds_reported_deposits": 2
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_d7d3c407833b9657ec75",
+      "source": "epa-echo",
+      "source_record_id": "110071912469",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "THE SUMMIT AT CHASTAIN",
+        "address": "NEW CHASTAIN ROAD, KENNESAW, GA, 30144",
+        "county": "COBB COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 17431,
+        "huc": "03150104",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5555996791243,
+          34.0345999439993
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5555996791243,
+          34.0345999439993
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071912469",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 9713
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_cfeb6bf9d350cff09573",
+      "source": "fdic-locations",
+      "source_record_id": "247151",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 7086,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "CANTON ROAD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2850 Canton Rd",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30066",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.52768897848561,
+          34.019330010758395
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.52768897848561,
+          34.019330010758395
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f9f1e8ef939d3b0aada1",
+      "source": "fdic-locations",
+      "source_record_id": "191856",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4262,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "TOWN CENTER BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2597 George Busbee Pkwy Nw",
+        "city": "Kennesaw",
+        "state": "GA",
+        "zip": "30144",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.56580164414795,
+          34.0129004377954
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.56580164414795,
+          34.0129004377954
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_cffe90642df3001754aa",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:245",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 245,
+        "institution_name": "Renasant Bank",
+        "branch_name": "Ga-Kennesaw-George Busbee Branch",
+        "deposits_usd": 124089000,
+        "address": "3415 George Busbee Pkwy Nw, Ste 100",
+        "city": "Kennesaw",
+        "state": "GA",
+        "zip": "30144"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5711179657705,
+          34.0368590010502
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5711179657705,
+          34.0368590010502
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.327Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f00d8833eeb5fab64098",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:217",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 217,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Canton Road Branch",
+        "deposits_usd": 66251000,
+        "address": "830 Old Piedmont Rd",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30066"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5274599848909,
+          34.0203220089992
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5274599848909,
+          34.0203220089992
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_62a5d0e189ea4f1ff811",
+      "source": "osm-notes",
+      "source_record_id": "4221659",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 2,
+        "latest": "If you could pinpoint areas along this tracethat need to be mapped as bike trails that aren't currently mapped that would be helpful."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5773215,
+          34.0114314
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5773215,
+          34.0114314
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2024-04-29 17:37:32 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4221659",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2024-04-29 17:37:32 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "Various bike trails\n\nvia StreetComplete 57.2\n\nGPS Trace: https://www.openstreetmap.org/user/SamWhited/traces/11338532\n",
+            "html": "<p dir=\"auto\">Various bike trails</p>\n\n<p dir=\"auto\">via StreetComplete 57.2</p>\n\n<p dir=\"auto\">GPS Trace: <a href=\"https://www.openstreetmap.org/user/SamWhited/traces/11338532\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">@SamWhited/traces/11338532</a>\n</p>"
+          },
+          {
+            "date": "2026-01-22 12:33:58 UTC",
+            "uid": 83188,
+            "user": "dannmer",
+            "user_url": "https://api.openstreetmap.org/user/dannmer",
+            "action": "commented",
+            "text": "If you could pinpoint areas along this tracethat need to be mapped as bike trails that aren't currently mapped that would be helpful.",
+            "html": "<p dir=\"auto\">If you could pinpoint areas along this tracethat need to be mapped as bike trails that aren't currently mapped that would be helpful.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12437:245",
+      "type": "bank_branch",
+      "name": "Ga-Kennesaw-George Busbee Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "245"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5711179657705,
+          34.0368590010502
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_cffe90642df3001754aa"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:217",
+      "type": "bank_branch",
+      "name": "Canton Road Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "217"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5274599848909,
+          34.0203220089992
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f00d8833eeb5fab64098"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4262",
+      "type": "bank_branch",
+      "name": "TOWN CENTER BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4262"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.56580164414795,
+          34.0129004377954
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f9f1e8ef939d3b0aada1"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:7086",
+      "type": "bank_branch",
+      "name": "CANTON ROAD BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "7086"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.52768897848561,
+          34.019330010758395
+        ]
+      },
+      "atlas_address": "F02.1331311210",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_cfeb6bf9d350cff09573"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_19143a67d6dab46cab28",
+      "subject": "fdic-branch:12437:245",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 124089000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_cffe90642df3001754aa"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_56a8687400652c12de11",
+      "subject": "fdic-branch:20504:217",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 66251000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f00d8833eeb5fab64098"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_014d0d2ddf14233abfc0",
+      "subject": "fdic-branch:20504:217",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f00d8833eeb5fab64098"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_738835d68ed4acde4767",
+      "subject": "fdic-branch:3510:4262",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f9f1e8ef939d3b0aada1"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_b1472dcfbb34a8d3603e",
+      "subject": "fdic-branch:12437:245",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_cffe90642df3001754aa"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_f2ba1b104d6391022bc0",
+      "subject": "fdic-branch:3511:7086",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_cfeb6bf9d350cff09573"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_397758b2e2a9621bf12c",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331311210",
+      "text": "4 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_d7d3c407833b9657ec75",
+        "sig_cfeb6bf9d350cff09573",
+        "sig_f9f1e8ef939d3b0aada1",
+        "sig_cffe90642df3001754aa",
+        "sig_f00d8833eeb5fab64098",
+        "sig_62a5d0e189ea4f1ff811"
+      ],
+      "derived_from": [
+        "sig_d7d3c407833b9657ec75",
+        "sig_cfeb6bf9d350cff09573",
+        "sig_f9f1e8ef939d3b0aada1",
+        "sig_cffe90642df3001754aa",
+        "sig_f00d8833eeb5fab64098",
+        "sig_62a5d0e189ea4f1ff811"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.8,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1813
+    },
+    {
+      "id": "stmt_ac49965db4f4400b5420",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331311210",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_d7d3c407833b9657ec75"
+      ],
+      "derived_from": [
+        "sig_d7d3c407833b9657ec75"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_afdd61ff6d79de9e987c",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331311210",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $190,340,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_cffe90642df3001754aa",
+        "sig_f00d8833eeb5fab64098"
+      ],
+      "derived_from": [
+        "sig_cffe90642df3001754aa",
+        "sig_f00d8833eeb5fab64098"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1375
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.111Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

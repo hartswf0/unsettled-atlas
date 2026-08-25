@@ -1,0 +1,286 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200303333",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 0,
+    "relations": 0,
+    "statements": 2,
+    "direct_signals": 3,
+    "direct_entities": 0,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "memory.national_register_resource": 2
+  },
+  "entity_types": {},
+  "relation_predicates": {},
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "institutional_memory_density": 1
+  },
+  "signals": [
+    {
+      "id": "sig_095afaa8f39d3c349aa6",
+      "source": "epa-echo",
+      "source_record_id": "110043222232",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "ST. ROSE DRUM",
+        "address": "100A EAST CLUB DR., ST. ROSE, LA, 70087",
+        "county": "SAINT CHARLES",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 17459,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.3130550486446,
+          29.960276661768
+        ]
+      },
+      "atlas_address": "F02.1200303333",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.3130550486446,
+          29.960276661768
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110043222232",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 49316
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_fd7bca6cf9c3c116b446",
+      "source": "nps-national-register",
+      "source_record_id": "84000145",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "LaBranche Plantation Dependency",
+        "resource_type": "building",
+        "address": "SW of Kenner off LA 48",
+        "city": "Kenner",
+        "county": "St. Charles",
+        "state": "LOUISIANA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.31605845399997,
+          29.95033324800005
+        ]
+      },
+      "atlas_address": "F02.1200303333",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.31605845399997,
+          29.95033324800005
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1984-10-18T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:24.834Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{2CDE2300-0CCB-40D3-A6AF-A31F39E4FD79}",
+        "src_date": 466905600000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_24fa084bd89c0541019a",
+      "source": "nps-national-register",
+      "source_record_id": "73002132",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Destrehan Plantation",
+        "resource_type": "building",
+        "address": "River Rd. (LA 48)",
+        "city": "Destrehan",
+        "county": "St. Charles",
+        "state": "LOUISIANA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.36538547199996,
+          29.94546646400005
+        ]
+      },
+      "atlas_address": "F02.1200303333",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.36538547199996,
+          29.94546646400005
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1973-03-20T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:24.836Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{81CF03D3-D6BA-456B-9FA6-029775981FF6}",
+        "src_date": 101433600000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [],
+  "relations": [],
+  "statements": [
+    {
+      "id": "stmt_37364a276463ece1a0f9",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200303333",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_095afaa8f39d3c349aa6"
+      ],
+      "derived_from": [
+        "sig_095afaa8f39d3c349aa6"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_85676a60e1f2f85fa57f",
+      "kind": "institutional_memory_density",
+      "atlas_address": "F02.1200303333",
+      "text": "2 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_24fa084bd89c0541019a",
+        "sig_fd7bca6cf9c3c116b446"
+      ],
+      "derived_from": [
+        "sig_24fa084bd89c0541019a",
+        "sig_fd7bca6cf9c3c116b446"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.15,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1417
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.090Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

@@ -1,0 +1,1572 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.133121012",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 18,
+    "entities": 5,
+    "relations": 6,
+    "statements": 6,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "ecology.inaturalist_observation": 3,
+    "claim.map_note": 3,
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 4,
+    "ecology.occurrence": 6,
+    "money.branch_deposits": 1
+  },
+  "entity_types": {
+    "bank_branch": 5
+  },
+  "relation_predicates": {
+    "branch_of": 5,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "ecological_observation_density": 1,
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 2,
+    "representation_contestation": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_24b46c048cb7bf704a0d",
+      "source": "epa-echo",
+      "source_record_id": "110005706138",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "FINE ARTS SIGNS INC",
+        "address": "811 S MAIN ST, STONE MOUNTAIN, GA, 30083",
+        "county": "DE KALB",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1698298584578,
+          33.8026796671187
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1698298584578,
+          33.8026796671187
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.526Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110005706138",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 184
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ac1969709a5803b42552",
+      "source": "inaturalist-observations",
+      "source_record_id": "394272120",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Helenium amarum",
+        "common_name": "Bitterweed",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1477405693,
+          33.8149056471
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1477405693,
+          33.8149056471
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T23:50:05.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394272120",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Stone Mountain Park, Stone Mountain, GA, US",
+        "positional_accuracy": 15
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_90feafb6e2a9b36afd8d",
+      "source": "inaturalist-observations",
+      "source_record_id": "394230700",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Melanerpes carolinus",
+        "common_name": "Red-bellied Woodpecker",
+        "iconic_taxon": "Aves",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1152638333,
+          33.8458366667
+        ]
+      },
+      "atlas_address": "F02.1331210120",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1152638333,
+          33.8458366667
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T20:56:11.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394230700",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Green Oak Dr SW, Lilburn, GA, US",
+        "positional_accuracy": 64
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c6d56cbff18b611a97ee",
+      "source": "inaturalist-observations",
+      "source_record_id": "394230149",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Melanerpes carolinus",
+        "common_name": "Red-bellied Woodpecker",
+        "iconic_taxon": "Aves",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1147833333,
+          33.8454133333
+        ]
+      },
+      "atlas_address": "F02.1331210120",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1147833333,
+          33.8454133333
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T20:55:29.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394230149",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Green Oak Dr SW, Lilburn, GA, US",
+        "positional_accuracy": 38
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4b93a20e1808683f4a7d",
+      "source": "fdic-locations",
+      "source_record_id": "11724",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3249,
+        "institution_name": "Truist Bank",
+        "branch_name": "STONE MOUNTAIN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5399 E Mountain St",
+        "city": "Stone Mountain",
+        "state": "GA",
+        "zip": "30083",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1688010302227,
+          33.80818299660841
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1688010302227,
+          33.80818299660841
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_831494ea2d9b567f531f",
+      "source": "fdic-locations",
+      "source_record_id": "217750",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4225,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "STONE MOUNTAIN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5330 Stone Mountain Hwy",
+        "city": "Stone Mountain",
+        "state": "GA",
+        "zip": "30087",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1144719645914,
+          33.8225250196748
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1144719645914,
+          33.8225250196748
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b61d4b83b09b40f00579",
+      "source": "fdic-locations",
+      "source_record_id": "191462",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8494,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "STONE MOUTAIN FESTIVAL BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1815 Rockbridge Rd",
+        "city": "Stone Mountain",
+        "state": "GA",
+        "zip": "30087",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.12354202201755,
+          33.82528501275242
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.12354202201755,
+          33.82528501275242
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_bd9d383bfe76c928bd55",
+      "source": "fdic-locations",
+      "source_record_id": "186317",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3237,
+        "institution_name": "Truist Bank",
+        "branch_name": "MOUNTAIN INDUSTRIAL BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1849 Mountain Industrial Blvd",
+        "city": "Tucker",
+        "state": "GA",
+        "zip": "30084",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2001309917309,
+          33.837270002736375
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2001309917309,
+          33.837270002736375
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b6cef7141960e47609db",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938111513",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Actias luna Linnaeus, 1758",
+        "species": "Actias luna",
+        "vernacular_name": null,
+        "taxon_key": 1865668,
+        "species_key": 1865668,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.164152,
+          33.808972
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.164152,
+          33.808972
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T16:58:03.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938111513",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b0ac0b3516bf5a1f5e1e",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938123322",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Liquidambar styraciflua L.",
+        "species": "Liquidambar styraciflua",
+        "vernacular_name": null,
+        "taxon_key": 3152824,
+        "species_key": 3152824,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 13,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.157372,
+          33.812589
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.157372,
+          33.812589
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T09:43:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938123322",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_14307832041588be406c",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938246927",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Asimina triloba (L.) Dunal",
+        "species": "Asimina triloba",
+        "vernacular_name": null,
+        "taxon_key": 3158040,
+        "species_key": 3158040,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 5,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.158968,
+          33.804994
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.158968,
+          33.804994
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T08:32:14.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938246927",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_2440ecc2990383aef76c",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938147365",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Melanoplus femurrubrum (De Geer, 1773)",
+        "species": "Melanoplus femurrubrum",
+        "vernacular_name": null,
+        "taxon_key": 1699053,
+        "species_key": 1699053,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 11,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.151978,
+          33.80828
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.151978,
+          33.80828
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T14:53:27.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938147365",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_26e0e399a6a0d2f46ced",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938367519",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Stagmomantis carolina (Johansson, 1763)",
+        "species": "Stagmomantis carolina",
+        "vernacular_name": null,
+        "taxon_key": 1404940,
+        "species_key": 1404940,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 4,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.155997,
+          33.809605
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.155997,
+          33.809605
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T14:39:55.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938367519",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_a1e39b09bc5842d4c9e7",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938214667",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Stagmomantis carolina (Johansson, 1763)",
+        "species": "Stagmomantis carolina",
+        "vernacular_name": null,
+        "taxon_key": 1404940,
+        "species_key": 1404940,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 152,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.156708,
+          33.809842
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.156708,
+          33.809842
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T14:37:24.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938214667",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9dc9978ddb521a09aa62",
+      "source": "osm-notes",
+      "source_record_id": "4846844",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "The open hours I added are for the office (to rent a unit.) People with units can access them daily between 6:00 ~ 22:00.\n\nvia StreetComplete 61.1\n\nAttached photo(s):\nhttps://streetcomplete.app/p/289621.jpg"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0514973,
+          33.8457404
+        ]
+      },
+      "atlas_address": "F02.1331210120",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0514973,
+          33.8457404
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-07-09 21:29:05 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4846844",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-07-09 21:29:05 UTC",
+            "uid": 22604963,
+            "user": "hyperdimension",
+            "user_url": "https://api.openstreetmap.org/user/hyperdimension",
+            "action": "opened",
+            "text": "The open hours I added are for the office (to rent a unit.) People with units can access them daily between 6:00 ~ 22:00.\n\nvia StreetComplete 61.1\n\nAttached photo(s):\nhttps://streetcomplete.app/p/289621.jpg",
+            "html": "<p dir=\"auto\">The open hours I added are for the office (to rent a unit.) People with units can access them daily between 6:00 ~ 22:00.</p>\n\n<p dir=\"auto\">via StreetComplete 61.1</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://streetcomplete.app/p/289621.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://streetcomplete.app/p/289621.jpg</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4d111765c29e18acae80",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16416:109",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16416,
+        "branch_id": 109,
+        "institution_name": "FSNB, National Association",
+        "branch_name": "Stone Mountain Branch",
+        "deposits_usd": 855000,
+        "address": "1825 Rockbridge Rd",
+        "city": "Stone Mountain",
+        "state": "GA",
+        "zip": "30087"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.123758442758,
+          33.82357292521
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.123758442758,
+          33.82357292521
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.327Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6d25edf3cee5bf2d207d",
+      "source": "osm-notes",
+      "source_record_id": "4718110",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Smart Food Mart 2 - an Exxon-branded gas station/convenience store\n\nvia StreetComplete 60.3\n\nAttached photo(s):\nhttps://streetcomplete.app/p/272494.jpg"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0961931,
+          33.8080962
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0961931,
+          33.8080962
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2025-04-19 23:05:37 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4718110",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2025-04-19 23:05:37 UTC",
+            "uid": 22604963,
+            "user": "hyperdimension",
+            "user_url": "https://api.openstreetmap.org/user/hyperdimension",
+            "action": "opened",
+            "text": "Smart Food Mart 2 - an Exxon-branded gas station/convenience store\n\nvia StreetComplete 60.3\n\nAttached photo(s):\nhttps://streetcomplete.app/p/272494.jpg",
+            "html": "<p dir=\"auto\">Smart Food Mart 2 - an Exxon-branded gas station/convenience store</p>\n\n<p dir=\"auto\">via StreetComplete 60.3</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://streetcomplete.app/p/272494.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://streetcomplete.app/p/272494.jpg</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_29c015e916007882f850",
+      "source": "osm-notes",
+      "source_record_id": "3977402",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 3,
+        "latest": "Thanks. A theme park multipolygon (with multiple outers) maybe, for everything that can only accessed with the ticket?\n\nWe could also use access=customers s important to show that some amenities are not accessible without a ticket."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1448021,
+          33.8121096
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1448021,
+          33.8121096
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2023-11-07 18:49:37 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/3977402",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2023-11-07 18:49:37 UTC",
+            "uid": 14047157,
+            "user": "osmuser63783",
+            "user_url": "https://api.openstreetmap.org/user/osmuser63783",
+            "action": "opened",
+            "text": "The mapping here could be improved. At the moment the whole park is mapped as a leisure=park and a tourism=theme_park.\n\nThe park itself is free if you arrive on foot or by bike. You can then hike up the mountain, use the trails, picnic areas, etc.\nIf you come by car you have to pay for parking.\n\nAnd then there are ticketed attractions. The tickets can be bought at the \"ticket plaza\", that is roughly where this note is if I remember correctly. There is a small area with restaurants that is only accessible to ticket holders, you cannot go there without buying a ticket for the attractions. \n\nMaybe it would be better to have the whole park as leisure=park and then the area for ticket holders only as tourism=theme_park? Unfortunately this would require another survey, I am not sure what exactly the boundaries of this area are.",
+            "html": "<p dir=\"auto\">The mapping here could be improved. At the moment the whole park is mapped as a <a href=\"https://wiki.openstreetmap.org/wiki/Tag:leisure=park\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">leisure=park</a> and a <a href=\"https://wiki.openstreetmap.org/wiki/Tag:tourism=theme_park\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">tourism=theme_park</a>.</p>\n\n<p dir=\"auto\">The park itself is free if you arrive on foot or by bike. You can then hike up the mountain, use the trails, picnic areas, etc.\n<br />If you come by car you have to pay for parking.</p>\n\n<p dir=\"auto\">And then there are ticketed attractions. The tickets can be bought at the \"ticket plaza\", that is roughly where this note is if I remember correctly. There is a small area with restaurants that is only accessible to ticket holders, you cannot go there without buying a ticket for the attractions. </p>\n\n<p dir=\"auto\">Maybe it would be better to have the whole park as <a href=\"https://wiki.openstreetmap.org/wiki/Tag:leisure=park\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">leisure=park</a> and then the area for ticket holders only as <a href=\"https://wiki.openstreetmap.org/wiki/Tag:tourism=theme_park\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">tourism=theme_park</a>? Unfortunately this would require another survey, I am not sure what exactly the boundaries of this area are.</p>"
+          },
+          {
+            "date": "2024-05-24 15:21:22 UTC",
+            "uid": 7596709,
+            "user": "MooPoo7",
+            "user_url": "https://api.openstreetmap.org/user/MooPoo7",
+            "action": "commented",
+            "text": "I removed the theme park tag from the park, since the entire park obviously is not a theme park. Not sure how to tag the rest though, since the \"attractions\" ticket covers this pedestrian area below the note, as well as the Skyride and Historic Squares which are elsewhere.\n\nhttps://stonemountainpark.com/activities/attractions/",
+            "html": "<p dir=\"auto\">I removed the theme park tag from the park, since the entire park obviously is not a theme park. Not sure how to tag the rest though, since the \"attractions\" ticket covers this pedestrian area below the note, as well as the Skyride and Historic Squares which are elsewhere.</p>\n\n<p dir=\"auto\"><a href=\"https://stonemountainpark.com/activities/attractions/\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://stonemountainpark.com/activities/attractions/</a></p>"
+          },
+          {
+            "date": "2024-05-24 16:49:38 UTC",
+            "uid": 14047157,
+            "user": "osmuser63783",
+            "user_url": "https://api.openstreetmap.org/user/osmuser63783",
+            "action": "commented",
+            "text": "Thanks. A theme park multipolygon (with multiple outers) maybe, for everything that can only accessed with the ticket?\n\nWe could also use access=customers s important to show that some amenities are not accessible without a ticket.",
+            "html": "<p dir=\"auto\">Thanks. A theme park multipolygon (with multiple outers) maybe, for everything that can only accessed with the ticket?</p>\n\n<p dir=\"auto\">We could also use <a href=\"https://wiki.openstreetmap.org/wiki/Tag:access=customers\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">access=customers</a> s important to show that some amenities are not accessible without a ticket.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:16416:109",
+      "type": "bank_branch",
+      "name": "Stone Mountain Branch",
+      "identifiers": {
+        "fdic_cert": "16416",
+        "branch_id": "109"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.123758442758,
+          33.82357292521
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4225",
+      "type": "bank_branch",
+      "name": "STONE MOUNTAIN BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4225"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1144719645914,
+          33.8225250196748
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_831494ea2d9b567f531f"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8494",
+      "type": "bank_branch",
+      "name": "STONE MOUTAIN FESTIVAL BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8494"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.12354202201755,
+          33.82528501275242
+        ]
+      },
+      "atlas_address": "F02.1331210123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b61d4b83b09b40f00579"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3237",
+      "type": "bank_branch",
+      "name": "MOUNTAIN INDUSTRIAL BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3237"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2001309917309,
+          33.837270002736375
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_bd9d383bfe76c928bd55"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3249",
+      "type": "bank_branch",
+      "name": "STONE MOUNTAIN BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3249"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1688010302227,
+          33.80818299660841
+        ]
+      },
+      "atlas_address": "F02.1331210121",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4b93a20e1808683f4a7d"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_8fb003e9392cd0834cb2",
+      "subject": "fdic-branch:16416:109",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16416",
+      "value": {
+        "amount_usd": 855000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_097155e7d9dafea27f80",
+      "subject": "fdic-branch:3511:8494",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b61d4b83b09b40f00579"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_24ccaf8dd164e6c8ae02",
+      "subject": "fdic-branch:9846:3249",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4b93a20e1808683f4a7d"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_27ff7f7c4a3771b007ba",
+      "subject": "fdic-branch:16416:109",
+      "predicate": "branch_of",
+      "object": "fdic:16416",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_3c3ddf5ef5375d5e84fd",
+      "subject": "fdic-branch:9846:3237",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_bd9d383bfe76c928bd55"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_49e198473a8210070da4",
+      "subject": "fdic-branch:3510:4225",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_831494ea2d9b567f531f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_d56678aaad2e51c910f3",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1331210121",
+      "text": "7 biodiversity observation records from 2 source channels address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_14307832041588be406c",
+        "sig_2440ecc2990383aef76c",
+        "sig_26e0e399a6a0d2f46ced",
+        "sig_a1e39b09bc5842d4c9e7",
+        "sig_b0ac0b3516bf5a1f5e1e",
+        "sig_b6cef7141960e47609db",
+        "sig_ac1969709a5803b42552"
+      ],
+      "derived_from": [
+        "sig_14307832041588be406c",
+        "sig_2440ecc2990383aef76c",
+        "sig_26e0e399a6a0d2f46ced",
+        "sig_a1e39b09bc5842d4c9e7",
+        "sig_b0ac0b3516bf5a1f5e1e",
+        "sig_b6cef7141960e47609db",
+        "sig_ac1969709a5803b42552"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.55,
+        "novelty": 0.35
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1833
+    },
+    {
+      "id": "stmt_99c657ea40bb00a82a2b",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331210121",
+      "text": "4 independent source channels address signals to this ground: epa-echo, fdic-locations, gbif-occurrences, inaturalist-observations.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_24b46c048cb7bf704a0d",
+        "sig_4b93a20e1808683f4a7d",
+        "sig_bd9d383bfe76c928bd55",
+        "sig_14307832041588be406c",
+        "sig_2440ecc2990383aef76c",
+        "sig_26e0e399a6a0d2f46ced",
+        "sig_a1e39b09bc5842d4c9e7",
+        "sig_b0ac0b3516bf5a1f5e1e",
+        "sig_b6cef7141960e47609db",
+        "sig_ac1969709a5803b42552"
+      ],
+      "derived_from": [
+        "sig_24b46c048cb7bf704a0d",
+        "sig_4b93a20e1808683f4a7d",
+        "sig_bd9d383bfe76c928bd55",
+        "sig_14307832041588be406c",
+        "sig_2440ecc2990383aef76c",
+        "sig_26e0e399a6a0d2f46ced",
+        "sig_a1e39b09bc5842d4c9e7",
+        "sig_b0ac0b3516bf5a1f5e1e",
+        "sig_b6cef7141960e47609db",
+        "sig_ac1969709a5803b42552"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.8,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1813
+    },
+    {
+      "id": "stmt_e0397b03a6757c85a214",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331210123",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, fdic-sod, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_831494ea2d9b567f531f",
+        "sig_b61d4b83b09b40f00579",
+        "sig_4d111765c29e18acae80",
+        "sig_29c015e916007882f850",
+        "sig_6d25edf3cee5bf2d207d"
+      ],
+      "derived_from": [
+        "sig_831494ea2d9b567f531f",
+        "sig_b61d4b83b09b40f00579",
+        "sig_4d111765c29e18acae80",
+        "sig_29c015e916007882f850",
+        "sig_6d25edf3cee5bf2d207d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_d3bf555f81fd76826758",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331210121",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_24b46c048cb7bf704a0d"
+      ],
+      "derived_from": [
+        "sig_24b46c048cb7bf704a0d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_060c4fedb02837b0851f",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331210123",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $855,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "derived_from": [
+        "sig_4d111765c29e18acae80"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    },
+    {
+      "id": "stmt_5519397a638862798cdf",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331210123",
+      "text": "2 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_29c015e916007882f850",
+        "sig_6d25edf3cee5bf2d207d"
+      ],
+      "derived_from": [
+        "sig_29c015e916007882f850",
+        "sig_6d25edf3cee5bf2d207d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.3333333333333333,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1104
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.063Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

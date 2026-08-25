@@ -1,0 +1,579 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211033",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 5,
+    "entities": 3,
+    "relations": 5,
+    "statements": 3,
+    "direct_signals": 5,
+    "direct_entities": 3,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 2,
+    "claim.map_note": 2
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "holds_reported_deposits": 2,
+    "branch_of": 3
+  },
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_c00711311ed11ab3f8ad",
+      "source": "fdic-locations",
+      "source_record_id": "225435",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4218,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "CUMBERLAND BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3057 Akers Mill Rd Se",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30339",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.46394602975992,
+          33.87887399824284
+        ]
+      },
+      "atlas_address": "F02.1331211033",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.46394602975992,
+          33.87887399824284
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9ccb3e1b479de50f0dba",
+      "source": "osm-notes",
+      "source_record_id": "5449444",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Unable to answer \"Is this still here?\" – Cobb County [16S GC 3374 5166] (Emergency Access Point) – https://osm.org/node/6816042283 via StreetComplete 63.4:\n\nNumber is wrong\n\nAttached photo(s):\nhttps://streetcomplete.app/p/363518.jpg"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.472665,
+          33.879496
+        ]
+      },
+      "atlas_address": "F02.1331211033",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.472665,
+          33.879496
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-11 00:30:21 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5449444",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-08-11 00:30:21 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "Unable to answer \"Is this still here?\" – Cobb County [16S GC 3374 5166] (Emergency Access Point) – https://osm.org/node/6816042283 via StreetComplete 63.4:\n\nNumber is wrong\n\nAttached photo(s):\nhttps://streetcomplete.app/p/363518.jpg",
+            "html": "<p dir=\"auto\">Unable to answer \"Is this still here?\" – Cobb&nbsp;County&nbsp;[16S&nbsp;GC&nbsp;3374&nbsp;5166] (Emergency&nbsp;Access&nbsp;Point) – <a href=\"https://osm.org/node/6816042283\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">node/6816042283</a> via StreetComplete 63.4:</p>\n\n<p dir=\"auto\">Number is wrong</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://streetcomplete.app/p/363518.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://streetcomplete.app/p/363518.jpg</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_35c4aa61db7371daead8",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:213",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 213,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Vinings Branch",
+        "deposits_usd": 95637000,
+        "address": "3020 Paces Mill Rd Se, Ste 150",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30339"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4655140323869,
+          33.8661360199871
+        ]
+      },
+      "atlas_address": "F02.1331211033",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4655140323869,
+          33.8661360199871
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_72db3192cd33298f6f6f",
+      "source": "fdic-sod",
+      "source_record_id": "2025:11063:1002",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 11063,
+        "branch_id": 1002,
+        "institution_name": "First-Citizens Bank & Trust Company",
+        "branch_name": "Cumberland Boulevard Branch",
+        "deposits_usd": 90493000,
+        "address": "3300 Cumberland Blvd Se",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30339"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4593759646916,
+          33.8752279960901
+        ]
+      },
+      "atlas_address": "F02.1331211033",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4593759646916,
+          33.8752279960901
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.324Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b7181a1869981fbe82dc",
+      "source": "osm-notes",
+      "source_record_id": "4301558",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "I think part of this building is missing here. The street in the middle is just down into the parking deck.\n\nvia StreetComplete 58.0"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4714555,
+          33.8651871
+        ]
+      },
+      "atlas_address": "F02.1331211033",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4714555,
+          33.8651871
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2024-06-21 13:49:41 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4301558",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2024-06-21 13:49:41 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "I think part of this building is missing here. The street in the middle is just down into the parking deck.\n\nvia StreetComplete 58.0",
+            "html": "<p dir=\"auto\">I think part of this building is missing here. The street in the middle is just down into the parking deck.</p>\n\n<p dir=\"auto\">via StreetComplete 58.0</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:11063:1002",
+      "type": "bank_branch",
+      "name": "Cumberland Boulevard Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "1002"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4593759646916,
+          33.8752279960901
+        ]
+      },
+      "atlas_address": "F02.1331211033",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_72db3192cd33298f6f6f"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:213",
+      "type": "bank_branch",
+      "name": "Vinings Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "213"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4655140323869,
+          33.8661360199871
+        ]
+      },
+      "atlas_address": "F02.1331211033",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_35c4aa61db7371daead8"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4218",
+      "type": "bank_branch",
+      "name": "CUMBERLAND BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4218"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.46394602975992,
+          33.87887399824284
+        ]
+      },
+      "atlas_address": "F02.1331211033",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c00711311ed11ab3f8ad"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_170ddb593c5472226e66",
+      "subject": "fdic-branch:20504:213",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 95637000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_35c4aa61db7371daead8"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_dd3ee5ef824f1d4812fa",
+      "subject": "fdic-branch:11063:1002",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:11063",
+      "value": {
+        "amount_usd": 90493000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_72db3192cd33298f6f6f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_6d81dd0951ab353530ab",
+      "subject": "fdic-branch:11063:1002",
+      "predicate": "branch_of",
+      "object": "fdic:11063",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_72db3192cd33298f6f6f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_99e513151c257cf5b1ab",
+      "subject": "fdic-branch:3510:4218",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c00711311ed11ab3f8ad"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_ed2c9e43b2776e3822a1",
+      "subject": "fdic-branch:20504:213",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_35c4aa61db7371daead8"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_b24ee39a7859fe8fd7f3",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331211033",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, fdic-sod, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_c00711311ed11ab3f8ad",
+        "sig_35c4aa61db7371daead8",
+        "sig_72db3192cd33298f6f6f",
+        "sig_9ccb3e1b479de50f0dba",
+        "sig_b7181a1869981fbe82dc"
+      ],
+      "derived_from": [
+        "sig_c00711311ed11ab3f8ad",
+        "sig_35c4aa61db7371daead8",
+        "sig_72db3192cd33298f6f6f",
+        "sig_9ccb3e1b479de50f0dba",
+        "sig_b7181a1869981fbe82dc"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_193e8687b1d29f0a94f3",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211033",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $186,130,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_35c4aa61db7371daead8",
+        "sig_72db3192cd33298f6f6f"
+      ],
+      "derived_from": [
+        "sig_35c4aa61db7371daead8",
+        "sig_72db3192cd33298f6f6f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1375
+    },
+    {
+      "id": "stmt_1430824b545224d48873",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331211033",
+      "text": "2 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_9ccb3e1b479de50f0dba",
+        "sig_b7181a1869981fbe82dc"
+      ],
+      "derived_from": [
+        "sig_9ccb3e1b479de50f0dba",
+        "sig_b7181a1869981fbe82dc"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.3333333333333333,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1104
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.096Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

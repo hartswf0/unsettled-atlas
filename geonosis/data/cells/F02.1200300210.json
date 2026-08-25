@@ -1,0 +1,489 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200300210",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "gbif-occurrences"
+  ],
+  "counts": {
+    "signals": 6,
+    "entities": 0,
+    "relations": 0,
+    "statements": 2,
+    "direct_signals": 6,
+    "direct_entities": 0,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "ecology.occurrence": 5
+  },
+  "entity_types": {},
+  "relation_predicates": {},
+  "statement_kinds": {
+    "ecological_observation_density": 1,
+    "regulated_environment_presence": 1
+  },
+  "signals": [
+    {
+      "id": "sig_d7f36c3b5f367664598e",
+      "source": "epa-echo",
+      "source_record_id": "110032959662",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "TET LP LINE 40 MP30.90",
+        "address": "9.8M NE OF BARATARIA BAY, GRAND ISLE, LA, 70358",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 18650,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1107571416067,
+          29.8269233675473
+        ]
+      },
+      "atlas_address": "F02.1200300210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1107571416067,
+          29.8269233675473
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110032959662",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 9600
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_36e00d1e6ad4ec4f2b15",
+      "source": "gbif-occurrences",
+      "source_record_id": "6130108379",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Smilax bona-nox L.",
+        "species": "Smilax bona-nox",
+        "vernacular_name": null,
+        "taxon_key": 5295574,
+        "species_key": 5295574,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 5,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.131819,
+          29.792075
+        ]
+      },
+      "atlas_address": "F02.1200300210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.131819,
+          29.792075
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-20T14:17:11.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.630Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6130108379",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_78ac455f4773510ba8a0",
+      "source": "gbif-occurrences",
+      "source_record_id": "6129919281",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Agkistrodon piscivorus (Lacépède, 1789)",
+        "species": "Agkistrodon piscivorus",
+        "vernacular_name": null,
+        "taxon_key": 9105722,
+        "species_key": 9105722,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 3,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.130822,
+          29.79103
+        ]
+      },
+      "atlas_address": "F02.1200300210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.130822,
+          29.79103
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-10T13:42:10.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.628Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6129919281",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_e857ad4688221202d029",
+      "source": "gbif-occurrences",
+      "source_record_id": "6130057789",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Taxodium distichum (L.) Rich.",
+        "species": "Taxodium distichum",
+        "vernacular_name": null,
+        "taxon_key": 2684191,
+        "species_key": 2684191,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 11,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.116248,
+          29.783301
+        ]
+      },
+      "atlas_address": "F02.1200300210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.116248,
+          29.783301
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-08T10:41:59.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.630Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6130057789",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_5cebd3151bff679c6267",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938444490",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Agkistrodon piscivorus (Lacépède, 1789)",
+        "species": "Agkistrodon piscivorus",
+        "vernacular_name": null,
+        "taxon_key": 9105722,
+        "species_key": 9105722,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.127989,
+          29.791633
+        ]
+      },
+      "atlas_address": "F02.1200300210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.127989,
+          29.791633
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-02T17:06:01.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.624Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938444490",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_a49e0c49287f0ebae422",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938371932",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Aramus guarauna (Linnaeus, 1766)",
+        "species": "Aramus guarauna",
+        "vernacular_name": null,
+        "taxon_key": 2474337,
+        "species_key": 2474337,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.122833,
+          29.793808
+        ]
+      },
+      "atlas_address": "F02.1200300210",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.122833,
+          29.793808
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-02T16:53:02.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.624Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938371932",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [],
+  "relations": [],
+  "statements": [
+    {
+      "id": "stmt_8ef780d94470e7882527",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200300210",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_d7f36c3b5f367664598e"
+      ],
+      "derived_from": [
+        "sig_d7f36c3b5f367664598e"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_44523c2837b4f7650ac3",
+      "kind": "ecological_observation_density",
+      "atlas_address": "F02.1200300210",
+      "text": "5 biodiversity observation records from 1 source channel address to this ground. This is observation density, not species abundance or complete ecological inventory.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_36e00d1e6ad4ec4f2b15",
+        "sig_5cebd3151bff679c6267",
+        "sig_78ac455f4773510ba8a0",
+        "sig_a49e0c49287f0ebae422",
+        "sig_e857ad4688221202d029"
+      ],
+      "derived_from": [
+        "sig_36e00d1e6ad4ec4f2b15",
+        "sig_5cebd3151bff679c6267",
+        "sig_78ac455f4773510ba8a0",
+        "sig_a49e0c49287f0ebae422",
+        "sig_e857ad4688221202d029"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.55,
+        "novelty": 0.25
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1292
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.085Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

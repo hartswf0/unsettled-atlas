@@ -1,0 +1,180 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331210231",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 1,
+    "entities": 1,
+    "relations": 2,
+    "statements": 1,
+    "direct_signals": 1,
+    "direct_entities": 1,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.branch_deposits": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 1,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_3c03d57300ac5a1e452f",
+      "source": "fdic-sod",
+      "source_record_id": "2025:16416:104",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 16416,
+        "branch_id": 104,
+        "institution_name": "FSNB, National Association",
+        "branch_name": "Conyers Branch",
+        "deposits_usd": 398000,
+        "address": "1436 Dogwood Dr Se",
+        "city": "Conyers",
+        "state": "GA",
+        "zip": "30013"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.9970300178961,
+          33.6522389872243
+        ]
+      },
+      "atlas_address": "F02.1331210231",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -83.9970300178961,
+          33.6522389872243
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.327Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:16416:104",
+      "type": "bank_branch",
+      "name": "Conyers Branch",
+      "identifiers": {
+        "fdic_cert": "16416",
+        "branch_id": "104"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -83.9970300178961,
+          33.6522389872243
+        ]
+      },
+      "atlas_address": "F02.1331210231",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_f75d380cd5f33d5279b7",
+      "subject": "fdic-branch:16416:104",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:16416",
+      "value": {
+        "amount_usd": 398000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_91f8914edca7e1ab24db",
+      "subject": "fdic-branch:16416:104",
+      "predicate": "branch_of",
+      "object": "fdic:16416",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_c863b3353633287eb58d",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331210231",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $398,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "derived_from": [
+        "sig_3c03d57300ac5a1e452f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.092Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

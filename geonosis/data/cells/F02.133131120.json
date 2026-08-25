@@ -1,0 +1,743 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.133131120",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-sod",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 7,
+    "entities": 3,
+    "relations": 6,
+    "statements": 4,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "money.branch_deposits": 3,
+    "ecology.occurrence": 2,
+    "memory.national_register_resource": 1,
+    "ecology.inaturalist_observation": 1
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "branch_of": 3,
+    "holds_reported_deposits": 3
+  },
+  "statement_kinds": {
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 3
+  },
+  "signals": [
+    {
+      "id": "sig_8bbbc1dabe3dc2680fbf",
+      "source": "inaturalist-observations",
+      "source_record_id": "394251984",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Antheraea polyphemus",
+        "common_name": "Polyphemus Moth",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4075722222,
+          34.0840416667
+        ]
+      },
+      "atlas_address": "F02.1331311202",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4075722222,
+          34.0840416667
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:20:52.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394251984",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Mountain Park, GA, USA",
+        "positional_accuracy": null
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6d998965c7239e32b0c1",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938356072",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Anolis carolinensis Voigt, 1832",
+        "species": "Anolis carolinensis",
+        "vernacular_name": null,
+        "taxon_key": 2466939,
+        "species_key": 2466939,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 12,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.536788,
+          34.109142
+        ]
+      },
+      "atlas_address": "F02.1331311201",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.536788,
+          34.109142
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T15:03:31.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938356072",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_bd502a4b7b854534f42f",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938260461",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Mimus polyglottos (Linnaeus, 1758)",
+        "species": "Mimus polyglottos",
+        "vernacular_name": null,
+        "taxon_key": 5231677,
+        "species_key": 5231677,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.494428,
+          34.106714
+        ]
+      },
+      "atlas_address": "F02.1331311203",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.494428,
+          34.106714
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T09:30:09.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938260461",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4cd0a17d9fed3682b000",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12437:100",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12437,
+        "branch_id": 100,
+        "institution_name": "Renasant Bank",
+        "branch_name": "East Woodstock Branch",
+        "deposits_usd": 45283000,
+        "address": "190 Village Ctr E",
+        "city": "Woodstock",
+        "state": "GA",
+        "zip": "30188"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4663610237028,
+          34.0876229918039
+        ]
+      },
+      "atlas_address": "F02.1331311202",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4663610237028,
+          34.0876229918039
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.326Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9872442177e8c4d647a7",
+      "source": "fdic-sod",
+      "source_record_id": "2025:20504:203",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 20504,
+        "branch_id": 203,
+        "institution_name": "Ameris Bank",
+        "branch_name": "Woodstock Square Branch",
+        "deposits_usd": 108309000,
+        "address": "159 Woodstock Square Ave",
+        "city": "Woodstock",
+        "state": "GA",
+        "zip": "30189"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.543223997831,
+          34.0846580192841
+        ]
+      },
+      "atlas_address": "F02.1331311201",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.543223997831,
+          34.0846580192841
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.329Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_dbd5b8b7c59c0274e29d",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:1000",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 1000,
+        "institution_name": "Regions Bank",
+        "branch_name": "Trickum Rd Branch",
+        "deposits_usd": 103132000,
+        "address": "12175 Highway 92",
+        "city": "Woodstock",
+        "state": "GA",
+        "zip": "30188"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4831529932484,
+          34.0881380178445
+        ]
+      },
+      "atlas_address": "F02.1331311203",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4831529932484,
+          34.0881380178445
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.325Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_3a29a787e416dde2c286",
+      "source": "nps-national-register",
+      "source_record_id": "95000736",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Woodstock Depot",
+        "resource_type": "building",
+        "address": "2 N. Main St. (GA 5)",
+        "city": "Woodstock",
+        "county": "Cherokee",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.51922168199997,
+          34.10057017100007
+        ]
+      },
+      "atlas_address": "F02.1331311201",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.51922168199997,
+          34.10057017100007
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1995-06-20T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.067Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{04CD0950-8B06-4E10-9B67-16F610E6558A}",
+        "src_date": 803606400000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:1000",
+      "type": "bank_branch",
+      "name": "Trickum Rd Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "1000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4831529932484,
+          34.0881380178445
+        ]
+      },
+      "atlas_address": "F02.1331311203",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:12437:100",
+      "type": "bank_branch",
+      "name": "East Woodstock Branch",
+      "identifiers": {
+        "fdic_cert": "12437",
+        "branch_id": "100"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4663610237028,
+          34.0876229918039
+        ]
+      },
+      "atlas_address": "F02.1331311202",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:20504:203",
+      "type": "bank_branch",
+      "name": "Woodstock Square Branch",
+      "identifiers": {
+        "fdic_cert": "20504",
+        "branch_id": "203"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.543223997831,
+          34.0846580192841
+        ]
+      },
+      "atlas_address": "F02.1331311201",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_9872442177e8c4d647a7"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_5bf54a5862bce317bffd",
+      "subject": "fdic-branch:20504:203",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:20504",
+      "value": {
+        "amount_usd": 108309000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_9872442177e8c4d647a7"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_8bf9d73993a5eeab599c",
+      "subject": "fdic-branch:12437:100",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12437",
+      "value": {
+        "amount_usd": 45283000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_9bc553437abfc313b5fd",
+      "subject": "fdic-branch:12368:1000",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 103132000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_31d698a7f641ed63969c",
+      "subject": "fdic-branch:20504:203",
+      "predicate": "branch_of",
+      "object": "fdic:20504",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_9872442177e8c4d647a7"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_8e2d9739579e5ff92e1f",
+      "subject": "fdic-branch:12368:1000",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_ffea8a9750b831e8457a",
+      "subject": "fdic-branch:12437:100",
+      "predicate": "branch_of",
+      "object": "fdic:12437",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_72f46c41b6c01412f936",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331311201",
+      "text": "3 independent source channels address signals to this ground: fdic-sod, gbif-occurrences, nps-national-register.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_9872442177e8c4d647a7",
+        "sig_6d998965c7239e32b0c1",
+        "sig_3a29a787e416dde2c286"
+      ],
+      "derived_from": [
+        "sig_9872442177e8c4d647a7",
+        "sig_6d998965c7239e32b0c1",
+        "sig_3a29a787e416dde2c286"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_15ab3f508d068efb6edb",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331311203",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $103,132,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "derived_from": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    },
+    {
+      "id": "stmt_4a0fa7b04a1fbd19a621",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331311202",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $45,283,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "derived_from": [
+        "sig_4cd0a17d9fed3682b000"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    },
+    {
+      "id": "stmt_683660c6bdd9b793b568",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331311201",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $108,309,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_9872442177e8c4d647a7"
+      ],
+      "derived_from": [
+        "sig_9872442177e8c4d647a7"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.075Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

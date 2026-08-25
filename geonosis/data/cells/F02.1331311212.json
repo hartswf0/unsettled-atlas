@@ -1,0 +1,669 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331311212",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "inaturalist-observations",
+    "nps-national-register",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 8,
+    "entities": 2,
+    "relations": 2,
+    "statements": 2,
+    "direct_signals": 8,
+    "direct_entities": 2,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 2,
+    "ecology.inaturalist_observation": 3,
+    "memory.national_register_resource": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1
+  },
+  "signals": [
+    {
+      "id": "sig_695b6511dcff8ce26b8c",
+      "source": "epa-echo",
+      "source_record_id": "110072190572",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "TOWN CENTER HEIGHTS",
+        "address": "AT THE EXISTING END OF ROBERTS TRAIL, MARIETTA, GA, 00000",
+        "county": null,
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 20000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5424627164093,
+          33.9535609535065
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5424627164093,
+          33.9535609535065
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110072190572",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 4567
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_3f0d836ea8ab8b9115f2",
+      "source": "inaturalist-observations",
+      "source_record_id": "394239817",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Prunus serotina",
+        "common_name": "black cherry",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "casual",
+        "captive": false,
+        "obscured": false,
+        "photos": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4957945553,
+          33.965974235
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4957945553,
+          33.965974235
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:33:45.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394239817",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Fawn Lake, Marietta, GA, US",
+        "positional_accuracy": 2
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8db20eeffe178d25e3b8",
+      "source": "inaturalist-observations",
+      "source_record_id": "394237189",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Carya",
+        "common_name": "hickories",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.496866921,
+          33.9664598415
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.496866921,
+          33.9664598415
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:24:13.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394237189",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Roswell Rd, Marietta, GA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_38944726d52c8b427434",
+      "source": "inaturalist-observations",
+      "source_record_id": "394236044",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Acer rubrum",
+        "common_name": "red maple",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.495688375,
+          33.9659552582
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.495688375,
+          33.9659552582
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T21:19:38.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394236044",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Roswell Rd, Marietta, GA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_84c490f97a61686b9cd9",
+      "source": "fdic-locations",
+      "source_record_id": "247157",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 7088,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "EAST LAKE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2201 Roswell Rd",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30062",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.48919198684823,
+          33.96992900128008
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.48919198684823,
+          33.96992900128008
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8a25b0075de39ac1c6d5",
+      "source": "fdic-locations",
+      "source_record_id": "186405",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3298,
+        "institution_name": "Truist Bank",
+        "branch_name": "SANDY PLAINS BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "1840 Sandy Plains Rd",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30066",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.51062996150489,
+          33.99403799511215
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.51062996150489,
+          33.99403799511215
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_4846c740082e33ecf5b9",
+      "source": "osm-notes",
+      "source_record_id": "5431864",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "\"No longer active fire station, closed down\"\nThe place has gone or never existed. A user of Organic Maps application has reported that the POI was visible on the map (see snapshot date below), but was not found on the ground.\nOSM snapshot date: 2026-07-14T00:42:02Z\nPOI name: Marietta Fire And Emergency Services Station 6\nPOI types: building amenity-fire_station\n #organicmaps android 2026.07.23-6-Google"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5339429,
+          33.9716027
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5339429,
+          33.9716027
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-02 12:22:18 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5431864",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-08-02 12:22:18 UTC",
+            "uid": 24375411,
+            "user": "Drone_guy1",
+            "user_url": "https://api.openstreetmap.org/user/Drone_guy1",
+            "action": "opened",
+            "text": "\"No longer active fire station, closed down\"\nThe place has gone or never existed. A user of Organic Maps application has reported that the POI was visible on the map (see snapshot date below), but was not found on the ground.\nOSM snapshot date: 2026-07-14T00:42:02Z\nPOI name: Marietta Fire And Emergency Services Station 6\nPOI types: building amenity-fire_station\n #organicmaps android 2026.07.23-6-Google",
+            "html": "<p dir=\"auto\">\"No longer active fire station, closed down\"\n<br />The place has gone or never existed. A user of Organic Maps application has reported that the POI was visible on the map (see snapshot date below), but was not found on the ground.\n<br />OSM snapshot date: 2026-07-14T00:42:02Z\n<br />POI name: Marietta Fire And Emergency Services Station 6\n<br />POI types: building amenity-fire_station\n<br /> #organicmaps android 2026.07.23-6-Google</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c313605deeb90b3660e5",
+      "source": "nps-national-register",
+      "source_record_id": "95000901",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Frobel--Knight--Borders House",
+        "resource_type": "building",
+        "address": "1001 Allgood Rd.",
+        "city": "Marietta",
+        "county": "Cobb",
+        "state": "GEORGIA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.52362532899997,
+          33.975340139000025
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.52362532899997,
+          33.975340139000025
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1995-07-21T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.067Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{7CAA3738-C9E9-47A0-8632-EC9B2F346D48}",
+        "src_date": 806284800000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3511:7088",
+      "type": "bank_branch",
+      "name": "EAST LAKE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "7088"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.48919198684823,
+          33.96992900128008
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_84c490f97a61686b9cd9"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3298",
+      "type": "bank_branch",
+      "name": "SANDY PLAINS BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3298"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.51062996150489,
+          33.99403799511215
+        ]
+      },
+      "atlas_address": "F02.1331311212",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_8a25b0075de39ac1c6d5"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_30950eca025e0179bb96",
+      "subject": "fdic-branch:3511:7088",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_84c490f97a61686b9cd9"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_6443bbab1d173891cd2f",
+      "subject": "fdic-branch:9846:3298",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8a25b0075de39ac1c6d5"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_a4764063a024b35cf4ee",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331311212",
+      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, inaturalist-observations, nps-national-register, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_695b6511dcff8ce26b8c",
+        "sig_84c490f97a61686b9cd9",
+        "sig_8a25b0075de39ac1c6d5",
+        "sig_38944726d52c8b427434",
+        "sig_3f0d836ea8ab8b9115f2",
+        "sig_8db20eeffe178d25e3b8",
+        "sig_c313605deeb90b3660e5",
+        "sig_4846c740082e33ecf5b9"
+      ],
+      "derived_from": [
+        "sig_695b6511dcff8ce26b8c",
+        "sig_84c490f97a61686b9cd9",
+        "sig_8a25b0075de39ac1c6d5",
+        "sig_38944726d52c8b427434",
+        "sig_3f0d836ea8ab8b9115f2",
+        "sig_8db20eeffe178d25e3b8",
+        "sig_c313605deeb90b3660e5",
+        "sig_4846c740082e33ecf5b9"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_bdb1ba160303c0a2e9e9",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331311212",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_695b6511dcff8ce26b8c"
+      ],
+      "derived_from": [
+        "sig_695b6511dcff8ce26b8c"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.111Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

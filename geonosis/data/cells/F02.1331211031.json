@@ -1,0 +1,799 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331211031",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 9,
+    "entities": 2,
+    "relations": 3,
+    "statements": 4,
+    "direct_signals": 9,
+    "direct_entities": 2,
+    "direct_statements": 4
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 1,
+    "money.branch_deposits": 1,
+    "ecology.inaturalist_observation": 4,
+    "claim.map_note": 2
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_ad630c0acf211d902edd",
+      "source": "epa-echo",
+      "source_record_id": "110072175715",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "WEST VILLAGE LOT 85",
+        "address": "2304 WEST VILLAGE JUNCTION, SMYRNA, GA, 00000",
+        "county": null,
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03130002",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4896498625406,
+          33.8415898868124
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4896498625406,
+          33.8415898868124
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110072175715",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 3550
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_522244972670c7f2f2be",
+      "source": "inaturalist-observations",
+      "source_record_id": "394317509",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Dioscorea polystachya",
+        "common_name": "Chinese yam",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4609698281,
+          33.8423784636
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4609698281,
+          33.8423784636
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:31:58.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394317509",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Atlanta, GA, US",
+        "positional_accuracy": 4
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_ab627300d84ee85686b1",
+      "source": "inaturalist-observations",
+      "source_record_id": "394317532",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Ampelopsis glandulosa",
+        "common_name": "Porcelain Berry",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4614828851,
+          33.8438800353
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4614828851,
+          33.8438800353
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:26:19.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394317532",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Atlanta, GA, US",
+        "positional_accuracy": 15
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e54d1855ca4a8920a77d",
+      "source": "inaturalist-observations",
+      "source_record_id": "394253999",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Clematis terniflora",
+        "common_name": "autumn clematis",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4622163799,
+          33.8420817472
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4622163799,
+          33.8420817472
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T22:24:17.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.679Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394253999",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Atlanta, GA, US",
+        "positional_accuracy": 20
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9e71869596bb78d2ce83",
+      "source": "inaturalist-observations",
+      "source_record_id": "394323856",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": null,
+        "common_name": null,
+        "iconic_taxon": null,
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4756866667,
+          33.8587033333
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4756866667,
+          33.8587033333
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T20:46:15.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394323856",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Paces Walk SE, Atlanta, GA, US",
+        "positional_accuracy": 40
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_2aa1655282242d38861d",
+      "source": "fdic-locations",
+      "source_record_id": "191888",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4277,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "WEST VININGS BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4567 S Cobb Dr Se",
+        "city": "Smyrna",
+        "state": "GA",
+        "zip": "30080",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.49920802586675,
+          33.84326297968778
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.49920802586675,
+          33.84326297968778
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c6d30c407b1e63da7d5e",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2635",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2635,
+        "institution_name": "Regions Bank",
+        "branch_name": "Vinings Smyrna Branch",
+        "deposits_usd": 133051000,
+        "address": "1650 Cumberland Pkwy Se",
+        "city": "Smyrna",
+        "state": "GA",
+        "zip": "30080"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4924160020856,
+          33.8483699894735
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4924160020856,
+          33.8483699894735
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.325Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_cd57b30cbbcf4d46bc54",
+      "source": "osm-notes",
+      "source_record_id": "4244811",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Separate hours for events office\n\nvia StreetComplete 57.4\n\nAttached photo(s):\nhttps://westnordost.de/p/212472.jpg"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5072129,
+          33.8752053
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.5072129,
+          33.8752053
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2024-05-13 19:48:06 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/4244811",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2024-05-13 19:48:06 UTC",
+            "uid": 14994176,
+            "user": "SamWhited",
+            "user_url": "https://api.openstreetmap.org/user/SamWhited",
+            "action": "opened",
+            "text": "Separate hours for events office\n\nvia StreetComplete 57.4\n\nAttached photo(s):\nhttps://westnordost.de/p/212472.jpg",
+            "html": "<p dir=\"auto\">Separate hours for events office</p>\n\n<p dir=\"auto\">via StreetComplete 57.4</p>\n\n<p dir=\"auto\">Attached photo(s):\n<br /><a href=\"https://westnordost.de/p/212472.jpg\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://westnordost.de/p/212472.jpg</a></p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_85a511524b53cf92704f",
+      "source": "osm-notes",
+      "source_record_id": "3816723",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Do the pipelines really go under people's houses here?"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4803915,
+          33.8462739
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4803915,
+          33.8462739
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2023-08-04 18:58:36 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/3816723",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2023-08-04 18:58:36 UTC",
+            "uid": 6641970,
+            "user": "CurlingMan13",
+            "user_url": "https://api.openstreetmap.org/user/CurlingMan13",
+            "action": "opened",
+            "text": "Do the pipelines really go under people's houses here?",
+            "html": "<p dir=\"auto\">Do the pipelines really go under people's houses here?</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:2635",
+      "type": "bank_branch",
+      "name": "Vinings Smyrna Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2635"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4924160020856,
+          33.8483699894735
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c6d30c407b1e63da7d5e"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4277",
+      "type": "bank_branch",
+      "name": "WEST VININGS BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4277"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.49920802586675,
+          33.84326297968778
+        ]
+      },
+      "atlas_address": "F02.1331211031",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_2aa1655282242d38861d"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_cc3410d0e6d80e82a78b",
+      "subject": "fdic-branch:12368:2635",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 133051000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c6d30c407b1e63da7d5e"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_16000b593652579d014e",
+      "subject": "fdic-branch:3510:4277",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_2aa1655282242d38861d"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_c6c13a6b8bf71a37180d",
+      "subject": "fdic-branch:12368:2635",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c6d30c407b1e63da7d5e"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_a784a40389109b113195",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331211031",
+      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ad630c0acf211d902edd",
+        "sig_2aa1655282242d38861d",
+        "sig_c6d30c407b1e63da7d5e",
+        "sig_522244972670c7f2f2be",
+        "sig_9e71869596bb78d2ce83",
+        "sig_ab627300d84ee85686b1",
+        "sig_e54d1855ca4a8920a77d",
+        "sig_85a511524b53cf92704f",
+        "sig_cd57b30cbbcf4d46bc54"
+      ],
+      "derived_from": [
+        "sig_ad630c0acf211d902edd",
+        "sig_2aa1655282242d38861d",
+        "sig_c6d30c407b1e63da7d5e",
+        "sig_522244972670c7f2f2be",
+        "sig_9e71869596bb78d2ce83",
+        "sig_ab627300d84ee85686b1",
+        "sig_e54d1855ca4a8920a77d",
+        "sig_85a511524b53cf92704f",
+        "sig_cd57b30cbbcf4d46bc54"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_487013070d575d026cff",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331211031",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_ad630c0acf211d902edd"
+      ],
+      "derived_from": [
+        "sig_ad630c0acf211d902edd"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_8abc9d2679004ab12f86",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331211031",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $133,051,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_c6d30c407b1e63da7d5e"
+      ],
+      "derived_from": [
+        "sig_c6d30c407b1e63da7d5e"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    },
+    {
+      "id": "stmt_b9fc8f4c2d60dfceb8d6",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331211031",
+      "text": "2 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_85a511524b53cf92704f",
+        "sig_cd57b30cbbcf4d46bc54"
+      ],
+      "derived_from": [
+        "sig_85a511524b53cf92704f",
+        "sig_cd57b30cbbcf4d46bc54"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.3333333333333333,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1104
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.096Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

@@ -1,0 +1,575 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213322",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 5,
+    "entities": 3,
+    "relations": 4,
+    "statements": 3,
+    "direct_signals": 5,
+    "direct_entities": 3,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 2,
+    "money.branch_deposits": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "branch_of": 3,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_205d5ad2aaa61d8d0679",
+      "source": "epa-echo",
+      "source_record_id": "110005721004",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SWIFT TRANSPORTATION CO",
+        "address": "5250 TRUMAN DR, DECATUR, GA, 30035",
+        "county": "DE KALB",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "Significant Violation",
+        "significant_noncompliance": "Y",
+        "programs_with_significant_noncompliance": 1,
+        "quarters_noncompliance_3y": 9,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "03070103",
+        "last_inspection": "2009-03-12T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1755296689356,
+          33.7144097866627
+        ]
+      },
+      "atlas_address": "F02.1331213322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1755296689356,
+          33.7144097866627
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110005721004",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 7734
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c072fec36cc511618b52",
+      "source": "fdic-locations",
+      "source_record_id": "191883",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4274,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "PANOLA ROAD BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "6138 Covington Hwy",
+        "city": "Lithonia",
+        "state": "GA",
+        "zip": "30058",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.16658099934766,
+          33.72331999881348
+        ]
+      },
+      "atlas_address": "F02.1331213322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.16658099934766,
+          33.72331999881348
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_df2c1f55c446e41f4447",
+      "source": "fdic-locations",
+      "source_record_id": "191419",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8458,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "LITHONIA CROSSING BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "6756 Covington Hwy",
+        "city": "Lithonia",
+        "state": "GA",
+        "zip": "30058",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.14286901435949,
+          33.71774800294905
+        ]
+      },
+      "atlas_address": "F02.1331213322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.14286901435949,
+          33.71774800294905
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1aa9ca171dcbd5c0f293",
+      "source": "fdic-sod",
+      "source_record_id": "2025:23220:841",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 23220,
+        "branch_id": 841,
+        "institution_name": "Woodforest National Bank",
+        "branch_name": "Lithonia Walmart Branch",
+        "deposits_usd": 1047000,
+        "address": "5401 Fairington Rd",
+        "city": "Lithonia",
+        "state": "GA",
+        "zip": "30038"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.166919125322,
+          33.700664301263
+        ]
+      },
+      "atlas_address": "F02.1331213322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.166919125322,
+          33.700664301263
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.331Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_04deb5821f6784e47ec5",
+      "source": "osm-notes",
+      "source_record_id": "3862014",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 2,
+        "latest": "Nah it’s good "
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.1723,
+          33.71415
+        ]
+      },
+      "atlas_address": "F02.1331213322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.1723,
+          33.71415
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2023-08-30 14:05:35 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/3862014",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2023-08-30 14:05:35 UTC",
+            "uid": 20136690,
+            "user": "Atlanta live fitness",
+            "user_url": "https://api.openstreetmap.org/user/Atlanta%20live%20fitness",
+            "action": "opened",
+            "text": "Steel mill wellness center 2500 Park Central blvd Suite A-1",
+            "html": "<p dir=\"auto\">Steel mill wellness center 2500 Park Central blvd Suite A-1</p>"
+          },
+          {
+            "date": "2023-09-24 09:43:27 UTC",
+            "uid": 20323896,
+            "user": "Tejas Ponce",
+            "user_url": "https://api.openstreetmap.org/user/Tejas%20Ponce",
+            "action": "commented",
+            "text": "Nah it’s good ",
+            "html": "<p dir=\"auto\">Nah it’s good </p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:23220:841",
+      "type": "bank_branch",
+      "name": "Lithonia Walmart Branch",
+      "identifiers": {
+        "fdic_cert": "23220",
+        "branch_id": "841"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.166919125322,
+          33.700664301263
+        ]
+      },
+      "atlas_address": "F02.1331213322",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_1aa9ca171dcbd5c0f293"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4274",
+      "type": "bank_branch",
+      "name": "PANOLA ROAD BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4274"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.16658099934766,
+          33.72331999881348
+        ]
+      },
+      "atlas_address": "F02.1331213322",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_c072fec36cc511618b52"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8458",
+      "type": "bank_branch",
+      "name": "LITHONIA CROSSING BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8458"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.14286901435949,
+          33.71774800294905
+        ]
+      },
+      "atlas_address": "F02.1331213322",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_df2c1f55c446e41f4447"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_f21247cc8a914964991d",
+      "subject": "fdic-branch:23220:841",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:23220",
+      "value": {
+        "amount_usd": 1047000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1aa9ca171dcbd5c0f293"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_57bcdd68d86f4ecdfe6c",
+      "subject": "fdic-branch:3511:8458",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_df2c1f55c446e41f4447"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_6fca170bd662131255dd",
+      "subject": "fdic-branch:3510:4274",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_c072fec36cc511618b52"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_b7d5b9ef58d23bdaa4a2",
+      "subject": "fdic-branch:23220:841",
+      "predicate": "branch_of",
+      "object": "fdic:23220",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_1aa9ca171dcbd5c0f293"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_2e8168fbd0eee7bf70fc",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213322",
+      "text": "4 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_205d5ad2aaa61d8d0679",
+        "sig_c072fec36cc511618b52",
+        "sig_df2c1f55c446e41f4447",
+        "sig_1aa9ca171dcbd5c0f293",
+        "sig_04deb5821f6784e47ec5"
+      ],
+      "derived_from": [
+        "sig_205d5ad2aaa61d8d0679",
+        "sig_c072fec36cc511618b52",
+        "sig_df2c1f55c446e41f4447",
+        "sig_1aa9ca171dcbd5c0f293",
+        "sig_04deb5821f6784e47ec5"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.8,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1813
+    },
+    {
+      "id": "stmt_0616407a2edf24f15fad",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331213322",
+      "text": "1 EPA-regulated facility addresses to this ground; 1 record carries a significant-noncompliance flag. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_205d5ad2aaa61d8d0679"
+      ],
+      "derived_from": [
+        "sig_205d5ad2aaa61d8d0679"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.48,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1725
+    },
+    {
+      "id": "stmt_dd49fd3272dd6f6d57ab",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331213322",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $1,047,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_1aa9ca171dcbd5c0f293"
+      ],
+      "derived_from": [
+        "sig_1aa9ca171dcbd5c0f293"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.110Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

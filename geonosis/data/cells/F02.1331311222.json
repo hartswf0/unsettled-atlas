@@ -1,0 +1,610 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331311222",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "gbif-occurrences",
+    "inaturalist-observations",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 7,
+    "entities": 1,
+    "relations": 1,
+    "statements": 3,
+    "direct_signals": 7,
+    "direct_entities": 1,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.bank_branch": 1,
+    "ecology.occurrence": 1,
+    "ecology.inaturalist_observation": 1,
+    "claim.map_note": 3
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 1
+  },
+  "statement_kinds": {
+    "representation_contestation": 1,
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1
+  },
+  "signals": [
+    {
+      "id": "sig_e5f2e0380eb4d5f18e50",
+      "source": "epa-echo",
+      "source_record_id": "110070047290",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "OLD JONESBORO LANDING LOT 44",
+        "address": "7957 RUDDER CIRCLE, GA, FULTON, UNKNOWN, GA, 11111",
+        "county": "CATOOSA COUNTY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 99999999,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3626658106081,
+          33.9656731525729
+        ]
+      },
+      "atlas_address": "F02.1331311222",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3626658106081,
+          33.9656731525729
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070047290",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 5978
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9cb1a8424e0343b8b77f",
+      "source": "inaturalist-observations",
+      "source_record_id": "394379126",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Misumessus",
+        "common_name": null,
+        "iconic_taxon": "Arachnida",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3450150951,
+          33.9843904722
+        ]
+      },
+      "atlas_address": "F02.1331311222",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3450150951,
+          33.9843904722
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25T11:50:30.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.677Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394379126",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Highland Park Trail, Sandy Springs, GA, US",
+        "positional_accuracy": 3076
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f1ae8ee0a796bb48d373",
+      "source": "fdic-locations",
+      "source_record_id": "191892",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4279,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "DUNWOODY PLACE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "8755 Roswell Rd",
+        "city": "Atlanta",
+        "state": "GA",
+        "zip": "30350",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3504320105307,
+          33.99634301848539
+        ]
+      },
+      "atlas_address": "F02.1331311222",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3504320105307,
+          33.99634301848539
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_111c691a1755bd6622da",
+      "source": "osm-notes",
+      "source_record_id": "5444205",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Townhomes \n #organicmaps android 2026.07.23-6-Google"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3476265,
+          33.993938
+        ]
+      },
+      "atlas_address": "F02.1331311222",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3476265,
+          33.993938
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-08 12:47:58 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5444205",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-08-08 12:47:58 UTC",
+            "uid": 24398473,
+            "user": "Optimus_23",
+            "user_url": "https://api.openstreetmap.org/user/Optimus_23",
+            "action": "opened",
+            "text": "Townhomes \n #organicmaps android 2026.07.23-6-Google",
+            "html": "<p dir=\"auto\">Townhomes \n<br /> #organicmaps android 2026.07.23-6-Google</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_24341771dda1de39f90b",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938367638",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Zenaida macroura carolinensis (Linnaeus, 1766)",
+        "species": "Zenaida macroura",
+        "vernacular_name": null,
+        "taxon_key": 6179181,
+        "species_key": 2495347,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 7,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.335997,
+          33.990116
+        ]
+      },
+      "atlas_address": "F02.1331311222",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.335997,
+          33.990116
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-02T10:26:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938367638",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_1a6e18592bf9ff56aeb7",
+      "source": "osm-notes",
+      "source_record_id": "2704846",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "ARIUM Morgan Falls apartment complex"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3627959,
+          33.9728841
+        ]
+      },
+      "atlas_address": "F02.1331311222",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3627959,
+          33.9728841
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2021-06-08 18:34:50 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/2704846",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2021-06-08 18:34:50 UTC",
+            "action": "opened",
+            "text": "ARIUM Morgan Falls apartment complex",
+            "html": "<p dir=\"auto\">ARIUM Morgan Falls apartment complex</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c60a7a3113cd75ffea2e",
+      "source": "osm-notes",
+      "source_record_id": "2470378",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Hemophilia of Georgia\n8607 Roberts Drive, Suite 150,\nSandy Springs, GA 30350"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3410298,
+          33.9918051
+        ]
+      },
+      "atlas_address": "F02.1331311222",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.3410298,
+          33.9918051
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2020-12-22 22:38:58 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/2470378",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2020-12-22 22:38:58 UTC",
+            "uid": 12375294,
+            "user": "8roh",
+            "user_url": "https://api.openstreetmap.org/user/8roh",
+            "action": "opened",
+            "text": "Hemophilia of Georgia\n8607 Roberts Drive, Suite 150,\nSandy Springs, GA 30350",
+            "html": "<p dir=\"auto\">Hemophilia of Georgia\n<br />8607 Roberts Drive, Suite 150,\n<br />Sandy Springs, GA 30350</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3510:4279",
+      "type": "bank_branch",
+      "name": "DUNWOODY PLACE BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4279"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3504320105307,
+          33.99634301848539
+        ]
+      },
+      "atlas_address": "F02.1331311222",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_f1ae8ee0a796bb48d373"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_824fad3abb8f887edcdb",
+      "subject": "fdic-branch:3510:4279",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_f1ae8ee0a796bb48d373"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_1c601df9aba57734a61c",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331311222",
+      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, gbif-occurrences, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_e5f2e0380eb4d5f18e50",
+        "sig_f1ae8ee0a796bb48d373",
+        "sig_24341771dda1de39f90b",
+        "sig_9cb1a8424e0343b8b77f",
+        "sig_111c691a1755bd6622da",
+        "sig_1a6e18592bf9ff56aeb7",
+        "sig_c60a7a3113cd75ffea2e"
+      ],
+      "derived_from": [
+        "sig_e5f2e0380eb4d5f18e50",
+        "sig_f1ae8ee0a796bb48d373",
+        "sig_24341771dda1de39f90b",
+        "sig_9cb1a8424e0343b8b77f",
+        "sig_111c691a1755bd6622da",
+        "sig_1a6e18592bf9ff56aeb7",
+        "sig_c60a7a3113cd75ffea2e"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_e4889209ffa8aedc79b8",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331311222",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_e5f2e0380eb4d5f18e50"
+      ],
+      "derived_from": [
+        "sig_e5f2e0380eb4d5f18e50"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_114b920831460b8641a4",
+      "kind": "representation_contestation",
+      "atlas_address": "F02.1331311222",
+      "text": "3 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_111c691a1755bd6622da",
+        "sig_1a6e18592bf9ff56aeb7",
+        "sig_c60a7a3113cd75ffea2e"
+      ],
+      "derived_from": [
+        "sig_111c691a1755bd6622da",
+        "sig_1a6e18592bf9ff56aeb7",
+        "sig_c60a7a3113cd75ffea2e"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.5,
+        "consequence": null,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.7,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.111Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

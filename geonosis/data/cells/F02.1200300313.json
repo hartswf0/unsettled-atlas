@@ -1,0 +1,863 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200300313",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 9,
+    "entities": 3,
+    "relations": 5,
+    "statements": 3,
+    "direct_signals": 9,
+    "direct_entities": 3,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 5,
+    "money.bank_branch": 3,
+    "money.branch_deposits": 1
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "branch_of": 4,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_698add8e3ac4c9046bef",
+      "source": "epa-echo",
+      "source_record_id": "110003348253",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "FRANCIS TORQUE SVC",
+        "address": "735 PETERS RD, HARVEY, LA, 70058",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0790196626188,
+          29.9013998545433
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0790196626188,
+          29.9013998545433
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003348253",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 57312
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_f764c8ca61c5d48e4fa6",
+      "source": "epa-echo",
+      "source_record_id": "110055038677",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "US ARMY COE",
+        "address": "MURPHY CANAL FROM BREAUX AVE, HARVEY, LA, 70000",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 20000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0660354135021,
+          29.8859018099054
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0660354135021,
+          29.8859018099054
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110055038677",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 58457
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_9f5ebb4fa8d5d89e5fae",
+      "source": "epa-echo",
+      "source_record_id": "110020042069",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BOH BROS. CONSTRUCTION CO",
+        "address": "DESTRHAN AVE TO PATRIOT ST, HARVEY, LA, 70000",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 64278,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0720163966638,
+          29.8710401154754
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0720163966638,
+          29.8710401154754
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110020042069",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 52675
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_415bbf6ad1c118e73d48",
+      "source": "epa-echo",
+      "source_record_id": "110003298137",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "OCHSNER CLINIC LAPALCO",
+        "address": "3909 LAPALCO BLVD, HARVEY, LA, 70058",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 1,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": "2023-05-31T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0872203828475,
+          29.8737703779079
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0872203828475,
+          29.8737703779079
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003298137",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 28958
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_8562e23616fb56a8a98d",
+      "source": "epa-echo",
+      "source_record_id": "110008393390",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "OUTBACK SPECIALTIES INC",
+        "address": "1912 COMMERCIAL DR STE C & D, HARVEY, LA, 70058",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 150,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0860085555292,
+          29.8757169587545
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0860085555292,
+          29.8757169587545
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110008393390",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 18801
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_02c5782ae3f57551a03a",
+      "source": "fdic-locations",
+      "source_record_id": "289584",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "5903",
+        "branch_id": 131,
+        "institution_name": "BankPlus",
+        "branch_name": "MANHATTAN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2800 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058",
+        "fi_uninum": 4024
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.04869001454146,
+          29.870796007975372
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.04869001454146,
+          29.870796007975372
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_084d3a0f378c8d1b7368",
+      "source": "fdic-locations",
+      "source_record_id": "425175",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "628",
+        "branch_id": 3373,
+        "institution_name": "JPMorgan Chase Bank, National Association",
+        "branch_name": "MARRERO BANKING CENTER BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "4100 Lapalco Blvd",
+        "city": "Marrero",
+        "state": "LA",
+        "zip": "70072",
+        "fi_uninum": 417
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.08977198511818,
+          29.8750439984142
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.08977198511818,
+          29.8750439984142
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_54e723320b9ea5132e9a",
+      "source": "fdic-locations",
+      "source_record_id": "202831",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "4297",
+        "branch_id": 373,
+        "institution_name": "Capital One, National Association",
+        "branch_name": "MANHATTAN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2412 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058",
+        "fi_uninum": 2818
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05133500790751,
+          29.876969992125865
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.05133500790751,
+          29.876969992125865
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_729a2b48cad5a59ad552",
+      "source": "fdic-sod",
+      "source_record_id": "2025:4297:373",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 4297,
+        "branch_id": 373,
+        "institution_name": "Capital One, National Association",
+        "branch_name": "Manhattan Branch",
+        "deposits_usd": 227486000,
+        "address": "2412 Manhattan Blvd",
+        "city": "Harvey",
+        "state": "LA",
+        "zip": "70058"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0513350079075,
+          29.8769699921259
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0513350079075,
+          29.8769699921259
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.777Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:4297:373",
+      "type": "bank_branch",
+      "name": "MANHATTAN BRANCH",
+      "identifiers": {
+        "fdic_cert": "4297",
+        "branch_id": "373"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05133500790751,
+          29.876969992125865
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_54e723320b9ea5132e9a",
+        "sig_729a2b48cad5a59ad552"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:5903:131",
+      "type": "bank_branch",
+      "name": "MANHATTAN BRANCH",
+      "identifiers": {
+        "fdic_cert": "5903",
+        "branch_id": "131"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.04869001454146,
+          29.870796007975372
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_02c5782ae3f57551a03a"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:628:3373",
+      "type": "bank_branch",
+      "name": "MARRERO BANKING CENTER BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "3373"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.08977198511818,
+          29.8750439984142
+        ]
+      },
+      "atlas_address": "F02.1200300313",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_084d3a0f378c8d1b7368"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_d8da5744f8e4c508ea74",
+      "subject": "fdic-branch:4297:373",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4297",
+      "value": {
+        "amount_usd": 227486000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_729a2b48cad5a59ad552"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_0c7040db794eabde6e76",
+      "subject": "fdic-branch:4297:373",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_729a2b48cad5a59ad552"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_3e12183d610bc698fd59",
+      "subject": "fdic-branch:628:3373",
+      "predicate": "branch_of",
+      "object": "fdic:628",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_084d3a0f378c8d1b7368"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_8a61471fa9c406577ddb",
+      "subject": "fdic-branch:4297:373",
+      "predicate": "branch_of",
+      "object": "fdic:4297",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_54e723320b9ea5132e9a"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_ce2f5f29cd7feee475c7",
+      "subject": "fdic-branch:5903:131",
+      "predicate": "branch_of",
+      "object": "fdic:5903",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_02c5782ae3f57551a03a"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_3e8463a1f854a11832ee",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200300313",
+      "text": "5 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_415bbf6ad1c118e73d48",
+        "sig_698add8e3ac4c9046bef",
+        "sig_8562e23616fb56a8a98d",
+        "sig_9f5ebb4fa8d5d89e5fae",
+        "sig_f764c8ca61c5d48e4fa6"
+      ],
+      "derived_from": [
+        "sig_415bbf6ad1c118e73d48",
+        "sig_698add8e3ac4c9046bef",
+        "sig_8562e23616fb56a8a98d",
+        "sig_9f5ebb4fa8d5d89e5fae",
+        "sig_f764c8ca61c5d48e4fa6"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.65,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1938
+    },
+    {
+      "id": "stmt_60412a9312db72091e81",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200300313",
+      "text": "3 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_415bbf6ad1c118e73d48",
+        "sig_698add8e3ac4c9046bef",
+        "sig_8562e23616fb56a8a98d",
+        "sig_9f5ebb4fa8d5d89e5fae",
+        "sig_f764c8ca61c5d48e4fa6",
+        "sig_02c5782ae3f57551a03a",
+        "sig_084d3a0f378c8d1b7368",
+        "sig_54e723320b9ea5132e9a",
+        "sig_729a2b48cad5a59ad552"
+      ],
+      "derived_from": [
+        "sig_415bbf6ad1c118e73d48",
+        "sig_698add8e3ac4c9046bef",
+        "sig_8562e23616fb56a8a98d",
+        "sig_9f5ebb4fa8d5d89e5fae",
+        "sig_f764c8ca61c5d48e4fa6",
+        "sig_02c5782ae3f57551a03a",
+        "sig_084d3a0f378c8d1b7368",
+        "sig_54e723320b9ea5132e9a",
+        "sig_729a2b48cad5a59ad552"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_05b5dddad6693fae01e7",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200300313",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $227,486,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_729a2b48cad5a59ad552"
+      ],
+      "derived_from": [
+        "sig_729a2b48cad5a59ad552"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.086Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

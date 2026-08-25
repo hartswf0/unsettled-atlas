@@ -1,0 +1,247 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331311203",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-sod",
+    "gbif-occurrences"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 1,
+    "relations": 2,
+    "statements": 1,
+    "direct_signals": 2,
+    "direct_entities": 1,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.branch_deposits": 1,
+    "ecology.occurrence": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 1,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_bd502a4b7b854534f42f",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938260461",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Mimus polyglottos (Linnaeus, 1758)",
+        "species": "Mimus polyglottos",
+        "vernacular_name": null,
+        "taxon_key": 5231677,
+        "species_key": 5231677,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.494428,
+          34.106714
+        ]
+      },
+      "atlas_address": "F02.1331311203",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.494428,
+          34.106714
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-01T09:30:09.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938260461",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_dbd5b8b7c59c0274e29d",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:1000",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 1000,
+        "institution_name": "Regions Bank",
+        "branch_name": "Trickum Rd Branch",
+        "deposits_usd": 103132000,
+        "address": "12175 Highway 92",
+        "city": "Woodstock",
+        "state": "GA",
+        "zip": "30188"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4831529932484,
+          34.0881380178445
+        ]
+      },
+      "atlas_address": "F02.1331311203",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4831529932484,
+          34.0881380178445
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.325Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:1000",
+      "type": "bank_branch",
+      "name": "Trickum Rd Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "1000"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4831529932484,
+          34.0881380178445
+        ]
+      },
+      "atlas_address": "F02.1331311203",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_9bc553437abfc313b5fd",
+      "subject": "fdic-branch:12368:1000",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 103132000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_8e2d9739579e5ff92e1f",
+      "subject": "fdic-branch:12368:1000",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_15ab3f508d068efb6edb",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331311203",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $103,132,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "derived_from": [
+        "sig_dbd5b8b7c59c0274e29d"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.110Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

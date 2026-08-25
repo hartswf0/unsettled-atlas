@@ -1,0 +1,380 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213332",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 2,
+    "relations": 3,
+    "statements": 2,
+    "direct_signals": 3,
+    "direct_entities": 2,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_0982273d7a90dedefbde",
+      "source": "fdic-locations",
+      "source_record_id": "186315",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "9846",
+        "branch_id": 3235,
+        "institution_name": "Truist Bank",
+        "branch_name": "SOUTH DEKALB BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "2727 Candler Rd",
+        "city": "Decatur",
+        "state": "GA",
+        "zip": "30034",
+        "fi_uninum": 6300
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.27348396008531,
+          33.7114350049344
+        ]
+      },
+      "atlas_address": "F02.1331213332",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.27348396008531,
+          33.7114350049344
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b5913b341bbafc81a9e8",
+      "source": "fdic-sod",
+      "source_record_id": "2025:11063:1190",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 11063,
+        "branch_id": 1190,
+        "institution_name": "First-Citizens Bank & Trust Company",
+        "branch_name": "South Dekalb Branch",
+        "deposits_usd": 38990000,
+        "address": "2630 Rainbow Way, Ste D",
+        "city": "Decatur",
+        "state": "GA",
+        "zip": "30034"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2706530170101,
+          33.7117012050875
+        ]
+      },
+      "atlas_address": "F02.1331213332",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2706530170101,
+          33.7117012050875
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.324Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_34ca6eb59d52d98b4a25",
+      "source": "osm-notes",
+      "source_record_id": "1250300",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 2,
+        "latest": "I suspect that Rainbow Forest Circle is correct for the \"inbound\" side."
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2652722,
+          33.7078633
+        ]
+      },
+      "atlas_address": "F02.1331213332",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.2652722,
+          33.7078633
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2017-12-27 13:15:09 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.002Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/1250300",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2017-12-27 13:15:09 UTC",
+            "uid": 2959379,
+            "user": "florinbadita_telenav",
+            "user_url": "https://api.openstreetmap.org/user/florinbadita_telenav",
+            "action": "opened",
+            "text": "1. Way 352387032 (residential): Misnamed double-digitized way: 'S Rainbow Dr' (352387037) vs 'Rainbow Forest Cir' (352387032)",
+            "html": "<p dir=\"auto\">1. <a href=\"https://www.openstreetmap.org/way/352387032\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">way/352387032</a> (residential): Misnamed double-digitized way: 'S Rainbow Dr' (352387037) vs 'Rainbow Forest Cir' (352387032)</p>"
+          },
+          {
+            "date": "2018-07-20 21:15:08 UTC",
+            "uid": 1946151,
+            "user": "Jack the Ripper",
+            "user_url": "https://api.openstreetmap.org/user/Jack%20the%20Ripper",
+            "action": "commented",
+            "text": "I suspect that Rainbow Forest Circle is correct for the \"inbound\" side.",
+            "html": "<p dir=\"auto\">I suspect that Rainbow Forest Circle is correct for the \"inbound\" side.</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:11063:1190",
+      "type": "bank_branch",
+      "name": "South Dekalb Branch",
+      "identifiers": {
+        "fdic_cert": "11063",
+        "branch_id": "1190"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2706530170101,
+          33.7117012050875
+        ]
+      },
+      "atlas_address": "F02.1331213332",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_b5913b341bbafc81a9e8"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:9846:3235",
+      "type": "bank_branch",
+      "name": "SOUTH DEKALB BRANCH",
+      "identifiers": {
+        "fdic_cert": "9846",
+        "branch_id": "3235"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.27348396008531,
+          33.7114350049344
+        ]
+      },
+      "atlas_address": "F02.1331213332",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_0982273d7a90dedefbde"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_fe35720b4b382c3ef57c",
+      "subject": "fdic-branch:11063:1190",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:11063",
+      "value": {
+        "amount_usd": 38990000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b5913b341bbafc81a9e8"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_c09f3f3c4ccd2c7638f2",
+      "subject": "fdic-branch:9846:3235",
+      "predicate": "branch_of",
+      "object": "fdic:9846",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_0982273d7a90dedefbde"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_d6d85697d33da39872a5",
+      "subject": "fdic-branch:11063:1190",
+      "predicate": "branch_of",
+      "object": "fdic:11063",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_b5913b341bbafc81a9e8"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_b3690be5b5fffad2cc33",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213332",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, fdic-sod, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_0982273d7a90dedefbde",
+        "sig_b5913b341bbafc81a9e8",
+        "sig_34ca6eb59d52d98b4a25"
+      ],
+      "derived_from": [
+        "sig_0982273d7a90dedefbde",
+        "sig_b5913b341bbafc81a9e8",
+        "sig_34ca6eb59d52d98b4a25"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_bf0f2e5d5a35ec953b89",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331213332",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $38,990,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_b5913b341bbafc81a9e8"
+      ],
+      "derived_from": [
+        "sig_b5913b341bbafc81a9e8"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.110Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

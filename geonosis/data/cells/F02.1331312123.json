@@ -1,0 +1,390 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331312123",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 2,
+    "relations": 4,
+    "statements": 2,
+    "direct_signals": 3,
+    "direct_entities": 2,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 1,
+    "money.branch_deposits": 2
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2,
+    "holds_reported_deposits": 2
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_5450212d73910e12f583",
+      "source": "epa-echo",
+      "source_record_id": "110070925240",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "LAWRENCEVILLE SUWANEE ROAD RETAIL CENTER",
+        "address": "LAWRENCEVILLE SUWANEE ROAD & BRYNFIELD PARKWAY, SUWANEE, GA, 30024",
+        "county": "GWINNETT COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 200,
+        "huc": "03070103",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0428898239742,
+          34.0221997512519
+        ]
+      },
+      "atlas_address": "F02.1331312123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0428898239742,
+          34.0221997512519
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070925240",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 4970
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8ce32ed01f6043863338",
+      "source": "fdic-sod",
+      "source_record_id": "2025:23647:4",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 23647,
+        "branch_id": 4,
+        "institution_name": "TIB National Association",
+        "branch_name": "Georgia Branch",
+        "deposits_usd": 198300000,
+        "address": "1550 N Brown Rd, Ste 150",
+        "city": "Lawrenceville",
+        "state": "GA",
+        "zip": "30043"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0729139857334,
+          33.994105008428
+        ]
+      },
+      "atlas_address": "F02.1331312123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0729139857334,
+          33.994105008428
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.331Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9ce4cc34293427c33c9b",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2636",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2636,
+        "institution_name": "Regions Bank",
+        "branch_name": "Duluth Branch",
+        "deposits_usd": 121515000,
+        "address": "1581 Satellite Blvd",
+        "city": "Duluth",
+        "state": "GA",
+        "zip": "30097"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0816230345898,
+          34.0017739888289
+        ]
+      },
+      "atlas_address": "F02.1331312123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.0816230345898,
+          34.0017739888289
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.325Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:2636",
+      "type": "bank_branch",
+      "name": "Duluth Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2636"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0816230345898,
+          34.0017739888289
+        ]
+      },
+      "atlas_address": "F02.1331312123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_9ce4cc34293427c33c9b"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:23647:4",
+      "type": "bank_branch",
+      "name": "Georgia Branch",
+      "identifiers": {
+        "fdic_cert": "23647",
+        "branch_id": "4"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.0729139857334,
+          33.994105008428
+        ]
+      },
+      "atlas_address": "F02.1331312123",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_8ce32ed01f6043863338"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_97152b75ea84fcc666b4",
+      "subject": "fdic-branch:12368:2636",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 121515000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_9ce4cc34293427c33c9b"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_9facb86fe6f68fd24417",
+      "subject": "fdic-branch:23647:4",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:23647",
+      "value": {
+        "amount_usd": 198300000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8ce32ed01f6043863338"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_7780701f5fc6bb505d57",
+      "subject": "fdic-branch:23647:4",
+      "predicate": "branch_of",
+      "object": "fdic:23647",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_8ce32ed01f6043863338"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_8aa9c099bbf620fdd414",
+      "subject": "fdic-branch:12368:2636",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_9ce4cc34293427c33c9b"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_a5623d86a3f88d44dfef",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1331312123",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_5450212d73910e12f583"
+      ],
+      "derived_from": [
+        "sig_5450212d73910e12f583"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1537
+    },
+    {
+      "id": "stmt_58a2207cce7d6cf49f9b",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331312123",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $319,815,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_9ce4cc34293427c33c9b",
+        "sig_8ce32ed01f6043863338"
+      ],
+      "derived_from": [
+        "sig_9ce4cc34293427c33c9b",
+        "sig_8ce32ed01f6043863338"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1375
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.113Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

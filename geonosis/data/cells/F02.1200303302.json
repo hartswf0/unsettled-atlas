@@ -1,0 +1,255 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200303302",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 1,
+    "relations": 3,
+    "statements": 1,
+    "direct_signals": 2,
+    "direct_entities": 1,
+    "direct_statements": 1
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 1
+  },
+  "entity_types": {
+    "bank_branch": 1
+  },
+  "relation_predicates": {
+    "branch_of": 2,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_4e4d2fa7d60866c5dad2",
+      "source": "fdic-locations",
+      "source_record_id": "261937",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "4977",
+        "branch_id": 1093,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "KENNER BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "285 W Esplanade Ave",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065",
+        "fi_uninum": 3319
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.27012296499224,
+          30.022455984737007
+        ]
+      },
+      "atlas_address": "F02.1200303302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.27012296499224,
+          30.022455984737007
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7e1b57748bed3a9efc37",
+      "source": "fdic-sod",
+      "source_record_id": "2025:4977:1093",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 4977,
+        "branch_id": 1093,
+        "institution_name": "First Horizon Bank",
+        "branch_name": "Kenner Branch",
+        "deposits_usd": 58549000,
+        "address": "285 W Esplanade Ave",
+        "city": "Kenner",
+        "state": "LA",
+        "zip": "70065"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2701229649922,
+          30.022455984737
+        ]
+      },
+      "atlas_address": "F02.1200303302",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.2701229649922,
+          30.022455984737
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.778Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:4977:1093",
+      "type": "bank_branch",
+      "name": "KENNER BRANCH",
+      "identifiers": {
+        "fdic_cert": "4977",
+        "branch_id": "1093"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.27012296499224,
+          30.022455984737007
+        ]
+      },
+      "atlas_address": "F02.1200303302",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_4e4d2fa7d60866c5dad2",
+        "sig_7e1b57748bed3a9efc37"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_7e75fe1e964c8d5c64c0",
+      "subject": "fdic-branch:4977:1093",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:4977",
+      "value": {
+        "amount_usd": 58549000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7e1b57748bed3a9efc37"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_35523bb61095746a7880",
+      "subject": "fdic-branch:4977:1093",
+      "predicate": "branch_of",
+      "object": "fdic:4977",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_4e4d2fa7d60866c5dad2"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_4279762cee44c5d32e31",
+      "subject": "fdic-branch:4977:1093",
+      "predicate": "branch_of",
+      "object": "fdic:4977",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7e1b57748bed3a9efc37"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_2dc79dff067005741b4d",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200303302",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $58,549,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_7e1b57748bed3a9efc37"
+      ],
+      "derived_from": [
+        "sig_7e1b57748bed3a9efc37"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.089Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

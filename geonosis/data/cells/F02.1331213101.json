@@ -1,0 +1,228 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331213101",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations"
+  ],
+  "counts": {
+    "signals": 2,
+    "entities": 2,
+    "relations": 2,
+    "statements": 0,
+    "direct_signals": 2,
+    "direct_entities": 2,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "money.bank_branch": 2
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2
+  },
+  "statement_kinds": {},
+  "signals": [
+    {
+      "id": "sig_081a4a2f43d00a6e3f27",
+      "source": "fdic-locations",
+      "source_record_id": "191820",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4191,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "OLD NATIONAL HIGHWAY BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5199 Old National Hwy",
+        "city": "College Park",
+        "state": "GA",
+        "zip": "30349",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.47311599947191,
+          33.61482598521506
+        ]
+      },
+      "atlas_address": "F02.1331213101",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.47311599947191,
+          33.61482598521506
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_28349c19ce2f5bf7f9e9",
+      "source": "fdic-locations",
+      "source_record_id": "191423",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3511",
+        "branch_id": 8459,
+        "institution_name": "Wells Fargo Bank, National Association",
+        "branch_name": "OLD NATIONAL BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "5060 Old Bill Cook Rd",
+        "city": "College Park",
+        "state": "GA",
+        "zip": "30349",
+        "fi_uninum": 2239
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.47366199664476,
+          33.614043995558305
+        ]
+      },
+      "atlas_address": "F02.1331213101",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.47366199664476,
+          33.614043995558305
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:3510:4191",
+      "type": "bank_branch",
+      "name": "OLD NATIONAL HIGHWAY BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4191"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.47311599947191,
+          33.61482598521506
+        ]
+      },
+      "atlas_address": "F02.1331213101",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_081a4a2f43d00a6e3f27"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3511:8459",
+      "type": "bank_branch",
+      "name": "OLD NATIONAL BRANCH",
+      "identifiers": {
+        "fdic_cert": "3511",
+        "branch_id": "8459"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.47366199664476,
+          33.614043995558305
+        ]
+      },
+      "atlas_address": "F02.1331213101",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_28349c19ce2f5bf7f9e9"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_50c3d90baa850a199a27",
+      "subject": "fdic-branch:3511:8459",
+      "predicate": "branch_of",
+      "object": "fdic:3511",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_28349c19ce2f5bf7f9e9"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_533621c7f5b0658e1948",
+      "subject": "fdic-branch:3510:4191",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_081a4a2f43d00a6e3f27"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [],
+  "generated_at": "2026-08-25T12:26:10.107Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

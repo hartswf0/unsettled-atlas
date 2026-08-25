@@ -1,0 +1,257 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.12003000",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "gbif-occurrences",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 0,
+    "relations": 0,
+    "statements": 1,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "memory.national_register_resource": 2,
+    "ecology.occurrence": 1
+  },
+  "entity_types": {},
+  "relation_predicates": {},
+  "statement_kinds": {
+    "institutional_memory_density": 1
+  },
+  "signals": [
+    {
+      "id": "sig_6f72146e9b75f8f2023a",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938332003",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Hemidactylus parvimaculatus Deraniyagala, 1953",
+        "species": "Hemidactylus parvimaculatus",
+        "vernacular_name": null,
+        "taxon_key": 5843310,
+        "species_key": 5843310,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 148239,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.854815,
+          29.719814
+        ]
+      },
+      "atlas_address": "F02.1200300020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.854815,
+          29.719814
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-04T08:19:50.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.624Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938332003",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_bf2552f2efdfde2a0d67",
+      "source": "nps-national-register",
+      "source_record_id": "06000317",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Kenilworth Plantation",
+        "resource_type": "building",
+        "address": "2931 Bayou Rd.",
+        "city": "St. Bernard",
+        "county": "St. Bernard",
+        "state": "LOUISIANA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "Unknown"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.80925799999994,
+          29.86728800000003
+        ]
+      },
+      "atlas_address": "F02.1200300013",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.80925799999994,
+          29.86728800000003
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "2006-04-24T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:24.838Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{9D4BB43E-720D-4C04-9C96-F27FB6FE07FD}",
+        "src_date": -27106617600000,
+        "src_scale": "Unknown"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ef777e640cbf0cfba476",
+      "source": "nps-national-register",
+      "source_record_id": "06000317",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Kenilworth Plantation House",
+        "resource_type": "building",
+        "address": "2931 Bayou Rd.",
+        "city": "St. Bernard",
+        "county": "St. Bernard",
+        "state": "LOUISIANA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.79862999999995,
+          29.866840000000025
+        ]
+      },
+      "atlas_address": "F02.1200300013",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.79862999999995,
+          29.866840000000025
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "2006-04-24T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:24.837Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{99148BAB-A88B-4156-BD76-60E52FAF6DC8}",
+        "src_date": 1145836800000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [],
+  "relations": [],
+  "statements": [
+    {
+      "id": "stmt_d865944f1b964fdd43f3",
+      "kind": "institutional_memory_density",
+      "atlas_address": "F02.1200300013",
+      "text": "2 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_bf2552f2efdfde2a0d67",
+        "sig_ef777e640cbf0cfba476"
+      ],
+      "derived_from": [
+        "sig_bf2552f2efdfde2a0d67",
+        "sig_ef777e640cbf0cfba476"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.15,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1417
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.043Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

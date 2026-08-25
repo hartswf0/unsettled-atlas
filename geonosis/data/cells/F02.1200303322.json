@@ -1,0 +1,937 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1200303322",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "fdic-locations",
+    "fdic-sod",
+    "gbif-occurrences",
+    "nps-national-register"
+  ],
+  "counts": {
+    "signals": 10,
+    "entities": 3,
+    "relations": 6,
+    "statements": 3,
+    "direct_signals": 10,
+    "direct_entities": 3,
+    "direct_statements": 3
+  },
+  "signal_predicates": {
+    "environment.regulated_facility": 2,
+    "money.bank_branch": 2,
+    "money.branch_deposits": 2,
+    "ecology.occurrence": 3,
+    "memory.national_register_resource": 1
+  },
+  "entity_types": {
+    "bank_branch": 3
+  },
+  "relation_predicates": {
+    "branch_of": 4,
+    "holds_reported_deposits": 2
+  },
+  "statement_kinds": {
+    "regulated_environment_presence": 1,
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_cbaa5abc35c80145b22e",
+      "source": "epa-echo",
+      "source_record_id": "110070104521",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BNSF RAILWAY- AVONDALE YARD",
+        "address": "2123 HWY 90, AVONDALE, LA, 70000",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 34810,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.183083200077,
+          29.9100278720067
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.183083200077,
+          29.9100278720067
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070104521",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 57012
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_b709b9f2868f525396c5",
+      "source": "epa-echo",
+      "source_record_id": "110032939060",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "LAKE CATAOUATCHE LEVEE",
+        "address": "LAKE CATAOUATCHE PUMP, AVONDALE, LA, 70000",
+        "county": "JEFFERSON",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 20000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1933275875771,
+          29.9004677035997
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.1933275875771,
+          29.9004677035997
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110032939060",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 33217
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_bcb34a98ed5281142c1f",
+      "source": "fdic-locations",
+      "source_record_id": "275303",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "628",
+        "branch_id": 2161,
+        "institution_name": "JPMorgan Chase Bank, National Association",
+        "branch_name": "HARAHAN BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "7129 Jefferson Hwy",
+        "city": "Harahan",
+        "state": "LA",
+        "zip": "70123",
+        "fi_uninum": 417
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.200582002383,
+          29.93607799985263
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.200582002383,
+          29.93607799985263
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_de4f61592eebb94fa353",
+      "source": "fdic-locations",
+      "source_record_id": "418523",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "28316",
+        "branch_id": 106,
+        "institution_name": "FIDELITY BANK",
+        "branch_name": "RIVER RIDGE BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "9099 Jefferson Hwy",
+        "city": "River Ridge",
+        "state": "LA",
+        "zip": "70123",
+        "fi_uninum": 41150
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.21340799062206,
+          29.94910900944336
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.21340799062206,
+          29.94910900944336
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ebb616cb160d77b0532f",
+      "source": "gbif-occurrences",
+      "source_record_id": "6129991151",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Impatiens hawkeri W.Bull",
+        "species": "Impatiens hawkeri",
+        "vernacular_name": null,
+        "taxon_key": 4193702,
+        "species_key": 4193702,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 7,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.203142,
+          29.928615
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.203142,
+          29.928615
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-15T16:24:28.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.629Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6129991151",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_13bf3a328c392a345a78",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938166727",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Myiarchus cinerascens (Lawrence, 1851)",
+        "species": "Myiarchus cinerascens",
+        "vernacular_name": null,
+        "taxon_key": 2483600,
+        "species_key": 2483600,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 222,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.192463,
+          29.932591
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.192463,
+          29.932591
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T10:06:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.624Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938166727",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_99ae9e8c49a0e9d5d1cb",
+      "source": "gbif-occurrences",
+      "source_record_id": "5938605366",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Setophaga discolor (Vieillot, 1809)",
+        "species": "Setophaga discolor",
+        "vernacular_name": null,
+        "taxon_key": 7341789,
+        "species_key": 7341789,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": 535,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.192592,
+          29.932259
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.192592,
+          29.932259
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-03T09:30:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.624Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/5938605366",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_e8d6412ff64ae7d8a551",
+      "source": "fdic-sod",
+      "source_record_id": "2025:28316:106",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 28316,
+        "branch_id": 106,
+        "institution_name": "FIDELITY BANK",
+        "branch_name": "River Ridge Branch",
+        "deposits_usd": 64787000,
+        "address": "9099 Jefferson Hwy",
+        "city": "River Ridge",
+        "state": "LA",
+        "zip": "70123"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2134079906221,
+          29.9491090094434
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.2134079906221,
+          29.9491090094434
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_fd79bcb1648408bb24ca",
+      "source": "fdic-sod",
+      "source_record_id": "2025:27752:2",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 27752,
+        "branch_id": 2,
+        "institution_name": "Hibernia Bank",
+        "branch_name": "Harahan Branch",
+        "deposits_usd": 52507000,
+        "address": "8384 Jefferson Hwy",
+        "city": "Harahan",
+        "state": "LA",
+        "zip": "70123"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2126650187246,
+          29.9380010179887
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.2126650187246,
+          29.9380010179887
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3ALA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_995c5429a16de953bc57",
+      "source": "nps-national-register",
+      "source_record_id": "83000511",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Harahan Elementary School",
+        "resource_type": "building",
+        "address": "6723 Jefferson Hwy",
+        "city": "Harahan",
+        "county": "Jefferson",
+        "state": "LOUISIANA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.19635903899996,
+          29.93818820100006
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.19635903899996,
+          29.93818820100006
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1983-04-14T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:24.835Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{509A4382-9FD3-4380-9F7F-62BEA8049316}",
+        "src_date": 419126400000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:27752:2",
+      "type": "bank_branch",
+      "name": "Harahan Branch",
+      "identifiers": {
+        "fdic_cert": "27752",
+        "branch_id": "2"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2126650187246,
+          29.9380010179887
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_fd79bcb1648408bb24ca"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:28316:106",
+      "type": "bank_branch",
+      "name": "RIVER RIDGE BRANCH",
+      "identifiers": {
+        "fdic_cert": "28316",
+        "branch_id": "106"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.21340799062206,
+          29.94910900944336
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_de4f61592eebb94fa353",
+        "sig_e8d6412ff64ae7d8a551"
+      ],
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "fdic-branch:628:2161",
+      "type": "bank_branch",
+      "name": "HARAHAN BRANCH",
+      "identifiers": {
+        "fdic_cert": "628",
+        "branch_id": "2161"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.200582002383,
+          29.93607799985263
+        ]
+      },
+      "atlas_address": "F02.1200303322",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_bcb34a98ed5281142c1f"
+      ],
+      "publication_region": "new-orleans"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_6e6dbc8d1f60f4ee284a",
+      "subject": "fdic-branch:27752:2",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:27752",
+      "value": {
+        "amount_usd": 52507000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_fd79bcb1648408bb24ca"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_eb03945682643dae1e98",
+      "subject": "fdic-branch:28316:106",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:28316",
+      "value": {
+        "amount_usd": 64787000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e8d6412ff64ae7d8a551"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_23515f8e991662b0872f",
+      "subject": "fdic-branch:28316:106",
+      "predicate": "branch_of",
+      "object": "fdic:28316",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_de4f61592eebb94fa353"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_b14af43b383b2d58aef1",
+      "subject": "fdic-branch:27752:2",
+      "predicate": "branch_of",
+      "object": "fdic:27752",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_fd79bcb1648408bb24ca"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_d46210501a2574fdab9b",
+      "subject": "fdic-branch:28316:106",
+      "predicate": "branch_of",
+      "object": "fdic:28316",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_e8d6412ff64ae7d8a551"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "rel_fa25ffc752cf9a2537ab",
+      "subject": "fdic-branch:628:2161",
+      "predicate": "branch_of",
+      "object": "fdic:628",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_bcb34a98ed5281142c1f"
+      ],
+      "provenance": {},
+      "publication_region": "new-orleans"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_1faf765dc5fce734d5bb",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200303322",
+      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, nps-national-register.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_b709b9f2868f525396c5",
+        "sig_cbaa5abc35c80145b22e",
+        "sig_bcb34a98ed5281142c1f",
+        "sig_de4f61592eebb94fa353",
+        "sig_e8d6412ff64ae7d8a551",
+        "sig_fd79bcb1648408bb24ca",
+        "sig_13bf3a328c392a345a78",
+        "sig_99ae9e8c49a0e9d5d1cb",
+        "sig_ebb616cb160d77b0532f",
+        "sig_995c5429a16de953bc57"
+      ],
+      "derived_from": [
+        "sig_b709b9f2868f525396c5",
+        "sig_cbaa5abc35c80145b22e",
+        "sig_bcb34a98ed5281142c1f",
+        "sig_de4f61592eebb94fa353",
+        "sig_e8d6412ff64ae7d8a551",
+        "sig_fd79bcb1648408bb24ca",
+        "sig_13bf3a328c392a345a78",
+        "sig_99ae9e8c49a0e9d5d1cb",
+        "sig_ebb616cb160d77b0532f",
+        "sig_995c5429a16de953bc57"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_58abf4aca80bc3779e32",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200303322",
+      "text": "2 EPA-regulated facilities address to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_b709b9f2868f525396c5",
+        "sig_cbaa5abc35c80145b22e"
+      ],
+      "derived_from": [
+        "sig_b709b9f2868f525396c5",
+        "sig_cbaa5abc35c80145b22e"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.41000000000000003,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1638
+    },
+    {
+      "id": "stmt_f2daf3b2dbf6461b9072",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1200303322",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $117,294,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_fd79bcb1648408bb24ca",
+        "sig_e8d6412ff64ae7d8a551"
+      ],
+      "derived_from": [
+        "sig_fd79bcb1648408bb24ca",
+        "sig_e8d6412ff64ae7d8a551"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.35,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1375
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.090Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

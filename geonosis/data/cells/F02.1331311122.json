@@ -1,0 +1,380 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.1331311122",
+  "regions": [
+    "atlanta"
+  ],
+  "sources": [
+    "fdic-locations",
+    "fdic-sod",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 3,
+    "entities": 2,
+    "relations": 3,
+    "statements": 2,
+    "direct_signals": 3,
+    "direct_entities": 2,
+    "direct_statements": 2
+  },
+  "signal_predicates": {
+    "money.bank_branch": 1,
+    "money.branch_deposits": 1,
+    "claim.map_note": 1
+  },
+  "entity_types": {
+    "bank_branch": 2
+  },
+  "relation_predicates": {
+    "branch_of": 2,
+    "holds_reported_deposits": 1
+  },
+  "statement_kinds": {
+    "multi_source_activity": 1,
+    "reported_deposit_stock": 1
+  },
+  "signals": [
+    {
+      "id": "sig_7512e9858b3e7b0819d9",
+      "source": "fdic-locations",
+      "source_record_id": "191721",
+      "predicate": "money.bank_branch",
+      "value": {
+        "cert": "3510",
+        "branch_id": 4593,
+        "institution_name": "Bank of America, National Association",
+        "branch_name": "WEST COBB BRANCH",
+        "main_office": 0,
+        "service_type": "FULL SERVICE - BRICK AND MORTAR",
+        "address": "3590 Dallas Hwy Sw",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30064",
+        "fi_uninum": 2238
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.65303397022795,
+          33.95433199776073
+        ]
+      },
+      "atlas_address": "F02.1331311122",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.65303397022795,
+          33.95433199776073
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-24T00:00:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
+        "provider": "FDIC BankFind Suite"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_d50beaafdfe79bdc05f8",
+      "source": "osm-notes",
+      "source_record_id": "5306490",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 2,
+        "latest": "what does this note mean?"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6629768,
+          33.9505579
+        ]
+      },
+      "atlas_address": "F02.1331311122",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.6629768,
+          33.9505579
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-05-23 17:35:35 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5306490",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-05-23 17:35:35 UTC",
+            "uid": 23000307,
+            "user": "blah-tutu",
+            "user_url": "https://api.openstreetmap.org/user/blah-tutu",
+            "action": "opened",
+            "text": "This whole commercial outlet needs to be done up, I will do one building however",
+            "html": "<p dir=\"auto\">This whole commercial outlet needs to be done up, I will do one building however</p>"
+          },
+          {
+            "date": "2026-05-23 20:02:36 UTC",
+            "uid": 23082099,
+            "user": "weblogdryads",
+            "user_url": "https://api.openstreetmap.org/user/weblogdryads",
+            "action": "commented",
+            "text": "what does this note mean?",
+            "html": "<p dir=\"auto\">what does this note mean?</p>"
+          }
+        ]
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_92e4ca8bf96eb8432890",
+      "source": "fdic-sod",
+      "source_record_id": "2025:12368:2711",
+      "predicate": "money.branch_deposits",
+      "value": {
+        "year": 2025,
+        "cert": 12368,
+        "branch_id": 2711,
+        "institution_name": "Regions Bank",
+        "branch_name": "Parkside West Branch",
+        "deposits_usd": 53393000,
+        "address": "250 Casteel Rd Sw",
+        "city": "Marietta",
+        "state": "GA",
+        "zip": "30064"
+      },
+      "unit": "USD",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6626105219334,
+          33.9493470974344
+        ]
+      },
+      "atlas_address": "F02.1331311122",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.6626105219334,
+          33.9493470974344
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": "2025-06-30",
+      "valid_to": "2025-06-30",
+      "retrieved_at": "2026-08-25T12:25:04.325Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
+        "provider": "FDIC Summary of Deposits",
+        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    }
+  ],
+  "entities": [
+    {
+      "id": "fdic-branch:12368:2711",
+      "type": "bank_branch",
+      "name": "Parkside West Branch",
+      "identifiers": {
+        "fdic_cert": "12368",
+        "branch_id": "2711"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.6626105219334,
+          33.9493470974344
+        ]
+      },
+      "atlas_address": "F02.1331311122",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_92e4ca8bf96eb8432890"
+      ],
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "fdic-branch:3510:4593",
+      "type": "bank_branch",
+      "name": "WEST COBB BRANCH",
+      "identifiers": {
+        "fdic_cert": "3510",
+        "branch_id": "4593"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.65303397022795,
+          33.95433199776073
+        ]
+      },
+      "atlas_address": "F02.1331311122",
+      "scope": null,
+      "properties": {},
+      "derived_from": [
+        "sig_7512e9858b3e7b0819d9"
+      ],
+      "publication_region": "atlanta"
+    }
+  ],
+  "relations": [
+    {
+      "id": "rel_95d2c473f8442f5e3577",
+      "subject": "fdic-branch:12368:2711",
+      "predicate": "holds_reported_deposits",
+      "object": "fdic:12368",
+      "value": {
+        "amount_usd": 53393000
+      },
+      "valid_from": "2025-06-30",
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_92e4ca8bf96eb8432890"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_328d5d285f154824a787",
+      "subject": "fdic-branch:12368:2711",
+      "predicate": "branch_of",
+      "object": "fdic:12368",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_92e4ca8bf96eb8432890"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "rel_cd963b2f83511b00a1a6",
+      "subject": "fdic-branch:3510:4593",
+      "predicate": "branch_of",
+      "object": "fdic:3510",
+      "value": null,
+      "valid_from": null,
+      "valid_to": null,
+      "epistemic": "REPORTED",
+      "derived_from": [
+        "sig_7512e9858b3e7b0819d9"
+      ],
+      "provenance": {},
+      "publication_region": "atlanta"
+    }
+  ],
+  "statements": [
+    {
+      "id": "stmt_567184e648d19b29db1f",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331311122",
+      "text": "3 independent source channels address signals to this ground: fdic-locations, fdic-sod, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_7512e9858b3e7b0819d9",
+        "sig_92e4ca8bf96eb8432890",
+        "sig_d50beaafdfe79bdc05f8"
+      ],
+      "derived_from": [
+        "sig_7512e9858b3e7b0819d9",
+        "sig_92e4ca8bf96eb8432890",
+        "sig_d50beaafdfe79bdc05f8"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1563
+    },
+    {
+      "id": "stmt_407416a34ad8d1bf11dc",
+      "kind": "reported_deposit_stock",
+      "atlas_address": "F02.1331311122",
+      "scope_id": null,
+      "text": "FDIC Summary of Deposits reports $53,393,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_92e4ca8bf96eb8432890"
+      ],
+      "derived_from": [
+        "sig_92e4ca8bf96eb8432890"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.3,
+        "evidence_diversity": null,
+        "uncertainty": 0.25,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1313
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.110Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

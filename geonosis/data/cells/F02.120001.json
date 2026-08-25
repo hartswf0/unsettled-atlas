@@ -1,0 +1,390 @@
+{
+  "schema": "geonosis-compiled-cell-v0.1",
+  "atlas_address": "F02.120001",
+  "regions": [
+    "new-orleans"
+  ],
+  "sources": [
+    "epa-echo",
+    "gbif-occurrences",
+    "nps-national-register",
+    "osm-notes"
+  ],
+  "counts": {
+    "signals": 5,
+    "entities": 0,
+    "relations": 0,
+    "statements": 1,
+    "direct_signals": 0,
+    "direct_entities": 0,
+    "direct_statements": 0
+  },
+  "signal_predicates": {
+    "memory.national_register_resource": 1,
+    "claim.map_note": 1,
+    "ecology.occurrence": 2,
+    "environment.regulated_facility": 1
+  },
+  "entity_types": {},
+  "relation_predicates": {},
+  "statement_kinds": {
+    "regulated_environment_presence": 1
+  },
+  "signals": [
+    {
+      "id": "sig_5811aa2c6e4c16da2af1",
+      "source": "epa-echo",
+      "source_record_id": "110030448237",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "VALENTINE FIELD CTB #2 PRODUCTION FACILITY",
+        "address": "VALENTINE FIELD, VALENTINE, LA, 70000",
+        "county": "LAFOURCHE",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 18550,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.4517216908471,
+          29.6180561787502
+        ]
+      },
+      "atlas_address": "F02.1200012121",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.4517216908471,
+          29.6180561787502
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110030448237",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 51697
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_dd5e70e886e77f900f5b",
+      "source": "gbif-occurrences",
+      "source_record_id": "6130036228",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Crotophaga sulcirostris Swainson, 1827",
+        "species": "Crotophaga sulcirostris",
+        "vernacular_name": null,
+        "taxon_key": 2496211,
+        "species_key": 2496211,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.003305,
+          29.659874
+        ]
+      },
+      "atlas_address": "F02.1200011211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.003305,
+          29.659874
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-19T13:04:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.630Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6130036228",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_1353c5dd568056aaa51a",
+      "source": "gbif-occurrences",
+      "source_record_id": "6129921322",
+      "predicate": "ecology.occurrence",
+      "value": {
+        "scientific_name": "Icterus bullockii (Swainson, 1827)",
+        "species": "Icterus bullockii",
+        "vernacular_name": null,
+        "taxon_key": 5229864,
+        "species_key": 5229864,
+        "basis_of_record": "HUMAN_OBSERVATION",
+        "occurrence_status": "PRESENT",
+        "coordinate_uncertainty_m": null,
+        "issues": [
+          "COORDINATE_ROUNDED",
+          "CONTINENT_DERIVED_FROM_COORDINATES",
+          "TAXON_ID_NOT_FOUND"
+        ]
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.012284,
+          29.661643
+        ]
+      },
+      "atlas_address": "F02.1200011211",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.012284,
+          29.661643
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-19T08:34:00.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.628Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-90.4862079631575+29.589351306817154%2C-89.6567920368425+29.589351306817154%2C-89.6567920368425+30.312848693182847%2C-90.4862079631575+30.312848693182847%2C-90.4862079631575+29.589351306817154%29%29&hasCoordinate=true&limit=160",
+        "source_url": "https://www.gbif.org/occurrence/6129921322",
+        "provider": "GBIF",
+        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
+        "license": "http://creativecommons.org/licenses/by/4.0/legalcode"
+      },
+      "raw": {
+        "country_code": "US",
+        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_c62eb7704556be8e7f83",
+      "source": "osm-notes",
+      "source_record_id": "5121040",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "\"Road closed\"\nOSM snapshot date: 2025-12-14T02:16:23Z\nPOI name: Gravolet Road\nPOI types: highway-residential\n #organicmaps android 2025.12.16-16-FDroid"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.8322111,
+          29.6070052
+        ]
+      },
+      "atlas_address": "F02.1200011132",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.8322111,
+          29.6070052
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-01-07 15:04:15 UTC",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:25.355Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&limit=160&closed=0",
+        "source_url": "https://www.openstreetmap.org/note/5121040",
+        "provider": "OpenStreetMap contributors",
+        "license": "ODbL 1.0"
+      },
+      "raw": {
+        "comments": [
+          {
+            "date": "2026-01-07 15:04:15 UTC",
+            "uid": 22488659,
+            "user": "Sario528",
+            "user_url": "https://api.openstreetmap.org/user/Sario528",
+            "action": "opened",
+            "text": "\"Road closed\"\nOSM snapshot date: 2025-12-14T02:16:23Z\nPOI name: Gravolet Road\nPOI types: highway-residential\n #organicmaps android 2025.12.16-16-FDroid",
+            "html": "<p dir=\"auto\">\"Road closed\"\n<br />OSM snapshot date: 2025-12-14T02:16:23Z\n<br />POI name: Gravolet Road\n<br />POI types: highway-residential\n<br /> #organicmaps android 2025.12.16-16-FDroid</p>"
+          }
+        ]
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_64eb0183ea45e2377515",
+      "source": "nps-national-register",
+      "source_record_id": "82000451",
+      "predicate": "memory.national_register_resource",
+      "value": {
+        "name": "Harlem Plantation House",
+        "resource_type": "building",
+        "address": "W of Pointe a la Hache on LA 39",
+        "city": "Pointe a la Hache",
+        "county": "Plaquemines",
+        "state": "LOUISIANA",
+        "national_historic_landmark": null,
+        "status": "Listed",
+        "extant": "Unknown",
+        "map_method": "Derived by XY event point or centroid generation",
+        "source_accuracy": "+/- 12 meters"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.90272509699997,
+          29.624706083000035
+        ]
+      },
+      "atlas_address": "F02.1200011122",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.90272509699997,
+          29.624706083000035
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": "1982-10-26T00:00:00.000Z",
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:25:24.838Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
+        "provider": "National Park Service",
+        "source": "National Register of Historic Places -- National Park Service",
+        "originator": "National Register of Historic Places -- National Park Service"
+      },
+      "raw": {
+        "geom_id": "{A1FAB958-13EE-4718-80A9-C1D3A4B76104}",
+        "src_date": 404438400000,
+        "src_scale": "1:24000"
+      },
+      "publication_region": "new-orleans"
+    }
+  ],
+  "entities": [],
+  "relations": [],
+  "statements": [
+    {
+      "id": "stmt_28065068cda3590b2475",
+      "kind": "regulated_environment_presence",
+      "atlas_address": "F02.1200012121",
+      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_5811aa2c6e4c16da2af1"
+      ],
+      "derived_from": [
+        "sig_5811aa2c6e4c16da2af1"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": 0.33,
+        "evidence_diversity": 0.25,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1537
+    }
+  ],
+  "generated_at": "2026-08-25T12:26:10.032Z",
+  "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
+}

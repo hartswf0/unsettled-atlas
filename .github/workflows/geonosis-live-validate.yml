@@ -7,7 +7,7 @@ on:
       - 'geonosis-*.js'
       - 'icosa-syntegrity-live.html'
       - 'geonosis.html'
-      - 'tests/geonosis-provider-smoke.mjs'
+      - 'tests/geonosis-*.mjs'
       - '.github/workflows/geonosis-live-validate.yml'
   push:
     branches:
@@ -20,7 +20,7 @@ on:
       - 'geonosis-*.js'
       - 'icosa-syntegrity-live.html'
       - 'geonosis.html'
-      - 'tests/geonosis-provider-smoke.mjs'
+      - 'tests/geonosis-*.mjs'
       - '.github/workflows/geonosis-live-validate.yml'
   workflow_dispatch:
 
@@ -72,12 +72,14 @@ jobs:
           grep -F '2026-08-25.signal-start-v1' icosa-syntegrity-live.html >/dev/null
           grep -F 'icosa-syntegrity-live.html?build=' geonosis.html >/dev/null
 
-      - name: Verify delayed adapters cannot miss startup
+      - name: Execute delayed-adapter startup race
+        run: node tests/geonosis-startup-smoke.mjs
+
+      - name: Verify delayed adapters expose runtime health
         shell: bash
         run: |
           set -euo pipefail
           grep -F 'var geoStartupRegisterBase=registerLiveSource' geonosis-startup.js >/dev/null
-          grep -F 'setTimeout(function(){geoStartupKick' geonosis-startup.js >/dev/null
           grep -F 'REGISTERING' geonosis-startup.js >/dev/null
           grep -F 'STARTING' geonosis-startup.js >/dev/null
           grep -F 'IDLE without a stated gate is a runtime fault' geonosis-startup.js >/dev/null
@@ -117,5 +119,6 @@ jobs:
           grep -F 'AIRCRAFT CORS BASE URL' geonosis-source-controls.js >/dev/null
           grep -F 'aircraft proxy/base URL not configured' icosa-live-motion.js >/dev/null
 
-      - name: Smoke public provider contracts
+      - name: Report current public-provider health
+        continue-on-error: true
         run: node tests/geonosis-provider-smoke.mjs

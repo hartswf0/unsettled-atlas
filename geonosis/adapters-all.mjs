@@ -1,7 +1,25 @@
 import { ADAPTERS as CORE, DEFAULT_SOURCES as CORE_DEFAULTS } from './adapters.mjs';
 import { WAVE1_ADAPTERS, WAVE1_GLOBAL_DEFAULTS } from './adapters-wave1.mjs';
+import { normalizeSignal } from './schema.mjs';
 
-export const ADAPTERS = { ...CORE, ...WAVE1_ADAPTERS };
+async function echoWithStrictTimeSemantics(ctx) {
+  const signals = await WAVE1_ADAPTERS['epa-echo'](ctx);
+  return signals.map(s => {
+    const lastInspection = s.observed_at;
+    return normalizeSignal({
+      ...s,
+      id: undefined,
+      observed_at: null,
+      value: { ...s.value, last_inspection: lastInspection }
+    });
+  });
+}
+
+export const ADAPTERS = {
+  ...CORE,
+  ...WAVE1_ADAPTERS,
+  'epa-echo': echoWithStrictTimeSemantics
+};
 
 function haversineKm(aLat, aLon, bLat, bLon) {
   const R = 6371.0088, d2r = Math.PI / 180;

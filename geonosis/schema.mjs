@@ -48,6 +48,7 @@ export function normalizeSignal(input) {
     unit: input.unit ?? null,
     geometry: input.geometry ?? null,
     atlas_address: input.atlas_address ?? null,
+    atlas_address_basis: input.atlas_address_basis ?? null,
     epistemic,
     observed_at: input.observed_at ?? null,
     valid_from: input.valid_from ?? null,
@@ -83,6 +84,10 @@ export function validateSignal(s) {
   if (s?.geometry?.type === 'Point') {
     const [lon, lat] = s.geometry.coordinates || [];
     if (!Number.isFinite(lon) || !Number.isFinite(lat)) errors.push('bad point geometry');
+  }
+  if (s?.atlas_address_basis?.representative_point) {
+    const [lon, lat] = s.atlas_address_basis.representative_point;
+    if (!Number.isFinite(lon) || !Number.isFinite(lat)) errors.push('bad atlas address basis point');
   }
   if (s?.confidence != null && (!Number.isFinite(s.confidence) || s.confidence < 0 || s.confidence > 1)) {
     errors.push('confidence must be 0..1');

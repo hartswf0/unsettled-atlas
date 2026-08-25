@@ -22,10 +22,22 @@ body{display:grid;place-items:center}
     })
   ]).then(function (parts) {
     var html = parts[0], inject = parts[1];
+    var cull = [
+      'var liveVisibleBinsUnculled = liveVisibleBins;',
+      'liveVisibleBins = function (depth) {',
+      '  var bins = liveVisibleBinsUnculled(depth);',
+      '  Object.keys(bins).forEach(function (slug) {',
+      '    var c = cellFromSlug(slug);',
+      '    if (!c || !facingCamera(cellCentre(c))) delete bins[slug];',
+      '  });',
+      '  return bins;',
+      '};'
+    ].join('\n');
     var needle = '})();';
     var at = html.lastIndexOf(needle);
     if (at < 0) throw new Error('main ICOSA closure not found');
-    html = html.slice(0, at) + '\n/* --- ICOSA LIVE DATA HARNESS --- */\n' + inject + '\n' + html.slice(at);
+    html = html.slice(0, at) + '\n/* --- ICOSA LIVE DATA HARNESS --- */\n' + inject +
+      '\n/* keep live observations on the visible side of the folded world */\n' + cull + '\n' + html.slice(at);
     document.open();
     document.write(html);
     document.close();

@@ -1,0 +1,63 @@
+name: Geonosis compiled ground
+
+on:
+  push:
+    branches:
+      - main
+      - geonosis-wave25
+    paths:
+      - 'geonosis/compile-ground.mjs'
+      - 'geonosis/publish.mjs'
+      - 'geonosis/adapters.mjs'
+      - 'geonosis/adapters-all.mjs'
+      - 'geonosis/adapters-wave1.mjs'
+      - 'geonosis/adapters-wave2.mjs'
+      - 'geonosis/harvest.mjs'
+      - 'geonosis/graph.mjs'
+      - 'geonosis/infer.mjs'
+      - 'geonosis/infer-graph.mjs'
+      - 'package.json'
+      - '.github/workflows/geonosis-compile-ground.yml'
+  schedule:
+    - cron: '17 10 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: geonosis-compiled-ground-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Compile Atlanta and New Orleans reference ground
+        run: npm run geonosis:compile-ground
+
+      - name: Validate published prefix semantics
+        run: npm run geonosis:validate-ground
+
+      - name: Commit refreshed static ground when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'geonosis-compiler'
+          git config user.email 'actions@users.noreply.github.com'
+          git add geonosis/data
+          if git diff --cached --quiet; then
+            echo 'compiled ground unchanged'
+            exit 0
+          fi
+          git commit -m 'Refresh compiled Geonosis ground'
+          git push origin "HEAD:${GITHUB_REF_NAME}"

@@ -32,6 +32,8 @@ ICOSA_LIVE.registerSource(spec)
 ICOSA_LIVE.poll(sourceId)
 ```
 
+The core distinction is between **global sources** and **attention-scoped sources**. Global sources may answer any cell from one indexed snapshot. Attention-scoped sources only answer the cell recorded in their coverage metadata. The renderer and panel both enforce that distinction.
+
 ## Source classes
 
 ### USGS earthquakes

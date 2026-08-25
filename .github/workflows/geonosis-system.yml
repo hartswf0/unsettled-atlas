@@ -1,0 +1,54 @@
+name: Geonosis system contract
+
+on:
+  push:
+    branches:
+      - feature/geonosis-system-remake
+      - main
+    paths:
+      - 'geonosis/system-*.mjs'
+      - 'geonosis/compile-system.mjs'
+      - 'geonosis/db/**'
+      - 'geonosis-map/**'
+      - 'package.json'
+      - '.github/workflows/geonosis-system.yml'
+  pull_request:
+    paths:
+      - 'geonosis/system-*.mjs'
+      - 'geonosis/compile-system.mjs'
+      - 'geonosis/db/**'
+      - 'geonosis-map/**'
+      - 'package.json'
+      - '.github/workflows/geonosis-system.yml'
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Existing evidence and V1 contracts stay green
+        run: |
+          npm run geonosis:test
+          npm run geonosis:v1-test
+      - name: System backplane is executable and deduplicating
+        run: npm run geonosis:system-test
+      - name: Syntax check system modules
+        run: |
+          node --check geonosis/system-backplane.mjs
+          node --check geonosis/system-rules.mjs
+          node --check geonosis/compile-system.mjs
+          node --check geonosis/system-index.mjs
+      - name: Map contains no staged geography
+        shell: bash
+        run: |
+          set -euo pipefail
+          ! grep -F '33.749' geonosis-map/index.html
+          ! grep -F 'actorDefs' geonosis-map/index.html
+          ! grep -F 'timeline=[' geonosis-map/index.html
+          ! grep -F 'SYNTHETIC TEST EVENT' geonosis-map/index.html
+          grep -F "const BASE='../geonosis/system-data/'" geonosis-map/index.html >/dev/null
+          grep -F 'The map refuses to fabricate one.' geonosis-map/index.html >/dev/null

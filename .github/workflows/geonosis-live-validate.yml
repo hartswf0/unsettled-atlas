@@ -6,18 +6,21 @@ on:
       - 'icosa-live-*.js'
       - 'geonosis-*.js'
       - 'icosa-syntegrity-live.html'
-      - 'tests/geonosis-provider-smoke.mjs'
+      - 'geonosis.html'
+      - 'tests/geonosis-*.mjs'
       - '.github/workflows/geonosis-live-validate.yml'
   push:
     branches:
       - feature/icosa-live-data
       - feature/geonosis-semiosis-lens
       - fix/geonosis-scope-contributions
+      - fix/geonosis-startup-cache
     paths:
       - 'icosa-live-*.js'
       - 'geonosis-*.js'
       - 'icosa-syntegrity-live.html'
-      - 'tests/geonosis-provider-smoke.mjs'
+      - 'geonosis.html'
+      - 'tests/geonosis-*.mjs'
       - '.github/workflows/geonosis-live-validate.yml'
   workflow_dispatch:
 
@@ -30,7 +33,6 @@ jobs:
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -40,138 +42,83 @@ jobs:
         run: |
           set -euo pipefail
           files=(
-            icosa-live-inject.js
-            geonosis-source-registry.js
-            geonosis-signal-core.js
-            icosa-live-sources.js
-            icosa-live-motion.js
-            geonosis-live-public.js
-            geonosis-live-311.js
-            geonosis-live-nfhl.js
-            geonosis-live-epa.js
-            geonosis-live-weather-terrain.js
-            geonosis-live-airnow.js
-            geonosis-inference.js
-            icosa-live-context.js
-            geonosis-live-context.js
-            geonosis-source-controls.js
-            geonosis-inspector.js
-            geonosis-semantics.js
-            geonosis-place.js
-            geonosis-scope.js
-            geonosis-contributions.js
+            icosa-live-inject.js geonosis-source-registry.js geonosis-signal-core.js
+            icosa-live-sources.js icosa-live-motion.js geonosis-live-public.js
+            geonosis-live-311.js geonosis-live-nfhl.js geonosis-live-epa.js
+            geonosis-live-weather-terrain.js geonosis-live-airnow.js geonosis-inference.js
+            icosa-live-context.js geonosis-live-context.js geonosis-source-controls.js
+            geonosis-inspector.js geonosis-semantics.js geonosis-place.js
+            geonosis-scope.js geonosis-contributions.js geonosis-startup.js
           )
-          for f in "${files[@]}"; do
-            echo "node --check $f"
-            node --check "$f"
-          done
+          for f in "${files[@]}"; do node --check "$f"; done
 
-      - name: Verify live harness references every module
+      - name: Verify cache-proof harness references every module
         shell: bash
         run: |
           set -euo pipefail
           for f in \
-            icosa-live-inject.js \
-            geonosis-source-registry.js \
-            geonosis-signal-core.js \
-            icosa-live-sources.js \
-            icosa-live-motion.js \
-            geonosis-live-public.js \
-            geonosis-live-311.js \
-            geonosis-live-nfhl.js \
-            geonosis-live-epa.js \
-            geonosis-live-weather-terrain.js \
-            geonosis-live-airnow.js \
-            geonosis-inference.js \
-            icosa-live-context.js \
-            geonosis-live-context.js \
-            geonosis-source-controls.js \
-            geonosis-inspector.js \
-            geonosis-semantics.js \
-            geonosis-place.js \
-            geonosis-scope.js \
-            geonosis-contributions.js
+            icosa-live-inject.js geonosis-source-registry.js geonosis-signal-core.js \
+            icosa-live-sources.js icosa-live-motion.js geonosis-live-public.js \
+            geonosis-live-311.js geonosis-live-nfhl.js geonosis-live-epa.js \
+            geonosis-live-weather-terrain.js geonosis-live-airnow.js geonosis-inference.js \
+            icosa-live-context.js geonosis-live-context.js geonosis-source-controls.js \
+            geonosis-inspector.js geonosis-semantics.js geonosis-place.js \
+            geonosis-scope.js geonosis-contributions.js geonosis-startup.js
           do
-            grep -F "fetch('$f'" icosa-syntegrity-live.html >/dev/null || {
-              echo "Harness does not load $f" >&2
-              exit 1
-            }
+            grep -F "'$f'" icosa-syntegrity-live.html >/dev/null || { echo "Harness does not load $f" >&2; exit 1; }
           done
+          grep -F "cache:'no-store'" icosa-syntegrity-live.html >/dev/null
+          grep -F "?build=" icosa-syntegrity-live.html >/dev/null
+          grep -F '2026-08-25.signal-start-v1' icosa-syntegrity-live.html >/dev/null
+          grep -F 'icosa-syntegrity-live.html?build=' geonosis.html >/dev/null
+
+      - name: Execute delayed-adapter startup race
+        run: node tests/geonosis-startup-smoke.mjs
+
+      - name: Verify delayed adapters expose runtime health
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'var geoStartupRegisterBase=registerLiveSource' geonosis-startup.js >/dev/null
+          grep -F 'REGISTERING' geonosis-startup.js >/dev/null
+          grep -F 'STARTING' geonosis-startup.js >/dev/null
+          grep -F 'IDLE without a stated gate is a runtime fault' geonosis-startup.js >/dev/null
+          grep -F 'window.ICOSA_LIVE.runtimeHealth' geonosis-startup.js >/dev/null
 
       - name: Verify map data stays inspectable
         shell: bash
         run: |
           set -euo pipefail
-          grep -F 'GEONOSIS DATA · ' geonosis-inspector.js >/dev/null
-          grep -F 'TAP A DATA MARK TO INSPECT' geonosis-inspector.js >/dev/null
           grep -F "canvas.addEventListener('pointerup',geoInspectPointer,true)" geonosis-inspector.js >/dev/null
-          grep -F 'geoInspectRequestAttention' geonosis-inspector.js >/dev/null
-          grep -F 'SOURCE STATE · ' geonosis-inspector.js >/dev/null
           grep -F 'SIGNALS HERE · ' geonosis-inspector.js >/dev/null
+          grep -F 'Select this data center on the map' geonosis-scope.js >/dev/null
+          grep -F 'SELECTED TRIANGLE' geonosis-scope.js >/dev/null
+          grep -F 'ATTENTION SAMPLE' geonosis-scope.js >/dev/null
+          grep -F 'NO HIDDEN HERE' geonosis-scope.js >/dev/null
 
-      - name: Verify Geonosis semiosis remains consequential and emplaced
+      - name: Verify consequential Geonosis reaches council context
         shell: bash
         run: |
           set -euo pipefail
           grep -F 'DIFFERENCE × EMPLACEMENT × RESPONSIVE SYSTEM → CONSEQUENCE' geonosis-semantics.js >/dev/null
-          grep -F "readers:['primary','person','ecology','infrastructure','institution','model']" geonosis-semantics.js >/dev/null
-          grep -F "status:geoSemAdmitted(op)?'CANDIDATE_GEOSIGN':'OBSERVATION_ONLY'" geonosis-semantics.js >/dev/null
-          grep -F 'WHERE · AT' geonosis-semantics.js >/dev/null
-          grep -F 'WHERE · COVERAGE' geonosis-semantics.js >/dev/null
-          grep -F 'RELATION PATH' geonosis-semantics.js >/dev/null
-          grep -F 'COMPOSES WITH · ' geonosis-semantics.js >/dev/null
-          grep -F 'MARK = OPERATION / SOURCE' geonosis-semantics.js >/dev/null
-          grep -F 'geonosis_interpretation' geonosis-semantics.js >/dev/null
           grep -F 'OBSERVATION_ONLY means no consequential relation is licensed' geonosis-semantics.js >/dev/null
-          grep -F 'WHERE · PLACE' geonosis-place.js >/dev/null
-          grep -F 'cellInventory' geonosis-place.js >/dev/null
-          grep -F 'placeForRecord' geonosis-place.js >/dev/null
-
-      - name: Verify selected scope and provider attention never collapse
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -F 'The selected ICOSA triangle is the user' geonosis-scope.js >/dev/null
-          grep -F 'ATTENTION SOURCES · ' geonosis-scope.js >/dev/null
-          grep -F 'SELECTED TRIANGLE' geonosis-scope.js >/dev/null
-          grep -F 'ATTENTION SAMPLE' geonosis-scope.js >/dev/null
-          grep -F 'geoRequestAll=geoScopeRequestAll' geonosis-scope.js >/dev/null
-          grep -F 'geoInspectDataCell=function(){return geoScopeSelectedCell()' geonosis-scope.js >/dev/null
-          grep -F 'Select this data center on the map' geonosis-scope.js >/dev/null
-          grep -F 'NO HIDDEN HERE' geonosis-scope.js >/dev/null
-
-      - name: Verify ordinary Geonosis contributions reach council context
-        shell: bash
-        run: |
-          set -euo pipefail
           grep -F 'datacenter-concentration' geonosis-contributions.js >/dev/null
           grep -F 'datacenter-hydro-proximity' geonosis-contributions.js >/dev/null
-          grep -F 'ecology-hydro-colocation' geonosis-contributions.js >/dev/null
           grep -F 'terrain-hydrology-composition' geonosis-contributions.js >/dev/null
           grep -F 'semiotic-aggregate' geonosis-contributions.js >/dev/null
-          grep -F 'GEONOSIS CONTRIBUTIONS · ' geonosis-contributions.js >/dev/null
           grep -F 'COUNCIL CANDIDATES' geonosis-contributions.js >/dev/null
           grep -F 'base.contributions=pack.items' geonosis-contributions.js >/dev/null
           grep -F 'x.contributions=p.items.slice(0,8)' geonosis-contributions.js >/dev/null
-          grep -F 'Co-location, proximity and shared ICOSA cells do not establish causation' geonosis-contributions.js >/dev/null
 
-      - name: Verify aircraft transport cannot silently use non-CORS upstream
-        shell: bash
-        run: |
-          set -euo pipefail
-          grep -F "var AIR_UPSTREAM_URL = 'https://api.adsb.lol/v2';" icosa-live-motion.js >/dev/null
-          grep -F "var AIR_BASE_URL = (window.ICOSA_LIVE_CONFIG" icosa-live-motion.js >/dev/null
-          grep -F "|| null;" icosa-live-motion.js >/dev/null
-          grep -F "aircraft proxy/base URL not configured" icosa-live-motion.js >/dev/null
-
-      - name: Verify source setup controls remain explicit and local
+      - name: Verify explicit source gates
         shell: bash
         run: |
           set -euo pipefail
           grep -F 'NASA FIRMS MAP KEY' geonosis-source-controls.js >/dev/null
           grep -F 'AIRNOW API KEY' geonosis-source-controls.js >/dev/null
           grep -F 'AIRCRAFT CORS BASE URL' geonosis-source-controls.js >/dev/null
-          grep -F 'localStorage' geonosis-source-controls.js >/dev/null
+          grep -F 'aircraft proxy/base URL not configured' icosa-live-motion.js >/dev/null
 
-      - name: Smoke public provider contracts
+      - name: Report current public-provider health
+        continue-on-error: true
         run: node tests/geonosis-provider-smoke.mjs

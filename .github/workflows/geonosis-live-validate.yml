@@ -56,6 +56,7 @@ jobs:
             geonosis-source-controls.js
             geonosis-inspector.js
             geonosis-semantics.js
+            geonosis-place.js
           )
           for f in "${files[@]}"; do
             echo "node --check $f"
@@ -83,7 +84,8 @@ jobs:
             geonosis-live-context.js \
             geonosis-source-controls.js \
             geonosis-inspector.js \
-            geonosis-semantics.js
+            geonosis-semantics.js \
+            geonosis-place.js
           do
             grep -F "fetch('$f'" icosa-syntegrity-live.html >/dev/null || {
               echo "Harness does not load $f" >&2
@@ -116,6 +118,9 @@ jobs:
           grep -F 'MARK = OPERATION / SOURCE' geonosis-semantics.js >/dev/null
           grep -F 'geonosis_interpretation' geonosis-semantics.js >/dev/null
           grep -F 'OBSERVATION_ONLY means no consequential relation is licensed' geonosis-semantics.js >/dev/null
+          grep -F 'WHERE · PLACE' geonosis-place.js >/dev/null
+          grep -F 'cellInventory' geonosis-place.js >/dev/null
+          grep -F 'placeForRecord' geonosis-place.js >/dev/null
 
       - name: Verify aircraft transport cannot silently use non-CORS upstream
         shell: bash

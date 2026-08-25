@@ -27,9 +27,10 @@ body{display:grid;place-items:center}
     fetch('geonosis-inference.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-inference.js '+r.status);return r.text();}),
     fetch('icosa-live-context.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-context.js '+r.status);return r.text();}),
     fetch('geonosis-live-context.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-context.js '+r.status);return r.text();}),
-    fetch('geonosis-source-controls.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-source-controls.js '+r.status);return r.text();})
+    fetch('geonosis-source-controls.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-source-controls.js '+r.status);return r.text();}),
+    fetch('geonosis-inspector.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-inspector.js '+r.status);return r.text();})
   ]).then(function(parts){
-    var html=parts[0],inject=parts[1],registry=parts[2],signalCore=parts[3],sources=parts[4],motion=parts[5],geoPublic=parts[6],geo311=parts[7],geoNfhl=parts[8],geoEpa=parts[9],geoWeatherTerrain=parts[10],geoAir=parts[11],geoInference=parts[12],modelContext=parts[13],geoContext=parts[14],geoControls=parts[15];
+    var html=parts[0],inject=parts[1],registry=parts[2],signalCore=parts[3],sources=parts[4],motion=parts[5],geoPublic=parts[6],geo311=parts[7],geoNfhl=parts[8],geoEpa=parts[9],geoWeatherTerrain=parts[10],geoAir=parts[11],geoInference=parts[12],modelContext=parts[13],geoContext=parts[14],geoControls=parts[15],geoInspector=parts[16];
     var preconfig=[
       'window.ICOSA_LIVE_CONFIG = window.ICOSA_LIVE_CONFIG || {};',
       'if (!window.ICOSA_LIVE_CONFIG.datacenterUrl) window.ICOSA_LIVE_CONFIG.datacenterUrl =',
@@ -95,7 +96,8 @@ body{display:grid;place-items:center}
       '\n/* scoped observations only paint the ground they actually queried */\n'+guards+
       '\n/* --- ICOSA LIVE → MODEL CONTEXT BRIDGE --- */\n'+modelContext+
       '\n/* --- GEONOSIS → MODEL CONTEXT BRIDGE --- */\n'+geoContext+
-      '\n/* --- GEONOSIS LABELED SOURCE SETUP --- */\n'+geoControls+'\n'+html.slice(at);
+      '\n/* --- GEONOSIS LABELED SOURCE SETUP --- */\n'+geoControls+
+      '\n/* --- GEONOSIS MAP INSPECTOR --- */\n'+geoInspector+'\n'+html.slice(at);
     document.open();document.write(html);document.close();
   }).catch(function(err){document.getElementById('boot').textContent='LIVE WORLD FAILED · '+String(err&&err.message||err);});
 })();

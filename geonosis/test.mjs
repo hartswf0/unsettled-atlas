@@ -1,11 +1,29 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
+import { ADAPTERS, defaultSourcesFor } from './adapters-all.mjs';
 import { createAddressor } from './icosa-address.mjs';
 import { addressBasis, representativePoint } from './geometry.mjs';
 import { normalizeSignal, pointGeometry, validateSignal } from './schema.mjs';
 import { inferStatements } from './infer.mjs';
 
 const A = createAddressor();
+
+// Every executable adapter must at least load as program text without making
+// the offline contract depend on the network.
+for (const id of [
+  'usgs-earthquakes','nws-alerts','osm-notes','wikipedia-geosearch','eonet',
+  'gbif-occurrences','inaturalist-observations','epa-echo','nps-national-register',
+  'nola-building-permits','nola-code-enforcement','atlanta-historic-buildings',
+  'atlanta-rezoning-cases','usaspending-county'
+]) assert.equal(typeof ADAPTERS[id], 'function', `adapter did not load: ${id}`);
+
+const atlDefaults = defaultSourcesFor({ lat: 33.749, lon: -84.388, radiusKm: 10 });
+assert(atlDefaults.includes('atlanta-historic-buildings'));
+assert(atlDefaults.includes('atlanta-rezoning-cases'));
+assert(!atlDefaults.includes('nola-building-permits'));
+const nolaDefaults = defaultSourcesFor({ lat: 29.9511, lon: -90.0715, radiusKm: 10 });
+assert(nolaDefaults.includes('nola-building-permits'));
+assert(nolaDefaults.includes('nola-code-enforcement'));
 
 // Address format and prefix invariance: deeper ground must remain inside its parent.
 for (const [lon, lat] of [[-84.388, 33.749], [-90.0715, 29.9511], [0, 0], [139.6917, 35.6895], [151.2093, -33.8688]]) {
@@ -100,6 +118,8 @@ for (const s of statements) {
 process.stdout.write(JSON.stringify({
   ok: true,
   tests: {
+    executable_adapters_load: true,
+    regional_defaults: true,
     address_prefix: true,
     root_face_identity: true,
     source_geometry_preserved: true,
@@ -107,6 +127,7 @@ process.stdout.write(JSON.stringify({
     signal_validation: true,
     deterministic_inference: true
   },
+  adapters: Object.keys(ADAPTERS).sort(),
   inference_kinds: [...kinds].sort(),
   atlanta: A.addressPoint(-84.388, 33.749, 10),
   new_orleans: A.addressPoint(-90.0715, 29.9511, 10)

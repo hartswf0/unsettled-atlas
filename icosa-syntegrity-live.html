@@ -27,9 +27,13 @@ body{display:grid;place-items:center}
     fetch('icosa-live-motion.js', { cache: 'no-cache' }).then(function (r) {
       if (!r.ok) throw new Error('icosa-live-motion.js ' + r.status);
       return r.text();
+    }),
+    fetch('icosa-live-context.js', { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error('icosa-live-context.js ' + r.status);
+      return r.text();
     })
   ]).then(function (parts) {
-    var html = parts[0], inject = parts[1], sources = parts[2], motion = parts[3];
+    var html = parts[0], inject = parts[1], sources = parts[2], motion = parts[3], modelContext = parts[4];
     var preconfig = [
       'window.ICOSA_LIVE_CONFIG = window.ICOSA_LIVE_CONFIG || {};',
       'if (!window.ICOSA_LIVE_CONFIG.datacenterUrl) window.ICOSA_LIVE_CONFIG.datacenterUrl =',
@@ -85,7 +89,8 @@ body{display:grid;place-items:center}
       '\n/* stable upstream defaults before source adapters evaluate */\n' + preconfig +
       '\n/* --- ICOSA LIVE SOURCE ADAPTERS --- */\n' + sources +
       '\n/* --- ICOSA LIVE MOTION ADAPTER --- */\n' + motion +
-      '\n/* scoped observations only paint the ground they actually queried */\n' + guards + '\n' +
+      '\n/* scoped observations only paint the ground they actually queried */\n' + guards +
+      '\n/* --- ICOSA LIVE → MODEL CONTEXT BRIDGE --- */\n' + modelContext + '\n' +
       html.slice(at);
     document.open();
     document.write(html);

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#f2efe7">
+<title>GEONOSIS · MAP</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+<style>
+:root{--paper:#f2efe7;--ink:#111513;--muted:#686d68;--line:rgba(17,21,19,.36);--material:#2166ac;--afford:#1b7f5b;--institution:#161918;--representation:#b75b22;--mismatch:#c1272d;--panel:rgba(242,239,231,.94)}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--paper);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}button,input{font:inherit}button{cursor:pointer}
+#map{position:absolute;inset:0}.leaflet-tile-pane{filter:grayscale(1) contrast(.82) brightness(1.08);opacity:.76}.leaflet-control-attribution{font-size:8px!important;background:rgba(242,239,231,.85)!important;color:#333!important}.leaflet-control-zoom{display:none}
+.top{position:absolute;z-index:900;left:max(10px,env(safe-area-inset-left));right:max(10px,env(safe-area-inset-right));top:max(10px,env(safe-area-inset-top));display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}.brand,.statebox{pointer-events:auto;background:var(--panel);border:1px solid var(--ink);box-shadow:0 3px 14px rgba(0,0,0,.08)}.brand{padding:9px 11px;max-width:480px}.eyebrow{font-size:9px;font-weight:900;letter-spacing:.16em}.title{font-size:20px;font-weight:900;line-height:1;margin-top:4px}.dek{font-size:9px;line-height:1.4;margin-top:5px;max-width:430px}.statebox{padding:8px 9px;min-width:170px;text-align:right}.state{font-size:13px;font-weight:900}.state.MISMATCH,.state.LAG{color:var(--mismatch)}.state.MATCH{color:var(--afford)}.tiny{font-size:8px;line-height:1.35;color:var(--muted);margin-top:3px}
+.rail{position:absolute;z-index:900;right:max(10px,env(safe-area-inset-right));top:120px;width:196px;background:var(--panel);border:1px solid var(--ink);box-shadow:0 3px 14px rgba(0,0,0,.08)}.rail h2,.lens h2,.time h2{font-size:8px;letter-spacing:.14em;margin:0;padding:7px 8px;border-bottom:1px solid var(--ink)}.layer{display:grid;grid-template-columns:16px 1fr auto;gap:7px;align-items:center;width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);padding:8px;text-align:left}.layer:last-child{border-bottom:0}.swatch{width:10px;height:10px;border:1px solid var(--ink)}.layer[data-k="material"] .swatch{background:var(--material)}.layer[data-k="affordance"] .swatch{background:var(--afford)}.layer[data-k="institutional"] .swatch{background:var(--institution)}.layer[data-k="representational"] .swatch{background:var(--representation)}.layer.off{opacity:.35}.lname{font-size:9px;font-weight:900}.lstate{font-size:8px;color:var(--muted)}
+.bottom{position:absolute;z-index:900;left:max(10px,env(safe-area-inset-left));right:max(10px,env(safe-area-inset-right));bottom:max(10px,env(safe-area-inset-bottom));display:grid;grid-template-columns:240px 1fr;gap:8px;align-items:end}.lens,.time{background:var(--panel);border:1px solid var(--ink);box-shadow:0 3px 14px rgba(0,0,0,.08)}.actors{display:grid;grid-template-columns:repeat(4,1fr)}.actor{border:0;border-right:1px solid var(--line);background:transparent;padding:9px 5px;font-size:9px;font-weight:900}.actor:last-child{border-right:0}.actor.on{background:var(--ink);color:var(--paper)}.actor-read{border-top:1px solid var(--ink);padding:7px 8px;display:grid;grid-template-columns:auto 1fr;gap:7px;font-size:9px}.actor-read b{font-size:10px}.timebody{padding:7px 9px}.ticks{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-bottom:5px}.tick{font-size:8px;color:var(--muted)}.tick strong{display:block;color:var(--ink);font-size:9px}.tick.current strong{color:var(--mismatch)}input[type=range]{width:100%;accent-color:var(--ink)}.event{display:flex;justify-content:space-between;gap:12px;margin-top:4px;font-size:9px}.event strong{font-size:10px}.warning{position:absolute;z-index:850;left:50%;top:50%;transform:translate(-50%,-50%);background:var(--paper);border:2px solid var(--mismatch);padding:7px 9px;font-size:9px;font-weight:900;letter-spacing:.08em;pointer-events:none;box-shadow:0 2px 12px rgba(0,0,0,.14)}
+.geo-label{background:var(--paper);border:1px solid var(--ink);box-shadow:none;border-radius:0;color:var(--ink);font:900 9px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:3px 5px}.leaflet-tooltip-top:before{border-top-color:var(--ink)}
+@keyframes pulse{0%,100%{opacity:.9}50%{opacity:.24}}.pulse{animation:pulse 1.15s infinite}
+@media(max-width:740px){.top{right:8px;left:8px}.brand{max-width:72vw}.dek{display:none}.statebox{min-width:120px}.rail{right:8px;top:88px;width:150px}.bottom{left:8px;right:8px;bottom:8px;grid-template-columns:1fr}.lens{order:2}.time{order:1}.actor-read{display:none}.layer{padding:7px}.warning{top:43%;font-size:8px}.title{font-size:17px}.actors{grid-template-columns:repeat(4,1fr)}}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="top">
+  <div class="brand"><div class="eyebrow">UNSETTLED ATLAS · GEONOSIS V1</div><div class="title">ONE GROUND. FOUR GEOGRAPHIES.</div><div class="dek">Synthetic correspondence fixture anchored to Atlanta reference ground. The map is real. The flood is not. Use the controls to watch material, affordance, institutional and representational geography diverge and recouple.</div></div>
+  <div class="statebox"><div class="eyebrow">CORRESPONDENCE</div><div class="state" id="mainState">MISMATCH</div><div class="tiny" id="mainExplain">MAP SAYS OPEN · CAR CANNOT PASS</div></div>
+</div>
+<div class="rail"><h2>REGIMES · SHOW / HIDE</h2>
+  <button class="layer" data-k="material"><span class="swatch"></span><span class="lname">MATERIAL</span><span class="lstate" id="smaterial">0.28 m</span></button>
+  <button class="layer" data-k="affordance"><span class="swatch"></span><span class="lname">AFFORDANCE</span><span class="lstate" id="saffordance">CLOSED</span></button>
+  <button class="layer" data-k="institutional"><span class="swatch"></span><span class="lname">INSTITUTIONAL</span><span class="lstate" id="sinstitutional">OPEN</span></button>
+  <button class="layer" data-k="representational"><span class="swatch"></span><span class="lname">REPRESENTATIONAL</span><span class="lstate" id="srepresentational">OPEN</span></button>
+</div>
+<div class="warning">SYNTHETIC TEST EVENT · NOT A REAL ATLANTA FLOOD</div>
+<div class="bottom">
+  <section class="lens"><h2>INTERPRETER · SAME GROUND, DIFFERENT POSSIBILITY</h2><div class="actors"><button class="actor on" data-a="CAR">CAR</button><button class="actor" data-a="DOG">DOG</button><button class="actor" data-a="FLOOD">FLOOD</button><button class="actor" data-a="CITY">CITY</button></div><div class="actor-read"><b id="actorValue">IMPASSABLE</b><span id="actorWhy">0.28 m water exceeds passenger-car threshold.</span></div></section>
+  <section class="time"><h2>EVENT TIME · MOVE THROUGH THE REGIME BREAK</h2><div class="timebody"><div class="ticks"><div class="tick current" data-i="0"><strong>08:10</strong>WATER</div><div class="tick" data-i="1"><strong>08:12</strong>MAP OPEN</div><div class="tick" data-i="2"><strong>08:27</strong>ROAD CLOSED</div><div class="tick" data-i="3"><strong>09:02</strong>MAP CLOSED</div></div><input id="scrub" type="range" min="0" max="3" step="1" value="1"><div class="event"><strong id="eventName">REPRESENTATION FAILS</strong><span id="eventNote">Material and affordance have changed; map still says OPEN.</span></div></div></section>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+(function(){
+const ATL=[33.7490,-84.3880];
+const map=L.map('map',{zoomControl:false,preferCanvas:true}).setView(ATL,16);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'© OpenStreetMap contributors'}).addTo(map);
+const panes={material:410,affordance:420,institutional:430,representational:440,mismatch:450};
+Object.entries(panes).forEach(([k,z])=>{map.createPane(k);map.getPane(k).style.zIndex=z});
+const layers={};
+layers.material=L.layerGroup().addTo(map);
+layers.affordance=L.layerGroup().addTo(map);
+layers.institutional=L.layerGroup().addTo(map);
+layers.representational=L.layerGroup().addTo(map);
+const halo=L.layerGroup().addTo(map);
+const p=ATL;
+// MATERIAL: continuous field, not a point icon.
+L.circle(p,{pane:'material',radius:54,color:'#2166ac',weight:1.5,fillColor:'#2166ac',fillOpacity:.20}).bindTooltip('MATERIAL · 0.28 m SURFACE WATER',{permanent:true,direction:'top',className:'geo-label',offset:[0,-46]}).addTo(layers.material);
+L.circle(p,{pane:'material',radius:27,color:'#2166ac',weight:1,fillOpacity:0,dashArray:'3 4'}).addTo(layers.material);
+// AFFORDANCE: actor-relative possibility ring.
+const afford=L.circle(p,{pane:'affordance',radius:75,color:'#1b7f5b',weight:5,fillOpacity:0,dashArray:'1 9'}).addTo(layers.affordance);
+// INSTITUTIONAL: declaration ring appears when closure exists.
+const inst=L.circle(p,{pane:'institutional',radius:92,color:'#161918',weight:3,fillOpacity:0,dashArray:'9 6'}).addTo(layers.institutional);
+// REPRESENTATIONAL: square-ish bounds around same ground.
+const d=.00078;const bounds=[[p[0]-d,p[1]-d],[p[0]+d,p[1]+d]];
+const repr=L.rectangle(bounds,{pane:'representational',color:'#b75b22',weight:3,fillOpacity:0,dashArray:'12 7'}).bindTooltip('REPRESENTATION · MAP STATUS',{permanent:true,direction:'bottom',className:'geo-label',offset:[0,18]}).addTo(layers.representational);
+const mismatch=L.circle(p,{pane:'mismatch',radius:112,color:'#c1272d',weight:4,fillOpacity:0,dashArray:'2 7',className:'pulse'}).addTo(halo);
+L.marker(p,{opacity:0}).bindTooltip('SYNTHETIC TEST GROUND',{permanent:true,direction:'right',className:'geo-label',offset:[10,0]}).addTo(map);
+
+const actorDefs={
+ CAR:{wet:'IMPASSABLE',dry:'PASSABLE',why:'0.28 m water exceeds passenger-car threshold.',color:'#c1272d'},
+ DOG:{wet:'WADE / RISK',dry:'PASSABLE',why:'Same depth becomes a different possibility for a dog; route is not simply CLOSED.',color:'#9c6d16'},
+ FLOOD:{wet:'FLOW / ACCUMULATE',dry:'DRAIN',why:'For floodwater the intersection is a basin and pathway, not a route.',color:'#2166ac'},
+ CITY:{wet:'SERVICE INCIDENT',dry:'NORMAL',why:'For the city this ground becomes liability, access and closure work.',color:'#161918'}
+};
+const timeline=[
+ {name:'MATERIAL DIFFERENCE',note:'Surface water becomes detectable.',material:'0.28 m',institution:'OPEN',map:'OPEN',wet:true,state:'UNKNOWN',explain:'WATER EXISTS · NO CROSS-REGIME CLAIM YET'},
+ {name:'REPRESENTATION FAILS',note:'Material and affordance have changed; map still says OPEN.',material:'0.28 m',institution:'OPEN',map:'OPEN',wet:true,state:'MISMATCH',explain:'MAP SAYS OPEN · CAR CANNOT PASS'},
+ {name:'INSTITUTION RECOGNIZES',note:'Road authority declares CLOSED. Map remains stale.',material:'0.28 m',institution:'CLOSED',map:'OPEN',wet:true,state:'LAG',explain:'ROAD CLOSED · MAP STILL OPEN'},
+ {name:'REPRESENTATION RECOUPLES',note:'Map updates to CLOSED and now corresponds with the institutional state.',material:'0.28 m',institution:'CLOSED',map:'CLOSED',wet:true,state:'MATCH',explain:'ROAD CLOSED · MAP CLOSED'}
+];
+let actor='CAR',step=1;
+function render(){
+ const t=timeline[step],a=actorDefs[actor];
+ document.getElementById('mainState').textContent=t.state;document.getElementById('mainState').className='state '+t.state;
+ document.getElementById('mainExplain').textContent=t.explain;
+ document.getElementById('smaterial').textContent=t.material;
+ document.getElementById('sinstitutional').textContent=t.institution;
+ document.getElementById('srepresentational').textContent=t.map;
+ const aval=t.wet?a.wet:a.dry;document.getElementById('saffordance').textContent=aval;
+ document.getElementById('actorValue').textContent=aval;document.getElementById('actorWhy').textContent=a.why;
+ afford.setStyle({color:a.color});
+ inst.setStyle({opacity:t.institution==='CLOSED'?1:.15,fillOpacity:0});
+ repr.setStyle({color:t.map==='OPEN'?'#b75b22':'#1b7f5b'});
+ if(t.state==='MISMATCH'||t.state==='LAG'){if(!map.hasLayer(halo))halo.addTo(map)}else if(map.hasLayer(halo))map.removeLayer(halo);
+ document.getElementById('eventName').textContent=t.name;document.getElementById('eventNote').textContent=t.note;
+ document.querySelectorAll('.tick').forEach((x,i)=>x.classList.toggle('current',i===step));
+}
+document.querySelectorAll('.layer').forEach(btn=>btn.onclick=()=>{const k=btn.dataset.k;if(map.hasLayer(layers[k])){map.removeLayer(layers[k]);btn.classList.add('off')}else{layers[k].addTo(map);btn.classList.remove('off')}});
+document.querySelectorAll('.actor').forEach(btn=>btn.onclick=()=>{actor=btn.dataset.a;document.querySelectorAll('.actor').forEach(x=>x.classList.toggle('on',x===btn));render()});
+document.getElementById('scrub').addEventListener('input',e=>{step=Number(e.target.value);render()});
+render();
+setTimeout(()=>map.invalidateSize(),100);
+})();
+</script>
+</body>
+</html>

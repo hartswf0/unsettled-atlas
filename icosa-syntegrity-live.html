@@ -32,12 +32,25 @@ body{display:grid;place-items:center}
       if (!r.ok) throw new Error('icosa-live-motion.js ' + r.status);
       return r.text();
     }),
+    fetch('geonosis-live-public.js', { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error('geonosis-live-public.js ' + r.status);
+      return r.text();
+    }),
+    fetch('geonosis-live-airnow.js', { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error('geonosis-live-airnow.js ' + r.status);
+      return r.text();
+    }),
     fetch('icosa-live-context.js', { cache: 'no-cache' }).then(function (r) {
       if (!r.ok) throw new Error('icosa-live-context.js ' + r.status);
       return r.text();
+    }),
+    fetch('geonosis-live-context.js', { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error('geonosis-live-context.js ' + r.status);
+      return r.text();
     })
   ]).then(function (parts) {
-    var html = parts[0], inject = parts[1], registry = parts[2], sources = parts[3], motion = parts[4], modelContext = parts[5];
+    var html=parts[0],inject=parts[1],registry=parts[2],sources=parts[3],motion=parts[4],
+        geoPublic=parts[5],geoAir=parts[6],modelContext=parts[7],geoContext=parts[8];
     var preconfig = [
       'window.ICOSA_LIVE_CONFIG = window.ICOSA_LIVE_CONFIG || {};',
       'if (!window.ICOSA_LIVE_CONFIG.datacenterUrl) window.ICOSA_LIVE_CONFIG.datacenterUrl =',
@@ -84,24 +97,25 @@ body{display:grid;place-items:center}
       '  return requestAircraftTimerGuard(cell);',
       '};'
     ].join('\n');
-    var needle = '})();';
-    var at = html.lastIndexOf(needle);
-    if (at < 0) throw new Error('main ICOSA closure not found');
-    html = html.slice(0, at) +
-      '\n/* --- ICOSA LIVE DATA HARNESS --- */\n' + inject +
-      '\n/* keep live observations on the visible side of the folded world */\n' + cull +
-      '\n/* --- VERIFIED GEONOSIS SOURCE REGISTRY --- */\n' + registry +
-      '\n/* stable upstream defaults before source adapters evaluate */\n' + preconfig +
-      '\n/* --- ICOSA LIVE SOURCE ADAPTERS --- */\n' + sources +
-      '\n/* --- ICOSA LIVE MOTION ADAPTER --- */\n' + motion +
-      '\n/* scoped observations only paint the ground they actually queried */\n' + guards +
-      '\n/* --- ICOSA LIVE → MODEL CONTEXT BRIDGE --- */\n' + modelContext + '\n' +
+    var needle='})();';
+    var at=html.lastIndexOf(needle);
+    if(at<0)throw new Error('main ICOSA closure not found');
+    html=html.slice(0,at)+
+      '\n/* --- ICOSA LIVE DATA HARNESS --- */\n'+inject+
+      '\n/* keep live observations on the visible side of the folded world */\n'+cull+
+      '\n/* --- VERIFIED GEONOSIS SOURCE REGISTRY --- */\n'+registry+
+      '\n/* stable upstream defaults before source adapters evaluate */\n'+preconfig+
+      '\n/* --- ICOSA LIVE SOURCE ADAPTERS --- */\n'+sources+
+      '\n/* --- ICOSA LIVE MOTION ADAPTER --- */\n'+motion+
+      '\n/* --- GEONOSIS PUBLIC SIGNAL ADAPTERS --- */\n'+geoPublic+
+      '\n/* --- GEONOSIS BYOK AIR QUALITY ADAPTER --- */\n'+geoAir+
+      '\n/* scoped observations only paint the ground they actually queried */\n'+guards+
+      '\n/* --- ICOSA LIVE → MODEL CONTEXT BRIDGE --- */\n'+modelContext+
+      '\n/* --- GEONOSIS → MODEL CONTEXT BRIDGE --- */\n'+geoContext+'\n'+
       html.slice(at);
-    document.open();
-    document.write(html);
-    document.close();
+    document.open();document.write(html);document.close();
   }).catch(function (err) {
-    document.getElementById('boot').textContent = 'LIVE WORLD FAILED · ' + String(err && err.message || err);
+    document.getElementById('boot').textContent='LIVE WORLD FAILED · '+String(err&&err.message||err);
   });
 })();
 </script>

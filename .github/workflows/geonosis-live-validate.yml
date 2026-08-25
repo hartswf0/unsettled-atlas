@@ -12,6 +12,7 @@ on:
     branches:
       - feature/icosa-live-data
       - feature/geonosis-semiosis-lens
+      - fix/geonosis-scope-contributions
     paths:
       - 'icosa-live-*.js'
       - 'geonosis-*.js'
@@ -57,6 +58,8 @@ jobs:
             geonosis-inspector.js
             geonosis-semantics.js
             geonosis-place.js
+            geonosis-scope.js
+            geonosis-contributions.js
           )
           for f in "${files[@]}"; do
             echo "node --check $f"
@@ -85,7 +88,9 @@ jobs:
             geonosis-source-controls.js \
             geonosis-inspector.js \
             geonosis-semantics.js \
-            geonosis-place.js
+            geonosis-place.js \
+            geonosis-scope.js \
+            geonosis-contributions.js
           do
             grep -F "fetch('$f'" icosa-syntegrity-live.html >/dev/null || {
               echo "Harness does not load $f" >&2
@@ -121,6 +126,34 @@ jobs:
           grep -F 'WHERE · PLACE' geonosis-place.js >/dev/null
           grep -F 'cellInventory' geonosis-place.js >/dev/null
           grep -F 'placeForRecord' geonosis-place.js >/dev/null
+
+      - name: Verify selected scope and provider attention never collapse
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'The selected ICOSA triangle is the user' geonosis-scope.js >/dev/null
+          grep -F 'ATTENTION SOURCES · ' geonosis-scope.js >/dev/null
+          grep -F 'SELECTED TRIANGLE' geonosis-scope.js >/dev/null
+          grep -F 'ATTENTION SAMPLE' geonosis-scope.js >/dev/null
+          grep -F 'geoRequestAll=geoScopeRequestAll' geonosis-scope.js >/dev/null
+          grep -F 'geoInspectDataCell=function(){return geoScopeSelectedCell()' geonosis-scope.js >/dev/null
+          grep -F 'Select this data center on the map' geonosis-scope.js >/dev/null
+          grep -F 'NO HIDDEN HERE' geonosis-scope.js >/dev/null
+
+      - name: Verify ordinary Geonosis contributions reach council context
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'datacenter-concentration' geonosis-contributions.js >/dev/null
+          grep -F 'datacenter-hydro-proximity' geonosis-contributions.js >/dev/null
+          grep -F 'ecology-hydro-colocation' geonosis-contributions.js >/dev/null
+          grep -F 'terrain-hydrology-composition' geonosis-contributions.js >/dev/null
+          grep -F 'semiotic-aggregate' geonosis-contributions.js >/dev/null
+          grep -F 'GEONOSIS CONTRIBUTIONS · ' geonosis-contributions.js >/dev/null
+          grep -F 'COUNCIL CANDIDATES' geonosis-contributions.js >/dev/null
+          grep -F 'base.contributions=pack.items' geonosis-contributions.js >/dev/null
+          grep -F 'x.contributions=p.items.slice(0,8)' geonosis-contributions.js >/dev/null
+          grep -F 'Co-location, proximity and shared ICOSA cells do not establish causation' geonosis-contributions.js >/dev/null
 
       - name: Verify aircraft transport cannot silently use non-CORS upstream
         shell: bash

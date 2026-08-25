@@ -5,6 +5,7 @@
     "atlanta"
   ],
   "sources": [
+    "atlanta-historic-buildings",
     "atlanta-rezoning-cases",
     "fdic-locations",
     "fdic-sod",
@@ -13,15 +14,16 @@
     "osm-notes"
   ],
   "counts": {
-    "signals": 30,
+    "signals": 83,
     "entities": 6,
     "relations": 8,
     "statements": 5,
-    "direct_signals": 30,
+    "direct_signals": 83,
     "direct_entities": 6,
     "direct_statements": 5
   },
   "signal_predicates": {
+    "memory.atlanta_historic_building": 53,
     "change.rezoning_case": 15,
     "money.bank_branch": 4,
     "money.branch_deposits": 2,
@@ -142,7 +144,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -274,7 +276,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -394,7 +396,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -478,7 +480,103 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f9ca2b15499e7db01d56",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{1DA6833B-4F0D-448B-BF52-1A8959589A50}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-05-135",
+        "from_zone": "C3, R4",
+        "to_zone": "C-3-C",
+        "status": "COMPLETE",
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": "06-O-0146",
+        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/06o0146.pdf",
+        "acres": 1.80917259
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.39395789527724,
+              33.806059314535574
+            ],
+            [
+              -84.39382509991806,
+              33.806057735111516
+            ],
+            [
+              -84.39283503723566,
+              33.806066507801425
+            ],
+            [
+              -84.3928140126605,
+              33.80657904539372
+            ],
+            [
+              -84.39343449324203,
+              33.806588779286265
+            ],
+            [
+              -84.39338827713219,
+              33.80682834445391
+            ],
+            [
+              -84.39373849695261,
+              33.80686631331753
+            ],
+            [
+              -84.39387068352309,
+              33.80688023479863
+            ],
+            [
+              -84.39394373620635,
+              33.8063382571071
+            ],
+            [
+              -84.39395789527724,
+              33.806059314535574
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.39343460506596,
+          33.8063948463463
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:21.038Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -590,103 +688,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.222Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_f9ca2b15499e7db01d56",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{1DA6833B-4F0D-448B-BF52-1A8959589A50}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-05-135",
-        "from_zone": "C3, R4",
-        "to_zone": "C-3-C",
-        "status": "COMPLETE",
-        "status_type": "Complete",
-        "final_update": null,
-        "ordinance": "06-O-0146",
-        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/06o0146.pdf",
-        "acres": 1.80917259
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.39395789527724,
-              33.806059314535574
-            ],
-            [
-              -84.39382509991806,
-              33.806057735111516
-            ],
-            [
-              -84.39283503723566,
-              33.806066507801425
-            ],
-            [
-              -84.3928140126605,
-              33.80657904539372
-            ],
-            [
-              -84.39343449324203,
-              33.806588779286265
-            ],
-            [
-              -84.39338827713219,
-              33.80682834445391
-            ],
-            [
-              -84.39373849695261,
-              33.80686631331753
-            ],
-            [
-              -84.39387068352309,
-              33.80688023479863
-            ],
-            [
-              -84.39394373620635,
-              33.8063382571071
-            ],
-            [
-              -84.39395789527724,
-              33.806059314535574
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.39343460506596,
-          33.8063948463463
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.222Z",
+      "retrieved_at": "2026-08-25T12:33:21.037Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -770,7 +772,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.220Z",
+      "retrieved_at": "2026-08-25T12:33:21.036Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -862,7 +864,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.220Z",
+      "retrieved_at": "2026-08-25T12:33:21.036Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1156,7 +1158,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.218Z",
+      "retrieved_at": "2026-08-25T12:33:21.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1280,7 +1282,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.217Z",
+      "retrieved_at": "2026-08-25T12:33:21.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1636,7 +1638,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.217Z",
+      "retrieved_at": "2026-08-25T12:33:21.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1655,1164 +1657,47 @@
       "publication_region": "atlanta"
     },
     {
-      "id": "sig_c2f5c87caceb1ced89dd",
-      "source": "inaturalist-observations",
-      "source_record_id": "394263175",
-      "predicate": "ecology.inaturalist_observation",
+      "id": "sig_241faf736338af00f890",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{48DBE07E-28D5-4D9F-9258-6AF453105FC0}",
+      "predicate": "memory.atlanta_historic_building",
       "value": {
-        "scientific_name": "Anaxyrus fowleri",
-        "common_name": "Fowler's Toad",
-        "iconic_taxon": "Amphibia",
-        "quality_grade": "needs_id",
-        "captive": false,
-        "obscured": false,
-        "photos": 1
+        "name": "Kelly's Auto Body",
+        "address": "1395 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1954,
+        "stories": 1,
+        "previous_use": "Commercial - service",
+        "construction_material": "Brick",
+        "npu": "D",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Service shop, steel windows, stepped rear parapet w/ concrete cap, extensive modifications.",
+        "survey": 1118966400000
       },
       "unit": null,
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -84.4005508423,
-          33.8036384583
+          -84.41433875841578,
+          33.79395275090241
         ]
       },
       "atlas_address": "F02.1331211020",
       "atlas_address_basis": {
         "method": "source_point",
         "representative_point": [
-          -84.4005508423,
-          33.8036384583
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-24T23:09:35.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.678Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "DOG",
-        "ECOLOGY"
-      ],
-      "provenance": {
-        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
-        "source_url": "https://www.inaturalist.org/observations/394263175",
-        "provider": "iNaturalist"
-      },
-      "raw": {
-        "place_guess": "Atlanta",
-        "positional_accuracy": null
-      },
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_00cd3f4e692d90166fe4",
-      "source": "fdic-locations",
-      "source_record_id": "186298",
-      "predicate": "money.bank_branch",
-      "value": {
-        "cert": "9846",
-        "branch_id": 3226,
-        "institution_name": "Truist Bank",
-        "branch_name": "BUCKHEAD BRANCH",
-        "main_office": 0,
-        "service_type": "FULL SERVICE - BRICK AND MORTAR",
-        "address": "3020 Peachtree Rd Nw",
-        "city": "Atlanta",
-        "state": "GA",
-        "zip": "30305",
-        "fi_uninum": 6300
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.38199297729041,
-          33.83739799439786
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.38199297729041,
-          33.83739799439786
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-24T00:00:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.276Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
-        "provider": "FDIC BankFind Suite"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_46cb15ee9d93f342b82b",
-      "source": "fdic-locations",
-      "source_record_id": "185982",
-      "predicate": "money.bank_branch",
-      "value": {
-        "cert": "3511",
-        "branch_id": 8765,
-        "institution_name": "Wells Fargo Bank, National Association",
-        "branch_name": "PEACHTREE BISCAYNE BRANCH",
-        "main_office": 0,
-        "service_type": "FULL SERVICE - BRICK AND MORTAR",
-        "address": "2204 Peachtree Rd Nw",
-        "city": "Atlanta",
-        "state": "GA",
-        "zip": "30309",
-        "fi_uninum": 2239
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.39250002819695,
-          33.81452298435127
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.39250002819695,
-          33.81452298435127
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-24T00:00:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.276Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
-        "provider": "FDIC BankFind Suite"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_9541017c500779000d19",
-      "source": "fdic-locations",
-      "source_record_id": "191390",
-      "predicate": "money.bank_branch",
-      "value": {
-        "cert": "3511",
-        "branch_id": 8447,
-        "institution_name": "Wells Fargo Bank, National Association",
-        "branch_name": "CHATTAHOOCHEE BRANCH",
-        "main_office": 0,
-        "service_type": "FULL SERVICE - BRICK AND MORTAR",
-        "address": "1071 Chattahoochee Ave Nw",
-        "city": "Atlanta",
-        "state": "GA",
-        "zip": "30318",
-        "fi_uninum": 2239
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.4223390167683,
-          33.80147102000261
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.4223390167683,
-          33.80147102000261
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-24T00:00:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.277Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
-        "provider": "FDIC BankFind Suite"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_a5c3b88c5cbfd87ff5ce",
-      "source": "fdic-locations",
-      "source_record_id": "191769",
-      "predicate": "money.bank_branch",
-      "value": {
-        "cert": "3510",
-        "branch_id": 4166,
-        "institution_name": "Bank of America, National Association",
-        "branch_name": "HOWELL MILL BRANCH",
-        "main_office": 0,
-        "service_type": "FULL SERVICE - BRICK AND MORTAR",
-        "address": "1775 Howell Mill Rd Nw",
-        "city": "Atlanta",
-        "state": "GA",
-        "zip": "30318",
-        "fi_uninum": 2238
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.41434703972858,
-          33.80269699907056
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.41434703972858,
-          33.80269699907056
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-24T00:00:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.277Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3AGA&limit=10000&offset=0&format=json",
-        "provider": "FDIC BankFind Suite"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_0de657267a0513332271",
-      "source": "fdic-sod",
-      "source_record_id": "2025:11813:656",
-      "predicate": "money.branch_deposits",
-      "value": {
-        "year": 2025,
-        "cert": 11813,
-        "branch_id": 656,
-        "institution_name": "Cadence Bank",
-        "branch_name": "Atlanta Buckhead Branch",
-        "deposits_usd": 72142000,
-        "address": "340 Pharr Rd Ne",
-        "city": "Atlanta",
-        "state": "GA",
-        "zip": "30305"
-      },
-      "unit": "USD",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.3766719775166,
-          33.8372819888579
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.3766719775166,
-          33.8372819888579
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": "2025-06-30",
-      "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:04.325Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
-        "provider": "FDIC Summary of Deposits",
-        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_b3c6089a70d75ec6dadc",
-      "source": "fdic-sod",
-      "source_record_id": "2025:20504:247",
-      "predicate": "money.branch_deposits",
-      "value": {
-        "year": 2025,
-        "cert": 20504,
-        "branch_id": 247,
-        "institution_name": "Ameris Bank",
-        "branch_name": "Howell Mill Branch",
-        "deposits_usd": 85239000,
-        "address": "1583 Howell Mill Rd Nw",
-        "city": "Atlanta",
-        "state": "GA",
-        "zip": "30318"
-      },
-      "unit": "USD",
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.4158140404223,
-          33.7980400136663
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.4158140404223,
-          33.7980400136663
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": "2025-06-30",
-      "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:04.329Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://api.fdic.gov/banks/sod?filters=STALPBR%3AGA+AND+YEAR%3A2025&limit=10000&offset=0&format=json",
-        "provider": "FDIC Summary of Deposits",
-        "note": "Branch deposits are reported in thousands of dollars by FDIC; normalized here to USD."
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_12e4d206352d751d28d6",
-      "source": "osm-notes",
-      "source_record_id": "4236427",
-      "predicate": "claim.map_note",
-      "value": {
-        "status": "open",
-        "comments": 3,
-        "latest": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.40757,
-          33.8011
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.40757,
-          33.8011
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2024-05-08 17:15:41 UTC",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.002Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "SERVICE"
-      ],
-      "provenance": {
-        "query_url": "https://api.openstreetmap.org/api/0.6/notes.json?bbox=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&limit=160&closed=0",
-        "source_url": "https://www.openstreetmap.org/note/4236427",
-        "provider": "OpenStreetMap contributors",
-        "license": "ODbL 1.0"
-      },
-      "raw": {
-        "comments": [
-          {
-            "date": "2024-05-08 17:15:41 UTC",
-            "action": "opened",
-            "text": "Station was destroyed in a fire on May 3rd\nhttps://www.11alive.com/article/news/local/gas-station-fire-northside-drive-atlanta/85-ba64209f-534d-4f04-bc8e-cff06eae6270",
-            "html": "<p dir=\"auto\">Station was destroyed in a fire on May 3rd\n<br /><a href=\"https://www.11alive.com/article/news/local/gas-station-fire-northside-drive-atlanta/85-ba64209f-534d-4f04-bc8e-cff06eae6270\" rel=\"nofollow noopener noreferrer\" dir=\"auto\">https://www.11alive.com/article/news/local/gas-station-fire-northside-drive-atlanta/85-ba64209f-534d-4f04-bc8e-cff06eae6270</a></p>"
-          },
-          {
-            "date": "2024-05-08 17:18:35 UTC",
-            "uid": 21453180,
-            "user": "Raymond Naylor",
-            "user_url": "https://api.openstreetmap.org/user/Raymond%20Naylor",
-            "action": "closed",
-            "text": "",
-            "html": "<p dir=\"auto\"></p>"
-          },
-          {
-            "date": "2024-05-08 17:18:51 UTC",
-            "uid": 21453180,
-            "user": "Raymond Naylor",
-            "user_url": "https://api.openstreetmap.org/user/Raymond%20Naylor",
-            "action": "reopened",
-            "text": "",
-            "html": "<p dir=\"auto\"></p>"
-          }
-        ]
-      },
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_39a95d328643e3f083e8",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{1AA9D94C-A7D5-4901-89AA-48216A50FE98}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-08-014",
-        "from_zone": "RG2",
-        "to_zone": "MR-3",
-        "status": null,
-        "status_type": "Complete",
-        "final_update": 1221609600000,
-        "ordinance": "08-O-0515",
-        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/08o0515.pdf",
-        "acres": 18.78819601
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.42164261865213,
-              33.81457824658856
-            ],
-            [
-              -84.42367254492602,
-              33.81454891465558
-            ],
-            [
-              -84.4236333937485,
-              33.8136556594828
-            ],
-            [
-              -84.42360229846471,
-              33.812945653163375
-            ],
-            [
-              -84.42541065433186,
-              33.81294185857884
-            ],
-            [
-              -84.42542833338914,
-              33.81294182149198
-            ],
-            [
-              -84.42542414318856,
-              33.812924170653
-            ],
-            [
-              -84.42542033414115,
-              33.81290647032539
-            ],
-            [
-              -84.42541689435407,
-              33.81288871692756
-            ],
-            [
-              -84.42541382492347,
-              33.812870915867094
-            ],
-            [
-              -84.42541112586817,
-              33.81285307345551
-            ],
-            [
-              -84.42540880044467,
-              33.812835195095886
-            ],
-            [
-              -84.42540781513786,
-              33.81282616177275
-            ],
-            [
-              -84.42503489873161,
-              33.81283314318613
-            ],
-            [
-              -84.42478808283369,
-              33.81283774168523
-            ],
-            [
-              -84.42477657865784,
-              33.8124308368744
-            ],
-            [
-              -84.42476716169578,
-              33.81209810154936
-            ],
-            [
-              -84.4247621499848,
-              33.811920491443296
-            ],
-            [
-              -84.4243518074586,
-              33.811924843249365
-            ],
-            [
-              -84.42435085215914,
-              33.811869935922964
-            ],
-            [
-              -84.42429830126325,
-              33.811323612301834
-            ],
-            [
-              -84.42427746818495,
-              33.81131525698244
-            ],
-            [
-              -84.42426259287546,
-              33.81130894767506
-            ],
-            [
-              -84.42424784978547,
-              33.81130242439972
-            ],
-            [
-              -84.42423324540135,
-              33.811295688946224
-            ],
-            [
-              -84.424218782969,
-              33.81128874311109
-            ],
-            [
-              -84.42420446681719,
-              33.81128158959031
-            ],
-            [
-              -84.42419030234939,
-              33.81127422927425
-            ],
-            [
-              -84.42417629173406,
-              33.81126666486343
-            ],
-            [
-              -84.42416244146023,
-              33.81125889904927
-            ],
-            [
-              -84.42414875369366,
-              33.8112509336306
-            ],
-            [
-              -84.42413523384319,
-              33.81124277130107
-            ],
-            [
-              -84.42412188515742,
-              33.811234414759
-            ],
-            [
-              -84.4241087130425,
-              33.811225865796324
-            ],
-            [
-              -84.42409571966955,
-              33.81121712801527
-            ],
-            [
-              -84.4240829093646,
-              33.81120820321006
-            ],
-            [
-              -84.42407028753647,
-              33.81119909407444
-            ],
-            [
-              -84.42405785635628,
-              33.81118980421053
-            ],
-            [
-              -84.42404562015001,
-              33.81118033541263
-            ],
-            [
-              -84.4240335821662,
-              33.81117069037898
-            ],
-            [
-              -84.42402174673894,
-              33.811160873608834
-            ],
-            [
-              -84.42401011603123,
-              33.81115088599934
-            ],
-            [
-              -84.42399869545723,
-              33.8111407320475
-            ],
-            [
-              -84.4239874882655,
-              33.81113041445153
-            ],
-            [
-              -84.42397649554422,
-              33.81111993591418
-            ],
-            [
-              -84.4239657107937,
-              33.81110929013756
-            ],
-            [
-              -84.42321190552744,
-              33.811881241729765
-            ],
-            [
-              -84.42179637727835,
-              33.811895390570605
-            ],
-            [
-              -84.42179655943062,
-              33.81203425806863
-            ],
-            [
-              -84.42179776172242,
-              33.8129494124346
-            ],
-            [
-              -84.42134532695577,
-              33.81295034743157
-            ],
-            [
-              -84.42118242129374,
-              33.81382879541051
-            ],
-            [
-              -84.4213204856634,
-              33.813788963369014
-            ],
-            [
-              -84.42164261865213,
-              33.81457824658856
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.42295347337016,
-          33.81301969305143
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": "2008-09-17T00:00:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.217Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_8b657d311cc65a58e544",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{588E1AEF-95DF-4E70-A46E-6533C303CA3A}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-97-058",
-        "from_zone": "C4C",
-        "to_zone": "I-2",
-        "status": "CORRECTION",
-        "status_type": "Correction",
-        "final_update": 1204243200000,
-        "ordinance": "98-O-0080",
-        "ordinance_url": null,
-        "acres": 15.93596924
-      },
-      "unit": null,
-      "geometry": {
-        "type": "MultiPolygon",
-        "coordinates": [
-          [
-            [
-              [
-                -84.39535832886952,
-                33.79674783651137
-              ],
-              [
-                -84.3957249366451,
-                33.79648767995106
-              ],
-              [
-                -84.39631724012284,
-                33.79607336226688
-              ],
-              [
-                -84.39631845496906,
-                33.79607251245573
-              ],
-              [
-                -84.39705020834245,
-                33.79549448339883
-              ],
-              [
-                -84.39705024074088,
-                33.79549448333834
-              ],
-              [
-                -84.39705159931535,
-                33.79549448080143
-              ],
-              [
-                -84.3970516317138,
-                33.79549448074094
-              ],
-              [
-                -84.3973308619595,
-                33.79549395900936
-              ],
-              [
-                -84.39733089435795,
-                33.79549395894878
-              ],
-              [
-                -84.39733131877745,
-                33.79549395815529
-              ],
-              [
-                -84.3973313511759,
-                33.79549395809472
-              ],
-              [
-                -84.39733225293237,
-                33.79549395640879
-              ],
-              [
-                -84.3973322853308,
-                33.79549395634821
-              ],
-              [
-                -84.39733231772924,
-                33.79549395628766
-              ],
-              [
-                -84.39733270975033,
-                33.795493955554726
-              ],
-              [
-                -84.39733274214878,
-                33.795493955494145
-              ],
-              [
-                -84.39857322120717,
-                33.79450090099845
-              ],
-              [
-                -84.39899805866739,
-                33.79412135777928
-              ],
-              [
-                -84.39899633233713,
-                33.79411993912965
-              ],
-              [
-                -84.39841017047202,
-                33.79362270912021
-              ],
-              [
-                -84.39817964044074,
-                33.793428286527245
-              ],
-              [
-                -84.39793847438682,
-                33.79362952074138
-              ],
-              [
-                -84.3977322337865,
-                33.79377466150684
-              ],
-              [
-                -84.39754086221959,
-                33.79391140048836
-              ],
-              [
-                -84.39705220249925,
-                33.79427439363084
-              ],
-              [
-                -84.39682964933823,
-                33.794444856395806
-              ],
-              [
-                -84.39668347817765,
-                33.79455986742953
-              ],
-              [
-                -84.39650117726663,
-                33.794704832555794
-              ],
-              [
-                -84.39632052723823,
-                33.79485151288064
-              ],
-              [
-                -84.39617765461735,
-                33.7949696089248
-              ],
-              [
-                -84.39600029956183,
-                33.79511834291529
-              ],
-              [
-                -84.39592968806572,
-                33.79517824805913
-              ],
-              [
-                -84.39571950248751,
-                33.79535933519942
-              ],
-              [
-                -84.39544365033817,
-                33.795604095578
-              ],
-              [
-                -84.3953410308742,
-                33.79569669490959
-              ],
-              [
-                -84.39530737325666,
-                33.795727674826516
-              ],
-              [
-                -84.39527289269435,
-                33.79575865716067
-              ],
-              [
-                -84.39520557825037,
-                33.795820960474416
-              ],
-              [
-                -84.39510460685788,
-                33.79591458713899
-              ],
-              [
-                -84.3950044590831,
-                33.796008555723866
-              ],
-              [
-                -84.3947983057899,
-                33.7961600894916
-              ],
-              [
-                -84.39394917662915,
-                33.796708237054546
-              ],
-              [
-                -84.39515865025052,
-                33.796489774130876
-              ],
-              [
-                -84.39535832886952,
-                33.79674783651137
-              ]
-            ]
-          ],
-          [
-            [
-              [
-                -84.40259470036592,
-                33.791101867827535
-              ],
-              [
-                -84.40032119429914,
-                33.792180368619675
-              ],
-              [
-                -84.39981221853279,
-                33.79239891291866
-              ],
-              [
-                -84.39970793800717,
-                33.79242414241216
-              ],
-              [
-                -84.39971188325826,
-                33.793483627672664
-              ],
-              [
-                -84.39986972869153,
-                33.793342606355445
-              ],
-              [
-                -84.40074350832333,
-                33.79258611093546
-              ],
-              [
-                -84.40251985358529,
-                33.791285345078684
-              ],
-              [
-                -84.40383061590212,
-                33.79052548949714
-              ],
-              [
-                -84.40381404349256,
-                33.7905053658805
-              ],
-              [
-                -84.40259470036592,
-                33.791101867827535
-              ]
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "largest_polygon_centroid_representative",
-        "representative_point": [
-          -84.39682369068909,
-          33.795114726906874
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": "2008-02-29T00:00:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.218Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_b6179d5c3adc50955e3f",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{2191CBFB-75AF-4341-80E9-D1047FCD7397}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-07-093",
-        "from_zone": "RG2",
-        "to_zone": "RG-3-C",
-        "status": "COMPLETE",
-        "status_type": "Complete",
-        "final_update": 1196035200000,
-        "ordinance": "07-O-1919",
-        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/07o1919.pdf",
-        "acres": 0.43485611
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.3787216982299,
-              33.835497239792936
-            ],
-            [
-              -84.37877949392194,
-              33.8348305950659
-            ],
-            [
-              -84.37878548983822,
-              33.83476431666007
-            ],
-            [
-              -84.37854053365005,
-              33.83476197065676
-            ],
-            [
-              -84.37853661135675,
-              33.834827110319
-            ],
-            [
-              -84.37849840357465,
-              33.83549201718142
-            ],
-            [
-              -84.3787216982299,
-              33.835497239792936
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.37863692155236,
-          33.83512331993034
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": "2007-11-26T00:00:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.220Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_2d9d5360cc323f20667c",
-      "source": "nps-national-register",
-      "source_record_id": "05000404",
-      "predicate": "memory.national_register_resource",
-      "value": {
-        "name": "Winship, George, Jr., and Emily, House",
-        "resource_type": "building",
-        "address": "2626 Brookwood Dr., NE",
-        "city": "Atlanta",
-        "county": "Fulton",
-        "state": "GEORGIA",
-        "national_historic_landmark": null,
-        "status": "Listed",
-        "extant": "Unknown",
-        "map_method": "Derived by XY event point or centroid generation",
-        "source_accuracy": "+/- 12 meters"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.38139549599998,
-          33.82801009000008
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.38139549599998,
-          33.82801009000008
+          -84.41433875841578,
+          33.79395275090241
         ],
         "exact": true,
         "note": "Atlas address derives from the source point."
       },
       "epistemic": "DECLARED",
       "observed_at": null,
-      "valid_from": "2005-05-10T00:00:00.000Z",
+      "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.068Z",
+      "retrieved_at": "2026-08-25T12:33:20.979Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2824,489 +1709,56 @@
         "SERVICE"
       ],
       "provenance": {
-        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
-        "provider": "National Park Service",
-        "source": "National Register of Historic Places -- National Park Service",
-        "originator": "National Register of Historic Places -- National Park Service"
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
       },
-      "raw": {
-        "geom_id": "{B81A0AFC-878E-4637-8682-6BDEAA8B8E6D}",
-        "src_date": 1115683200000,
-        "src_scale": "1:24000"
-      },
+      "raw": null,
       "publication_region": "atlanta"
     },
     {
-      "id": "sig_b2c8f68f15c19528e394",
-      "source": "nps-national-register",
-      "source_record_id": "01001556",
-      "predicate": "memory.national_register_resource",
+      "id": "sig_2bc5598cd57c7f45d893",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{F284AB68-E390-4C2D-9714-02517314B3D9}",
+      "predicate": "memory.atlanta_historic_building",
       "value": {
-        "name": "Spotswood Hall",
-        "resource_type": "building",
-        "address": "555 Argonne Dr., NW",
-        "city": "Atlanta",
-        "county": "Fulton",
-        "state": "GEORGIA",
-        "national_historic_landmark": null,
-        "status": "Listed",
-        "extant": "Unknown",
-        "map_method": "Derived by XY event point or centroid generation",
-        "source_accuracy": "+/- 12 meters"
+        "name": "Vacant",
+        "address": "1587 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1965,
+        "stories": 1,
+        "previous_use": "Commercial - office",
+        "construction_material": "Brick",
+        "npu": "D",
+        "national_register_potential": "Contributing - In near future",
+        "description": "Salmon colored textured brick, aluminum awning & sun screens",
+        "survey": 1118966400000
       },
       "unit": null,
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -84.40515671799994,
-          33.83710474000003
+          -84.41587849725444,
+          33.79852542859614
         ]
       },
       "atlas_address": "F02.1331211020",
       "atlas_address_basis": {
         "method": "source_point",
         "representative_point": [
-          -84.40515671799994,
-          33.83710474000003
+          -84.41587849725444,
+          33.79852542859614
         ],
         "exact": true,
         "note": "Atlas address derives from the source point."
       },
       "epistemic": "DECLARED",
       "observed_at": null,
-      "valid_from": "2002-02-05T00:00:00.000Z",
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.068Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "MEMORY",
-        "SERVICE"
-      ],
-      "provenance": {
-        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
-        "provider": "National Park Service",
-        "source": "National Register of Historic Places -- National Park Service",
-        "originator": "National Register of Historic Places -- National Park Service"
-      },
-      "raw": {
-        "geom_id": "{6DD2AD36-BABC-4E20-8C40-4E4A99CE4ACC}",
-        "src_date": 1012867200000,
-        "src_scale": "1:24000"
-      },
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_c0c90915063b8678b88f",
-      "source": "nps-national-register",
-      "source_record_id": "96000208",
-      "predicate": "memory.national_register_resource",
-      "value": {
-        "name": "Knight, William and Ruth, Lustron House",
-        "resource_type": "building",
-        "address": "9166 Northside Dr.",
-        "city": "Atlanta",
-        "county": "Fulton",
-        "state": "GEORGIA",
-        "national_historic_landmark": null,
-        "status": "Listed",
-        "extant": "Unknown",
-        "map_method": "Derived by XY event point or centroid generation",
-        "source_accuracy": "+/- 12 meters"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.40760895799997,
-          33.818511956000066
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.40760895799997,
-          33.818511956000066
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": "1996-03-18T00:00:00.000Z",
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.067Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "MEMORY",
-        "SERVICE"
-      ],
-      "provenance": {
-        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
-        "provider": "National Park Service",
-        "source": "National Register of Historic Places -- National Park Service",
-        "originator": "National Register of Historic Places -- National Park Service"
-      },
-      "raw": {
-        "geom_id": "{C19B92BE-CD42-4F63-82A4-2FC7A54C40C6}",
-        "src_date": 827107200000,
-        "src_scale": "1:24000"
-      },
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_4c50287f490136de4857",
-      "source": "nps-national-register",
-      "source_record_id": "80004456",
-      "predicate": "memory.national_register_resource",
-      "value": {
-        "name": "Canton Apartments",
-        "resource_type": "building",
-        "address": "2846--2840 Peachtree Rd.",
-        "city": "Atlanta",
-        "county": "Fulton",
-        "state": "GEORGIA",
-        "national_historic_landmark": null,
-        "status": "Listed",
-        "extant": "Unknown",
-        "map_method": "Derived by XY event point or centroid generation",
-        "source_accuracy": "+/- 12 meters"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.38449283499995,
-          33.83271892100004
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.38449283499995,
-          33.83271892100004
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": "1980-12-08T00:00:00.000Z",
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.065Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "MEMORY",
-        "SERVICE"
-      ],
-      "provenance": {
-        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
-        "provider": "National Park Service",
-        "source": "National Register of Historic Places -- National Park Service",
-        "originator": "National Register of Historic Places -- National Park Service"
-      },
-      "raw": {
-        "geom_id": "{A72DD4E5-0445-4329-8268-351E08772E7A}",
-        "src_date": 345081600000,
-        "src_scale": "1:24000"
-      },
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_1f62735a7f45f22279b4",
-      "source": "nps-national-register",
-      "source_record_id": "78000986",
-      "predicate": "memory.national_register_resource",
-      "value": {
-        "name": "Witham, Stuart, House",
-        "resource_type": "building",
-        "address": "2922 Andrews Dr., NW",
-        "city": "Atlanta",
-        "county": "Fulton",
-        "state": "GEORGIA",
-        "national_historic_landmark": null,
-        "status": "Listed",
-        "extant": "Unknown",
-        "map_method": "Derived by XY event point or centroid generation",
-        "source_accuracy": "+/- 12 meters"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.39306153499996,
-          33.83515444300008
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.39306153499996,
-          33.83515444300008
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": "1978-12-22T00:00:00.000Z",
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.064Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "MEMORY",
-        "SERVICE"
-      ],
-      "provenance": {
-        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
-        "provider": "National Park Service",
-        "source": "National Register of Historic Places -- National Park Service",
-        "originator": "National Register of Historic Places -- National Park Service"
-      },
-      "raw": {
-        "geom_id": "{F585F0CB-31FB-417F-9289-0587E6623830}",
-        "src_date": 283132800000,
-        "src_scale": "1:24000"
-      },
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_a254468af41d5cf25334",
-      "source": "nps-national-register",
-      "source_record_id": "78000982",
-      "predicate": "memory.national_register_resource",
-      "value": {
-        "name": "Atlanta Waterworks Hemphill Avenue Station",
-        "resource_type": "building",
-        "address": "1210 Hemphill Ave., NW.",
-        "city": "Atlanta",
-        "county": "Fulton",
-        "state": "GEORGIA",
-        "national_historic_landmark": null,
-        "status": "Listed",
-        "extant": "Unknown",
-        "map_method": "Derived by XY event point or centroid generation",
-        "source_accuracy": "+/- 12 meters"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.40822290299997,
-          33.78742069000003
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.40822290299997,
-          33.78742069000003
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": "1978-03-29T00:00:00.000Z",
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.064Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "MEMORY",
-        "SERVICE"
-      ],
-      "provenance": {
-        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
-        "provider": "National Park Service",
-        "source": "National Register of Historic Places -- National Park Service",
-        "originator": "National Register of Historic Places -- National Park Service"
-      },
-      "raw": {
-        "geom_id": "{767032C8-1A35-486C-9DCE-6DA3B9C94177}",
-        "src_date": 259977600000,
-        "src_scale": "1:24000"
-      },
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_7a21c8fb3ec7e759c145",
-      "source": "nps-national-register",
-      "source_record_id": "76000633",
-      "predicate": "memory.national_register_resource",
-      "value": {
-        "name": "Tompkins, Henry B., House",
-        "resource_type": "building",
-        "address": "125 W. Wesley Rd., NW.",
-        "city": "Atlanta",
-        "county": "Fulton",
-        "state": "GEORGIA",
-        "national_historic_landmark": null,
-        "status": "Listed",
-        "extant": "Unknown",
-        "map_method": "Derived by XY event point or centroid generation",
-        "source_accuracy": "+/- 12 meters"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.39140683099998,
-          33.82916910300003
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.39140683099998,
-          33.82916910300003
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": "1976-12-12T00:00:00.000Z",
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.064Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "MEMORY",
-        "SERVICE"
-      ],
-      "provenance": {
-        "query_url": "https://mapservices.nps.gov/arcgis/rest/services/cultural_resources/nrhp_locations/MapServer/0/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CNRIS_Refnum%2CRESNAME%2CResType%2CAddress%2CCity%2CCounty%2CState%2CIs_NHL%2CSTATUS%2CCertDate%2CIS_EXTANT%2CMAP_METHOD%2CSOURCE%2CSRC_DATE%2CSRC_SCALE%2CSRC_ACCU%2CORIGINATOR%2CCR_ID%2CGEOM_ID&returnGeometry=true&resultRecordCount=160",
-        "provider": "National Park Service",
-        "source": "National Register of Historic Places -- National Park Service",
-        "originator": "National Register of Historic Places -- National Park Service"
-      },
-      "raw": {
-        "geom_id": "{F2D927FD-7647-458C-A22D-E1B917199D08}",
-        "src_date": 219196800000,
-        "src_scale": "1:24000"
-      },
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_ed517192a5094b8d338d",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{26A84692-1ABF-45DA-B8A1-3525E8289A41}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-07-122",
-        "from_zone": "I2",
-        "to_zone": "MR-5A-C",
-        "status": "NEW",
-        "status_type": "Complete",
-        "final_update": -2209131652000,
-        "ordinance": "08-O-0098",
-        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/08o0098.pdf",
-        "acres": 6.59995615
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.40106209935662,
-              33.78868525562292
-            ],
-            [
-              -84.40235138442449,
-              33.788727727092066
-            ],
-            [
-              -84.40239355648535,
-              33.78859412664104
-            ],
-            [
-              -84.40240358373396,
-              33.788418630222914
-            ],
-            [
-              -84.40265507806689,
-              33.78816370663467
-            ],
-            [
-              -84.40201808174021,
-              33.78782020543361
-            ],
-            [
-              -84.40106017924606,
-              33.78778716921127
-            ],
-            [
-              -84.40070020128421,
-              33.787406415837204
-            ],
-            [
-              -84.39989572259401,
-              33.78740760995573
-            ],
-            [
-              -84.39989235675894,
-              33.78861010342284
-            ],
-            [
-              -84.40048743739744,
-              33.78866634645079
-            ],
-            [
-              -84.40106209935662,
-              33.78868525562292
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.401057846333,
-          33.788154397593225
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": "1899-12-30T08:19:08.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.222Z",
+      "retrieved_at": "2026-08-25T12:33:20.979Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -3314,12 +1766,1173 @@
         "GROUND",
         "HUMAN",
         "BUILDING",
-        "SERVICE",
-        "ECONOMY"
+        "MEMORY",
+        "SERVICE"
       ],
       "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_65cd29152d44c013dff6",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{B21422F0-2F12-43EF-BA51-9C2210E01F8E}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Auto Sales",
+        "address": "980 Northside Dr NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1956,
+        "stories": 1,
+        "previous_use": "Commercial - service",
+        "construction_material": "Concrete Masonry Units",
+        "npu": "E",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Rounded corner, stucco, transoms over doors, new aluminum windows, garage doors, concrete b& @ top.",
+        "survey": 1119312000000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.40767479083118,
+          33.78124462041445
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.40767479083118,
+          33.78124462041445
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.979Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_e5ee6c77fc9f6483809b",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{D26E1634-3E56-484D-AFF9-E1273FC7F39A}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Vintage Millwork, Inc",
+        "address": "670 Trabert Ave NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1958,
+        "stories": 2,
+        "previous_use": "Industrial - warehouse/manufacture",
+        "construction_material": "Brick",
+        "npu": "D",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Jumbo multi-chrome brick, concrete loading dock, aluminum garage doors & windows & awning over door.",
+        "survey": 1118966400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.40999311558821,
+          33.794906939640235
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.40999311558821,
+          33.794906939640235
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.979Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_01b9055b125ef4426a1b",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{09C04773-A664-4071-A257-D86E42D0390A}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Boykin Tool & Supply",
+        "address": "396 Trabert Ave NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1930,
+        "stories": 1,
+        "previous_use": "Industrial - warehouse/manufacture",
+        "construction_material": "Brick",
+        "npu": "E",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "A) Jumbo bricks w/ metal windows.  B)  Shed outbuilding - jumbo bricks, corrugated shed roof, 4 doors.",
+        "survey": 1118620800000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.40094340606736,
+          33.79455641254474
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.40094340606736,
+          33.79455641254474
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0293dd1f1dfd7e150ca6",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{A108015F-FA69-484D-B8CD-0A2536033051}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Multiple tenants",
+        "address": "1738 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1941,
+        "stories": 2,
+        "previous_use": "Commercial - retail/Residential - Single-",
+        "construction_material": "CMU/Light-frame",
+        "npu": " ",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "House over commercial retail, House has gable roof, bracketed eaves, wood side door, wood siding, windows replaced.  Store is cmu w/ brick front, 2 doors & 2 picture windows.",
+        "survey": 1142294400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41579471684278,
+          33.801468316151016
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41579471684278,
+          33.801468316151016
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_0800057df568990bc824",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{F5EA8705-1A4E-4057-8E76-1FE121706875}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "The Silk Trading Co",
+        "address": "1183 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": null,
+        "stories": 1,
+        "previous_use": "Industrial - warehouse",
+        "construction_material": "Brick",
+        "npu": "D",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Continuous steel windows, barrel vault roof, brick piers, stucco over base, roof metal over wood decking (exposed).",
+        "survey": 1119312000000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41152101079085,
+          33.786846066187266
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41152101079085,
+          33.786846066187266
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_290e810f97184fbe8b15",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{DBA6685B-C66E-4C36-8F21-FBF45F63B39D}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Moakler Photo Services",
+        "address": "1468 Mecaslin St NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1955,
+        "stories": 1,
+        "previous_use": "Industrial - office",
+        "construction_material": "Brick",
+        "npu": "E",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "1960s decorative additions.  Jumbo bricks.  Metal windows.",
+        "survey": 1118620800000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.40000945917437,
+          33.79507801184268
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.40000945917437,
+          33.79507801184268
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_49cfb5e3ebf3e759083a",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{35DA7690-F6F6-4E6A-9E09-7A477FCDEF72}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Precision Tune Auto Parts",
+        "address": "1689 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1955,
+        "stories": 1,
+        "previous_use": "Commercial - service",
+        "construction_material": "Concrete Masonry Units",
+        "npu": "D",
+        "national_register_potential": "Non-contributing",
+        "description": "Automotive repair garage - steel windows.  New addition at front makes non-contributing",
+        "survey": 1118102400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41576456717088,
+          33.80028146803351
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41576456717088,
+          33.80028146803351
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_52acdc98231eb6f04e88",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{455C2A13-B243-4CA0-A0C7-3A22C349FB93}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Sherwood & Assoc Interior Specialists",
+        "address": "1478 Mecaslin St NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1955,
+        "stories": 1,
+        "previous_use": "Commercial - service",
+        "construction_material": "Concrete/Brick",
+        "npu": "E",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Concrete frames exposed w/ brick infill.  Clerestory windows.",
+        "survey": 1118620800000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.39999380199662,
+          33.79525192712741
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.39999380199662,
+          33.79525192712741
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_5af4d09b976a8ed6dca7",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{F30A646A-6518-444D-8480-184C6FBED51D}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Manchester",
+        "address": "22 Collier Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1925,
+        "stories": 3,
+        "previous_use": "Residential - Multi-family",
+        "construction_material": "Brick",
+        "npu": " ",
+        "national_register_potential": "Contributing - Residential District",
+        "description": "Running bond brick, 6/1 windows with flat arch, clay tile roof with brackets, side entrance with small brackets, clay tiled gable entry, wooden window surround, wrought iron entrance with iron awning, stuccoed entrance with",
+        "survey": 1142294400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.39609317102769,
+          33.80762412593482
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.39609317102769,
+          33.80762412593482
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_62b265f578c827011856",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{128C7602-38A0-414A-B8D5-08407B04F9F4}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Total Electric Thomas B. West",
+        "address": "1898 Wycliff Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": null,
+        "stories": 3,
+        "previous_use": "Residential - Multi-family",
+        "construction_material": "Brick",
+        "npu": " ",
+        "national_register_potential": "Contributing - Residential District",
+        "description": "Doric entrances, flat roof w/ dentilated cornice, casements, 6/6 double-hung windows w/ flat arches & keystones, stucco panels between windows, stone foundation, projecting bay sleeping porches, blue fabric awnings,original",
+        "survey": 1142294400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.39570510099172,
+          33.80694879027712
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.39570510099172,
+          33.80694879027712
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6b7453a913bc6194518e",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{F75E0B61-60F7-4B3B-B2B8-51C521C48FD3}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Siemen's Westinghouse",
+        "address": "1299 Northside Dr NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1941,
+        "stories": 2,
+        "previous_use": "Industrial - warehouse/office",
+        "construction_material": "Concrete/Brick",
+        "npu": "E",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Moderne building, yellow brick, rounded corners, concrete \"ribbons\" at level of sills & heads, concrete \"faux stone\" at entrance, steel windows at rear.",
+        "survey": 1118620800000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.40766524400296,
+          33.7905798726787
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.40766524400296,
+          33.7905798726787
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6eaf3ad1c845249e1726",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{EAEE5BE7-6B0C-483E-A58D-229F34454446}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Graphics Worldwide Printing",
+        "address": "1015 Chattahoochee Ave NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1957,
+        "stories": 2,
+        "previous_use": "Commercial - office",
+        "construction_material": "Brick",
+        "npu": "D",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Steel casement windows, textured brick, brick window sills, corrugated steel shed rear addition.",
+        "survey": 1118966400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.42081447284306,
+          33.80079603610981
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.42081447284306,
+          33.80079603610981
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_7dd86740281b6ee377e7",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{4E8BC528-77D2-48CB-A841-58C0B338FB0B}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "The Curtain Exchange",
+        "address": "1183 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": null,
+        "stories": 1,
+        "previous_use": "Industrial - warehouse",
+        "construction_material": "Brick",
+        "npu": "D",
+        "national_register_potential": "Non-contributing",
+        "description": "Jumbo brick, steel windows, new fa‡ade.",
+        "survey": 1119312000000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41152101079085,
+          33.786846066187266
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41152101079085,
+          33.786846066187266
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8cd2d3fe14e6d566edf6",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{F906A879-1AD8-4AA9-95CA-57F62CBA08C3}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Collier House",
+        "address": "8 Collier Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1920,
+        "stories": 3,
+        "previous_use": "Residential - Multi-family",
+        "construction_material": "Brick",
+        "npu": " ",
+        "national_register_potential": "Contributing - Residential District",
+        "description": "Beige brick, wood proches & side entrances w/ corinthian columns, tile roof, stone window sills & heads, wood casement & double-hung windows, stone foundation, quoins.",
+        "survey": 1142294400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.39500530093306,
+          33.807096928983206
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.39500530093306,
+          33.807096928983206
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8e4536d20b18908a47c5",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{3A2D7F15-638E-4205-BEB8-60C14FC56B3E}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Sensational Subs",
+        "address": "1690 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1925,
+        "stories": 1,
+        "previous_use": "Commercial - retail",
+        "construction_material": "Brick",
+        "npu": "D",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Commercial storefront building, new windows.  Addition at rear (ca. 1940s?)",
+        "survey": 1118102400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41615966086947,
+          33.800306460377996
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41615966086947,
+          33.800306460377996
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9462a7883c878665b3f1",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{AFC6DD46-101B-49E2-A8E7-021026A30992}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Multiple tenants",
+        "address": "1750 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1930,
+        "stories": 1,
+        "previous_use": "Commercial - service",
+        "construction_material": "Brick",
+        "npu": " ",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Former english vernacular service station, brick running bond, flat arched windows, gable roof w/ vinyl siding over half-timbering, brick chimney, cmu garage behind with metal windows, stepped parapet & gable roof.",
+        "survey": 1142294400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41561801481119,
+          33.801764937080094
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41561801481119,
+          33.801764937080094
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_9fa423c084b54321aed6",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{90CFE0B8-10DA-4F48-922E-EE55CE4F4907}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Belvedere/Taqueria Del Sol",
+        "address": "1200 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1947,
+        "stories": 1,
+        "previous_use": "Industrial - warehouse/manufacture",
+        "construction_material": "Concrete Masonry Units",
+        "npu": "D",
+        "national_register_potential": "Non-contributing",
+        "description": "Garage doors, modified front.",
+        "survey": 1119312000000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41276358248217,
+          33.787424463958864
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41276358248217,
+          33.787424463958864
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_b6286447242eda0b86df",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{1A11972B-23C4-4648-9ACA-7091BDBCA991}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": " ",
+        "address": "1526 Howell Mill Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": null,
+        "stories": 1,
+        "previous_use": "Commercial - service",
+        "construction_material": "Brick",
+        "npu": "D",
+        "national_register_potential": "Contributing - Non-residential buildings/s",
+        "description": "Wood double-hung 6/6 windows.  Brick & mortar heavily deteriorated.  \"Pediment\" added over door.  Steel lintels. Addition in back",
+        "survey": 1118966400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.41629988975735,
+          33.79692443818643
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.41629988975735,
+          33.79692443818643
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_bb1019ae7736fa5884fb",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{B63534E5-185A-494C-A25B-5947DD9B52DA}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Exeter",
+        "address": "2 Collier Rd NW",
+        "status": "M",
+        "class": "Building",
+        "date": 1922,
+        "stories": 3,
+        "previous_use": "Residential - multi-family",
+        "construction_material": "Brick",
+        "npu": " ",
+        "national_register_potential": "Contributing - Residential District",
+        "description": "Broken pediment, flat arched windows w/ keystone, gable roof, corinthian columned porches, wood windows & surrounds, 8/1 double-hung windows, shutters, half-timbered gables, stone foundation.",
+        "survey": 1142294400000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.39427180916604,
+          33.80656672743219
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.39427180916604,
+          33.80656672743219
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
       },
       "raw": null,
       "publication_region": "atlanta"
@@ -3593,12 +3206,65 @@
   ],
   "statements": [
     {
-      "id": "stmt_b0e0892b3fc1dbbb0764",
+      "id": "stmt_9b383094611b3df8c5ab",
       "kind": "heritage_change_coaddress",
       "atlas_address": "F02.1331211020",
       "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
       "epistemic": "INFERRED",
       "evidence": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_1f62735a7f45f22279b4",
         "sig_2d9d5360cc323f20667c",
         "sig_4c50287f490136de4857",
@@ -3623,6 +3289,59 @@
         "sig_f9ca2b15499e7db01d56"
       ],
       "derived_from": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_1f62735a7f45f22279b4",
         "sig_2d9d5360cc323f20667c",
         "sig_4c50287f490136de4857",
@@ -3652,12 +3371,12 @@
         "anomaly": null,
         "contestation": 0.45,
         "consequence": null,
-        "evidence_diversity": 0.5,
+        "evidence_diversity": 0.75,
         "uncertainty": 0.65,
         "novelty": 0.55
       },
       "publication_region": "atlanta",
-      "publication_rank": 0.3063
+      "publication_rank": 0.3375
     },
     {
       "id": "stmt_d96b50175a55589d0d80",
@@ -3713,12 +3432,65 @@
       "publication_rank": 0.2229
     },
     {
-      "id": "stmt_f34a03518272266b778b",
+      "id": "stmt_484c4a8a8c87e2d9e591",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1331211020",
-      "text": "6 independent source channels address signals to this ground: atlanta-rezoning-cases, fdic-locations, fdic-sod, inaturalist-observations, nps-national-register, osm-notes.",
+      "text": "7 independent source channels address signals to this ground: atlanta-historic-buildings, atlanta-rezoning-cases, fdic-locations, fdic-sod, inaturalist-observations, nps-national-register, osm-notes.",
       "epistemic": "INFERRED",
       "evidence": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_39a95d328643e3f083e8",
         "sig_6e8dd09a0a4948cd19a7",
         "sig_807663e0ccbc5d5451dd",
@@ -3751,6 +3523,59 @@
         "sig_12e4d206352d751d28d6"
       ],
       "derived_from": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_39a95d328643e3f083e8",
         "sig_6e8dd09a0a4948cd19a7",
         "sig_807663e0ccbc5d5451dd",
@@ -3796,12 +3621,65 @@
       "publication_rank": 0.2062
     },
     {
-      "id": "stmt_b2782c1314a4f7b437ec",
+      "id": "stmt_fc28f1432d29288944f2",
       "kind": "institutional_memory_density",
       "atlas_address": "F02.1331211020",
-      "text": "7 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "text": "60 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
       "epistemic": "INFERRED",
       "evidence": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_1f62735a7f45f22279b4",
         "sig_2d9d5360cc323f20667c",
         "sig_4c50287f490136de4857",
@@ -3811,6 +3689,59 @@
         "sig_c0c90915063b8678b88f"
       ],
       "derived_from": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_1f62735a7f45f22279b4",
         "sig_2d9d5360cc323f20667c",
         "sig_4c50287f490136de4857",
@@ -3825,12 +3756,12 @@
         "anomaly": null,
         "contestation": 0.15,
         "consequence": null,
-        "evidence_diversity": 0.3333333333333333,
+        "evidence_diversity": 0.6666666666666666,
         "uncertainty": 0.35,
         "novelty": null
       },
       "publication_region": "atlanta",
-      "publication_rank": 0.1417
+      "publication_rank": 0.1833
     },
     {
       "id": "stmt_c781d70e3600cc7420b9",
@@ -3861,6 +3792,6 @@
       "publication_rank": 0.1375
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.094Z",
+  "generated_at": "2026-08-25T12:34:09.132Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

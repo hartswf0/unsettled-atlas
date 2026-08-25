@@ -8,14 +8,15 @@
     "epa-echo",
     "gbif-occurrences",
     "inaturalist-observations",
+    "nola-building-permits",
     "nps-national-register",
     "osm-notes"
   ],
   "counts": {
-    "signals": 124,
+    "signals": 126,
     "entities": 0,
     "relations": 0,
-    "statements": 20,
+    "statements": 23,
     "direct_signals": 0,
     "direct_entities": 0,
     "direct_statements": 0
@@ -25,289 +26,20 @@
     "memory.national_register_resource": 11,
     "claim.map_note": 4,
     "ecology.occurrence": 64,
+    "change.building_permit": 2,
     "ecology.inaturalist_observation": 12
   },
   "entity_types": {},
   "relation_predicates": {},
   "statement_kinds": {
     "regulated_environment_presence": 12,
+    "building_change_activity": 1,
+    "heritage_change_coaddress": 1,
+    "multi_source_activity": 3,
     "ecological_observation_density": 4,
-    "institutional_memory_density": 2,
-    "multi_source_activity": 2
+    "institutional_memory_density": 2
   },
   "signals": [
-    {
-      "id": "sig_1014bf7b2d82a1b861ce",
-      "source": "epa-echo",
-      "source_record_id": "110070917088",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "BARRIERE CONSTRUCTION CO.,LLC - CNO CENTRAL CITY GROUP A",
-        "address": "CENTRAL CITY (S. ROCHEBLAVE, S. DERBIGNY, 1ST, NEW ORLEANS, LA, 70000",
-        "county": "ORLEANS",
-        "major": null,
-        "active": null,
-        "compliance_status": null,
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 20000,
-        "huc": null,
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.9390073441206,
-          30.0686358773116
-        ]
-      },
-      "atlas_address": "F02.1200100220",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.9390073441206,
-          30.0686358773116
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.022Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070917088",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 58441
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_547709a1efd992153d4f",
-      "source": "epa-echo",
-      "source_record_id": "110055240412",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "BARBER BROTHERS CONTRACTING CO., LLC",
-        "address": "PORTABLE ASPHALT PLANT #3, LOUISIANA, STATE OF, LA, 70000",
-        "county": "CADDO",
-        "major": null,
-        "active": null,
-        "compliance_status": null,
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": null,
-        "huc": null,
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.9011110155448,
-          30.0238888331429
-        ]
-      },
-      "atlas_address": "F02.1200100202",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.9011110155448,
-          30.0238888331429
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.022Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110055240412",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 58466
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_853615172a6221b12f89",
-      "source": "epa-echo",
-      "source_record_id": "110032748196",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "US EPA, HURRICANE KATRINA",
-        "address": "IGLOO RD, LOT A,, SLIDELL, LA, 70460",
-        "county": "ST TAMMANY",
-        "major": null,
-        "active": null,
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 10000,
-        "huc": null,
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.8359966321754,
-          30.299874913692
-        ]
-      },
-      "atlas_address": "F02.1200103230",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.8359966321754,
-          30.299874913692
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.022Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110032748196",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 57506
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_b24a676f7584a9b11847",
-      "source": "epa-echo",
-      "source_record_id": "110071539096",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "HARD ROCK CONSTRUCTION LLC - PROJECT RR052-GENTILLY TERRACE NORTH GROUP B",
-        "address": "VARIOUS LOCATIONS, NEW ORLEANS, LA, 70000",
-        "county": "ORLEANS",
-        "major": null,
-        "active": "Y",
-        "compliance_status": null,
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 1,
-        "penalties_5y": 1,
-        "penalty_total_5y_usd": 1000,
-        "coordinate_accuracy_m": 20000,
-        "huc": null,
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.9390073441206,
-          30.0686358773116
-        ]
-      },
-      "atlas_address": "F02.1200100220",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.9390073441206,
-          30.0686358773116
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.022Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071539096",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 55237
-      },
-      "publication_region": "new-orleans"
-    },
     {
       "id": "sig_be57ef99eae210e708f2",
       "source": "epa-echo",
@@ -353,7 +85,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "retrieved_at": "2026-08-25T12:33:46.036Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -421,7 +153,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -441,6 +173,74 @@
       },
       "raw": {
         "objectid": 53895
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_1014bf7b2d82a1b861ce",
+      "source": "epa-echo",
+      "source_record_id": "110070917088",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BARRIERE CONSTRUCTION CO.,LLC - CNO CENTRAL CITY GROUP A",
+        "address": "CENTRAL CITY (S. ROCHEBLAVE, S. DERBIGNY, 1ST, NEW ORLEANS, LA, 70000",
+        "county": "ORLEANS",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 20000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9390073441206,
+          30.0686358773116
+        ]
+      },
+      "atlas_address": "F02.1200100220",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9390073441206,
+          30.0686358773116
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110070917088",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 58441
       },
       "publication_region": "new-orleans"
     },
@@ -489,7 +289,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -509,6 +309,142 @@
       },
       "raw": {
         "objectid": 54642
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_547709a1efd992153d4f",
+      "source": "epa-echo",
+      "source_record_id": "110055240412",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BARBER BROTHERS CONTRACTING CO., LLC",
+        "address": "PORTABLE ASPHALT PLANT #3, LOUISIANA, STATE OF, LA, 70000",
+        "county": "CADDO",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": null,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9011110155448,
+          30.0238888331429
+        ]
+      },
+      "atlas_address": "F02.1200100202",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9011110155448,
+          30.0238888331429
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110055240412",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 58466
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_853615172a6221b12f89",
+      "source": "epa-echo",
+      "source_record_id": "110032748196",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "US EPA, HURRICANE KATRINA",
+        "address": "IGLOO RD, LOT A,, SLIDELL, LA, 70460",
+        "county": "ST TAMMANY",
+        "major": null,
+        "active": null,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 10000,
+        "huc": null,
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.8359966321754,
+          30.299874913692
+        ]
+      },
+      "atlas_address": "F02.1200103230",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.8359966321754,
+          30.299874913692
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110032748196",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 57506
       },
       "publication_region": "new-orleans"
     },
@@ -557,7 +493,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -581,246 +517,42 @@
       "publication_region": "new-orleans"
     },
     {
-      "id": "sig_cac8cbd8a98c0771ad01",
+      "id": "sig_b24a676f7584a9b11847",
       "source": "epa-echo",
-      "source_record_id": "110000449104",
+      "source_record_id": "110071539096",
       "predicate": "environment.regulated_facility",
       "value": {
-        "name": "BOC GASES",
-        "address": "15200 INTRACOASTAL DRIVE, NEW ORLEANS, LA, 70129",
+        "name": "HARD ROCK CONSTRUCTION LLC - PROJECT RR052-GENTILLY TERRACE NORTH GROUP B",
+        "address": "VARIOUS LOCATIONS, NEW ORLEANS, LA, 70000",
         "county": "ORLEANS",
         "major": null,
         "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 50,
-        "huc": "08090203",
-        "last_inspection": "1990-12-17T00:00:00.000Z"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.9009511154242,
-          30.0204268894229
-        ]
-      },
-      "atlas_address": "F02.1200100202",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.9009511154242,
-          30.0204268894229
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.020Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110000449104",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 48759
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_00f666e70edcb9fba905",
-      "source": "epa-echo",
-      "source_record_id": "110044256881",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "RAIN FOREST EXPRESS",
-        "address": "3017 PONTCHARTRAIN DR., SLIDELL, LA, 70458",
-        "county": "ST. TAMMANY",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "Significant Violation",
-        "significant_noncompliance": "Y",
-        "programs_with_significant_noncompliance": 1,
-        "quarters_noncompliance_3y": 9,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 30,
-        "huc": "08090201",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.7848797975631,
-          30.2628996330218
-        ]
-      },
-      "atlas_address": "F02.1200103201",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.7848797975631,
-          30.2628996330218
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110044256881",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 36988
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_1c4a4077286e99c1e8f0",
-      "source": "epa-echo",
-      "source_record_id": "110006808204",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "BAYOU SEAFOOD",
-        "address": "3124 HOPEDALE HWY, HOPEDALE, LA, 70085",
-        "county": "ST. BERNARD",
-        "major": null,
-        "active": null,
         "compliance_status": null,
         "significant_noncompliance": "N",
         "programs_with_significant_noncompliance": 0,
         "quarters_noncompliance_3y": 0,
         "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 50,
-        "huc": "08090203",
-        "last_inspection": "2000-05-17T00:00:00.000Z"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.682991979723,
-          29.8347840299565
-        ]
-      },
-      "atlas_address": "F02.1200100032",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.682991979723,
-          29.8347840299565
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110006808204",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 38416
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_7e88d346871031501827",
-      "source": "epa-echo",
-      "source_record_id": "110041247512",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "SOUTHERN PIPE & SUPPLY",
-        "address": "59489 CAMP VILLERE RD, SLIDELL, LA, 70460",
-        "county": "ST. TAMMANY",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 50,
-        "huc": "08090201",
+        "formal_actions_5y": 1,
+        "penalties_5y": 1,
+        "penalty_total_5y_usd": 1000,
+        "coordinate_accuracy_m": 20000,
+        "huc": null,
         "last_inspection": null
       },
       "unit": null,
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -89.813180322274,
-          30.3012097163518
+          -89.9390073441206,
+          30.0686358773116
         ]
       },
-      "atlas_address": "F02.1200103230",
+      "atlas_address": "F02.1200100220",
       "atlas_address_basis": {
         "method": "source_point",
         "representative_point": [
-          -89.813180322274,
-          30.3012097163518
+          -89.9390073441206,
+          30.0686358773116
         ],
         "exact": true,
         "note": "Atlas address derives from the source point."
@@ -829,7 +561,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -843,12 +575,12 @@
       ],
       "provenance": {
         "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110041247512",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110071539096",
         "provider": "U.S. EPA ECHO",
         "refresh": "weekly"
       },
       "raw": {
-        "objectid": 35653
+        "objectid": 55237
       },
       "publication_region": "new-orleans"
     },
@@ -897,7 +629,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -965,7 +697,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1033,7 +765,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1053,6 +785,74 @@
       },
       "raw": {
         "objectid": 47455
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_cac8cbd8a98c0771ad01",
+      "source": "epa-echo",
+      "source_record_id": "110000449104",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BOC GASES",
+        "address": "15200 INTRACOASTAL DRIVE, NEW ORLEANS, LA, 70129",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": "1990-12-17T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9009511154242,
+          30.0204268894229
+        ]
+      },
+      "atlas_address": "F02.1200100202",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9009511154242,
+          30.0204268894229
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110000449104",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 48759
       },
       "publication_region": "new-orleans"
     },
@@ -1101,7 +901,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1169,7 +969,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1193,110 +993,42 @@
       "publication_region": "new-orleans"
     },
     {
-      "id": "sig_fe6b3f308823dab33b2c",
+      "id": "sig_00f666e70edcb9fba905",
       "source": "epa-echo",
-      "source_record_id": "110011178858",
+      "source_record_id": "110044256881",
       "predicate": "environment.regulated_facility",
       "value": {
-        "name": "CHAMPION TRAILERAPRTS & REPAIR LLC",
-        "address": "56705 GARRETT RD, SLIDELL, LA, 70459",
+        "name": "RAIN FOREST EXPRESS",
+        "address": "3017 PONTCHARTRAIN DR., SLIDELL, LA, 70458",
         "county": "ST. TAMMANY",
         "major": null,
-        "active": null,
-        "compliance_status": null,
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
+        "active": "Y",
+        "compliance_status": "Significant Violation",
+        "significant_noncompliance": "Y",
+        "programs_with_significant_noncompliance": 1,
+        "quarters_noncompliance_3y": 9,
         "inspections_5y": 0,
         "formal_actions_5y": 0,
         "penalties_5y": null,
         "penalty_total_5y_usd": 0,
         "coordinate_accuracy_m": 30,
         "huc": "08090201",
-        "last_inspection": "2005-06-27T00:00:00.000Z"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.7615604311026,
-          30.2542596651499
-        ]
-      },
-      "atlas_address": "F02.1200103321",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.7615604311026,
-          30.2542596651499
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110011178858",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 37246
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_50f1dae8b0e1fd9c2307",
-      "source": "epa-echo",
-      "source_record_id": "110040432305",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "NEW BEGINNINGS MINISTRY",
-        "address": "36196 OCEOLA ST., SLIDELL, LA, 70460",
-        "county": "ST. TAMMANY",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 17459,
-        "huc": "08090201",
         "last_inspection": null
       },
       "unit": null,
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -89.7990165851893,
-          30.2806481723035
+          -89.7848797975631,
+          30.2628996330218
         ]
       },
       "atlas_address": "F02.1200103201",
       "atlas_address_basis": {
         "method": "source_point",
         "representative_point": [
-          -89.7990165851893,
-          30.2806481723035
+          -89.7848797975631,
+          30.2628996330218
         ],
         "exact": true,
         "note": "Atlas address derives from the source point."
@@ -1305,7 +1037,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1319,92 +1051,24 @@
       ],
       "provenance": {
         "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110040432305",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110044256881",
         "provider": "U.S. EPA ECHO",
         "refresh": "weekly"
       },
       "raw": {
-        "objectid": 35602
+        "objectid": 36988
       },
       "publication_region": "new-orleans"
     },
     {
-      "id": "sig_65138393d37ac4ad1e1b",
+      "id": "sig_1c4a4077286e99c1e8f0",
       "source": "epa-echo",
-      "source_record_id": "110006023668",
+      "source_record_id": "110006808204",
       "predicate": "environment.regulated_facility",
       "value": {
-        "name": "PIKES CLASSICS OF YESTERYEAR",
-        "address": "55285 HWY 433, SLIDELL, LA, 70461",
-        "county": "ST TAMMANY",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 50,
-        "huc": "08090201",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.7485869617694,
-          30.2330456509391
-        ]
-      },
-      "atlas_address": "F02.1200103200",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.7485869617694,
-          30.2330456509391
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110006023668",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 33274
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_841b9e618cc6e4a3367f",
-      "source": "epa-echo",
-      "source_record_id": "110041250874",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "BAYOU METALS",
-        "address": "60042 CABIRAN RD, SLIDELL, LA, 70460",
-        "county": "ST. TAMMANY",
+        "name": "BAYOU SEAFOOD",
+        "address": "3124 HOPEDALE HWY, HOPEDALE, LA, 70085",
+        "county": "ST. BERNARD",
         "major": null,
         "active": null,
         "compliance_status": null,
@@ -1416,23 +1080,23 @@
         "penalties_5y": null,
         "penalty_total_5y_usd": 0,
         "coordinate_accuracy_m": 50,
-        "huc": "08090201",
-        "last_inspection": null
+        "huc": "08090203",
+        "last_inspection": "2000-05-17T00:00:00.000Z"
       },
       "unit": null,
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -89.8123808216711,
-          30.3019201559124
+          -89.682991979723,
+          29.8347840299565
         ]
       },
-      "atlas_address": "F02.1200103230",
+      "atlas_address": "F02.1200100032",
       "atlas_address_basis": {
         "method": "source_point",
         "representative_point": [
-          -89.8123808216711,
-          30.3019201559124
+          -89.682991979723,
+          29.8347840299565
         ],
         "exact": true,
         "note": "Atlas address derives from the source point."
@@ -1441,7 +1105,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1455,80 +1119,12 @@
       ],
       "provenance": {
         "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110041250874",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110006808204",
         "provider": "U.S. EPA ECHO",
         "refresh": "weekly"
       },
       "raw": {
-        "objectid": 26953
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_b88151add9c60cc00eba",
-      "source": "epa-echo",
-      "source_record_id": "110003293310",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "SEARS 2026 6118 6816 ROEBUCK & CO",
-        "address": "150 NORTH SHORE BLVD STE 1000, SLIDELL, LA, 70460",
-        "county": "ST TAMMANY",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 50,
-        "huc": "08090201",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.7272106512685,
-          30.2853568888485
-        ]
-      },
-      "atlas_address": "F02.1200103323",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.7272106512685,
-          30.2853568888485
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003293310",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 31599
+        "objectid": 38416
       },
       "publication_region": "new-orleans"
     },
@@ -1577,7 +1173,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1645,7 +1241,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1665,6 +1261,278 @@
       },
       "raw": {
         "objectid": 13603
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_50f1dae8b0e1fd9c2307",
+      "source": "epa-echo",
+      "source_record_id": "110040432305",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "NEW BEGINNINGS MINISTRY",
+        "address": "36196 OCEOLA ST., SLIDELL, LA, 70460",
+        "county": "ST. TAMMANY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 17459,
+        "huc": "08090201",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.7990165851893,
+          30.2806481723035
+        ]
+      },
+      "atlas_address": "F02.1200103201",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.7990165851893,
+          30.2806481723035
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110040432305",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 35602
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_65138393d37ac4ad1e1b",
+      "source": "epa-echo",
+      "source_record_id": "110006023668",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "PIKES CLASSICS OF YESTERYEAR",
+        "address": "55285 HWY 433, SLIDELL, LA, 70461",
+        "county": "ST TAMMANY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090201",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.7485869617694,
+          30.2330456509391
+        ]
+      },
+      "atlas_address": "F02.1200103200",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.7485869617694,
+          30.2330456509391
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110006023668",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 33274
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7e88d346871031501827",
+      "source": "epa-echo",
+      "source_record_id": "110041247512",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SOUTHERN PIPE & SUPPLY",
+        "address": "59489 CAMP VILLERE RD, SLIDELL, LA, 70460",
+        "county": "ST. TAMMANY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090201",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.813180322274,
+          30.3012097163518
+        ]
+      },
+      "atlas_address": "F02.1200103230",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.813180322274,
+          30.3012097163518
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110041247512",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 35653
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_841b9e618cc6e4a3367f",
+      "source": "epa-echo",
+      "source_record_id": "110041250874",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BAYOU METALS",
+        "address": "60042 CABIRAN RD, SLIDELL, LA, 70460",
+        "county": "ST. TAMMANY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090201",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.8123808216711,
+          30.3019201559124
+        ]
+      },
+      "atlas_address": "F02.1200103230",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.8123808216711,
+          30.3019201559124
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110041250874",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 26953
       },
       "publication_region": "new-orleans"
     },
@@ -1713,7 +1581,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1733,6 +1601,142 @@
       },
       "raw": {
         "objectid": 15941
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_b88151add9c60cc00eba",
+      "source": "epa-echo",
+      "source_record_id": "110003293310",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "SEARS 2026 6118 6816 ROEBUCK & CO",
+        "address": "150 NORTH SHORE BLVD STE 1000, SLIDELL, LA, 70460",
+        "county": "ST TAMMANY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090201",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.7272106512685,
+          30.2853568888485
+        ]
+      },
+      "atlas_address": "F02.1200103323",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.7272106512685,
+          30.2853568888485
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003293310",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 31599
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_fe6b3f308823dab33b2c",
+      "source": "epa-echo",
+      "source_record_id": "110011178858",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "CHAMPION TRAILERAPRTS & REPAIR LLC",
+        "address": "56705 GARRETT RD, SLIDELL, LA, 70459",
+        "county": "ST. TAMMANY",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090201",
+        "last_inspection": "2005-06-27T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.7615604311026,
+          30.2542596651499
+        ]
+      },
+      "atlas_address": "F02.1200103321",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.7615604311026,
+          30.2542596651499
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110011178858",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 37246
       },
       "publication_region": "new-orleans"
     },
@@ -1781,7 +1785,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1801,6 +1805,74 @@
       },
       "raw": {
         "objectid": 6306
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_177fde611fb9366c7c4b",
+      "source": "epa-echo",
+      "source_record_id": "110011177010",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "RESTORATION & HEALING MINISTRY INC",
+        "address": "1490 W. GAUSE BLVD, SLIDELL, LA, 70469",
+        "county": "ST. TAMMANY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "Significant Violation",
+        "significant_noncompliance": "Y",
+        "programs_with_significant_noncompliance": 1,
+        "quarters_noncompliance_3y": 11,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090201",
+        "last_inspection": "2001-11-30T00:00:00.000Z"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.7970097488446,
+          30.2933200786584
+        ]
+      },
+      "atlas_address": "F02.1200103201",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.7970097488446,
+          30.2933200786584
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110011177010",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 486
       },
       "publication_region": "new-orleans"
     },
@@ -1849,7 +1921,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1869,6 +1941,74 @@
       },
       "raw": {
         "objectid": 10014
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_c01a6d6d0d65c1ba8426",
+      "source": "epa-echo",
+      "source_record_id": "110016758926",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "LILY OAK LANDSCAPE & MAINTENANCE, LLC - THE GARDEN HUB",
+        "address": "29388 HWY 190, LACOMBE, LA, 70445",
+        "county": "ST. TAMMANY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090201",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9095246364958,
+          30.3113430757137
+        ]
+      },
+      "atlas_address": "F02.1200103212",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9095246364958,
+          30.3113430757137
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110016758926",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 436
       },
       "publication_region": "new-orleans"
     },
@@ -1917,7 +2057,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1985,7 +2125,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2053,7 +2193,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2075,147 +2215,40 @@
         "objectid": 10414
       },
       "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_f4f82a38ba9b2a58e657",
-      "source": "epa-echo",
-      "source_record_id": "110006019496",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "PAT MCGEE EXTERMINATING CO INC",
-        "address": "RT 1 BOX 363, SLIDELL, LA, 70458",
-        "county": "ST TAMMANY",
-        "major": null,
-        "active": null,
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 10000,
-        "huc": null,
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.7941683776009,
-          30.2620073500278
-        ]
-      },
-      "atlas_address": "F02.1200103201",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.7941683776009,
-          30.2620073500278
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110006019496",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 3610
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_177fde611fb9366c7c4b",
-      "source": "epa-echo",
-      "source_record_id": "110011177010",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "RESTORATION & HEALING MINISTRY INC",
-        "address": "1490 W. GAUSE BLVD, SLIDELL, LA, 70469",
-        "county": "ST. TAMMANY",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "Significant Violation",
-        "significant_noncompliance": "Y",
-        "programs_with_significant_noncompliance": 1,
-        "quarters_noncompliance_3y": 11,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 30,
-        "huc": "08090201",
-        "last_inspection": "2001-11-30T00:00:00.000Z"
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.7970097488446,
-          30.2933200786584
-        ]
-      },
-      "atlas_address": "F02.1200103201",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.7970097488446,
-          30.2933200786584
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.015Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110011177010",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 486
-      },
-      "publication_region": "new-orleans"
     }
   ],
   "entities": [],
   "relations": [],
   "statements": [
+    {
+      "id": "stmt_fcaac5abb21fbbc45228",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1200100230",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_acfcbd6f02eb2eab9804",
+        "sig_d22d1ca813e18124aa35",
+        "sig_fd8dcec0c1d1bd3e07e1"
+      ],
+      "derived_from": [
+        "sig_acfcbd6f02eb2eab9804",
+        "sig_d22d1ca813e18124aa35",
+        "sig_fd8dcec0c1d1bd3e07e1"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.5,
+        "novelty": 0.55
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.325
+    },
     {
       "id": "stmt_37d3bbb433bade175523",
       "kind": "ecological_observation_density",
@@ -2664,6 +2697,37 @@
       "publication_rank": 0.1563
     },
     {
+      "id": "stmt_723717f37d5e5d57337a",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200100230",
+      "text": "3 independent source channels address signals to this ground: gbif-occurrences, nola-building-permits, nps-national-register.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_54ff82d41dc5bf022a6b",
+        "sig_d22d1ca813e18124aa35",
+        "sig_fd8dcec0c1d1bd3e07e1",
+        "sig_acfcbd6f02eb2eab9804"
+      ],
+      "derived_from": [
+        "sig_54ff82d41dc5bf022a6b",
+        "sig_d22d1ca813e18124aa35",
+        "sig_fd8dcec0c1d1bd3e07e1",
+        "sig_acfcbd6f02eb2eab9804"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.6,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1563
+    },
+    {
       "id": "stmt_990ecaa966ad893e4b44",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1200103201",
@@ -2711,6 +2775,33 @@
       "publication_rank": 0.1563
     },
     {
+      "id": "stmt_2559729bbb902eb7002c",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1200100230",
+      "text": "2 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_d22d1ca813e18124aa35",
+        "sig_fd8dcec0c1d1bd3e07e1"
+      ],
+      "derived_from": [
+        "sig_d22d1ca813e18124aa35",
+        "sig_fd8dcec0c1d1bd3e07e1"
+      ],
+      "importance": {
+        "change": 0.25,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1542
+    },
+    {
       "id": "stmt_058e3d641cf10ee4d8c0",
       "kind": "regulated_environment_presence",
       "atlas_address": "F02.1200103323",
@@ -2734,83 +2825,8 @@
       },
       "publication_region": "new-orleans",
       "publication_rank": 0.1537
-    },
-    {
-      "id": "stmt_1c96d7939a47c5d7ac11",
-      "kind": "regulated_environment_presence",
-      "atlas_address": "F02.1200103212",
-      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
-      "epistemic": "INFERRED",
-      "evidence": [
-        "sig_c01a6d6d0d65c1ba8426"
-      ],
-      "derived_from": [
-        "sig_c01a6d6d0d65c1ba8426"
-      ],
-      "importance": {
-        "change": null,
-        "exposure": null,
-        "anomaly": null,
-        "contestation": null,
-        "consequence": 0.33,
-        "evidence_diversity": 0.25,
-        "uncertainty": 0.35,
-        "novelty": null
-      },
-      "publication_region": "new-orleans",
-      "publication_rank": 0.1537
-    },
-    {
-      "id": "stmt_7d92d2d2c8beb1dd634d",
-      "kind": "regulated_environment_presence",
-      "atlas_address": "F02.1200103322",
-      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
-      "epistemic": "INFERRED",
-      "evidence": [
-        "sig_ec5c3e0a8700ab697ff7"
-      ],
-      "derived_from": [
-        "sig_ec5c3e0a8700ab697ff7"
-      ],
-      "importance": {
-        "change": null,
-        "exposure": null,
-        "anomaly": null,
-        "contestation": null,
-        "consequence": 0.33,
-        "evidence_diversity": 0.25,
-        "uncertainty": 0.35,
-        "novelty": null
-      },
-      "publication_region": "new-orleans",
-      "publication_rank": 0.1537
-    },
-    {
-      "id": "stmt_a8cd402a34a6d2fa7401",
-      "kind": "regulated_environment_presence",
-      "atlas_address": "F02.1200100211",
-      "text": "1 EPA-regulated facility addresses to this ground. The statement reports ECHO records and does not independently establish present harm.",
-      "epistemic": "INFERRED",
-      "evidence": [
-        "sig_dd3c9880be891296f945"
-      ],
-      "derived_from": [
-        "sig_dd3c9880be891296f945"
-      ],
-      "importance": {
-        "change": null,
-        "exposure": null,
-        "anomaly": null,
-        "contestation": null,
-        "consequence": 0.33,
-        "evidence_diversity": 0.25,
-        "uncertainty": 0.35,
-        "novelty": null
-      },
-      "publication_region": "new-orleans",
-      "publication_rank": 0.1537
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.029Z",
+  "generated_at": "2026-08-25T12:34:09.092Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

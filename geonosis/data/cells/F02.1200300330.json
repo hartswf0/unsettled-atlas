@@ -9,23 +9,25 @@
     "fdic-locations",
     "fdic-sod",
     "gbif-occurrences",
-    "inaturalist-observations"
+    "inaturalist-observations",
+    "nola-building-permits"
   ],
   "counts": {
-    "signals": 11,
+    "signals": 13,
     "entities": 2,
     "relations": 6,
-    "statements": 3,
-    "direct_signals": 11,
+    "statements": 4,
+    "direct_signals": 13,
     "direct_entities": 2,
-    "direct_statements": 3
+    "direct_statements": 4
   },
   "signal_predicates": {
     "environment.regulated_facility": 4,
     "money.bank_branch": 2,
     "money.branch_deposits": 2,
     "ecology.occurrence": 2,
-    "ecology.inaturalist_observation": 1
+    "ecology.inaturalist_observation": 1,
+    "change.building_permit": 2
   },
   "entity_types": {
     "bank_branch": 2
@@ -36,6 +38,7 @@
   },
   "statement_kinds": {
     "regulated_environment_presence": 1,
+    "building_change_activity": 1,
     "multi_source_activity": 1,
     "reported_deposit_stock": 1
   },
@@ -85,7 +88,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -105,6 +108,74 @@
       },
       "raw": {
         "objectid": 16159
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_a524fd05f45cb8e8c7e8",
+      "source": "epa-echo",
+      "source_record_id": "110003295238",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "CARDINAL SVCS INC",
+        "address": "131 KEATING DR, BELLE CHASSE, LA, 70037",
+        "county": "PLAQUEMINES",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090301",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.985789807487,
+          29.9013803861499
+        ]
+      },
+      "atlas_address": "F02.1200300330",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.985789807487,
+          29.9013803861499
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003295238",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 1896
       },
       "publication_region": "new-orleans"
     },
@@ -153,7 +224,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -221,7 +292,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -245,51 +316,48 @@
       "publication_region": "new-orleans"
     },
     {
-      "id": "sig_a524fd05f45cb8e8c7e8",
-      "source": "epa-echo",
-      "source_record_id": "110003295238",
-      "predicate": "environment.regulated_facility",
+      "id": "sig_250d39ea821f48b320ad",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24261-SERV",
+      "predicate": "change.building_permit",
       "value": {
-        "name": "CARDINAL SVCS INC",
-        "address": "131 KEATING DR, BELLE CHASSE, LA, 70037",
-        "county": "PLAQUEMINES",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 30,
-        "huc": "08090301",
-        "last_inspection": null
+        "permit": "26-24261-SERV",
+        "permit_type": "Electrical Service / Circuit / Feeder",
+        "address": "3853 S Inwood Ave",
+        "description": "200 amp service change, grounding, surge protection, ceiling fan and light fixture",
+        "owner": "Ray Charles A Jr Ray Ethel SS",
+        "status": "Permit Issued",
+        "next_status": "Certificate of Completion",
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 7753,
+        "filing_date": "2026-08-18T14:17:03.000",
+        "issue_date": "2026-08-24T14:07:51.000"
       },
       "unit": null,
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -89.985789807487,
-          29.9013803861499
+          -89.99455679771924,
+          29.907304953583548
         ]
       },
       "atlas_address": "F02.1200300330",
       "atlas_address_basis": {
         "method": "source_point",
         "representative_point": [
-          -89.985789807487,
-          29.9013803861499
+          -89.99455679771924,
+          29.907304953583548
         ],
         "exact": true,
         "note": "Atlas address derives from the source point."
       },
-      "epistemic": "REPORTED",
-      "observed_at": null,
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-24T14:07:51.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.015Z",
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -298,17 +366,19 @@
         "HUMAN",
         "BUILDING",
         "SERVICE",
-        "ECOLOGY",
         "ECONOMY"
       ],
       "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003295238",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
       },
       "raw": {
-        "objectid": 1896
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
       },
       "publication_region": "new-orleans"
     },
@@ -352,7 +422,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -409,7 +479,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.673Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -462,7 +532,7 @@
       "observed_at": "2026-08-23T19:13:40.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.605Z",
+      "retrieved_at": "2026-08-25T12:33:46.149Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -480,6 +550,73 @@
       "raw": {
         "place_guess": "Belle Chasse",
         "positional_accuracy": null
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_b8ae871893415dfcdfe5",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24423-HVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24423-HVAC",
+        "permit_type": "Mechanical HVAC",
+        "address": "3858 S Inwood Ave",
+        "description": "Replace 4-ton condenser and evaporator coil",
+        "owner": "Severan Carl A SR",
+        "status": "Permit Issued",
+        "next_status": "Inspections Finaled",
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 13991,
+        "filing_date": "2026-08-19T15:30:47.000",
+        "issue_date": "2026-08-20T16:09:45.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.994197473885,
+          29.90703091213284
+        ]
+      },
+      "atlas_address": "F02.1200300330",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.994197473885,
+          29.90703091213284
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-20T16:09:45.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
       },
       "publication_region": "new-orleans"
     },
@@ -525,7 +662,7 @@
       "observed_at": "2026-01-08T07:45:36.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.628Z",
+      "retrieved_at": "2026-08-25T12:33:46.948Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -590,7 +727,7 @@
       "observed_at": "2026-01-03T09:23:52.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.630Z",
+      "retrieved_at": "2026-08-25T12:33:46.949Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -652,7 +789,7 @@
       "observed_at": null,
       "valid_from": "2025-06-30",
       "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:25.771Z",
+      "retrieved_at": "2026-08-25T12:33:46.720Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -709,7 +846,7 @@
       "observed_at": null,
       "valid_from": "2025-06-30",
       "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:25.772Z",
+      "retrieved_at": "2026-08-25T12:33:46.721Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -876,10 +1013,10 @@
   ],
   "statements": [
     {
-      "id": "stmt_2f358f3d6dba521b5058",
+      "id": "stmt_e07b40031cb53c7a13fc",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1200300330",
-      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations.",
+      "text": "6 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nola-building-permits.",
       "epistemic": "INFERRED",
       "evidence": [
         "sig_93327e5200416c31492d",
@@ -892,7 +1029,9 @@
         "sig_bf7c24581817e170dc98",
         "sig_b11830ab2a4ae17e03f0",
         "sig_d8a9cd50402e0e98a0ba",
-        "sig_452e43a47fad6c2412c5"
+        "sig_452e43a47fad6c2412c5",
+        "sig_250d39ea821f48b320ad",
+        "sig_b8ae871893415dfcdfe5"
       ],
       "derived_from": [
         "sig_93327e5200416c31492d",
@@ -905,7 +1044,9 @@
         "sig_bf7c24581817e170dc98",
         "sig_b11830ab2a4ae17e03f0",
         "sig_d8a9cd50402e0e98a0ba",
-        "sig_452e43a47fad6c2412c5"
+        "sig_452e43a47fad6c2412c5",
+        "sig_250d39ea821f48b320ad",
+        "sig_b8ae871893415dfcdfe5"
       ],
       "importance": {
         "change": null,
@@ -952,6 +1093,33 @@
       "publication_rank": 0.1838
     },
     {
+      "id": "stmt_07508432f3fa2cf4c7b5",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1200300330",
+      "text": "2 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_250d39ea821f48b320ad",
+        "sig_b8ae871893415dfcdfe5"
+      ],
+      "derived_from": [
+        "sig_250d39ea821f48b320ad",
+        "sig_b8ae871893415dfcdfe5"
+      ],
+      "importance": {
+        "change": 0.25,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1542
+    },
+    {
       "id": "stmt_e2b30ecb3283862b0909",
       "kind": "reported_deposit_stock",
       "atlas_address": "F02.1200300330",
@@ -980,6 +1148,6 @@
       "publication_rank": 0.1375
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.087Z",
+  "generated_at": "2026-08-25T12:34:09.128Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

@@ -10,18 +10,19 @@
     "fdic-sod",
     "gbif-occurrences",
     "inaturalist-observations",
+    "nola-building-permits",
     "nps-national-register",
     "osm-notes",
     "wikipedia-geosearch"
   ],
   "counts": {
-    "signals": 343,
+    "signals": 383,
     "entities": 28,
     "relations": 70,
-    "statements": 7,
-    "direct_signals": 343,
+    "statements": 9,
+    "direct_signals": 383,
     "direct_entities": 28,
-    "direct_statements": 7
+    "direct_statements": 9
   },
   "signal_predicates": {
     "environment.regulated_facility": 16,
@@ -29,6 +30,7 @@
     "money.branch_deposits": 25,
     "ecology.occurrence": 8,
     "ecology.inaturalist_observation": 15,
+    "change.building_permit": 40,
     "memory.national_register_resource": 80,
     "claim.map_note": 20,
     "attention.wikipedia_entity": 160
@@ -46,78 +48,12 @@
     "ecological_observation_density": 1,
     "regulated_environment_presence": 1,
     "institutional_memory_density": 1,
+    "building_change_activity": 1,
+    "heritage_change_coaddress": 1,
     "multi_source_activity": 1,
     "reported_deposit_stock": 1
   },
   "signals": [
-    {
-      "id": "sig_46855ebf78a86c868e8f",
-      "source": "epa-echo",
-      "source_record_id": "110009583888",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "PROPERTY ONE-BANK ONE CENTRE",
-        "address": "200 CARONDELET ST, NEW ORLEANS, LA, 70130",
-        "county": "ORLEANS",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 30,
-        "huc": "08090203",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.07103992795,
-          29.9525403065237
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.07103992795,
-          29.9525403065237
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.022Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110009583888",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 56778
-      },
-      "publication_region": "new-orleans"
-    },
     {
       "id": "sig_5f450a70a1089a751775",
       "source": "epa-echo",
@@ -163,7 +99,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "retrieved_at": "2026-08-25T12:33:46.036Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -231,7 +167,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.022Z",
+      "retrieved_at": "2026-08-25T12:33:46.036Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -251,6 +187,74 @@
       },
       "raw": {
         "objectid": 58707
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_46855ebf78a86c868e8f",
+      "source": "epa-echo",
+      "source_record_id": "110009583888",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "PROPERTY ONE-BANK ONE CENTRE",
+        "address": "200 CARONDELET ST, NEW ORLEANS, LA, 70130",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.07103992795,
+          29.9525403065237
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.07103992795,
+          29.9525403065237
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110009583888",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 56778
       },
       "publication_region": "new-orleans"
     },
@@ -299,7 +303,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -367,7 +371,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -387,278 +391,6 @@
       },
       "raw": {
         "objectid": 44115
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_267bef6d8320d118d2e1",
-      "source": "epa-echo",
-      "source_record_id": "110003284945",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "PAN AMERICAN LIFE INS CO",
-        "address": "601 POYDRAS ST 10TH FL, NEW ORLEANS, LA, 70130",
-        "county": "ORLEANS",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 30,
-        "huc": "08090203",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.0693699598368,
-          29.9493903322967
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.0693699598368,
-          29.9493903322967
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003284945",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 32481
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_521617523162eeb3f2ab",
-      "source": "epa-echo",
-      "source_record_id": "110003292026",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "ROTARY CONNECTION",
-        "address": "1032 BARONNE ST ID721, NEW ORLEANS, LA, 70113",
-        "county": "ORLEANS",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 30,
-        "huc": "08090203",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.075090431566,
-          29.9443199640721
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.075090431566,
-          29.9443199640721
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003292026",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 20844
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_bcbf37bea2c29ec702d3",
-      "source": "epa-echo",
-      "source_record_id": "110003337489",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "COTTMAN TRANSMISSION",
-        "address": "1479 N CLAIBORNE, NEW ORLEANS, LA, 70116",
-        "county": "ORLEANS",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 30,
-        "huc": "08090203",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.0675796174755,
-          29.9708598609616
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.0675796174755,
-          29.9708598609616
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003337489",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 31684
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_d65d3620317c3a0adc43",
-      "source": "epa-echo",
-      "source_record_id": "110003326507",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "BOURQUE PRINTING DBA UPTON PRNT",
-        "address": "746 CARONDELET ST, NEW ORLEANS, LA, 70130",
-        "county": "ORLEANS",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 30,
-        "huc": "08090203",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.0727098960631,
-          29.9469501428289
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.0727098960631,
-          29.9469501428289
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003326507",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 22762
       },
       "publication_region": "new-orleans"
     },
@@ -707,7 +439,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -775,7 +507,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -795,6 +527,142 @@
       },
       "raw": {
         "objectid": 15668
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_267bef6d8320d118d2e1",
+      "source": "epa-echo",
+      "source_record_id": "110003284945",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "PAN AMERICAN LIFE INS CO",
+        "address": "601 POYDRAS ST 10TH FL, NEW ORLEANS, LA, 70130",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0693699598368,
+          29.9493903322967
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0693699598368,
+          29.9493903322967
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003284945",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 32481
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_521617523162eeb3f2ab",
+      "source": "epa-echo",
+      "source_record_id": "110003292026",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "ROTARY CONNECTION",
+        "address": "1032 BARONNE ST ID721, NEW ORLEANS, LA, 70113",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.075090431566,
+          29.9443199640721
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.075090431566,
+          29.9443199640721
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003292026",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 20844
       },
       "publication_region": "new-orleans"
     },
@@ -843,7 +711,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -911,7 +779,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -931,6 +799,142 @@
       },
       "raw": {
         "objectid": 13197
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_bcbf37bea2c29ec702d3",
+      "source": "epa-echo",
+      "source_record_id": "110003337489",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "COTTMAN TRANSMISSION",
+        "address": "1479 N CLAIBORNE, NEW ORLEANS, LA, 70116",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0675796174755,
+          29.9708598609616
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0675796174755,
+          29.9708598609616
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003337489",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 31684
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_d65d3620317c3a0adc43",
+      "source": "epa-echo",
+      "source_record_id": "110003326507",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "BOURQUE PRINTING DBA UPTON PRNT",
+        "address": "746 CARONDELET ST, NEW ORLEANS, LA, 70130",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 30,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0727098960631,
+          29.9469501428289
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0727098960631,
+          29.9469501428289
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110003326507",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 22762
       },
       "publication_region": "new-orleans"
     },
@@ -979,7 +983,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1047,7 +1051,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1115,7 +1119,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1136,6 +1140,349 @@
       "raw": {
         "objectid": 3628
       },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_36f7f15f58d65b7f64f6",
+      "source": "wikipedia-geosearch",
+      "source_record_id": "4670648",
+      "predicate": "attention.wikipedia_entity",
+      "value": {
+        "title": "Congo Square",
+        "distance_m": 1124.5,
+        "namespace": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.06833333333333,
+          29.960833333333333
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.06833333333333,
+          29.960833333333333
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:45.930Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "MEMORY"
+      ],
+      "provenance": {
+        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
+        "source_url": "https://en.wikipedia.org/?curid=4670648",
+        "provider": "Wikimedia"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_42c5cd3cbc001e0beaa6",
+      "source": "wikipedia-geosearch",
+      "source_record_id": "3518169",
+      "predicate": "attention.wikipedia_entity",
+      "value": {
+        "title": "Municipal Auditorium (New Orleans)",
+        "distance_m": 1165.9,
+        "namespace": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.06916666666666,
+          29.961388888888887
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.06916666666666,
+          29.961388888888887
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:45.930Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "MEMORY"
+      ],
+      "provenance": {
+        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
+        "source_url": "https://en.wikipedia.org/?curid=3518169",
+        "provider": "Wikimedia"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_5865138e96a2b51b545e",
+      "source": "wikipedia-geosearch",
+      "source_record_id": "36532139",
+      "predicate": "attention.wikipedia_entity",
+      "value": {
+        "title": "Grand Palace Hotel, New Orleans",
+        "distance_m": 1116.3,
+        "namespace": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0785,
+          29.9591
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0785,
+          29.9591
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:45.930Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "MEMORY"
+      ],
+      "provenance": {
+        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
+        "source_url": "https://en.wikipedia.org/?curid=36532139",
+        "provider": "Wikimedia"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_a262a161f385a9671cb7",
+      "source": "wikipedia-geosearch",
+      "source_record_id": "37832324",
+      "predicate": "attention.wikipedia_entity",
+      "value": {
+        "title": "Mermaid Lounge",
+        "distance_m": 1166.6,
+        "namespace": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0692,
+          29.9408
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0692,
+          29.9408
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:45.930Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "MEMORY"
+      ],
+      "provenance": {
+        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
+        "source_url": "https://en.wikipedia.org/?curid=37832324",
+        "provider": "Wikimedia"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_af890d098fb77a0cf559",
+      "source": "wikipedia-geosearch",
+      "source_record_id": "7487187",
+      "predicate": "attention.wikipedia_entity",
+      "value": {
+        "title": "Mississippi Aerial River Transit",
+        "distance_m": 1140,
+        "namespace": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0625,
+          29.944444444444446
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0625,
+          29.944444444444446
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:45.930Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "MEMORY"
+      ],
+      "provenance": {
+        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
+        "source_url": "https://en.wikipedia.org/?curid=7487187",
+        "provider": "Wikimedia"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ca6ab8a68e38bd1ec263",
+      "source": "wikipedia-geosearch",
+      "source_record_id": "17719739",
+      "predicate": "attention.wikipedia_entity",
+      "value": {
+        "title": "Théâtre d'Orléans",
+        "distance_m": 1099.1,
+        "namespace": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.064652,
+          29.959006
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.064652,
+          29.959006
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:45.930Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "MEMORY"
+      ],
+      "provenance": {
+        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
+        "source_url": "https://en.wikipedia.org/?curid=17719739",
+        "provider": "Wikimedia"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_d96c6369cd5a9d0446d0",
+      "source": "wikipedia-geosearch",
+      "source_record_id": "752085",
+      "predicate": "attention.wikipedia_entity",
+      "value": {
+        "title": "Café du Monde",
+        "distance_m": 1173.9,
+        "namespace": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.061823,
+          29.957515
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.061823,
+          29.957515
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:45.930Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "MEMORY"
+      ],
+      "provenance": {
+        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
+        "source_url": "https://en.wikipedia.org/?curid=752085",
+        "provider": "Wikimedia"
+      },
+      "raw": null,
       "publication_region": "new-orleans"
     },
     {
@@ -1170,7 +1517,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
+      "retrieved_at": "2026-08-25T12:33:45.929Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1219,7 +1566,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
+      "retrieved_at": "2026-08-25T12:33:45.929Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1231,202 +1578,6 @@
       "provenance": {
         "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
         "source_url": "https://en.wikipedia.org/?curid=3639121",
-        "provider": "Wikimedia"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_0748c71eb3013dc1ad42",
-      "source": "wikipedia-geosearch",
-      "source_record_id": "59934231",
-      "predicate": "attention.wikipedia_entity",
-      "value": {
-        "title": "Pêche Seafood Grill",
-        "distance_m": 695.6,
-        "namespace": 0
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.0691,
-          29.9452
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.0691,
-          29.9452
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "MEMORY"
-      ],
-      "provenance": {
-        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
-        "source_url": "https://en.wikipedia.org/?curid=59934231",
-        "provider": "Wikimedia"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_09587ac0a1a91473eb5f",
-      "source": "wikipedia-geosearch",
-      "source_record_id": "9715312",
-      "predicate": "attention.wikipedia_entity",
-      "value": {
-        "title": "Benson Tower (New Orleans)",
-        "distance_m": 630.2,
-        "namespace": 0
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.078035,
-          29.951336
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.078035,
-          29.951336
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "MEMORY"
-      ],
-      "provenance": {
-        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
-        "source_url": "https://en.wikipedia.org/?curid=9715312",
-        "provider": "Wikimedia"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_09668fac63e5ad6a8d55",
-      "source": "wikipedia-geosearch",
-      "source_record_id": "24080130",
-      "predicate": "attention.wikipedia_entity",
-      "value": {
-        "title": "John Minor Wisdom United States Court of Appeals Building",
-        "distance_m": 825.9,
-        "namespace": 0
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.07916666666667,
-          29.947777777777777
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.07916666666667,
-          29.947777777777777
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "MEMORY"
-      ],
-      "provenance": {
-        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
-        "source_url": "https://en.wikipedia.org/?curid=24080130",
-        "provider": "Wikimedia"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_0c95493f5f033b441684",
-      "source": "wikipedia-geosearch",
-      "source_record_id": "15093611",
-      "predicate": "attention.wikipedia_entity",
-      "value": {
-        "title": "Napoleon House",
-        "distance_m": 808.2,
-        "namespace": 0
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.065,
-          29.955694444444443
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.065,
-          29.955694444444443
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "MEMORY"
-      ],
-      "provenance": {
-        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
-        "source_url": "https://en.wikipedia.org/?curid=15093611",
         "provider": "Wikimedia"
       },
       "raw": null,
@@ -1464,7 +1615,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
+      "retrieved_at": "2026-08-25T12:33:45.929Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1513,7 +1664,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
+      "retrieved_at": "2026-08-25T12:33:45.929Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1525,55 +1676,6 @@
       "provenance": {
         "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
         "source_url": "https://en.wikipedia.org/?curid=753673",
-        "provider": "Wikimedia"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_201826d0954f3483f5b5",
-      "source": "wikipedia-geosearch",
-      "source_record_id": "19406583",
-      "predicate": "attention.wikipedia_entity",
-      "value": {
-        "title": "Broussard's",
-        "distance_m": 689.3,
-        "namespace": 0
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.0682,
-          29.9566
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.0682,
-          29.9566
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "MEMORY"
-      ],
-      "provenance": {
-        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
-        "source_url": "https://en.wikipedia.org/?curid=19406583",
         "provider": "Wikimedia"
       },
       "raw": null,
@@ -1611,7 +1713,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
+      "retrieved_at": "2026-08-25T12:33:45.929Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1623,55 +1725,6 @@
       "provenance": {
         "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
         "source_url": "https://en.wikipedia.org/?curid=15093868",
-        "provider": "Wikimedia"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_271255fdbc28417a4880",
-      "source": "wikipedia-geosearch",
-      "source_record_id": "42938652",
-      "predicate": "attention.wikipedia_entity",
-      "value": {
-        "title": "Four Seasons Hotel and Private Residences New Orleans",
-        "distance_m": 819.5,
-        "namespace": 0
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.063355,
-          29.948976
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.063355,
-          29.948976
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "MEMORY"
-      ],
-      "provenance": {
-        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
-        "source_url": "https://en.wikipedia.org/?curid=42938652",
         "provider": "Wikimedia"
       },
       "raw": null,
@@ -1709,7 +1762,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
+      "retrieved_at": "2026-08-25T12:33:45.929Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1721,104 +1774,6 @@
       "provenance": {
         "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
         "source_url": "https://en.wikipedia.org/?curid=25351545",
-        "provider": "Wikimedia"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_30d035fe973a1c8ffc6a",
-      "source": "wikipedia-geosearch",
-      "source_record_id": "9718383",
-      "predicate": "attention.wikipedia_entity",
-      "value": {
-        "title": "Hilton New Orleans Riverside",
-        "distance_m": 831.7,
-        "namespace": 0
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.063697,
-          29.947902
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.063697,
-          29.947902
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "MEMORY"
-      ],
-      "provenance": {
-        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
-        "source_url": "https://en.wikipedia.org/?curid=9718383",
-        "provider": "Wikimedia"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_31a31b227c622c39def1",
-      "source": "wikipedia-geosearch",
-      "source_record_id": "9701673",
-      "predicate": "attention.wikipedia_entity",
-      "value": {
-        "title": "1615 Poydras",
-        "distance_m": 819.9,
-        "namespace": 0
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.07982,
-          29.952649
-        ]
-      },
-      "atlas_address": "F02.1200300123",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.07982,
-          29.952649
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "MEMORY"
-      ],
-      "provenance": {
-        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
-        "source_url": "https://en.wikipedia.org/?curid=9701673",
         "provider": "Wikimedia"
       },
       "raw": null,
@@ -1856,7 +1811,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
+      "retrieved_at": "2026-08-25T12:33:45.929Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1874,29 +1829,29 @@
       "publication_region": "new-orleans"
     },
     {
-      "id": "sig_3325a9bfc3447c61f736",
+      "id": "sig_3520bbcfd2f250ab2231",
       "source": "wikipedia-geosearch",
-      "source_record_id": "75186105",
+      "source_record_id": "7568917",
       "predicate": "attention.wikipedia_entity",
       "value": {
-        "title": "New Orleans Pharmacy Museum",
-        "distance_m": 837.4,
+        "title": "Hotel Maison De Ville",
+        "distance_m": 896.2,
         "namespace": 0
       },
       "unit": null,
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -90.0649,
-          29.956
+          -90.066,
+          29.9576
         ]
       },
       "atlas_address": "F02.1200300123",
       "atlas_address_basis": {
         "method": "source_point",
         "representative_point": [
-          -90.0649,
-          29.956
+          -90.066,
+          29.9576
         ],
         "exact": true,
         "note": "Atlas address derives from the source point."
@@ -1905,7 +1860,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.887Z",
+      "retrieved_at": "2026-08-25T12:33:45.929Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1916,7 +1871,56 @@
       ],
       "provenance": {
         "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
-        "source_url": "https://en.wikipedia.org/?curid=75186105",
+        "source_url": "https://en.wikipedia.org/?curid=7568917",
+        "provider": "Wikimedia"
+      },
+      "raw": null,
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_4cf9ccf6b99e89096702",
+      "source": "wikipedia-geosearch",
+      "source_record_id": "19145982",
+      "predicate": "attention.wikipedia_entity",
+      "value": {
+        "title": "Johnny White's",
+        "distance_m": 1011.5,
+        "namespace": 0
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.06541,
+          29.95851
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.06541,
+          29.95851
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:45.929Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "MEMORY"
+      ],
+      "provenance": {
+        "query_url": "https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&list=geosearch&gscoord=29.9511%7C-90.0715&gsradius=10000&gslimit=160",
+        "source_url": "https://en.wikipedia.org/?curid=19145982",
         "provider": "Wikimedia"
       },
       "raw": null,
@@ -2906,6 +2910,269 @@
   ],
   "statements": [
     {
+      "id": "stmt_9c4a5d871201f175c697",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1200300123",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_04bf66c44ad4c3f93b98",
+        "sig_08123877c60497fd6b0f",
+        "sig_08279dd198daf8eb9f1f",
+        "sig_0a386bfab7f4261e0397",
+        "sig_0a6502c2d3daa3cedef9",
+        "sig_0ace7c0267783ad90dad",
+        "sig_0b2e5bc863b3344f864d",
+        "sig_0d95ada28a2a89d65e52",
+        "sig_10cc23a38946b1b3619d",
+        "sig_156600326bb138cbb951",
+        "sig_16b850d128b51579a408",
+        "sig_1d7ee91149f7ed20a220",
+        "sig_1ef053a602d6e6ad034b",
+        "sig_214012f151925b0e594c",
+        "sig_22a25ef0acc0cb55d2b3",
+        "sig_22bb1d88885e4cf64acf",
+        "sig_23d95adc557111c6a8f4",
+        "sig_318fe0b23f0b917c9594",
+        "sig_34cb1857c4007604828c",
+        "sig_46afe6130a7833be6c52",
+        "sig_487c6e710665cfb19c3b",
+        "sig_4a94ab28477a38df6be3",
+        "sig_4a96bf5f6396d41a4d47",
+        "sig_4c1a9677ba2d6d35fbd5",
+        "sig_4f34c59df21d4fb1bb00",
+        "sig_51f40c727a211ec5ffd4",
+        "sig_5491bf32bdbf7d2c3336",
+        "sig_56cbc9fc97102c6572bb",
+        "sig_5825c5281eac8d4a39be",
+        "sig_58945c5ab55d96ef9191",
+        "sig_5a6f23431208e459fb1e",
+        "sig_5ada3c114f831f9940c5",
+        "sig_629db3889f29be950e63",
+        "sig_633a2b0a28cb11e71ddf",
+        "sig_67006fde411b1197179b",
+        "sig_784279f1568fd26f8a49",
+        "sig_7a224973eca9f765bc77",
+        "sig_7c15d7eb58b1372c811b",
+        "sig_7dc5dbfca6228bf4e020",
+        "sig_8229fad8e77f6f29c37f",
+        "sig_824f5808781c75c3a5ca",
+        "sig_862c9c668af04de00b0f",
+        "sig_8746d57b5537a712ac11",
+        "sig_971ba88de0207b9658bf",
+        "sig_9f7bee7ab7a9a351d0d0",
+        "sig_a04e5f765a65d1785c42",
+        "sig_a05b5eacf622d55996d0",
+        "sig_a1549559b90aec783b55",
+        "sig_a61bb2ea4b5ad34889a5",
+        "sig_a6732cf70f3eea2e1944",
+        "sig_ace18239ce4336797a3f",
+        "sig_b06311453d127e3638ff",
+        "sig_b9a8da4d8c99707ea707",
+        "sig_ba4985a1aa9e98dad3b9",
+        "sig_bbcaa4f08a2147a8dd08",
+        "sig_c0164bd3bd1af5bfe596",
+        "sig_c4ca6d3f6535aab7094a",
+        "sig_c509083ea7ad2a51edf9",
+        "sig_c514714f465bd356e4dc",
+        "sig_c73fe66504ab26c04d81",
+        "sig_c82984f7b47db8e4f3a5",
+        "sig_c84ab3f89f624f2a05f4",
+        "sig_cdabe9c219fffc121d78",
+        "sig_ce2600f102592146b862",
+        "sig_cf80218f4faa59f2511d",
+        "sig_d080dc62adb36ed701af",
+        "sig_d9037da01e1c7275b77c",
+        "sig_de2b86da0e821cfe6b6a",
+        "sig_dec6e4e3ffd1d16f3ee4",
+        "sig_e1708ac5ab17da06b863",
+        "sig_e28629c9e81fb930bfe2",
+        "sig_e35b35ec28ec209c3914",
+        "sig_e3e342f4a89f4f12c6b5",
+        "sig_e55e06352b03ca89240c",
+        "sig_e7e55656878057fe560c",
+        "sig_ec144b871fddc50a66a9",
+        "sig_f46316f1fbc927be26db",
+        "sig_fc635cc246cd9f4642eb",
+        "sig_ffdcc096330cc637a024",
+        "sig_fff7d3db24d7234c6c86",
+        "sig_06e2566c89ea0b45870d",
+        "sig_0c4295c593acc75880b5",
+        "sig_0f87adabde3e195c2b9a",
+        "sig_16617acf19b2dd80d185",
+        "sig_19b4870df690789fe8a4",
+        "sig_1cb9ee33fe40b7436447",
+        "sig_208121ccdb9bb22e2287",
+        "sig_229636ded810ec0892aa",
+        "sig_2436cc2a5d9857a11c90",
+        "sig_260c111b1a574e7d8d85",
+        "sig_3e87a787087148385321",
+        "sig_5477f0053acffd5fd920",
+        "sig_577c7db25af77acfa6d5",
+        "sig_5adcee4e83114eb468cc",
+        "sig_5e35074fef331e3e632d",
+        "sig_608cfa1729728f761cd0",
+        "sig_6531e6ca5bbc5a4e2d60",
+        "sig_70f3bc5b9299e0543882",
+        "sig_8014a73808bd6b0e2a02",
+        "sig_8af196efad9a298f42ca",
+        "sig_8d68b50b24c61addc698",
+        "sig_9e8c0bdd38b9bc6dedc0",
+        "sig_a75bf46473245246161f",
+        "sig_a8f9ce0435d3cf814467",
+        "sig_a987800e2b07f1908c74",
+        "sig_abf205c7d1be95383ac1",
+        "sig_b1919c5ddc74fd3cc982",
+        "sig_b27ce7cd8d892b42ec97",
+        "sig_b7fbc1d37ee9d218e9dc",
+        "sig_b9d4228bbb61cf3c69eb",
+        "sig_bc505a432da14c519632",
+        "sig_c25a555f9c09f841ea28",
+        "sig_d2947063df90b89d9985",
+        "sig_da5093fa689399c95e0f",
+        "sig_de4406407b6a35b7b2bd",
+        "sig_e0082adc76c98e96f651",
+        "sig_eb7ea31f46ec552f809f",
+        "sig_eee98bbf859994b2dd49",
+        "sig_f53c66ec850b3fcf5033",
+        "sig_fc001ee0a0db18329ae5"
+      ],
+      "derived_from": [
+        "sig_04bf66c44ad4c3f93b98",
+        "sig_08123877c60497fd6b0f",
+        "sig_08279dd198daf8eb9f1f",
+        "sig_0a386bfab7f4261e0397",
+        "sig_0a6502c2d3daa3cedef9",
+        "sig_0ace7c0267783ad90dad",
+        "sig_0b2e5bc863b3344f864d",
+        "sig_0d95ada28a2a89d65e52",
+        "sig_10cc23a38946b1b3619d",
+        "sig_156600326bb138cbb951",
+        "sig_16b850d128b51579a408",
+        "sig_1d7ee91149f7ed20a220",
+        "sig_1ef053a602d6e6ad034b",
+        "sig_214012f151925b0e594c",
+        "sig_22a25ef0acc0cb55d2b3",
+        "sig_22bb1d88885e4cf64acf",
+        "sig_23d95adc557111c6a8f4",
+        "sig_318fe0b23f0b917c9594",
+        "sig_34cb1857c4007604828c",
+        "sig_46afe6130a7833be6c52",
+        "sig_487c6e710665cfb19c3b",
+        "sig_4a94ab28477a38df6be3",
+        "sig_4a96bf5f6396d41a4d47",
+        "sig_4c1a9677ba2d6d35fbd5",
+        "sig_4f34c59df21d4fb1bb00",
+        "sig_51f40c727a211ec5ffd4",
+        "sig_5491bf32bdbf7d2c3336",
+        "sig_56cbc9fc97102c6572bb",
+        "sig_5825c5281eac8d4a39be",
+        "sig_58945c5ab55d96ef9191",
+        "sig_5a6f23431208e459fb1e",
+        "sig_5ada3c114f831f9940c5",
+        "sig_629db3889f29be950e63",
+        "sig_633a2b0a28cb11e71ddf",
+        "sig_67006fde411b1197179b",
+        "sig_784279f1568fd26f8a49",
+        "sig_7a224973eca9f765bc77",
+        "sig_7c15d7eb58b1372c811b",
+        "sig_7dc5dbfca6228bf4e020",
+        "sig_8229fad8e77f6f29c37f",
+        "sig_824f5808781c75c3a5ca",
+        "sig_862c9c668af04de00b0f",
+        "sig_8746d57b5537a712ac11",
+        "sig_971ba88de0207b9658bf",
+        "sig_9f7bee7ab7a9a351d0d0",
+        "sig_a04e5f765a65d1785c42",
+        "sig_a05b5eacf622d55996d0",
+        "sig_a1549559b90aec783b55",
+        "sig_a61bb2ea4b5ad34889a5",
+        "sig_a6732cf70f3eea2e1944",
+        "sig_ace18239ce4336797a3f",
+        "sig_b06311453d127e3638ff",
+        "sig_b9a8da4d8c99707ea707",
+        "sig_ba4985a1aa9e98dad3b9",
+        "sig_bbcaa4f08a2147a8dd08",
+        "sig_c0164bd3bd1af5bfe596",
+        "sig_c4ca6d3f6535aab7094a",
+        "sig_c509083ea7ad2a51edf9",
+        "sig_c514714f465bd356e4dc",
+        "sig_c73fe66504ab26c04d81",
+        "sig_c82984f7b47db8e4f3a5",
+        "sig_c84ab3f89f624f2a05f4",
+        "sig_cdabe9c219fffc121d78",
+        "sig_ce2600f102592146b862",
+        "sig_cf80218f4faa59f2511d",
+        "sig_d080dc62adb36ed701af",
+        "sig_d9037da01e1c7275b77c",
+        "sig_de2b86da0e821cfe6b6a",
+        "sig_dec6e4e3ffd1d16f3ee4",
+        "sig_e1708ac5ab17da06b863",
+        "sig_e28629c9e81fb930bfe2",
+        "sig_e35b35ec28ec209c3914",
+        "sig_e3e342f4a89f4f12c6b5",
+        "sig_e55e06352b03ca89240c",
+        "sig_e7e55656878057fe560c",
+        "sig_ec144b871fddc50a66a9",
+        "sig_f46316f1fbc927be26db",
+        "sig_fc635cc246cd9f4642eb",
+        "sig_ffdcc096330cc637a024",
+        "sig_fff7d3db24d7234c6c86",
+        "sig_06e2566c89ea0b45870d",
+        "sig_0c4295c593acc75880b5",
+        "sig_0f87adabde3e195c2b9a",
+        "sig_16617acf19b2dd80d185",
+        "sig_19b4870df690789fe8a4",
+        "sig_1cb9ee33fe40b7436447",
+        "sig_208121ccdb9bb22e2287",
+        "sig_229636ded810ec0892aa",
+        "sig_2436cc2a5d9857a11c90",
+        "sig_260c111b1a574e7d8d85",
+        "sig_3e87a787087148385321",
+        "sig_5477f0053acffd5fd920",
+        "sig_577c7db25af77acfa6d5",
+        "sig_5adcee4e83114eb468cc",
+        "sig_5e35074fef331e3e632d",
+        "sig_608cfa1729728f761cd0",
+        "sig_6531e6ca5bbc5a4e2d60",
+        "sig_70f3bc5b9299e0543882",
+        "sig_8014a73808bd6b0e2a02",
+        "sig_8af196efad9a298f42ca",
+        "sig_8d68b50b24c61addc698",
+        "sig_9e8c0bdd38b9bc6dedc0",
+        "sig_a75bf46473245246161f",
+        "sig_a8f9ce0435d3cf814467",
+        "sig_a987800e2b07f1908c74",
+        "sig_abf205c7d1be95383ac1",
+        "sig_b1919c5ddc74fd3cc982",
+        "sig_b27ce7cd8d892b42ec97",
+        "sig_b7fbc1d37ee9d218e9dc",
+        "sig_b9d4228bbb61cf3c69eb",
+        "sig_bc505a432da14c519632",
+        "sig_c25a555f9c09f841ea28",
+        "sig_d2947063df90b89d9985",
+        "sig_da5093fa689399c95e0f",
+        "sig_de4406407b6a35b7b2bd",
+        "sig_e0082adc76c98e96f651",
+        "sig_eb7ea31f46ec552f809f",
+        "sig_eee98bbf859994b2dd49",
+        "sig_f53c66ec850b3fcf5033",
+        "sig_fc001ee0a0db18329ae5"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.5,
+        "novelty": 0.55
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.325
+    },
+    {
       "id": "stmt_774df5e01bacaf3b3aa3",
       "kind": "ecological_observation_density",
       "atlas_address": "F02.1200300123",
@@ -2973,6 +3240,109 @@
       },
       "publication_region": "new-orleans",
       "publication_rank": 0.2646
+    },
+    {
+      "id": "stmt_5d074b2db8fbb754f81f",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1200300123",
+      "text": "40 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_06e2566c89ea0b45870d",
+        "sig_0c4295c593acc75880b5",
+        "sig_0f87adabde3e195c2b9a",
+        "sig_16617acf19b2dd80d185",
+        "sig_19b4870df690789fe8a4",
+        "sig_1cb9ee33fe40b7436447",
+        "sig_208121ccdb9bb22e2287",
+        "sig_229636ded810ec0892aa",
+        "sig_2436cc2a5d9857a11c90",
+        "sig_260c111b1a574e7d8d85",
+        "sig_3e87a787087148385321",
+        "sig_5477f0053acffd5fd920",
+        "sig_577c7db25af77acfa6d5",
+        "sig_5adcee4e83114eb468cc",
+        "sig_5e35074fef331e3e632d",
+        "sig_608cfa1729728f761cd0",
+        "sig_6531e6ca5bbc5a4e2d60",
+        "sig_70f3bc5b9299e0543882",
+        "sig_8014a73808bd6b0e2a02",
+        "sig_8af196efad9a298f42ca",
+        "sig_8d68b50b24c61addc698",
+        "sig_9e8c0bdd38b9bc6dedc0",
+        "sig_a75bf46473245246161f",
+        "sig_a8f9ce0435d3cf814467",
+        "sig_a987800e2b07f1908c74",
+        "sig_abf205c7d1be95383ac1",
+        "sig_b1919c5ddc74fd3cc982",
+        "sig_b27ce7cd8d892b42ec97",
+        "sig_b7fbc1d37ee9d218e9dc",
+        "sig_b9d4228bbb61cf3c69eb",
+        "sig_bc505a432da14c519632",
+        "sig_c25a555f9c09f841ea28",
+        "sig_d2947063df90b89d9985",
+        "sig_da5093fa689399c95e0f",
+        "sig_de4406407b6a35b7b2bd",
+        "sig_e0082adc76c98e96f651",
+        "sig_eb7ea31f46ec552f809f",
+        "sig_eee98bbf859994b2dd49",
+        "sig_f53c66ec850b3fcf5033",
+        "sig_fc001ee0a0db18329ae5"
+      ],
+      "derived_from": [
+        "sig_06e2566c89ea0b45870d",
+        "sig_0c4295c593acc75880b5",
+        "sig_0f87adabde3e195c2b9a",
+        "sig_16617acf19b2dd80d185",
+        "sig_19b4870df690789fe8a4",
+        "sig_1cb9ee33fe40b7436447",
+        "sig_208121ccdb9bb22e2287",
+        "sig_229636ded810ec0892aa",
+        "sig_2436cc2a5d9857a11c90",
+        "sig_260c111b1a574e7d8d85",
+        "sig_3e87a787087148385321",
+        "sig_5477f0053acffd5fd920",
+        "sig_577c7db25af77acfa6d5",
+        "sig_5adcee4e83114eb468cc",
+        "sig_5e35074fef331e3e632d",
+        "sig_608cfa1729728f761cd0",
+        "sig_6531e6ca5bbc5a4e2d60",
+        "sig_70f3bc5b9299e0543882",
+        "sig_8014a73808bd6b0e2a02",
+        "sig_8af196efad9a298f42ca",
+        "sig_8d68b50b24c61addc698",
+        "sig_9e8c0bdd38b9bc6dedc0",
+        "sig_a75bf46473245246161f",
+        "sig_a8f9ce0435d3cf814467",
+        "sig_a987800e2b07f1908c74",
+        "sig_abf205c7d1be95383ac1",
+        "sig_b1919c5ddc74fd3cc982",
+        "sig_b27ce7cd8d892b42ec97",
+        "sig_b7fbc1d37ee9d218e9dc",
+        "sig_b9d4228bbb61cf3c69eb",
+        "sig_bc505a432da14c519632",
+        "sig_c25a555f9c09f841ea28",
+        "sig_d2947063df90b89d9985",
+        "sig_da5093fa689399c95e0f",
+        "sig_de4406407b6a35b7b2bd",
+        "sig_e0082adc76c98e96f651",
+        "sig_eb7ea31f46ec552f809f",
+        "sig_eee98bbf859994b2dd49",
+        "sig_f53c66ec850b3fcf5033",
+        "sig_fc001ee0a0db18329ae5"
+      ],
+      "importance": {
+        "change": 1,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2479
     },
     {
       "id": "stmt_05e4a194be18d784d984",
@@ -3104,10 +3474,10 @@
       "publication_rank": 0.2188
     },
     {
-      "id": "stmt_c8562dbcd80d2b0b7190",
+      "id": "stmt_6fcea7d5a5d47ef62f7c",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1200300123",
-      "text": "8 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nps-national-register, osm-notes, wikipedia-geosearch.",
+      "text": "9 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nola-building-permits, nps-national-register, osm-notes, wikipedia-geosearch.",
       "epistemic": "INFERRED",
       "evidence": [
         "sig_2237cc8299bda8d552fb",
@@ -3193,6 +3563,46 @@
         "sig_cff6a247bb1e3fc28969",
         "sig_dc28eb38ee6075a6c526",
         "sig_f3380e51e458c1362cee",
+        "sig_06e2566c89ea0b45870d",
+        "sig_0c4295c593acc75880b5",
+        "sig_0f87adabde3e195c2b9a",
+        "sig_16617acf19b2dd80d185",
+        "sig_19b4870df690789fe8a4",
+        "sig_1cb9ee33fe40b7436447",
+        "sig_208121ccdb9bb22e2287",
+        "sig_229636ded810ec0892aa",
+        "sig_2436cc2a5d9857a11c90",
+        "sig_260c111b1a574e7d8d85",
+        "sig_3e87a787087148385321",
+        "sig_5477f0053acffd5fd920",
+        "sig_577c7db25af77acfa6d5",
+        "sig_5adcee4e83114eb468cc",
+        "sig_5e35074fef331e3e632d",
+        "sig_608cfa1729728f761cd0",
+        "sig_6531e6ca5bbc5a4e2d60",
+        "sig_70f3bc5b9299e0543882",
+        "sig_8014a73808bd6b0e2a02",
+        "sig_8af196efad9a298f42ca",
+        "sig_8d68b50b24c61addc698",
+        "sig_9e8c0bdd38b9bc6dedc0",
+        "sig_a75bf46473245246161f",
+        "sig_a8f9ce0435d3cf814467",
+        "sig_a987800e2b07f1908c74",
+        "sig_abf205c7d1be95383ac1",
+        "sig_b1919c5ddc74fd3cc982",
+        "sig_b27ce7cd8d892b42ec97",
+        "sig_b7fbc1d37ee9d218e9dc",
+        "sig_b9d4228bbb61cf3c69eb",
+        "sig_bc505a432da14c519632",
+        "sig_c25a555f9c09f841ea28",
+        "sig_d2947063df90b89d9985",
+        "sig_da5093fa689399c95e0f",
+        "sig_de4406407b6a35b7b2bd",
+        "sig_e0082adc76c98e96f651",
+        "sig_eb7ea31f46ec552f809f",
+        "sig_eee98bbf859994b2dd49",
+        "sig_f53c66ec850b3fcf5033",
+        "sig_fc001ee0a0db18329ae5",
         "sig_04bf66c44ad4c3f93b98",
         "sig_08123877c60497fd6b0f",
         "sig_08279dd198daf8eb9f1f",
@@ -3538,6 +3948,46 @@
         "sig_cff6a247bb1e3fc28969",
         "sig_dc28eb38ee6075a6c526",
         "sig_f3380e51e458c1362cee",
+        "sig_06e2566c89ea0b45870d",
+        "sig_0c4295c593acc75880b5",
+        "sig_0f87adabde3e195c2b9a",
+        "sig_16617acf19b2dd80d185",
+        "sig_19b4870df690789fe8a4",
+        "sig_1cb9ee33fe40b7436447",
+        "sig_208121ccdb9bb22e2287",
+        "sig_229636ded810ec0892aa",
+        "sig_2436cc2a5d9857a11c90",
+        "sig_260c111b1a574e7d8d85",
+        "sig_3e87a787087148385321",
+        "sig_5477f0053acffd5fd920",
+        "sig_577c7db25af77acfa6d5",
+        "sig_5adcee4e83114eb468cc",
+        "sig_5e35074fef331e3e632d",
+        "sig_608cfa1729728f761cd0",
+        "sig_6531e6ca5bbc5a4e2d60",
+        "sig_70f3bc5b9299e0543882",
+        "sig_8014a73808bd6b0e2a02",
+        "sig_8af196efad9a298f42ca",
+        "sig_8d68b50b24c61addc698",
+        "sig_9e8c0bdd38b9bc6dedc0",
+        "sig_a75bf46473245246161f",
+        "sig_a8f9ce0435d3cf814467",
+        "sig_a987800e2b07f1908c74",
+        "sig_abf205c7d1be95383ac1",
+        "sig_b1919c5ddc74fd3cc982",
+        "sig_b27ce7cd8d892b42ec97",
+        "sig_b7fbc1d37ee9d218e9dc",
+        "sig_b9d4228bbb61cf3c69eb",
+        "sig_bc505a432da14c519632",
+        "sig_c25a555f9c09f841ea28",
+        "sig_d2947063df90b89d9985",
+        "sig_da5093fa689399c95e0f",
+        "sig_de4406407b6a35b7b2bd",
+        "sig_e0082adc76c98e96f651",
+        "sig_eb7ea31f46ec552f809f",
+        "sig_eee98bbf859994b2dd49",
+        "sig_f53c66ec850b3fcf5033",
+        "sig_fc001ee0a0db18329ae5",
         "sig_04bf66c44ad4c3f93b98",
         "sig_08123877c60497fd6b0f",
         "sig_08279dd198daf8eb9f1f",
@@ -4402,6 +4852,6 @@
       "publication_rank": 0.1125
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.084Z",
+  "generated_at": "2026-08-25T12:34:09.126Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

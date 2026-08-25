@@ -7,25 +7,28 @@
   "sources": [
     "epa-echo",
     "inaturalist-observations",
+    "nola-building-permits",
     "nps-national-register"
   ],
   "counts": {
-    "signals": 4,
+    "signals": 7,
     "entities": 0,
     "relations": 0,
-    "statements": 2,
+    "statements": 3,
     "direct_signals": 0,
     "direct_entities": 0,
     "direct_statements": 0
   },
   "signal_predicates": {
     "ecology.inaturalist_observation": 1,
+    "change.building_permit": 3,
     "environment.regulated_facility": 1,
     "memory.national_register_resource": 2
   },
   "entity_types": {},
   "relation_predicates": {},
   "statement_kinds": {
+    "building_change_activity": 1,
     "regulated_environment_presence": 1,
     "institutional_memory_density": 1
   },
@@ -75,7 +78,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -134,7 +137,7 @@
       "observed_at": "2026-08-23T12:47:09.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.606Z",
+      "retrieved_at": "2026-08-25T12:33:46.149Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -152,6 +155,207 @@
       "raw": {
         "place_guess": "Belle Chasse, LA 70037, USA",
         "positional_accuracy": null
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_34d6fc50615a29c4d4bc",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24412-HVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24412-HVAC",
+        "permit_type": "Mechanical HVAC",
+        "address": "4010 Sullen Pl",
+        "description": "Replace 2.5 ton condenser and air handler",
+        "owner": "Tam M Cao",
+        "status": "Permit Issued",
+        "next_status": "Inspections Finaled",
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 16704,
+        "filing_date": "2026-08-19T14:57:24.000",
+        "issue_date": "2026-08-20T16:07:08.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.98635921544505,
+          29.912238581800057
+        ]
+      },
+      "atlas_address": "F02.1200300301",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.98635921544505,
+          29.912238581800057
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-20T16:07:08.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_595668290ce9d7ff71e9",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24152-FGAS",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24152-FGAS",
+        "permit_type": "Mechanical Fuel Gas",
+        "address": "19 Pinehurst Dr",
+        "description": "Test system for leaks and file permit for out over six months.",
+        "owner": "Randey G Fisher",
+        "status": "Finaled",
+        "next_status": null,
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 475,
+        "filing_date": "2026-08-17T18:09:17.000",
+        "issue_date": "2026-08-18T11:35:32.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9629625227806,
+          29.911218769136482
+        ]
+      },
+      "atlas_address": "F02.1200300301",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9629625227806,
+          29.911218769136482
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-19T15:04:31.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "True"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ea3a842efc9ed605b5da",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24221-HVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24221-HVAC",
+        "permit_type": "Mechanical HVAC",
+        "address": "3350 Oliver St",
+        "description": "INSTALL 2 NEW A/C UNITS",
+        "owner": "Byrd Isaiah Byrd Angeonita G",
+        "status": "Permit Issued",
+        "next_status": "Inspections Finaled",
+        "zoning": "GPD",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 12000,
+        "filing_date": "2026-08-18T11:13:45.000",
+        "issue_date": "2026-08-18T14:43:55.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.96480885546987,
+          29.91737308410626
+        ]
+      },
+      "atlas_address": "F02.1200300301",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.96480885546987,
+          29.91737308410626
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-18T14:43:55.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
       },
       "publication_region": "new-orleans"
     },
@@ -195,7 +399,7 @@
       "observed_at": null,
       "valid_from": "1986-08-13T00:00:00.000Z",
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.838Z",
+      "retrieved_at": "2026-08-25T12:33:45.942Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -259,7 +463,7 @@
       "observed_at": null,
       "valid_from": "1986-08-13T00:00:00.000Z",
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.838Z",
+      "retrieved_at": "2026-08-25T12:33:45.941Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -287,6 +491,35 @@
   "entities": [],
   "relations": [],
   "statements": [
+    {
+      "id": "stmt_3bf4c6fbb2e3361097d7",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1200300301",
+      "text": "3 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_34d6fc50615a29c4d4bc",
+        "sig_595668290ce9d7ff71e9",
+        "sig_ea3a842efc9ed605b5da"
+      ],
+      "derived_from": [
+        "sig_34d6fc50615a29c4d4bc",
+        "sig_595668290ce9d7ff71e9",
+        "sig_ea3a842efc9ed605b5da"
+      ],
+      "importance": {
+        "change": 0.375,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1698
+    },
     {
       "id": "stmt_ba4f924316d6260fd760",
       "kind": "regulated_environment_presence",
@@ -340,6 +573,6 @@
       "publication_rank": 0.1417
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.059Z",
+  "generated_at": "2026-08-25T12:34:09.111Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

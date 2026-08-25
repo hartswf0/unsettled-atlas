@@ -10,16 +10,17 @@
     "fdic-sod",
     "gbif-occurrences",
     "inaturalist-observations",
+    "nola-building-permits",
     "nps-national-register"
   ],
   "counts": {
-    "signals": 66,
+    "signals": 70,
     "entities": 32,
     "relations": 78,
-    "statements": 5,
-    "direct_signals": 66,
+    "statements": 7,
+    "direct_signals": 70,
     "direct_entities": 32,
-    "direct_statements": 5
+    "direct_statements": 7
   },
   "signal_predicates": {
     "environment.regulated_facility": 2,
@@ -27,6 +28,7 @@
     "money.branch_deposits": 26,
     "ecology.occurrence": 1,
     "ecology.inaturalist_observation": 7,
+    "change.building_permit": 4,
     "memory.national_register_resource": 3
   },
   "entity_types": {
@@ -40,6 +42,8 @@
     "ecological_observation_density": 1,
     "regulated_environment_presence": 1,
     "institutional_memory_density": 1,
+    "building_change_activity": 1,
+    "heritage_change_coaddress": 1,
     "multi_source_activity": 1,
     "reported_deposit_stock": 1
   },
@@ -89,7 +93,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -157,7 +161,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -177,6 +181,140 @@
       },
       "raw": {
         "objectid": 16757
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_e436066f502ef97279e0",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24772-HVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24772-HVAC",
+        "permit_type": "Mechanical HVAC",
+        "address": "401 40Th St",
+        "description": "Install 3 Ton HVAC with Gas Furnace.",
+        "owner": "Enamorado Carlos",
+        "status": "Permit Issued",
+        "next_status": "Inspections Finaled",
+        "zoning": "S-LRS1",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 6200,
+        "filing_date": "2026-08-23T18:57:50.000",
+        "issue_date": "2026-08-24T19:36:39.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.11941973487478,
+          30.01621111491794
+        ]
+      },
+      "atlas_address": "F02.1200303020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.11941973487478,
+          30.01621111491794
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-24T19:36:39.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.458Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_92474cbfee0e6211e252",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24773-FGAS",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24773-FGAS",
+        "permit_type": "Mechanical Fuel Gas",
+        "address": "401 40Th St",
+        "description": "Install a tankless water heater and 50' of gas line to stove, water heater , furnace, dryer",
+        "owner": "Enamorado Carlos",
+        "status": "Permit Issued",
+        "next_status": "Inspections Finaled",
+        "zoning": "S-LRS1",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 2500,
+        "filing_date": "2026-08-23T19:05:45.000",
+        "issue_date": "2026-08-24T19:30:54.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.11941973487478,
+          30.01621111491794
+        ]
+      },
+      "atlas_address": "F02.1200303020",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.11941973487478,
+          30.01621111491794
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-24T19:30:54.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.458Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
       },
       "publication_region": "new-orleans"
     },
@@ -216,7 +354,7 @@
       "observed_at": "2026-08-24T15:46:19.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "retrieved_at": "2026-08-25T12:33:46.148Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -273,7 +411,7 @@
       "observed_at": "2026-08-24T12:16:02.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "retrieved_at": "2026-08-25T12:33:46.148Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -334,7 +472,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -391,7 +529,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -448,7 +586,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -505,7 +643,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.676Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -562,7 +700,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -619,7 +757,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -676,7 +814,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -733,7 +871,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -790,7 +928,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -847,7 +985,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -904,7 +1042,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -961,7 +1099,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1018,7 +1156,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1075,7 +1213,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1132,7 +1270,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1189,7 +1327,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1246,7 +1384,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1303,7 +1441,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1360,7 +1498,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1417,7 +1555,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.673Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1474,7 +1612,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.676Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1531,7 +1669,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1588,7 +1726,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1645,7 +1783,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1702,7 +1840,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1759,7 +1897,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.673Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1774,120 +1912,6 @@
         "provider": "FDIC BankFind Suite"
       },
       "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_ff6aedeeff96d391e827",
-      "source": "fdic-locations",
-      "source_record_id": "286777",
-      "predicate": "money.bank_branch",
-      "value": {
-        "cert": "628",
-        "branch_id": 2126,
-        "institution_name": "JPMorgan Chase Bank, National Association",
-        "branch_name": "BONNABEL BRANCH",
-        "main_office": 0,
-        "service_type": "FULL SERVICE - BRICK AND MORTAR",
-        "address": "1400 Veterans Memorial Blvd",
-        "city": "Metairie",
-        "state": "LA",
-        "zip": "70005",
-        "fi_uninum": 417
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.13827696914704,
-          30.001516984776373
-        ]
-      },
-      "atlas_address": "F02.1200303020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.13827696914704,
-          30.001516984776373
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-24T00:00:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
-        "provider": "FDIC BankFind Suite"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_8923084281826ef2e8e3",
-      "source": "inaturalist-observations",
-      "source_record_id": "393876698",
-      "predicate": "ecology.inaturalist_observation",
-      "value": {
-        "scientific_name": "Bidens alba",
-        "common_name": "White beggarticks",
-        "iconic_taxon": "Plantae",
-        "quality_grade": "needs_id",
-        "captive": false,
-        "obscured": false,
-        "photos": 1
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.1269445,
-          30.0226333333
-        ]
-      },
-      "atlas_address": "F02.1200303020",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.1269445,
-          30.0226333333
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-23T18:25:23.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.605Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "DOG",
-        "ECOLOGY"
-      ],
-      "provenance": {
-        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
-        "source_url": "https://www.inaturalist.org/observations/393876698",
-        "provider": "iNaturalist"
-      },
-      "raw": {
-        "place_guess": "Lake Pontchartrain, Metairie, LA, US",
-        "positional_accuracy": 4
-      },
       "publication_region": "new-orleans"
     }
   ],
@@ -2875,6 +2899,43 @@
   ],
   "statements": [
     {
+      "id": "stmt_5a3529e394fed7bb5c24",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1200303020",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_435b7b30a2b5c0a473e1",
+        "sig_9b4b2ee3470dc6ebf87f",
+        "sig_c50209fa38577774f176",
+        "sig_50dafe7156dbc947fb23",
+        "sig_92474cbfee0e6211e252",
+        "sig_c634a7fe5735353c2f6e",
+        "sig_e436066f502ef97279e0"
+      ],
+      "derived_from": [
+        "sig_435b7b30a2b5c0a473e1",
+        "sig_9b4b2ee3470dc6ebf87f",
+        "sig_c50209fa38577774f176",
+        "sig_50dafe7156dbc947fb23",
+        "sig_92474cbfee0e6211e252",
+        "sig_c634a7fe5735353c2f6e",
+        "sig_e436066f502ef97279e0"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.5,
+        "novelty": 0.55
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.325
+    },
+    {
       "id": "stmt_8be39a796f8456b1e64f",
       "kind": "reported_deposit_stock",
       "atlas_address": "F02.1200303020",
@@ -2951,10 +3012,10 @@
       "publication_rank": 0.2188
     },
     {
-      "id": "stmt_4cf6c657b3e35d416909",
+      "id": "stmt_3baa05f5ca40f23a3b5f",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1200303020",
-      "text": "6 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nps-national-register.",
+      "text": "7 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nola-building-permits, nps-national-register.",
       "epistemic": "INFERRED",
       "evidence": [
         "sig_d7cf6b6f35a359731d48",
@@ -3020,6 +3081,10 @@
         "sig_8923084281826ef2e8e3",
         "sig_a0a7e05887127a788c20",
         "sig_f6f1e3e75a9fba8fcfb8",
+        "sig_50dafe7156dbc947fb23",
+        "sig_92474cbfee0e6211e252",
+        "sig_c634a7fe5735353c2f6e",
+        "sig_e436066f502ef97279e0",
         "sig_435b7b30a2b5c0a473e1",
         "sig_9b4b2ee3470dc6ebf87f",
         "sig_c50209fa38577774f176"
@@ -3088,6 +3153,10 @@
         "sig_8923084281826ef2e8e3",
         "sig_a0a7e05887127a788c20",
         "sig_f6f1e3e75a9fba8fcfb8",
+        "sig_50dafe7156dbc947fb23",
+        "sig_92474cbfee0e6211e252",
+        "sig_c634a7fe5735353c2f6e",
+        "sig_e436066f502ef97279e0",
         "sig_435b7b30a2b5c0a473e1",
         "sig_9b4b2ee3470dc6ebf87f",
         "sig_c50209fa38577774f176"
@@ -3143,6 +3212,37 @@
       },
       "publication_region": "new-orleans",
       "publication_rank": 0.1896
+    },
+    {
+      "id": "stmt_697607218e8152bcc6ae",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1200303020",
+      "text": "4 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_50dafe7156dbc947fb23",
+        "sig_92474cbfee0e6211e252",
+        "sig_c634a7fe5735353c2f6e",
+        "sig_e436066f502ef97279e0"
+      ],
+      "derived_from": [
+        "sig_50dafe7156dbc947fb23",
+        "sig_92474cbfee0e6211e252",
+        "sig_c634a7fe5735353c2f6e",
+        "sig_e436066f502ef97279e0"
+      ],
+      "importance": {
+        "change": 0.5,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.1854
     },
     {
       "id": "stmt_0b1dabd7016e892fdee2",
@@ -3201,6 +3301,6 @@
       "publication_rank": 0.1417
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.087Z",
+  "generated_at": "2026-08-25T12:34:09.128Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

@@ -11,11 +11,11 @@
     "inaturalist-observations"
   ],
   "counts": {
-    "signals": 5,
+    "signals": 6,
     "entities": 3,
     "relations": 5,
     "statements": 3,
-    "direct_signals": 5,
+    "direct_signals": 6,
     "direct_entities": 3,
     "direct_statements": 3
   },
@@ -23,7 +23,7 @@
     "environment.regulated_facility": 1,
     "money.bank_branch": 1,
     "money.branch_deposits": 2,
-    "ecology.inaturalist_observation": 1
+    "ecology.inaturalist_observation": 2
   },
   "entity_types": {
     "bank_branch": 3
@@ -83,7 +83,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.526Z",
+      "retrieved_at": "2026-08-25T12:33:21.161Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -142,7 +142,7 @@
       "observed_at": "2026-08-25T12:17:53.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.677Z",
+      "retrieved_at": "2026-08-25T12:33:21.084Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -160,6 +160,63 @@
       "raw": {
         "place_guess": "Arbor Club Dr, Marietta, GA, US",
         "positional_accuracy": 4
+      },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_85364c7b3807d0ac61f1",
+      "source": "inaturalist-observations",
+      "source_record_id": "394382263",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Stagmomantis carolina",
+        "common_name": "Carolina Mantis",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "casual",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4576749722,
+          34.029513
+        ]
+      },
+      "atlas_address": "F02.1331311233",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.4576749722,
+          34.029513
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": "2026-08-25T00:23:18.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:21.084Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "DOG",
+        "ECOLOGY"
+      ],
+      "provenance": {
+        "query_url": "https://api.inaturalist.org/v1/observations?lat=33.749&lng=-84.388&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
+        "source_url": "https://www.inaturalist.org/observations/394382263",
+        "provider": "iNaturalist"
+      },
+      "raw": {
+        "place_guess": "Marietta, GA 30062, USA",
+        "positional_accuracy": null
       },
       "publication_region": "atlanta"
     },
@@ -203,7 +260,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "retrieved_at": "2026-08-25T12:33:21.802Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -259,7 +316,7 @@
       "observed_at": null,
       "valid_from": "2025-06-30",
       "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:04.324Z",
+      "retrieved_at": "2026-08-25T12:33:21.826Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -316,7 +373,7 @@
       "observed_at": null,
       "valid_from": "2025-06-30",
       "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:04.325Z",
+      "retrieved_at": "2026-08-25T12:33:21.827Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -489,7 +546,7 @@
   ],
   "statements": [
     {
-      "id": "stmt_0af03d0bbb42a34e19c5",
+      "id": "stmt_2c7d0fe05802fde370ce",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1331311233",
       "text": "4 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, inaturalist-observations.",
@@ -499,6 +556,7 @@
         "sig_bee00b5feeb7d7d6dbd9",
         "sig_264538573f276821050e",
         "sig_73156b935890fe139b8e",
+        "sig_85364c7b3807d0ac61f1",
         "sig_8f92037cc03e15c3e72b"
       ],
       "derived_from": [
@@ -506,6 +564,7 @@
         "sig_bee00b5feeb7d7d6dbd9",
         "sig_264538573f276821050e",
         "sig_73156b935890fe139b8e",
+        "sig_85364c7b3807d0ac61f1",
         "sig_8f92037cc03e15c3e72b"
       ],
       "importance": {
@@ -575,6 +634,6 @@
       "publication_rank": 0.1375
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.112Z",
+  "generated_at": "2026-08-25T12:34:09.143Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

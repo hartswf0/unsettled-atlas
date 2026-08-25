@@ -9,22 +9,24 @@
     "fdic-locations",
     "fdic-sod",
     "inaturalist-observations",
+    "nola-building-permits",
     "osm-notes"
   ],
   "counts": {
-    "signals": 16,
+    "signals": 22,
     "entities": 5,
     "relations": 15,
-    "statements": 3,
-    "direct_signals": 16,
+    "statements": 4,
+    "direct_signals": 22,
     "direct_entities": 5,
-    "direct_statements": 3
+    "direct_statements": 4
   },
   "signal_predicates": {
     "environment.regulated_facility": 4,
     "money.bank_branch": 5,
     "money.branch_deposits": 5,
     "ecology.inaturalist_observation": 1,
+    "change.building_permit": 6,
     "claim.map_note": 1
   },
   "entity_types": {
@@ -36,78 +38,11 @@
   },
   "statement_kinds": {
     "regulated_environment_presence": 1,
+    "building_change_activity": 1,
     "multi_source_activity": 1,
     "reported_deposit_stock": 1
   },
   "signals": [
-    {
-      "id": "sig_9f1248ac60ba7a681ea6",
-      "source": "epa-echo",
-      "source_record_id": "110008380395",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "GARRETT HONDA YAMAHA",
-        "address": "10150 I10, NEW ORLEANS, LA, 70127",
-        "county": "ORLEANS",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 150,
-        "huc": "08090203",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.9806721053134,
-          30.0350982922886
-        ]
-      },
-      "atlas_address": "F02.1200300130",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.9806721053134,
-          30.0350982922886
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.020Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110008380395",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 48672
-      },
-      "publication_region": "new-orleans"
-    },
     {
       "id": "sig_f54cc64fdd0bcf0a154b",
       "source": "epa-echo",
@@ -153,7 +88,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -173,6 +108,74 @@
       },
       "raw": {
         "objectid": 52327
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_9f1248ac60ba7a681ea6",
+      "source": "epa-echo",
+      "source_record_id": "110008380395",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "GARRETT HONDA YAMAHA",
+        "address": "10150 I10, NEW ORLEANS, LA, 70127",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 150,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9806721053134,
+          30.0350982922886
+        ]
+      },
+      "atlas_address": "F02.1200300130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9806721053134,
+          30.0350982922886
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110008380395",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 48672
       },
       "publication_region": "new-orleans"
     },
@@ -221,7 +224,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -289,7 +292,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -344,7 +347,7 @@
       "observed_at": "2026-08-24 08:31:24 UTC",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.354Z",
+      "retrieved_at": "2026-08-25T12:33:46.585Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -414,7 +417,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -471,7 +474,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -528,7 +531,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -585,7 +588,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.673Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -642,7 +645,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -695,7 +698,7 @@
       "observed_at": "2026-08-22T19:13:01.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.606Z",
+      "retrieved_at": "2026-08-25T12:33:46.150Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -713,6 +716,408 @@
       "raw": {
         "place_guess": "Lake Forest Blvd, New Orleans, LA, US",
         "positional_accuracy": 11
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_98b753413c6ed4944350",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24023-LOOP",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24023-LOOP",
+        "permit_type": "Construction Loop",
+        "address": "4711 Longfellow Dr",
+        "description": "Construction Loop",
+        "owner": "MDM Nola Enterprises LLC",
+        "status": "Finaled",
+        "next_status": null,
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 1000,
+        "filing_date": "2026-08-16T14:41:16.000",
+        "issue_date": "2026-08-17T10:28:34.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9781019859748,
+          30.02089193111644
+        ]
+      },
+      "atlas_address": "F02.1200300130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.9781019859748,
+          30.02089193111644
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-21T09:54:57.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.460Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "True"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_031c68f4ea3ab364647d",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24201-HVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24201-HVAC",
+        "permit_type": "Mechanical HVAC",
+        "address": "11021 Roger Dr Apt A",
+        "description": "Install 3.5 ton Trane gas complete system",
+        "owner": "Harris Glen J Harris Angela W",
+        "status": "Finaled",
+        "next_status": null,
+        "zoning": "S-RM2",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 13000,
+        "filing_date": "2026-08-18T09:42:02.000",
+        "issue_date": "2026-08-19T12:29:07.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.96985462848205,
+          30.04271058158355
+        ]
+      },
+      "atlas_address": "F02.1200300130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.96985462848205,
+          30.04271058158355
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-21T08:27:53.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "True"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_ac97bbe426165f21251b",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24112-FGAS",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24112-FGAS",
+        "permit_type": "Mechanical Fuel Gas",
+        "address": "11021 Roger Dr Apt A",
+        "description": "Replace water heater and file for Vacancy Reconnect.",
+        "owner": "Harris Glen J Harris Angela W",
+        "status": "Finaled",
+        "next_status": null,
+        "zoning": "S-RM2",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 1300,
+        "filing_date": "2026-08-17T13:06:46.000",
+        "issue_date": "2026-08-18T11:00:06.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.96985462848205,
+          30.04271058158355
+        ]
+      },
+      "atlas_address": "F02.1200300130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.96985462848205,
+          30.04271058158355
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-21T08:26:03.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "True"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_204d181af21d6107e942",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24425-HVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24425-HVAC",
+        "permit_type": "Mechanical HVAC",
+        "address": "4641 Werner Dr",
+        "description": "Replace 2-ton condenser, and air handler",
+        "owner": "Gross Ernest C Jr",
+        "status": "Permit Issued",
+        "next_status": "Inspections Finaled",
+        "zoning": "S-RD",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 15367,
+        "filing_date": "2026-08-19T15:39:03.000",
+        "issue_date": "2026-08-20T16:13:23.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.99340313228622,
+          30.01846232761408
+        ]
+      },
+      "atlas_address": "F02.1200300130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.99340313228622,
+          30.01846232761408
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-20T16:13:23.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_57141434d10a565716d6",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24414-HVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24414-HVAC",
+        "permit_type": "Mechanical HVAC",
+        "address": "4929 Chrysler St",
+        "description": "Replace 3 ton condenser, gas furnace and evaporator coil",
+        "owner": "Carlos G Brooks",
+        "status": "Permit Issued",
+        "next_status": "Inspections Finaled",
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 11684,
+        "filing_date": "2026-08-19T15:02:14.000",
+        "issue_date": "2026-08-20T16:05:11.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.96034909724685,
+          30.026255501627915
+        ]
+      },
+      "atlas_address": "F02.1200300130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.96034909724685,
+          30.026255501627915
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-20T16:05:11.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_265f6782bb8ee0a91ab1",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24360-HVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24360-HVAC",
+        "permit_type": "Mechanical HVAC",
+        "address": "10130 Hammond St",
+        "description": "Replace 3.5-ton condenser, gas furnace and evaporator coil",
+        "owner": "Anna D Anthony",
+        "status": "Permit Issued",
+        "next_status": "Inspections Finaled",
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 17484,
+        "filing_date": "2026-08-19T14:48:39.000",
+        "issue_date": "2026-08-20T16:04:06.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.96751030206684,
+          30.022769253067715
+        ]
+      },
+      "atlas_address": "F02.1200300130",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.96751030206684,
+          30.022769253067715
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-20T16:04:06.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
       },
       "publication_region": "new-orleans"
     },
@@ -755,7 +1160,7 @@
       "observed_at": null,
       "valid_from": "2025-06-30",
       "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:25.775Z",
+      "retrieved_at": "2026-08-25T12:33:46.723Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -812,7 +1217,7 @@
       "observed_at": null,
       "valid_from": "2025-06-30",
       "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:25.777Z",
+      "retrieved_at": "2026-08-25T12:33:46.724Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -869,7 +1274,7 @@
       "observed_at": null,
       "valid_from": "2025-06-30",
       "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:25.774Z",
+      "retrieved_at": "2026-08-25T12:33:46.722Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -926,7 +1331,7 @@
       "observed_at": null,
       "valid_from": "2025-06-30",
       "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:25.772Z",
+      "retrieved_at": "2026-08-25T12:33:46.720Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -983,7 +1388,7 @@
       "observed_at": null,
       "valid_from": "2025-06-30",
       "valid_to": "2025-06-30",
-      "retrieved_at": "2026-08-25T12:25:25.774Z",
+      "retrieved_at": "2026-08-25T12:33:46.722Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1363,10 +1768,45 @@
   ],
   "statements": [
     {
-      "id": "stmt_0c26c17bbeee85f8eb01",
+      "id": "stmt_2535d5a89efb28171a3f",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1200300130",
+      "text": "6 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_031c68f4ea3ab364647d",
+        "sig_204d181af21d6107e942",
+        "sig_265f6782bb8ee0a91ab1",
+        "sig_57141434d10a565716d6",
+        "sig_98b753413c6ed4944350",
+        "sig_ac97bbe426165f21251b"
+      ],
+      "derived_from": [
+        "sig_031c68f4ea3ab364647d",
+        "sig_204d181af21d6107e942",
+        "sig_265f6782bb8ee0a91ab1",
+        "sig_57141434d10a565716d6",
+        "sig_98b753413c6ed4944350",
+        "sig_ac97bbe426165f21251b"
+      ],
+      "importance": {
+        "change": 0.75,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2167
+    },
+    {
+      "id": "stmt_840fb4ecf58e1b152520",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1200300130",
-      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, inaturalist-observations, osm-notes.",
+      "text": "6 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, inaturalist-observations, nola-building-permits, osm-notes.",
       "epistemic": "INFERRED",
       "evidence": [
         "sig_42a5d7adb97f2ed4359b",
@@ -1384,6 +1824,12 @@
         "sig_a615b6cf7f5f19f5a33d",
         "sig_c60188be331724a105b2",
         "sig_edd836c641fbea756a3e",
+        "sig_031c68f4ea3ab364647d",
+        "sig_204d181af21d6107e942",
+        "sig_265f6782bb8ee0a91ab1",
+        "sig_57141434d10a565716d6",
+        "sig_98b753413c6ed4944350",
+        "sig_ac97bbe426165f21251b",
         "sig_68c98224a659119154c2"
       ],
       "derived_from": [
@@ -1402,6 +1848,12 @@
         "sig_a615b6cf7f5f19f5a33d",
         "sig_c60188be331724a105b2",
         "sig_edd836c641fbea756a3e",
+        "sig_031c68f4ea3ab364647d",
+        "sig_204d181af21d6107e942",
+        "sig_265f6782bb8ee0a91ab1",
+        "sig_57141434d10a565716d6",
+        "sig_98b753413c6ed4944350",
+        "sig_ac97bbe426165f21251b",
         "sig_68c98224a659119154c2"
       ],
       "importance": {
@@ -1483,6 +1935,6 @@
       "publication_rank": 0.1563
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.084Z",
+  "generated_at": "2026-08-25T12:34:09.126Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

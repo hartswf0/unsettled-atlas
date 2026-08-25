@@ -10,14 +10,15 @@
     "fdic-sod",
     "gbif-occurrences",
     "inaturalist-observations",
+    "nola-building-permits",
     "nps-national-register",
     "osm-notes"
   ],
   "counts": {
-    "signals": 55,
+    "signals": 106,
     "entities": 14,
     "relations": 39,
-    "statements": 11,
+    "statements": 15,
     "direct_signals": 0,
     "direct_entities": 0,
     "direct_statements": 0
@@ -27,6 +28,7 @@
     "money.bank_branch": 13,
     "money.branch_deposits": 13,
     "ecology.inaturalist_observation": 12,
+    "change.building_permit": 51,
     "claim.map_note": 2,
     "ecology.occurrence": 3,
     "memory.national_register_resource": 1
@@ -40,79 +42,13 @@
   },
   "statement_kinds": {
     "regulated_environment_presence": 3,
+    "building_change_activity": 3,
     "multi_source_activity": 3,
     "ecological_observation_density": 2,
+    "heritage_change_coaddress": 1,
     "reported_deposit_stock": 3
   },
   "signals": [
-    {
-      "id": "sig_9f1248ac60ba7a681ea6",
-      "source": "epa-echo",
-      "source_record_id": "110008380395",
-      "predicate": "environment.regulated_facility",
-      "value": {
-        "name": "GARRETT HONDA YAMAHA",
-        "address": "10150 I10, NEW ORLEANS, LA, 70127",
-        "county": "ORLEANS",
-        "major": null,
-        "active": "Y",
-        "compliance_status": "No Violation Identified",
-        "significant_noncompliance": "N",
-        "programs_with_significant_noncompliance": 0,
-        "quarters_noncompliance_3y": 0,
-        "inspections_5y": 0,
-        "formal_actions_5y": 0,
-        "penalties_5y": null,
-        "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 150,
-        "huc": "08090203",
-        "last_inspection": null
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.9806721053134,
-          30.0350982922886
-        ]
-      },
-      "atlas_address": "F02.1200300130",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.9806721053134,
-          30.0350982922886
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.020Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECOLOGY",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110008380395",
-        "provider": "U.S. EPA ECHO",
-        "refresh": "weekly"
-      },
-      "raw": {
-        "objectid": 48672
-      },
-      "publication_region": "new-orleans"
-    },
     {
       "id": "sig_f54cc64fdd0bcf0a154b",
       "source": "epa-echo",
@@ -158,7 +94,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.020Z",
+      "retrieved_at": "2026-08-25T12:33:46.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -226,7 +162,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.019Z",
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -250,25 +186,25 @@
       "publication_region": "new-orleans"
     },
     {
-      "id": "sig_91d67c7efd5f5ebe607f",
+      "id": "sig_9f1248ac60ba7a681ea6",
       "source": "epa-echo",
-      "source_record_id": "110011164275",
+      "source_record_id": "110008380395",
       "predicate": "environment.regulated_facility",
       "value": {
-        "name": "ORLEANS LEVEE DISTRICT",
-        "address": "6001 STARS & STRIPES BOULEVARD, NEW ORLEANS, LA, 70126",
+        "name": "GARRETT HONDA YAMAHA",
+        "address": "10150 I10, NEW ORLEANS, LA, 70127",
         "county": "ORLEANS",
         "major": null,
         "active": "Y",
-        "compliance_status": "Significant Violation",
-        "significant_noncompliance": "Y",
-        "programs_with_significant_noncompliance": 1,
-        "quarters_noncompliance_3y": 7,
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
         "inspections_5y": 0,
         "formal_actions_5y": 0,
         "penalties_5y": null,
         "penalty_total_5y_usd": 0,
-        "coordinate_accuracy_m": 50,
+        "coordinate_accuracy_m": 150,
         "huc": "08090203",
         "last_inspection": null
       },
@@ -276,16 +212,16 @@
       "geometry": {
         "type": "Point",
         "coordinates": [
-          -90.0328624266902,
-          30.0324618929846
+          -89.9806721053134,
+          30.0350982922886
         ]
       },
-      "atlas_address": "F02.1200300131",
+      "atlas_address": "F02.1200300130",
       "atlas_address_basis": {
         "method": "source_point",
         "representative_point": [
-          -90.0328624266902,
-          30.0324618929846
+          -89.9806721053134,
+          30.0350982922886
         ],
         "exact": true,
         "note": "Atlas address derives from the source point."
@@ -294,7 +230,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.018Z",
+      "retrieved_at": "2026-08-25T12:33:46.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -308,12 +244,12 @@
       ],
       "provenance": {
         "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
-        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110011164275",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110008380395",
         "provider": "U.S. EPA ECHO",
         "refresh": "weekly"
       },
       "raw": {
-        "objectid": 24569
+        "objectid": 48672
       },
       "publication_region": "new-orleans"
     },
@@ -362,7 +298,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -430,7 +366,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -450,6 +386,74 @@
       },
       "raw": {
         "objectid": 19111
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_91d67c7efd5f5ebe607f",
+      "source": "epa-echo",
+      "source_record_id": "110011164275",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "ORLEANS LEVEE DISTRICT",
+        "address": "6001 STARS & STRIPES BOULEVARD, NEW ORLEANS, LA, 70126",
+        "county": "ORLEANS",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "Significant Violation",
+        "significant_noncompliance": "Y",
+        "programs_with_significant_noncompliance": 1,
+        "quarters_noncompliance_3y": 7,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": null
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0328624266902,
+          30.0324618929846
+        ]
+      },
+      "atlas_address": "F02.1200300131",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0328624266902,
+          30.0324618929846
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "REPORTED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECOLOGY",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://services.arcgis.com/cJ9YHowT8TU7DUyn/arcgis/rest/services/ECHO_All_Media_Facilities/FeatureServer/0/query?f=geojson&where=1%3D1&geometry=-90.4862079631575%2C29.589351306817154%2C-89.6567920368425%2C30.312848693182847&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2Cregistry_id%2Cfac_name%2Cfac_street%2Cfac_city%2Cfac_state%2Cfac_zip%2Cfac_county%2Cfac_lat%2Cfac_long%2Cfac_accuracy_meters%2Cfac_major_flag%2Cfac_active_flag%2Cfac_inspection_count%2Cfac_date_last_inspection%2Cfac_formal_action_count%2Cfac_total_penalties%2Cfac_penalty_count%2Cfac_qtrs_with_nc%2Cfac_programs_with_snc%2Cfac_compliance_status%2Cfac_snc_flg%2Cfac_derived_huc&returnGeometry=true&resultRecordCount=160",
+        "source_url": "https://echo.epa.gov/detailed-facility-report?fid=110011164275",
+        "provider": "U.S. EPA ECHO",
+        "refresh": "weekly"
+      },
+      "raw": {
+        "objectid": 24569
       },
       "publication_region": "new-orleans"
     },
@@ -498,7 +502,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.017Z",
+      "retrieved_at": "2026-08-25T12:33:46.033Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -566,7 +570,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -634,7 +638,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -702,7 +706,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -770,7 +774,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.016Z",
+      "retrieved_at": "2026-08-25T12:33:46.032Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -829,7 +833,7 @@
       "observed_at": "2026-08-25T03:04:31.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.603Z",
+      "retrieved_at": "2026-08-25T12:33:46.148Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -886,7 +890,7 @@
       "observed_at": "2026-08-24T14:27:15.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "retrieved_at": "2026-08-25T12:33:46.148Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -904,6 +908,73 @@
       "raw": {
         "place_guess": "Wildair Dr, New Orleans, LA, US",
         "positional_accuracy": 2
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_47fbbc01dc7943cd6a4e",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24375-EVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24375-EVAC",
+        "permit_type": "Electrical Vacancy",
+        "address": "3319 Clermont Dr",
+        "description": "Vacancy no work",
+        "owner": "Wanda J Jones",
+        "status": "Finaled",
+        "next_status": null,
+        "zoning": "HU-RD1",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 500,
+        "filing_date": "2026-08-19T11:39:28.000",
+        "issue_date": "2026-08-20T11:59:47.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.05231974379143,
+          29.99271432156871
+        ]
+      },
+      "atlas_address": "F02.1200300131",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.05231974379143,
+          29.99271432156871
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-24T14:23:33.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "True"
       },
       "publication_region": "new-orleans"
     },
@@ -943,7 +1014,7 @@
       "observed_at": "2026-08-24T13:46:06.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.604Z",
+      "retrieved_at": "2026-08-25T12:33:46.148Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -961,6 +1032,140 @@
       "raw": {
         "place_guess": "Venetian Isles, New Orleans, LA, USA",
         "positional_accuracy": 1385
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_7762fc72842367c92c75",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24783-SERV",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24783-SERV",
+        "permit_type": "Electrical Service / Circuit / Feeder",
+        "address": "6701 Pauline Dr",
+        "description": "Change meter socket ",
+        "owner": "Joshua M Jackson",
+        "status": "Permit Issued",
+        "next_status": "Certificate of Completion",
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 500,
+        "filing_date": "2026-08-23T21:44:59.000",
+        "issue_date": "2026-08-24T13:19:05.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0375254644795,
+          30.02903617777612
+        ]
+      },
+      "atlas_address": "F02.1200300131",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.0375254644795,
+          30.02903617777612
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-24T13:19:05.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.458Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_1c7b94930f0a8368e6bc",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24646-EVAC",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24646-EVAC",
+        "permit_type": "Electrical Vacancy",
+        "address": "2765 N Rocheblave St",
+        "description": "vacancy",
+        "owner": "Kenderick Toussaint",
+        "status": "Permit Issued",
+        "next_status": "Certificate of Completion",
+        "zoning": "HU-RD2",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 800,
+        "filing_date": "2026-08-20T23:31:04.000",
+        "issue_date": "2026-08-24T09:26:46.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.04773882052636,
+          29.982430573229113
+        ]
+      },
+      "atlas_address": "F02.1200300131",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.04773882052636,
+          29.982430573229113
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-24T09:26:46.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.458Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
       },
       "publication_region": "new-orleans"
     },
@@ -996,7 +1201,7 @@
       "observed_at": "2026-08-24 08:31:24 UTC",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.354Z",
+      "retrieved_at": "2026-08-25T12:33:46.585Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1023,6 +1228,140 @@
             "html": "<p dir=\"auto\">\"apartment complex. with buildings a-z. willow brook apartments.\"\n<br />OSM snapshot date: 2026-07-14T00:42:02Z\n<br />POI has no name\n<br />POI types: building\n<br /> #organicmaps android 2026.07.23-6-Google</p>"
           }
         ]
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_a0ab1cfdf700c637a8b8",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24161-LOOP",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24161-LOOP",
+        "permit_type": "Construction Loop",
+        "address": "5757 Warrington Dr",
+        "description": "Temporary power or construction site",
+        "owner": "Hizz Home Builder LLC",
+        "status": "Permit Issued",
+        "next_status": "Certificate of Completion",
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 4000,
+        "filing_date": "2026-08-17T18:50:40.000",
+        "issue_date": "2026-08-24T07:37:20.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.06936350620225,
+          30.01823333434483
+        ]
+      },
+      "atlas_address": "F02.1200300131",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.06936350620225,
+          30.01823333434483
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-24T07:37:20.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
+      },
+      "publication_region": "new-orleans"
+    },
+    {
+      "id": "sig_8cb11ba957da60e74c89",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24159-SERV",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24159-SERV",
+        "permit_type": "Electrical Service / Circuit / Feeder",
+        "address": "5757 Warrington Dr",
+        "description": "Wire a new construction single family home\r\n15 new circuits and 200 amps",
+        "owner": "Hizz Home Builder LLC",
+        "status": "Permit Issued",
+        "next_status": "Certificate of Completion",
+        "zoning": "S-RS",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 4000,
+        "filing_date": "2026-08-17T18:46:08.000",
+        "issue_date": "2026-08-24T07:37:15.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.06936350620225,
+          30.01823333434483
+        ]
+      },
+      "atlas_address": "F02.1200300131",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -90.06936350620225,
+          30.01823333434483
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-24T07:37:15.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.459Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
       },
       "publication_region": "new-orleans"
     },
@@ -1066,7 +1405,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.673Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1123,7 +1462,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1180,7 +1519,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1237,7 +1576,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1294,7 +1633,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.739Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1351,7 +1690,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1408,7 +1747,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1465,7 +1804,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1522,7 +1861,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1579,7 +1918,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.675Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1636,7 +1975,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
+      "retrieved_at": "2026-08-25T12:33:46.674Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1693,7 +2032,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.737Z",
+      "retrieved_at": "2026-08-25T12:33:46.673Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1708,291 +2047,6 @@
         "provider": "FDIC BankFind Suite"
       },
       "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_ffe76dc75b886e508dee",
-      "source": "fdic-locations",
-      "source_record_id": "251828",
-      "predicate": "money.bank_branch",
-      "value": {
-        "cert": "20856",
-        "branch_id": 2,
-        "institution_name": "Liberty Bank and Trust Company",
-        "branch_name": "NEW ORLEANS EAST BRANCH",
-        "main_office": 0,
-        "service_type": "FULL SERVICE - BRICK AND MORTAR",
-        "address": "7200 Crowder Blvd",
-        "city": "New Orleans",
-        "state": "LA",
-        "zip": "70127",
-        "fi_uninum": 14407
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -89.99661802779725,
-          30.03440899776035
-        ]
-      },
-      "atlas_address": "F02.1200300130",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -89.99661802779725,
-          30.03440899776035
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-24T00:00:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.738Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json",
-        "provider": "FDIC BankFind Suite"
-      },
-      "raw": null,
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_0841408b278b89ddd4fd",
-      "source": "inaturalist-observations",
-      "source_record_id": "393958951",
-      "predicate": "ecology.inaturalist_observation",
-      "value": {
-        "scientific_name": "Marsilea macropoda",
-        "common_name": "Bigfoot Waterclover",
-        "iconic_taxon": "Plantae",
-        "quality_grade": "needs_id",
-        "captive": false,
-        "obscured": false,
-        "photos": 1
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.0487416052,
-          30.011704755
-        ]
-      },
-      "atlas_address": "F02.1200300131",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.0487416052,
-          30.011704755
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-23T22:46:58.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.605Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "DOG",
-        "ECOLOGY"
-      ],
-      "provenance": {
-        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
-        "source_url": "https://www.inaturalist.org/observations/393958951",
-        "provider": "iNaturalist"
-      },
-      "raw": {
-        "place_guess": "Lafaye St, New Orleans, LA, US",
-        "positional_accuracy": 4
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_a9631fae4b2a5dce587a",
-      "source": "inaturalist-observations",
-      "source_record_id": "393967466",
-      "predicate": "ecology.inaturalist_observation",
-      "value": {
-        "scientific_name": "Niesthrea louisianica",
-        "common_name": "Hibiscus Scentless Plant Bug",
-        "iconic_taxon": "Insecta",
-        "quality_grade": "needs_id",
-        "captive": false,
-        "obscured": false,
-        "photos": 2
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.0296447799,
-          29.96696415
-        ]
-      },
-      "atlas_address": "F02.1200300132",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.0296447799,
-          29.96696415
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-23T22:26:34.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.605Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "DOG",
-        "ECOLOGY"
-      ],
-      "provenance": {
-        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
-        "source_url": "https://www.inaturalist.org/observations/393967466",
-        "provider": "iNaturalist"
-      },
-      "raw": {
-        "place_guess": "Poydras, New Orleans, LA 70113, USA",
-        "positional_accuracy": 1524
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_17eb8b1e3bf70f9e4820",
-      "source": "inaturalist-observations",
-      "source_record_id": "393967514",
-      "predicate": "ecology.inaturalist_observation",
-      "value": {
-        "scientific_name": "Spartocera fusca",
-        "common_name": null,
-        "iconic_taxon": "Insecta",
-        "quality_grade": "needs_id",
-        "captive": false,
-        "obscured": false,
-        "photos": 1
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.029739663,
-          29.963481833
-        ]
-      },
-      "atlas_address": "F02.1200300132",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.029739663,
-          29.963481833
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-23T21:58:25.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.605Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "DOG",
-        "ECOLOGY"
-      ],
-      "provenance": {
-        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
-        "source_url": "https://www.inaturalist.org/observations/393967514",
-        "provider": "iNaturalist"
-      },
-      "raw": {
-        "place_guess": "Poydras, New Orleans, LA 70113, USA",
-        "positional_accuracy": 928
-      },
-      "publication_region": "new-orleans"
-    },
-    {
-      "id": "sig_124fc16e2e2aad501707",
-      "source": "inaturalist-observations",
-      "source_record_id": "393637726",
-      "predicate": "ecology.inaturalist_observation",
-      "value": {
-        "scientific_name": "Podocarpus macrophyllus",
-        "common_name": "kusamaki",
-        "iconic_taxon": "Plantae",
-        "quality_grade": "casual",
-        "captive": true,
-        "obscured": false,
-        "photos": 1
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -90.0488123338,
-          30.0116425645
-        ]
-      },
-      "atlas_address": "F02.1200300131",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -90.0488123338,
-          30.0116425645
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-08-22T23:29:57.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:25.606Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "DOG",
-        "ECOLOGY"
-      ],
-      "provenance": {
-        "query_url": "https://api.inaturalist.org/v1/observations?lat=29.9511&lng=-90.0715&radius=40&per_page=160&order_by=observed_on&order=desc&geo=true",
-        "source_url": "https://www.inaturalist.org/observations/393637726",
-        "provider": "iNaturalist"
-      },
-      "raw": {
-        "place_guess": "Lafaye St, New Orleans, LA, US",
-        "positional_accuracy": 10
-      },
       "publication_region": "new-orleans"
     }
   ],
@@ -2722,124 +2776,206 @@
   ],
   "statements": [
     {
-      "id": "stmt_0c26c17bbeee85f8eb01",
-      "kind": "multi_source_activity",
-      "atlas_address": "F02.1200300130",
-      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, inaturalist-observations, osm-notes.",
+      "id": "stmt_621ae0f458eb5018bfec",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1200300133",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource.",
       "epistemic": "INFERRED",
       "evidence": [
-        "sig_42a5d7adb97f2ed4359b",
-        "sig_5409c0ca8866905a3062",
-        "sig_9f1248ac60ba7a681ea6",
-        "sig_f54cc64fdd0bcf0a154b",
-        "sig_3d707772b7cc66c74e49",
-        "sig_6a088a5f0284c948ce3a",
-        "sig_b6623dcce149c664e4d2",
-        "sig_dffa7686a1acae55fe9d",
-        "sig_ffe76dc75b886e508dee",
-        "sig_22af4c291b946ef5c0f8",
-        "sig_33a43098687e999721c6",
-        "sig_7371592204ab6fdf4747",
-        "sig_a615b6cf7f5f19f5a33d",
-        "sig_c60188be331724a105b2",
-        "sig_edd836c641fbea756a3e",
-        "sig_68c98224a659119154c2"
+        "sig_d0ef2a737bff9fc100c2",
+        "sig_545a2a6fc1c10b6c1df4"
       ],
       "derived_from": [
-        "sig_42a5d7adb97f2ed4359b",
-        "sig_5409c0ca8866905a3062",
-        "sig_9f1248ac60ba7a681ea6",
-        "sig_f54cc64fdd0bcf0a154b",
-        "sig_3d707772b7cc66c74e49",
-        "sig_6a088a5f0284c948ce3a",
-        "sig_b6623dcce149c664e4d2",
-        "sig_dffa7686a1acae55fe9d",
-        "sig_ffe76dc75b886e508dee",
-        "sig_22af4c291b946ef5c0f8",
-        "sig_33a43098687e999721c6",
-        "sig_7371592204ab6fdf4747",
-        "sig_a615b6cf7f5f19f5a33d",
-        "sig_c60188be331724a105b2",
-        "sig_edd836c641fbea756a3e",
-        "sig_68c98224a659119154c2"
+        "sig_d0ef2a737bff9fc100c2",
+        "sig_545a2a6fc1c10b6c1df4"
       ],
       "importance": {
-        "change": null,
+        "change": 0.6,
         "exposure": null,
         "anomaly": null,
-        "contestation": null,
+        "contestation": 0.45,
         "consequence": null,
-        "evidence_diversity": 1,
-        "uncertainty": 0.35,
-        "novelty": null
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.5,
+        "novelty": 0.55
       },
       "publication_region": "new-orleans",
-      "publication_rank": 0.2062
+      "publication_rank": 0.325
     },
     {
-      "id": "stmt_6a7af479b16e28dc3512",
-      "kind": "multi_source_activity",
+      "id": "stmt_35926fd2cf5876758ef1",
+      "kind": "building_change_activity",
       "atlas_address": "F02.1200300131",
-      "text": "5 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations.",
+      "text": "18 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred.",
       "epistemic": "INFERRED",
       "evidence": [
-        "sig_71e38d2de01e0aa8392b",
-        "sig_91d67c7efd5f5ebe607f",
-        "sig_c6001dd0e055f9064754",
-        "sig_1678af49af00f3286088",
-        "sig_26240d2956871ac6b837",
-        "sig_3ccd1ac226c43911770d",
-        "sig_3eb927bfaf8e16feb9d2",
-        "sig_61258b04bbad8bccc327",
-        "sig_1112bbb4cfb5a2eef965",
-        "sig_2df15bf334a386367518",
-        "sig_3d491ab8469971755a14",
-        "sig_52a1102677f2184c62fb",
-        "sig_ad9e1ea6a8b5d8f25958",
-        "sig_a63a22988ce1529bdf79",
-        "sig_0841408b278b89ddd4fd",
-        "sig_124fc16e2e2aad501707",
-        "sig_78860688b3b91f77e193",
-        "sig_a623e97ac89c82f4ecbd"
+        "sig_00fa92a8f9ee13fcaf7a",
+        "sig_0a72fe81d6329713a4bf",
+        "sig_184aabe0d7f99b586c2c",
+        "sig_1c7b94930f0a8368e6bc",
+        "sig_21cc2bad1b85a3e9dcfb",
+        "sig_328fca66a270940607e0",
+        "sig_47592600551a3849859a",
+        "sig_47fbbc01dc7943cd6a4e",
+        "sig_5d9ed75d1110f1006b47",
+        "sig_7762fc72842367c92c75",
+        "sig_882094b92a03f51efe2d",
+        "sig_8cb11ba957da60e74c89",
+        "sig_924ad97668f4a4843422",
+        "sig_9fc5bb227d16c8ab05a6",
+        "sig_a0ab1cfdf700c637a8b8",
+        "sig_b602c25582354220b53e",
+        "sig_cacd6392f13d3c082604",
+        "sig_f4d6bf54518439892b38"
       ],
       "derived_from": [
-        "sig_71e38d2de01e0aa8392b",
-        "sig_91d67c7efd5f5ebe607f",
-        "sig_c6001dd0e055f9064754",
-        "sig_1678af49af00f3286088",
-        "sig_26240d2956871ac6b837",
-        "sig_3ccd1ac226c43911770d",
-        "sig_3eb927bfaf8e16feb9d2",
-        "sig_61258b04bbad8bccc327",
-        "sig_1112bbb4cfb5a2eef965",
-        "sig_2df15bf334a386367518",
-        "sig_3d491ab8469971755a14",
-        "sig_52a1102677f2184c62fb",
-        "sig_ad9e1ea6a8b5d8f25958",
-        "sig_a63a22988ce1529bdf79",
-        "sig_0841408b278b89ddd4fd",
-        "sig_124fc16e2e2aad501707",
-        "sig_78860688b3b91f77e193",
-        "sig_a623e97ac89c82f4ecbd"
+        "sig_00fa92a8f9ee13fcaf7a",
+        "sig_0a72fe81d6329713a4bf",
+        "sig_184aabe0d7f99b586c2c",
+        "sig_1c7b94930f0a8368e6bc",
+        "sig_21cc2bad1b85a3e9dcfb",
+        "sig_328fca66a270940607e0",
+        "sig_47592600551a3849859a",
+        "sig_47fbbc01dc7943cd6a4e",
+        "sig_5d9ed75d1110f1006b47",
+        "sig_7762fc72842367c92c75",
+        "sig_882094b92a03f51efe2d",
+        "sig_8cb11ba957da60e74c89",
+        "sig_924ad97668f4a4843422",
+        "sig_9fc5bb227d16c8ab05a6",
+        "sig_a0ab1cfdf700c637a8b8",
+        "sig_b602c25582354220b53e",
+        "sig_cacd6392f13d3c082604",
+        "sig_f4d6bf54518439892b38"
       ],
       "importance": {
-        "change": null,
+        "change": 1,
         "exposure": null,
         "anomaly": null,
         "contestation": null,
         "consequence": null,
-        "evidence_diversity": 1,
+        "evidence_diversity": 0.3333333333333333,
         "uncertainty": 0.35,
         "novelty": null
       },
       "publication_region": "new-orleans",
-      "publication_rank": 0.2062
+      "publication_rank": 0.2479
     },
     {
-      "id": "stmt_c2372bc54824af722f1e",
+      "id": "stmt_6debc6d83bdb0765f13c",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1200300132",
+      "text": "26 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_002e942fcb065ff429ae",
+        "sig_17e02d70db8585bb322d",
+        "sig_1874b4cd179af38b1f28",
+        "sig_1b53d077c7fd9e3f0846",
+        "sig_230b44a97fd315897a62",
+        "sig_2f7ee412a827e6e5a990",
+        "sig_3455892967eb3ec99ed3",
+        "sig_3c456ba2383a2e349603",
+        "sig_47406889198c0367eae7",
+        "sig_47a4bb412a5ec8f7fb7e",
+        "sig_4c79c53683b2f51ae690",
+        "sig_5173d740856e291a814c",
+        "sig_542beee89943aa92de62",
+        "sig_59e06c1a5754406d34ac",
+        "sig_640b787d16845add2219",
+        "sig_6fd039e47a9c7916faca",
+        "sig_8106031dcd1caa047174",
+        "sig_85a3b86fefa475e4a386",
+        "sig_874c8040e757926bc3b5",
+        "sig_8b154a80bc13d0802339",
+        "sig_92a15ffc7d8bd3d55edb",
+        "sig_92c26d4b1da7263b8d21",
+        "sig_9a493441547adf45f2c8",
+        "sig_9d99a1e66bd3c923780f",
+        "sig_a03b410e82786db98cfc",
+        "sig_cc6228d22d6a85dfa56a"
+      ],
+      "derived_from": [
+        "sig_002e942fcb065ff429ae",
+        "sig_17e02d70db8585bb322d",
+        "sig_1874b4cd179af38b1f28",
+        "sig_1b53d077c7fd9e3f0846",
+        "sig_230b44a97fd315897a62",
+        "sig_2f7ee412a827e6e5a990",
+        "sig_3455892967eb3ec99ed3",
+        "sig_3c456ba2383a2e349603",
+        "sig_47406889198c0367eae7",
+        "sig_47a4bb412a5ec8f7fb7e",
+        "sig_4c79c53683b2f51ae690",
+        "sig_5173d740856e291a814c",
+        "sig_542beee89943aa92de62",
+        "sig_59e06c1a5754406d34ac",
+        "sig_640b787d16845add2219",
+        "sig_6fd039e47a9c7916faca",
+        "sig_8106031dcd1caa047174",
+        "sig_85a3b86fefa475e4a386",
+        "sig_874c8040e757926bc3b5",
+        "sig_8b154a80bc13d0802339",
+        "sig_92a15ffc7d8bd3d55edb",
+        "sig_92c26d4b1da7263b8d21",
+        "sig_9a493441547adf45f2c8",
+        "sig_9d99a1e66bd3c923780f",
+        "sig_a03b410e82786db98cfc",
+        "sig_cc6228d22d6a85dfa56a"
+      ],
+      "importance": {
+        "change": 1,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2479
+    },
+    {
+      "id": "stmt_2535d5a89efb28171a3f",
+      "kind": "building_change_activity",
+      "atlas_address": "F02.1200300130",
+      "text": "6 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_031c68f4ea3ab364647d",
+        "sig_204d181af21d6107e942",
+        "sig_265f6782bb8ee0a91ab1",
+        "sig_57141434d10a565716d6",
+        "sig_98b753413c6ed4944350",
+        "sig_ac97bbe426165f21251b"
+      ],
+      "derived_from": [
+        "sig_031c68f4ea3ab364647d",
+        "sig_204d181af21d6107e942",
+        "sig_265f6782bb8ee0a91ab1",
+        "sig_57141434d10a565716d6",
+        "sig_98b753413c6ed4944350",
+        "sig_ac97bbe426165f21251b"
+      ],
+      "importance": {
+        "change": 0.75,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 0.3333333333333333,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2167
+    },
+    {
+      "id": "stmt_131a2a60da37edf57b39",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1200300132",
-      "text": "6 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, osm-notes.",
+      "text": "7 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nola-building-permits, osm-notes.",
       "epistemic": "INFERRED",
       "evidence": [
         "sig_3c3b1a919a8394caf2f1",
@@ -2861,6 +2997,32 @@
         "sig_a9631fae4b2a5dce587a",
         "sig_f9b0b63474c1e46fc62f",
         "sig_fa36e166e9f016b21da9",
+        "sig_002e942fcb065ff429ae",
+        "sig_17e02d70db8585bb322d",
+        "sig_1874b4cd179af38b1f28",
+        "sig_1b53d077c7fd9e3f0846",
+        "sig_230b44a97fd315897a62",
+        "sig_2f7ee412a827e6e5a990",
+        "sig_3455892967eb3ec99ed3",
+        "sig_3c456ba2383a2e349603",
+        "sig_47406889198c0367eae7",
+        "sig_47a4bb412a5ec8f7fb7e",
+        "sig_4c79c53683b2f51ae690",
+        "sig_5173d740856e291a814c",
+        "sig_542beee89943aa92de62",
+        "sig_59e06c1a5754406d34ac",
+        "sig_640b787d16845add2219",
+        "sig_6fd039e47a9c7916faca",
+        "sig_8106031dcd1caa047174",
+        "sig_85a3b86fefa475e4a386",
+        "sig_874c8040e757926bc3b5",
+        "sig_8b154a80bc13d0802339",
+        "sig_92a15ffc7d8bd3d55edb",
+        "sig_92c26d4b1da7263b8d21",
+        "sig_9a493441547adf45f2c8",
+        "sig_9d99a1e66bd3c923780f",
+        "sig_a03b410e82786db98cfc",
+        "sig_cc6228d22d6a85dfa56a",
         "sig_d7bd66ee83496bd98f30"
       ],
       "derived_from": [
@@ -2883,7 +3045,195 @@
         "sig_a9631fae4b2a5dce587a",
         "sig_f9b0b63474c1e46fc62f",
         "sig_fa36e166e9f016b21da9",
+        "sig_002e942fcb065ff429ae",
+        "sig_17e02d70db8585bb322d",
+        "sig_1874b4cd179af38b1f28",
+        "sig_1b53d077c7fd9e3f0846",
+        "sig_230b44a97fd315897a62",
+        "sig_2f7ee412a827e6e5a990",
+        "sig_3455892967eb3ec99ed3",
+        "sig_3c456ba2383a2e349603",
+        "sig_47406889198c0367eae7",
+        "sig_47a4bb412a5ec8f7fb7e",
+        "sig_4c79c53683b2f51ae690",
+        "sig_5173d740856e291a814c",
+        "sig_542beee89943aa92de62",
+        "sig_59e06c1a5754406d34ac",
+        "sig_640b787d16845add2219",
+        "sig_6fd039e47a9c7916faca",
+        "sig_8106031dcd1caa047174",
+        "sig_85a3b86fefa475e4a386",
+        "sig_874c8040e757926bc3b5",
+        "sig_8b154a80bc13d0802339",
+        "sig_92a15ffc7d8bd3d55edb",
+        "sig_92c26d4b1da7263b8d21",
+        "sig_9a493441547adf45f2c8",
+        "sig_9d99a1e66bd3c923780f",
+        "sig_a03b410e82786db98cfc",
+        "sig_cc6228d22d6a85dfa56a",
         "sig_d7bd66ee83496bd98f30"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_840fb4ecf58e1b152520",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200300130",
+      "text": "6 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, inaturalist-observations, nola-building-permits, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_42a5d7adb97f2ed4359b",
+        "sig_5409c0ca8866905a3062",
+        "sig_9f1248ac60ba7a681ea6",
+        "sig_f54cc64fdd0bcf0a154b",
+        "sig_3d707772b7cc66c74e49",
+        "sig_6a088a5f0284c948ce3a",
+        "sig_b6623dcce149c664e4d2",
+        "sig_dffa7686a1acae55fe9d",
+        "sig_ffe76dc75b886e508dee",
+        "sig_22af4c291b946ef5c0f8",
+        "sig_33a43098687e999721c6",
+        "sig_7371592204ab6fdf4747",
+        "sig_a615b6cf7f5f19f5a33d",
+        "sig_c60188be331724a105b2",
+        "sig_edd836c641fbea756a3e",
+        "sig_031c68f4ea3ab364647d",
+        "sig_204d181af21d6107e942",
+        "sig_265f6782bb8ee0a91ab1",
+        "sig_57141434d10a565716d6",
+        "sig_98b753413c6ed4944350",
+        "sig_ac97bbe426165f21251b",
+        "sig_68c98224a659119154c2"
+      ],
+      "derived_from": [
+        "sig_42a5d7adb97f2ed4359b",
+        "sig_5409c0ca8866905a3062",
+        "sig_9f1248ac60ba7a681ea6",
+        "sig_f54cc64fdd0bcf0a154b",
+        "sig_3d707772b7cc66c74e49",
+        "sig_6a088a5f0284c948ce3a",
+        "sig_b6623dcce149c664e4d2",
+        "sig_dffa7686a1acae55fe9d",
+        "sig_ffe76dc75b886e508dee",
+        "sig_22af4c291b946ef5c0f8",
+        "sig_33a43098687e999721c6",
+        "sig_7371592204ab6fdf4747",
+        "sig_a615b6cf7f5f19f5a33d",
+        "sig_c60188be331724a105b2",
+        "sig_edd836c641fbea756a3e",
+        "sig_031c68f4ea3ab364647d",
+        "sig_204d181af21d6107e942",
+        "sig_265f6782bb8ee0a91ab1",
+        "sig_57141434d10a565716d6",
+        "sig_98b753413c6ed4944350",
+        "sig_ac97bbe426165f21251b",
+        "sig_68c98224a659119154c2"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_e82a275b414dbf26a5d5",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1200300131",
+      "text": "6 independent source channels address signals to this ground: epa-echo, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, nola-building-permits.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_71e38d2de01e0aa8392b",
+        "sig_91d67c7efd5f5ebe607f",
+        "sig_c6001dd0e055f9064754",
+        "sig_1678af49af00f3286088",
+        "sig_26240d2956871ac6b837",
+        "sig_3ccd1ac226c43911770d",
+        "sig_3eb927bfaf8e16feb9d2",
+        "sig_61258b04bbad8bccc327",
+        "sig_1112bbb4cfb5a2eef965",
+        "sig_2df15bf334a386367518",
+        "sig_3d491ab8469971755a14",
+        "sig_52a1102677f2184c62fb",
+        "sig_ad9e1ea6a8b5d8f25958",
+        "sig_a63a22988ce1529bdf79",
+        "sig_0841408b278b89ddd4fd",
+        "sig_124fc16e2e2aad501707",
+        "sig_78860688b3b91f77e193",
+        "sig_a623e97ac89c82f4ecbd",
+        "sig_00fa92a8f9ee13fcaf7a",
+        "sig_0a72fe81d6329713a4bf",
+        "sig_184aabe0d7f99b586c2c",
+        "sig_1c7b94930f0a8368e6bc",
+        "sig_21cc2bad1b85a3e9dcfb",
+        "sig_328fca66a270940607e0",
+        "sig_47592600551a3849859a",
+        "sig_47fbbc01dc7943cd6a4e",
+        "sig_5d9ed75d1110f1006b47",
+        "sig_7762fc72842367c92c75",
+        "sig_882094b92a03f51efe2d",
+        "sig_8cb11ba957da60e74c89",
+        "sig_924ad97668f4a4843422",
+        "sig_9fc5bb227d16c8ab05a6",
+        "sig_a0ab1cfdf700c637a8b8",
+        "sig_b602c25582354220b53e",
+        "sig_cacd6392f13d3c082604",
+        "sig_f4d6bf54518439892b38"
+      ],
+      "derived_from": [
+        "sig_71e38d2de01e0aa8392b",
+        "sig_91d67c7efd5f5ebe607f",
+        "sig_c6001dd0e055f9064754",
+        "sig_1678af49af00f3286088",
+        "sig_26240d2956871ac6b837",
+        "sig_3ccd1ac226c43911770d",
+        "sig_3eb927bfaf8e16feb9d2",
+        "sig_61258b04bbad8bccc327",
+        "sig_1112bbb4cfb5a2eef965",
+        "sig_2df15bf334a386367518",
+        "sig_3d491ab8469971755a14",
+        "sig_52a1102677f2184c62fb",
+        "sig_ad9e1ea6a8b5d8f25958",
+        "sig_a63a22988ce1529bdf79",
+        "sig_0841408b278b89ddd4fd",
+        "sig_124fc16e2e2aad501707",
+        "sig_78860688b3b91f77e193",
+        "sig_a623e97ac89c82f4ecbd",
+        "sig_00fa92a8f9ee13fcaf7a",
+        "sig_0a72fe81d6329713a4bf",
+        "sig_184aabe0d7f99b586c2c",
+        "sig_1c7b94930f0a8368e6bc",
+        "sig_21cc2bad1b85a3e9dcfb",
+        "sig_328fca66a270940607e0",
+        "sig_47592600551a3849859a",
+        "sig_47fbbc01dc7943cd6a4e",
+        "sig_5d9ed75d1110f1006b47",
+        "sig_7762fc72842367c92c75",
+        "sig_882094b92a03f51efe2d",
+        "sig_8cb11ba957da60e74c89",
+        "sig_924ad97668f4a4843422",
+        "sig_9fc5bb227d16c8ab05a6",
+        "sig_a0ab1cfdf700c637a8b8",
+        "sig_b602c25582354220b53e",
+        "sig_cacd6392f13d3c082604",
+        "sig_f4d6bf54518439892b38"
       ],
       "importance": {
         "change": null,
@@ -3162,6 +3512,6 @@
       "publication_rank": 0.1437
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.058Z",
+  "generated_at": "2026-08-25T12:34:09.110Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

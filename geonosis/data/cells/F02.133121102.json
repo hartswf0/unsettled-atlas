@@ -5,6 +5,7 @@
     "atlanta"
   ],
   "sources": [
+    "atlanta-historic-buildings",
     "atlanta-rezoning-cases",
     "epa-echo",
     "fdic-locations",
@@ -15,15 +16,16 @@
     "osm-notes"
   ],
   "counts": {
-    "signals": 73,
+    "signals": 187,
     "entities": 7,
     "relations": 10,
-    "statements": 17,
+    "statements": 20,
     "direct_signals": 0,
     "direct_entities": 0,
     "direct_statements": 0
   },
   "signal_predicates": {
+    "memory.atlanta_historic_building": 114,
     "change.rezoning_case": 45,
     "money.bank_branch": 4,
     "money.branch_deposits": 3,
@@ -41,9 +43,9 @@
     "holds_reported_deposits": 3
   },
   "statement_kinds": {
-    "institutional_memory_density": 1,
+    "institutional_memory_density": 3,
     "building_change_activity": 4,
-    "heritage_change_coaddress": 2,
+    "heritage_change_coaddress": 3,
     "multi_source_activity": 3,
     "regulated_environment_presence": 3,
     "representation_contestation": 2,
@@ -95,7 +97,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "retrieved_at": "2026-08-25T12:33:21.165Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -163,7 +165,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "retrieved_at": "2026-08-25T12:33:21.165Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -231,7 +233,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.529Z",
+      "retrieved_at": "2026-08-25T12:33:21.165Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -299,7 +301,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.528Z",
+      "retrieved_at": "2026-08-25T12:33:21.163Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -320,6 +322,118 @@
       "raw": {
         "objectid": 7513
       },
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_019645d920184be92cc0",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{9F722D0E-5A47-4177-8A74-B42F29B85692}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-06-115",
+        "from_zone": "R-4A",
+        "to_zone": "PD-H",
+        "status": "COMPLETE",
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": null,
+        "ordinance_url": null,
+        "acres": 2.61455355
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.46522057288321,
+              33.80815037643415
+            ],
+            [
+              -84.46584667199794,
+              33.808148007439904
+            ],
+            [
+              -84.46597835722189,
+              33.80814749593244
+            ],
+            [
+              -84.46618780331376,
+              33.80814682254352
+            ],
+            [
+              -84.4661900803735,
+              33.80758705952578
+            ],
+            [
+              -84.4661915683456,
+              33.80722271734259
+            ],
+            [
+              -84.46619030836749,
+              33.807161793533055
+            ],
+            [
+              -84.46590940354058,
+              33.807014236702926
+            ],
+            [
+              -84.46581938709677,
+              33.807034977382926
+            ],
+            [
+              -84.46553050705683,
+              33.807101537386174
+            ],
+            [
+              -84.46521105698034,
+              33.807164174611145
+            ],
+            [
+              -84.46521576197587,
+              33.807652768346664
+            ],
+            [
+              -84.46521790632528,
+              33.807875533517
+            ],
+            [
+              -84.46522057288321,
+              33.80815037643415
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331211023",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.46570774465616,
+          33.80761765837711
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
       "publication_region": "atlanta"
     },
     {
@@ -428,311 +542,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.224Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_7d7427611affb62d6499",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{8CA359A0-FECC-42E9-BD1E-07ED16E82890}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-07-008",
-        "from_zone": "R-4A",
-        "to_zone": "LW",
-        "status": null,
-        "status_type": "Complete",
-        "final_update": null,
-        "ordinance": "07-O-0268",
-        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/07o0268.pdf",
-        "acres": 0.87671232
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.47116326683287,
-              33.80803224214124
-            ],
-            [
-              -84.47170164255358,
-              33.80801582477437
-            ],
-            [
-              -84.47180511881712,
-              33.80801119046307
-            ],
-            [
-              -84.471543396573,
-              33.807429171212426
-            ],
-            [
-              -84.47103685122232,
-              33.80741613375046
-            ],
-            [
-              -84.47104700856318,
-              33.807471365999874
-            ],
-            [
-              -84.47116326683287,
-              33.80803224214124
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211021",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.47138850224796,
-          33.80773512674054
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.224Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_c50167ce1f7553f2f4d6",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{6B3A0E7A-29DC-41FF-8818-CF586123748A}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-06-108",
-        "from_zone": "PDH, R4",
-        "to_zone": "MR-1",
-        "status": "FILED",
-        "status_type": "Filed",
-        "final_update": null,
-        "ordinance": null,
-        "ordinance_url": null,
-        "acres": 5.06310571
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.48962489550144,
-              33.781139055667296
-            ],
-            [
-              -84.48963089665814,
-              33.78019396380326
-            ],
-            [
-              -84.48963153984323,
-              33.78014525146992
-            ],
-            [
-              -84.48952869964548,
-              33.780131783061556
-            ],
-            [
-              -84.4892516955459,
-              33.78008657841639
-            ],
-            [
-              -84.48901820102448,
-              33.78009108819683
-            ],
-            [
-              -84.48869626482329,
-              33.780173826357014
-            ],
-            [
-              -84.48719938557565,
-              33.78078220209808
-            ],
-            [
-              -84.4866116334482,
-              33.78097092128354
-            ],
-            [
-              -84.48638778055185,
-              33.78105729871527
-            ],
-            [
-              -84.4864746819002,
-              33.78106032848217
-            ],
-            [
-              -84.48797640494492,
-              33.781097868124746
-            ],
-            [
-              -84.48962489550144,
-              33.781139055667296
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211021",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.48851980687331,
-          33.78070858135751
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.224Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_019645d920184be92cc0",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{9F722D0E-5A47-4177-8A74-B42F29B85692}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-06-115",
-        "from_zone": "R-4A",
-        "to_zone": "PD-H",
-        "status": "COMPLETE",
-        "status_type": "Complete",
-        "final_update": null,
-        "ordinance": null,
-        "ordinance_url": null,
-        "acres": 2.61455355
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.46522057288321,
-              33.80815037643415
-            ],
-            [
-              -84.46584667199794,
-              33.808148007439904
-            ],
-            [
-              -84.46597835722189,
-              33.80814749593244
-            ],
-            [
-              -84.46618780331376,
-              33.80814682254352
-            ],
-            [
-              -84.4661900803735,
-              33.80758705952578
-            ],
-            [
-              -84.4661915683456,
-              33.80722271734259
-            ],
-            [
-              -84.46619030836749,
-              33.807161793533055
-            ],
-            [
-              -84.46590940354058,
-              33.807014236702926
-            ],
-            [
-              -84.46581938709677,
-              33.807034977382926
-            ],
-            [
-              -84.46553050705683,
-              33.807101537386174
-            ],
-            [
-              -84.46521105698034,
-              33.807164174611145
-            ],
-            [
-              -84.46521576197587,
-              33.807652768346664
-            ],
-            [
-              -84.46521790632528,
-              33.807875533517
-            ],
-            [
-              -84.46522057288321,
-              33.80815037643415
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211023",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.46570774465616,
-          33.80761765837711
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -840,7 +650,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -944,7 +754,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1096,7 +906,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1488,7 +1298,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1604,7 +1414,91 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_7d7427611affb62d6499",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{8CA359A0-FECC-42E9-BD1E-07ED16E82890}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-07-008",
+        "from_zone": "R-4A",
+        "to_zone": "LW",
+        "status": null,
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": "07-O-0268",
+        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/07o0268.pdf",
+        "acres": 0.87671232
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.47116326683287,
+              33.80803224214124
+            ],
+            [
+              -84.47170164255358,
+              33.80801582477437
+            ],
+            [
+              -84.47180511881712,
+              33.80801119046307
+            ],
+            [
+              -84.471543396573,
+              33.807429171212426
+            ],
+            [
+              -84.47103685122232,
+              33.80741613375046
+            ],
+            [
+              -84.47104700856318,
+              33.807471365999874
+            ],
+            [
+              -84.47116326683287,
+              33.80803224214124
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331211021",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.47138850224796,
+          33.80773512674054
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1736,7 +1630,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1856,7 +1750,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1964,7 +1858,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2084,7 +1978,115 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_c50167ce1f7553f2f4d6",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{6B3A0E7A-29DC-41FF-8818-CF586123748A}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-06-108",
+        "from_zone": "PDH, R4",
+        "to_zone": "MR-1",
+        "status": "FILED",
+        "status_type": "Filed",
+        "final_update": null,
+        "ordinance": null,
+        "ordinance_url": null,
+        "acres": 5.06310571
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.48962489550144,
+              33.781139055667296
+            ],
+            [
+              -84.48963089665814,
+              33.78019396380326
+            ],
+            [
+              -84.48963153984323,
+              33.78014525146992
+            ],
+            [
+              -84.48952869964548,
+              33.780131783061556
+            ],
+            [
+              -84.4892516955459,
+              33.78008657841639
+            ],
+            [
+              -84.48901820102448,
+              33.78009108819683
+            ],
+            [
+              -84.48869626482329,
+              33.780173826357014
+            ],
+            [
+              -84.48719938557565,
+              33.78078220209808
+            ],
+            [
+              -84.4866116334482,
+              33.78097092128354
+            ],
+            [
+              -84.48638778055185,
+              33.78105729871527
+            ],
+            [
+              -84.4864746819002,
+              33.78106032848217
+            ],
+            [
+              -84.48797640494492,
+              33.781097868124746
+            ],
+            [
+              -84.48962489550144,
+              33.781139055667296
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331211021",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.48851980687331,
+          33.78070858135751
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2196,7 +2198,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2280,7 +2282,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2464,7 +2466,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.222Z",
+      "retrieved_at": "2026-08-25T12:33:21.038Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2560,7 +2562,103 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.222Z",
+      "retrieved_at": "2026-08-25T12:33:21.038Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f9ca2b15499e7db01d56",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{1DA6833B-4F0D-448B-BF52-1A8959589A50}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-05-135",
+        "from_zone": "C3, R4",
+        "to_zone": "C-3-C",
+        "status": "COMPLETE",
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": "06-O-0146",
+        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/06o0146.pdf",
+        "acres": 1.80917259
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.39395789527724,
+              33.806059314535574
+            ],
+            [
+              -84.39382509991806,
+              33.806057735111516
+            ],
+            [
+              -84.39283503723566,
+              33.806066507801425
+            ],
+            [
+              -84.3928140126605,
+              33.80657904539372
+            ],
+            [
+              -84.39343449324203,
+              33.806588779286265
+            ],
+            [
+              -84.39338827713219,
+              33.80682834445391
+            ],
+            [
+              -84.39373849695261,
+              33.80686631331753
+            ],
+            [
+              -84.39387068352309,
+              33.80688023479863
+            ],
+            [
+              -84.39394373620635,
+              33.8063382571071
+            ],
+            [
+              -84.39395789527724,
+              33.806059314535574
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.39343460506596,
+          33.8063948463463
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:21.038Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2672,7 +2770,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.222Z",
+      "retrieved_at": "2026-08-25T12:33:21.037Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -2840,375 +2938,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.222Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_f9ca2b15499e7db01d56",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{1DA6833B-4F0D-448B-BF52-1A8959589A50}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-05-135",
-        "from_zone": "C3, R4",
-        "to_zone": "C-3-C",
-        "status": "COMPLETE",
-        "status_type": "Complete",
-        "final_update": null,
-        "ordinance": "06-O-0146",
-        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/06o0146.pdf",
-        "acres": 1.80917259
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.39395789527724,
-              33.806059314535574
-            ],
-            [
-              -84.39382509991806,
-              33.806057735111516
-            ],
-            [
-              -84.39283503723566,
-              33.806066507801425
-            ],
-            [
-              -84.3928140126605,
-              33.80657904539372
-            ],
-            [
-              -84.39343449324203,
-              33.806588779286265
-            ],
-            [
-              -84.39338827713219,
-              33.80682834445391
-            ],
-            [
-              -84.39373849695261,
-              33.80686631331753
-            ],
-            [
-              -84.39387068352309,
-              33.80688023479863
-            ],
-            [
-              -84.39394373620635,
-              33.8063382571071
-            ],
-            [
-              -84.39395789527724,
-              33.806059314535574
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.39343460506596,
-          33.8063948463463
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.222Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_8b28ac839e6b149cb8f7",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{CC162EA1-4623-4F8C-95A0-B9C60D2D3313}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-07-114",
-        "from_zone": "I2",
-        "to_zone": "PD-MU",
-        "status": "NEW",
-        "status_type": "Complete",
-        "final_update": null,
-        "ordinance": "07-O-2528",
-        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/07o2528.pdf",
-        "acres": 0.64572834
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.40800019472954,
-              33.78253197510355
-            ],
-            [
-              -84.40765711801289,
-              33.78253223262984
-            ],
-            [
-              -84.40746916581112,
-              33.78255282807213
-            ],
-            [
-              -84.40747300516963,
-              33.78301721472095
-            ],
-            [
-              -84.40800412868875,
-              33.783012128705295
-            ],
-            [
-              -84.40800389771988,
-              33.78296096681034
-            ],
-            [
-              -84.40800019472954,
-              33.78253197510355
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.40773774428008,
-          33.78277520519582
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.220Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_deffb7eced69e4211160",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{1A25C27D-969F-4899-96EB-9E62FB88A9FE}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-07-072",
-        "from_zone": "RG2",
-        "to_zone": "RG-3",
-        "status": "COMPLETE",
-        "status_type": "Complete",
-        "final_update": null,
-        "ordinance": null,
-        "ordinance_url": null,
-        "acres": 1.15602844
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.37994514128164,
-              33.835525892886245
-            ],
-            [
-              -84.37998409618648,
-              33.83484787261141
-            ],
-            [
-              -84.37998672245384,
-              33.83477685643239
-            ],
-            [
-              -84.37937758818197,
-              33.83477049901425
-            ],
-            [
-              -84.37937278806425,
-              33.83483910613345
-            ],
-            [
-              -84.37933417764286,
-              33.83551158413213
-            ],
-            [
-              -84.3795374806523,
-              33.83551635105354
-            ],
-            [
-              -84.3797476017593,
-              33.8355212762684
-            ],
-            [
-              -84.37994514128164,
-              33.835525892886245
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211020",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.3796615794416,
-          33.83514628049566
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.220Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "BUILDING",
-        "SERVICE",
-        "ECONOMY"
-      ],
-      "provenance": {
-        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
-        "provider": "City of Atlanta Department of City Planning"
-      },
-      "raw": null,
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_f9a628e074711bd44ec7",
-      "source": "atlanta-rezoning-cases",
-      "source_record_id": "{C884C1E4-C97D-4470-A9CF-2202BD400D7F}",
-      "predicate": "change.rezoning_case",
-      "value": {
-        "docket": "Z-07-125",
-        "from_zone": "R-4",
-        "to_zone": "MR-3-C",
-        "status": null,
-        "status_type": "Complete",
-        "final_update": null,
-        "ordinance": "08-O-0100",
-        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/08o0100.pdf",
-        "acres": 0.44536353
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Polygon",
-        "coordinates": [
-          [
-            [
-              -84.43833002899669,
-              33.77101143811959
-            ],
-            [
-              -84.43831856045452,
-              33.77152510973794
-            ],
-            [
-              -84.43865117427328,
-              33.77156073627124
-            ],
-            [
-              -84.43866824635546,
-              33.77133987705093
-            ],
-            [
-              -84.43867367740819,
-              33.771264502365845
-            ],
-            [
-              -84.43867689243201,
-              33.77121422551808
-            ],
-            [
-              -84.43867977271573,
-              33.77116393407948
-            ],
-            [
-              -84.43868231826562,
-              33.77111362985346
-            ],
-            [
-              -84.43868452801118,
-              33.771063315547224
-            ],
-            [
-              -84.43833002899669,
-              33.77101143811959
-            ]
-          ]
-        ]
-      },
-      "atlas_address": "F02.1331211022",
-      "atlas_address_basis": {
-        "method": "polygon_centroid_representative",
-        "representative_point": [
-          -84.4384962198991,
-          33.7712872959217
-        ],
-        "exact": false,
-        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
-      },
-      "epistemic": "DECLARED",
-      "observed_at": null,
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.220Z",
+      "retrieved_at": "2026-08-25T12:33:21.037Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -3316,7 +3046,279 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.219Z",
+      "retrieved_at": "2026-08-25T12:33:21.036Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_8b28ac839e6b149cb8f7",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{CC162EA1-4623-4F8C-95A0-B9C60D2D3313}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-07-114",
+        "from_zone": "I2",
+        "to_zone": "PD-MU",
+        "status": "NEW",
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": "07-O-2528",
+        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/07o2528.pdf",
+        "acres": 0.64572834
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.40800019472954,
+              33.78253197510355
+            ],
+            [
+              -84.40765711801289,
+              33.78253223262984
+            ],
+            [
+              -84.40746916581112,
+              33.78255282807213
+            ],
+            [
+              -84.40747300516963,
+              33.78301721472095
+            ],
+            [
+              -84.40800412868875,
+              33.783012128705295
+            ],
+            [
+              -84.40800389771988,
+              33.78296096681034
+            ],
+            [
+              -84.40800019472954,
+              33.78253197510355
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.40773774428008,
+          33.78277520519582
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:21.036Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_deffb7eced69e4211160",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{1A25C27D-969F-4899-96EB-9E62FB88A9FE}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-07-072",
+        "from_zone": "RG2",
+        "to_zone": "RG-3",
+        "status": "COMPLETE",
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": null,
+        "ordinance_url": null,
+        "acres": 1.15602844
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.37994514128164,
+              33.835525892886245
+            ],
+            [
+              -84.37998409618648,
+              33.83484787261141
+            ],
+            [
+              -84.37998672245384,
+              33.83477685643239
+            ],
+            [
+              -84.37937758818197,
+              33.83477049901425
+            ],
+            [
+              -84.37937278806425,
+              33.83483910613345
+            ],
+            [
+              -84.37933417764286,
+              33.83551158413213
+            ],
+            [
+              -84.3795374806523,
+              33.83551635105354
+            ],
+            [
+              -84.3797476017593,
+              33.8355212762684
+            ],
+            [
+              -84.37994514128164,
+              33.835525892886245
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331211020",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.3796615794416,
+          33.83514628049566
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:21.036Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_f9a628e074711bd44ec7",
+      "source": "atlanta-rezoning-cases",
+      "source_record_id": "{C884C1E4-C97D-4470-A9CF-2202BD400D7F}",
+      "predicate": "change.rezoning_case",
+      "value": {
+        "docket": "Z-07-125",
+        "from_zone": "R-4",
+        "to_zone": "MR-3-C",
+        "status": null,
+        "status_type": "Complete",
+        "final_update": null,
+        "ordinance": "08-O-0100",
+        "ordinance_url": "https://aimewebapp.blob.core.windows.net/finalactions/08o0100.pdf",
+        "acres": 0.44536353
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [
+              -84.43833002899669,
+              33.77101143811959
+            ],
+            [
+              -84.43831856045452,
+              33.77152510973794
+            ],
+            [
+              -84.43865117427328,
+              33.77156073627124
+            ],
+            [
+              -84.43866824635546,
+              33.77133987705093
+            ],
+            [
+              -84.43867367740819,
+              33.771264502365845
+            ],
+            [
+              -84.43867689243201,
+              33.77121422551808
+            ],
+            [
+              -84.43867977271573,
+              33.77116393407948
+            ],
+            [
+              -84.43868231826562,
+              33.77111362985346
+            ],
+            [
+              -84.43868452801118,
+              33.771063315547224
+            ],
+            [
+              -84.43833002899669,
+              33.77101143811959
+            ]
+          ]
+        ]
+      },
+      "atlas_address": "F02.1331211022",
+      "atlas_address_basis": {
+        "method": "polygon_centroid_representative",
+        "representative_point": [
+          -84.4384962198991,
+          33.7712872959217
+        ],
+        "exact": false,
+        "note": "Representative address only. The preserved source geometry may span additional Atlas cells."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:21.036Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -3924,7 +3926,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.219Z",
+      "retrieved_at": "2026-08-25T12:33:21.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -4218,7 +4220,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.218Z",
+      "retrieved_at": "2026-08-25T12:33:21.035Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -4342,7 +4344,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.217Z",
+      "retrieved_at": "2026-08-25T12:33:21.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -4698,7 +4700,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.217Z",
+      "retrieved_at": "2026-08-25T12:33:21.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -5040,12 +5042,222 @@
   ],
   "statements": [
     {
-      "id": "stmt_b0e0892b3fc1dbbb0764",
+      "id": "stmt_19f2a13096acb6d37203",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331211023",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_06f91ec075312686989b",
+        "sig_096cfc065a6df2f7c14e",
+        "sig_1192595633e8759fe94d",
+        "sig_138ddb91bbb3cebbd4b4",
+        "sig_142949b26bc7f4cce227",
+        "sig_157a91d94beeedf88846",
+        "sig_18c5098a2473d126c54b",
+        "sig_1a624b638280be370ca4",
+        "sig_26f75a9f651b2239787f",
+        "sig_299bb462d81eea7e1ce0",
+        "sig_2e0700887d562714e0dd",
+        "sig_2e49b09c427f9b1d57be",
+        "sig_3752e8456818d69a517d",
+        "sig_3c18ef88c3ea97dbfb7f",
+        "sig_3eeb9327522798164b40",
+        "sig_42e1a34ed3a73bf5d0a3",
+        "sig_4bb6cb2f6089aa760993",
+        "sig_4c015cf510dffb338c33",
+        "sig_51b4c7f35bbf742cec29",
+        "sig_529ec3a74e628e119e45",
+        "sig_549db77722e8f75e4a70",
+        "sig_5af879796fdb6357e7b5",
+        "sig_5f924d4d4096fdb558fb",
+        "sig_6569d22a03baa3ece6c3",
+        "sig_6832dcba004242f6d842",
+        "sig_7183d25dfb99b605914a",
+        "sig_7e1ac65cc12047515ea8",
+        "sig_83c2e6be810836f6940f",
+        "sig_87c9f1c0bd179e7a345a",
+        "sig_8a4499e207d43798ca2b",
+        "sig_8ed0242b3159d502cbf1",
+        "sig_94593a65080192201f89",
+        "sig_a032c80b0e8424a499b6",
+        "sig_abd2e302690a3e81c6e6",
+        "sig_b529b17c1cbba7507f9e",
+        "sig_bed7350facc8c93e6802",
+        "sig_c25348eeb02d28bc29e0",
+        "sig_cc0bb5ea38fbe5bceefd",
+        "sig_ccef5d4383d61e94c547",
+        "sig_d062c3550fffb2c78740",
+        "sig_d2045cc29d668df3ea32",
+        "sig_d545f42904c3438db5eb",
+        "sig_d895ba5cc9f806674009",
+        "sig_dd47d188f4e198d81902",
+        "sig_df2fa5971a5c08dfa745",
+        "sig_e0b078c1444700bdd107",
+        "sig_e0bdcac67bae4b146567",
+        "sig_f25d201485056c7f1c59",
+        "sig_f462a9903d5966b9d0f6",
+        "sig_0518df75f07129817af3",
+        "sig_019645d920184be92cc0",
+        "sig_12530b1fd3dd313cfd44",
+        "sig_222ec702ccad01df4003",
+        "sig_23fda9cd66e045a3dd2f",
+        "sig_5b31a0c4d6d95a90730f",
+        "sig_7bc0b87a7de5ad2bf8f7",
+        "sig_8af3a9b4266a1c70bd7e",
+        "sig_8b51992bf4f14dca5401",
+        "sig_906da4816fda0ceccb02",
+        "sig_b29ae7c84016ad5bd8a7",
+        "sig_b5a002aca0f8ed9e5444",
+        "sig_c7101e6bc2a52b2e02cc",
+        "sig_d4d38ae479b09064aea4",
+        "sig_dedd0cdf2b330f2dc912",
+        "sig_e6053dba49192a6e6dc7",
+        "sig_f1940ada92810cd86ace",
+        "sig_f37f131ac8dc506e371e"
+      ],
+      "derived_from": [
+        "sig_06f91ec075312686989b",
+        "sig_096cfc065a6df2f7c14e",
+        "sig_1192595633e8759fe94d",
+        "sig_138ddb91bbb3cebbd4b4",
+        "sig_142949b26bc7f4cce227",
+        "sig_157a91d94beeedf88846",
+        "sig_18c5098a2473d126c54b",
+        "sig_1a624b638280be370ca4",
+        "sig_26f75a9f651b2239787f",
+        "sig_299bb462d81eea7e1ce0",
+        "sig_2e0700887d562714e0dd",
+        "sig_2e49b09c427f9b1d57be",
+        "sig_3752e8456818d69a517d",
+        "sig_3c18ef88c3ea97dbfb7f",
+        "sig_3eeb9327522798164b40",
+        "sig_42e1a34ed3a73bf5d0a3",
+        "sig_4bb6cb2f6089aa760993",
+        "sig_4c015cf510dffb338c33",
+        "sig_51b4c7f35bbf742cec29",
+        "sig_529ec3a74e628e119e45",
+        "sig_549db77722e8f75e4a70",
+        "sig_5af879796fdb6357e7b5",
+        "sig_5f924d4d4096fdb558fb",
+        "sig_6569d22a03baa3ece6c3",
+        "sig_6832dcba004242f6d842",
+        "sig_7183d25dfb99b605914a",
+        "sig_7e1ac65cc12047515ea8",
+        "sig_83c2e6be810836f6940f",
+        "sig_87c9f1c0bd179e7a345a",
+        "sig_8a4499e207d43798ca2b",
+        "sig_8ed0242b3159d502cbf1",
+        "sig_94593a65080192201f89",
+        "sig_a032c80b0e8424a499b6",
+        "sig_abd2e302690a3e81c6e6",
+        "sig_b529b17c1cbba7507f9e",
+        "sig_bed7350facc8c93e6802",
+        "sig_c25348eeb02d28bc29e0",
+        "sig_cc0bb5ea38fbe5bceefd",
+        "sig_ccef5d4383d61e94c547",
+        "sig_d062c3550fffb2c78740",
+        "sig_d2045cc29d668df3ea32",
+        "sig_d545f42904c3438db5eb",
+        "sig_d895ba5cc9f806674009",
+        "sig_dd47d188f4e198d81902",
+        "sig_df2fa5971a5c08dfa745",
+        "sig_e0b078c1444700bdd107",
+        "sig_e0bdcac67bae4b146567",
+        "sig_f25d201485056c7f1c59",
+        "sig_f462a9903d5966b9d0f6",
+        "sig_0518df75f07129817af3",
+        "sig_019645d920184be92cc0",
+        "sig_12530b1fd3dd313cfd44",
+        "sig_222ec702ccad01df4003",
+        "sig_23fda9cd66e045a3dd2f",
+        "sig_5b31a0c4d6d95a90730f",
+        "sig_7bc0b87a7de5ad2bf8f7",
+        "sig_8af3a9b4266a1c70bd7e",
+        "sig_8b51992bf4f14dca5401",
+        "sig_906da4816fda0ceccb02",
+        "sig_b29ae7c84016ad5bd8a7",
+        "sig_b5a002aca0f8ed9e5444",
+        "sig_c7101e6bc2a52b2e02cc",
+        "sig_d4d38ae479b09064aea4",
+        "sig_dedd0cdf2b330f2dc912",
+        "sig_e6053dba49192a6e6dc7",
+        "sig_f1940ada92810cd86ace",
+        "sig_f37f131ac8dc506e371e"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.75,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3375
+    },
+    {
+      "id": "stmt_9b383094611b3df8c5ab",
       "kind": "heritage_change_coaddress",
       "atlas_address": "F02.1331211020",
       "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
       "epistemic": "INFERRED",
       "evidence": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_1f62735a7f45f22279b4",
         "sig_2d9d5360cc323f20667c",
         "sig_4c50287f490136de4857",
@@ -5070,6 +5282,59 @@
         "sig_f9ca2b15499e7db01d56"
       ],
       "derived_from": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_1f62735a7f45f22279b4",
         "sig_2d9d5360cc323f20667c",
         "sig_4c50287f490136de4857",
@@ -5099,58 +5364,66 @@
         "anomaly": null,
         "contestation": 0.45,
         "consequence": null,
-        "evidence_diversity": 0.5,
+        "evidence_diversity": 0.75,
         "uncertainty": 0.65,
         "novelty": 0.55
       },
       "publication_region": "atlanta",
-      "publication_rank": 0.3063
+      "publication_rank": 0.3375
     },
     {
-      "id": "stmt_d5f5749815210af05698",
+      "id": "stmt_274b8bc481cafa97c587",
       "kind": "heritage_change_coaddress",
-      "atlas_address": "F02.1331211023",
+      "atlas_address": "F02.1331211022",
       "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
       "epistemic": "INFERRED",
       "evidence": [
-        "sig_0518df75f07129817af3",
-        "sig_019645d920184be92cc0",
-        "sig_12530b1fd3dd313cfd44",
-        "sig_222ec702ccad01df4003",
-        "sig_23fda9cd66e045a3dd2f",
-        "sig_5b31a0c4d6d95a90730f",
-        "sig_7bc0b87a7de5ad2bf8f7",
-        "sig_8af3a9b4266a1c70bd7e",
-        "sig_8b51992bf4f14dca5401",
-        "sig_906da4816fda0ceccb02",
-        "sig_b29ae7c84016ad5bd8a7",
-        "sig_b5a002aca0f8ed9e5444",
-        "sig_c7101e6bc2a52b2e02cc",
-        "sig_d4d38ae479b09064aea4",
-        "sig_dedd0cdf2b330f2dc912",
-        "sig_e6053dba49192a6e6dc7",
-        "sig_f1940ada92810cd86ace",
-        "sig_f37f131ac8dc506e371e"
+        "sig_03c2d8864a7201cb50f8",
+        "sig_175ec3a22cd78f2d2f3f",
+        "sig_18fb4d0270379b862b09",
+        "sig_4d6c201b6d2a42b0ec67",
+        "sig_5df1795b13cdf69576b2",
+        "sig_7f8c99ab3dccf8bc93c2",
+        "sig_85e605ae76064ed0eadc",
+        "sig_8e8356931ff3dfef2648",
+        "sig_936810da42da81c1ec2a",
+        "sig_cad0ead86b3f11c76d0f",
+        "sig_d215623505d32090e44c",
+        "sig_e9f512bab830b1a94645",
+        "sig_14c1eeec753f261c35c3",
+        "sig_29b34c6b91a58b26ed73",
+        "sig_2a93422f093e8120a3d3",
+        "sig_2d560891b91602db6cdd",
+        "sig_2e8a0af88904588a73e1",
+        "sig_5459b190c4c1712bd739",
+        "sig_6189b83a690d8db257f5",
+        "sig_6d19710ae13cc32417c5",
+        "sig_7dc9ff1e1fc6013d4427",
+        "sig_f9a628e074711bd44ec7"
       ],
       "derived_from": [
-        "sig_0518df75f07129817af3",
-        "sig_019645d920184be92cc0",
-        "sig_12530b1fd3dd313cfd44",
-        "sig_222ec702ccad01df4003",
-        "sig_23fda9cd66e045a3dd2f",
-        "sig_5b31a0c4d6d95a90730f",
-        "sig_7bc0b87a7de5ad2bf8f7",
-        "sig_8af3a9b4266a1c70bd7e",
-        "sig_8b51992bf4f14dca5401",
-        "sig_906da4816fda0ceccb02",
-        "sig_b29ae7c84016ad5bd8a7",
-        "sig_b5a002aca0f8ed9e5444",
-        "sig_c7101e6bc2a52b2e02cc",
-        "sig_d4d38ae479b09064aea4",
-        "sig_dedd0cdf2b330f2dc912",
-        "sig_e6053dba49192a6e6dc7",
-        "sig_f1940ada92810cd86ace",
-        "sig_f37f131ac8dc506e371e"
+        "sig_03c2d8864a7201cb50f8",
+        "sig_175ec3a22cd78f2d2f3f",
+        "sig_18fb4d0270379b862b09",
+        "sig_4d6c201b6d2a42b0ec67",
+        "sig_5df1795b13cdf69576b2",
+        "sig_7f8c99ab3dccf8bc93c2",
+        "sig_85e605ae76064ed0eadc",
+        "sig_8e8356931ff3dfef2648",
+        "sig_936810da42da81c1ec2a",
+        "sig_cad0ead86b3f11c76d0f",
+        "sig_d215623505d32090e44c",
+        "sig_e9f512bab830b1a94645",
+        "sig_14c1eeec753f261c35c3",
+        "sig_29b34c6b91a58b26ed73",
+        "sig_2a93422f093e8120a3d3",
+        "sig_2d560891b91602db6cdd",
+        "sig_2e8a0af88904588a73e1",
+        "sig_5459b190c4c1712bd739",
+        "sig_6189b83a690d8db257f5",
+        "sig_6d19710ae13cc32417c5",
+        "sig_7dc9ff1e1fc6013d4427",
+        "sig_f9a628e074711bd44ec7"
       ],
       "importance": {
         "change": 0.6,
@@ -5319,12 +5592,61 @@
       "publication_rank": 0.2229
     },
     {
-      "id": "stmt_a44faf80222ddc1cffdc",
+      "id": "stmt_1d0f955b68a62b1e5c62",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1331211023",
-      "text": "6 independent source channels address signals to this ground: atlanta-rezoning-cases, epa-echo, fdic-sod, gbif-occurrences, nps-national-register, osm-notes.",
+      "text": "7 independent source channels address signals to this ground: atlanta-historic-buildings, atlanta-rezoning-cases, epa-echo, fdic-sod, gbif-occurrences, nps-national-register, osm-notes.",
       "epistemic": "INFERRED",
       "evidence": [
+        "sig_06f91ec075312686989b",
+        "sig_096cfc065a6df2f7c14e",
+        "sig_1192595633e8759fe94d",
+        "sig_138ddb91bbb3cebbd4b4",
+        "sig_142949b26bc7f4cce227",
+        "sig_157a91d94beeedf88846",
+        "sig_18c5098a2473d126c54b",
+        "sig_1a624b638280be370ca4",
+        "sig_26f75a9f651b2239787f",
+        "sig_299bb462d81eea7e1ce0",
+        "sig_2e0700887d562714e0dd",
+        "sig_2e49b09c427f9b1d57be",
+        "sig_3752e8456818d69a517d",
+        "sig_3c18ef88c3ea97dbfb7f",
+        "sig_3eeb9327522798164b40",
+        "sig_42e1a34ed3a73bf5d0a3",
+        "sig_4bb6cb2f6089aa760993",
+        "sig_4c015cf510dffb338c33",
+        "sig_51b4c7f35bbf742cec29",
+        "sig_529ec3a74e628e119e45",
+        "sig_549db77722e8f75e4a70",
+        "sig_5af879796fdb6357e7b5",
+        "sig_5f924d4d4096fdb558fb",
+        "sig_6569d22a03baa3ece6c3",
+        "sig_6832dcba004242f6d842",
+        "sig_7183d25dfb99b605914a",
+        "sig_7e1ac65cc12047515ea8",
+        "sig_83c2e6be810836f6940f",
+        "sig_87c9f1c0bd179e7a345a",
+        "sig_8a4499e207d43798ca2b",
+        "sig_8ed0242b3159d502cbf1",
+        "sig_94593a65080192201f89",
+        "sig_a032c80b0e8424a499b6",
+        "sig_abd2e302690a3e81c6e6",
+        "sig_b529b17c1cbba7507f9e",
+        "sig_bed7350facc8c93e6802",
+        "sig_c25348eeb02d28bc29e0",
+        "sig_cc0bb5ea38fbe5bceefd",
+        "sig_ccef5d4383d61e94c547",
+        "sig_d062c3550fffb2c78740",
+        "sig_d2045cc29d668df3ea32",
+        "sig_d545f42904c3438db5eb",
+        "sig_d895ba5cc9f806674009",
+        "sig_dd47d188f4e198d81902",
+        "sig_df2fa5971a5c08dfa745",
+        "sig_e0b078c1444700bdd107",
+        "sig_e0bdcac67bae4b146567",
+        "sig_f25d201485056c7f1c59",
+        "sig_f462a9903d5966b9d0f6",
         "sig_019645d920184be92cc0",
         "sig_12530b1fd3dd313cfd44",
         "sig_222ec702ccad01df4003",
@@ -5350,6 +5672,55 @@
         "sig_f9d35ea1dae9db3214e2"
       ],
       "derived_from": [
+        "sig_06f91ec075312686989b",
+        "sig_096cfc065a6df2f7c14e",
+        "sig_1192595633e8759fe94d",
+        "sig_138ddb91bbb3cebbd4b4",
+        "sig_142949b26bc7f4cce227",
+        "sig_157a91d94beeedf88846",
+        "sig_18c5098a2473d126c54b",
+        "sig_1a624b638280be370ca4",
+        "sig_26f75a9f651b2239787f",
+        "sig_299bb462d81eea7e1ce0",
+        "sig_2e0700887d562714e0dd",
+        "sig_2e49b09c427f9b1d57be",
+        "sig_3752e8456818d69a517d",
+        "sig_3c18ef88c3ea97dbfb7f",
+        "sig_3eeb9327522798164b40",
+        "sig_42e1a34ed3a73bf5d0a3",
+        "sig_4bb6cb2f6089aa760993",
+        "sig_4c015cf510dffb338c33",
+        "sig_51b4c7f35bbf742cec29",
+        "sig_529ec3a74e628e119e45",
+        "sig_549db77722e8f75e4a70",
+        "sig_5af879796fdb6357e7b5",
+        "sig_5f924d4d4096fdb558fb",
+        "sig_6569d22a03baa3ece6c3",
+        "sig_6832dcba004242f6d842",
+        "sig_7183d25dfb99b605914a",
+        "sig_7e1ac65cc12047515ea8",
+        "sig_83c2e6be810836f6940f",
+        "sig_87c9f1c0bd179e7a345a",
+        "sig_8a4499e207d43798ca2b",
+        "sig_8ed0242b3159d502cbf1",
+        "sig_94593a65080192201f89",
+        "sig_a032c80b0e8424a499b6",
+        "sig_abd2e302690a3e81c6e6",
+        "sig_b529b17c1cbba7507f9e",
+        "sig_bed7350facc8c93e6802",
+        "sig_c25348eeb02d28bc29e0",
+        "sig_cc0bb5ea38fbe5bceefd",
+        "sig_ccef5d4383d61e94c547",
+        "sig_d062c3550fffb2c78740",
+        "sig_d2045cc29d668df3ea32",
+        "sig_d545f42904c3438db5eb",
+        "sig_d895ba5cc9f806674009",
+        "sig_dd47d188f4e198d81902",
+        "sig_df2fa5971a5c08dfa745",
+        "sig_e0b078c1444700bdd107",
+        "sig_e0bdcac67bae4b146567",
+        "sig_f25d201485056c7f1c59",
+        "sig_f462a9903d5966b9d0f6",
         "sig_019645d920184be92cc0",
         "sig_12530b1fd3dd313cfd44",
         "sig_222ec702ccad01df4003",
@@ -5388,12 +5759,65 @@
       "publication_rank": 0.2062
     },
     {
-      "id": "stmt_f34a03518272266b778b",
+      "id": "stmt_484c4a8a8c87e2d9e591",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1331211020",
-      "text": "6 independent source channels address signals to this ground: atlanta-rezoning-cases, fdic-locations, fdic-sod, inaturalist-observations, nps-national-register, osm-notes.",
+      "text": "7 independent source channels address signals to this ground: atlanta-historic-buildings, atlanta-rezoning-cases, fdic-locations, fdic-sod, inaturalist-observations, nps-national-register, osm-notes.",
       "epistemic": "INFERRED",
       "evidence": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_39a95d328643e3f083e8",
         "sig_6e8dd09a0a4948cd19a7",
         "sig_807663e0ccbc5d5451dd",
@@ -5426,6 +5850,59 @@
         "sig_12e4d206352d751d28d6"
       ],
       "derived_from": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
         "sig_39a95d328643e3f083e8",
         "sig_6e8dd09a0a4948cd19a7",
         "sig_807663e0ccbc5d5451dd",
@@ -5471,12 +5948,24 @@
       "publication_rank": 0.2062
     },
     {
-      "id": "stmt_eed42c971836cf188412",
+      "id": "stmt_7e92a947044e1b836ecc",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1331211022",
-      "text": "4 independent source channels address signals to this ground: atlanta-rezoning-cases, epa-echo, gbif-occurrences, osm-notes.",
+      "text": "5 independent source channels address signals to this ground: atlanta-historic-buildings, atlanta-rezoning-cases, epa-echo, gbif-occurrences, osm-notes.",
       "epistemic": "INFERRED",
       "evidence": [
+        "sig_03c2d8864a7201cb50f8",
+        "sig_175ec3a22cd78f2d2f3f",
+        "sig_18fb4d0270379b862b09",
+        "sig_4d6c201b6d2a42b0ec67",
+        "sig_5df1795b13cdf69576b2",
+        "sig_7f8c99ab3dccf8bc93c2",
+        "sig_85e605ae76064ed0eadc",
+        "sig_8e8356931ff3dfef2648",
+        "sig_936810da42da81c1ec2a",
+        "sig_cad0ead86b3f11c76d0f",
+        "sig_d215623505d32090e44c",
+        "sig_e9f512bab830b1a94645",
         "sig_14c1eeec753f261c35c3",
         "sig_29b34c6b91a58b26ed73",
         "sig_2a93422f093e8120a3d3",
@@ -5494,6 +5983,18 @@
         "sig_97a0d12e5a9367ffcf24"
       ],
       "derived_from": [
+        "sig_03c2d8864a7201cb50f8",
+        "sig_175ec3a22cd78f2d2f3f",
+        "sig_18fb4d0270379b862b09",
+        "sig_4d6c201b6d2a42b0ec67",
+        "sig_5df1795b13cdf69576b2",
+        "sig_7f8c99ab3dccf8bc93c2",
+        "sig_85e605ae76064ed0eadc",
+        "sig_8e8356931ff3dfef2648",
+        "sig_936810da42da81c1ec2a",
+        "sig_cad0ead86b3f11c76d0f",
+        "sig_d215623505d32090e44c",
+        "sig_e9f512bab830b1a94645",
         "sig_14c1eeec753f261c35c3",
         "sig_29b34c6b91a58b26ed73",
         "sig_2a93422f093e8120a3d3",
@@ -5516,12 +6017,278 @@
         "anomaly": null,
         "contestation": null,
         "consequence": null,
-        "evidence_diversity": 0.8,
+        "evidence_diversity": 1,
         "uncertainty": 0.35,
         "novelty": null
       },
       "publication_region": "atlanta",
-      "publication_rank": 0.1813
+      "publication_rank": 0.2062
+    },
+    {
+      "id": "stmt_69a2a8f117ed1025fe6b",
+      "kind": "institutional_memory_density",
+      "atlas_address": "F02.1331211023",
+      "text": "50 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_06f91ec075312686989b",
+        "sig_096cfc065a6df2f7c14e",
+        "sig_1192595633e8759fe94d",
+        "sig_138ddb91bbb3cebbd4b4",
+        "sig_142949b26bc7f4cce227",
+        "sig_157a91d94beeedf88846",
+        "sig_18c5098a2473d126c54b",
+        "sig_1a624b638280be370ca4",
+        "sig_26f75a9f651b2239787f",
+        "sig_299bb462d81eea7e1ce0",
+        "sig_2e0700887d562714e0dd",
+        "sig_2e49b09c427f9b1d57be",
+        "sig_3752e8456818d69a517d",
+        "sig_3c18ef88c3ea97dbfb7f",
+        "sig_3eeb9327522798164b40",
+        "sig_42e1a34ed3a73bf5d0a3",
+        "sig_4bb6cb2f6089aa760993",
+        "sig_4c015cf510dffb338c33",
+        "sig_51b4c7f35bbf742cec29",
+        "sig_529ec3a74e628e119e45",
+        "sig_549db77722e8f75e4a70",
+        "sig_5af879796fdb6357e7b5",
+        "sig_5f924d4d4096fdb558fb",
+        "sig_6569d22a03baa3ece6c3",
+        "sig_6832dcba004242f6d842",
+        "sig_7183d25dfb99b605914a",
+        "sig_7e1ac65cc12047515ea8",
+        "sig_83c2e6be810836f6940f",
+        "sig_87c9f1c0bd179e7a345a",
+        "sig_8a4499e207d43798ca2b",
+        "sig_8ed0242b3159d502cbf1",
+        "sig_94593a65080192201f89",
+        "sig_a032c80b0e8424a499b6",
+        "sig_abd2e302690a3e81c6e6",
+        "sig_b529b17c1cbba7507f9e",
+        "sig_bed7350facc8c93e6802",
+        "sig_c25348eeb02d28bc29e0",
+        "sig_cc0bb5ea38fbe5bceefd",
+        "sig_ccef5d4383d61e94c547",
+        "sig_d062c3550fffb2c78740",
+        "sig_d2045cc29d668df3ea32",
+        "sig_d545f42904c3438db5eb",
+        "sig_d895ba5cc9f806674009",
+        "sig_dd47d188f4e198d81902",
+        "sig_df2fa5971a5c08dfa745",
+        "sig_e0b078c1444700bdd107",
+        "sig_e0bdcac67bae4b146567",
+        "sig_f25d201485056c7f1c59",
+        "sig_f462a9903d5966b9d0f6",
+        "sig_0518df75f07129817af3"
+      ],
+      "derived_from": [
+        "sig_06f91ec075312686989b",
+        "sig_096cfc065a6df2f7c14e",
+        "sig_1192595633e8759fe94d",
+        "sig_138ddb91bbb3cebbd4b4",
+        "sig_142949b26bc7f4cce227",
+        "sig_157a91d94beeedf88846",
+        "sig_18c5098a2473d126c54b",
+        "sig_1a624b638280be370ca4",
+        "sig_26f75a9f651b2239787f",
+        "sig_299bb462d81eea7e1ce0",
+        "sig_2e0700887d562714e0dd",
+        "sig_2e49b09c427f9b1d57be",
+        "sig_3752e8456818d69a517d",
+        "sig_3c18ef88c3ea97dbfb7f",
+        "sig_3eeb9327522798164b40",
+        "sig_42e1a34ed3a73bf5d0a3",
+        "sig_4bb6cb2f6089aa760993",
+        "sig_4c015cf510dffb338c33",
+        "sig_51b4c7f35bbf742cec29",
+        "sig_529ec3a74e628e119e45",
+        "sig_549db77722e8f75e4a70",
+        "sig_5af879796fdb6357e7b5",
+        "sig_5f924d4d4096fdb558fb",
+        "sig_6569d22a03baa3ece6c3",
+        "sig_6832dcba004242f6d842",
+        "sig_7183d25dfb99b605914a",
+        "sig_7e1ac65cc12047515ea8",
+        "sig_83c2e6be810836f6940f",
+        "sig_87c9f1c0bd179e7a345a",
+        "sig_8a4499e207d43798ca2b",
+        "sig_8ed0242b3159d502cbf1",
+        "sig_94593a65080192201f89",
+        "sig_a032c80b0e8424a499b6",
+        "sig_abd2e302690a3e81c6e6",
+        "sig_b529b17c1cbba7507f9e",
+        "sig_bed7350facc8c93e6802",
+        "sig_c25348eeb02d28bc29e0",
+        "sig_cc0bb5ea38fbe5bceefd",
+        "sig_ccef5d4383d61e94c547",
+        "sig_d062c3550fffb2c78740",
+        "sig_d2045cc29d668df3ea32",
+        "sig_d545f42904c3438db5eb",
+        "sig_d895ba5cc9f806674009",
+        "sig_dd47d188f4e198d81902",
+        "sig_df2fa5971a5c08dfa745",
+        "sig_e0b078c1444700bdd107",
+        "sig_e0bdcac67bae4b146567",
+        "sig_f25d201485056c7f1c59",
+        "sig_f462a9903d5966b9d0f6",
+        "sig_0518df75f07129817af3"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.15,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1833
+    },
+    {
+      "id": "stmt_fc28f1432d29288944f2",
+      "kind": "institutional_memory_density",
+      "atlas_address": "F02.1331211020",
+      "text": "60 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
+        "sig_1f62735a7f45f22279b4",
+        "sig_2d9d5360cc323f20667c",
+        "sig_4c50287f490136de4857",
+        "sig_7a21c8fb3ec7e759c145",
+        "sig_a254468af41d5cf25334",
+        "sig_b2c8f68f15c19528e394",
+        "sig_c0c90915063b8678b88f"
+      ],
+      "derived_from": [
+        "sig_01b9055b125ef4426a1b",
+        "sig_0293dd1f1dfd7e150ca6",
+        "sig_07e74c3582ac23e824ec",
+        "sig_0800057df568990bc824",
+        "sig_1a69989a11b70f39af40",
+        "sig_1c8eeaeaf60563b2c26a",
+        "sig_241faf736338af00f890",
+        "sig_25ae15c649018fb43500",
+        "sig_290e810f97184fbe8b15",
+        "sig_2bc5598cd57c7f45d893",
+        "sig_3426021320245d4a3e24",
+        "sig_49cfb5e3ebf3e759083a",
+        "sig_509f2822cc894208a6ac",
+        "sig_52acdc98231eb6f04e88",
+        "sig_52c4bad357a6c6b4a02e",
+        "sig_54258ce967f45e1f645a",
+        "sig_56461b813fd8f65f5456",
+        "sig_5af4d09b976a8ed6dca7",
+        "sig_62b265f578c827011856",
+        "sig_657f899cafde49efebf4",
+        "sig_65cd29152d44c013dff6",
+        "sig_6b7453a913bc6194518e",
+        "sig_6eaf3ad1c845249e1726",
+        "sig_70b076a39d59c93a0f6f",
+        "sig_7a6fbf39a832c6639a31",
+        "sig_7ad03840a7d9b0663fd3",
+        "sig_7dd86740281b6ee377e7",
+        "sig_87fd4fb9a269138d5b76",
+        "sig_8b84d75f14b7239c49d1",
+        "sig_8cd2d3fe14e6d566edf6",
+        "sig_8e4536d20b18908a47c5",
+        "sig_900e0fde3b3715e55d07",
+        "sig_9462a7883c878665b3f1",
+        "sig_97024a5a7225b6cac5c7",
+        "sig_9fa423c084b54321aed6",
+        "sig_af6770825564cd44d025",
+        "sig_b1326aeaf661d80edfc9",
+        "sig_b6286447242eda0b86df",
+        "sig_b93251217fe2c4060a75",
+        "sig_b94d12cbabfd3dde0c0c",
+        "sig_bb1019ae7736fa5884fb",
+        "sig_c521fa14e6fe3a2a7bf6",
+        "sig_dab6f0363ba447d0572a",
+        "sig_e006c88c042c575e39ed",
+        "sig_e161464f29a56cf1426f",
+        "sig_e4814c852e5731548645",
+        "sig_e5ee6c77fc9f6483809b",
+        "sig_e6e974df1a9d6d8f8d98",
+        "sig_e86da482082475b3db6c",
+        "sig_e923d74108a111d97824",
+        "sig_ea1e07f3272f1aad744f",
+        "sig_f6bbc112ca9dcce8460e",
+        "sig_fb7c7b70b58d0215d7a3",
+        "sig_1f62735a7f45f22279b4",
+        "sig_2d9d5360cc323f20667c",
+        "sig_4c50287f490136de4857",
+        "sig_7a21c8fb3ec7e759c145",
+        "sig_a254468af41d5cf25334",
+        "sig_b2c8f68f15c19528e394",
+        "sig_c0c90915063b8678b88f"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.15,
+        "consequence": null,
+        "evidence_diversity": 0.6666666666666666,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.1833
     },
     {
       "id": "stmt_24ea6dc5361a4fc7f695",
@@ -5630,28 +6397,38 @@
       "publication_rank": 0.1448
     },
     {
-      "id": "stmt_b2782c1314a4f7b437ec",
+      "id": "stmt_8fa61cdd13af0ec9ad76",
       "kind": "institutional_memory_density",
-      "atlas_address": "F02.1331211020",
-      "text": "7 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
+      "atlas_address": "F02.1331211022",
+      "text": "12 officially recorded historic or commemorative resources address to this ground. This measures institutionalized memory in the connected registers, not everything a community considers historically important.",
       "epistemic": "INFERRED",
       "evidence": [
-        "sig_1f62735a7f45f22279b4",
-        "sig_2d9d5360cc323f20667c",
-        "sig_4c50287f490136de4857",
-        "sig_7a21c8fb3ec7e759c145",
-        "sig_a254468af41d5cf25334",
-        "sig_b2c8f68f15c19528e394",
-        "sig_c0c90915063b8678b88f"
+        "sig_03c2d8864a7201cb50f8",
+        "sig_175ec3a22cd78f2d2f3f",
+        "sig_18fb4d0270379b862b09",
+        "sig_4d6c201b6d2a42b0ec67",
+        "sig_5df1795b13cdf69576b2",
+        "sig_7f8c99ab3dccf8bc93c2",
+        "sig_85e605ae76064ed0eadc",
+        "sig_8e8356931ff3dfef2648",
+        "sig_936810da42da81c1ec2a",
+        "sig_cad0ead86b3f11c76d0f",
+        "sig_d215623505d32090e44c",
+        "sig_e9f512bab830b1a94645"
       ],
       "derived_from": [
-        "sig_1f62735a7f45f22279b4",
-        "sig_2d9d5360cc323f20667c",
-        "sig_4c50287f490136de4857",
-        "sig_7a21c8fb3ec7e759c145",
-        "sig_a254468af41d5cf25334",
-        "sig_b2c8f68f15c19528e394",
-        "sig_c0c90915063b8678b88f"
+        "sig_03c2d8864a7201cb50f8",
+        "sig_175ec3a22cd78f2d2f3f",
+        "sig_18fb4d0270379b862b09",
+        "sig_4d6c201b6d2a42b0ec67",
+        "sig_5df1795b13cdf69576b2",
+        "sig_7f8c99ab3dccf8bc93c2",
+        "sig_85e605ae76064ed0eadc",
+        "sig_8e8356931ff3dfef2648",
+        "sig_936810da42da81c1ec2a",
+        "sig_cad0ead86b3f11c76d0f",
+        "sig_d215623505d32090e44c",
+        "sig_e9f512bab830b1a94645"
       ],
       "importance": {
         "change": null,
@@ -5665,91 +6442,8 @@
       },
       "publication_region": "atlanta",
       "publication_rank": 0.1417
-    },
-    {
-      "id": "stmt_c781d70e3600cc7420b9",
-      "kind": "reported_deposit_stock",
-      "atlas_address": "F02.1331211020",
-      "scope_id": null,
-      "text": "FDIC Summary of Deposits reports $157,381,000 held across 2 branches addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
-      "epistemic": "INFERRED",
-      "evidence": [
-        "sig_0de657267a0513332271",
-        "sig_b3c6089a70d75ec6dadc"
-      ],
-      "derived_from": [
-        "sig_0de657267a0513332271",
-        "sig_b3c6089a70d75ec6dadc"
-      ],
-      "importance": {
-        "change": null,
-        "exposure": null,
-        "anomaly": null,
-        "contestation": null,
-        "consequence": 0.35,
-        "evidence_diversity": null,
-        "uncertainty": 0.25,
-        "novelty": null
-      },
-      "publication_region": "atlanta",
-      "publication_rank": 0.1375
-    },
-    {
-      "id": "stmt_596c1c8f1fd11fa5165a",
-      "kind": "reported_deposit_stock",
-      "atlas_address": "F02.1331211023",
-      "scope_id": null,
-      "text": "FDIC Summary of Deposits reports $4,782,000 held across 1 branch addressed to this ground. This is reported deposit stock, not evidence that the money is invested locally.",
-      "epistemic": "INFERRED",
-      "evidence": [
-        "sig_4427cb58fae23b32e6e7"
-      ],
-      "derived_from": [
-        "sig_4427cb58fae23b32e6e7"
-      ],
-      "importance": {
-        "change": null,
-        "exposure": null,
-        "anomaly": null,
-        "contestation": null,
-        "consequence": 0.3,
-        "evidence_diversity": null,
-        "uncertainty": 0.25,
-        "novelty": null
-      },
-      "publication_region": "atlanta",
-      "publication_rank": 0.1313
-    },
-    {
-      "id": "stmt_a85df11315e1e83bc2a6",
-      "kind": "representation_contestation",
-      "atlas_address": "F02.1331211022",
-      "text": "3 unresolved OpenStreetMap Notes address to this ground. This is evidence of unresolved mapping claims, not evidence that the underlying claims are true.",
-      "epistemic": "INFERRED",
-      "evidence": [
-        "sig_68806468b440761838a5",
-        "sig_776d7f9588701a25fa9b",
-        "sig_97a0d12e5a9367ffcf24"
-      ],
-      "derived_from": [
-        "sig_68806468b440761838a5",
-        "sig_776d7f9588701a25fa9b",
-        "sig_97a0d12e5a9367ffcf24"
-      ],
-      "importance": {
-        "change": null,
-        "exposure": null,
-        "anomaly": null,
-        "contestation": 0.5,
-        "consequence": null,
-        "evidence_diversity": 0.25,
-        "uncertainty": 0.7,
-        "novelty": null
-      },
-      "publication_region": "atlanta",
-      "publication_rank": 0.1313
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.065Z",
+  "generated_at": "2026-08-25T12:34:09.115Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

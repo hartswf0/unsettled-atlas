@@ -5,24 +5,95 @@
     "new-orleans"
   ],
   "sources": [
+    "nola-building-permits",
     "nps-national-register"
   ],
   "counts": {
-    "signals": 1,
+    "signals": 2,
     "entities": 0,
     "relations": 0,
-    "statements": 0,
-    "direct_signals": 1,
+    "statements": 1,
+    "direct_signals": 2,
     "direct_entities": 0,
-    "direct_statements": 0
+    "direct_statements": 1
   },
   "signal_predicates": {
+    "change.building_permit": 1,
     "memory.national_register_resource": 1
   },
   "entity_types": {},
   "relation_predicates": {},
-  "statement_kinds": {},
+  "statement_kinds": {
+    "heritage_change_coaddress": 1
+  },
   "signals": [
+    {
+      "id": "sig_545a2a6fc1c10b6c1df4",
+      "source": "nola-building-permits",
+      "source_record_id": "26-24657-ECOA",
+      "predicate": "change.building_permit",
+      "value": {
+        "permit": "26-24657-ECOA",
+        "permit_type": "Change of Address",
+        "address": "7589 Warfield St",
+        "description": "30.014368,-89.999230\r\nADD 7589 Warfield St New Orleans, LA 70126",
+        "owner": null,
+        "status": "Permit Issued",
+        "next_status": null,
+        "zoning": "C-1",
+        "historic_district": null,
+        "council_district": null,
+        "construction_value_usd": 0,
+        "filing_date": "2026-08-21T09:20:30.000",
+        "issue_date": "2026-08-21T09:36:21.000"
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.99945270941116,
+          30.014368599605277
+        ]
+      },
+      "atlas_address": "F02.1200300133",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -89.99945270941116,
+          30.014368599605277
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": "2026-08-21T09:36:21.000Z",
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:46.458Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "SERVICE",
+        "ECONOMY"
+      ],
+      "provenance": {
+        "query_url": "https://data.nola.gov/resource/rcm3-fn58.json?%24where=within_circle%28location_1%2C+29.9511%2C+-90.0715%2C+40000%29+AND+filingdate+%3E%3D+%272025-08-25T00%3A00%3A00.000%27&%24order=filingdate+DESC&%24limit=160",
+        "provider": "City of New Orleans · Data.NOLA",
+        "dataset_id": "rcm3-fn58",
+        "dataset_scope": "City permit data since 2012; current dataset is updated nightly.",
+        "spatial_method": "source location_1 point"
+      },
+      "raw": {
+        "division": "SP",
+        "master_or_subpermit": "M",
+        "is_closed": "False"
+      },
+      "publication_region": "new-orleans"
+    },
     {
       "id": "sig_d0ef2a737bff9fc100c2",
       "source": "nps-national-register",
@@ -63,7 +134,7 @@
       "observed_at": null,
       "valid_from": "2005-06-08T00:00:00.000Z",
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:24.837Z",
+      "retrieved_at": "2026-08-25T12:33:45.941Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -90,7 +161,35 @@
   ],
   "entities": [],
   "relations": [],
-  "statements": [],
-  "generated_at": "2026-08-25T12:26:10.085Z",
+  "statements": [
+    {
+      "id": "stmt_621ae0f458eb5018bfec",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1200300133",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_d0ef2a737bff9fc100c2",
+        "sig_545a2a6fc1c10b6c1df4"
+      ],
+      "derived_from": [
+        "sig_d0ef2a737bff9fc100c2",
+        "sig_545a2a6fc1c10b6c1df4"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.5,
+        "novelty": 0.55
+      },
+      "publication_region": "new-orleans",
+      "publication_rank": 0.325
+    }
+  ],
+  "generated_at": "2026-08-25T12:34:09.127Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

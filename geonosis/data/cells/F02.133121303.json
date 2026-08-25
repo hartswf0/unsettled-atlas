@@ -5,6 +5,7 @@
     "atlanta"
   ],
   "sources": [
+    "atlanta-historic-buildings",
     "atlanta-rezoning-cases",
     "epa-echo",
     "fdic-locations",
@@ -15,15 +16,16 @@
     "osm-notes"
   ],
   "counts": {
-    "signals": 72,
+    "signals": 73,
     "entities": 11,
     "relations": 16,
-    "statements": 16,
+    "statements": 17,
     "direct_signals": 0,
     "direct_entities": 0,
     "direct_statements": 0
   },
   "signal_predicates": {
+    "memory.atlanta_historic_building": 1,
     "change.rezoning_case": 2,
     "money.bank_branch": 6,
     "money.branch_deposits": 5,
@@ -43,6 +45,7 @@
   "statement_kinds": {
     "ecological_observation_density": 4,
     "building_change_activity": 1,
+    "heritage_change_coaddress": 1,
     "multi_source_activity": 4,
     "representation_contestation": 1,
     "regulated_environment_presence": 1,
@@ -95,7 +98,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.527Z",
+      "retrieved_at": "2026-08-25T12:33:21.162Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -188,7 +191,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.223Z",
+      "retrieved_at": "2026-08-25T12:33:21.039Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -272,7 +275,7 @@
       "observed_at": null,
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.217Z",
+      "retrieved_at": "2026-08-25T12:33:21.034Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -286,6 +289,67 @@
       "provenance": {
         "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/23/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CFROM_ZONE%2CTO_ZONE%2CDOCKET_NO%2CSTATUS%2CFINAL_UPDA%2CORDINANCE%2CORDHYPERLINK%2CSTATUSTYPE%2CACRES%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
         "provider": "City of Atlanta Department of City Planning"
+      },
+      "raw": null,
+      "publication_region": "atlanta"
+    },
+    {
+      "id": "sig_6a322c4c435b92d392ad",
+      "source": "atlanta-historic-buildings",
+      "source_record_id": "{9ECF45E6-A6FE-4103-AC02-A1E48174AEA2}",
+      "predicate": "memory.atlanta_historic_building",
+      "value": {
+        "name": "Buckhead Diner",
+        "address": "3073 Piedmont Rd NE",
+        "status": "M",
+        "class": "building",
+        "date": 1988,
+        "stories": 1,
+        "previous_use": "Commercial - service",
+        "construction_material": "Brick/Storefront",
+        "npu": " ",
+        "national_register_potential": "Non-Contributing",
+        "description": "Faux diner, chrome detailing, neon lights, curved glass & walls, brick rear",
+        "survey": 1141689600000
+      },
+      "unit": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.36897815688697,
+          33.83931741536164
+        ]
+      },
+      "atlas_address": "F02.1331213030",
+      "atlas_address_basis": {
+        "method": "source_point",
+        "representative_point": [
+          -84.36897815688697,
+          33.83931741536164
+        ],
+        "exact": true,
+        "note": "Atlas address derives from the source point."
+      },
+      "epistemic": "DECLARED",
+      "observed_at": null,
+      "valid_from": null,
+      "valid_to": null,
+      "retrieved_at": "2026-08-25T12:33:20.978Z",
+      "confidence": null,
+      "derived_from": [],
+      "relations": [],
+      "actors": [
+        "GROUND",
+        "HUMAN",
+        "BUILDING",
+        "MEMORY",
+        "SERVICE"
+      ],
+      "provenance": {
+        "query_url": "https://gis.atlantaga.gov/dpcd/rest/services/OpenDataService1/MapServer/17/query?f=geojson&where=1%3D1&geometry=-84.82015082592463%2C33.387251306817156%2C-83.95584917407538%2C34.11074869318285&geometryType=esriGeometryEnvelope&inSR=4326&outSR=4326&spatialRel=esriSpatialRelIntersects&outFields=OBJECTID%2CSTATUS%2CADDRESS%2CNAME%2CCLASS%2CDATE_%2COF_STORI%2CPREV_USE%2CCONSTR_MAT%2CNPU%2CNR_POTENTI%2CDESCRIPTIO%2CSURVEY%2CGLOBALID&returnGeometry=true&resultRecordCount=160",
+        "provider": "City of Atlanta Department of City Planning",
+        "layer": 17,
+        "schema_note": "ArcGIS field name is DESCRIPTIO (10-character source field), not DESCRIPTION."
       },
       "raw": null,
       "publication_region": "atlanta"
@@ -326,7 +390,7 @@
       "observed_at": "2026-08-25T12:16:57.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.677Z",
+      "retrieved_at": "2026-08-25T12:33:21.084Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -383,7 +447,7 @@
       "observed_at": "2026-08-25T11:27:44.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "retrieved_at": "2026-08-25T12:33:21.084Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -440,7 +504,7 @@
       "observed_at": "2026-08-25T11:27:27.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "retrieved_at": "2026-08-25T12:33:21.084Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -497,7 +561,7 @@
       "observed_at": "2026-08-25T02:19:23.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "retrieved_at": "2026-08-25T12:33:21.084Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -554,7 +618,7 @@
       "observed_at": "2026-08-24T23:19:26.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "retrieved_at": "2026-08-25T12:33:21.084Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -611,7 +675,7 @@
       "observed_at": "2026-08-24T23:16:42.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "retrieved_at": "2026-08-25T12:33:21.084Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -668,7 +732,7 @@
       "observed_at": "2026-08-24T22:52:51.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.678Z",
+      "retrieved_at": "2026-08-25T12:33:21.085Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -725,7 +789,7 @@
       "observed_at": "2026-08-24T21:28:46.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.680Z",
+      "retrieved_at": "2026-08-25T12:33:21.085Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -786,7 +850,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.276Z",
+      "retrieved_at": "2026-08-25T12:33:21.802Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -843,7 +907,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "retrieved_at": "2026-08-25T12:33:21.803Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -900,7 +964,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "retrieved_at": "2026-08-25T12:33:21.802Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -957,7 +1021,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "retrieved_at": "2026-08-25T12:33:21.802Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1014,7 +1078,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.278Z",
+      "retrieved_at": "2026-08-25T12:33:21.803Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1071,7 +1135,7 @@
       "observed_at": "2026-08-24T00:00:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.277Z",
+      "retrieved_at": "2026-08-25T12:33:21.802Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1120,7 +1184,7 @@
       "observed_at": "2026-08-23 01:33:08 UTC",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.000Z",
+      "retrieved_at": "2026-08-25T12:33:22.078Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1188,7 +1252,7 @@
       "observed_at": "2026-07-07 12:48:57 UTC",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "retrieved_at": "2026-08-25T12:33:22.078Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1250,7 +1314,7 @@
       "observed_at": "2026-07-07 12:48:45 UTC",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "retrieved_at": "2026-08-25T12:33:22.078Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1312,7 +1376,7 @@
       "observed_at": "2026-07-07 12:47:37 UTC",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "retrieved_at": "2026-08-25T12:33:22.078Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1374,7 +1438,7 @@
       "observed_at": "2026-06-18 14:05:51 UTC",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:04.001Z",
+      "retrieved_at": "2026-08-25T12:33:22.078Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1446,7 +1510,7 @@
       "observed_at": "2026-01-04T17:42:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "retrieved_at": "2026-08-25T12:33:21.852Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1511,7 +1575,7 @@
       "observed_at": "2026-01-04T17:40:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.830Z",
+      "retrieved_at": "2026-08-25T12:33:21.852Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1576,7 +1640,7 @@
       "observed_at": "2026-01-04T16:43:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.828Z",
+      "retrieved_at": "2026-08-25T12:33:21.851Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1641,7 +1705,7 @@
       "observed_at": "2026-01-04T15:37:38.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.829Z",
+      "retrieved_at": "2026-08-25T12:33:21.852Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1706,7 +1770,7 @@
       "observed_at": "2026-01-04T15:34:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.832Z",
+      "retrieved_at": "2026-08-25T12:33:21.853Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1771,7 +1835,7 @@
       "observed_at": "2026-01-04T11:19:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "retrieved_at": "2026-08-25T12:33:21.852Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1836,7 +1900,7 @@
       "observed_at": "2026-01-04T11:03:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "retrieved_at": "2026-08-25T12:33:21.852Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1901,7 +1965,7 @@
       "observed_at": "2026-01-04T10:06:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "retrieved_at": "2026-08-25T12:33:21.852Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1966,7 +2030,7 @@
       "observed_at": "2026-01-03T15:31:00.000Z",
       "valid_from": null,
       "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.831Z",
+      "retrieved_at": "2026-08-25T12:33:21.852Z",
       "confidence": null,
       "derived_from": [],
       "relations": [],
@@ -1979,71 +2043,6 @@
       "provenance": {
         "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
         "source_url": "https://www.gbif.org/occurrence/5938278542",
-        "provider": "GBIF",
-        "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
-        "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
-      },
-      "raw": {
-        "country_code": "US",
-        "publishing_org_key": "28eb1a3f-1c15-4a95-931a-4af90ecb574d"
-      },
-      "publication_region": "atlanta"
-    },
-    {
-      "id": "sig_b64dc7ec270303918c54",
-      "source": "gbif-occurrences",
-      "source_record_id": "5938288522",
-      "predicate": "ecology.occurrence",
-      "value": {
-        "scientific_name": "Dryobates pubescens (Linnaeus, 1766)",
-        "species": "Dryobates pubescens",
-        "vernacular_name": null,
-        "taxon_key": 9149595,
-        "species_key": 9149595,
-        "basis_of_record": "HUMAN_OBSERVATION",
-        "occurrence_status": "PRESENT",
-        "coordinate_uncertainty_m": 201,
-        "issues": [
-          "COORDINATE_ROUNDED",
-          "CONTINENT_DERIVED_FROM_COORDINATES",
-          "TAXON_ID_NOT_FOUND"
-        ]
-      },
-      "unit": null,
-      "geometry": {
-        "type": "Point",
-        "coordinates": [
-          -84.24594,
-          33.824825
-        ]
-      },
-      "atlas_address": "F02.1331213032",
-      "atlas_address_basis": {
-        "method": "source_point",
-        "representative_point": [
-          -84.24594,
-          33.824825
-        ],
-        "exact": true,
-        "note": "Atlas address derives from the source point."
-      },
-      "epistemic": "REPORTED",
-      "observed_at": "2026-01-03T15:27:00.000Z",
-      "valid_from": null,
-      "valid_to": null,
-      "retrieved_at": "2026-08-25T12:25:03.831Z",
-      "confidence": null,
-      "derived_from": [],
-      "relations": [],
-      "actors": [
-        "GROUND",
-        "HUMAN",
-        "DOG",
-        "ECOLOGY"
-      ],
-      "provenance": {
-        "query_url": "https://api.gbif.org/v1/occurrence/search?geometry=POLYGON%28%28-84.82015082592463+33.387251306817156%2C-83.95584917407538+33.387251306817156%2C-83.95584917407538+34.11074869318285%2C-84.82015082592463+34.11074869318285%2C-84.82015082592463+33.387251306817156%29%29&hasCoordinate=true&limit=160",
-        "source_url": "https://www.gbif.org/occurrence/5938288522",
         "provider": "GBIF",
         "dataset_key": "50c9509d-22c7-4a22-a47d-8c48425ef4a7",
         "license": "http://creativecommons.org/licenses/by-nc/4.0/legalcode"
@@ -2564,6 +2563,35 @@
   ],
   "statements": [
     {
+      "id": "stmt_9792a6563dd2a00c203b",
+      "kind": "heritage_change_coaddress",
+      "atlas_address": "F02.1331213030",
+      "text": "Official historic-resource records and permit/rezoning records co-address at this requested Atlas depth. This is a prompt for investigation, not evidence that any listed action affects any listed historic resource. At least one source geometry is representatively indexed rather than point-exact.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_6a322c4c435b92d392ad",
+        "sig_ecb0621d90ae26eeb657",
+        "sig_f891a89e9f58718df944"
+      ],
+      "derived_from": [
+        "sig_6a322c4c435b92d392ad",
+        "sig_ecb0621d90ae26eeb657",
+        "sig_f891a89e9f58718df944"
+      ],
+      "importance": {
+        "change": 0.6,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": 0.45,
+        "consequence": null,
+        "evidence_diversity": 0.5,
+        "uncertainty": 0.65,
+        "novelty": 0.55
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.3063
+    },
+    {
       "id": "stmt_ffde76d2c3e09f0c1952",
       "kind": "ecological_observation_density",
       "atlas_address": "F02.1331213033",
@@ -2672,6 +2700,57 @@
       "publication_rank": 0.2062
     },
     {
+      "id": "stmt_1c520730b11511a79ab6",
+      "kind": "multi_source_activity",
+      "atlas_address": "F02.1331213030",
+      "text": "7 independent source channels address signals to this ground: atlanta-historic-buildings, atlanta-rezoning-cases, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, osm-notes.",
+      "epistemic": "INFERRED",
+      "evidence": [
+        "sig_6a322c4c435b92d392ad",
+        "sig_ecb0621d90ae26eeb657",
+        "sig_f891a89e9f58718df944",
+        "sig_0f62c7b4d03edb937ba8",
+        "sig_4e23834c2ea27c6cd3fc",
+        "sig_bd2acc23ff2e51bfe447",
+        "sig_c6b877b90638f993fa90",
+        "sig_c618a85dab32ba19799b",
+        "sig_31782d25126c1df02254",
+        "sig_4d1d10414d948f758b16",
+        "sig_e4ae5537ca8b25f6ac6b",
+        "sig_2026e9c971bcf72ed890",
+        "sig_bc4dc5aab9aa6b8f1960",
+        "sig_99ec4acde051bb56f86a"
+      ],
+      "derived_from": [
+        "sig_6a322c4c435b92d392ad",
+        "sig_ecb0621d90ae26eeb657",
+        "sig_f891a89e9f58718df944",
+        "sig_0f62c7b4d03edb937ba8",
+        "sig_4e23834c2ea27c6cd3fc",
+        "sig_bd2acc23ff2e51bfe447",
+        "sig_c6b877b90638f993fa90",
+        "sig_c618a85dab32ba19799b",
+        "sig_31782d25126c1df02254",
+        "sig_4d1d10414d948f758b16",
+        "sig_e4ae5537ca8b25f6ac6b",
+        "sig_2026e9c971bcf72ed890",
+        "sig_bc4dc5aab9aa6b8f1960",
+        "sig_99ec4acde051bb56f86a"
+      ],
+      "importance": {
+        "change": null,
+        "exposure": null,
+        "anomaly": null,
+        "contestation": null,
+        "consequence": null,
+        "evidence_diversity": 1,
+        "uncertainty": 0.35,
+        "novelty": null
+      },
+      "publication_region": "atlanta",
+      "publication_rank": 0.2062
+    },
+    {
       "id": "stmt_74b4d677c445f5680cff",
       "kind": "multi_source_activity",
       "atlas_address": "F02.1331213031",
@@ -2740,55 +2819,6 @@
         "sig_9aa6bc10963675ad2cc1",
         "sig_9e221f81018cc9f93eb2",
         "sig_c3a5b05626c5d06d16b0"
-      ],
-      "importance": {
-        "change": null,
-        "exposure": null,
-        "anomaly": null,
-        "contestation": null,
-        "consequence": null,
-        "evidence_diversity": 1,
-        "uncertainty": 0.35,
-        "novelty": null
-      },
-      "publication_region": "atlanta",
-      "publication_rank": 0.2062
-    },
-    {
-      "id": "stmt_e2c923e384b1e46fd1e3",
-      "kind": "multi_source_activity",
-      "atlas_address": "F02.1331213030",
-      "text": "6 independent source channels address signals to this ground: atlanta-rezoning-cases, fdic-locations, fdic-sod, gbif-occurrences, inaturalist-observations, osm-notes.",
-      "epistemic": "INFERRED",
-      "evidence": [
-        "sig_ecb0621d90ae26eeb657",
-        "sig_f891a89e9f58718df944",
-        "sig_0f62c7b4d03edb937ba8",
-        "sig_4e23834c2ea27c6cd3fc",
-        "sig_bd2acc23ff2e51bfe447",
-        "sig_c6b877b90638f993fa90",
-        "sig_c618a85dab32ba19799b",
-        "sig_31782d25126c1df02254",
-        "sig_4d1d10414d948f758b16",
-        "sig_e4ae5537ca8b25f6ac6b",
-        "sig_2026e9c971bcf72ed890",
-        "sig_bc4dc5aab9aa6b8f1960",
-        "sig_99ec4acde051bb56f86a"
-      ],
-      "derived_from": [
-        "sig_ecb0621d90ae26eeb657",
-        "sig_f891a89e9f58718df944",
-        "sig_0f62c7b4d03edb937ba8",
-        "sig_4e23834c2ea27c6cd3fc",
-        "sig_bd2acc23ff2e51bfe447",
-        "sig_c6b877b90638f993fa90",
-        "sig_c618a85dab32ba19799b",
-        "sig_31782d25126c1df02254",
-        "sig_4d1d10414d948f758b16",
-        "sig_e4ae5537ca8b25f6ac6b",
-        "sig_2026e9c971bcf72ed890",
-        "sig_bc4dc5aab9aa6b8f1960",
-        "sig_99ec4acde051bb56f86a"
       ],
       "importance": {
         "change": null,
@@ -3175,35 +3205,8 @@
       },
       "publication_region": "atlanta",
       "publication_rank": 0.1313
-    },
-    {
-      "id": "stmt_1a35a3f729a496f4ebab",
-      "kind": "building_change_activity",
-      "atlas_address": "F02.1331213030",
-      "text": "2 permit or rezoning records address to this ground. They record authorized or proposed change, not proof that construction or land-use change occurred. At least one polygon is indexed by a representative address; its preserved geometry may span other cells.",
-      "epistemic": "INFERRED",
-      "evidence": [
-        "sig_ecb0621d90ae26eeb657",
-        "sig_f891a89e9f58718df944"
-      ],
-      "derived_from": [
-        "sig_ecb0621d90ae26eeb657",
-        "sig_f891a89e9f58718df944"
-      ],
-      "importance": {
-        "change": 0.25,
-        "exposure": null,
-        "anomaly": null,
-        "contestation": null,
-        "consequence": null,
-        "evidence_diversity": 0.3333333333333333,
-        "uncertainty": 0.55,
-        "novelty": null
-      },
-      "publication_region": "atlanta",
-      "publication_rank": 0.1292
     }
   ],
-  "generated_at": "2026-08-25T12:26:10.071Z",
+  "generated_at": "2026-08-25T12:34:09.119Z",
   "coverage_note": "Counts aggregate only compiled descendant records under this Icosa prefix. Samples are bounded. A non-point source keeps its representative-address caveat from the source signal."
 }

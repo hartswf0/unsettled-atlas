@@ -30,6 +30,11 @@ body{display:grid;place-items:center}
     })
   ]).then(function (parts) {
     var html = parts[0], inject = parts[1], sources = parts[2], motion = parts[3];
+    var preconfig = [
+      'window.ICOSA_LIVE_CONFIG = window.ICOSA_LIVE_CONFIG || {};',
+      'if (!window.ICOSA_LIVE_CONFIG.datacenterUrl) window.ICOSA_LIVE_CONFIG.datacenterUrl =',
+      '  "https://raw.githubusercontent.com/bilawalsidhu/gods-eye-view/880a672b5e16ad3e41d318801d3a5203f9201923/src/data/local_data/datacenters/datacenters.geojsonl";'
+    ].join('\n');
     var cull = [
       'var liveVisibleBinsUnculled = liveVisibleBins;',
       'liveVisibleBins = function (depth) {',
@@ -41,14 +46,46 @@ body{display:grid;place-items:center}
       '  return bins;',
       '};'
     ].join('\n');
+    var guards = [
+      'var live2DrawFiresCoverageGuard = live2DrawFires;',
+      'live2DrawFires = function (S) {',
+      '  var s = LIVE.sources[FIRMS_SOURCE];',
+      '  if (!FIRMS_TARGET || !s || !s.meta || s.meta.coverageCell !== FIRMS_TARGET.slug) return;',
+      '  live2DrawFiresCoverageGuard(S);',
+      '};',
+      'var drawAircraftCoverageGuard = drawAircraft;',
+      'drawAircraft = function (S) {',
+      '  var s = LIVE.sources[AIR_SOURCE];',
+      '  if (!AIR_TARGET || !s || !s.meta || s.meta.coverageCell !== AIR_TARGET.slug) return;',
+      '  drawAircraftCoverageGuard(S);',
+      '};',
+      'var live2RequestFirmsTimerGuard = live2RequestFirms;',
+      'live2RequestFirms = function (cell) {',
+      '  if (cell && cellEdgeKm(cell) > FIRMS_MAX_KM) {',
+      '    var s = LIVE.sources[FIRMS_SOURCE];',
+      '    if (s && s.timer) { clearTimeout(s.timer); s.timer = null; }',
+      '  }',
+      '  return live2RequestFirmsTimerGuard(cell);',
+      '};',
+      'var requestAircraftTimerGuard = requestAircraft;',
+      'requestAircraft = function (cell) {',
+      '  if (cell && cellEdgeKm(cell) > AIR_MAX_CELL_KM) {',
+      '    var s = LIVE.sources[AIR_SOURCE];',
+      '    if (s && s.timer) { clearTimeout(s.timer); s.timer = null; }',
+      '  }',
+      '  return requestAircraftTimerGuard(cell);',
+      '};'
+    ].join('\n');
     var needle = '})();';
     var at = html.lastIndexOf(needle);
     if (at < 0) throw new Error('main ICOSA closure not found');
     html = html.slice(0, at) +
       '\n/* --- ICOSA LIVE DATA HARNESS --- */\n' + inject +
       '\n/* keep live observations on the visible side of the folded world */\n' + cull +
+      '\n/* stable upstream defaults before source adapters evaluate */\n' + preconfig +
       '\n/* --- ICOSA LIVE SOURCE ADAPTERS --- */\n' + sources +
-      '\n/* --- ICOSA LIVE MOTION ADAPTER --- */\n' + motion + '\n' +
+      '\n/* --- ICOSA LIVE MOTION ADAPTER --- */\n' + motion +
+      '\n/* scoped observations only paint the ground they actually queried */\n' + guards + '\n' +
       html.slice(at);
     document.open();
     document.write(html);

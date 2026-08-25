@@ -1,0 +1,36 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>ICOSA SYNTEGRITY · live data</title>
+<style>
+html,body{margin:0;width:100%;height:100%;background:#f1eee4;color:#121514;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{display:grid;place-items:center}
+#boot{font-size:10px;letter-spacing:.18em}
+</style>
+<div id="boot">COMPILING LIVE WORLD</div>
+<script>
+(function () {
+  'use strict';
+  Promise.all([
+    fetch('icosa-syntegrity.html', { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error('icosa-syntegrity.html ' + r.status);
+      return r.text();
+    }),
+    fetch('icosa-live-inject.js', { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error('icosa-live-inject.js ' + r.status);
+      return r.text();
+    })
+  ]).then(function (parts) {
+    var html = parts[0], inject = parts[1];
+    var needle = '})();';
+    var at = html.lastIndexOf(needle);
+    if (at < 0) throw new Error('main ICOSA closure not found');
+    html = html.slice(0, at) + '\n/* --- ICOSA LIVE DATA HARNESS --- */\n' + inject + '\n' + html.slice(at);
+    document.open();
+    document.write(html);
+    document.close();
+  }).catch(function (err) {
+    document.getElementById('boot').textContent = 'LIVE WORLD FAILED · ' + String(err && err.message || err);
+  });
+})();
+</script>

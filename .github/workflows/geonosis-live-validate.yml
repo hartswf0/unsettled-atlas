@@ -47,6 +47,7 @@ jobs:
             geonosis-live-311.js
             geonosis-live-nfhl.js
             geonosis-live-epa.js
+            geonosis-live-weather-terrain.js
             geonosis-live-airnow.js
             geonosis-inference.js
             icosa-live-context.js
@@ -71,6 +72,7 @@ jobs:
             geonosis-live-311.js \
             geonosis-live-nfhl.js \
             geonosis-live-epa.js \
+            geonosis-live-weather-terrain.js \
             geonosis-live-airnow.js \
             geonosis-inference.js \
             icosa-live-context.js \
@@ -81,6 +83,15 @@ jobs:
               exit 1
             }
           done
+
+      - name: Verify aircraft transport cannot silently use non-CORS upstream
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F "var AIR_UPSTREAM_URL = 'https://api.adsb.lol/v2';" icosa-live-motion.js >/dev/null
+          grep -F "var AIR_BASE_URL = (window.ICOSA_LIVE_CONFIG" icosa-live-motion.js >/dev/null
+          grep -F "|| null;" icosa-live-motion.js >/dev/null
+          grep -F "aircraft proxy/base URL not configured" icosa-live-motion.js >/dev/null
 
       - name: Smoke public provider contracts
         run: node tests/geonosis-provider-smoke.mjs

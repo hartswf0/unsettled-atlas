@@ -1,42 +1,52 @@
 <!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>ICOSA SYNTEGRITY · live data</title>
+<title>ICOSA SYNTEGRITY · GEONOSIS</title>
 <style>
 html,body{margin:0;width:100%;height:100%;background:#f1eee4;color:#121514;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
 body{display:grid;place-items:center}
 #boot{font-size:10px;letter-spacing:.18em}
 </style>
-<div id="boot">COMPILING LIVE WORLD</div>
+<div id="boot">COMPILING GEONOSIS · 2026-08-25.signal-start-v1</div>
 <script>
 (function () {
   'use strict';
-  Promise.all([
-    fetch('icosa-syntegrity.html',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-syntegrity.html '+r.status);return r.text();}),
-    fetch('icosa-live-inject.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-inject.js '+r.status);return r.text();}),
-    fetch('geonosis-source-registry.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-source-registry.js '+r.status);return r.text();}),
-    fetch('geonosis-signal-core.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-signal-core.js '+r.status);return r.text();}),
-    fetch('icosa-live-sources.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-sources.js '+r.status);return r.text();}),
-    fetch('icosa-live-motion.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-motion.js '+r.status);return r.text();}),
-    fetch('geonosis-live-public.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-public.js '+r.status);return r.text();}),
-    fetch('geonosis-live-311.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-311.js '+r.status);return r.text();}),
-    fetch('geonosis-live-nfhl.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-nfhl.js '+r.status);return r.text();}),
-    fetch('geonosis-live-epa.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-epa.js '+r.status);return r.text();}),
-    fetch('geonosis-live-weather-terrain.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-weather-terrain.js '+r.status);return r.text();}),
-    fetch('geonosis-live-airnow.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-airnow.js '+r.status);return r.text();}),
-    fetch('geonosis-inference.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-inference.js '+r.status);return r.text();}),
-    fetch('icosa-live-context.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-context.js '+r.status);return r.text();}),
-    fetch('geonosis-live-context.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-context.js '+r.status);return r.text();}),
-    fetch('geonosis-source-controls.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-source-controls.js '+r.status);return r.text();}),
-    fetch('geonosis-inspector.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-inspector.js '+r.status);return r.text();}),
-    fetch('geonosis-semantics.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-semantics.js '+r.status);return r.text();}),
-    fetch('geonosis-place.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-place.js '+r.status);return r.text();}),
-    fetch('geonosis-scope.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-scope.js '+r.status);return r.text();}),
-    fetch('geonosis-contributions.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-contributions.js '+r.status);return r.text();})
-  ]).then(function(parts){
-    var html=parts[0],inject=parts[1],registry=parts[2],signalCore=parts[3],sources=parts[4],motion=parts[5],geoPublic=parts[6],geo311=parts[7],geoNfhl=parts[8],geoEpa=parts[9],geoWeatherTerrain=parts[10],geoAir=parts[11],geoInference=parts[12],modelContext=parts[13],geoContext=parts[14],geoControls=parts[15],geoInspector=parts[16],geoSemantics=parts[17],geoPlace=parts[18],geoScope=parts[19],geoContributions=parts[20];
+  var BUILD='2026-08-25.signal-start-v1';
+  var files=[
+    'icosa-syntegrity.html',
+    'icosa-live-inject.js',
+    'geonosis-source-registry.js',
+    'geonosis-signal-core.js',
+    'icosa-live-sources.js',
+    'icosa-live-motion.js',
+    'geonosis-live-public.js',
+    'geonosis-live-311.js',
+    'geonosis-live-nfhl.js',
+    'geonosis-live-epa.js',
+    'geonosis-live-weather-terrain.js',
+    'geonosis-live-airnow.js',
+    'geonosis-inference.js',
+    'icosa-live-context.js',
+    'geonosis-live-context.js',
+    'geonosis-source-controls.js',
+    'geonosis-inspector.js',
+    'geonosis-semantics.js',
+    'geonosis-place.js',
+    'geonosis-scope.js',
+    'geonosis-contributions.js',
+    'geonosis-startup.js'
+  ];
+  function load(name){
+    return fetch(name+'?build='+encodeURIComponent(BUILD),{cache:'no-store'}).then(function(r){
+      if(!r.ok)throw new Error(name+' '+r.status);return r.text();
+    });
+  }
+  Promise.all(files.map(load)).then(function(parts){
+    var src={};for(var i=0;i<files.length;i++)src[files[i]]=parts[i];
+    var html=src['icosa-syntegrity.html'];
     var preconfig=[
       'window.ICOSA_LIVE_CONFIG = window.ICOSA_LIVE_CONFIG || {};',
+      'window.ICOSA_LIVE_CONFIG.buildId = '+JSON.stringify(BUILD)+';',
       'if (!window.ICOSA_LIVE_CONFIG.datacenterUrl) window.ICOSA_LIVE_CONFIG.datacenterUrl =',
       '  "https://raw.githubusercontent.com/bilawalsidhu/gods-eye-view/880a672b5e16ad3e41d318801d3a5203f9201923/src/data/local_data/datacenters/datacenters.geojsonl";'
     ].join('\n');
@@ -81,32 +91,39 @@ body{display:grid;place-items:center}
       '  return requestAircraftTimerGuard(cell);',
       '};'
     ].join('\n');
+    var blocks=[
+      ['ICOSA LIVE DATA HARNESS',src['icosa-live-inject.js']],
+      ['VISIBLE-SIDE LIVE CULL',cull],
+      ['VERIFIED GEONOSIS SOURCE REGISTRY',src['geonosis-source-registry.js']],
+      ['GEONOSIS PRECONFIG',preconfig],
+      ['GEONOSIS SIGNAL CONTRACT',src['geonosis-signal-core.js']],
+      ['ICOSA LIVE SOURCE ADAPTERS',src['icosa-live-sources.js']],
+      ['ICOSA LIVE MOTION ADAPTER',src['icosa-live-motion.js']],
+      ['GEONOSIS PUBLIC SIGNAL ADAPTERS',src['geonosis-live-public.js']],
+      ['GEONOSIS NYC 311 ADAPTER',src['geonosis-live-311.js']],
+      ['GEONOSIS FEMA NFHL ADAPTER',src['geonosis-live-nfhl.js']],
+      ['GEONOSIS EPA ECHO/FRS ADAPTER',src['geonosis-live-epa.js']],
+      ['GEONOSIS NWS WEATHER + 3DEP TERRAIN',src['geonosis-live-weather-terrain.js']],
+      ['GEONOSIS BYOK AIR QUALITY ADAPTER',src['geonosis-live-airnow.js']],
+      ['GEONOSIS DIFFERENCE + STATEMENT ENGINE',src['geonosis-inference.js']],
+      ['SCOPED COVERAGE GUARDS',guards],
+      ['ICOSA LIVE TO MODEL CONTEXT',src['icosa-live-context.js']],
+      ['GEONOSIS TO MODEL CONTEXT',src['geonosis-live-context.js']],
+      ['GEONOSIS LABELED SOURCE SETUP',src['geonosis-source-controls.js']],
+      ['GEONOSIS MAP INSPECTOR',src['geonosis-inspector.js']],
+      ['GEONOSIS SEMIOSIS LENS',src['geonosis-semantics.js']],
+      ['GEONOSIS HUMAN PLACE ORIENTATION',src['geonosis-place.js']],
+      ['GEONOSIS SCOPE COHERENCE',src['geonosis-scope.js']],
+      ['GEONOSIS ORDINARY CONTRIBUTIONS',src['geonosis-contributions.js']],
+      ['GEONOSIS STARTUP + RUNTIME HEALTH',src['geonosis-startup.js']]
+    ];
+    var injection='\n';
+    blocks.forEach(function(b){injection+='\n/* --- '+b[0]+' --- */\n'+b[1]+'\n';});
     var needle='})();',at=html.lastIndexOf(needle);if(at<0)throw new Error('main ICOSA closure not found');
-    html=html.slice(0,at)+
-      '\n/* --- ICOSA LIVE DATA HARNESS --- */\n'+inject+
-      '\n/* keep live observations on the visible side of the folded world */\n'+cull+
-      '\n/* --- VERIFIED GEONOSIS SOURCE REGISTRY --- */\n'+registry+
-      '\n/* stable upstream defaults before source adapters evaluate */\n'+preconfig+
-      '\n/* --- GEONOSIS SIGNAL CONTRACT --- */\n'+signalCore+
-      '\n/* --- ICOSA LIVE SOURCE ADAPTERS --- */\n'+sources+
-      '\n/* --- ICOSA LIVE MOTION ADAPTER --- */\n'+motion+
-      '\n/* --- GEONOSIS PUBLIC SIGNAL ADAPTERS --- */\n'+geoPublic+
-      '\n/* --- GEONOSIS NYC 311 ADAPTER --- */\n'+geo311+
-      '\n/* --- GEONOSIS FEMA NFHL ADAPTER --- */\n'+geoNfhl+
-      '\n/* --- GEONOSIS EPA ECHO/FRS ADAPTER --- */\n'+geoEpa+
-      '\n/* --- GEONOSIS NWS WEATHER + 3DEP TERRAIN --- */\n'+geoWeatherTerrain+
-      '\n/* --- GEONOSIS BYOK AIR QUALITY ADAPTER --- */\n'+geoAir+
-      '\n/* --- GEONOSIS DIFFERENCE + STATEMENT ENGINE --- */\n'+geoInference+
-      '\n/* scoped observations only paint the ground they actually queried */\n'+guards+
-      '\n/* --- ICOSA LIVE → MODEL CONTEXT BRIDGE --- */\n'+modelContext+
-      '\n/* --- GEONOSIS → MODEL CONTEXT BRIDGE --- */\n'+geoContext+
-      '\n/* --- GEONOSIS LABELED SOURCE SETUP --- */\n'+geoControls+
-      '\n/* --- GEONOSIS MAP INSPECTOR --- */\n'+geoInspector+
-      '\n/* --- GEONOSIS SEMIOSIS LENS --- */\n'+geoSemantics+
-      '\n/* --- GEONOSIS HUMAN PLACE ORIENTATION --- */\n'+geoPlace+
-      '\n/* --- GEONOSIS SCOPE COHERENCE --- */\n'+geoScope+
-      '\n/* --- GEONOSIS ORDINARY CONTRIBUTIONS --- */\n'+geoContributions+'\n'+html.slice(at);
+    html=html.slice(0,at)+injection+html.slice(at);
     document.open();document.write(html);document.close();
-  }).catch(function(err){document.getElementById('boot').textContent='LIVE WORLD FAILED · '+String(err&&err.message||err);});
+  }).catch(function(err){
+    document.getElementById('boot').textContent='GEONOSIS BOOT FAILED · '+String(err&&err.message||err)+' · BUILD '+BUILD;
+  });
 })();
 </script>

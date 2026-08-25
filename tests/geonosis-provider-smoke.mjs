@@ -1,7 +1,7 @@
 const TIMEOUT_MS = 20000;
 const BROWSER_ORIGIN = 'https://hartswf0.github.io';
 
-async function rawFetch(name, url) {
+async function rawFetch(name, url, { requireCors = true } = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   const started = Date.now();
@@ -17,7 +17,7 @@ async function rawFetch(name, url) {
     const text = await r.text();
     if (!r.ok) throw new Error(`${name}: HTTP ${r.status} ${text.slice(0,240)}`);
     const cors = r.headers.get('access-control-allow-origin');
-    if (!(cors === '*' || cors === BROWSER_ORIGIN)) {
+    if (requireCors && !(cors === '*' || cors === BROWSER_ORIGIN)) {
       throw new Error(`${name}: server answered but did not authorize browser origin ${BROWSER_ORIGIN}; ACAO=${cors || '(missing)'}`);
     }
     return { r, text, cors, elapsed: Date.now()-started };
@@ -26,20 +26,20 @@ async function rawFetch(name, url) {
   }
 }
 
-async function fetchChecked(name, url, validate) {
-  const got = await rawFetch(name, url);
+async function fetchChecked(name, url, validate, options) {
+  const got = await rawFetch(name, url, options);
   let body;
   try { body = JSON.parse(got.text); }
   catch { throw new Error(`${name}: expected JSON; got ${got.text.slice(0,160)}`); }
-  validate(body);
-  console.log(`PASS ${name} ${got.elapsed}ms CORS=${got.cors}`);
+  validate(body, got);
+  console.log(`PASS ${name} ${got.elapsed}ms CORS=${got.cors || '(not advertised)'}`);
   return body;
 }
 
-async function fetchTextChecked(name, url, validate) {
-  const got = await rawFetch(name, url);
-  validate(got.text);
-  console.log(`PASS ${name} ${got.elapsed}ms CORS=${got.cors}`);
+async function fetchTextChecked(name, url, validate, options) {
+  const got = await rawFetch(name, url, options);
+  validate(got.text, got);
+  console.log(`PASS ${name} ${got.elapsed}ms CORS=${got.cors || '(not advertised)'}`);
   return got.text;
 }
 
@@ -69,6 +69,31 @@ function arcQuery(base, outFields='*') {
   }).toString();
 }
 
+const nwsWeatherChain = (async () => {
+  const point = await fetchChecked(
+    'NWS point metadata',
+    `https://api.weather.gov/points/${atl.lat},${atl.lon}`,
+    j => assert(j && j.properties && j.properties.forecastHourly && j.properties.observationStations, 'NWS point response missing linked forecast/station URLs')
+  );
+  await fetchChecked(
+    'NWS hourly forecast',
+    point.properties.forecastHourly,
+    j => assert(j && j.properties && Array.isArray(j.properties.periods) && j.properties.periods.length, 'NWS hourly forecast missing periods[]')
+  );
+  const stations = await fetchChecked(
+    'NWS observation stations',
+    point.properties.observationStations,
+    j => assert(j && Array.isArray(j.features) && j.features.length, 'NWS stations response missing features[]')
+  );
+  const stationBase = stations.features[0].id || (stations.features[0].properties && stations.features[0].properties['@id']);
+  assert(stationBase, 'NWS first station missing id');
+  await fetchChecked(
+    'NWS latest observation',
+    String(stationBase).replace(/\/$/, '') + '/observations/latest',
+    j => assert(j && j.properties && j.properties.timestamp, 'NWS latest observation missing timestamp')
+  );
+})();
+
 const tests = [
   fetchChecked(
     'USGS earthquake GeoJSON',
@@ -86,14 +111,24 @@ const tests = [
     }
   ),
   fetchChecked(
-    'adsb.lol aircraft',
+    'adsb.lol upstream shape (server-only transport)',
     `https://api.adsb.lol/v2/lat/${atl.lat}/lon/${atl.lon}/dist/25`,
-    j => assert(j && Array.isArray(j.ac), 'adsb.lol response missing ac[]')
+    (j, got) => {
+      assert(j && Array.isArray(j.ac), 'adsb.lol response missing ac[]');
+      assert(!(got.cors === '*' || got.cors === BROWSER_ORIGIN), 'adsb.lol unexpectedly became browser-CORS capable; revisit proxy requirement');
+    },
+    { requireCors: false }
   ),
   fetchChecked(
     'NWS active alerts',
     `https://api.weather.gov/alerts/active?point=${atl.lat},${atl.lon}`,
     j => assert(j && Array.isArray(j.features), 'NWS response missing features[]')
+  ),
+  nwsWeatherChain,
+  fetchChecked(
+    'USGS 3DEP EPQS',
+    `https://epqs.nationalmap.gov/v1/json?x=${atl.lon}&y=${atl.lat}&wkid=4326&units=Meters&includeDate=true`,
+    j => assert(j && Number.isFinite(Number(j.value)), '3DEP EPQS response missing numeric value')
   ),
   fetchChecked(
     'USGS Water latest continuous',
@@ -164,7 +199,7 @@ for (const x of settled) {
   }
 }
 if (failed) {
-  console.error(`${failed}/${settled.length} browser-provider smoke tests failed`);
+  console.error(`${failed}/${settled.length} provider/deployment smoke tests failed`);
   process.exit(1);
 }
-console.log(`PASS all ${settled.length} browser-provider smoke tests`);
+console.log(`PASS all ${settled.length} provider/deployment smoke tests`);

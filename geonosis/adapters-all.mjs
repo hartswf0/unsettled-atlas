@@ -1,6 +1,7 @@
 import { ADAPTERS as CORE, DEFAULT_SOURCES as CORE_DEFAULTS } from './adapters.mjs';
 import { WAVE1_ADAPTERS, WAVE1_GLOBAL_DEFAULTS } from './adapters-wave1.mjs';
 import { WAVE2_ADAPTERS, WAVE2_DEFAULTS } from './adapters-wave2.mjs';
+import { WAVE25_OVERRIDES } from './adapters-wave25.mjs';
 import { normalizeSignal } from './schema.mjs';
 
 async function echoWithStrictTimeSemantics(ctx) {
@@ -11,7 +12,13 @@ async function echoWithStrictTimeSemantics(ctx) {
   });
 }
 
-export const ADAPTERS = { ...CORE, ...WAVE1_ADAPTERS, ...WAVE2_ADAPTERS, 'epa-echo': echoWithStrictTimeSemantics };
+export const ADAPTERS = {
+  ...CORE,
+  ...WAVE1_ADAPTERS,
+  ...WAVE2_ADAPTERS,
+  ...WAVE25_OVERRIDES,
+  'epa-echo': echoWithStrictTimeSemantics
+};
 
 function haversineKm(aLat,aLon,bLat,bLon){const R=6371.0088,d2r=Math.PI/180,p1=aLat*d2r,p2=bLat*d2r,dp=(bLat-aLat)*d2r,dl=(bLon-aLon)*d2r,h=Math.sin(dp/2)**2+Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)**2;return 2*R*Math.asin(Math.min(1,Math.sqrt(h)));}
 

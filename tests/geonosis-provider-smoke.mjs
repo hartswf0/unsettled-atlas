@@ -1,7 +1,7 @@
 const TIMEOUT_MS = 20000;
 const BROWSER_ORIGIN = 'https://hartswf0.github.io';
 
-async function fetchChecked(name, url, validate, { requireCors = true } = {}) {
+async function rawFetch(name, url) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   const started = Date.now();
@@ -9,26 +9,38 @@ async function fetchChecked(name, url, validate, { requireCors = true } = {}) {
     const r = await fetch(url, {
       signal: controller.signal,
       headers: {
-        'accept': 'application/json, application/geo+json;q=0.9, */*;q=0.5',
+        'accept': 'application/json, application/geo+json;q=0.9, text/plain;q=0.8, */*;q=0.5',
         'origin': BROWSER_ORIGIN,
         'user-agent': 'ICOSA-Geonosis-provider-smoke/1.0 (github.com/hartswf0/unsettled-atlas)'
       }
     });
     const text = await r.text();
     if (!r.ok) throw new Error(`${name}: HTTP ${r.status} ${text.slice(0,240)}`);
-    let body;
-    try { body = JSON.parse(text); }
-    catch { throw new Error(`${name}: expected JSON; got ${text.slice(0,160)}`); }
-    validate(body);
     const cors = r.headers.get('access-control-allow-origin');
-    if (requireCors && !(cors === '*' || cors === BROWSER_ORIGIN)) {
+    if (!(cors === '*' || cors === BROWSER_ORIGIN)) {
       throw new Error(`${name}: server answered but did not authorize browser origin ${BROWSER_ORIGIN}; ACAO=${cors || '(missing)'}`);
     }
-    console.log(`PASS ${name} ${Date.now()-started}ms CORS=${cors || '(not advertised)'}`);
-    return body;
+    return { r, text, cors, elapsed: Date.now()-started };
   } finally {
     clearTimeout(timer);
   }
+}
+
+async function fetchChecked(name, url, validate) {
+  const got = await rawFetch(name, url);
+  let body;
+  try { body = JSON.parse(got.text); }
+  catch { throw new Error(`${name}: expected JSON; got ${got.text.slice(0,160)}`); }
+  validate(body);
+  console.log(`PASS ${name} ${got.elapsed}ms CORS=${got.cors}`);
+  return body;
+}
+
+async function fetchTextChecked(name, url, validate) {
+  const got = await rawFetch(name, url);
+  validate(got.text);
+  console.log(`PASS ${name} ${got.elapsed}ms CORS=${got.cors}`);
+  return got.text;
 }
 
 function assert(cond, message) {
@@ -58,6 +70,26 @@ function arcQuery(base, outFields='*') {
 }
 
 const tests = [
+  fetchChecked(
+    'USGS earthquake GeoJSON',
+    'https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson',
+    j => assert(j && Array.isArray(j.features), 'USGS earthquake response missing features[]')
+  ),
+  fetchTextChecked(
+    'OSM datacenter snapshot',
+    'https://raw.githubusercontent.com/bilawalsidhu/gods-eye-view/880a672b5e16ad3e41d318801d3a5203f9201923/src/data/local_data/datacenters/datacenters.geojsonl',
+    text => {
+      const line = text.split('\n').find(x => x.trim());
+      assert(line, 'datacenter snapshot empty');
+      const f = JSON.parse(line);
+      assert(f && f.geometry, 'datacenter first record missing geometry');
+    }
+  ),
+  fetchChecked(
+    'adsb.lol aircraft',
+    `https://api.adsb.lol/v2/lat/${atl.lat}/lon/${atl.lon}/dist/25`,
+    j => assert(j && Array.isArray(j.ac), 'adsb.lol response missing ac[]')
+  ),
   fetchChecked(
     'NWS active alerts',
     `https://api.weather.gov/alerts/active?point=${atl.lat},${atl.lon}`,

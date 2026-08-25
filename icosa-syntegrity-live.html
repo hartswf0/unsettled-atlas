@@ -20,6 +20,10 @@ body{display:grid;place-items:center}
       if (!r.ok) throw new Error('icosa-live-inject.js ' + r.status);
       return r.text();
     }),
+    fetch('geonosis-source-registry.js', { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error('geonosis-source-registry.js ' + r.status);
+      return r.text();
+    }),
     fetch('icosa-live-sources.js', { cache: 'no-cache' }).then(function (r) {
       if (!r.ok) throw new Error('icosa-live-sources.js ' + r.status);
       return r.text();
@@ -33,7 +37,7 @@ body{display:grid;place-items:center}
       return r.text();
     })
   ]).then(function (parts) {
-    var html = parts[0], inject = parts[1], sources = parts[2], motion = parts[3], modelContext = parts[4];
+    var html = parts[0], inject = parts[1], registry = parts[2], sources = parts[3], motion = parts[4], modelContext = parts[5];
     var preconfig = [
       'window.ICOSA_LIVE_CONFIG = window.ICOSA_LIVE_CONFIG || {};',
       'if (!window.ICOSA_LIVE_CONFIG.datacenterUrl) window.ICOSA_LIVE_CONFIG.datacenterUrl =',
@@ -86,6 +90,7 @@ body{display:grid;place-items:center}
     html = html.slice(0, at) +
       '\n/* --- ICOSA LIVE DATA HARNESS --- */\n' + inject +
       '\n/* keep live observations on the visible side of the folded world */\n' + cull +
+      '\n/* --- VERIFIED GEONOSIS SOURCE REGISTRY --- */\n' + registry +
       '\n/* stable upstream defaults before source adapters evaluate */\n' + preconfig +
       '\n/* --- ICOSA LIVE SOURCE ADAPTERS --- */\n' + sources +
       '\n/* --- ICOSA LIVE MOTION ADAPTER --- */\n' + motion +

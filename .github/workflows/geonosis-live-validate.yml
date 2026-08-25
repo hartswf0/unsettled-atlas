@@ -11,6 +11,7 @@ on:
   push:
     branches:
       - feature/icosa-live-data
+      - geonosis-wave25
     paths:
       - 'icosa-live-*.js'
       - 'geonosis-*.js'
@@ -53,6 +54,8 @@ jobs:
             icosa-live-context.js
             geonosis-live-context.js
             geonosis-source-controls.js
+            geonosis-compiled-ground.js
+            geonosis-ground-panel.js
           )
           for f in "${files[@]}"; do
             echo "node --check $f"
@@ -78,13 +81,27 @@ jobs:
             geonosis-inference.js \
             icosa-live-context.js \
             geonosis-live-context.js \
-            geonosis-source-controls.js
+            geonosis-source-controls.js \
+            geonosis-compiled-ground.js \
+            geonosis-ground-panel.js
           do
             grep -F "fetch('$f'" icosa-syntegrity-live.html >/dev/null || {
               echo "Harness does not load $f" >&2
               exit 1
             }
           done
+
+      - name: Verify compiled-ground laws are explicit
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'COMPILED_PARENT_SCOPE' geonosis-compiled-ground.js >/dev/null
+          grep -F 'OUTSIDE_COMPILED_COVERAGE' geonosis-compiled-ground.js >/dev/null
+          grep -F 'HERE · WHAT EXISTS IN THE COMPILED RECORD' geonosis-ground-panel.js >/dev/null
+          grep -F 'HAPPENING · REPORTED CHANGE, ACTIVITY, CONDITION' geonosis-ground-panel.js >/dev/null
+          grep -F 'CONNECTIONS · TYPED EDGES' geonosis-ground-panel.js >/dev/null
+          grep -F 'STRANGE · RULE-DERIVED STATEMENTS' geonosis-ground-panel.js >/dev/null
+          grep -F 'CALL A COUNCIL' geonosis-ground-panel.js >/dev/null
 
       - name: Verify aircraft transport cannot silently use non-CORS upstream
         shell: bash

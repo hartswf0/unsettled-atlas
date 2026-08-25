@@ -37,6 +37,21 @@ const atlTri = {
 };
 const atlWkt = 'POLYGON((-84.55 33.62,-84.22 33.68,-84.38 33.88,-84.55 33.62))';
 
+function arcQuery(base, outFields='*') {
+  return base + '?' + new URLSearchParams({
+    where: '1=1',
+    geometry: JSON.stringify(atlTri),
+    geometryType: 'esriGeometryPolygon',
+    inSR: '4326',
+    spatialRel: 'esriSpatialRelIntersects',
+    outFields,
+    returnGeometry: 'true',
+    outSR: '4326',
+    resultRecordCount: '5',
+    f: 'geojson'
+  }).toString();
+}
+
 const tests = [
   fetchChecked(
     'NWS active alerts',
@@ -50,35 +65,29 @@ const tests = [
   ),
   fetchChecked(
     'USGS 3DHP flowlines',
-    'https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/FeatureServer/50/query?' + new URLSearchParams({
-      where: '1=1',
-      geometry: JSON.stringify(atlTri),
-      geometryType: 'esriGeometryPolygon',
-      inSR: '4326',
-      spatialRel: 'esriSpatialRelIntersects',
-      outFields: 'OBJECTID,id3dhp,streamorder,flowdirectionlabel,hydrosequence,dnhydrosequence,uphydrosequence',
-      returnGeometry: 'true',
-      outSR: '4326',
-      resultRecordCount: '5',
-      f: 'geojson'
-    }).toString(),
+    arcQuery(
+      'https://3dhp.nationalmap.gov/arcgis/rest/services/usgs_3dhp_all/FeatureServer/50/query',
+      'OBJECTID,id3dhp,streamorder,flowdirectionlabel,hydrosequence,dnhydrosequence,uphydrosequence'
+    ),
     j => assert(j && Array.isArray(j.features), '3DHP response missing features[]')
   ),
   fetchChecked(
     'FEMA designated counties',
-    'https://gis.fema.gov/arcgis/rest/services/FEMA/DECS_ALL/MapServer/0/query?' + new URLSearchParams({
-      where: '1=1',
-      geometry: JSON.stringify(atlTri),
-      geometryType: 'esriGeometryPolygon',
-      inSR: '4326',
-      spatialRel: 'esriSpatialRelIntersects',
-      outFields: 'objectid,name,state_name,fips,fema_postdate,designate,dec_number',
-      returnGeometry: 'true',
-      outSR: '4326',
-      resultRecordCount: '5',
-      f: 'geojson'
-    }).toString(),
+    arcQuery(
+      'https://gis.fema.gov/arcgis/rest/services/FEMA/DECS_ALL/MapServer/0/query',
+      'objectid,name,state_name,fips,fema_postdate,designate,dec_number'
+    ),
     j => assert(j && Array.isArray(j.features), 'FEMA response missing features[]')
+  ),
+  fetchChecked(
+    'FEMA NFHL availability',
+    arcQuery('https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/0/query'),
+    j => assert(j && Array.isArray(j.features), 'NFHL availability response missing features[]')
+  ),
+  fetchChecked(
+    'FEMA NFHL flood hazard zones',
+    arcQuery('https://hazards.fema.gov/arcgis/rest/services/public/NFHL/MapServer/28/query'),
+    j => assert(j && Array.isArray(j.features), 'NFHL flood hazard response missing features[]')
   ),
   fetchChecked(
     'GBIF occurrence search',

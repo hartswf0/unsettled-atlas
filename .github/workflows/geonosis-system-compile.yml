@@ -1,0 +1,78 @@
+name: Compile Geonosis system ground
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '17 9 * * *'
+  push:
+    branches:
+      - main
+    paths:
+      - 'geonosis/adapters*.mjs'
+      - 'geonosis/geometry.mjs'
+      - 'geonosis/graph.mjs'
+      - 'geonosis/harvest.mjs'
+      - 'geonosis/icosa-address.mjs'
+      - 'geonosis/schema.mjs'
+      - 'geonosis/v1-bridge.mjs'
+      - 'geonosis/v1-schema.mjs'
+      - 'geonosis/system-backplane.mjs'
+      - 'geonosis/system-rules.mjs'
+      - 'geonosis/compile-system.mjs'
+      - 'geonosis/system-index.mjs'
+      - '.github/workflows/geonosis-system-compile.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: geonosis-system-ground
+  cancel-in-progress: false
+
+jobs:
+  compile:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Compile Atlanta evidence into the backplane
+        run: |
+          rm -rf /tmp/geonosis-atlanta
+          node geonosis/harvest.mjs \
+            --lat 33.749 --lon -84.388 --radius-km 18 --depth 10 --since-days 30 --limit 160 --gleif-limit 20 \
+            --run-id system-atlanta --out /tmp/geonosis-atlanta
+          node geonosis/compile-system.mjs \
+            --in /tmp/geonosis-atlanta --out geonosis/system-data/atlanta \
+            --region Atlanta --center-lat 33.749 --center-lon -84.388 --map-limit 1400
+      - name: Compile New Orleans evidence into the same system
+        run: |
+          rm -rf /tmp/geonosis-new-orleans
+          node geonosis/harvest.mjs \
+            --lat 29.9511 --lon -90.0715 --radius-km 18 --depth 10 --since-days 30 --limit 160 --gleif-limit 20 \
+            --run-id system-new-orleans --out /tmp/geonosis-new-orleans
+          node geonosis/compile-system.mjs \
+            --in /tmp/geonosis-new-orleans --out geonosis/system-data/new-orleans \
+            --region 'New Orleans' --center-lat 29.9511 --center-lon -90.0715 --map-limit 1400
+      - name: Build public region index and validate contracts
+        run: |
+          node geonosis/system-index.mjs geonosis/system-data
+          npm run geonosis:system-test
+          node -e "const x=require('./geonosis/system-data/index.json'); if(x.regions.length<2) process.exit(1); console.log(x.regions.map(r=>[r.id,r.counts.observations,r.counts.active_events]));"
+      - name: Commit changed compiled ground
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add geonosis/system-data
+          if git diff --cached --quiet; then
+            echo 'Compiled ground unchanged.'
+          else
+            git commit -m 'Compile Geonosis system ground'
+            git push
+          fi

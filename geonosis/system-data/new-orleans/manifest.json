@@ -1,0 +1,143 @@
+{
+  "schema": "geonosis-system-public-v1",
+  "region": "New Orleans",
+  "generated_at": "2026-08-25T20:21:16.735Z",
+  "center": [
+    29.9511,
+    -90.0715
+  ],
+  "harvest_run_id": "system-new-orleans",
+  "harvest_created_at": "2026-08-25T20:21:16.527Z",
+  "counts": {
+    "signals": 1647,
+    "forms": 1647,
+    "observations": 1647,
+    "subjects": 1528,
+    "current_states": 1548,
+    "correspondences": 0,
+    "events": 0,
+    "active_events": 0,
+    "possibilities": 327,
+    "addressed_cells": 317,
+    "map_features": 1400,
+    "bridge_errors": 0
+  },
+  "source_health": {
+    "total": 16,
+    "failed": 1,
+    "failures": [
+      {
+        "id": "nola-building-permits",
+        "error": "fetch failed"
+      }
+    ]
+  },
+  "laws": [
+    "map is a client, not an inference engine",
+    "no cross-source identity from coordinate proximity",
+    "no correspondence without an explicit registered rule",
+    "unchanged observations deduplicate by stable id",
+    "UNKNOWN and zero licensed events are valid system outputs"
+  ],
+  "rule_registry": {
+    "correspondence": [
+      {
+        "id": "road-status-cross-regime-v1",
+        "predicate": "road.status",
+        "regimes": [
+          "MATERIAL",
+          "AFFORDANCE",
+          "INSTITUTIONAL",
+          "REPRESENTATIONAL"
+        ],
+        "expectation": "The same road-status predicate should agree across regimes when it is claimed as current.",
+        "compare": "exact"
+      },
+      {
+        "id": "access-status-cross-regime-v1",
+        "predicate": "access.status",
+        "regimes": [
+          "AFFORDANCE",
+          "INSTITUTIONAL",
+          "REPRESENTATIONAL"
+        ],
+        "expectation": "Declared, represented, and actor-relative access status should agree when they refer to the same subject and time.",
+        "compare": "exact"
+      },
+      {
+        "id": "service-status-cross-regime-v1",
+        "predicate": "service.status",
+        "regimes": [
+          "MATERIAL",
+          "INSTITUTIONAL",
+          "REPRESENTATIONAL"
+        ],
+        "expectation": "Observed, institutional, and represented service status should agree for the same service subject.",
+        "compare": "exact"
+      },
+      {
+        "id": "closure-status-cross-regime-v1",
+        "predicate": "closure.status",
+        "regimes": [
+          "MATERIAL",
+          "INSTITUTIONAL",
+          "REPRESENTATIONAL"
+        ],
+        "expectation": "Closure status should agree across observed, institutional, and represented regimes for the same subject.",
+        "compare": "exact"
+      }
+    ],
+    "actor": [
+      {
+        "id": "surface-water-car-v1",
+        "predicate": "surface_water.depth_m",
+        "actor": "CAR"
+      },
+      {
+        "id": "surface-water-dog-v1",
+        "predicate": "surface_water.depth_m",
+        "actor": "DOG"
+      },
+      {
+        "id": "surface-water-flow-v1",
+        "predicate": "surface_water.depth_m",
+        "actor": "FLOOD"
+      },
+      {
+        "id": "surface-water-city-v1",
+        "predicate": "surface_water.depth_m",
+        "actor": "CITY"
+      },
+      {
+        "id": "nws-alert-human-v1",
+        "predicate": "hazard.weather_alert",
+        "actor": "HUMAN"
+      },
+      {
+        "id": "nws-alert-service-v1",
+        "predicate": "hazard.weather_alert",
+        "actor": "SERVICE"
+      },
+      {
+        "id": "earthquake-human-v1",
+        "predicate": "hazard.earthquake",
+        "actor": "HUMAN"
+      },
+      {
+        "id": "earthquake-building-v1",
+        "predicate": "hazard.earthquake",
+        "actor": "BUILDING"
+      },
+      {
+        "id": "natural-event-human-v1",
+        "predicate": "hazard.natural_event",
+        "actor": "HUMAN"
+      },
+      {
+        "id": "map-note-service-v1",
+        "predicate": "claim.map_note",
+        "actor": "SERVICE"
+      }
+    ]
+  }
+}

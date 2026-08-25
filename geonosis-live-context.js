@@ -3,7 +3,7 @@
  * than creating a second LLM path.
  */
 
-var GEONOSIS_CONTEXT_VERSION='geonosis-context-v1';
+var GEONOSIS_CONTEXT_VERSION='geonosis-context-v2-statements';
 var GEONOSIS_CONTEXT_MAX=8;
 
 function geoCtxIso(ms){return Number.isFinite(Number(ms))&&Number(ms)>0?new Date(Number(ms)).toISOString():null;}
@@ -37,7 +37,8 @@ function geoCtxKind(cell,id){
 function geoCtxBuild(cell){
   var ids=Object.keys(GEO_DEFS),sources={},signs={};
   ids.forEach(function(id){sources[id]=geoCtxSource(id,cell);signs[GEO_DEFS[id].kind]=geoCtxKind(cell,id);});
-  return {version:GEONOSIS_CONTEXT_VERSION,focus_address:cellSlug(cell),semantics:{signal:'a source-stamped proposition about the focused place, never omniscience',reported:'a person or institution asserted/reported it',observed:'a sensor or source recorded an observation',record:'a mapped/administrative record',preliminary:'current values may not be quality-assured',regulatory:'an official mapped or administrative classification, not a direct physical measurement',absence:'a missing record is only meaningful when coverage is matching, complete, and the source-specific zero_semantics says what that zero means'},sources:sources,signs:signs};
+  var inference=typeof geonosisInfer==='function'?geonosisInfer(cell):{differences:[],statements_of_importance:[]};
+  return {version:GEONOSIS_CONTEXT_VERSION,focus_address:cellSlug(cell),semantics:{signal:'a source-stamped proposition about the focused place, never omniscience',reported:'a person or institution asserted/reported it',observed:'a sensor or source recorded an observation',record:'a mapped/administrative record',preliminary:'current values may not be quality-assured',regulatory:'an official mapped or administrative classification, not a direct physical measurement',derived_statement:'a deterministic candidate proposition produced by a named rule from attached evidence IDs; it is an agenda candidate, not an additional fact',absence:'a missing record is only meaningful when coverage is matching, complete, and the source-specific zero_semantics says what that zero means'},sources:sources,signs:signs,differences:inference.differences||[],statements_of_importance:inference.statements_of_importance||[]};
 }
 
 var liveCtxBuildGeonosisBase=liveCtxBuild;
@@ -53,7 +54,7 @@ liveCtxPending=function(cell){
   return out;
 };
 
-var GEONOSIS_CONTEXT_LAW=' When context.live.geonosis is present, preserve each sign epistemic class and source coverage. NWS sampled-point zeros do not prove there is no weather alert elsewhere in a triangle. A USGS streamflow zero means no matching current gauge time-series point, not no stream or no water. A 3DHP zero means no mapped flowline intersection under the returned service coverage, not physical absence of water. A FEMA declaration zero means no current designated-county intersection, not no hazard or disaster. A FEMA NFHL zero is valid only when the separate availability layer confirms mapped coverage; even then it means no mapped regulatory Flood Hazard Zone intersection, not zero flood probability. A GBIF zero means no matching occurrence record, not species absence. A 311 zero means no geocoded service request in the stated time window, not no experienced problem. An AirNow zero means no returned reporting-area observation, not clean air. Never collapse these narrow zeros into world claims.';
+var GEONOSIS_CONTEXT_LAW=' When context.live.geonosis is present, preserve each sign epistemic class and source coverage. NWS sampled-point zeros do not prove there is no weather alert elsewhere in a triangle. A USGS streamflow zero means no matching current gauge time-series point, not no stream or no water. A 3DHP zero means no mapped flowline intersection under the returned service coverage, not physical absence of water. A FEMA declaration zero means no current designated-county intersection, not no hazard or disaster. A FEMA NFHL zero is valid only when the separate availability layer confirms mapped coverage; even then it means no mapped regulatory Flood Hazard Zone intersection, not zero flood probability. A GBIF zero means no matching occurrence record, not species absence. A 311 zero means no geocoded service request in the stated time window, not no experienced problem. An AirNow zero means no returned reporting-area observation, not clean air. EPA ECHO is an administrative facility/compliance record, not direct pollution measurement. Never collapse these narrow zeros into world claims. context.live.geonosis.statements_of_importance are deterministic agenda candidates whose evidence IDs are authoritative for their basis: you may argue, qualify, connect or reject the proposition, but never add a factual premise that is not in the supplied context.';
 if(typeof LAW==='string'&&LAW.indexOf('context.live.geonosis is present')<0)LAW+=GEONOSIS_CONTEXT_LAW;
 
 var renderLiveModelContextGeoBase=renderLiveModelContext;
@@ -62,7 +63,7 @@ renderLiveModelContext=function(cell){
   var el=document.getElementById('live-model-context');if(!el)return;
   var g=geoCtxBuild(cell),parts=[];
   Object.keys(GEO_DEFS).forEach(function(id){var k=GEO_DEFS[id].kind,q=g.signs[k];parts.push(GEO_DEFS[id].label+' '+(q.count==null?'?':q.count));});
-  var p=document.createElement('p');p.style.fontSize='8px';p.style.letterSpacing='.08em';p.textContent='GEONOSIS · '+parts.join(' · ');el.appendChild(p);
+  var p=document.createElement('p');p.style.fontSize='8px';p.style.letterSpacing='.08em';p.textContent='GEONOSIS · '+parts.join(' · ')+' · SOI '+g.statements_of_importance.length;el.appendChild(p);
 };
 
 window.ICOSA_LIVE.geonosisContext=function(slug){var c=typeof slug==='string'?cellFromSlug(slug):slug;return c?geoCtxBuild(c):null;};

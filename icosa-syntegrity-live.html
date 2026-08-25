@@ -22,12 +22,13 @@ body{display:grid;place-items:center}
     fetch('geonosis-live-311.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-311.js '+r.status);return r.text();}),
     fetch('geonosis-live-nfhl.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-nfhl.js '+r.status);return r.text();}),
     fetch('geonosis-live-epa.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-epa.js '+r.status);return r.text();}),
+    fetch('geonosis-live-weather-terrain.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-weather-terrain.js '+r.status);return r.text();}),
     fetch('geonosis-live-airnow.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-airnow.js '+r.status);return r.text();}),
     fetch('geonosis-inference.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-inference.js '+r.status);return r.text();}),
     fetch('icosa-live-context.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('icosa-live-context.js '+r.status);return r.text();}),
     fetch('geonosis-live-context.js',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error('geonosis-live-context.js '+r.status);return r.text();})
   ]).then(function(parts){
-    var html=parts[0],inject=parts[1],registry=parts[2],signalCore=parts[3],sources=parts[4],motion=parts[5],geoPublic=parts[6],geo311=parts[7],geoNfhl=parts[8],geoEpa=parts[9],geoAir=parts[10],geoInference=parts[11],modelContext=parts[12],geoContext=parts[13];
+    var html=parts[0],inject=parts[1],registry=parts[2],signalCore=parts[3],sources=parts[4],motion=parts[5],geoPublic=parts[6],geo311=parts[7],geoNfhl=parts[8],geoEpa=parts[9],geoWeatherTerrain=parts[10],geoAir=parts[11],geoInference=parts[12],modelContext=parts[13],geoContext=parts[14];
     var preconfig=[
       'window.ICOSA_LIVE_CONFIG = window.ICOSA_LIVE_CONFIG || {};',
       'if (!window.ICOSA_LIVE_CONFIG.datacenterUrl) window.ICOSA_LIVE_CONFIG.datacenterUrl =',
@@ -87,6 +88,7 @@ body{display:grid;place-items:center}
       '\n/* --- GEONOSIS NYC 311 ADAPTER --- */\n'+geo311+
       '\n/* --- GEONOSIS FEMA NFHL ADAPTER --- */\n'+geoNfhl+
       '\n/* --- GEONOSIS EPA ECHO/FRS ADAPTER --- */\n'+geoEpa+
+      '\n/* --- GEONOSIS NWS WEATHER + 3DEP TERRAIN --- */\n'+geoWeatherTerrain+
       '\n/* --- GEONOSIS BYOK AIR QUALITY ADAPTER --- */\n'+geoAir+
       '\n/* --- GEONOSIS DIFFERENCE + STATEMENT ENGINE --- */\n'+geoInference+
       '\n/* scoped observations only paint the ground they actually queried */\n'+guards+

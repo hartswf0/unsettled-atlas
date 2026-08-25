@@ -53,6 +53,7 @@ jobs:
             icosa-live-context.js
             geonosis-live-context.js
             geonosis-source-controls.js
+            geonosis-inspector.js
           )
           for f in "${files[@]}"; do
             echo "node --check $f"
@@ -78,13 +79,25 @@ jobs:
             geonosis-inference.js \
             icosa-live-context.js \
             geonosis-live-context.js \
-            geonosis-source-controls.js
+            geonosis-source-controls.js \
+            geonosis-inspector.js
           do
             grep -F "fetch('$f'" icosa-syntegrity-live.html >/dev/null || {
               echo "Harness does not load $f" >&2
               exit 1
             }
           done
+
+      - name: Verify map data stays inspectable
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'GEONOSIS DATA · ' geonosis-inspector.js >/dev/null
+          grep -F 'TAP A DATA MARK TO INSPECT' geonosis-inspector.js >/dev/null
+          grep -F "canvas.addEventListener('pointerup',geoInspectPointer,true)" geonosis-inspector.js >/dev/null
+          grep -F 'geoInspectRequestAttention' geonosis-inspector.js >/dev/null
+          grep -F 'SOURCE STATE · ' geonosis-inspector.js >/dev/null
+          grep -F 'SIGNALS HERE · ' geonosis-inspector.js >/dev/null
 
       - name: Verify aircraft transport cannot silently use non-CORS upstream
         shell: bash

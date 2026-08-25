@@ -4,12 +4,18 @@ on:
   push:
     paths:
       - 'geonosis/**'
+      - 'geonosis-compiled-ground.js'
+      - 'geonosis-ground-panel.js'
+      - 'icosa-syntegrity-live.html'
       - 'icosa-world.data.js'
       - 'package.json'
       - '.github/workflows/geonosis-test.yml'
   pull_request:
     paths:
       - 'geonosis/**'
+      - 'geonosis-compiled-ground.js'
+      - 'geonosis-ground-panel.js'
+      - 'icosa-syntegrity-live.html'
       - 'icosa-world.data.js'
       - 'package.json'
       - '.github/workflows/geonosis-test.yml'
@@ -17,13 +23,19 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Offline contract
+      - name: Offline signal, geometry and graph contract
         run: npm run geonosis:test
-      - name: Wave 2 public-provider smoke
+      - name: Prefix publication contract
+        run: npm run geonosis:publish-test
+      - name: Browser bridge syntax
+        run: |
+          node --check geonosis-compiled-ground.js
+          node --check geonosis-ground-panel.js
+      - name: Public-provider smoke
         run: npm run geonosis:smoke

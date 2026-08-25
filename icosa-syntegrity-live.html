@@ -23,9 +23,13 @@ body{display:grid;place-items:center}
     fetch('icosa-live-sources.js', { cache: 'no-cache' }).then(function (r) {
       if (!r.ok) throw new Error('icosa-live-sources.js ' + r.status);
       return r.text();
+    }),
+    fetch('icosa-live-motion.js', { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) throw new Error('icosa-live-motion.js ' + r.status);
+      return r.text();
     })
   ]).then(function (parts) {
-    var html = parts[0], inject = parts[1], sources = parts[2];
+    var html = parts[0], inject = parts[1], sources = parts[2], motion = parts[3];
     var cull = [
       'var liveVisibleBinsUnculled = liveVisibleBins;',
       'liveVisibleBins = function (depth) {',
@@ -43,7 +47,8 @@ body{display:grid;place-items:center}
     html = html.slice(0, at) +
       '\n/* --- ICOSA LIVE DATA HARNESS --- */\n' + inject +
       '\n/* keep live observations on the visible side of the folded world */\n' + cull +
-      '\n/* --- ICOSA LIVE SOURCE ADAPTERS --- */\n' + sources + '\n' +
+      '\n/* --- ICOSA LIVE SOURCE ADAPTERS --- */\n' + sources +
+      '\n/* --- ICOSA LIVE MOTION ADAPTER --- */\n' + motion + '\n' +
       html.slice(at);
     document.open();
     document.write(html);

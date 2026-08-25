@@ -2,7 +2,12 @@
  * Injected after the persistent/scoped source adapters, inside ICOSA's closure.
  *
  * A plane is not primarily an icon. It is a sequence of cell addresses.
- * adsb.lol provides the regional observed snapshot; ICOSA supplies the trace.
+ * adsb.lol is the upstream observation source; ICOSA supplies the trace.
+ *
+ * IMPORTANT DEPLOYMENT LAW: api.adsb.lol does not currently authorize the
+ * GitHub Pages browser origin with CORS. The public static build therefore
+ * never silently fetches the upstream directly. Configure adsbBaseUrl to a
+ * CORS-enabled reverse proxy/mirror that preserves the adsb.lol /v2 path.
  */
 
 var AIR_SOURCE = 'adsb-lol-aircraft';
@@ -11,7 +16,8 @@ var AIR_MAX_CELL_KM = 900;
 var AIR_TARGET = null;
 var AIR_HISTORY = Object.create(null);
 var AIR_HISTORY_TTL = 10 * 60 * 1000;
-var AIR_BASE_URL = (window.ICOSA_LIVE_CONFIG && window.ICOSA_LIVE_CONFIG.adsbBaseUrl) || 'https://api.adsb.lol/v2';
+var AIR_UPSTREAM_URL = 'https://api.adsb.lol/v2';
+var AIR_BASE_URL = (window.ICOSA_LIVE_CONFIG && liveText(window.ICOSA_LIVE_CONFIG.adsbBaseUrl)) || null;
 
 function airNumber(v) {
   if (v === null || v === undefined || v === '') return null;
@@ -26,6 +32,7 @@ function airCategory(v) {
   var s = String(v || '').trim().toUpperCase();
   return s || null;
 }
+function airConfigured() { return !!liveText(AIR_BASE_URL); }
 
 function normalizeAdsbLol(payload) {
   var ac = payload && Array.isArray(payload.ac) ? payload.ac : [];
@@ -100,6 +107,7 @@ function airTraceRecords(records) {
 }
 
 function airUrl(target) {
+  if (!airConfigured()) return null;
   var p = lonlat(cellCentre(target.cell));
   return AIR_BASE_URL.replace(/\/$/, '') + '/lat/' + p[1].toFixed(5) + '/lon/' + p[0].toFixed(5) +
     '/dist/' + Math.round(target.radiusNm);
@@ -115,7 +123,9 @@ function registerAirSource() {
     load: function (done) {
       var target = AIR_TARGET;
       if (!target || !target.cell) return done('awaiting a local triangle');
-      fetch(airUrl(target), { credentials: 'omit', cache: 'no-store' })
+      if (!airConfigured()) return done('aircraft proxy/base URL not configured');
+      var url = airUrl(target);
+      fetch(url, { credentials: 'omit', cache: 'no-store' })
         .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
         .then(function (j) {
           var rows = normalizeAdsbLol(j).filter(function (r) { return cellContains(target.cell, fromLonLat(r.lon, r.lat)); });
@@ -127,13 +137,21 @@ function registerAirSource() {
             completeForCell: target.complete,
             attribution: 'adsb.lol contributors',
             license: 'ODbL 1.0',
-            scoped: true
+            scoped: true,
+            upstream: AIR_UPSTREAM_URL,
+            transportBase: AIR_BASE_URL,
+            transport: 'configured CORS-enabled reverse proxy/mirror'
           });
         })
         .catch(function (e) { done(String(e && e.message || e)); });
     }
   });
-  if (AIR_TARGET) pollLiveSource(AIR_SOURCE);
+  var s = LIVE.sources[AIR_SOURCE];
+  if (s && !airConfigured()) {
+    s.state = 'unconfigured';
+    s.lastError = 'configure ICOSA_LIVE_CONFIG.adsbBaseUrl with a CORS-enabled adsb.lol /v2 proxy or mirror';
+  }
+  if (AIR_TARGET && airConfigured()) pollLiveSource(AIR_SOURCE);
 }
 setTimeout(registerAirSource, 650); // manual/scoped: keep it out of the global auto-start set
 
@@ -149,7 +167,15 @@ function requestAircraft(cell) {
   var slug = cellSlug(cell), needKm = km * 0.70, radiusNm = clamp(needKm / 1.852, 25, 250);
   if (AIR_TARGET && AIR_TARGET.slug === slug) return;
   AIR_TARGET = { cell: cell, slug: slug, radiusNm: radiusNm, complete: radiusNm * 1.852 >= needKm - 1 };
-  if (s) pollLiveSource(AIR_SOURCE);
+  if (!s) return;
+  if (!airConfigured()) {
+    if (s.timer) { clearTimeout(s.timer); s.timer = null; }
+    s.state = 'unconfigured';
+    s.lastError = 'aircraft transport is unconfigured because api.adsb.lol does not authorize this Pages origin with CORS';
+    liveRefreshOpenPanel();
+    return;
+  }
+  pollLiveSource(AIR_SOURCE);
 }
 
 function airRecords(cell) {
@@ -223,10 +249,12 @@ function renderAircraftPanel(cell) {
   var exact = coverage === cellSlug(cell);
   var h = '<details id="live-air-record"' + (rows.length ? ' open' : '') + '><summary>MOVEMENT · ' + rows.length +
     ' AIRCRAFT · ADSB.LOL ' + liveSourceFreshness(src) + '</summary>';
-  if (!src || src.state === 'idle') {
+  if (src && src.state === 'unconfigured') {
+    h += '<p>Aircraft upstream is integrated but browser transport is not configured. Set <b>ICOSA_LIVE_CONFIG.adsbBaseUrl</b> to a CORS-enabled reverse proxy or mirror of the adsb.lol /v2 API. No empty-airspace claim is made.</p>';
+  } else if (!src || src.state === 'idle') {
     h += '<p>' + (cellEdgeKm(cell) > AIR_MAX_CELL_KM ? 'Enter a regional or smaller triangle to query aircraft.' : 'Aircraft have not been queried for this triangle yet.') + '</p>';
   } else if (src.state === 'error' && !src.lastUpdate) {
-    h += '<p>adsb.lol unavailable. No claim is made that this airspace is empty.</p>';
+    h += '<p>Aircraft source/transport unavailable. No claim is made that this airspace is empty.</p>';
   } else if (!exact) {
     h += '<p>The loaded aircraft snapshot belongs to another triangle. This airspace is not being described as empty.</p>';
   } else if (!rows.length) {
@@ -268,10 +296,24 @@ window.ICOSA_LIVE.requestAircraft = function (slug) {
   var c = typeof slug === 'string' ? cellFromSlug(slug) : slug;
   if (!c) return false; requestAircraft(c); return true;
 };
+window.ICOSA_LIVE.setAircraftBaseUrl = function (url) {
+  AIR_BASE_URL = liveText(url) || null;
+  var s = LIVE.sources[AIR_SOURCE];
+  if (s) {
+    s.state = AIR_BASE_URL ? 'idle' : 'unconfigured';
+    s.lastError = AIR_BASE_URL ? null : 'aircraft proxy/base URL not configured';
+  }
+  if (AIR_BASE_URL && AIR_TARGET && s) pollLiveSource(AIR_SOURCE);
+  liveRefreshOpenPanel();
+  return !!AIR_BASE_URL;
+};
 window.ICOSA_LIVE.sourceInfo.aircraft = {
   source: 'adsb.lol contributors',
+  upstream: AIR_UPSTREAM_URL,
   license: 'ODbL 1.0',
   scoped: true,
   traceDepth: AIR_TRACE_DEPTH,
-  maxCellKm: AIR_MAX_CELL_KM
+  maxCellKm: AIR_MAX_CELL_KM,
+  browserTransport: 'requires configured CORS-enabled reverse proxy/mirror',
+  configured: function () { return airConfigured(); }
 };

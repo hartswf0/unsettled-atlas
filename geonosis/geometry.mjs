@@ -27,22 +27,46 @@ function flattenPoints(coords, out = []) {
   return out;
 }
 
-// Planar centroid for one closed ring in lon/lat. This is intentionally an
-// indexing representative, not a geodesic claim about area. It is excellent
-// for local municipal polygons and falls back cleanly when degenerate.
+function localRing(points) {
+  const pts = points.filter(finitePoint);
+  if (!pts.length) return { origin: [0, 0], pts: [] };
+  const origin = [+pts[0][0], +pts[0][1]];
+  return {
+    origin,
+    pts: pts.map(p => [(+p[0]) - origin[0], (+p[1]) - origin[1]])
+  };
+}
+
+function signedTwiceArea(points) {
+  const { pts } = localRing(points);
+  let a = 0;
+  for (let i = 0; i < pts.length; i++) {
+    const p = pts[i], q = pts[(i + 1) % pts.length];
+    a += p[0] * q[1] - q[0] * p[1];
+  }
+  return a;
+}
+
+// Planar centroid for one closed ring in lon/lat. Arithmetic is performed in
+// coordinates translated to the first vertex; this avoids catastrophic
+// cancellation for small municipal polygons whose absolute longitudes are
+// two orders of magnitude larger than their width.
+//
+// This remains an indexing representative, not a geodesic claim about area.
 function ringCentroid(ring) {
-  const pts = (ring || []).filter(finitePoint);
-  if (pts.length < 3) return mean(pts);
+  const original = (ring || []).filter(finitePoint);
+  if (original.length < 3) return mean(original);
+  const { origin, pts } = localRing(original);
   let twiceA = 0, cx = 0, cy = 0;
   for (let i = 0; i < pts.length; i++) {
     const a = pts[i], b = pts[(i + 1) % pts.length];
-    const cross = (+a[0]) * (+b[1]) - (+b[0]) * (+a[1]);
+    const cross = a[0] * b[1] - b[0] * a[1];
     twiceA += cross;
-    cx += ((+a[0]) + (+b[0])) * cross;
-    cy += ((+a[1]) + (+b[1])) * cross;
+    cx += (a[0] + b[0]) * cross;
+    cy += (a[1] + b[1]) * cross;
   }
-  if (Math.abs(twiceA) < 1e-12) return mean(pts);
-  return [cx / (3 * twiceA), cy / (3 * twiceA)];
+  if (Math.abs(twiceA) < 1e-15) return mean(original);
+  return [origin[0] + cx / (3 * twiceA), origin[1] + cy / (3 * twiceA)];
 }
 
 function polygonRepresentative(coords) {
@@ -57,13 +81,7 @@ function multiPolygonRepresentative(coords) {
   let best = null, bestArea = -1;
   for (const poly of coords || []) {
     const ring = poly?.[0] || [];
-    const pts = ring.filter(finitePoint);
-    let a = 0;
-    for (let i = 0; i < pts.length; i++) {
-      const p = pts[i], q = pts[(i + 1) % pts.length];
-      a += (+p[0]) * (+q[1]) - (+q[0]) * (+p[1]);
-    }
-    a = Math.abs(a / 2);
+    const a = Math.abs(signedTwiceArea(ring) / 2);
     const c = ringCentroid(ring);
     if (c && a > bestArea) { bestArea = a; best = c; }
   }

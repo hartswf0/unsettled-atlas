@@ -53,6 +53,8 @@ ICOSA_LIVE.poll(sourceId)
 - Epistemic state: `RECORD`.
 - Point features keep their coordinates; non-point geometries receive a deterministic geometry anchor before ICOSA indexing.
 
+The harness pins the upstream snapshot to the God's Eye View commit it was inspected from rather than following that repository's moving `main` branch.
+
 The UI keeps the required attribution: `© OpenStreetMap contributors · ODbL 1.0`.
 
 ### NASA FIRMS
@@ -119,7 +121,7 @@ narrow scale     cell counts -> individual observations
 movement         positions -> cell transitions -> trace
 ```
 
-Back-side records are culled with the same `facingCamera` rule as the rest of the folded world.
+Back-side records are culled with the same `facingCamera` rule as the rest of the folded world. Scoped sources paint only when their recorded coverage address still matches the triangle currently holding attention; previous-region data never leaks into a new region while its request is loading.
 
 ## Absence law
 
@@ -138,3 +140,7 @@ ZERO RECORDS IN A SUCCESSFUL EXACT-COVERAGE QUERY
 ```
 
 The interface must never collapse the first six into the seventh.
+
+## Validation boundary
+
+The original observation bus passed a local mocked execution of normalization -> 13-prefix indexing -> source replacement -> per-cell inventory. The later browser adapters have been reviewed against the current ICOSA closure and committed through GitHub, but this execution environment cannot resolve `github.com` for a fresh branch clone, so a full browser/runtime pass of the expanded branch remains to be run in the deployed GitHub Pages context before merge.

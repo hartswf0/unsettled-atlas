@@ -1,6 +1,7 @@
 const TIMEOUT_MS = 20000;
+const BROWSER_ORIGIN = 'https://hartswf0.github.io';
 
-async function fetchChecked(name, url, validate) {
+async function fetchChecked(name, url, validate, { requireCors = true } = {}) {
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
   const started = Date.now();
@@ -9,6 +10,7 @@ async function fetchChecked(name, url, validate) {
       signal: controller.signal,
       headers: {
         'accept': 'application/json, application/geo+json;q=0.9, */*;q=0.5',
+        'origin': BROWSER_ORIGIN,
         'user-agent': 'ICOSA-Geonosis-provider-smoke/1.0 (github.com/hartswf0/unsettled-atlas)'
       }
     });
@@ -18,8 +20,11 @@ async function fetchChecked(name, url, validate) {
     try { body = JSON.parse(text); }
     catch { throw new Error(`${name}: expected JSON; got ${text.slice(0,160)}`); }
     validate(body);
-    const cors = r.headers.get('access-control-allow-origin') || '(not advertised)';
-    console.log(`PASS ${name} ${Date.now()-started}ms CORS=${cors}`);
+    const cors = r.headers.get('access-control-allow-origin');
+    if (requireCors && !(cors === '*' || cors === BROWSER_ORIGIN)) {
+      throw new Error(`${name}: server answered but did not authorize browser origin ${BROWSER_ORIGIN}; ACAO=${cors || '(missing)'}`);
+    }
+    console.log(`PASS ${name} ${Date.now()-started}ms CORS=${cors || '(not advertised)'}`);
     return body;
   } finally {
     clearTimeout(timer);
@@ -127,7 +132,7 @@ for (const x of settled) {
   }
 }
 if (failed) {
-  console.error(`${failed}/${settled.length} public-provider smoke tests failed`);
+  console.error(`${failed}/${settled.length} browser-provider smoke tests failed`);
   process.exit(1);
 }
-console.log(`PASS all ${settled.length} public-provider smoke tests`);
+console.log(`PASS all ${settled.length} browser-provider smoke tests`);

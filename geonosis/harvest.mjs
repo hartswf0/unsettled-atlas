@@ -2,8 +2,9 @@
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { ADAPTERS, DEFAULT_SOURCES } from './adapters.mjs';
+import { ADAPTERS, defaultSourcesFor } from './adapters-all.mjs';
 import { createAddressor } from './icosa-address.mjs';
+import { addressBasis } from './geometry.mjs';
 import { inferStatements } from './infer.mjs';
 import { validateSignal } from './schema.mjs';
 
@@ -44,8 +45,11 @@ function addressSignals(signals, addressor, depth) {
   for (const s of signals) {
     const errors = validateSignal(s);
     if (errors.length) { rejected.push({ signal: s.id || null, errors }); continue; }
-    if (s.geometry?.type === 'Point') {
-      const [lon, lat] = s.geometry.coordinates;
+
+    const basis = addressBasis(s.geometry);
+    if (basis) {
+      s.atlas_address_basis = basis;
+      const [lon, lat] = basis.representative_point;
       s.atlas_address = addressor.addressPoint(lon, lat, depth);
     }
     good.push(s);
@@ -74,7 +78,8 @@ async function run() {
   if (lat < -90 || lat > 90 || lon < -180 || lon > 180) throw new Error('lat/lon out of range');
   if (radiusKm <= 0) throw new Error('--radius-km must be positive');
 
-  const selected = String(a.sources || DEFAULT_SOURCES.join(','))
+  const ctx = { lat, lon, radiusKm, depth, sinceDays, limit };
+  const selected = String(a.sources || defaultSourcesFor(ctx).join(','))
     .split(',').map(s => s.trim()).filter(Boolean);
   for (const id of selected) if (!ADAPTERS[id]) throw new Error(`no executable adapter: ${id}`);
 
@@ -82,7 +87,6 @@ async function run() {
   const outDir = resolve(a.out || join(HERE, 'out', runId));
   mkdirSync(join(outDir, 'cells'), { recursive: true });
 
-  const ctx = { lat, lon, radiusKm, depth, sinceDays, limit };
   const sourceRuns = [];
   const batches = await Promise.all(selected.map(async id => {
     const started = new Date().toISOString();
@@ -111,8 +115,10 @@ async function run() {
     });
   }
 
+  const unaddressed = signals.filter(s => !s.atlas_address);
+  const approximate = signals.filter(s => s.atlas_address_basis && !s.atlas_address_basis.exact);
   const manifest = {
-    schema: 'geonosis-harvest-v0',
+    schema: 'geonosis-harvest-v0.2',
     run_id: runId,
     created_at: new Date().toISOString(),
     query: ctx,
@@ -121,14 +127,18 @@ async function run() {
       signals: signals.length,
       statements: statements.length,
       addressed_cells: cells.size,
+      exact_addressed_signals: signals.filter(s => s.atlas_address_basis?.exact).length,
+      representative_addressed_signals: approximate.length,
+      unaddressed_signals: unaddressed.length,
       rejected: rejected.length
     },
-    epistemic_note: 'A source result is not an Atlas fact merely because it was retrieved. See geonosis/SYSTEM.md.'
+    epistemic_note: 'A source result is not an Atlas fact merely because it was retrieved. Representative addresses index preserved non-point geometries; they do not claim full containment. Administrative scopes are not pinned to query points. See geonosis/SYSTEM.md.'
   };
 
   writeJSON(join(outDir, 'manifest.json'), manifest);
   writeJSON(join(outDir, 'signals.json'), signals);
   writeJSON(join(outDir, 'statements.json'), statements);
+  if (unaddressed.length) writeJSON(join(outDir, 'unaddressed.json'), unaddressed);
   if (rejected.length) writeJSON(join(outDir, 'rejected.json'), rejected);
 
   process.stdout.write(JSON.stringify({ out: outDir, ...manifest.counts, sources: manifest.sources }, null, 2) + '\n');

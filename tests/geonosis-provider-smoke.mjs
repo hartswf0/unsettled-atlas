@@ -90,6 +90,14 @@ const tests = [
     j => assert(j && Array.isArray(j.features), 'NFHL flood hazard response missing features[]')
   ),
   fetchChecked(
+    'EPA ECHO facilities',
+    arcQuery(
+      'https://echogeo.epa.gov/arcgis/rest/services/ECHO/Facilities/MapServer/0/query',
+      'OBJECTID,REGISTRY_ID,FAC_NAME,FAC_LAT,FAC_LONG,FAC_DERIVED_HUC,FAC_INSPECTION_COUNT,FAC_CURR_COMPLIANCE_STATUS,FAC_QTRS_IN_NC'
+    ),
+    j => assert(j && Array.isArray(j.features), 'EPA ECHO response missing features[]')
+  ),
+  fetchChecked(
     'GBIF occurrence search',
     'https://api.gbif.org/v1/occurrence/search?' + new URLSearchParams({
       limit: '5',

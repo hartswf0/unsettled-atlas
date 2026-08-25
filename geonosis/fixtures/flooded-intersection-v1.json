@@ -1,0 +1,95 @@
+{
+  "schema": "geonosis-v1-fixture",
+  "fixture": true,
+  "name": "Flooded Intersection A",
+  "warning": "Synthetic contract fixture. These values do not describe a real place or event.",
+  "scope": "FIXTURE_INTERSECTION_A",
+  "forms": [
+    {
+      "key": "water_depth_field",
+      "form": "FIELD",
+      "subject_id": "fixture:intersection-a:surface-water"
+    },
+    {
+      "key": "road_status_relation",
+      "form": "RELATION",
+      "subject_id": "fixture:intersection-a:road-status"
+    }
+  ],
+  "events": [
+    {
+      "key": "material_flood",
+      "regime": "MATERIAL",
+      "form_key": "water_depth_field",
+      "source": "FIXTURE_SENSOR",
+      "epistemic": "OBSERVED",
+      "predicate": "surface_water.depth_m",
+      "value": 0.28,
+      "unit": "m",
+      "apparatus": {
+        "id": "FIXTURE_DEPTH_SENSOR",
+        "classification_method": "synthetic depth reading",
+        "failure_modes": ["sensor error", "local depth not representative"]
+      },
+      "time": {
+        "occurred_at": "2026-01-01T08:10:00Z",
+        "became_detectable_at": "2026-01-01T08:10:00Z",
+        "observed_at": "2026-01-01T08:10:00Z"
+      }
+    },
+    {
+      "key": "map_open",
+      "regime": "REPRESENTATIONAL",
+      "form_key": "road_status_relation",
+      "source": "FIXTURE_MAP",
+      "epistemic": "REPORTED",
+      "predicate": "road.status",
+      "value": "OPEN",
+      "apparatus": {
+        "id": "FIXTURE_MAP_DATABASE",
+        "classification_method": "synthetic road-state database",
+        "failure_modes": ["stale update", "missing closure"]
+      },
+      "time": {
+        "observed_at": "2026-01-01T08:12:00Z",
+        "published_at": "2026-01-01T08:12:00Z"
+      }
+    },
+    {
+      "key": "institution_closure",
+      "regime": "INSTITUTIONAL",
+      "form_key": "road_status_relation",
+      "source": "FIXTURE_ROAD_AUTHORITY",
+      "epistemic": "DECLARED",
+      "predicate": "road.status",
+      "value": "CLOSED",
+      "apparatus": {
+        "id": "FIXTURE_ROAD_AUTHORITY",
+        "classification_method": "synthetic closure declaration",
+        "failure_modes": ["recognition lag", "communication lag"]
+      },
+      "time": {
+        "recognized_at": "2026-01-01T08:27:00Z",
+        "published_at": "2026-01-01T08:27:00Z"
+      }
+    },
+    {
+      "key": "map_closed",
+      "regime": "REPRESENTATIONAL",
+      "form_key": "road_status_relation",
+      "source": "FIXTURE_MAP",
+      "epistemic": "REPORTED",
+      "predicate": "road.status",
+      "value": "CLOSED",
+      "apparatus": {
+        "id": "FIXTURE_MAP_DATABASE",
+        "classification_method": "synthetic road-state database",
+        "failure_modes": ["stale update", "missing closure"]
+      },
+      "time": {
+        "observed_at": "2026-01-01T09:02:00Z",
+        "published_at": "2026-01-01T09:02:00Z"
+      }
+    }
+  ]
+}

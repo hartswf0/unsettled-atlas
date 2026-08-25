@@ -144,3 +144,17 @@ The interface must never collapse the first six into the seventh.
 ## Validation boundary
 
 The original observation bus passed a local mocked execution of normalization -> 13-prefix indexing -> source replacement -> per-cell inventory. The later browser adapters have been reviewed against the current ICOSA closure and committed through GitHub, but this execution environment cannot resolve `github.com` for a fresh branch clone, so a full browser/runtime pass of the expanded branch remains to be run in the deployed GitHub Pages context before merge.
+
+After deployment, the minimum smoke test is:
+
+```js
+ICOSA_LIVE.sourceState()
+```
+
+Expect `usgs-earthquakes` and `osm-datacenters` to leave `idle/loading`, then select a regional triangle and expect `adsb-lol-aircraft` to acquire a coverage cell. Configure a FIRMS key, reopen that triangle, and expect `nasa-firms.meta.coverageCell` to equal the selected cell slug. Open a smaller triangle twice at least 15 seconds apart and inspect an aircraft with:
+
+```js
+ICOSA_LIVE.aircraftHistory('icao24')
+```
+
+A valid moving contact should accumulate trail points and eventually `from -> to` cell transitions at trace depth 9.

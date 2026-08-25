@@ -11,6 +11,7 @@ on:
   push:
     branches:
       - feature/icosa-live-data
+      - feature/geonosis-semiosis-lens
     paths:
       - 'icosa-live-*.js'
       - 'geonosis-*.js'
@@ -54,6 +55,7 @@ jobs:
             geonosis-live-context.js
             geonosis-source-controls.js
             geonosis-inspector.js
+            geonosis-semantics.js
           )
           for f in "${files[@]}"; do
             echo "node --check $f"
@@ -80,7 +82,8 @@ jobs:
             icosa-live-context.js \
             geonosis-live-context.js \
             geonosis-source-controls.js \
-            geonosis-inspector.js
+            geonosis-inspector.js \
+            geonosis-semantics.js
           do
             grep -F "fetch('$f'" icosa-syntegrity-live.html >/dev/null || {
               echo "Harness does not load $f" >&2
@@ -98,6 +101,21 @@ jobs:
           grep -F 'geoInspectRequestAttention' geonosis-inspector.js >/dev/null
           grep -F 'SOURCE STATE · ' geonosis-inspector.js >/dev/null
           grep -F 'SIGNALS HERE · ' geonosis-inspector.js >/dev/null
+
+      - name: Verify Geonosis semiosis remains consequential and emplaced
+        shell: bash
+        run: |
+          set -euo pipefail
+          grep -F 'DIFFERENCE × EMPLACEMENT × RESPONSIVE SYSTEM → CONSEQUENCE' geonosis-semantics.js >/dev/null
+          grep -F "readers:['primary','person','ecology','infrastructure','institution','model']" geonosis-semantics.js >/dev/null
+          grep -F "status:geoSemAdmitted(op)?'CANDIDATE_GEOSIGN':'OBSERVATION_ONLY'" geonosis-semantics.js >/dev/null
+          grep -F 'WHERE · AT' geonosis-semantics.js >/dev/null
+          grep -F 'WHERE · COVERAGE' geonosis-semantics.js >/dev/null
+          grep -F 'RELATION PATH' geonosis-semantics.js >/dev/null
+          grep -F 'COMPOSES WITH · ' geonosis-semantics.js >/dev/null
+          grep -F 'MARK = OPERATION / SOURCE' geonosis-semantics.js >/dev/null
+          grep -F 'geonosis_interpretation' geonosis-semantics.js >/dev/null
+          grep -F 'OBSERVATION_ONLY means no consequential relation is licensed' geonosis-semantics.js >/dev/null
 
       - name: Verify aircraft transport cannot silently use non-CORS upstream
         shell: bash

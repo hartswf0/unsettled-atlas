@@ -1,0 +1,97 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>GEONOSIS V1 · correspondence test</title>
+<style>
+:root{--paper:#f4f0e6;--ink:#111513;--line:#9b978e;--soft:#e6e0d3;--ok:#dfe9df;--warn:#efe1c7;--bad:#ead4cf}
+*{box-sizing:border-box}html,body{margin:0;width:100%;min-height:100%;background:var(--paper);color:var(--ink);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{padding:14px}.wrap{max-width:1180px;margin:0 auto}.top{display:flex;gap:12px;align-items:flex-start;justify-content:space-between;border-bottom:2px solid var(--ink);padding-bottom:10px;margin-bottom:12px}.k{font-size:10px;letter-spacing:.18em;font-weight:800}.title{font:800 clamp(20px,4vw,38px)/1.02 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:4px 0}.sub{font-size:11px;max-width:760px;line-height:1.45}.status{border:1px solid var(--ink);padding:7px 9px;font-size:10px;white-space:nowrap}.controls{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:10px}.ctrl{border:1px solid var(--ink);padding:8px;background:rgba(255,255,255,.2)}label{display:block;font-size:9px;font-weight:800;letter-spacing:.1em;margin-bottom:5px}input{width:100%;background:transparent;border:0;border-bottom:1px solid var(--ink);font:800 16px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;color:var(--ink);padding:2px 0;outline:none}.regimes{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}.regime{border:1px solid var(--ink);min-height:180px;padding:9px}.regime h2{margin:0 0 9px;font-size:11px;letter-spacing:.12em}.row{border-top:1px solid var(--line);padding:7px 0}.row:first-of-type{border-top:0}.label{font-size:8px;letter-spacing:.1em;font-weight:800}.value{font-size:15px;font-weight:800;margin-top:3px;overflow-wrap:anywhere}.meta{font-size:9px;line-height:1.45;margin-top:4px;opacity:.75}.results{margin-top:10px;border:2px solid var(--ink)}.result-head{padding:8px 9px;border-bottom:1px solid var(--ink);display:flex;justify-content:space-between;gap:8px;align-items:center}.result-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr))}.result{padding:10px;border-right:1px solid var(--ink);min-height:130px}.result:last-child{border-right:0}.state{display:inline-block;border:1px solid var(--ink);padding:3px 5px;font-size:10px;font-weight:900;margin:5px 0 7px}.MATCH{background:var(--ok)}.MISMATCH,.CONTRADICTION{background:var(--bad)}.LAG{background:var(--warn)}.UNKNOWN{background:var(--soft)}.explain{font-size:10px;line-height:1.45}.trace{margin-top:10px;border:1px solid var(--ink);padding:9px}.trace-line{display:grid;grid-template-columns:96px 1fr;gap:8px;padding:5px 0;border-top:1px solid var(--line);font-size:10px}.trace-line:first-child{border-top:0}.warning{margin-top:10px;border:1px dashed var(--ink);padding:8px;font-size:9px;line-height:1.4}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}button{background:var(--ink);color:var(--paper);border:1px solid var(--ink);padding:8px 11px;font:800 10px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.08em}button.alt{background:transparent;color:var(--ink)}
+@media(max-width:760px){body{padding:8px}.top{display:block}.status{display:inline-block;margin-top:8px}.controls,.regimes,.result-grid{grid-template-columns:1fr 1fr}.result:nth-child(2){border-right:0}.result:nth-child(-n+2){border-bottom:1px solid var(--ink)}}
+@media(max-width:470px){.controls,.regimes,.result-grid{grid-template-columns:1fr}.result{border-right:0;border-bottom:1px solid var(--ink)}.result:last-child{border-bottom:0}}
+</style>
+<div class="wrap">
+  <div class="top">
+    <div><div class="k">UNSETTLED ATLAS · GEONOSIS V1</div><div class="title">CORRESPONDENCE TEST</div><div class="sub">One synthetic flooded intersection. Four geographic regimes. Change the world values below and watch declared cross-regime expectations resolve as MATCH, MISMATCH, or LAG.</div></div>
+    <div class="status" id="fixtureState">LOADING FIXTURE</div>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl"><label>MATERIAL · WATER DEPTH (m)</label><input id="depth" type="number" min="0" step="0.01" value="0.28"></div>
+    <div class="ctrl"><label>AFFORDANCE · CAR LIMIT (m)</label><input id="limit" type="number" min="0" step="0.01" value="0.15"></div>
+    <div class="ctrl"><label>INSTITUTIONAL · CLOSURE MINUTES AFTER FLOOD</label><input id="closureLag" type="number" min="0" step="1" value="17"></div>
+    <div class="ctrl"><label>REPRESENTATIONAL · MAP UPDATE MINUTES AFTER CLOSURE</label><input id="mapLag" type="number" min="0" step="1" value="35"></div>
+  </div>
+
+  <div class="regimes">
+    <section class="regime"><h2>MATERIAL</h2><div class="row"><div class="label">OBSERVATION</div><div class="value" id="materialDepth">0.28 m</div><div class="meta">FIELD · surface water depth<br>OBSERVED · fixture sensor</div></div></section>
+    <section class="regime"><h2>AFFORDANCE</h2><div class="row"><div class="label">CAR INTERPRETANT</div><div class="value" id="carState">IMPASSABLE</div><div class="meta">Actor-relative possibility derived from water depth × vehicle limit. Not intrinsic to the road.</div></div></section>
+    <section class="regime"><h2>INSTITUTIONAL</h2><div class="row"><div class="label">ROAD AUTHORITY</div><div class="value">CLOSED</div><div class="meta" id="closureTime">Recognition at +17 min</div></div></section>
+    <section class="regime"><h2>REPRESENTATIONAL</h2><div class="row"><div class="label">MAP BEFORE UPDATE</div><div class="value">OPEN</div><div class="meta">Potentially stale representation</div></div><div class="row"><div class="label">MAP AFTER UPDATE</div><div class="value">CLOSED</div><div class="meta" id="mapTime">Published +35 min after closure</div></div></section>
+  </div>
+
+  <section class="results">
+    <div class="result-head"><div class="k">DECLARED CORRESPONDENCE RULES</div><div class="k" id="summary">—</div></div>
+    <div class="result-grid">
+      <div class="result"><div class="label">AFFORDANCE ↔ REPRESENTATION</div><div class="state" id="r1s">—</div><div class="explain" id="r1e"></div></div>
+      <div class="result"><div class="label">MATERIAL → INSTITUTION</div><div class="state" id="r2s">—</div><div class="explain" id="r2e"></div></div>
+      <div class="result"><div class="label">INSTITUTION → REPRESENTATION</div><div class="state" id="r3s">—</div><div class="explain" id="r3e"></div></div>
+      <div class="result"><div class="label">INSTITUTION ↔ UPDATED MAP</div><div class="state" id="r4s">—</div><div class="explain" id="r4e"></div></div>
+    </div>
+  </section>
+
+  <section class="trace"><div class="k">GEONOTIC EVENT TRACE</div><div id="trace"></div></section>
+  <div class="actions"><button id="reset">RESET FIXTURE</button><button class="alt" id="dry">MAKE ROAD DRY</button><button class="alt" id="fast">MAKE INSTITUTIONS FAST</button></div>
+  <div class="warning" id="warning">SYNTHETIC CONTRACT FIXTURE. These values describe no real place or event. The purpose is to test the V1 grammar and correspondence logic before applying it to live geographic evidence.</div>
+</div>
+<script>
+const $=id=>document.getElementById(id);
+let fixture=null;
+function state(el,s){el.textContent=s;el.className='state '+s;}
+function mins(n){return Number.isFinite(n)?n:0}
+function render(){
+  const depth=Number($('depth').value),limit=Number($('limit').value),closure=mins(Number($('closureLag').value)),mapLag=mins(Number($('mapLag').value));
+  const passable=depth<=limit;
+  $('materialDepth').textContent=depth.toFixed(2)+' m';
+  $('carState').textContent=passable?'PASSABLE':'IMPASSABLE';
+  $('closureTime').textContent='Recognition at +'+closure+' min';
+  $('mapTime').textContent='Published +'+mapLag+' min after closure';
+
+  const mapBefore='OPEN',affordance=passable?'OPEN':'CLOSED',institution='CLOSED',mapAfter='CLOSED';
+  const r1=affordance===mapBefore?'MATCH':'MISMATCH';
+  const r2=closure>10?'LAG':'MATCH';
+  const r3=mapLag>10?'LAG':'MATCH';
+  const r4=institution===mapAfter?'MATCH':'MISMATCH';
+  state($('r1s'),r1);state($('r2s'),r2);state($('r3s'),r3);state($('r4s'),r4);
+  $('r1e').textContent=r1==='MATCH'?'The map agrees with the car-relative traversability state.':'The map says OPEN while the actor-relative possibility field says '+(passable?'OPEN':'CLOSED')+'.';
+  $('r2e').textContent=r2==='LAG'?'Institutional recognition follows material evidence by '+closure+' minutes, beyond the declared 10-minute expectation.':'Institutional recognition occurs within the declared 10-minute expectation.';
+  $('r3e').textContent=r3==='LAG'?'The representation follows the institutional closure by '+mapLag+' minutes, beyond the declared 10-minute expectation.':'The representation updates within the declared 10-minute expectation.';
+  $('r4e').textContent=r4==='MATCH'?'The updated map and institutional state agree: CLOSED.':'The updated representation still conflicts with the institutional state.';
+  const states=[r1,r2,r3,r4],bad=states.filter(x=>x!=='MATCH').length;
+  $('summary').textContent=bad?bad+' DIFFERENCE'+(bad===1?'':'S')+' REQUIRE ATTENTION':'ALL DECLARED EXPECTATIONS MATCH';
+  const lines=[
+    ['FIELD',depth.toFixed(2)+' m surface water'],
+    ['DETECT','fixture sensor observes material difference'],
+    ['INTERPRET','CAR × '+depth.toFixed(2)+' m × '+limit.toFixed(2)+' m limit → '+(passable?'PASSABLE':'IMPASSABLE')],
+    ['COMPARE',r1+' · affordance ↔ map-before'],
+    ['RECOGNIZE',r2+' · road authority at +'+closure+' min'],
+    ['REPRESENT',r3+' · map update +'+mapLag+' min after closure'],
+    ['COMPARE',r4+' · institutional ↔ updated map'],
+    ['ACTION',passable?'CONTINUE':'REORIENT / SEEK ALTERNATE ROUTE']
+  ];
+  $('trace').innerHTML=lines.map(x=>'<div class="trace-line"><b>'+x[0]+'</b><span>'+x[1]+'</span></div>').join('');
+}
+['depth','limit','closureLag','mapLag'].forEach(id=>$(id).addEventListener('input',render));
+$('reset').onclick=()=>{$('depth').value=.28;$('limit').value=.15;$('closureLag').value=17;$('mapLag').value=35;render()};
+$('dry').onclick=()=>{$('depth').value=.04;render()};
+$('fast').onclick=()=>{$('closureLag').value=5;$('mapLag').value=4;render()};
+fetch('geonosis/fixtures/flooded-intersection-v1.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw new Error(r.status);return r.json()}).then(j=>{
+  fixture=j;$('fixtureState').textContent='FIXTURE LOADED · '+j.name;
+  const m=(j.events||[]).find(x=>x.key==='material_flood');if(m&&Number.isFinite(Number(m.value)))$('depth').value=Number(m.value);
+  const c=(j.events||[]).find(x=>x.key==='institution_closure'),u=(j.events||[]).find(x=>x.key==='map_closed');
+  const t0=Date.parse(m?.time?.observed_at||''),tc=Date.parse(c?.time?.recognized_at||''),tu=Date.parse(u?.time?.published_at||'');
+  if(Number.isFinite(t0)&&Number.isFinite(tc))$('closureLag').value=Math.round((tc-t0)/60000);
+  if(Number.isFinite(tc)&&Number.isFinite(tu))$('mapLag').value=Math.round((tu-tc)/60000);
+  $('warning').textContent=j.warning+' This page loads the merged fixture directly from geonosis/fixtures/flooded-intersection-v1.json.';render();
+}).catch(e=>{$('fixtureState').textContent='FIXTURE LOAD FAILED · '+e;render()});
+render();
+</script>

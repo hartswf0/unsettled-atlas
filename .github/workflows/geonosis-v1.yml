@@ -1,0 +1,36 @@
+name: Geonosis v1 contract
+
+on:
+  push:
+    branches:
+      - geonosis-v1-architecture
+      - main
+    paths:
+      - 'geonosis/v1-*.mjs'
+      - 'geonosis/correspondence-engine.mjs'
+      - 'geonosis/fixtures/**'
+      - 'package.json'
+      - '.github/workflows/geonosis-v1.yml'
+  pull_request:
+    paths:
+      - 'geonosis/v1-*.mjs'
+      - 'geonosis/correspondence-engine.mjs'
+      - 'geonosis/fixtures/**'
+      - 'package.json'
+      - '.github/workflows/geonosis-v1.yml'
+
+jobs:
+  contract:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Existing Geonosis contract remains green
+        run: npm run geonosis:test
+      - name: Geonosis v1 ontology and correspondence contract
+        run: npm run geonosis:v1-test
+      - name: Event trace is executable JSON
+        run: npm run geonosis:v1-trace > /tmp/geonosis-v1-trace.json

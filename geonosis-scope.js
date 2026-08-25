@@ -38,9 +38,9 @@ function geoScopeRequestSource(id,selected){
     if(s&&typeof geoStopSource==='function')geoStopSource(id,'out_of_scope','attention sample is outside NYC 311 jurisdiction');
     return;
   }
-  var slug=cellSlug(c),old=GEO_TARGETS[id],changed=!old||old.slug!==slug;
+  var slug=cellSlug(c),old=GEO_TARGETS[id],changed=!old||old.slug!==slug,coverageMismatch=!s||!s.meta||s.meta.coverageCell!==slug;
   GEO_TARGETS[id]={cell:c,slug:slug,mode:'attention_descendant',selectedCell:cellSlug(selected),requestedAt:Date.now()};
-  if(s&&(changed||!s.lastUpdate||s.state==='idle'||s.state==='error'||s.state==='out_of_scope'))pollLiveSource(id);
+  if(s&&(changed||coverageMismatch||!s.lastUpdate||s.state==='idle'||s.state==='error'||s.state==='out_of_scope'))pollLiveSource(id);
 }
 function geoScopeRequestAll(selected){
   selected=selected||geoScopeSelectedCell();if(!selected)return;
@@ -51,6 +51,7 @@ function geoScopeRequestAll(selected){
   if(typeof requestAircraft==='function'&&typeof AIR_MAX_CELL_KM!=='undefined'){
     try{requestAircraft(geoScopeCellFor(selected,AIR_MAX_CELL_KM));}catch(e){}
   }
+  if(typeof liveRefreshOpenPanel==='function')liveRefreshOpenPanel();
   geoScopeUpdatePlate();
 }
 
@@ -87,12 +88,20 @@ function geoScopeRequestKey(selected){
   if(typeof AIR_MAX_CELL_KM!=='undefined'){var a=geoScopeCellFor(selected,AIR_MAX_CELL_KM);parts.push('air:'+(a?cellSlug(a):'-'));}
   return parts.join('|');
 }
+function geoScopeNeedsRefresh(){
+  if(typeof GEO_TARGETS==='undefined')return false;
+  var ids=Object.keys(GEO_TARGETS);for(var i=0;i<ids.length;i++){
+    var t=GEO_TARGETS[ids[i]],s=LIVE.sources[ids[i]];if(!t||!t.slug||!s||s.state==='loading'||s.state==='unconfigured'||s.state==='out_of_scope'||s.state==='error')continue;
+    if(!s.meta||s.meta.coverageCell!==t.slug)return true;
+  }
+  return false;
+}
 geoInspectTick=function(){
   if(!GEO_INSPECT.active)return;
   var selected=geoScopeSelectedCell()||focusCell();if(!selected)return;
   var slug=cellSlug(selected);if(slug!==GEO_INSPECT.focusSlug){GEO_INSPECT.focusSlug=slug;GEO_INSPECT.focusSince=Date.now();GEO_INSPECT.requestedKey=null;geoScopeUpdatePlate();return;}
   if(Date.now()-GEO_INSPECT.focusSince<300)return;
-  var key=geoScopeRequestKey(selected);if(!key||key===GEO_INSPECT.requestedKey)return;
+  var key=geoScopeRequestKey(selected),needs=geoScopeNeedsRefresh();if(!key||(key===GEO_INSPECT.requestedKey&&!needs))return;
   GEO_INSPECT.requestedKey=key;geoScopeRequestAll(selected);
 };
 

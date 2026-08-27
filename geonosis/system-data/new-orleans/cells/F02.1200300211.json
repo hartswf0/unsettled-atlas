@@ -90,6 +90,36 @@
       "identity_basis": [
         "legacy-signal:ecology.occurrence"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:394827399",
+      "form_ids": [
+        "gform_c24979ada2570c7ed631"
+      ],
+      "atlas_addresses": [
+        "F02.1200300211"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-08-27T00:12:30.000Z",
+      "last_observed_at": "2026-08-27T00:12:30.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.123898735,
+          29.8492725638
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -167,6 +197,31 @@
         "source": "gbif-occurrences"
       },
       "id": "gform_2da99555a094716ba52e"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:394827399",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.123898735,
+          29.8492725638
+        ]
+      },
+      "atlas_address": "F02.1200300211",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_e6927caf9d4787da398c",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_c24979ada2570c7ed631"
     }
   ],
   "current": [
@@ -317,6 +372,49 @@
           "observer bias",
           "coordinate uncertainty",
           "taxonomic error",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:394827399",
+      "form_id": "gform_c24979ada2570c7ed631",
+      "atlas_address": "F02.1200300211",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.123898735,
+          29.8492725638
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Automeris io",
+        "common_name": "Io Moth",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": true,
+        "photos": 2
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-08-27T00:12:30.000Z",
+      "observation_id": "obs_8a4137149af326372cde",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
           "sampling absence"
         ]
       }

@@ -90,6 +90,36 @@
       "identity_basis": [
         "legacy-signal:ecology.occurrence"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:394827510",
+      "form_ids": [
+        "gform_a5db3f2dae1021fffc65"
+      ],
+      "atlas_addresses": [
+        "F02.1200300213"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-08-27T00:19:43.000Z",
+      "last_observed_at": "2026-08-27T00:19:43.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1180519028,
+          29.8375455702
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -167,6 +197,31 @@
         "source": "gbif-occurrences"
       },
       "id": "gform_fcdbaadd5c7d74cff90c"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:394827510",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1180519028,
+          29.8375455702
+        ]
+      },
+      "atlas_address": "F02.1200300213",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_faf8664cb823d673201e",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_a5db3f2dae1021fffc65"
     }
   ],
   "current": [
@@ -313,6 +368,49 @@
           "observer bias",
           "coordinate uncertainty",
           "taxonomic error",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:394827510",
+      "form_id": "gform_a5db3f2dae1021fffc65",
+      "atlas_address": "F02.1200300213",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.1180519028,
+          29.8375455702
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Anolis carolinensis",
+        "common_name": "Green Anole",
+        "iconic_taxon": "Reptilia",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": true,
+        "photos": 2
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-08-27T00:19:43.000Z",
+      "observation_id": "obs_3307065ada08d366bbf8",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
           "sampling absence"
         ]
       }

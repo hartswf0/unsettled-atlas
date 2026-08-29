@@ -212,6 +212,36 @@
       "identity_basis": [
         "legacy-signal:ecology.occurrence"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:395403322",
+      "form_ids": [
+        "gform_fb9b828eaa0d7673827e"
+      ],
+      "atlas_addresses": [
+        "F02.1331213102"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-08-28T13:10:07.000Z",
+      "last_observed_at": "2026-08-28T13:10:07.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3949640682,
+          33.6234212392
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -439,6 +469,31 @@
         "source": "fdic-locations"
       },
       "id": "gform_4af8dc652068660eb70c"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:395403322",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3949640682,
+          33.6234212392
+        ]
+      },
+      "atlas_address": "F02.1331213102",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_d0f33a151481cebf3284",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_fb9b828eaa0d7673827e"
     }
   ],
   "current": [
@@ -774,6 +829,49 @@
           "observer bias",
           "coordinate uncertainty",
           "taxonomic error",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:395403322",
+      "form_id": "gform_fb9b828eaa0d7673827e",
+      "atlas_address": "F02.1331213102",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3949640682,
+          33.6234212392
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Richardia",
+        "common_name": "Mexican clovers",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": true,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-08-28T13:10:07.000Z",
+      "observation_id": "obs_e9fc22858b43c73a9655",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
           "sampling absence"
         ]
       }

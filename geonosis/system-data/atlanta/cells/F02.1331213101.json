@@ -243,6 +243,36 @@
       "identity_basis": [
         "legacy-signal:money.branch_deposits"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:395660073",
+      "form_ids": [
+        "gform_758598b3ab38c81d798d"
+      ],
+      "atlas_addresses": [
+        "F02.1331213101"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-08-29T17:42:59.000Z",
+      "last_observed_at": "2026-08-29T17:42:59.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4653657475,
+          33.6020934976
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -520,6 +550,31 @@
         "source": "fdic-locations"
       },
       "id": "gform_d0459c3ff66db66611df"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:395660073",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4653657475,
+          33.6020934976
+        ]
+      },
+      "atlas_address": "F02.1331213101",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_bde19ae629d2b9ef4838",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_758598b3ab38c81d798d"
     }
   ],
   "current": [
@@ -896,6 +951,49 @@
         "failure_modes": [
           "annual reporting cadence",
           "deposit attribution limits"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:395660073",
+      "form_id": "gform_758598b3ab38c81d798d",
+      "atlas_address": "F02.1331213101",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.4653657475,
+          33.6020934976
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Coreopsis tinctoria",
+        "common_name": "plains coreopsis",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": true,
+        "photos": 2
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-08-29T17:42:59.000Z",
+      "observation_id": "obs_5f47d9820d663f187297",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
         ]
       }
     }

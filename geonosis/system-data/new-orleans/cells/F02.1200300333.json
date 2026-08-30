@@ -129,6 +129,36 @@
       "identity_basis": [
         "legacy-signal:ecology.occurrence"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:395571337",
+      "form_ids": [
+        "gform_b673659a032f9dcb365b"
+      ],
+      "atlas_addresses": [
+        "F02.1200300333"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-08-29T15:38:12.000Z",
+      "last_observed_at": "2026-08-29T15:38:12.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0070258661,
+          29.8395316465
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -256,6 +286,31 @@
         "source": "fdic-locations"
       },
       "id": "gform_54ff06b15f81aac21633"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:395571337",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0070258661,
+          29.8395316465
+        ]
+      },
+      "atlas_address": "F02.1200300333",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_e01aca6afde15cf98bd3",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_b673659a032f9dcb365b"
     }
   ],
   "current": [
@@ -444,6 +499,49 @@
           "observer bias",
           "coordinate uncertainty",
           "taxonomic error",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:395571337",
+      "form_id": "gform_b673659a032f9dcb365b",
+      "atlas_address": "F02.1200300333",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0070258661,
+          29.8395316465
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Pulchroboletus rubricitrinus",
+        "common_name": null,
+        "iconic_taxon": "Fungi",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": true,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-08-29T15:38:12.000Z",
+      "observation_id": "obs_7c3f46aecff1d415d816",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
           "sampling absence"
         ]
       }

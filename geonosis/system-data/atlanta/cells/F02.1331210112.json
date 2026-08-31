@@ -60,6 +60,36 @@
       "identity_basis": [
         "legacy-signal:environment.regulated_facility"
       ]
+    },
+    {
+      "id": "osm-notes:record:5490308",
+      "form_ids": [
+        "gform_894dfac0571d933289b0"
+      ],
+      "atlas_addresses": [
+        "F02.1331210112"
+      ],
+      "sources": [
+        "osm-notes"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "claim.map_note"
+      ],
+      "first_observed_at": "2026-08-31T14:52:10.000Z",
+      "last_observed_at": "2026-08-31T14:52:10.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2264485,
+          33.8690927
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:claim.map_note"
+      ]
     }
   ],
   "forms": [
@@ -112,6 +142,31 @@
         "source": "epa-echo"
       },
       "id": "gform_82b74a5748cd8f55a09f"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "osm-notes:record:5490308",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2264485,
+          33.8690927
+        ]
+      },
+      "atlas_address": "F02.1331210112",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:claim.map_note",
+      "provenance": {
+        "source_signal_id": "sig_910c8657eb6256809092",
+        "source": "osm-notes"
+      },
+      "id": "gform_894dfac0571d933289b0"
     }
   ],
   "current": [
@@ -216,8 +271,63 @@
           "regulatory coverage limits"
         ]
       }
+    },
+    {
+      "subject_id": "osm-notes:record:5490308",
+      "form_id": "gform_894dfac0571d933289b0",
+      "atlas_address": "F02.1331210112",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2264485,
+          33.8690927
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Road is closed at this point due to construction."
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "osm-notes",
+      "observed_at": "2026-08-31T14:52:10.000Z",
+      "observation_id": "obs_8f8fe0d7175bd12273e1",
+      "apparatus": {
+        "id": "OSM_NOTES",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "voluntary map issue report",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting opportunity",
+          "uneven mapper attention",
+          "stale unresolved notes"
+        ]
+      }
     }
   ],
   "events": [],
-  "possibilities": []
+  "possibilities": [
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "SERVICE",
+      "condition": "open map issue report",
+      "modality": "POSSIBLE",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": null,
+      "horizon": null,
+      "geographic_scope": "F02.1331210112",
+      "derived_from": [
+        "obs_8f8fe0d7175bd12273e1"
+      ],
+      "id": "poss_9a31f2b416ebb2c24156"
+    }
+  ]
 }

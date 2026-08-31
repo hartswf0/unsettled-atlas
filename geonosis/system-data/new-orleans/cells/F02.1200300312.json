@@ -180,6 +180,36 @@
       "identity_basis": [
         "legacy-signal:memory.national_register_resource"
       ]
+    },
+    {
+      "id": "epa-echo:record:110006807697",
+      "form_ids": [
+        "gform_1c09c716ada79163dca1"
+      ],
+      "atlas_addresses": [
+        "F02.1200300312"
+      ],
+      "sources": [
+        "epa-echo"
+      ],
+      "regimes": [
+        "INSTITUTIONAL"
+      ],
+      "predicates": [
+        "environment.regulated_facility"
+      ],
+      "first_observed_at": null,
+      "last_observed_at": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0417377816973,
+          29.8413178761095
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:environment.regulated_facility"
+      ]
     }
   ],
   "forms": [
@@ -332,6 +362,31 @@
         "source": "nps-national-register"
       },
       "id": "gform_4c7c5e2884f7f8742e0a"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "epa-echo:record:110006807697",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0417377816973,
+          29.8413178761095
+        ]
+      },
+      "atlas_address": "F02.1200300312",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:environment.regulated_facility",
+      "provenance": {
+        "source_signal_id": "sig_80a4b0314bfa37689c2d",
+        "source": "epa-echo"
+      },
+      "id": "gform_1c09c716ada79163dca1"
     }
   ],
   "current": [
@@ -629,6 +684,57 @@
           "designation bias",
           "sensitive geometry omission",
           "update latency"
+        ]
+      }
+    },
+    {
+      "subject_id": "epa-echo:record:110006807697",
+      "form_id": "gform_1c09c716ada79163dca1",
+      "atlas_address": "F02.1200300312",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0417377816973,
+          29.8413178761095
+        ]
+      },
+      "regime": "INSTITUTIONAL",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "FIRE MARK FIRE EQUIPMENT, INC.",
+        "address": "306 ENGINEERS ROAD, BELLE CHASSE, LA, 70037",
+        "county": "PLAQUEMINES",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "Significant Violation",
+        "significant_noncompliance": "Y",
+        "programs_with_significant_noncompliance": 1,
+        "quarters_noncompliance_3y": 7,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090301",
+        "last_inspection": "2007-02-16T00:00:00.000Z"
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "epa-echo",
+      "observed_at": null,
+      "observation_id": "obs_6d00ec0beb379248f96b",
+      "apparatus": {
+        "id": "EPA_ECHO",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "regulatory facility record",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting lag",
+          "facility identity mismatch",
+          "regulatory coverage limits"
         ]
       }
     }

@@ -429,6 +429,36 @@
       "identity_basis": [
         "legacy-signal:claim.map_note"
       ]
+    },
+    {
+      "id": "epa-echo:record:110024585723",
+      "form_ids": [
+        "gform_529605191a9a238dfd06"
+      ],
+      "atlas_addresses": [
+        "F02.1200300102"
+      ],
+      "sources": [
+        "epa-echo"
+      ],
+      "regimes": [
+        "INSTITUTIONAL"
+      ],
+      "predicates": [
+        "environment.regulated_facility"
+      ],
+      "first_observed_at": null,
+      "last_observed_at": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9341672213698,
+          29.9244438704561
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:environment.regulated_facility"
+      ]
     }
   ],
   "forms": [
@@ -881,6 +911,31 @@
         "source": "fdic-locations"
       },
       "id": "gform_186ffb72596b70b707db"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "epa-echo:record:110024585723",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9341672213698,
+          29.9244438704561
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:environment.regulated_facility",
+      "provenance": {
+        "source_signal_id": "sig_79761429d6cb02c97ecf",
+        "source": "epa-echo"
+      },
+      "id": "gform_529605191a9a238dfd06"
     }
   ],
   "current": [
@@ -1527,6 +1582,57 @@
           "reporting opportunity",
           "uneven mapper attention",
           "stale unresolved notes"
+        ]
+      }
+    },
+    {
+      "subject_id": "epa-echo:record:110024585723",
+      "form_id": "gform_529605191a9a238dfd06",
+      "atlas_address": "F02.1200300102",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9341672213698,
+          29.9244438704561
+        ]
+      },
+      "regime": "INSTITUTIONAL",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "TURN SERVICES, INC. - MERAUX FACILITY",
+        "address": "LEFT DESC. BANK OF MISSISSIPPI RIVER AT MILE 86.4, MERAUX, LA, 70075",
+        "county": "ST. BERNARD",
+        "major": null,
+        "active": null,
+        "compliance_status": null,
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090100",
+        "last_inspection": "2007-12-11T00:00:00.000Z"
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "epa-echo",
+      "observed_at": null,
+      "observation_id": "obs_13c0efdd2da8a747d91c",
+      "apparatus": {
+        "id": "EPA_ECHO",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "regulatory facility record",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting lag",
+          "facility identity mismatch",
+          "regulatory coverage limits"
         ]
       }
     }

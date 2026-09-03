@@ -30,6 +30,36 @@
       "identity_basis": [
         "legacy-signal:ecology.occurrence"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:396772066",
+      "form_ids": [
+        "gform_ec61c8e69c31246adcd9"
+      ],
+      "atlas_addresses": [
+        "F02.1200300112"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-09-02T18:02:00.000Z",
+      "last_observed_at": "2026-09-02T18:02:00.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0217476509,
+          30.041840434
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -57,6 +87,31 @@
         "source": "gbif-occurrences"
       },
       "id": "gform_53d8891d9e4e4d195b58"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:396772066",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0217476509,
+          30.041840434
+        ]
+      },
+      "atlas_address": "F02.1200300112",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_48ff64cfa03501d8dc7d",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_ec61c8e69c31246adcd9"
     }
   ],
   "current": [
@@ -105,6 +160,49 @@
           "observer bias",
           "coordinate uncertainty",
           "taxonomic error",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:396772066",
+      "form_id": "gform_ec61c8e69c31246adcd9",
+      "atlas_address": "F02.1200300112",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0217476509,
+          30.041840434
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Lanius ludovicianus",
+        "common_name": "Loggerhead Shrike",
+        "iconic_taxon": "Aves",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-09-02T18:02:00.000Z",
+      "observation_id": "obs_aec3a4ce65e742c45b4d",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
           "sampling absence"
         ]
       }

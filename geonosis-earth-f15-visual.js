@@ -1,107 +1,201 @@
-/* F15 EARTH · VISIBLE MATERIAL LENS
- * The architecture was real but perceptually buried. This layer makes the
- * working descendant legible at world scale without changing its evidence
- * semantics: selected ground stays the address; FIELD/GEOMETRY/VOLUME remain
- * distinct; native pages remain provenance only.
+/* F15 EARTH · MATERIAL TILE FIELD
+ * F15 is not the old atlas with an outline. The grid itself becomes a
+ * working-set display: unmaterialized tiles are visibly empty; bounded
+ * working cells acquire evidence-driven terrain/cover; returned line
+ * geometry is drawn as geometry. Nothing outside the loaded evidence region
+ * is painted as if it had been observed.
  */
-var F15_VISUAL_VERSION='f15-visible-material-lens-v1';
-var F15_VISUAL={lastPaint:0,lastLens:0};
+var F15_VISUAL_VERSION='f15-material-tile-field-v2';
+var F15_VISUAL={lastLegend:0};
 
-function f15VisualDominant(){
-  var h=F15.cover&&F15.cover.histogram;if(!h)return null;
-  var best=null,n=-1;Object.keys(h).forEach(function(k){if(h[k]>n){n=h[k];best=+k;}});
+function f15VisualActive(){
+  var c=(F15&&F15.selected)||f15Selected();
+  return !!(c&&typeof f15IsActive==='function'&&f15IsActive(c));
+}
+function f15VisualHexRgb(hex){
+  var s=String(hex||'').replace('#','');
+  if(s.length===3)s=s[0]+s[0]+s[1]+s[1]+s[2]+s[2];
+  var n=parseInt(s,16);if(!Number.isFinite(n))return [189,184,168];
+  return [(n>>16)&255,(n>>8)&255,n&255];
+}
+function f15VisualMix(hex,toward,amount){
+  var a=f15VisualHexRgb(hex),b=f15VisualHexRgb(toward),m=Math.max(0,Math.min(1,amount));
+  var r=Math.round(a[0]*(1-m)+b[0]*m),g=Math.round(a[1]*(1-m)+b[1]*m),bl=Math.round(a[2]*(1-m)+b[2]*m);
+  return 'rgb('+r+','+g+','+bl+')';
+}
+function f15VisualTriCentreLL(f,tri){
+  var w=[0,0,0];
+  for(var i=0;i<3;i++){w[0]+=tri[i][0]/3;w[1]+=tri[i][1]/3;w[2]+=tri[i][2]/3;}
+  return lonlat(worldOf(f,w));
+}
+function f15VisualInside(cell,ll){
+  if(!cell||!ll)return false;
+  try{return cellContains(cell,fromLonLat(ll[0],ll[1]));}catch(e){return false;}
+}
+function f15VisualNearest(samples,ll,key){
+  if(!Array.isArray(samples)||!samples.length)return null;
+  var best=null,bd=Infinity,latr=ll[1]*Math.PI/180;
+  for(var i=0;i<samples.length;i++){
+    var s=samples[i],lon=Number(s.lon),lat=Number(s.lat),v=Number(s[key]);
+    if(!Number.isFinite(lon)||!Number.isFinite(lat)||!Number.isFinite(v))continue;
+    var dx=lon-ll[0];if(dx>180)dx-=360;if(dx<-180)dx+=360;dx*=Math.cos(latr);
+    var dy=lat-ll[1],d=dx*dx+dy*dy;
+    if(d<bd){bd=d;best=s;}
+  }
   return best;
 }
-function f15VisualCoverText(){
-  var d=f15VisualDominant();
-  if(d!=null)return (F15_CLASSES[d]||('CLASS '+d));
-  return F15.cover&&F15.cover.state||'LOADING';
+function f15VisualMaterialAt(ll){
+  var out={state:'UNMATERIALIZED',fill:'rgba(250,248,241,.88)',stroke:'rgba(95,103,99,.23)'};
+  if(!f15VisualActive())return out;
+
+  var inTerrain=f15VisualInside(F15.terrainCell,ll);
+  var inCover=f15VisualInside(F15.coverCell,ll);
+  if(inTerrain){
+    out.state='TERRAIN';
+    out.fill='rgba(205,199,184,.82)';
+    out.stroke='rgba(18,21,20,.25)';
+    if(F15.terrain&&F15.terrain.state==='READY'){
+      var ts=f15VisualNearest(F15.terrain.samples,ll,'elevationM');
+      if(ts){
+        var span=Math.max(1,Number(F15.terrain.max)-Number(F15.terrain.min));
+        var t=(Number(ts.elevationM)-Number(F15.terrain.min))/span;
+        out.fill=f15VisualMix('#bdb8a8',t>.5?'#7f796d':'#f5f1e7',Math.abs(t-.5)*.82);
+      }
+    }else if(F15.terrain&&F15.terrain.state==='LOADING'){
+      out.fill='rgba(214,208,194,.78)';
+    }
+  }
+  if(inCover){
+    out.state='COVER';
+    if(F15.cover&&F15.cover.state==='READY'){
+      var cs=f15VisualNearest(F15.cover.samples,ll,'classCode');
+      if(cs&&F15_COLORS[cs.classCode]){
+        var base=F15_COLORS[cs.classCode];
+        if(F15.terrain&&F15.terrain.state==='READY'){
+          var ts2=f15VisualNearest(F15.terrain.samples,ll,'elevationM');
+          if(ts2){
+            var span2=Math.max(1,Number(F15.terrain.max)-Number(F15.terrain.min));
+            var t2=(Number(ts2.elevationM)-Number(F15.terrain.min))/span2;
+            base=f15VisualMix(base,t2>.5?'#121514':'#faf8f1',.10+Math.abs(t2-.5)*.18);
+          }
+        }
+        out.fill=base;out.stroke='rgba(18,21,20,.36)';
+      }
+    }else if(F15.cover&&F15.cover.state==='LOADING'){
+      out.fill='rgba(168,70,42,.11)';out.stroke='rgba(168,70,42,.42)';
+    }
+  }
+  return out;
 }
-function f15VisualLidarText(){
-  var x=F15.lidar||{};
-  if(x.state==='HEADER_READY')return 'COPC HEADER READY';
-  return x.state||'UNAVAILABLE';
+function f15VisualFillTri(scr,mat){
+  ctx.beginPath();ctx.moveTo(scr[0][0],scr[0][1]);ctx.lineTo(scr[1][0],scr[1][1]);ctx.lineTo(scr[2][0],scr[2][1]);ctx.closePath();
+  ctx.fillStyle=mat.fill;ctx.fill();
+  ctx.strokeStyle=mat.stroke;ctx.lineWidth=mat.state==='COVER'?.7:.55;ctx.stroke();
+  if(mat.state==='UNMATERIALIZED'){
+    var cx=(scr[0][0]+scr[1][0]+scr[2][0])/3,cy=(scr[0][1]+scr[1][1]+scr[2][1])/3;
+    ctx.fillStyle='rgba(95,103,99,.20)';ctx.fillRect(cx-.65,cy-.65,1.3,1.3);
+  }
 }
-function f15VisualNativeText(){
-  if(typeof F15_NATIVE==='undefined')return 'NATIVE · NOT LOADED';
-  return 'NATIVE · '+F15_NATIVE.state+' · '+f15NativeBytes(F15_NATIVE.bytes)+' · '+F15_NATIVE.pages.length+'/'+F15_NATIVE_LIMITS.MAX_PAGES+' PAGES';
+
+/* Replace the visual grammar of F15 tiles only. Other faces retain the base
+ * infinite grid exactly. The recursion remains bounded by the base budget.
+ */
+if(typeof drawGrid==='function'){
+  var f15VisualGridBase=drawGrid;
+  drawGrid=function(f,tri,depth,S,stopPx,budget){
+    if(f!==15||!f15VisualActive())return f15VisualGridBase(f,tri,depth,S,stopPx,budget);
+    var c=faceCorners[f],scr=[];
+    for(var k=0;k<3;k++){
+      var w=tri[k],p=[c[0][0]*w[0]+c[1][0]*w[1]+c[2][0]*w[2],c[0][1]*w[0]+c[1][1]*w[1]+c[2][1]*w[2],c[0][2]*w[0]+c[1][2]*w[1]+c[2][2]*w[2]];
+      scr.push(project(toView(p),S));
+    }
+    var minx=Math.min(scr[0][0],scr[1][0],scr[2][0]),maxx=Math.max(scr[0][0],scr[1][0],scr[2][0]);
+    var miny=Math.min(scr[0][1],scr[1][1],scr[2][1]),maxy=Math.max(scr[0][1],scr[1][1],scr[2][1]);
+    if(maxx<-20||minx>W+20||maxy<-20||miny>H+20)return;
+    var size=Math.max(maxx-minx,maxy-miny);
+    if(size>stopPx&&depth<MAX_DEPTH&&budget.n<3000){
+      budget.n++;
+      for(var i=0;i<4;i++)drawGrid(f,childTri(tri,i),depth+1,S,stopPx,budget);
+      return;
+    }
+    f15VisualFillTri(scr,f15VisualMaterialAt(f15VisualTriCentreLL(f,tri)));
+  };
 }
-function f15VisualEnsureLens(){
-  var stage=document.getElementById('stage');if(!stage)return null;
-  var old=document.getElementById('f15-earth-plate');if(old)old.style.display='none';
-  var el=document.getElementById('f15-material-lens');if(el)return el;
-  var style=document.createElement('style');
-  style.textContent='\
-#f15-material-lens{position:absolute;z-index:18;right:max(12px,env(safe-area-inset-right));top:72px;width:min(330px,40vw);background:rgba(241,238,228,.96);border:2px solid var(--ink);box-shadow:5px 5px 0 rgba(18,21,20,.12);padding:10px 11px;pointer-events:auto;cursor:pointer;font-size:8px;line-height:1.45;letter-spacing:.07em}\
-#f15-material-lens .f15vhead{display:flex;justify-content:space-between;align-items:baseline;border-bottom:1px solid var(--ink);padding-bottom:6px;margin-bottom:7px}\
-#f15-material-lens .f15vhead b{font-size:11px;letter-spacing:.13em}\
-#f15-material-lens .f15vaddr{font-size:7px;color:var(--muted);max-width:45%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}\
-#f15-material-lens .f15vfield{display:grid;grid-template-columns:64px 1fr;gap:7px;align-items:center;margin:5px 0}\
-#f15-material-lens .f15vfield strong{font-size:8px}\
-#f15-material-lens .f15vbar{height:6px;border:1px solid var(--ink);background:transparent;position:relative}\
-#f15-material-lens .f15vbar i{display:block;height:100%;background:var(--ink)}\
-#f15-material-lens .f15vtriangle{width:100%;height:56px;position:relative;margin:8px 0 6px;overflow:hidden;border-bottom:1px solid var(--ink)}\
-#f15-material-lens .f15vtriangle:before{content:"";position:absolute;left:50%;top:2px;width:78px;height:48px;transform:translateX(-50%);clip-path:polygon(50% 0,100% 100%,0 100%);background:var(--f15field,#bdb8a8);opacity:.7}\
-#f15-material-lens .f15vtriangle:after{content:"WORKING DESCENDANT";position:absolute;left:0;right:0;bottom:2px;text-align:center;font-size:7px;letter-spacing:.12em}\
-#f15-material-lens .f15vfoot{border-top:1px solid var(--ink);padding-top:6px;margin-top:6px;color:var(--muted)}\
-@media(max-width:620px){#f15-material-lens{top:auto;bottom:max(72px,env(safe-area-inset-bottom));right:10px;width:min(310px,72vw);font-size:7px;padding:8px 9px}#f15-material-lens .f15vtriangle{height:45px}}';
-  document.head.appendChild(style);
-  el=document.createElement('div');el.id='f15-material-lens';
-  el.onclick=function(){var c=F15.selected||f15Selected();if(c&&typeof openWhere==='function')openWhere(c);};
-  stage.appendChild(el);return el;
+
+/* F15's inherited political/gazetteer surface becomes a ghost. The material
+ * grid is the foreground. This is intentionally face-scoped.
+ */
+if(typeof drawFaceSurface==='function'){
+  var f15VisualSurfaceBase=drawFaceSurface;
+  drawFaceSurface=function(f,S){
+    if(f!==15||!f15VisualActive())return f15VisualSurfaceBase(f,S);
+    ctx.save();ctx.globalAlpha=.11;f15VisualSurfaceBase(f,S);ctx.restore();
+  };
 }
-function f15VisualUpdateLens(force){
-  var now=performance.now();if(!force&&now-F15_VISUAL.lastLens<180)return;F15_VISUAL.lastLens=now;
-  var el=f15VisualEnsureLens();if(!el)return;
-  var selected=F15.selected||f15Selected(),slug=selected?cellSlug(selected):'—';
-  var z=F15.terrain&&F15.terrain.state==='READY'?(Math.round(F15.terrain.min)+'–'+Math.round(F15.terrain.max)+' m'):(F15.terrain&&F15.terrain.state||'LOADING');
-  var cover=f15VisualCoverText(),p=F15.power&&F15.power.features?F15.power.features.length:0,w=F15.water&&F15.water.features?F15.water.features.length:0;
-  var d=f15VisualDominant(),fieldColor=d!=null?(F15_COLORS[d]||'#bdb8a8'):'#bdb8a8';
-  var requestN=F15.resources&&F15.resources.requests||0,featureN=F15.resources&&F15.resources.features||0;
-  var reqPct=Math.min(100,requestN*7),featPct=Math.min(100,featureN/1.2);
-  el.style.setProperty('--f15field',fieldColor);
-  el.innerHTML='<div class="f15vhead"><b>F15 / MATERIAL LENS</b><span class="f15vaddr">'+f15Esc(slug)+'</span></div>'+ 
-    '<div class="f15vtriangle"></div>'+ 
-    '<div class="f15vfield"><strong>TERRAIN</strong><span>'+f15Esc(z)+'</span></div>'+ 
-    '<div class="f15vfield"><strong>COVER</strong><span>'+f15Esc(cover)+' · 2021 FIELD</span></div>'+ 
-    '<div class="f15vfield"><strong>LINES</strong><span>'+p+' POWER · '+w+' WATER</span></div>'+ 
-    '<div class="f15vfield"><strong>LIDAR</strong><span>'+f15Esc(f15VisualLidarText())+'</span></div>'+ 
-    '<div class="f15vfield"><strong>REQUESTS</strong><span class="f15vbar"><i style="width:'+reqPct+'%"></i></span></div>'+ 
-    '<div class="f15vfield"><strong>GEOMETRY</strong><span class="f15vbar"><i style="width:'+featPct+'%"></i></span></div>'+ 
-    '<div class="f15vfoot">'+f15Esc(f15VisualNativeText())+'<br>TAP THIS LENS TO READ THE WORKING SET</div>';
+
+function f15VisualDrawGeometry(S){
+  if(!f15VisualActive())return;
+  function draw(features,stroke,width){
+    if(!Array.isArray(features)||!features.length)return;
+    ctx.save();ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';
+    for(var i=0;i<features.length;i++){
+      var g=features[i]&&features[i].coordinates;if(!Array.isArray(g)||g.length<2)continue;
+      var started=false;ctx.beginPath();
+      for(var j=0;j<g.length;j++){
+        var sp=f15Screen(g[j][0],g[j][1],S);if(!sp)continue;
+        if(!started){ctx.moveTo(sp[0],sp[1]);started=true;}else ctx.lineTo(sp[0],sp[1]);
+      }
+      if(started)ctx.stroke();
+    }
+    ctx.restore();
+  }
+  draw(F15.water&&F15.water.features,'rgba(57,127,157,.94)',Math.max(1.5,1.1+view.zoom*.16));
+  draw(F15.power&&F15.power.features,'rgba(168,70,42,.98)',Math.max(1.8,1.35+view.zoom*.18));
+}
+function f15VisualOutlineWorking(cell,S,stroke,dash){
+  if(!cell)return;var p=f15VisualCellPath(cell,S);if(!p)return;
+  ctx.save();ctx.strokeStyle=stroke;ctx.lineWidth=1.25;ctx.setLineDash(dash||[]);ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);ctx.lineTo(p[1][0],p[1][1]);ctx.lineTo(p[2][0],p[2][1]);ctx.closePath();ctx.stroke();ctx.restore();
 }
 function f15VisualCellPath(cell,S){
   if(!cell)return null;var cs=cellCorners(cell).map(lonlat),pts=[];
   for(var i=0;i<3;i++){var sp=f15Screen(cs[i][0],cs[i][1],S);if(!sp)return null;pts.push(sp);}return pts;
 }
-function f15VisualFillCell(cell,S,fill,alpha){
-  var p=f15VisualCellPath(cell,S);if(!p)return;ctx.save();ctx.globalAlpha=alpha;ctx.fillStyle=fill;ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);ctx.lineTo(p[1][0],p[1][1]);ctx.lineTo(p[2][0],p[2][1]);ctx.closePath();ctx.fill();ctx.restore();
+
+/* Keep the HUD nearly empty: one narrow state strip. The map carries the
+ * semantics; the strip only tells the reader what has materialized.
+ */
+function f15VisualEnsureLegend(){
+  var stage=document.getElementById('stage');if(!stage)return null;
+  var plate=document.getElementById('f15-earth-plate');if(plate)plate.style.display='none';
+  var old=document.getElementById('f15-material-lens');if(old)old.remove();
+  var el=document.getElementById('f15-material-strip');if(el)return el;
+  var style=document.createElement('style');style.textContent='\
+#f15-material-strip{position:absolute;z-index:18;left:max(12px,env(safe-area-inset-left));top:max(12px,env(safe-area-inset-top));background:rgba(250,248,241,.90);border:1px solid rgba(18,21,20,.5);padding:4px 6px;font:700 7px/1.35 ui-monospace,monospace;letter-spacing:.11em;pointer-events:none;white-space:nowrap}\
+#f15-material-strip i{font-style:normal;font-weight:400;color:var(--muted)}';document.head.appendChild(style);
+  el=document.createElement('div');el.id='f15-material-strip';stage.appendChild(el);return el;
 }
-function f15VisualOutline(cell,S,label){
-  var p=f15VisualCellPath(cell,S);if(!p)return;ctx.save();ctx.strokeStyle='#121514';ctx.lineWidth=2.4;ctx.setLineDash([]);ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);ctx.lineTo(p[1][0],p[1][1]);ctx.lineTo(p[2][0],p[2][1]);ctx.closePath();ctx.stroke();
-  var c=lonlat(cellCentre(cell)),sp=f15Screen(c[0],c[1],S);if(sp){ctx.fillStyle='#121514';ctx.beginPath();ctx.arc(sp[0],sp[1],6,0,Math.PI*2);ctx.fill();ctx.font='700 8px ui-monospace,monospace';ctx.textAlign='left';ctx.fillText(label,sp[0]+10,sp[1]+3);}ctx.restore();
+function f15VisualUpdateLegend(force){
+  if(!f15VisualActive())return;
+  var now=performance.now();if(!force&&now-F15_VISUAL.lastLegend<220)return;F15_VISUAL.lastLegend=now;
+  var el=f15VisualEnsureLegend();if(!el)return;
+  var cover=F15.cover&&F15.cover.state||'—',terrain=F15.terrain&&F15.terrain.state||'—';
+  var p=F15.power&&F15.power.features?F15.power.features.length:0,w=F15.water&&F15.water.features?F15.water.features.length:0;
+  el.innerHTML='F15 · MATERIAL TILES <i>TERRAIN '+terrain+' · COVER '+cover+' · '+p+' POWER · '+w+' WATER</i>';
 }
-function f15VisualAura(cell,S){
-  if(!cell)return;var c=lonlat(cellCentre(cell)),sp=f15Screen(c[0],c[1],S);if(!sp)return;var d=f15VisualDominant(),fill=d!=null?(F15_COLORS[d]||'#121514'):'#121514';ctx.save();ctx.globalAlpha=.9;ctx.strokeStyle=fill;ctx.lineWidth=2;ctx.beginPath();ctx.arc(sp[0],sp[1],17,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=.35;ctx.beginPath();ctx.arc(sp[0],sp[1],24,0,Math.PI*2);ctx.stroke();ctx.restore();
-}
+
 if(typeof drawGround==='function'){
-  var f15VisualDrawBase=drawGround;
+  var f15VisualDrawGroundBase=drawGround;
   drawGround=function(S){
-    var d=f15VisualDominant(),fill=d!=null?(F15_COLORS[d]||'#bdb8a8'):'#bdb8a8';
-    f15VisualFillCell(F15.coverCell,S,fill,.16);
-    f15VisualFillCell(F15.geomCell,S,'#665678',.07);
-    f15VisualDrawBase(S);
-    if(F15.selected)f15VisualOutline(F15.selected,S,'F15 ADDRESS');
-    f15VisualAura(F15.coverCell,S);
-    f15VisualUpdateLens(false);
+    f15VisualDrawGroundBase(S);
+    if(!f15VisualActive())return;
+    f15VisualDrawGeometry(S);
+    f15VisualOutlineWorking(F15.terrainCell,S,'rgba(18,21,20,.36)',[5,4]);
+    f15VisualOutlineWorking(F15.coverCell,S,'rgba(168,70,42,.76)',[]);
+    f15VisualUpdateLegend(false);
   };
 }
 if(typeof f15RefreshState==='function'){
   var f15VisualRefreshBase=f15RefreshState;
-  f15RefreshState=function(){var r=f15VisualRefreshBase();f15VisualUpdateLens(true);return r;};
+  f15RefreshState=function(){var r=f15VisualRefreshBase();f15VisualUpdateLegend(true);if(typeof wake==='function')wake();return r;};
 }
-if(typeof f15NativeRefresh==='function'){
-  var f15VisualNativeRefreshBase=f15NativeRefresh;
-  f15NativeRefresh=function(){f15VisualNativeRefreshBase();f15VisualUpdateLens(true);};
-}
-setTimeout(function(){f15VisualEnsureLens();f15VisualUpdateLens(true);if(typeof wake==='function')wake();},80);
+setTimeout(function(){if(f15VisualActive()){f15VisualEnsureLegend();f15VisualUpdateLegend(true);if(typeof wake==='function')wake();}},80);

@@ -1,0 +1,51 @@
+name: Integrate F15 material ground
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'geonosis-earth-f15-lite.js'
+      - 'scripts/integrate-f15.mjs'
+      - '.github/workflows/f15-integrate.yml'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: f15-material-ground
+  cancel-in-progress: false
+
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Generate same-instrument F15 runtime
+        run: |
+          set -euo pipefail
+          node scripts/integrate-f15.mjs
+          node --check /tmp/f15-integrated.js
+          grep -q 'F15 MATERIAL GROUND · SAME-INSTRUMENT EARTH WORKING SET · GENERATED V5' icosa-syntegrity.html
+          grep -q "cell&&Number(cell.f)===15" icosa-syntegrity.html
+          grep -q 'F15 / MATERIAL' icosa-syntegrity.html
+      - name: Commit generated atlas only when changed
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add icosa-syntegrity.html
+          if git diff --cached --quiet; then
+            echo 'F15 integration already current.'
+          else
+            git commit -m 'Integrate F15 material ground into ICOSA'
+            git push
+          fi

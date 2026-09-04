@@ -7,6 +7,8 @@ on:
       - main
     paths:
       - 'geonosis-earth-f15-lite.js'
+      - 'geonosis-earth-f15-visual.js'
+      - 'geonosis-earth-native-pages.js'
       - 'scripts/integrate-f15.mjs'
       - '.github/workflows/f15-integrate.yml'
 
@@ -35,7 +37,8 @@ jobs:
           node --check /tmp/f15-integrated.js
           grep -q 'F15 MATERIAL GROUND · SAME-INSTRUMENT EARTH WORKING SET · GENERATED V5' icosa-syntegrity.html
           grep -q "cell&&Number(cell.f)===15" icosa-syntegrity.html
-          grep -q 'F15 / MATERIAL' icosa-syntegrity.html
+          grep -q 'F15 · MATERIAL TILES' icosa-syntegrity.html
+          grep -q 'f15-material-tile-field-v2' icosa-syntegrity.html
       - name: Commit generated atlas only when changed
         shell: bash
         run: |

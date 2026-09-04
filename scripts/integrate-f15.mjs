@@ -4,6 +4,8 @@ import path from 'node:path';
 const root = process.cwd();
 const atlasPath = path.join(root, 'icosa-syntegrity.html');
 const sourcePath = path.join(root, 'geonosis-earth-f15-lite.js');
+const nativePath = path.join(root, 'geonosis-earth-native-pages.js');
+const visualPath = path.join(root, 'geonosis-earth-f15-visual.js');
 const markerStart = '/* F15 MATERIAL GROUND · SAME-INSTRUMENT EARTH WORKING SET · GENERATED V5 */';
 const markerEnd = '/* END F15 MATERIAL GROUND · GENERATED V5 */';
 
@@ -107,8 +109,14 @@ source = need(source,
   "setTimeout(function(){var c=f15Selected();if(f15IsActive(c)){f15EnsurePlate();f15UpdatePlate();f15Request(c,true);}else f15HidePlate();},120);",
   'startup gate');
 
-source += "\nwindow.ICOSA_F15_INTEGRATED='2026-09-04.integrated-v5';\n";
-fs.writeFileSync('/tmp/f15-integrated.js', source);
+const native = fs.readFileSync(nativePath, 'utf8');
+const visual = fs.readFileSync(visualPath, 'utf8');
+const bundle = source +
+  '\n/* --- F15 NATIVE STAC / COG / COPC PAGES --- */\n' + native +
+  '\n/* --- F15 MATERIAL TILE FIELD --- */\n' + visual +
+  "\nwindow.ICOSA_F15_INTEGRATED='2026-09-04.integrated-v5-material-tiles';\n";
+
+fs.writeFileSync('/tmp/f15-integrated.js', bundle);
 
 let atlas = fs.readFileSync(atlasPath, 'utf8');
 const oldStart = atlas.indexOf(markerStart);
@@ -119,7 +127,7 @@ if (oldStart >= 0) {
 }
 const close = atlas.lastIndexOf('})();');
 if (close < 0) throw new Error('main ICOSA closure not found');
-const block = `\n${markerStart}\n${source}\n${markerEnd}\n`;
+const block = `\n${markerStart}\n${bundle}\n${markerEnd}\n`;
 atlas = atlas.slice(0, close) + block + atlas.slice(close);
 fs.writeFileSync(atlasPath, atlas);
-console.log(`Integrated F15 material ground: ${source.length} bytes into ${path.basename(atlasPath)}.`);
+console.log(`Integrated F15 material ground: ${bundle.length} bytes into ${path.basename(atlasPath)}.`);

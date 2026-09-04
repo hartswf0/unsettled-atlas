@@ -11,7 +11,7 @@ body{display:grid;place-items:center}
 <script>
 (function () {
   'use strict';
-  var BUILD='2026-09-04.f15-earth-v1';
+  var BUILD='2026-09-04.f15-earth-v1p10';
   if(!location.hash)history.replaceState(null,'',location.pathname+location.search+'#F15');
   var files=[
     'icosa-syntegrity.html',
@@ -36,7 +36,8 @@ body{display:grid;place-items:center}
     'geonosis-scope.js',
     'geonosis-contributions.js',
     'geonosis-startup.js',
-    'geonosis-earth-working-set.js'
+    'geonosis-earth-working-set.js',
+    'geonosis-earth-power10.js'
   ];
   function load(name){
     return fetch(name+'?build='+encodeURIComponent(BUILD),{cache:'no-store'}).then(function(r){
@@ -119,7 +120,8 @@ body{display:grid;place-items:center}
       ['GEONOSIS SCOPE COHERENCE',src['geonosis-scope.js']],
       ['GEONOSIS ORDINARY CONTRIBUTIONS',src['geonosis-contributions.js']],
       ['GEONOSIS STARTUP + RUNTIME HEALTH',src['geonosis-startup.js']],
-      ['F15 EARTH WORKING SET',src['geonosis-earth-working-set.js']]
+      ['F15 EARTH WORKING SET',src['geonosis-earth-working-set.js']],
+      ['F15 EARTH POWER-OF-10 SAFETY',src['geonosis-earth-power10.js']]
     ];
     var injection='\n';
     blocks.forEach(function(b){injection+='\n/* --- '+b[0]+' --- */\n'+b[1]+'\n';});

@@ -7585,6 +7585,8 @@ if (!DATA) {
   setTimeout(start, 30);
 }
 
+
+
 /* F15 MATERIAL GROUND · SAME-INSTRUMENT EARTH WORKING SET · GENERATED V5 */
 /* F15 EARTH WORKING SET · LEAN
  * Standalone additive runtime injected inside the base ICOSA closure.
@@ -7976,7 +7978,265 @@ window.ICOSA_EARTH={
 
 setTimeout(function(){var c=f15Selected();if(f15IsActive(c)){f15EnsurePlate();f15UpdatePlate();f15Request(c,true);}else f15HidePlate();},120);
 
-window.ICOSA_F15_INTEGRATED='2026-09-04.integrated-v5';
+/* --- F15 NATIVE STAC / COG / COPC PAGES --- */
+/* F15 EARTH · NATIVE PAGE COMPILER · LEAN
+ * <selected ICOSA cell> is a virtual address. [materialize] admits only a
+ * bounded set of real STAC metadata and COG/COPC header byte ranges.
+ * [refine] may increase resolution; it may not silently change source,
+ * quantity, units, semantics, or categorical interpolation law.
+ */
+var F15_NATIVE_VERSION='f15-native-pages-v1';
+var F15_NATIVE_LIMITS=Object.freeze({MAX_PAGES:12,MAX_ITEMS:2,RANGE_BYTES:65536,TIMEOUT_MS:10000,TERRAIN_MAX_KM:800,COVER_MAX_KM:180,LIDAR_MAX_KM:12,EDGE_SAMPLES:8});
+var F15_NATIVE_LAYERS=Object.freeze([
+ Object.freeze({id:'terrain',collection:'3dep-seamless',asset:'data',storage:'COG',source:'USGS 3DEP via Microsoft Planetary Computer',quantity:'bare-earth elevation',units:'metres',semantics:'continuous',resampling:'bilinear',nativeM:10,maxKm:F15_NATIVE_LIMITS.TERRAIN_MAX_KM}),
+ Object.freeze({id:'cover',collection:'esa-worldcover',asset:'map',storage:'COG',source:'ESA WorldCover via Microsoft Planetary Computer',quantity:'land-cover class',units:'class code',semantics:'categorical',resampling:'nearest',nativeM:10,maxKm:F15_NATIVE_LIMITS.COVER_MAX_KM}),
+ Object.freeze({id:'lidar',collection:'3dep-lidar-copc',asset:'data',storage:'COPC',source:'USGS 3DEP LiDAR via Microsoft Planetary Computer',quantity:'classified lidar point cloud',units:'metres',semantics:'points',resampling:'none',nativeM:2,maxKm:F15_NATIVE_LIMITS.LIDAR_MAX_KM})
+]);
+var F15_NATIVE={slug:null,generation:0,abort:null,state:'IDLE',bytes:0,pages:[],layers:{},errors:[]};
+var F15_NATIVE_CATALOG={};
+var F15_NATIVE_STAC='https://planetarycomputer.microsoft.com/api/stac/v1';
+var F15_NATIVE_SIGN='https://planetarycomputer.microsoft.com/api/sas/v1/sign?href=';
+function f15NativeLayer(id){for(var i=0;i<F15_NATIVE_LAYERS.length;i++)if(F15_NATIVE_LAYERS[i].id===id)return F15_NATIVE_LAYERS[i];return null;}
+function f15NativeSafe(h){try{var u=new URL(h);u.search='';u.hash='';return u.toString();}catch(e){return String(h||'').split('?')[0];}}
+function f15NativeBytes(n){n=Math.max(0,Number(n)||0);return n>=1048576?(n/1048576).toFixed(2)+' MB':n>=1024?(n/1024).toFixed(1)+' KB':Math.round(n)+' B';}
+function f15NativeReset(cell){if(F15_NATIVE.abort)try{F15_NATIVE.abort.abort();}catch(e){}F15_NATIVE.abort=new AbortController();F15_NATIVE.slug=cellSlug(cell);F15_NATIVE.generation++;F15_NATIVE.state='LOADING';F15_NATIVE.bytes=0;F15_NATIVE.pages=[];F15_NATIVE.layers={};F15_NATIVE.errors=[];for(var i=0;i<F15_NATIVE_LAYERS.length;i++)F15_NATIVE.layers[F15_NATIVE_LAYERS[i].id]={state:'NOT QUERIED',items:[]};return {g:F15_NATIVE.generation,signal:F15_NATIVE.abort.signal};}
+function f15NativeSame(g){return g===F15_NATIVE.generation;}
+function f15NativeWireStart(url,why){var host='';try{host=new URL(url).host;}catch(e){host=String(url).split('/')[2]||'';}if(F15&&F15.resources)F15.resources.requests++;if(typeof netStart==='function')netStart(host,why);return host;}
+function f15NativeWireEnd(host,err){if(typeof netEnd==='function')netEnd(host,!!err);}
+function f15NativeFetch(url,opt,parent,why){var c=new AbortController(),timer=setTimeout(function(){c.abort();},F15_NATIVE_LIMITS.TIMEOUT_MS),unlink=function(){};if(parent){var fn=function(){c.abort();};if(parent.aborted)c.abort();else{parent.addEventListener('abort',fn,{once:true});unlink=function(){try{parent.removeEventListener('abort',fn);}catch(e){}};}}var o=Object.assign({},opt||{});o.signal=c.signal;o.credentials='omit';o.cache='no-store';var host=f15NativeWireStart(url,why||'native page');return fetch(url,o).then(function(r){if(!r.ok&&r.status!==206)throw new Error('HTTP '+r.status);f15NativeWireEnd(host,false);return r;},function(e){f15NativeWireEnd(host,true);throw e;}).finally(function(){clearTimeout(timer);unlink();});}
+function f15NativePage(L,kind,n,href,note){if(F15_NATIVE.pages.length>=F15_NATIVE_LIMITS.MAX_PAGES)return false;n=Math.max(0,Number(n)||0);F15_NATIVE.pages.push({layer:L.id,kind:kind,source:L.source,quantity:L.quantity,units:L.units,storage:L.storage,semantics:L.semantics,resampling:L.resampling,bytes:n,href:f15NativeSafe(href),note:String(note||'').slice(0,160)});F15_NATIVE.bytes+=n;return true;}
+function f15NativeGeometry(cell){var C=cellCorners(cell),ring=[],n=F15_NATIVE_LIMITS.EDGE_SAMPLES,min=180,max=-180;for(var e=0;e<3;e++)for(var k=0;k<n;k++){var p=lonlat(norm(lerp3(C[e],C[(e+1)%3],k/n)));ring.push([+p[0].toFixed(6),+p[1].toFixed(6)]);min=Math.min(min,p[0]);max=Math.max(max,p[0]);}ring.push(ring[0]);return {ok:max-min<=180,geometry:{type:'Polygon',coordinates:[ring]}};}
+function f15NativeCatalog(L,signal){if(F15_NATIVE_CATALOG[L.collection])return Promise.resolve({j:F15_NATIVE_CATALOG[L.collection],bytes:0,cached:true});var url=F15_NATIVE_STAC+'/collections/'+encodeURIComponent(L.collection);return f15NativeFetch(url,null,signal,'catalog '+L.id).then(function(r){return r.text();}).then(function(t){var j=JSON.parse(t);F15_NATIVE_CATALOG[L.collection]=j;return {j:j,bytes:t.length,cached:false};});}
+function f15NativeSearch(cell,L,signal){var g=f15NativeGeometry(cell);if(!g.ok)return Promise.reject(new Error('antimeridian cell: descend before spatial asset query'));var body={collections:[L.collection],limit:F15_NATIVE_LIMITS.MAX_ITEMS,intersects:g.geometry};return f15NativeFetch(F15_NATIVE_STAC+'/search',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)},signal,'STAC '+L.id+' · '+cellSlug(cell)).then(function(r){return r.text();}).then(function(t){return {j:JSON.parse(t),bytes:t.length};});}
+function f15NativeAsset(f,L){var a=f&&f.assets||{};if(a[L.asset]&&a[L.asset].href)return a[L.asset];var ks=Object.keys(a);for(var i=0;i<ks.length;i++){var x=a[ks[i]];if(x&&x.href&&(x.roles||[]).indexOf('data')>=0)return x;}return null;}
+function f15NativeSign(href,signal){return f15NativeFetch(F15_NATIVE_SIGN+encodeURIComponent(href),null,signal,'sign native asset').then(function(r){return r.json();}).then(function(j){if(!j||!j.href)throw new Error('signer returned no href');return j.href;});}
+function f15NativeHeader(url,L,signal){return f15NativeFetch(url,{headers:{Range:'bytes=0-'+(F15_NATIVE_LIMITS.RANGE_BYTES-1)}},signal,L.id+' '+L.storage+' page 0 · '+F15_NATIVE_LIMITS.RANGE_BYTES+' B').then(function(r){return r.arrayBuffer();}).then(function(buf){var a=new Uint8Array(buf),note;if(L.storage==='COG'){var tif=a.length>=4&&((a[0]===73&&a[1]===73)||(a[0]===77&&a[1]===77));note=tif?'TIFF header present · STAC COG contract':'TIFF header not confirmed';}else{var las=a.length>=4&&a[0]===76&&a[1]===65&&a[2]===83&&a[3]===70,copc=false;for(var i=0;i+3<a.length&&i<8192;i++)if(a[i]===99&&a[i+1]===111&&a[i+2]===112&&a[i+3]===99){copc=true;break;}note=las?(copc?'LASF + COPC marker present':'LASF present · COPC marker beyond first page or absent'):'LAS header not confirmed';}return {bytes:a.byteLength,note:note};});}
+function f15NativeRunLayer(cell,L,g,signal){var st=F15_NATIVE.layers[L.id],edge=cellEdgeKm(cell);if(edge>L.maxKm){st.state='CATALOG ONLY · DESCEND';return f15NativeCatalog(L,signal).then(function(x){if(!f15NativeSame(g))return;st.state=x.cached?'CATALOG READY · CACHE':'CATALOG READY';f15NativePage(L,'catalog',x.bytes,F15_NATIVE_STAC+'/collections/'+L.collection,'assets deferred above '+L.maxKm+' km edge');});}st.state='DISCOVERING';return f15NativeSearch(cell,L,signal).then(function(x){if(!f15NativeSame(g))return;var fs=(x.j&&x.j.features||[]).slice(0,F15_NATIVE_LIMITS.MAX_ITEMS);st.items=fs.map(function(f){return f.id;});st.state=fs.length?'ITEMS FOUND':'NO ITEM RETURNED';f15NativePage(L,'STAC item page',x.bytes,F15_NATIVE_STAC+'/search',fs.length+' bounded item(s)');if(!fs.length){if(L.id==='lidar')F15.lidar={type:'VOLUME',state:'NO ITEM RETURNED',source:L.source,reason:'bounded STAC query returned no item; this is not a claim of physical absence',coverage:cellSlug(cell)};return;}var a=f15NativeAsset(fs[0],L);if(!a)throw new Error('no data asset on first item');st.state='SIGNING';return f15NativeSign(a.href,signal).then(function(signed){if(!f15NativeSame(g))return;st.state='MATERIALIZING';return f15NativeHeader(signed,L,signal).then(function(pg){if(!f15NativeSame(g))return;st.state='HEADER READY';st.item=fs[0].id;st.asset=f15NativeSafe(a.href);f15NativePage(L,L.storage+' header page',pg.bytes,a.href,pg.note+' · '+fs[0].id);if(L.id==='lidar')F15.lidar={type:'VOLUME',state:'HEADER_READY',source:L.source,item:fs[0].id,asset:f15NativeSafe(a.href),headerBytes:pg.bytes,header:pg.note,coverage:cellSlug(cell),reason:'asset and first byte page verified; point records not decoded'};});});}).catch(function(e){if(!f15NativeSame(g)||f15AbortError(e))return;st.state='ERROR';st.error=String(e&&e.message||e);F15_NATIVE.errors.push(L.id+': '+st.error);if(L.id==='lidar')F15.lidar={type:'VOLUME',state:'UNAVAILABLE TO THIS REQUEST',source:L.source,error:st.error,reason:'request failure is not LiDAR absence',coverage:cellSlug(cell)};});}
+function f15NativeRequest(cell,force){cell=cell||f15Selected();if(!cell)return Promise.resolve(F15_NATIVE);var slug=cellSlug(cell);if(!force&&F15_NATIVE.slug===slug&&(F15_NATIVE.state==='READY'||F15_NATIVE.state==='PARTIAL'))return Promise.resolve(F15_NATIVE);var run=f15NativeReset(cell),g=run.g,signal=run.signal,jobs=[];for(var i=0;i<F15_NATIVE_LAYERS.length;i++)jobs.push(f15NativeRunLayer(cell,F15_NATIVE_LAYERS[i],g,signal));f15NativeRefresh();return Promise.all(jobs).then(function(){if(!f15NativeSame(g))return F15_NATIVE;var err=0;for(var i=0;i<F15_NATIVE_LAYERS.length;i++)if(F15_NATIVE.layers[F15_NATIVE_LAYERS[i].id].state==='ERROR')err++;F15_NATIVE.state=err===0?'READY':err<F15_NATIVE_LAYERS.length?'PARTIAL':'ERROR';f15NativeRefresh();return F15_NATIVE;});}
+function f15NativeContext(cell){var slug=cell?cellSlug(cell):null,same=slug&&slug===F15_NATIVE.slug;return {version:F15_NATIVE_VERSION,focus_address:slug,matches_loaded_selected:!!same,state:same?F15_NATIVE.state:'OTHER CELL',bytes:same?F15_NATIVE.bytes:0,law:'header pages prove bounded asset availability only; refinement may not change quantity identity',limits:F15_NATIVE_LIMITS,layers:F15_NATIVE_LAYERS.map(function(L){var x=same&&F15_NATIVE.layers[L.id];return {id:L.id,collection:L.collection,source:L.source,quantity:L.quantity,units:L.units,storage:L.storage,semantics:L.semantics,resampling:L.resampling,native_m:L.nativeM,max_edge_km:L.maxKm,state:x?x.state:'NOT LOADED',items:x&&x.items||[],item:x&&x.item||null,asset:x&&x.asset||null,error:x&&x.error||null};}),pages:same?F15_NATIVE.pages.slice(0,F15_NATIVE_LIMITS.MAX_PAGES):[],errors:same?F15_NATIVE.errors.slice(0,4):[]};}
+function f15NativeVerify(){var registry=true,categorical=true,pages=true,bounded=F15_NATIVE.pages.length<=F15_NATIVE_LIMITS.MAX_PAGES;for(var i=0;i<F15_NATIVE_LAYERS.length;i++){var L=F15_NATIVE_LAYERS[i];if(!L.id||!L.collection||!L.source||!L.quantity||!L.units||!L.storage||!L.semantics)registry=false;if(L.semantics==='categorical'&&L.resampling!=='nearest')categorical=false;}for(var j=0;j<F15_NATIVE.pages.length;j++){var p=F15_NATIVE.pages[j],S=f15NativeLayer(p.layer);if(!S||p.source!==S.source||p.quantity!==S.quantity||p.units!==S.units||p.storage!==S.storage||p.semantics!==S.semantics||p.bytes<0||/[?&](sig|se|sp|sv|skoid)=/i.test(p.href))pages=false;}return {registry:registry,categorical:categorical,pages:pages,bounded:bounded,pass:registry&&categorical&&pages&&bounded};}
+function f15NativeHTML(){var c=f15NativeContext(F15.selected||f15Selected()),v=f15NativeVerify(),rows=c.layers.map(function(L){return '<div class="row"><b>'+f15Esc(L.quantity.toUpperCase())+'</b><span>'+f15Esc(L.storage+' · '+L.state)+'</span></div><div class="row"><b style="font-weight:400">'+f15Esc(L.source)+'</b><span>'+f15Esc(L.semantics+' · '+L.resampling)+'</span></div>';}).join(''),pages=c.pages.map(function(p){return '<div class="row"><b>'+f15Esc(p.layer.toUpperCase()+' · '+p.kind)+'</b><span>'+f15Esc(f15NativeBytes(p.bytes)+' · '+p.note)+'</span></div>';}).join('');return '<details id="f15-native-pages"><summary>NATIVE PAGES · '+f15Esc(c.state)+' · '+f15NativeBytes(c.bytes)+'</summary><p><b>The address reaches the bytes.</b> STAC discovers the bounded asset set. Planetary Computer signs only the asset being read. Signed capabilities are scrubbed before anything enters context.</p>'+rows+(pages?'<p><b>PAGES PRESENT</b></p>'+pages:'')+(c.errors.length?'<p style="color:var(--signal)">'+f15Esc(c.errors.join(' · '))+'</p>':'')+'<div class="row"><b>VERIFY</b><span>'+(v.pass?'4/4 PASS':'FAILED')+' · identity · category law · capability scrub · bound</span></div><button class="go ghost" onclick="window.ICOSA_EARTH.native.request()">MATERIALIZE NATIVE PAGES</button></details>';}
+function f15NativeRefresh(){if(typeof f15UpdatePlate==='function')f15UpdatePlate();if(typeof wake==='function')wake();}
+
+/* Extend the lean Earth context without replacing its FIELD/GEOMETRY/VOLUME
+ * semantics. Also repair the lean-v2 compileContext wrapper so all four base
+ * arguments survive. */
+if(typeof f15Context==='function'){var f15NativeContextBase=f15Context;f15Context=function(cell){var x=f15NativeContextBase(cell);x.native_pages=f15NativeContext(cell);return x;};}
+if(typeof f15CompileBase==='function')compileContext=function(cell,seat,world,op){var x=f15CompileBase(cell,seat,world,op);x.earth=f15Context(cell);return x;};
+if(typeof LAW==='string'&&LAW.indexOf('native_pages')<0)LAW+=' F15 earth.native_pages is a byte-range provenance manifest, not a second measurement. A readable COG or COPC header proves asset/page availability only, not pixel values, point classifications, completeness, or absence.';
+if(typeof f15WhereHTML==='function'){var f15NativeWhereBase=f15WhereHTML;f15WhereHTML=function(){return f15NativeWhereBase()+f15NativeHTML();};}
+if(typeof f15UpdatePlate==='function'){var f15NativePlateBase=f15UpdatePlate;f15UpdatePlate=function(){f15NativePlateBase();var el=document.getElementById('f15-earth-plate');if(el)el.insertAdjacentHTML('beforeend','<div class="f15dim">NATIVE · '+f15Esc(F15_NATIVE.state)+' · '+f15NativeBytes(F15_NATIVE.bytes)+' · '+F15_NATIVE.pages.length+'/'+F15_NATIVE_LIMITS.MAX_PAGES+' PAGES</div>');};}
+if(typeof wireTable==='function'){var f15NativeWireBase=wireTable;wireTable=function(){var h=f15NativeWireBase();return F15_NATIVE.slug?'<div class="wrow"><b>native pages</b> · '+f15Esc(F15_NATIVE.slug)+' · '+f15Esc(F15_NATIVE.state)+' · '+f15NativeBytes(F15_NATIVE.bytes)+' · '+F15_NATIVE.pages.length+'/'+F15_NATIVE_LIMITS.MAX_PAGES+'</div>'+h:h;};}
+if(typeof availableActions==='function'){var f15NativeActionsBase=availableActions;availableActions=function(cell){var a=f15NativeActionsBase(cell),s=F15_NATIVE.slug===cellSlug(cell)?F15_NATIVE.state+' · '+f15NativeBytes(F15_NATIVE.bytes):'native pages';a.splice(Math.min(1,a.length),0,{k:'measure',t:'MEASURE',s:s});return a;};}
+if(typeof doAction==='function'){var f15NativeDoBase=doAction;doAction=function(kind,cell){if(kind!=='measure')return f15NativeDoBase(kind,cell);f15NativeRequest(cell,true);openWhere(cell);hideActions();setTimeout(function(){var e=document.getElementById('f15-native-pages');if(e)e.open=true;},40);wake();};}
+if(typeof f15Request==='function'){var f15NativeRequestBase=f15Request;f15Request=function(cell,force){var p=f15NativeRequestBase(cell,force);f15NativeRequest(cell,!!force);return p;};}
+(function(){var v=f15NativeVerify();if(!v.registry)throw new Error('F15 native registry incomplete');if(!v.categorical)throw new Error('F15 native categorical interpolation illegal');if(F15_NATIVE_LIMITS.MAX_PAGES<1||F15_NATIVE_LIMITS.MAX_PAGES>16)throw new Error('F15 native page bound invalid');if(F15_NATIVE_LIMITS.RANGE_BYTES<4096||F15_NATIVE_LIMITS.RANGE_BYTES>262144)throw new Error('F15 native range bound invalid');})();
+if(window.ICOSA_EARTH)window.ICOSA_EARTH.native={version:F15_NATIVE_VERSION,state:function(){return f15NativeContext(F15.selected||f15Selected());},request:function(slug){var c=typeof slug==='string'?cellFromSlug(slug):slug;return f15NativeRequest(c||F15.selected||f15Selected(),true);},verify:f15NativeVerify};
+
+/* --- F15 MATERIAL TILE FIELD --- */
+/* F15 EARTH · MATERIAL TILE FIELD
+ * F15 is not the old atlas with an outline. The grid itself becomes a
+ * working-set display: unmaterialized tiles are visibly empty; bounded
+ * working cells acquire evidence-driven terrain/cover; returned line
+ * geometry is drawn as geometry. Nothing outside the loaded evidence region
+ * is painted as if it had been observed.
+ */
+var F15_VISUAL_VERSION='f15-material-tile-field-v2';
+var F15_VISUAL={lastLegend:0};
+
+function f15VisualActive(){
+  var c=(F15&&F15.selected)||f15Selected();
+  return !!(c&&typeof f15IsActive==='function'&&f15IsActive(c));
+}
+function f15VisualHexRgb(hex){
+  var s=String(hex||'').replace('#','');
+  if(s.length===3)s=s[0]+s[0]+s[1]+s[1]+s[2]+s[2];
+  var n=parseInt(s,16);if(!Number.isFinite(n))return [189,184,168];
+  return [(n>>16)&255,(n>>8)&255,n&255];
+}
+function f15VisualMix(hex,toward,amount){
+  var a=f15VisualHexRgb(hex),b=f15VisualHexRgb(toward),m=Math.max(0,Math.min(1,amount));
+  var r=Math.round(a[0]*(1-m)+b[0]*m),g=Math.round(a[1]*(1-m)+b[1]*m),bl=Math.round(a[2]*(1-m)+b[2]*m);
+  return 'rgb('+r+','+g+','+bl+')';
+}
+function f15VisualTriCentreLL(f,tri){
+  var w=[0,0,0];
+  for(var i=0;i<3;i++){w[0]+=tri[i][0]/3;w[1]+=tri[i][1]/3;w[2]+=tri[i][2]/3;}
+  return lonlat(worldOf(f,w));
+}
+function f15VisualInside(cell,ll){
+  if(!cell||!ll)return false;
+  try{return cellContains(cell,fromLonLat(ll[0],ll[1]));}catch(e){return false;}
+}
+function f15VisualNearest(samples,ll,key){
+  if(!Array.isArray(samples)||!samples.length)return null;
+  var best=null,bd=Infinity,latr=ll[1]*Math.PI/180;
+  for(var i=0;i<samples.length;i++){
+    var s=samples[i],lon=Number(s.lon),lat=Number(s.lat),v=Number(s[key]);
+    if(!Number.isFinite(lon)||!Number.isFinite(lat)||!Number.isFinite(v))continue;
+    var dx=lon-ll[0];if(dx>180)dx-=360;if(dx<-180)dx+=360;dx*=Math.cos(latr);
+    var dy=lat-ll[1],d=dx*dx+dy*dy;
+    if(d<bd){bd=d;best=s;}
+  }
+  return best;
+}
+function f15VisualMaterialAt(ll){
+  var out={state:'UNMATERIALIZED',fill:'rgba(250,248,241,.88)',stroke:'rgba(95,103,99,.23)'};
+  if(!f15VisualActive())return out;
+
+  var inTerrain=f15VisualInside(F15.terrainCell,ll);
+  var inCover=f15VisualInside(F15.coverCell,ll);
+  if(inTerrain){
+    out.state='TERRAIN';
+    out.fill='rgba(205,199,184,.82)';
+    out.stroke='rgba(18,21,20,.25)';
+    if(F15.terrain&&F15.terrain.state==='READY'){
+      var ts=f15VisualNearest(F15.terrain.samples,ll,'elevationM');
+      if(ts){
+        var span=Math.max(1,Number(F15.terrain.max)-Number(F15.terrain.min));
+        var t=(Number(ts.elevationM)-Number(F15.terrain.min))/span;
+        out.fill=f15VisualMix('#bdb8a8',t>.5?'#7f796d':'#f5f1e7',Math.abs(t-.5)*.82);
+      }
+    }else if(F15.terrain&&F15.terrain.state==='LOADING'){
+      out.fill='rgba(214,208,194,.78)';
+    }
+  }
+  if(inCover){
+    out.state='COVER';
+    if(F15.cover&&F15.cover.state==='READY'){
+      var cs=f15VisualNearest(F15.cover.samples,ll,'classCode');
+      if(cs&&F15_COLORS[cs.classCode]){
+        var base=F15_COLORS[cs.classCode];
+        if(F15.terrain&&F15.terrain.state==='READY'){
+          var ts2=f15VisualNearest(F15.terrain.samples,ll,'elevationM');
+          if(ts2){
+            var span2=Math.max(1,Number(F15.terrain.max)-Number(F15.terrain.min));
+            var t2=(Number(ts2.elevationM)-Number(F15.terrain.min))/span2;
+            base=f15VisualMix(base,t2>.5?'#121514':'#faf8f1',.10+Math.abs(t2-.5)*.18);
+          }
+        }
+        out.fill=base;out.stroke='rgba(18,21,20,.36)';
+      }
+    }else if(F15.cover&&F15.cover.state==='LOADING'){
+      out.fill='rgba(168,70,42,.11)';out.stroke='rgba(168,70,42,.42)';
+    }
+  }
+  return out;
+}
+function f15VisualFillTri(scr,mat){
+  ctx.beginPath();ctx.moveTo(scr[0][0],scr[0][1]);ctx.lineTo(scr[1][0],scr[1][1]);ctx.lineTo(scr[2][0],scr[2][1]);ctx.closePath();
+  ctx.fillStyle=mat.fill;ctx.fill();
+  ctx.strokeStyle=mat.stroke;ctx.lineWidth=mat.state==='COVER'?.7:.55;ctx.stroke();
+  if(mat.state==='UNMATERIALIZED'){
+    var cx=(scr[0][0]+scr[1][0]+scr[2][0])/3,cy=(scr[0][1]+scr[1][1]+scr[2][1])/3;
+    ctx.fillStyle='rgba(95,103,99,.20)';ctx.fillRect(cx-.65,cy-.65,1.3,1.3);
+  }
+}
+
+/* Replace the visual grammar of F15 tiles only. Other faces retain the base
+ * infinite grid exactly. The recursion remains bounded by the base budget.
+ */
+if(typeof drawGrid==='function'){
+  var f15VisualGridBase=drawGrid;
+  drawGrid=function(f,tri,depth,S,stopPx,budget){
+    if(f!==15||!f15VisualActive())return f15VisualGridBase(f,tri,depth,S,stopPx,budget);
+    var c=faceCorners[f],scr=[];
+    for(var k=0;k<3;k++){
+      var w=tri[k],p=[c[0][0]*w[0]+c[1][0]*w[1]+c[2][0]*w[2],c[0][1]*w[0]+c[1][1]*w[1]+c[2][1]*w[2],c[0][2]*w[0]+c[1][2]*w[1]+c[2][2]*w[2]];
+      scr.push(project(toView(p),S));
+    }
+    var minx=Math.min(scr[0][0],scr[1][0],scr[2][0]),maxx=Math.max(scr[0][0],scr[1][0],scr[2][0]);
+    var miny=Math.min(scr[0][1],scr[1][1],scr[2][1]),maxy=Math.max(scr[0][1],scr[1][1],scr[2][1]);
+    if(maxx<-20||minx>W+20||maxy<-20||miny>H+20)return;
+    var size=Math.max(maxx-minx,maxy-miny);
+    if(size>stopPx&&depth<MAX_DEPTH&&budget.n<3000){
+      budget.n++;
+      for(var i=0;i<4;i++)drawGrid(f,childTri(tri,i),depth+1,S,stopPx,budget);
+      return;
+    }
+    f15VisualFillTri(scr,f15VisualMaterialAt(f15VisualTriCentreLL(f,tri)));
+  };
+}
+
+/* F15's inherited political/gazetteer surface becomes a ghost. The material
+ * grid is the foreground. This is intentionally face-scoped.
+ */
+if(typeof drawFaceSurface==='function'){
+  var f15VisualSurfaceBase=drawFaceSurface;
+  drawFaceSurface=function(f,S){
+    if(f!==15||!f15VisualActive())return f15VisualSurfaceBase(f,S);
+    ctx.save();ctx.globalAlpha=.11;f15VisualSurfaceBase(f,S);ctx.restore();
+  };
+}
+
+function f15VisualDrawGeometry(S){
+  if(!f15VisualActive())return;
+  function draw(features,stroke,width){
+    if(!Array.isArray(features)||!features.length)return;
+    ctx.save();ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.lineCap='round';ctx.lineJoin='round';
+    for(var i=0;i<features.length;i++){
+      var g=features[i]&&features[i].coordinates;if(!Array.isArray(g)||g.length<2)continue;
+      var started=false;ctx.beginPath();
+      for(var j=0;j<g.length;j++){
+        var sp=f15Screen(g[j][0],g[j][1],S);if(!sp)continue;
+        if(!started){ctx.moveTo(sp[0],sp[1]);started=true;}else ctx.lineTo(sp[0],sp[1]);
+      }
+      if(started)ctx.stroke();
+    }
+    ctx.restore();
+  }
+  draw(F15.water&&F15.water.features,'rgba(57,127,157,.94)',Math.max(1.5,1.1+view.zoom*.16));
+  draw(F15.power&&F15.power.features,'rgba(168,70,42,.98)',Math.max(1.8,1.35+view.zoom*.18));
+}
+function f15VisualOutlineWorking(cell,S,stroke,dash){
+  if(!cell)return;var p=f15VisualCellPath(cell,S);if(!p)return;
+  ctx.save();ctx.strokeStyle=stroke;ctx.lineWidth=1.25;ctx.setLineDash(dash||[]);ctx.beginPath();ctx.moveTo(p[0][0],p[0][1]);ctx.lineTo(p[1][0],p[1][1]);ctx.lineTo(p[2][0],p[2][1]);ctx.closePath();ctx.stroke();ctx.restore();
+}
+function f15VisualCellPath(cell,S){
+  if(!cell)return null;var cs=cellCorners(cell).map(lonlat),pts=[];
+  for(var i=0;i<3;i++){var sp=f15Screen(cs[i][0],cs[i][1],S);if(!sp)return null;pts.push(sp);}return pts;
+}
+
+/* Keep the HUD nearly empty: one narrow state strip. The map carries the
+ * semantics; the strip only tells the reader what has materialized.
+ */
+function f15VisualEnsureLegend(){
+  var stage=document.getElementById('stage');if(!stage)return null;
+  var plate=document.getElementById('f15-earth-plate');if(plate)plate.style.display='none';
+  var old=document.getElementById('f15-material-lens');if(old)old.remove();
+  var el=document.getElementById('f15-material-strip');if(el)return el;
+  var style=document.createElement('style');style.textContent='\
+#f15-material-strip{position:absolute;z-index:18;left:max(12px,env(safe-area-inset-left));top:max(12px,env(safe-area-inset-top));background:rgba(250,248,241,.90);border:1px solid rgba(18,21,20,.5);padding:4px 6px;font:700 7px/1.35 ui-monospace,monospace;letter-spacing:.11em;pointer-events:none;white-space:nowrap}\
+#f15-material-strip i{font-style:normal;font-weight:400;color:var(--muted)}';document.head.appendChild(style);
+  el=document.createElement('div');el.id='f15-material-strip';stage.appendChild(el);return el;
+}
+function f15VisualUpdateLegend(force){
+  if(!f15VisualActive())return;
+  var now=performance.now();if(!force&&now-F15_VISUAL.lastLegend<220)return;F15_VISUAL.lastLegend=now;
+  var el=f15VisualEnsureLegend();if(!el)return;
+  var cover=F15.cover&&F15.cover.state||'—',terrain=F15.terrain&&F15.terrain.state||'—';
+  var p=F15.power&&F15.power.features?F15.power.features.length:0,w=F15.water&&F15.water.features?F15.water.features.length:0;
+  el.innerHTML='F15 · MATERIAL TILES <i>TERRAIN '+terrain+' · COVER '+cover+' · '+p+' POWER · '+w+' WATER</i>';
+}
+
+if(typeof drawGround==='function'){
+  var f15VisualDrawGroundBase=drawGround;
+  drawGround=function(S){
+    f15VisualDrawGroundBase(S);
+    if(!f15VisualActive())return;
+    f15VisualDrawGeometry(S);
+    f15VisualOutlineWorking(F15.terrainCell,S,'rgba(18,21,20,.36)',[5,4]);
+    f15VisualOutlineWorking(F15.coverCell,S,'rgba(168,70,42,.76)',[]);
+    f15VisualUpdateLegend(false);
+  };
+}
+if(typeof f15RefreshState==='function'){
+  var f15VisualRefreshBase=f15RefreshState;
+  f15RefreshState=function(){var r=f15VisualRefreshBase();f15VisualUpdateLegend(true);if(typeof wake==='function')wake();return r;};
+}
+setTimeout(function(){if(f15VisualActive()){f15VisualEnsureLegend();f15VisualUpdateLegend(true);if(typeof wake==='function')wake();}},80);
+
+window.ICOSA_F15_INTEGRATED='2026-09-04.integrated-v5-material-tiles';
 
 /* END F15 MATERIAL GROUND · GENERATED V5 */
 })();

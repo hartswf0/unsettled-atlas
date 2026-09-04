@@ -11,7 +11,7 @@ body{display:grid;place-items:center}
 <script>
 (function () {
   'use strict';
-  var BUILD='2026-09-04.f15-earth-lean-v2';
+  var BUILD='2026-09-04.f15-earth-native-v3';
   if(!location.hash)history.replaceState(null,'',location.pathname+location.search+'#F15');
 
   function load(name){
@@ -23,12 +23,16 @@ body{display:grid;place-items:center}
 
   Promise.all([
     load('icosa-syntegrity.html'),
-    load('geonosis-earth-f15-lite.js')
+    load('geonosis-earth-f15-lite.js'),
+    load('geonosis-earth-native-pages.js')
   ]).then(function(parts){
-    var html=parts[0],earth=parts[1];
+    var html=parts[0],earth=parts[1],native=parts[2];
     var needle='})();',at=html.lastIndexOf(needle);
     if(at<0)throw new Error('main ICOSA closure not found');
-    html=html.slice(0,at)+'\n/* --- F15 EARTH WORKING SET · LEAN --- */\n'+earth+'\n'+html.slice(at);
+    html=html.slice(0,at)+
+      '\n/* --- F15 EARTH WORKING SET · LEAN --- */\n'+earth+
+      '\n/* --- F15 NATIVE STAC / COG / COPC PAGES --- */\n'+native+'\n'+
+      html.slice(at);
     document.open();document.write(html);document.close();
   }).catch(function(err){
     document.getElementById('boot').textContent='F15 BOOT FAILED · '+String(err&&err.message||err)+' · '+BUILD;

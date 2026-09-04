@@ -1483,7 +1483,8 @@
       "id": "fdic-locations:branch:4536",
       "form_ids": [
         "gform_cebd88f4c18b98dfc282",
-        "gform_2483dc1d201a3d74d891"
+        "gform_2483dc1d201a3d74d891",
+        "gform_588eda961600432727b0"
       ],
       "atlas_addresses": [
         "F02.1331213301"
@@ -1498,7 +1499,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-08-28T00:00:00.000Z",
+      "last_observed_at": "2026-09-04T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1684,6 +1685,36 @@
         "coordinates": [
           -84.3533326641,
           33.6346128407
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
+    },
+    {
+      "id": "inaturalist-observations:record:396920929",
+      "form_ids": [
+        "gform_0d8327ba74297f7da23b"
+      ],
+      "atlas_addresses": [
+        "F02.1331213301"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-09-03T14:27:22.000Z",
+      "last_observed_at": "2026-09-03T14:27:22.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3284698147,
+          33.6301026456
         ]
       },
       "identity_basis": [
@@ -3334,6 +3365,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_e1dd01b5ac800a29e60c"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:4536",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.35509100759174,
+          33.61931197979456
+        ]
+      },
+      "atlas_address": "F02.1331213301",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_97527e4cb8d2d6b8e0aa",
+        "source": "fdic-locations"
+      },
+      "id": "gform_588eda961600432727b0"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:396920929",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3284698147,
+          33.6301026456
+        ]
+      },
+      "atlas_address": "F02.1331213301",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_e5c38d5469e6cdefba37",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_0d8327ba74297f7da23b"
     }
   ],
   "current": [
@@ -4932,7 +5013,7 @@
     },
     {
       "subject_id": "fdic-locations:branch:4536",
-      "form_id": "gform_2483dc1d201a3d74d891",
+      "form_id": "gform_588eda961600432727b0",
       "atlas_address": "F02.1331213301",
       "geometry": {
         "type": "Point",
@@ -4959,8 +5040,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-08-28T00:00:00.000Z",
-      "observation_id": "obs_1e889fd627efb39e9f07",
+      "observed_at": "2026-09-04T00:00:00.000Z",
+      "observation_id": "obs_6dc4e57ef25807566c57",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -5213,6 +5294,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-08-29T19:23:33.000Z",
       "observation_id": "obs_c0a36e6f2ef00b6e1a54",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:396920929",
+      "form_id": "gform_0d8327ba74297f7da23b",
+      "atlas_address": "F02.1331213301",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3284698147,
+          33.6301026456
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Stagmomantis carolina",
+        "common_name": "Carolina Mantis",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-09-03T14:27:22.000Z",
+      "observation_id": "obs_6f7760b644af10ab29e6",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

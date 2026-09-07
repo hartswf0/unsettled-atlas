@@ -1252,6 +1252,66 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "epa-echo:record:110003346763",
+      "form_ids": [
+        "gform_6ad69f76dd6c4c2b2b1b"
+      ],
+      "atlas_addresses": [
+        "F02.1200300132"
+      ],
+      "sources": [
+        "epa-echo"
+      ],
+      "regimes": [
+        "INSTITUTIONAL"
+      ],
+      "predicates": [
+        "environment.regulated_facility"
+      ],
+      "first_observed_at": null,
+      "last_observed_at": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9884155830625,
+          29.9357992329598
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:environment.regulated_facility"
+      ]
+    },
+    {
+      "id": "inaturalist-observations:record:397943217",
+      "form_ids": [
+        "gform_33d96a9079be1c89ffdd"
+      ],
+      "atlas_addresses": [
+        "F02.1200300132"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-09-06T23:20:47.000Z",
+      "last_observed_at": "2026-09-06T23:20:47.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0288689509,
+          29.965201658
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -2629,6 +2689,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_0a05e29b668617fd58e6"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "epa-echo:record:110003346763",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9884155830625,
+          29.9357992329598
+        ]
+      },
+      "atlas_address": "F02.1200300132",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:environment.regulated_facility",
+      "provenance": {
+        "source_signal_id": "sig_ce100c4f0602093c8d9d",
+        "source": "epa-echo"
+      },
+      "id": "gform_6ad69f76dd6c4c2b2b1b"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:397943217",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0288689509,
+          29.965201658
+        ]
+      },
+      "atlas_address": "F02.1200300132",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_7dd54c9039fb19a8d949",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_33d96a9079be1c89ffdd"
     }
   ],
   "current": [
@@ -4463,6 +4573,100 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-09-03T23:56:39.000Z",
       "observation_id": "obs_19d36e15d60570d89fde",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "epa-echo:record:110003346763",
+      "form_id": "gform_6ad69f76dd6c4c2b2b1b",
+      "atlas_address": "F02.1200300132",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9884155830625,
+          29.9357992329598
+        ]
+      },
+      "regime": "INSTITUTIONAL",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "ST. BERNARD PORT HARBOR & TERM",
+        "address": "9000 W ST BERNARD HWY, CHALMETTE, LA, 70043",
+        "county": "SAINT BERNARD",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 1,
+        "inspections_5y": 1,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": "2022-03-09T00:00:00.000Z"
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "epa-echo",
+      "observed_at": null,
+      "observation_id": "obs_0fb2767e7d497aaa6018",
+      "apparatus": {
+        "id": "EPA_ECHO",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "regulatory facility record",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting lag",
+          "facility identity mismatch",
+          "regulatory coverage limits"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:397943217",
+      "form_id": "gform_33d96a9079be1c89ffdd",
+      "atlas_address": "F02.1200300132",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0288689509,
+          29.965201658
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Belocaulus angustipes",
+        "common_name": "Black-velvet Leatherleaf",
+        "iconic_taxon": "Mollusca",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-09-06T23:20:47.000Z",
+      "observation_id": "obs_8ea2e5e62fe16d4d4e09",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

@@ -512,6 +512,66 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:398880718",
+      "form_ids": [
+        "gform_11cebc8ab25f4094eb6c"
+      ],
+      "atlas_addresses": [
+        "F02.1200303320"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-09-06T17:18:17.000Z",
+      "last_observed_at": "2026-09-06T17:18:17.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2196387851,
+          29.9649705075
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
+    },
+    {
+      "id": "nws-alerts:record:urn:oid:2.49.0.1.840.0.724f31f5bd6c2edce752d4948f84070e7d216ff7.001.1",
+      "form_ids": [
+        "gform_baa11d32c2cfac0074ee"
+      ],
+      "atlas_addresses": [
+        "F02.1200303320"
+      ],
+      "sources": [
+        "nws-alerts"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "hazard.weather_alert"
+      ],
+      "first_observed_at": "2026-09-10T12:17:00.000Z",
+      "last_observed_at": "2026-09-10T12:17:00.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.28,
+          29.97
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:hazard.weather_alert"
+      ]
     }
   ],
   "forms": [
@@ -989,6 +1049,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_f5dc5e31d7b05102c0bc"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:398880718",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2196387851,
+          29.9649705075
+        ]
+      },
+      "atlas_address": "F02.1200303320",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_15947b148f8c2c56b364",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_11cebc8ab25f4094eb6c"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "FIELD",
+      "subject_id": "nws-alerts:record:urn:oid:2.49.0.1.840.0.724f31f5bd6c2edce752d4948f84070e7d216ff7.001.1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.28,
+          29.97
+        ]
+      },
+      "atlas_address": "F02.1200303320",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:hazard.weather_alert",
+      "provenance": {
+        "source_signal_id": "sig_a56662f3eed49bde2f64",
+        "source": "nws-alerts"
+      },
+      "id": "gform_baa11d32c2cfac0074ee"
     }
   ],
   "current": [
@@ -1784,6 +1894,90 @@
           "sampling absence"
         ]
       }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:398880718",
+      "form_id": "gform_11cebc8ab25f4094eb6c",
+      "atlas_address": "F02.1200303320",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2196387851,
+          29.9649705075
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Anolis",
+        "common_name": "Anoles",
+        "iconic_taxon": "Reptilia",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-09-06T17:18:17.000Z",
+      "observation_id": "obs_dec0808f38cb1a2b3c74",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "nws-alerts:record:urn:oid:2.49.0.1.840.0.724f31f5bd6c2edce752d4948f84070e7d216ff7.001.1",
+      "form_id": "gform_baa11d32c2cfac0074ee",
+      "atlas_address": "F02.1200303320",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.28,
+          29.97
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "hazard.weather_alert",
+      "value": {
+        "event": "Flood Advisory",
+        "severity": "Minor",
+        "certainty": "Likely",
+        "urgency": "Expected",
+        "headline": "Flood Advisory issued September 10 at 7:17AM CDT until September 10 at 9:15AM CDT by NWS New Orleans LA",
+        "area_desc": "Jefferson, LA; Orleans, LA; Plaquemines, LA; St. Bernard, LA"
+      },
+      "unit": null,
+      "epistemic": "DECLARED",
+      "source": "nws-alerts",
+      "observed_at": "2026-09-10T12:17:00.000Z",
+      "observation_id": "obs_0801bf72b18caa4679cc",
+      "apparatus": {
+        "id": "NWS_ALERTS",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "official alert production",
+        "expected_frequency": null,
+        "failure_modes": [
+          "forecast uncertainty",
+          "polygon generalization",
+          "issuance latency"
+        ]
+      }
     }
   ],
   "events": [],
@@ -1803,6 +1997,38 @@
         "obs_20023e3c39237e58f1f6"
       ],
       "id": "poss_b27afa6f9f612f9f80ad"
+    },
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "HUMAN",
+      "condition": "Flood Advisory",
+      "modality": "POSSIBLE",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": 0.25,
+      "horizon": null,
+      "geographic_scope": "F02.1200303320",
+      "derived_from": [
+        "obs_0801bf72b18caa4679cc"
+      ],
+      "id": "poss_ec588a505b46fb3a4514"
+    },
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "SERVICE",
+      "condition": "Flood Advisory",
+      "modality": "POSSIBLE",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": 0.25,
+      "horizon": null,
+      "geographic_scope": "F02.1200303320",
+      "derived_from": [
+        "obs_0801bf72b18caa4679cc"
+      ],
+      "id": "poss_c8e39839ba8054aefdca"
     }
   ]
 }

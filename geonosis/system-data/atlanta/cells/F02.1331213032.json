@@ -6,7 +6,8 @@
       "form_ids": [
         "gform_cfc9281af39ee4cf6d4e",
         "gform_f352c1eac1d01cf1a626",
-        "gform_bcd2790cdc4657709627"
+        "gform_bcd2790cdc4657709627",
+        "gform_ecf05c350dd8657aea76"
       ],
       "atlas_addresses": [
         "F02.1331213032"
@@ -21,7 +22,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-09-04T00:00:00.000Z",
+      "last_observed_at": "2026-09-11T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -1802,6 +1803,36 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:399119643",
+      "form_ids": [
+        "gform_c547618856c6b3ea3ade"
+      ],
+      "atlas_addresses": [
+        "F02.1331213032"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-09-10T23:23:19.000Z",
+      "last_observed_at": "2026-09-10T23:23:19.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23860957,
+          33.8084403276
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -3354,12 +3385,62 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_8c631d24387b3ff3b51a"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:1825",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25930999417757,
+          33.84320300717056
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_5edbdbb7947cdac94dac",
+        "source": "fdic-locations"
+      },
+      "id": "gform_ecf05c350dd8657aea76"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:399119643",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23860957,
+          33.8084403276
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_faea0fee521a75f09fe2",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_c547618856c6b3ea3ade"
     }
   ],
   "current": [
     {
       "subject_id": "fdic-locations:branch:1825",
-      "form_id": "gform_bcd2790cdc4657709627",
+      "form_id": "gform_ecf05c350dd8657aea76",
       "atlas_address": "F02.1331213032",
       "geometry": {
         "type": "Point",
@@ -3386,8 +3467,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-09-04T00:00:00.000Z",
-      "observation_id": "obs_bf9379ad4b22a64bf2d8",
+      "observed_at": "2026-09-11T00:00:00.000Z",
+      "observation_id": "obs_7daa74f7e4b3ac431c44",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -6001,6 +6082,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-09-08T20:52:03.000Z",
       "observation_id": "obs_4460e64c8f18c46ec859",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:399119643",
+      "form_id": "gform_c547618856c6b3ea3ade",
+      "atlas_address": "F02.1331213032",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.23860957,
+          33.8084403276
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Prenolepis imparis",
+        "common_name": "American Winter Ant",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 3
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-09-10T23:23:19.000Z",
+      "observation_id": "obs_3f4c476f7481f0b5df54",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

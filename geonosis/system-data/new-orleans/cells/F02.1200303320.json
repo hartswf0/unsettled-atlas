@@ -577,7 +577,8 @@
     {
       "id": "inaturalist-observations:record:399543983",
       "form_ids": [
-        "gform_609fe8acfffd4b066ce3"
+        "gform_609fe8acfffd4b066ce3",
+        "gform_7c47a3c3bd3ec1aa8922"
       ],
       "atlas_addresses": [
         "F02.1200303320"
@@ -602,6 +603,36 @@
       },
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
+      ]
+    },
+    {
+      "id": "epa-echo:record:110032889541",
+      "form_ids": [
+        "gform_c2ddee35707f10b9b5ee"
+      ],
+      "atlas_addresses": [
+        "F02.1200303320"
+      ],
+      "sources": [
+        "epa-echo"
+      ],
+      "regimes": [
+        "INSTITUTIONAL"
+      ],
+      "predicates": [
+        "environment.regulated_facility"
+      ],
+      "first_observed_at": null,
+      "last_observed_at": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2320198234947,
+          29.9656201547707
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:environment.regulated_facility"
       ]
     }
   ],
@@ -1180,6 +1211,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_609fe8acfffd4b066ce3"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "epa-echo:record:110032889541",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2320198234947,
+          29.9656201547707
+        ]
+      },
+      "atlas_address": "F02.1200303320",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:environment.regulated_facility",
+      "provenance": {
+        "source_signal_id": "sig_73f93e497d99051de1fd",
+        "source": "epa-echo"
+      },
+      "id": "gform_c2ddee35707f10b9b5ee"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:399543983",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2241743356,
+          29.9652673018
+        ]
+      },
+      "atlas_address": "F02.1200303320",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_587210f90d01caeda929",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_7c47a3c3bd3ec1aa8922"
     }
   ],
   "current": [
@@ -2062,7 +2143,7 @@
     },
     {
       "subject_id": "inaturalist-observations:record:399543983",
-      "form_id": "gform_609fe8acfffd4b066ce3",
+      "form_id": "gform_7c47a3c3bd3ec1aa8922",
       "atlas_address": "F02.1200303320",
       "geometry": {
         "type": "Point",
@@ -2077,7 +2158,7 @@
         "scientific_name": "Thryothorus ludovicianus",
         "common_name": "Carolina Wren",
         "iconic_taxon": "Aves",
-        "quality_grade": "needs_id",
+        "quality_grade": "research",
         "captive": false,
         "obscured": false,
         "photos": 5
@@ -2086,7 +2167,7 @@
       "epistemic": "REPORTED",
       "source": "inaturalist-observations",
       "observed_at": "2026-09-12T14:13:39.000Z",
-      "observation_id": "obs_4449d5237b42772618d8",
+      "observation_id": "obs_95f6edf6332cbc8e1f4a",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,
@@ -2100,6 +2181,57 @@
           "location obscuration",
           "taxonomic disagreement",
           "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "epa-echo:record:110032889541",
+      "form_id": "gform_c2ddee35707f10b9b5ee",
+      "atlas_address": "F02.1200303320",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2320198234947,
+          29.9656201547707
+        ]
+      },
+      "regime": "INSTITUTIONAL",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "RIVER RIDGE TERMINAL",
+        "address": "100 B FLORIDA STREET, RIVER RIDGE, LA, 70123",
+        "county": "JEFFERSON PARISH",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090100",
+        "last_inspection": "2000-09-27T00:00:00.000Z"
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "epa-echo",
+      "observed_at": null,
+      "observation_id": "obs_7237732b142382825c71",
+      "apparatus": {
+        "id": "EPA_ECHO",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "regulatory facility record",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting lag",
+          "facility identity mismatch",
+          "regulatory coverage limits"
         ]
       }
     }

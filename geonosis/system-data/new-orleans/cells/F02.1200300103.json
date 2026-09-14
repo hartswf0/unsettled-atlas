@@ -90,6 +90,66 @@
       "identity_basis": [
         "legacy-signal:environment.regulated_facility"
       ]
+    },
+    {
+      "id": "epa-echo:record:110038332177",
+      "form_ids": [
+        "gform_9a0f5abe31c713404e16"
+      ],
+      "atlas_addresses": [
+        "F02.1200300103"
+      ],
+      "sources": [
+        "epa-echo"
+      ],
+      "regimes": [
+        "INSTITUTIONAL"
+      ],
+      "predicates": [
+        "environment.regulated_facility"
+      ],
+      "first_observed_at": null,
+      "last_observed_at": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9412719969519,
+          29.9748200021082
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:environment.regulated_facility"
+      ]
+    },
+    {
+      "id": "inaturalist-observations:record:399947996",
+      "form_ids": [
+        "gform_d2c2e6e0471457beaabf"
+      ],
+      "atlas_addresses": [
+        "F02.1200300103"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-09-13T17:41:12.000Z",
+      "last_observed_at": "2026-09-13T17:41:12.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.940746,
+          29.975172
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -167,6 +227,56 @@
         "source": "epa-echo"
       },
       "id": "gform_1361bbb3d5161a9a2060"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "epa-echo:record:110038332177",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9412719969519,
+          29.9748200021082
+        ]
+      },
+      "atlas_address": "F02.1200300103",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:environment.regulated_facility",
+      "provenance": {
+        "source_signal_id": "sig_e4096bace05137b7ff98",
+        "source": "epa-echo"
+      },
+      "id": "gform_9a0f5abe31c713404e16"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:399947996",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.940746,
+          29.975172
+        ]
+      },
+      "atlas_address": "F02.1200300103",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_e73490f452fb5bd590c7",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_d2c2e6e0471457beaabf"
     }
   ],
   "current": [
@@ -316,6 +426,100 @@
           "reporting lag",
           "facility identity mismatch",
           "regulatory coverage limits"
+        ]
+      }
+    },
+    {
+      "subject_id": "epa-echo:record:110038332177",
+      "form_id": "gform_9a0f5abe31c713404e16",
+      "atlas_address": "F02.1200300103",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9412719969519,
+          29.9748200021082
+        ]
+      },
+      "regime": "INSTITUTIONAL",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "THERESA'S SEAFOOD  INC.",
+        "address": "215 MARINA RD, CHALMETTE, LA, 70043",
+        "county": "ST. BERNARD",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "Significant Violation",
+        "significant_noncompliance": "Y",
+        "programs_with_significant_noncompliance": 1,
+        "quarters_noncompliance_3y": 5,
+        "inspections_5y": 1,
+        "formal_actions_5y": 2,
+        "penalties_5y": 2,
+        "penalty_total_5y_usd": 13848,
+        "coordinate_accuracy_m": 50,
+        "huc": "08090203",
+        "last_inspection": "2022-09-21T00:00:00.000Z"
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "epa-echo",
+      "observed_at": null,
+      "observation_id": "obs_174db2df5c7ccf643983",
+      "apparatus": {
+        "id": "EPA_ECHO",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "regulatory facility record",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting lag",
+          "facility identity mismatch",
+          "regulatory coverage limits"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:399947996",
+      "form_id": "gform_d2c2e6e0471457beaabf",
+      "atlas_address": "F02.1200300103",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.940746,
+          29.975172
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Nekemias arborea",
+        "common_name": "peppervine",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-09-13T17:41:12.000Z",
+      "observation_id": "obs_62ce8bd11aa7653e02d0",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
         ]
       }
     }

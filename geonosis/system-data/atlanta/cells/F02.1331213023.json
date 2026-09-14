@@ -303,6 +303,66 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:400220907",
+      "form_ids": [
+        "gform_1767e800b5efc25a00ac"
+      ],
+      "atlas_addresses": [
+        "F02.1331213023"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-09-14T15:41:35.000Z",
+      "last_observed_at": "2026-09-14T15:41:35.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2392883333,
+          33.78463
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
+    },
+    {
+      "id": "osm-notes:record:5518888",
+      "form_ids": [
+        "gform_15e79e0b0e1b6457803d"
+      ],
+      "atlas_addresses": [
+        "F02.1331213023"
+      ],
+      "sources": [
+        "osm-notes"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "claim.map_note"
+      ],
+      "first_observed_at": "2026-09-14T11:57:43.000Z",
+      "last_observed_at": "2026-09-14T11:57:43.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2358421,
+          33.7833342
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:claim.map_note"
+      ]
     }
   ],
   "forms": [
@@ -630,6 +690,56 @@
         "source": "fdic-locations"
       },
       "id": "gform_80429e6afafdae20501a"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:400220907",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2392883333,
+          33.78463
+        ]
+      },
+      "atlas_address": "F02.1331213023",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_14dde145eea4af01bb64",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_1767e800b5efc25a00ac"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "osm-notes:record:5518888",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2358421,
+          33.7833342
+        ]
+      },
+      "atlas_address": "F02.1331213023",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:claim.map_note",
+      "provenance": {
+        "source_signal_id": "sig_63e432d081ffaa679d64",
+        "source": "osm-notes"
+      },
+      "id": "gform_15e79e0b0e1b6457803d"
     }
   ],
   "current": [
@@ -1065,8 +1175,106 @@
           "sampling absence"
         ]
       }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:400220907",
+      "form_id": "gform_1767e800b5efc25a00ac",
+      "atlas_address": "F02.1331213023",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2392883333,
+          33.78463
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Canoparmelia",
+        "common_name": null,
+        "iconic_taxon": "Fungi",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-09-14T15:41:35.000Z",
+      "observation_id": "obs_5f844226baf801a5f7fa",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "osm-notes:record:5518888",
+      "form_id": "gform_15e79e0b0e1b6457803d",
+      "atlas_address": "F02.1331213023",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2358421,
+          33.7833342
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "\"Fenced off\"\nThe place has gone or never existed. A user of Organic Maps application has reported that the POI was visible on the map (see snapshot date below), but was not found on the ground.\nOSM snapshot date: 2026-08-26T01:30:29Z\nPOI has no name\nPOI types: amenity-parking\n #organicmaps android 2026.08.27-18-Google"
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "osm-notes",
+      "observed_at": "2026-09-14T11:57:43.000Z",
+      "observation_id": "obs_17d027558946059507b7",
+      "apparatus": {
+        "id": "OSM_NOTES",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "voluntary map issue report",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting opportunity",
+          "uneven mapper attention",
+          "stale unresolved notes"
+        ]
+      }
     }
   ],
   "events": [],
-  "possibilities": []
+  "possibilities": [
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "SERVICE",
+      "condition": "open map issue report",
+      "modality": "POSSIBLE",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": null,
+      "horizon": null,
+      "geographic_scope": "F02.1331213023",
+      "derived_from": [
+        "obs_17d027558946059507b7"
+      ],
+      "id": "poss_9803f6512c8245407ef3"
+    }
+  ]
 }

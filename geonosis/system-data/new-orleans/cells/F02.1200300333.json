@@ -15,7 +15,10 @@
         "gform_de3ef6bb0a971aa8ca49",
         "gform_4eeb4b3638beb4c673f1",
         "gform_9c56b2dcad40d5ef1d8d",
-        "gform_1326303e2af6fbe0933d"
+        "gform_1326303e2af6fbe0933d",
+        "gform_656cb00b69084e51e1e2",
+        "gform_e696cc89809781bc9631",
+        "gform_9045395fc4616d373c7b"
       ],
       "atlas_addresses": [
         "F02.1200300121",
@@ -32,7 +35,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-09-11T00:00:00.000Z",
+      "last_observed_at": "2026-09-18T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -194,6 +197,36 @@
       },
       "identity_basis": [
         "legacy-signal:environment.regulated_facility"
+      ]
+    },
+    {
+      "id": "inaturalist-observations:record:401054426",
+      "form_ids": [
+        "gform_07abd1e4ee8a38a106d2"
+      ],
+      "atlas_addresses": [
+        "F02.1200300333"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-09-17T18:48:12.000Z",
+      "last_observed_at": "2026-09-17T18:48:12.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0013316901,
+          29.838756429
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
       ]
     }
   ],
@@ -422,12 +455,62 @@
         "source": "epa-echo"
       },
       "id": "gform_b07809b0cf824da46b03"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:22",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.985866979689,
+          29.852584982222
+        ]
+      },
+      "atlas_address": "F02.1200300333",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_148e58d4809d66874f6b",
+        "source": "fdic-locations"
+      },
+      "id": "gform_e696cc89809781bc9631"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:401054426",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0013316901,
+          29.838756429
+        ]
+      },
+      "atlas_address": "F02.1200300333",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_d4a416fb1ee0acf15546",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_07abd1e4ee8a38a106d2"
     }
   ],
   "current": [
     {
       "subject_id": "fdic-locations:branch:22",
-      "form_id": "gform_1326303e2af6fbe0933d",
+      "form_id": "gform_9045395fc4616d373c7b",
       "atlas_address": "F02.1200303023",
       "geometry": {
         "type": "Point",
@@ -454,8 +537,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-09-11T00:00:00.000Z",
-      "observation_id": "obs_e9f45d67d2df9e051a1f",
+      "observed_at": "2026-09-18T00:00:00.000Z",
+      "observation_id": "obs_e0be875751bc6fd1019a",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -705,6 +788,49 @@
           "reporting lag",
           "facility identity mismatch",
           "regulatory coverage limits"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:401054426",
+      "form_id": "gform_07abd1e4ee8a38a106d2",
+      "atlas_address": "F02.1200300333",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0013316901,
+          29.838756429
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Eudocimus albus",
+        "common_name": "White Ibis",
+        "iconic_taxon": "Aves",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": true,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-09-17T18:48:12.000Z",
+      "observation_id": "obs_757c11c4ee3a57b04c0f",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
         ]
       }
     }

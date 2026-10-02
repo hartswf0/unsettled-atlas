@@ -1488,7 +1488,8 @@
         "gform_a8bf3c46ea6370fe397b",
         "gform_1a02fa37ba580d6166c9",
         "gform_9ce3611e9ae52f16b800",
-        "gform_9245e58690f678220302"
+        "gform_9245e58690f678220302",
+        "gform_0c42f1695e9bb386675b"
       ],
       "atlas_addresses": [
         "F02.1331213301"
@@ -1503,7 +1504,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-09-29T00:00:00.000Z",
+      "last_observed_at": "2026-10-02T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2320,6 +2321,36 @@
         "coordinates": [
           -84.3494866578,
           33.615894891
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
+    },
+    {
+      "id": "inaturalist-observations:record:405122503",
+      "form_ids": [
+        "gform_b715c2ec7fed0fe2a219"
+      ],
+      "atlas_addresses": [
+        "F02.1331213301"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-10-01T21:00:17.000Z",
+      "last_observed_at": "2026-10-01T21:00:17.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3316567645,
+          33.650012757
         ]
       },
       "identity_basis": [
@@ -4645,6 +4676,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_7b90f8e98b99b64fe1a8"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:4536",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.35509100759174,
+          33.61931197979456
+        ]
+      },
+      "atlas_address": "F02.1331213301",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_3c22e6879b33373fe3c8",
+        "source": "fdic-locations"
+      },
+      "id": "gform_0c42f1695e9bb386675b"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:405122503",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3316567645,
+          33.650012757
+        ]
+      },
+      "atlas_address": "F02.1331213301",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_9c9bb2a48c0abbf9eeed",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_b715c2ec7fed0fe2a219"
     }
   ],
   "current": [
@@ -6243,7 +6324,7 @@
     },
     {
       "subject_id": "fdic-locations:branch:4536",
-      "form_id": "gform_9245e58690f678220302",
+      "form_id": "gform_0c42f1695e9bb386675b",
       "atlas_address": "F02.1331213301",
       "geometry": {
         "type": "Point",
@@ -6270,8 +6351,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-09-29T00:00:00.000Z",
-      "observation_id": "obs_822ac4c99778cb2268df",
+      "observed_at": "2026-10-02T00:00:00.000Z",
+      "observation_id": "obs_cb0311533bb2aac26f69",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -7507,6 +7588,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-09-30T18:13:13.000Z",
       "observation_id": "obs_9e7c36c0dbaec55e0507",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:405122503",
+      "form_id": "gform_b715c2ec7fed0fe2a219",
+      "atlas_address": "F02.1331213301",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3316567645,
+          33.650012757
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Alluaudia procera",
+        "common_name": "Madagascar Ocotillo",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "casual",
+        "captive": true,
+        "obscured": true,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-10-01T21:00:17.000Z",
+      "observation_id": "obs_b052389b7a1d58e4f3dc",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

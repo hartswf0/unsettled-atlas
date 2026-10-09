@@ -101,7 +101,8 @@
         "gform_ab405f87057e142794d7",
         "gform_559a006b84921921adbf",
         "gform_033d91a3256a1eab620e",
-        "gform_92a1c37449983030658e"
+        "gform_92a1c37449983030658e",
+        "gform_04412ae24716aed58137"
       ],
       "atlas_addresses": [
         "F02.1331211320"
@@ -116,7 +117,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-10-02T00:00:00.000Z",
+      "last_observed_at": "2026-10-09T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2017,6 +2018,36 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:406859843",
+      "form_ids": [
+        "gform_951718bc0a7b214480d6"
+      ],
+      "atlas_addresses": [
+        "F02.1331211320"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-10-08T18:58:16.000Z",
+      "last_observed_at": "2026-10-08T18:58:16.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.544280832,
+          33.8073055882
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -3869,6 +3900,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_3ebad12e8bd767622e83"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:7047",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.5282329640017,
+          33.80591497933767
+        ]
+      },
+      "atlas_address": "F02.1331211320",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_90f456ab2c06a63d6fe5",
+        "source": "fdic-locations"
+      },
+      "id": "gform_04412ae24716aed58137"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:406859843",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.544280832,
+          33.8073055882
+        ]
+      },
+      "atlas_address": "F02.1331211320",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_c0bc8c104eb5aa6a0297",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_951718bc0a7b214480d6"
     }
   ],
   "current": [
@@ -4027,7 +4108,7 @@
     },
     {
       "subject_id": "fdic-locations:branch:7047",
-      "form_id": "gform_92a1c37449983030658e",
+      "form_id": "gform_04412ae24716aed58137",
       "atlas_address": "F02.1331211320",
       "geometry": {
         "type": "Point",
@@ -4054,8 +4135,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-10-02T00:00:00.000Z",
-      "observation_id": "obs_a487d2fccfb7835a35eb",
+      "observed_at": "2026-10-09T00:00:00.000Z",
+      "observation_id": "obs_32b152e1cd5cc1e5077a",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -6876,6 +6957,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-10-07T20:00:05.000Z",
       "observation_id": "obs_6ac0f81fd1f7c0ec2586",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:406859843",
+      "form_id": "gform_951718bc0a7b214480d6",
+      "atlas_address": "F02.1331211320",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.544280832,
+          33.8073055882
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Lithobates palustris",
+        "common_name": "Pickerel Frog",
+        "iconic_taxon": "Amphibia",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": true,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-10-08T18:58:16.000Z",
+      "observation_id": "obs_5401e8f9ba0cd92db9c1",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

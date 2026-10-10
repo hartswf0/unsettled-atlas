@@ -20404,6 +20404,36 @@
       "identity_basis": [
         "legacy-signal:hazard.weather_alert"
       ]
+    },
+    {
+      "id": "nws-alerts:record:urn:oid:2.49.0.1.840.0.0578f3fed6e32f30699dcea8e195d0254ec85384.003.1",
+      "form_ids": [
+        "gform_ff15c2451c5ce0dea432"
+      ],
+      "atlas_addresses": [
+        "F02.1200300123"
+      ],
+      "sources": [
+        "nws-alerts"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "hazard.weather_alert"
+      ],
+      "first_observed_at": "2026-10-10T03:09:00.000Z",
+      "last_observed_at": "2026-10-10T03:09:00.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0715,
+          29.9511
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:hazard.weather_alert"
+      ]
     }
   ],
   "forms": [
@@ -43181,6 +43211,31 @@
         "source": "nws-alerts"
       },
       "id": "gform_b5092b7a6dc791954062"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "FIELD",
+      "subject_id": "nws-alerts:record:urn:oid:2.49.0.1.840.0.0578f3fed6e32f30699dcea8e195d0254ec85384.003.1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0715,
+          29.9511
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:hazard.weather_alert",
+      "provenance": {
+        "source_signal_id": "sig_361da0e211e3f3af15d5",
+        "source": "nws-alerts"
+      },
+      "id": "gform_ff15c2451c5ce0dea432"
     }
   ],
   "current": [
@@ -72136,6 +72191,47 @@
           "issuance latency"
         ]
       }
+    },
+    {
+      "subject_id": "nws-alerts:record:urn:oid:2.49.0.1.840.0.0578f3fed6e32f30699dcea8e195d0254ec85384.003.1",
+      "form_id": "gform_ff15c2451c5ce0dea432",
+      "atlas_address": "F02.1200300123",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0715,
+          29.9511
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "hazard.weather_alert",
+      "value": {
+        "event": "Coastal Flood Advisory",
+        "severity": "Minor",
+        "certainty": "Likely",
+        "urgency": "Expected",
+        "headline": "Coastal Flood Advisory issued October 9 at 10:09PM CDT until October 10 at 7:00PM CDT by NWS New Orleans LA",
+        "area_desc": "St. John The Baptist; Western Orleans; Southern Livingston; Upper Jefferson; Upper St. Charles"
+      },
+      "unit": null,
+      "epistemic": "DECLARED",
+      "source": "nws-alerts",
+      "observed_at": "2026-10-10T03:09:00.000Z",
+      "observation_id": "obs_1a3eea2919d2d6b170ec",
+      "apparatus": {
+        "id": "NWS_ALERTS",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "official alert production",
+        "expected_frequency": null,
+        "failure_modes": [
+          "forecast uncertainty",
+          "polygon generalization",
+          "issuance latency"
+        ]
+      }
     }
   ],
   "events": [],
@@ -72699,6 +72795,38 @@
         "obs_a217f005953b819cf22d"
       ],
       "id": "poss_21a0c71c75e1acf59ee5"
+    },
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "HUMAN",
+      "condition": "Coastal Flood Advisory",
+      "modality": "POSSIBLE",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": 0.25,
+      "horizon": null,
+      "geographic_scope": "F02.1200300123",
+      "derived_from": [
+        "obs_1a3eea2919d2d6b170ec"
+      ],
+      "id": "poss_8f6904b59215a55e4aaa"
+    },
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "SERVICE",
+      "condition": "Coastal Flood Advisory",
+      "modality": "POSSIBLE",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": 0.25,
+      "horizon": null,
+      "geographic_scope": "F02.1200300123",
+      "derived_from": [
+        "obs_1a3eea2919d2d6b170ec"
+      ],
+      "id": "poss_af3e0e8cf1183eaade0e"
     }
   ]
 }

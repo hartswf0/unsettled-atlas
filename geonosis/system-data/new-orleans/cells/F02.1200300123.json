@@ -21365,6 +21365,66 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:408173647",
+      "form_ids": [
+        "gform_a5a2318d5d9310d83bfb"
+      ],
+      "atlas_addresses": [
+        "F02.1200300123"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-10-14T00:12:28.000Z",
+      "last_observed_at": "2026-10-14T00:12:28.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0635986328,
+          29.9608592987
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
+    },
+    {
+      "id": "nws-alerts:record:urn:oid:2.49.0.1.840.0.cb1c4162089b75d374e1da5627aa273762415077.002.1",
+      "form_ids": [
+        "gform_bbc89bc0846ebc564ec9"
+      ],
+      "atlas_addresses": [
+        "F02.1200300123"
+      ],
+      "sources": [
+        "nws-alerts"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "hazard.weather_alert"
+      ],
+      "first_observed_at": "2026-10-14T14:26:00.000Z",
+      "last_observed_at": "2026-10-14T14:26:00.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0715,
+          29.9511
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:hazard.weather_alert"
+      ]
     }
   ],
   "forms": [
@@ -44967,6 +45027,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_d8e5dfc5e3d6f0977dac"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:408173647",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0635986328,
+          29.9608592987
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_fff4b6e47fc360648ad4",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_a5a2318d5d9310d83bfb"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "FIELD",
+      "subject_id": "nws-alerts:record:urn:oid:2.49.0.1.840.0.cb1c4162089b75d374e1da5627aa273762415077.002.1",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0715,
+          29.9511
+        ]
+      },
+      "atlas_address": "F02.1200300123",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:hazard.weather_alert",
+      "provenance": {
+        "source_signal_id": "sig_d1a508c25b144b8f9b68",
+        "source": "nws-alerts"
+      },
+      "id": "gform_bbc89bc0846ebc564ec9"
     }
   ],
   "current": [
@@ -75416,6 +75526,90 @@
           "sampling absence"
         ]
       }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:408173647",
+      "form_id": "gform_a5a2318d5d9310d83bfb",
+      "atlas_address": "F02.1200300123",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0635986328,
+          29.9608592987
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Hemidactylus parvimaculatus",
+        "common_name": "Spotted House Gecko",
+        "iconic_taxon": "Reptilia",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-10-14T00:12:28.000Z",
+      "observation_id": "obs_d76765c2d86b8588f9e3",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "nws-alerts:record:urn:oid:2.49.0.1.840.0.cb1c4162089b75d374e1da5627aa273762415077.002.1",
+      "form_id": "gform_bbc89bc0846ebc564ec9",
+      "atlas_address": "F02.1200300123",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.0715,
+          29.9511
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "hazard.weather_alert",
+      "value": {
+        "event": "Dense Fog Advisory",
+        "severity": "Moderate",
+        "certainty": "Likely",
+        "urgency": "Expected",
+        "headline": "Dense Fog Advisory issued October 14 at 9:26AM CDT until October 14 at 10:00AM CDT by NWS New Orleans LA",
+        "area_desc": "Pointe Coupee; West Feliciana; East Feliciana; St. Helena; Washington; Iberville; West Baton Rouge; East Baton Rouge; Assumption; St. James; St. John The Baptist; Northern Tangipahoa; Southeast St. Tammany; Western Orleans; Eastern Orleans; Northern St. Tammany; Southwestern St. Tammany; Central Tangipahoa; Lower Tangipahoa; Northern Livingston; Southern Livingston; Western Ascension; Eastern Ascension; Upper Jefferson; Upper Lafourche; Upper St. Charles; Central St. Charles; Lower St. Charles; Pearl River; Northern Hancock; Northern Harrison; Northern Jackson; Southern Hancock; Southern Harrison; Southern Jackson"
+      },
+      "unit": null,
+      "epistemic": "DECLARED",
+      "source": "nws-alerts",
+      "observed_at": "2026-10-14T14:26:00.000Z",
+      "observation_id": "obs_73a748492d78fdd9fca7",
+      "apparatus": {
+        "id": "NWS_ALERTS",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "official alert production",
+        "expected_frequency": null,
+        "failure_modes": [
+          "forecast uncertainty",
+          "polygon generalization",
+          "issuance latency"
+        ]
+      }
     }
   ],
   "events": [],
@@ -76011,6 +76205,38 @@
         "obs_1a3eea2919d2d6b170ec"
       ],
       "id": "poss_af3e0e8cf1183eaade0e"
+    },
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "HUMAN",
+      "condition": "Dense Fog Advisory",
+      "modality": "THREATENED",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": 0.5,
+      "horizon": null,
+      "geographic_scope": "F02.1200300123",
+      "derived_from": [
+        "obs_73a748492d78fdd9fca7"
+      ],
+      "id": "poss_88e569a16dc71db4ec62"
+    },
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "SERVICE",
+      "condition": "Dense Fog Advisory",
+      "modality": "THREATENED",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": 0.5,
+      "horizon": null,
+      "geographic_scope": "F02.1200300123",
+      "derived_from": [
+        "obs_73a748492d78fdd9fca7"
+      ],
+      "id": "poss_483234a19f4308af2119"
     }
   ]
 }

@@ -1694,6 +1694,36 @@
       "identity_basis": [
         "legacy-signal:environment.regulated_facility"
       ]
+    },
+    {
+      "id": "osm-notes:record:5581113",
+      "form_ids": [
+        "gform_51299f6b916eac2154b9"
+      ],
+      "atlas_addresses": [
+        "F02.1200300102"
+      ],
+      "sources": [
+        "osm-notes"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "claim.map_note"
+      ],
+      "first_observed_at": "2026-10-15T03:00:40.000Z",
+      "last_observed_at": "2026-10-15T03:00:40.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9599267,
+          29.9405063
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:claim.map_note"
+      ]
     }
   ],
   "forms": [
@@ -3871,6 +3901,31 @@
         "source": "epa-echo"
       },
       "id": "gform_a049661ddf45767860c4"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "osm-notes:record:5581113",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9599267,
+          29.9405063
+        ]
+      },
+      "atlas_address": "F02.1200300102",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:claim.map_note",
+      "provenance": {
+        "source_signal_id": "sig_cbee8c8bf689f9c5418f",
+        "source": "osm-notes"
+      },
+      "id": "gform_51299f6b916eac2154b9"
     }
   ],
   "current": [
@@ -6462,6 +6517,44 @@
           "regulatory coverage limits"
         ]
       }
+    },
+    {
+      "subject_id": "osm-notes:record:5581113",
+      "form_id": "gform_51299f6b916eac2154b9",
+      "atlas_address": "F02.1200300102",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9599267,
+          29.9405063
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "This is a driveway. Not sure why it's on the map."
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "osm-notes",
+      "observed_at": "2026-10-15T03:00:40.000Z",
+      "observation_id": "obs_3b9bf23643e7d4fe7719",
+      "apparatus": {
+        "id": "OSM_NOTES",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "voluntary map issue report",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting opportunity",
+          "uneven mapper attention",
+          "stale unresolved notes"
+        ]
+      }
     }
   ],
   "events": [],
@@ -6545,6 +6638,22 @@
         "obs_0e210154b6fc82c37d24"
       ],
       "id": "poss_9300e44af7a633cfc61a"
+    },
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "SERVICE",
+      "condition": "open map issue report",
+      "modality": "POSSIBLE",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": null,
+      "horizon": null,
+      "geographic_scope": "F02.1200300102",
+      "derived_from": [
+        "obs_3b9bf23643e7d4fe7719"
+      ],
+      "id": "poss_106e8a9528c4233c65fc"
     }
   ]
 }

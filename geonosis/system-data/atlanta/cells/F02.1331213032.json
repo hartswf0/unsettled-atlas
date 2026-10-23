@@ -13,7 +13,8 @@
         "gform_b5c1329b9bfce21e66a7",
         "gform_0f08dd48fc9de1dbc8c6",
         "gform_c63d58d47517997519a9",
-        "gform_da743cd76cc648a44c24"
+        "gform_da743cd76cc648a44c24",
+        "gform_c9ed798a10b88618f4e6"
       ],
       "atlas_addresses": [
         "F02.1331213032"
@@ -28,7 +29,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-10-16T00:00:00.000Z",
+      "last_observed_at": "2026-10-23T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -5623,6 +5624,36 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:410208591",
+      "form_ids": [
+        "gform_c392d956b2915a08c479"
+      ],
+      "atlas_addresses": [
+        "F02.1331213032"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-10-22T22:03:00.000Z",
+      "last_observed_at": "2026-10-22T22:03:00.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2460267,
+          33.8313056
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -10625,12 +10656,62 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_908aa891b90cb6df9714"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:1825",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25930999417757,
+          33.84320300717056
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_b5e632d405f95b524edb",
+        "source": "fdic-locations"
+      },
+      "id": "gform_c9ed798a10b88618f4e6"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:410208591",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2460267,
+          33.8313056
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_574d99bb81fc9aa34758",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_c392d956b2915a08c479"
     }
   ],
   "current": [
     {
       "subject_id": "fdic-locations:branch:1825",
-      "form_id": "gform_da743cd76cc648a44c24",
+      "form_id": "gform_c9ed798a10b88618f4e6",
       "atlas_address": "F02.1331213032",
       "geometry": {
         "type": "Point",
@@ -10657,8 +10738,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-10-16T00:00:00.000Z",
-      "observation_id": "obs_fb47a90361d5695d82e9",
+      "observed_at": "2026-10-23T00:00:00.000Z",
+      "observation_id": "obs_ab347c6b79e82805996d",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -18795,6 +18876,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-10-21T22:05:31.000Z",
       "observation_id": "obs_fefb0e03c73d06ed44fc",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:410208591",
+      "form_id": "gform_c392d956b2915a08c479",
+      "atlas_address": "F02.1331213032",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2460267,
+          33.8313056
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Leiothlypis peregrina",
+        "common_name": "Tennessee Warbler",
+        "iconic_taxon": "Aves",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 6
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-10-22T22:03:00.000Z",
+      "observation_id": "obs_a3fadaf86be50e88221c",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

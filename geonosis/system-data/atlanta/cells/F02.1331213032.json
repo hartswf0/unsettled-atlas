@@ -14,7 +14,8 @@
         "gform_0f08dd48fc9de1dbc8c6",
         "gform_c63d58d47517997519a9",
         "gform_da743cd76cc648a44c24",
-        "gform_c9ed798a10b88618f4e6"
+        "gform_c9ed798a10b88618f4e6",
+        "gform_33a9d2a63a25bd9feec6"
       ],
       "atlas_addresses": [
         "F02.1331213032"
@@ -29,7 +30,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-10-23T00:00:00.000Z",
+      "last_observed_at": "2026-10-30T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -6014,6 +6015,36 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:411767201",
+      "form_ids": [
+        "gform_accc683facf5a41e88d1"
+      ],
+      "atlas_addresses": [
+        "F02.1331213032"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-10-30T15:06:26.000Z",
+      "last_observed_at": "2026-10-30T15:06:26.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2405757308,
+          33.824214834
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -11366,12 +11397,62 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_14d836a44429d99b612d"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:1825",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25930999417757,
+          33.84320300717056
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_fba57489e30cf7cc6233",
+        "source": "fdic-locations"
+      },
+      "id": "gform_33a9d2a63a25bd9feec6"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:411767201",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2405757308,
+          33.824214834
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_4b3f58e1cf70d3fb1c49",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_accc683facf5a41e88d1"
     }
   ],
   "current": [
     {
       "subject_id": "fdic-locations:branch:1825",
-      "form_id": "gform_c9ed798a10b88618f4e6",
+      "form_id": "gform_33a9d2a63a25bd9feec6",
       "atlas_address": "F02.1331213032",
       "geometry": {
         "type": "Point",
@@ -11398,8 +11479,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-10-23T00:00:00.000Z",
-      "observation_id": "obs_ab347c6b79e82805996d",
+      "observed_at": "2026-10-30T00:00:00.000Z",
+      "observation_id": "obs_2c889f81042129dda923",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -20122,6 +20203,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-10-28T16:18:46.000Z",
       "observation_id": "obs_fd07ddbbd0fc92f7448e",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:411767201",
+      "form_id": "gform_accc683facf5a41e88d1",
+      "atlas_address": "F02.1331213032",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2405757308,
+          33.824214834
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Symphyotrichum racemosum",
+        "common_name": "Small White Aster",
+        "iconic_taxon": "Plantae",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-10-30T15:06:26.000Z",
+      "observation_id": "obs_07edc326013bce06dfcd",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

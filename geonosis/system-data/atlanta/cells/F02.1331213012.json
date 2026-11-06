@@ -651,7 +651,8 @@
         "gform_5d12ec98aa632488b06c",
         "gform_543b42174bcb5c3454b8",
         "gform_19d757d274d380c6efde",
-        "gform_7a985571a9eda9b72887"
+        "gform_7a985571a9eda9b72887",
+        "gform_3d1c239eec98508ad6a0"
       ],
       "atlas_addresses": [
         "F02.1331213012"
@@ -666,7 +667,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-10-30T00:00:00.000Z",
+      "last_observed_at": "2026-11-06T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -15263,6 +15264,36 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:413058477",
+      "form_ids": [
+        "gform_4e9761f1b73367986bd0"
+      ],
+      "atlas_addresses": [
+        "F02.1331213012"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-11-05T21:10:57.000Z",
+      "last_observed_at": "2026-11-05T21:10:57.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3177033333,
+          33.7453133333
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -28451,6 +28482,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_23cbc7f1c5dc65ea61db"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:9534",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3125719597156,
+          33.73976399364871
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_fa544cb8d11dc7c80912",
+        "source": "fdic-locations"
+      },
+      "id": "gform_3d1c239eec98508ad6a0"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:413058477",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3177033333,
+          33.7453133333
+        ]
+      },
+      "atlas_address": "F02.1331213012",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_aac03051dc923f35ff0a",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_4e9761f1b73367986bd0"
     }
   ],
   "current": [
@@ -29254,7 +29335,7 @@
     },
     {
       "subject_id": "fdic-locations:branch:9534",
-      "form_id": "gform_7a985571a9eda9b72887",
+      "form_id": "gform_3d1c239eec98508ad6a0",
       "atlas_address": "F02.1331213012",
       "geometry": {
         "type": "Point",
@@ -29281,8 +29362,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-10-30T00:00:00.000Z",
-      "observation_id": "obs_c99e47ae6d2d7a277af2",
+      "observed_at": "2026-11-06T00:00:00.000Z",
+      "observation_id": "obs_e07920910fecbb59e797",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -50326,6 +50407,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-11-05T13:34:41.000Z",
       "observation_id": "obs_ceb01a017550aebc5785",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:413058477",
+      "form_id": "gform_4e9761f1b73367986bd0",
+      "atlas_address": "F02.1331213012",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3177033333,
+          33.7453133333
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Oecanthus niveus",
+        "common_name": "Narrow-winged Tree Cricket",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-11-05T21:10:57.000Z",
+      "observation_id": "obs_4e95c67124e8c1ad8476",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

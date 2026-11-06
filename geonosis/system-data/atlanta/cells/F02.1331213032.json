@@ -15,7 +15,8 @@
         "gform_c63d58d47517997519a9",
         "gform_da743cd76cc648a44c24",
         "gform_c9ed798a10b88618f4e6",
-        "gform_33a9d2a63a25bd9feec6"
+        "gform_33a9d2a63a25bd9feec6",
+        "gform_ab702c0f3f8aaf543943"
       ],
       "atlas_addresses": [
         "F02.1331213032"
@@ -30,7 +31,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-10-30T00:00:00.000Z",
+      "last_observed_at": "2026-11-06T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -6617,6 +6618,36 @@
       "identity_basis": [
         "legacy-signal:claim.map_note"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:413013799",
+      "form_ids": [
+        "gform_39c9910d85590bd1ebc2"
+      ],
+      "atlas_addresses": [
+        "F02.1331213032"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-11-05T16:00:22.000Z",
+      "last_observed_at": "2026-11-05T16:00:22.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2405757308,
+          33.824214834
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -12544,12 +12575,62 @@
         "source": "osm-notes"
       },
       "id": "gform_56757f0b127ede709863"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:1825",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25930999417757,
+          33.84320300717056
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_66d1c316035b7b679092",
+        "source": "fdic-locations"
+      },
+      "id": "gform_ab702c0f3f8aaf543943"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:413013799",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2405757308,
+          33.824214834
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_436a35ba04d0033768b4",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_39c9910d85590bd1ebc2"
     }
   ],
   "current": [
     {
       "subject_id": "fdic-locations:branch:1825",
-      "form_id": "gform_33a9d2a63a25bd9feec6",
+      "form_id": "gform_ab702c0f3f8aaf543943",
       "atlas_address": "F02.1331213032",
       "geometry": {
         "type": "Point",
@@ -12576,8 +12657,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-10-30T00:00:00.000Z",
-      "observation_id": "obs_2c889f81042129dda923",
+      "observed_at": "2026-11-06T00:00:00.000Z",
+      "observation_id": "obs_d651f2e93cf2031f62a3",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -22163,6 +22244,49 @@
           "reporting opportunity",
           "uneven mapper attention",
           "stale unresolved notes"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:413013799",
+      "form_id": "gform_39c9910d85590bd1ebc2",
+      "atlas_address": "F02.1331213032",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2405757308,
+          33.824214834
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Apidae",
+        "common_name": "Honey Bees, Bumble Bees, and Allies",
+        "iconic_taxon": "Insecta",
+        "quality_grade": "needs_id",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-11-05T16:00:22.000Z",
+      "observation_id": "obs_ffef612b516c308b5d67",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
         ]
       }
     }

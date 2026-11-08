@@ -10,8 +10,10 @@ import detect as D
 from scipy.spatial import cKDTree
 Q = dict(strong_support=0.85, strong_step=0.08, strong_bstep=0.04, weak_support=0.6, weak_step=0.025,
          sp_lo=1.9, sp_hi=2.7, r_tol=0.25, min_nb=2)
+import os
+ANY_SIGN = os.environ.get("STRONG_SIGN", "darker") == "any"   # non-desert basins: fields may be brighter than surroundings
 def tier(d):
-    if d["bstep"] >= Q["strong_bstep"] and d["support"] >= Q["strong_support"] and d["step"] >= Q["strong_step"]: return "strong"
+    if (abs(d["bstep"]) if ANY_SIGN else d["bstep"]) >= Q["strong_bstep"] and d["support"] >= Q["strong_support"] and d["step"] >= Q["strong_step"]: return "strong"
     if d["support"] >= Q["weak_support"] and d["step"] >= Q["weak_step"]: return "weak"
     return None
 def lattice_neighbours(c, S, tree):

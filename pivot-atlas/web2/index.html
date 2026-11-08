@@ -1,0 +1,340 @@
+<meta charset="utf-8">
+<title>Glyph Observatory</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: instrument on the left (the live picture), controls and readouts on the right; the bank below, linked both ways. */
+:root{
+  --bg:#ead4ab; --panel:#f3e3c3; --fg:#1d2316; --muted:#5d5a44; --rule:#c9ad7f; --ink:#14262d; --focus:#0f5d6b; --hi:#0f5d6b;
+  --b0:#0d9488; --b1:#c2410c; --b2:#4f46e5; --b3:#db2777; --b4:#9333ea;
+  --e0:#f1eecf; --e1:#e9c46a; --e2:#e07a3f; --e3:#b5303a; --e4:#5e1230;
+  --display:"Archivo",ui-sans-serif,system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12160f;--panel:#1b2117;--fg:#ead9b8;--muted:#aa9f83;--rule:#3a3a2a;--ink:#0b1214;--focus:#7fd0dc;--hi:#7fd0dc;
+  --b0:#0d9488;--b1:#ea580c;--b2:#6366f1;--b3:#ec4899;--b4:#a855f7;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12160f;--panel:#1b2117;--fg:#ead9b8;--muted:#aa9f83;--rule:#3a3a2a;--ink:#0b1214;--focus:#7fd0dc;--hi:#7fd0dc;
+  --b0:#0d9488;--b1:#ea580c;--b2:#6366f1;--b3:#ec4899;--b4:#a855f7;color-scheme:dark}
+*{box-sizing:border-box} [hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--display);font-size:15px;line-height:1.5;margin:0;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 56px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:36px}
+h1,h2,h3{margin:0;line-height:1.1;text-wrap:balance}
+h1{font-size:clamp(2rem,5.5vw,3.6rem);font-stretch:120%;font-weight:800}
+h2{font-size:1.35rem;font-stretch:110%;font-weight:700}
+h3{font-size:.95rem;font-weight:700}
+p{margin:0;max-width:66ch}
+.eyebrow{font:500 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.mono{font-family:var(--mono);font-size:.82rem}
+.note{font-size:.82rem;color:var(--muted)}
+.studio{display:grid;grid-template-columns:minmax(0,1fr) 330px;gap:18px;align-items:start}
+@media (max-width:900px){.studio{grid-template-columns:minmax(0,1fr)}}
+.stagecol{display:flex;flex-direction:column;gap:8px;min-width:0}
+.crumbs{display:flex;gap:6px;align-items:center;font:500 .8rem var(--mono);color:var(--muted);flex-wrap:wrap}
+.crumbs b{color:var(--fg);font-weight:500}
+.stage{position:relative;background:var(--ink);border-radius:6px;overflow:hidden;max-width:100%;touch-action:none;cursor:grab}
+.stage canvas{display:block;width:100%;height:100%}
+.stage .zoom{position:absolute;right:10px;bottom:10px;display:flex;gap:6px}
+.stage .zoom button{width:36px;height:36px;border-radius:50%;border:none;background:rgba(10,14,10,.72);color:#ead9b8;font:600 1.05rem var(--display);cursor:pointer}
+.busy{position:absolute;left:10px;top:10px;font:500 .76rem var(--mono);color:#ead9b8;background:rgba(10,14,10,.65);padding:4px 10px;border-radius:999px}
+.panel{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:14px;min-width:0}
+.group{display:flex;flex-direction:column;gap:7px}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.seg button,.btn{font:500 .82rem var(--display);color:var(--fg);background:transparent;border:1px solid var(--rule);border-radius:999px;padding:6px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.btn.primary{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+label.slider{display:grid;grid-template-columns:1fr auto;gap:2px 10px;font-size:.84rem}
+label.slider input{grid-column:1/-1;width:100%;accent-color:var(--hi)}
+label.slider output{font:500 .8rem var(--mono);font-variant-numeric:tabular-nums}
+.biomes{display:flex;flex-direction:column;gap:4px}
+.biomes label{display:grid;grid-template-columns:auto 12px 1fr auto;gap:8px;align-items:center;font-size:.84rem;cursor:pointer}
+.biomes i{width:12px;height:12px;border-radius:50%}
+.biomes span.n{font:500 .76rem var(--mono);color:var(--muted)}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 10px}
+.metrics div{display:flex;flex-direction:column;min-width:0}
+.metrics b{font-size:1.15rem;font-stretch:110%;font-variant-numeric:tabular-nums}
+.metrics span{font-size:.7rem;color:var(--muted);line-height:1.25}
+.snaps{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.snap{flex:0 0 auto;width:84px;display:flex;flex-direction:column;gap:3px;border:1px solid var(--rule);border-radius:4px;padding:4px;background:transparent;color:var(--fg);cursor:pointer;font:500 .66rem var(--mono);text-align:left}
+.snap img{width:100%;aspect-ratio:1/1;object-fit:cover;border-radius:2px}
+.snap[aria-pressed="true"]{outline:2px solid var(--hi)}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:.76rem;color:var(--muted);align-items:center}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px}
+.ramp{display:inline-block;width:120px;height:10px;border-radius:2px;vertical-align:-1px;background:linear-gradient(90deg,var(--e0),var(--e1),var(--e2),var(--e3),var(--e4))}
+.bankwrap{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+@media (max-width:900px){.bankwrap{grid-template-columns:minmax(0,1fr)}}
+.bank{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.bank canvas{display:block;width:100%;aspect-ratio:2/1}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.card canvas{width:160px;height:160px;border-radius:50%;align-self:center;background:var(--bg)}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px;font-size:.82rem;margin:0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-family:var(--mono);font-size:.76rem;overflow-wrap:anywhere}
+.links{display:flex;gap:10px;flex-wrap:wrap;font-size:.82rem} .links a{color:var(--fg)}
+.tablewrap{overflow-x:auto;border-top:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.84rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:7px 10px 7px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 .7rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+button:focus-visible,a:focus-visible,input:focus-visible,label:focus-within{outline:2px solid var(--focus);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:10px">
+  <span class="eyebrow">Sentinel-2 L2A · five irrigation basins on two continents · 0% tint</span>
+  <h1>Glyph Observatory</h1>
+  <p>Drop in any picture and it is rebuilt, live, from real center-pivot farms. Every dot is a field on Earth with a date and coordinates. Change the rules and watch the picture re-solve; zoom until the dots become farms; open the bank to see all of them at once, arranged by color, wedge, size or place.</p>
+</header>
+
+<section class="studio" aria-label="Assembler">
+  <div class="stagecol">
+    <div class="crumbs" id="crumbs"></div>
+    <div class="stage" id="stage"><canvas id="cv"></canvas><span class="busy" id="busy" hidden>Solving…</span>
+      <div class="zoom"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zfit" aria-label="Fit picture">⤢</button></div></div>
+    <div class="legend" id="ovlLegend"></div>
+  </div>
+  <aside class="panel" aria-label="Rules and readouts">
+    <div class="group"><span class="eyebrow">Picture</span>
+      <div class="row seg" id="targets"><button data-t="astronaut" aria-pressed="true">Astronaut</button><button data-t="toshka">Toshka scene</button><button data-t="upload">Your image…</button></div>
+      <input type="file" id="file" accept="image/*" hidden><span class="note">Your image stays in this browser; nothing is uploaded.</span></div>
+    <div class="group"><span class="eyebrow">Rule</span>
+      <div class="row seg" id="modes"><button data-m="faithful" aria-pressed="true">Color match</button><button data-m="halftone">Halftone (true size)</button></div>
+      <label class="slider">Dots across <output id="o_cols"></output><input type="range" id="cols" min="30" max="150" step="2" value="84"></label>
+      <label class="slider">Wedges follow edges <output id="o_lam"></output><input type="range" id="lam" min="0" max="3" step="0.1" value="1.2"></label>
+      <div class="row seg" id="gaps" aria-label="Between the dots"><button data-g="sand" aria-pressed="true">Between dots: sand</button><button data-g="void">Between dots: void</button></div>
+      <label class="slider">Repeat spacing (cells) <output id="o_cool"></output><input type="range" id="cool" min="0" max="8" step="1" value="3"></label></div>
+    <div class="group"><span class="eyebrow">Palette: basins</span><div class="biomes" id="biomes"></div></div>
+    <div class="group"><span class="eyebrow">See what's hidden</span>
+      <div class="row seg" id="ovls"><button data-o="none" aria-pressed="true">Picture</button><button data-o="de">Color error</button><button data-o="biome">Basin</button><button data-o="reuse">Reuse</button><button data-o="edge">Wedge vs edge</button></div></div>
+    <div class="group"><span class="eyebrow">Readout</span><div class="metrics" id="metrics"></div></div>
+    <div class="group"><span class="eyebrow">Snapshots (tap to restore)</span><div class="snaps" id="snaps"></div><button class="btn" id="snapBtn">Keep this version</button></div>
+  </aside>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:12px" aria-labelledby="h-bank">
+  <h2 id="h-bank">The bank</h2>
+  <p class="note">Every admitted field, drawn as itself. Choose an arrangement; the same fields move to their new places. Tap one to see where the picture uses it.</p>
+  <div class="row seg" id="arr"><button data-a="color" aria-pressed="true">By color (a*, b*)</button><button data-a="light">Lightness × size</button><button data-a="wedge">Wedge direction</button><button data-a="basin">By basin</button></div>
+  <div class="bankwrap">
+    <div class="bank"><canvas id="bk" width="1600" height="800"></canvas></div>
+    <aside class="card" id="card" aria-live="polite"><span class="eyebrow">Field</span><canvas id="chip" width="320" height="320"></canvas>
+      <h3 id="fid">Tap a dot or a bank field</h3><dl class="kv" id="fkv"></dl><div class="links" id="flinks"></div></aside>
+  </div>
+</section>
+
+<section style="display:flex;flex-direction:column;gap:12px" aria-labelledby="h-ledger">
+  <h2 id="h-ledger">Bank ledger</h2>
+  <div class="tablewrap"><table id="ledger"><thead><tr><th>Basin</th><th>Scene</th><th>Fields admitted</th><th>Lightness range L*</th><th>Admission</th></tr></thead><tbody></tbody></table></div>
+  <p class="note" id="ledgerNote"></p>
+  <h3>Checks</h3>
+  <div class="tablewrap"><table id="checks"><thead><tr><th>Check</th><th>Sample</th><th>Result</th><th>Kind</th></tr></thead><tbody></tbody></table></div>
+</section>
+</div>
+
+<script>
+(()=>{
+"use strict";
+const $=s=>document.querySelector(s), css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const BI=["Toshka, Egypt","East Oweinat, Egypt","Columbia Basin, USA","Texas Panhandle, USA","Al Jawf, Saudi Arabia"];
+let SP=null, BK=null, SH=[], G=[], tgt=null, sol=null, view={s:1,x:0,y:0}, sel=-1, ovl="none", arr="color", snaps=[], activeSnap=-1;
+const st={t:"astronaut",mode:"faithful",cols:84,lam:1.2,cool:3,gap:"sand",off:new Set()};
+// ---------- color ----------
+function srgb2lin(c){c/=255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
+function rgb2lab(r,g,b){r=srgb2lin(r);g=srgb2lin(g);b=srgb2lin(b);
+  let x=(r*0.4124+g*0.3576+b*0.1805)/0.95047,y=r*0.2126+g*0.7152+b*0.0722,z=(r*0.0193+g*0.1192+b*0.9505)/1.08883;
+  const f=t=>t>0.008856?Math.cbrt(t):7.787*t+16/116;x=f(x);y=f(y);z=f(z);return[116*y-16,500*(x-y),200*(y-z)];}
+function de00(L1,a1,b1,L2,a2,b2){const r=Math.PI/180,C1=Math.hypot(a1,b1),C2=Math.hypot(a2,b2),Cb=(C1+C2)/2,G7=Math.pow(Cb,7),Gf=0.5*(1-Math.sqrt(G7/(G7+6103515625)));
+  const ap1=a1*(1+Gf),ap2=a2*(1+Gf),Cp1=Math.hypot(ap1,b1),Cp2=Math.hypot(ap2,b2);let h1=Math.atan2(b1,ap1)/r;if(h1<0)h1+=360;let h2=Math.atan2(b2,ap2)/r;if(h2<0)h2+=360;
+  const dL=L2-L1,dC=Cp2-Cp1;let dh=h2-h1;if(Cp1*Cp2===0)dh=0;else if(dh>180)dh-=360;else if(dh<-180)dh+=360;const dH=2*Math.sqrt(Cp1*Cp2)*Math.sin(dh*r/2);
+  const Lb=(L1+L2)/2,Cpb=(Cp1+Cp2)/2;let hb=h1+h2;if(Cp1*Cp2!==0){hb=Math.abs(h1-h2)>180?(h1+h2+360)/2:(h1+h2)/2;if(hb>=360)hb-=360;}
+  const T=1-0.17*Math.cos((hb-30)*r)+0.24*Math.cos(2*hb*r)+0.32*Math.cos((3*hb+6)*r)-0.2*Math.cos((4*hb-63)*r);
+  const Sl=1+0.015*(Lb-50)**2/Math.sqrt(20+(Lb-50)**2),Sc=1+0.045*Cpb,Sh=1+0.015*Cpb*T,C7=Math.pow(Cpb,7),Rt=-2*Math.sqrt(C7/(C7+6103515625))*Math.sin(60*Math.exp(-(((hb-275)/25)**2))*r);
+  return Math.sqrt((dL/Sl)**2+(dC/Sc)**2+(dH/Sh)**2+Rt*(dC/Sc)*(dH/Sh));}
+// ---------- loading ----------
+const loadImg=src=>new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});
+async function boot(){
+  BK=await (await fetch("bank/bank.json")).json(); const c=Object.fromEntries(BK.cols.map((n,i)=>[n,i]));
+  G=BK.rows.map((r,i)=>({i,id:r[c.id],biome:BI.indexOf(r[c.biome]),lon:r[c.lon],lat:r[c.lat],rad:r[c.radius_m],date:r[c.date],scene:r[c.scene],cls:r[c.cls],
+    L:r[c.L],a:r[c.a],b:r[c.b],exg:r[c.exg],ndvi:r[c.ndvi],tex:r[c.tex],ang:r[c.dark_angle_deg]*Math.PI/180,str:r[c.dark_strength],sheet:Math.floor(i/(BK.per_row**2)),cell:i%(BK.per_row**2),bx:0,by:0,tx:0,ty:0}));
+  const raw=await Promise.all(Array.from({length:BK.sheets},(_,k)=>loadImg(`bank/sheet_${k}.jpg`)));
+  const S=BK.glyph_px,pr=BK.per_row,inner=S/1.04,off=(S-inner)/2;
+  SH=raw.map(im=>{const c=document.createElement("canvas");c.width=im.width;c.height=im.height;const g=c.getContext("2d");
+    for(let j=0;j<pr*pr;j++){const x=(j%pr)*S,y=Math.floor(j/pr)*S;g.save();g.beginPath();g.arc(x+S/2,y+S/2,inner/2*0.95,0,Math.PI*2);g.clip();g.drawImage(im,x,y,S,S,x,y,S,S);g.restore();}return c;});
+  SP={inner,off};
+  biomeUI(); ledger(); bindUI(); await setTarget("astronaut"); arrange("color",false); drawBank();
+}
+// ---------- target ----------
+async function setTarget(t,file){st.t=t;document.querySelectorAll("#targets button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===t));
+  let img=null; if(t==="upload"&&file){const u=URL.createObjectURL(file);img=await loadImg(u);} else img=await loadImg(t==="toshka"?"targets/toshka.jpg":"targets/astronaut.jpg");
+  if(!img)return; tgt=img; $("#stage").style.aspectRatio=`${img.width}/${img.height}`; await solve(); fit(); draw();}
+// ---------- the solver ----------
+function cellsFor(){const W=tgt.width,H=tgt.height,cols=st.cols,D=W/cols,rowh=D*Math.sqrt(3)/2,out=[];
+  for(let j=0;j<Math.ceil(H/rowh)+1;j++)for(let i=0;i<=cols;i++){const x=i*D+(j%2?D/2:0),y=j*rowh;if(x<W+D/2&&y<H+D/2)out.push({x,y,i,j});}return{D,rowh,cells:out};}
+function analyse(D,cells){const k=8,cols=st.cols,w=Math.round(cols*k),h=Math.round(w*tgt.height/tgt.width),cv=document.createElement("canvas");cv.width=w;cv.height=h;
+  const g=cv.getContext("2d",{willReadFrequently:true});g.drawImage(tgt,0,0,w,h);const px=g.getImageData(0,0,w,h).data,L=new Float32Array(w*h),A=new Float32Array(w*h),B=new Float32Array(w*h);
+  for(let p=0;p<w*h;p++){const q=rgb2lab(px[4*p],px[4*p+1],px[4*p+2]);L[p]=q[0];A[p]=q[1];B[p]=q[2];}
+  const s=w/tgt.width,R=D/2*s;
+  for(const c of cells){const cx=c.x*s,cy=c.y*s;let n=0,l=0,a=0,b=0,gx=0,gy=0;
+    for(let y=Math.max(1,Math.floor(cy-R));y<Math.min(h-1,Math.ceil(cy+R));y++)for(let x=Math.max(1,Math.floor(cx-R));x<Math.min(w-1,Math.ceil(cx+R));x++){
+      if((x-cx)**2+(y-cy)**2>R*R)continue;const p=y*w+x;n++;l+=L[p];a+=A[p];b+=B[p];
+      gx+=(L[p-w+1]+2*L[p+1]+L[p+w+1])-(L[p-w-1]+2*L[p-1]+L[p+w-1]);gy+=(L[p+w-1]+2*L[p+w]+L[p+w+1])-(L[p-w-1]+2*L[p-w]+L[p-w+1]);}
+    if(!n){c.skip=true;continue;}c.L=l/n;c.a=a/n;c.b=b/n;c.gm=Math.hypot(gx,gy)/n/8;c.phi=Math.atan2(-gy,-gx);} // phi: direction toward darker side (Sobel)
+  const ls=cells.filter(c=>!c.skip).map(c=>c.L).sort((p,q)=>p-q);return{Lmin:ls[Math.floor(ls.length*0.02)],Lmax:ls[Math.floor(ls.length*0.98)]};}
+let solveToken=0;
+async function solve(){const tok=++solveToken;$("#busy").hidden=false;await new Promise(r=>setTimeout(r,16));
+  const pool=G.filter(g=>!st.off.has(g.biome)); if(!pool.length){$("#busy").hidden=true;return;}
+  const {D,rowh,cells}=cellsFor(),{Lmin,Lmax}=analyse(D,cells);
+  // target gamut fit for colour matching: map target L*a*b* percentiles onto the active bank's (declared; chips are never altered)
+  const pc=(arr,q)=>{const s=[...arr].sort((x,y)=>x-y);return s[Math.floor(q*(s.length-1))];};
+  const live=cells.filter(c=>!c.skip),fitc={};
+  for(const k of ["L","a","b"]){const t2=pc(live.map(c=>c[k]),.02),t98=pc(live.map(c=>c[k]),.98),l2=pc(pool.map(g=>g[k]),.02),l98=pc(pool.map(g=>g[k]),.98);fitc[k]=[t2,t98,l2,l98];}
+  const fm=(k,v)=>{const[t2,t98,l2,l98]=fitc[k];return l2+(v-t2)*(l98-l2)/Math.max(t98-t2,1e-3);};
+  const rmax=pc(pool.map(g=>g.rad),.98),gmMax=pc(live.map(c=>c.gm),.95)||1,uses=new Map(),where=new Map();
+  // seeded order
+  let seed=7;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;const order=live.map((c,i)=>[rnd(),c]).sort((p,q)=>p[0]-q[0]).map(p=>p[1]);
+  const cool=st.cool,lam=st.lam,out=[];let t0=performance.now();
+  for(const c of order){
+    const e=Math.min(1,c.gm/gmMax);let best=-1,bc=1e18,tL,ta,tb,rreq=0;
+    if(st.mode==="halftone"){const cover=Math.pow(Math.min(1,Math.max(0,(Lmax-c.L)/Math.max(1,Lmax-Lmin))),1.15);if(cover<0.03){continue;}rreq=rmax*Math.sqrt(cover);}
+    else{tL=fm("L",c.L);ta=fm("a",c.a);tb=fm("b",c.b);}
+    for(const g of pool){let cost;
+      if(st.mode==="halftone")cost=Math.abs(Math.log(g.rad/rreq))*40+0.5*Math.hypot(g.a-c.a,g.b-c.b);
+      else cost=Math.sqrt((g.L-tL)**2+(g.a-ta)**2+(g.b-tb)**2);
+      cost+=lam*20*(e*Math.max(0,1-g.str/0.18)+(1-e)*0.5*Math.min(1,g.str/0.18));
+      const u=uses.get(g.i)||0;cost+=2*u;
+      if(cool>0&&u){const ws=where.get(g.i);let near=false;for(const w of ws){if(Math.abs(w.i-c.i)<=cool&&Math.abs(w.j-c.j)<=cool){near=true;break;}}if(near)continue;}
+      if(cost<bc){bc=cost;best=g.i;}}
+    if(best<0)continue;const g=G[best];uses.set(best,(uses.get(best)||0)+1);if(!where.has(best))where.set(best,[]);where.get(best).push(c);
+    const rot=(g.str>0.04&&c.gm>0)?c.phi-g.ang:0;const d=st.mode==="halftone"?Math.max(2,2*g.rad/rmax*(D/2)):D;
+    out.push({x:c.x,y:c.y,d,g:best,rot,i:c.i,j:c.j,de:de00(c.L,c.a,c.b,g.L,g.a,g.b),e,align:g.str>=0.08?1:0});
+    if(performance.now()-t0>40){await new Promise(r=>setTimeout(r,0));if(tok!==solveToken)return;t0=performance.now();}}
+  sol={D,rowh,dots:out,uses,fit:fitc};render();metrics();$("#busy").hidden=true;draw();drawBank();}
+// ---------- render composite ----------
+let comp=null;
+function drawGlyph(g2,G0,x,y,d,rot){const S=BK.glyph_px,pr=BK.per_row,sx=(G0.cell%pr)*S+SP.off,sy=Math.floor(G0.cell/pr)*S+SP.off;
+  g2.save();g2.translate(x,y);if(rot)g2.rotate(rot);g2.drawImage(SH[G0.sheet],sx,sy,SP.inner,SP.inner,-d/2,-d/2,d,d);g2.restore();}
+function sandCol(){return st.gap==="void"?"#0b0d0a":"#d29a62";}
+function render(){const W=tgt.width,H=tgt.height,k=Math.min(1,3000/W);comp=document.createElement("canvas");comp.width=Math.round(W*k);comp.height=Math.round(H*k);
+  const g=comp.getContext("2d");g.fillStyle=sandCol();g.fillRect(0,0,comp.width,comp.height);g.imageSmoothingQuality="high";
+  for(const p of sol.dots)drawGlyph(g,G[p.g],p.x*k,p.y*k,p.d*k,p.rot);comp.k=k;}
+// ---------- view ----------
+const cv=$("#cv"),cx=cv.getContext("2d"),stage=$("#stage");
+function size(){const r=stage.getBoundingClientRect(),d=devicePixelRatio||1;cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);}
+function fit(){size();if(!tgt)return;const s=Math.min(cv.width/tgt.width,cv.height/tgt.height);view={s,x:(cv.width-tgt.width*s)/2,y:(cv.height-tgt.height*s)/2};}
+function rampCol(v){const s=["--e0","--e1","--e2","--e3","--e4"].map(css),t=Math.min(1,v/20)*4,i=Math.min(3,Math.floor(t));return s[t>=4?4:i];}
+function draw(){cx.fillStyle=css("--ink");cx.fillRect(0,0,cv.width,cv.height);if(!comp||!sol)return;
+  const fitS=Math.min(cv.width/tgt.width,cv.height/tgt.height),zoom=view.s/fitS,dotPx=sol.D*view.s;
+  cx.drawImage(comp,view.x,view.y,tgt.width*view.s,tgt.height*view.s);
+  if(dotPx>34){ // semantic zoom: redraw visible fields from their own pixels, label them when large
+    for(const p of sol.dots){const X=view.x+p.x*view.s,Y=view.y+p.y*view.s,dd=p.d*view.s;if(X<-dd||Y<-dd||X>cv.width+dd||Y>cv.height+dd)continue;
+      drawGlyph(cx,G[p.g],X,Y,dd,p.rot);
+      if(dd>120){const g=G[p.g];cx.fillStyle="rgba(10,14,10,.72)";const t=`${g.lat.toFixed(3)}, ${g.lon.toFixed(3)} · ${Math.round(g.rad)} m`;cx.font=`${Math.round(11*devicePixelRatio)}px ${css("--mono")}`;
+        const tw=cx.measureText(t).width+12;cx.fillRect(X-tw/2,Y+dd/2-24*devicePixelRatio,tw,18*devicePixelRatio);cx.fillStyle="#ead9b8";cx.textAlign="center";cx.fillText(t,X,Y+dd/2-11*devicePixelRatio);cx.textAlign="left";}}}
+  if(ovl!=="none"||sel>=0){for(const p of sol.dots){const X=view.x+p.x*view.s,Y=view.y+p.y*view.s,r=p.d*view.s/2;if(X<-r||Y<-r||X>cv.width+r||Y>cv.height+r)continue;
+    if(ovl==="de"){cx.globalAlpha=.85;cx.fillStyle=rampCol(p.de);cx.beginPath();cx.arc(X,Y,r,0,7);cx.fill();cx.globalAlpha=1;}
+    else if(ovl==="biome"){cx.strokeStyle=css(`--b${G[p.g].biome}`);cx.lineWidth=Math.max(2,r*.28);cx.beginPath();cx.arc(X,Y,r*.82,0,7);cx.stroke();}
+    else if(ovl==="reuse"){const u=sol.uses.get(p.g);if(u>1){cx.fillStyle=rampCol(Math.min(20,(u-1)*2.5));cx.globalAlpha=.85;cx.beginPath();cx.arc(X,Y,r,0,7);cx.fill();cx.globalAlpha=1;}}
+    else if(ovl==="edge"&&p.e>0.35&&G[p.g].str>0.02){const g=G[p.g],a=g.ang+p.rot+Math.PI/2,L=r*.9;cx.strokeStyle=p.align===1?"#7fd0dc":"#e07a3f";cx.lineWidth=Math.max(1.5,r*.12);cx.beginPath();cx.moveTo(X-Math.cos(a)*L,Y-Math.sin(a)*L);cx.lineTo(X+Math.cos(a)*L,Y+Math.sin(a)*L);cx.stroke();}
+    if(sel>=0&&p.g===sel){cx.strokeStyle=css("--hi")||"#7fd0dc";cx.lineWidth=Math.max(2,2*devicePixelRatio);cx.beginPath();cx.arc(X,Y,r+3,0,7);cx.stroke();}}}
+  crumbs(zoom,dotPx);}
+function crumbs(z,dp){const lvl=sel>=0?2:dp>34?1:0;$("#crumbs").innerHTML=["Picture","Fields","Field"].map((n,i)=>i===lvl?`<b>${n}</b>`:n).join(" › ")+` · ${z.toFixed(1)}×`;}
+const pts=new Map();let moved=0,last=null,pinch=null;
+function zoomAt(f,px,py){const ns=Math.min(Math.max(view.s*f,0.05),80);const k=ns/view.s;view.x=px-(px-view.x)*k;view.y=py-(py-view.y)*k;view.s=ns;draw();}
+const loc=e=>{const r=cv.getBoundingClientRect(),d=cv.width/r.width;return[(e.clientX-r.left)*d,(e.clientY-r.top)*d];};
+cv.addEventListener("wheel",e=>{e.preventDefault();const[p,q]=loc(e);zoomAt(Math.exp(-e.deltaY*0.0015),p,q);},{passive:false});
+cv.addEventListener("pointerdown",e=>{cv.setPointerCapture(e.pointerId);pts.set(e.pointerId,loc(e));moved=0;last=loc(e);if(pts.size===2){const[a,b]=[...pts.values()];pinch=Math.hypot(a[0]-b[0],a[1]-b[1]);}});
+cv.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;const p=loc(e);if(pts.size===2){pts.set(e.pointerId,p);const[a,b]=[...pts.values()],dd=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pinch)zoomAt(dd/pinch,(a[0]+b[0])/2,(a[1]+b[1])/2);pinch=dd;moved=99;return;}
+  const dx=p[0]-last[0],dy=p[1]-last[1];moved+=Math.abs(dx)+Math.abs(dy);if(moved>6){view.x+=dx;view.y+=dy;draw();}last=p;pts.set(e.pointerId,p);});
+cv.addEventListener("pointerup",e=>{const n=pts.size;pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(n===1&&moved<=6){const[p,q]=loc(e);pickStage(p,q);}});
+cv.addEventListener("pointercancel",e=>{pts.delete(e.pointerId);pinch=null;});
+$("#zin").onclick=()=>zoomAt(1.8,cv.width/2,cv.height/2);$("#zout").onclick=()=>zoomAt(1/1.8,cv.width/2,cv.height/2);$("#zfit").onclick=()=>{fit();draw();};
+function pickStage(px,py){if(!sol)return;const x=(px-view.x)/view.s,y=(py-view.y)/view.s;let best=null,bd=1e9;for(const p of sol.dots){const d=Math.hypot(p.x-x,p.y-y);if(d<bd){bd=d;best=p;}}
+  if(best&&bd<best.d*.6)select(best.g,best);}
+// ---------- metrics ----------
+function ssim(){const n=128,a=document.createElement("canvas"),b=document.createElement("canvas");a.width=b.width=n;a.height=b.height=Math.round(n*tgt.height/tgt.width);
+  a.getContext("2d").drawImage(tgt,0,0,a.width,a.height);b.getContext("2d").drawImage(comp,0,0,b.width,b.height);
+  const A=a.getContext("2d").getImageData(0,0,a.width,a.height).data,B=b.getContext("2d").getImageData(0,0,b.width,b.height).data,W=a.width,H=a.height,y=(d,i)=>0.299*d[i]+0.587*d[i+1]+0.114*d[i+2];
+  let tot=0,m=0;const C1=6.5,C2=58.5;for(let by=0;by+8<=H;by+=4)for(let bx=0;bx+8<=W;bx+=4){let sa=0,sb=0,saa=0,sbb=0,sab=0;
+    for(let j=0;j<8;j++)for(let i=0;i<8;i++){const k=4*((by+j)*W+bx+i),p=y(A,k),q=y(B,k);sa+=p;sb+=q;saa+=p*p;sbb+=q*q;sab+=p*q;}
+    const ma=sa/64,mb=sb/64,va=saa/64-ma*ma,vb=sbb/64-mb*mb,cab=sab/64-ma*mb;tot+=((2*ma*mb+C1)*(2*cab+C2))/((ma*ma+mb*mb+C1)*(va+vb+C2));m++;}return tot/m;}
+let lastM=null;
+function metrics(){const de=sol.dots.map(p=>p.de).sort((a,b)=>a-b),mean=de.reduce((s,v)=>s+v,0)/de.length,p95=de[Math.floor(.95*(de.length-1))];
+  let maxU=0;sol.uses.forEach(u=>maxU=Math.max(maxU,u));const s=ssim(),basins=new Set(sol.dots.map(p=>G[p.g].biome)).size;
+  const ed=sol.dots.filter(p=>p.e>0.35),al=ed.length?ed.filter(p=>p.align===1).length/ed.length:0;
+  lastM={mean,p95,s,maxU,distinct:sol.uses.size,dots:sol.dots.length,basins,al};
+  const item=(v,l)=>`<div><b>${v}</b><span>${l}</span></div>`;
+  $("#metrics").innerHTML=item(mean.toFixed(1),"mean ΔE00, cell vs field")+item(p95.toFixed(1),"95th pct ΔE00")+item(s.toFixed(2),"SSIM, luminance 128 px")+
+    item(sol.uses.size.toLocaleString(),`distinct fields of ${sol.dots.length.toLocaleString()} dots`)+item(maxU,"max uses of one field")+item(`${Math.round(al*100)}%`,"edge cells drawn with a one-sided (wedge) field")+
+    item(basins,"basins in use")+item("0%","tint applied to fields")+item(st.mode==="faithful"?"on":"off","target tone-mapped to bank");}
+// ---------- overlays legend ----------
+function ovlLegend(){const L=$("#ovlLegend");
+  if(ovl==="de")L.innerHTML=`<span>Color error ΔE00 (cell mean vs field mean): 0</span><span class="ramp"></span><span>20+</span>`;
+  else if(ovl==="biome")L.innerHTML=BI.map((b,i)=>`<span><i style="background:var(--b${i})"></i>${b}</span>`).join("");
+  else if(ovl==="reuse")L.innerHTML=`<span>Fields used more than once, by count: 2</span><span class="ramp"></span><span>9+</span>`;
+  else if(ovl==="edge")L.innerHTML=`<span><i style="background:#7fd0dc"></i>edge carried by a planted/bare wedge, rotated to the picture's edge</span><span><i style="background:#e07a3f"></i>edge cell with no strong wedge available</span>`;
+  else L.innerHTML=`<span>${st.gap==="void"?"Space between dots is empty (black); it is not a field.":"Space between dots is measured Egyptian desert sand; it is not a field."} Scroll or pinch to zoom until the dots turn into farms.</span>`;}
+// ---------- bank ----------
+const bk=$("#bk"),bx=bk.getContext("2d");let anim=0;
+function arrange(a,animate=true){arr=a;document.querySelectorAll("#arr button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.a===a));
+  const W=bk.width,H=bk.height,m=40;const pool=G;
+  if(a==="color"){const ax=pool.map(g=>g.a),bb=pool.map(g=>g.b),x0=Math.min(...ax),x1=Math.max(...ax),y0=Math.min(...bb),y1=Math.max(...bb);
+    pool.forEach(g=>{g.tx=m+(g.a-x0)/(x1-x0||1)*(W-2*m);g.ty=H-m-(g.b-y0)/(y1-y0||1)*(H-2*m);});}
+  else if(a==="light"){const rs=pool.map(g=>g.rad),r0=Math.min(...rs),r1=Math.max(...rs);pool.forEach(g=>{g.tx=m+(g.L/100)*(W-2*m);g.ty=H-m-(g.rad-r0)/(r1-r0||1)*(H-2*m);});}
+  else if(a==="wedge"){const cxm=W/2,cym=H/2,R=H/2-m,mx=Math.max(...pool.map(g=>g.str));pool.forEach(g=>{const s=Math.sqrt(g.str/mx);g.tx=cxm+Math.cos(g.ang)*R*s*1.9;g.ty=cym+Math.sin(g.ang)*R*s;});}
+  else{const cols=6,cw=(W-2*m)/cols;BI.forEach((b,k)=>{const grp=pool.filter(g=>g.biome===k).sort((p,q)=>p.L-q.L),per=Math.max(1,Math.floor(cw/11));grp.forEach((g,n)=>{g.tx=m+k*cw+(n%per)*11+6;g.ty=m+22+Math.floor(n/per)*11;});});}
+  if(!animate){pool.forEach(g=>{g.bx=g.tx;g.by=g.ty;});drawBank();return;}
+  const from=pool.map(g=>[g.bx,g.by]),t0=performance.now(),dur=matchMedia("(prefers-reduced-motion: reduce)").matches?0:700,id=++anim;
+  const step=t=>{if(id!==anim)return;const u=dur?Math.min(1,(t-t0)/dur):1,e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2;pool.forEach((g,i)=>{g.bx=from[i][0]+(g.tx-from[i][0])*e;g.by=from[i][1]+(g.ty-from[i][1])*e;});drawBank();if(u<1)requestAnimationFrame(step);};requestAnimationFrame(step);}
+function drawBank(){if(!G.length||!SH.length)return;const W=bk.width,H=bk.height;bx.clearRect(0,0,W,H);bx.fillStyle=css("--panel");bx.fillRect(0,0,W,H);
+  bx.fillStyle=css("--muted");bx.font=`20px ${css("--mono")}`;
+  if(arr==="color"){bx.fillText("a* green → red",W-230,H-12);bx.save();bx.translate(18,170);bx.rotate(-Math.PI/2);bx.fillText("b* blue → yellow",0,0);bx.restore();}
+  if(arr==="light"){bx.fillText("lightness L* →",W-200,H-12);bx.save();bx.translate(18,190);bx.rotate(-Math.PI/2);bx.fillText("radius (m) →",0,0);bx.restore();}
+  if(arr==="wedge"){bx.fillText("angle = side the planted wedge faces; distance = how one-sided",24,H-12);}
+  if(arr==="basin"){const cw=(W-80)/6;BI.forEach((b,k)=>{bx.fillStyle=css(`--b${k}`);bx.fillRect(40+k*cw,22,10,10);bx.fillStyle=css("--fg");bx.fillText(b.split(",")[0],56+k*cw,32);});}
+  const used=sol?sol.uses:new Map(),S=BK.glyph_px,pr=BK.per_row,dim=st.off;
+  for(const g of G){const r=arr==="basin"?5:6;bx.globalAlpha=dim.has(g.biome)?0.18:(sol&&!used.has(g.i)?0.55:1);
+    bx.drawImage(SH[g.sheet],(g.cell%pr)*S+SP.off,Math.floor(g.cell/pr)*S+SP.off,SP.inner,SP.inner,g.bx-r,g.by-r,2*r,2*r);}
+  bx.globalAlpha=1;if(sel>=0){const g=G[sel];bx.strokeStyle=css("--hi");bx.lineWidth=3;bx.beginPath();bx.arc(g.bx,g.by,12,0,7);bx.stroke();}}
+const bloc=e=>{const r=bk.getBoundingClientRect();return[(e.clientX-r.left)*bk.width/r.width,(e.clientY-r.top)*bk.height/r.height];};
+bk.addEventListener("click",e=>{const[x,y]=bloc(e);let best=-1,bd=1e9;for(const g of G){const d=Math.hypot(g.bx-x,g.by-y);if(d<bd){bd=d;best=g.i;}}if(bd<14)select(best,null);});
+// ---------- selection ----------
+function select(gi,dot){sel=gi;const g=G[gi],S=BK.glyph_px,pr=BK.per_row,c=$("#chip").getContext("2d");c.clearRect(0,0,320,320);
+  c.imageSmoothingQuality="high";c.drawImage(SH[g.sheet],(g.cell%pr)*S+SP.off,Math.floor(g.cell/pr)*S+SP.off,SP.inner,SP.inner,0,0,320,320);
+  const u=sol?sol.uses.get(gi)||0:0,st2={active:"Planted",partial:"Partly planted",fallow:"Bare"}[g.cls]||g.cls;
+  $("#fid").textContent=g.id;
+  $("#fkv").innerHTML=`<dt>Basin</dt><dd>${BI[g.biome]}</dd><dt>Where</dt><dd>${g.lat.toFixed(5)}, ${g.lon.toFixed(5)}</dd><dt>Size</dt><dd>${Math.round(g.rad)} m radius · ${(Math.PI*g.rad*g.rad/1e4).toFixed(0)} ha</dd>
+    <dt>Seen</dt><dd>${g.date} · ${st2}</dd><dt>Scene</dt><dd>${g.scene}</dd><dt>Color</dt><dd>L* ${g.L} · a* ${g.a} · b* ${g.b}</dd><dt>In picture</dt><dd>${u?`${u} dot${u>1?"s":""} (ringed)`:"not used"}</dd>
+    ${dot?`<dt>This dot</dt><dd>ΔE00 ${dot.de.toFixed(1)} · rotated ${Math.round(dot.rot*180/Math.PI)}°</dd>`:""}`;
+  $("#flinks").innerHTML=`<a href="https://www.openstreetmap.org/?mlat=${g.lat}&mlon=${g.lon}#map=14/${g.lat}/${g.lon}" target="_blank" rel="noopener">OpenStreetMap</a><a href="https://browser.dataspace.copernicus.eu/?zoom=14&lat=${g.lat}&lng=${g.lon}" target="_blank" rel="noopener">Copernicus Browser</a>`;
+  draw();drawBank();}
+// ---------- UI ----------
+function biomeUI(){const cnt=BI.map((_,k)=>G.filter(g=>g.biome===k).length);
+  $("#biomes").innerHTML=BI.map((b,k)=>cnt[k]?`<label><input type="checkbox" data-k="${k}" checked><i style="background:var(--b${k})"></i>${b}<span class="n">${cnt[k].toLocaleString()}</span></label>`:"").join("");
+  document.querySelectorAll("#biomes input").forEach(i=>i.onchange=()=>{i.checked?st.off.delete(+i.dataset.k):st.off.add(+i.dataset.k);
+    if(st.off.size>=BI.filter((_,k)=>cnt[k]).length){i.checked=true;st.off.delete(+i.dataset.k);return;}queue();});}
+let qt=null;const queue=()=>{clearTimeout(qt);qt=setTimeout(()=>solve(),180);};
+function bindUI(){
+  for(const[id,key,fmt] of [["cols","cols",v=>v],["lam","lam",v=>(+v).toFixed(1)],["cool","cool",v=>v]]){const el=$("#"+id),o=$("#o_"+id);o.textContent=fmt(el.value);
+    el.oninput=()=>{st[key]=+el.value;o.textContent=fmt(el.value);queue();};}
+  document.querySelectorAll("#modes button").forEach(b=>b.onclick=()=>{st.mode=b.dataset.m;document.querySelectorAll("#modes button").forEach(x=>x.setAttribute("aria-pressed",x===b));solve();});
+  document.querySelectorAll("#gaps button").forEach(b=>b.onclick=()=>{st.gap=b.dataset.g;document.querySelectorAll("#gaps button").forEach(x=>x.setAttribute("aria-pressed",x===b));render();metrics();draw();ovlLegend();});
+  document.querySelectorAll("#ovls button").forEach(b=>b.onclick=()=>{ovl=b.dataset.o;document.querySelectorAll("#ovls button").forEach(x=>x.setAttribute("aria-pressed",x===b));ovlLegend();draw();});
+  document.querySelectorAll("#targets button").forEach(b=>b.onclick=()=>{if(b.dataset.t==="upload")$("#file").click();else setTarget(b.dataset.t);});
+  $("#file").onchange=e=>{const f=e.target.files[0];if(f)setTarget("upload",f);};
+  document.querySelectorAll("#arr button").forEach(b=>b.onclick=()=>arrange(b.dataset.a));
+  $("#snapBtn").onclick=snapshot;ovlLegend();
+  new ResizeObserver(()=>{const s=view.s;size();if(tgt){fit();}draw();}).observe(stage);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{draw();drawBank();});}
+function snapshot(){if(!comp||!lastM)return;const t=document.createElement("canvas");t.width=t.height=168;const s=Math.max(168/comp.width,168/comp.height);
+  t.getContext("2d").drawImage(comp,(168-comp.width*s)/2,(168-comp.height*s)/2,comp.width*s,comp.height*s);
+  snaps.push({st:{...st,off:new Set(st.off)},m:{...lastM},img:t.toDataURL("image/jpeg",.8)});activeSnap=snaps.length-1;snapUI();}
+function snapUI(){$("#snaps").innerHTML=snaps.map((s,i)=>`<button class="snap" data-i="${i}" aria-pressed="${i===activeSnap}"><img src="${s.img}" alt=""><span>${s.st.mode==="faithful"?"color":"halftone"} · ${s.st.cols} · ${s.st.gap}</span><span>ΔE ${s.m.mean.toFixed(1)} · SSIM ${s.m.s.toFixed(2)}</span></button>`).join("");
+  document.querySelectorAll(".snap").forEach(b=>b.onclick=async()=>{const s=snaps[+b.dataset.i];activeSnap=+b.dataset.i;Object.assign(st,{...s.st,off:new Set(s.st.off)});
+    for(const k of ["cols","lam","cool"]){$("#"+k).value=st[k];$("#o_"+k).textContent=k==="lam"?(+st[k]).toFixed(1):st[k];}
+    document.querySelectorAll("#modes button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.m===st.mode));document.querySelectorAll("#gaps button").forEach(x=>x.setAttribute("aria-pressed",x.dataset.g===st.gap));document.querySelectorAll("#biomes input").forEach(i=>i.checked=!st.off.has(+i.dataset.k));
+    snapUI();await solve();});}
+async function ledger(){let L=null;try{L=await (await fetch("bank/ledger.json")).json();}catch(e){}
+  let C=null;try{C=await (await fetch("bank/checks.json")).json();}catch(e){}
+  if(C)$("#checks tbody").innerHTML=C.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="mono">${r[3]}</td></tr>`).join("");
+  if(!L)return;$("#ledger tbody").innerHTML=L.rows.map(r=>`<tr><td>${r[0]}</td><td class="mono">${r[1]}</td><td>${r[2]}</td><td>${r[3]}</td><td>${r[4]}</td></tr>`).join("");$("#ledgerNote").textContent=L.note;}
+boot();
+})();
+</script>

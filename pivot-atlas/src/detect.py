@@ -7,7 +7,8 @@
 Writes candidates with all scores so thresholds can be audited, not hidden."""
 import sys, json, numpy as np, cv2
 sys.path.insert(0, __file__.rsplit("/",1)[0]); from common import *
-P = dict(rmin=7, rmax=32, tile=768, ovl=80, hough_param2=0.55, support_min=0.5, step_min=0.015, mean_step_min=0.03, overlap_max=0.80)
+import os
+P = dict(rmin=7, rmax=int(os.environ.get("RMAX", 32)), tile=768, ovl=80, hough_param2=0.55, support_min=0.5, step_min=0.015, mean_step_min=0.03, overlap_max=0.80)
 NA = 96
 ANG = np.linspace(0, 2*np.pi, NA, endpoint=False)
 

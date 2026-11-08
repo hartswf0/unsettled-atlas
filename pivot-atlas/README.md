@@ -51,3 +51,13 @@ The Toshka tile had about 300 pivot fields in March 2017 and 3,410 in March 2025
 ## Licenses
 
 Contains modified Copernicus Sentinel data 2017–2025. Portrait target: NASA photo of Eileen Collins (public domain), via scikit-image `data.astronaut`. Code: MIT (repository license).
+
+## Glyph Observatory (web2/) and the five-basin bank
+
+`web2/index.html` assembles any image live in the browser from the glyph bank (`web2/bank/`). It offers color-match or true-size halftone, wedges rotated along Sobel edges, repeat spacing, basin palette toggles, a sand or void filler between dots, overlays (ΔE00, basin, reuse, wedge vs edge), semantic zoom to labelled farms, a bank view that morphs between arrangements, and snapshots.
+
+- **Bank:** 7,207 fields. Toshka 3,410 and East Oweinat 1,213 (the catalog), Columbia Basin 630, Texas Panhandle 348, Al Jawf 1,606. New basins pass the strict rule: strong rim, sub-pixel fit, residual ≤ 0.05. Non-desert basins allow either contrast sign (`STRONG_SIGN=any`).
+- **Excluded:** Western Bahia. The independent critic measured 75% precision (circles cut from rectangular fields with no hub).
+- **Harvest:** `src/pick_scene.py`, `src/harvest_tile.sh`, `src/rerun_from_lattice.sh`, `src/export_bank.py`.
+- **External check:** `src/external_check.py` against Chen et al., *Africa hyper-arid CPIS* (CC BY 4.0, raw.githubusercontent.com/detectcpis/africa_hyperarid_cpis_shp). In 2025 we find 94.4% (Toshka) and 97.3% (East Oweinat) of its circular fields, and 95.0% / 94.3% of our records are in it. In 2017 our presence test over-counts: only 64% of our Toshka 2017 records are in the inventory.
+- **Critic** (`data/critic_bank/verdicts.json`): micro 10× met; macro 1× not met. The palette lacks bright, near-white, grey, saturated-red and blue fields. Adding basins raised diversity but not color fidelity (astronaut mean ΔE00 29.5 → 29.2).

@@ -1,0 +1,39 @@
+<meta charset="utf-8">
+<title>Micro / Macro Portrait</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · C2 · learned from Georges Seurat, A Sunday on La Grande Jatte</span>
+<h1>Micro / Macro Portrait</h1>
+</header>
+<p class="lede">From across the room, a portrait. Under the lens, real farms. Move the lens (drag or hover) to see every dot as the field it is, with its coordinates.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+ <div class="panel"><span class="eyebrow">Bar met (critic, 10×)</span><p>Every dot is a labelled, unaltered field, and no field repeats within a zoomed crop.</p></div>
+ <div class="panel unknown"><span class="eyebrow">Open gap (critic, 1×)</span><h2>The light tones are out of reach</h2><p>The bank has no bright, near-white, grey, saturated red or blue fields, so the face and white suit collapse into tan. Fixing that means harvesting new fields (chalk soils, harvested wheat, flooded fields), never tinting.</p></div>
+</div>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{
+const [M,img,F,B]=await Promise.all([K.json("m_astronaut_halftone.json"),K.img("astronaut_halftone.jpg"),K.json("fields.json"),K.bank()]);
+const C=Object.fromEntries(F.cols.map((n,i)=>[n,i])),bidx=new Map(B.rows.map((r,i)=>[r[B.c.id],i])),S=K.stage(K.$("#cv"),1),g=S.g,k=img.width/M.w;
+const dots=M.dots.map(d=>({x:d[0]*k,y:d[1]*k,d:d[2]*k,rot:(d[4]||0)*Math.PI/180,bi:bidx.get(F.rows[d[3]][C.id]),row:F.rows[d[3]]}));
+let lx=0.45*img.width,ly=0.32*img.height;const Z=5;
+function draw(){const s=S.W/img.width;g.drawImage(img,0,0,S.W,S.H);const R=S.W*0.17,cx=lx*s,cy=ly*s;g.save();g.beginPath();g.arc(cx,cy,R,0,7);g.clip();g.fillStyle="#d29a62";g.fillRect(cx-R,cy-R,2*R,2*R);
+ let near=null,nd=1e9;const need=[];dots.forEach(p=>{const X=cx+(p.x-lx)*s*Z,Y=cy+(p.y-ly)*s*Z;if(Math.abs(X-cx)>R+p.d*s*Z||Math.abs(Y-cy)>R+p.d*s*Z)return;if(p.bi===undefined)return;
+  if(!K.chip(g,p.bi,X,Y,p.d*s*Z,p.rot))need.push(p.bi);const dd=Math.hypot(p.x-lx,p.y-ly);if(dd<nd){nd=dd;near=p;}});g.restore();
+ g.strokeStyle="#ead9b8";g.lineWidth=3*S.dpr;g.beginPath();g.arc(cx,cy,R,0,7);g.stroke();if(need.length)K.ensure(need).then(draw);
+ if(near){const r=near.row;K.$("#cap").textContent=`Centre of lens: ${r[C.id]} · ${r[C.region]} · ${r[C.lat].toFixed(4)} N, ${r[C.lon].toFixed(4)} E · ${Math.round(r[C.radius_m])} m · ${r[C.date]} · lens ×${Z}`;}
+ K.labels(K.$("#labs"),["COMPOSED","OBSERVED"]);}
+const mv=e=>{const r=S.c.getBoundingClientRect();lx=(e.clientX-r.left)/r.width*img.width;ly=(e.clientY-r.top)/r.height*img.height;draw();};
+S.c.addEventListener("pointermove",e=>{if(e.pointerType==="mouse"||e.buttons)mv(e);});S.c.addEventListener("pointerdown",mv);S.c.style.touchAction="none";
+await K.ensure(dots.filter(p=>p.bi!==undefined).slice(0,1).map(p=>p.bi));draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

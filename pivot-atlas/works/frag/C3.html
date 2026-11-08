@@ -1,0 +1,19 @@
+<p class="lede">Every field Toshka has in 2025 appears at its true position in the year the inventory first records it. By 2021 the marks come faster than you can count.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+<div class="ctrl" id="pl"></div>
+<p class="note">Within a year, the order in which marks appear is arbitrary (the inventory is annual). Fields that existed and were later lost are not in this count; see Choreography of Scale.</p>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),16/10),g=S.g,inv=await K.json("inventory.json"),P=inv.first_year["36QUL"].slice();let seed=11;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;
+P.forEach(p=>p.push(rnd()));P.sort((a,b)=>a[3]-b[3]||a[4]-b[4]);const lon=P.map(p=>p[0]),lat=P.map(p=>p[1]),x0=Math.min(...lon),x1=Math.max(...lon),y0=Math.min(...lat),y1=Math.max(...lat),kx=Math.cos(23*Math.PI/180);
+const pre=P.filter(p=>p[3]<=2016).length,y17=P.findIndex(p=>p[3]>=2017),D=60;
+function XY(p){const s=Math.min(S.W*0.92/((x1-x0)*kx),S.H*0.88/(y1-y0));return[S.W/2+(p[0]-(x0+x1)/2)*kx*s,S.H/2-(p[1]-(y0+y1)/2)*s,Math.max(1.4,p[2]/111320*s)];}
+function draw(t){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);const u=t/D,yr=2016+u*9.0,n=P.filter(p=>p[3]<=2016||(p[3]-2016-1+p[4])<u*9).length;
+ for(let i=0;i<n;i++){const p=P[i],[x,y,r]=XY(p);g.fillStyle=p[3]===Math.floor(yr)?"#ead9b8":"#8fb36f";g.beginPath();g.arc(x,y,r,0,7);g.fill();}
+ g.fillStyle="#ead9b8";g.font=`800 ${44*S.dpr}px Archivo`;g.fillText(Math.min(2025,Math.floor(yr)),S.W*0.04,S.H*0.12);g.font=`800 ${26*S.dpr}px Archivo`;g.fillText(`${n.toLocaleString()} fields`,S.W*0.04,S.H*0.19);
+ K.$("#cap").textContent="Toshka, Egypt · positions are real · first-seen years from Chen et al. inventory";K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED"]);}
+const Pl=K.player(K.$("#pl"),{duration:D,chapters:[{t:0,name:"2017"},{t:D*4/9,name:"2021"},{t:D*6/9,name:"2023"},{t:D-0.01,name:"2025"}],draw});Pl.seek(K.reduced?D:0);addEventListener("resize",()=>{S.fit();Pl.redraw();});
+})();
+</script>

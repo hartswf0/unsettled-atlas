@@ -1,0 +1,42 @@
+<meta charset="utf-8">
+<title>Choreography of Scale</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · A7 · learned from Johnny Kelly and Nexus Studios, Back to the Start</span>
+<h1>Choreography of Scale</h1>
+</header>
+<p class="lede">Choreography of scale: one hub, one circle, one farm, a whole basin, and then the turn, where some circles go back to sand. Every circle in the turn is a field the inventory recorded and later lost.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+<div class="ctrl" id="pl"></div>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint). Field counts by year: Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),16/9),g=S.g;const [inv,man,farm]=await Promise.all([K.json("inventory.json"),K.json("manifest.json"),K.img("farm_oweinat.jpg")]);
+const FM=man.farm,hub=FM.fields.reduce((a,b)=>Math.hypot(b.x-.5,b.y-.5)<Math.hypot(a.x-.5,a.y-.5)?b:a);
+const T=inv.first_year["36QUL"],gone=inv.gone["36QUL"],lons=T.map(p=>p[0]),lats=T.map(p=>p[1]);
+const bx={lon0:Math.min(...lons),lon1:Math.max(...lons),lat0:Math.min(...lats),lat1:Math.max(...lats)};
+let seed=5;const rnd=()=>(seed=(seed*16807)%2147483647)/2147483647;const start=FM.fields.map(()=>[rnd(),rnd()]);
+function GP(lon,lat){const k=Math.cos(23*Math.PI/180),w=(bx.lon1-bx.lon0)*k,h=bx.lat1-bx.lat0,s=Math.min(S.W*0.9/w,S.H*0.86/h);return[S.W/2+((lon-(bx.lon0+bx.lon1)/2)*k)*s,S.H/2-(lat-(bx.lat0+bx.lat1)/2)*s,s];}
+function draw(t){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);const cap=K.$("#cap");let labs=[];const side=S.H*0.92,ox=(S.W-side)/2,oy=S.H*0.04;
+ if(t<5){const u=K.ease(K.clamp((t-0.5)/3.5,0,1)),d=K.lerp(4*S.dpr,S.H*0.6,u);g.fillStyle="#ead9b8";g.beginPath();g.arc(S.W/2,S.H/2,3*S.dpr,0,7);g.fill();if(t>1)K.circ(g,farm,hub.x,hub.y,hub.r,S.W/2,S.H/2,d);cap.textContent="One hub, one circle.";labs=["OBSERVED"];}
+ else if(t<14){const u=K.ease(K.clamp((t-5)/6,0,1));FM.fields.forEach((q,i)=>{const x=K.lerp(start[i][0]*S.W,ox+q.x*side,u),y=K.lerp(start[i][1]*S.H,oy+q.y*side,u);K.circ(g,farm,q.x,q.y,q.r,x,y,2*q.r*side);});
+  cap.textContent=u<1?"Fields slide into the farm grid…":`One farm: ${FM.fields.length} fields at their true positions, East Oweinat`;labs=u<1?["COMPOSED"]:["GEOGRAPHIC","OBSERVED"];}
+ else if(t<28){const y=Math.min(2025,2017+Math.floor((t-14)/1.4));let n=0;T.forEach(p=>{if(p[3]<=y){const[x,yy,s]=GP(p[0],p[1]);g.fillStyle=p[3]===y?"#d29a62":"#8fb36f";g.beginPath();g.arc(x,yy,Math.max(1.2,p[2]/111320*s),0,7);g.fill();n++;}});
+  g.fillStyle="#ead9b8";g.font=`800 ${40*S.dpr}px Archivo`;g.fillText(y,S.W*0.05,S.H*0.14);cap.textContent=`Toshka: fields of 2025 by the first year the inventory records them · ${K.fmt(n)} shown`;labs=["GEOGRAPHIC"];}
+ else{T.forEach(p=>{const[x,yy,s]=GP(p[0],p[1]);g.fillStyle="#3c5434";g.beginPath();g.arc(x,yy,Math.max(1.2,p[2]/111320*s),0,7);g.fill();});
+  const u=K.clamp((t-28)/9,0,1);gone.forEach((p,i)=>{const a=K.clamp(u*gone.length*1.2-i,0,1);if(a<=0)return;const[x,yy,s]=GP(p[0],p[1]);const r=Math.max(2,p[2]/111320*s);
+   g.strokeStyle=`rgba(224,162,79,${0.25+0.75*(1-Math.max(0,a-0.5))})`;g.lineWidth=1.6*S.dpr;g.beginPath();g.arc(x,yy,r,0,7);g.stroke();});
+  g.fillStyle="#ead9b8";g.font=`800 ${26*S.dpr}px Archivo`;g.fillText(`${gone.length} circles gone`,S.W*0.05,S.H*0.12);g.font=`${13*S.dpr}px Archivo`;g.fillStyle="#aa9f83";g.fillText("recorded 2015–2024, no field at that spot in 2025 (inventory)",S.W*0.05,S.H*0.18);
+  cap.textContent="Orange outlines: fields that went back to sand. Why each was lost is NOT SEEN.";labs=["GEOGRAPHIC","NOT SEEN"];}
+ K.labels(K.$("#labs"),labs);}
+const P=K.player(K.$("#pl"),{duration:40,chapters:[{t:0,name:"A hub"},{t:5,name:"A farm"},{t:14,name:"A basin"},{t:28,name:"The turn"}],draw});P.seek(K.reduced?39:0.2);addEventListener("resize",()=>{S.fit();P.redraw();});
+})();
+</script>

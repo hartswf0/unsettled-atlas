@@ -1,0 +1,31 @@
+<p class="lede">Log something from your own week, like glasses of water, meals or walks, and it is drawn as a pivot. Each day is one circle split into 24 hours; each logged hour fills a wedge. The key on the right decodes every mark.</p>
+<div class="labels" id="labs"></div>
+<div class="ctrl" id="cats"></div>
+<div class="grid" style="grid-template-columns:minmax(0,1fr) 220px;align-items:start" id="lay">
+ <div class="stage" style="background:var(--panel);color:var(--fg)"><canvas id="cv"></canvas></div>
+ <div class="panel"><span class="eyebrow">Key</span><div id="key"></div><p class="note">Tap a category, then tap an hour wedge on any day. Tap again to clear it. Saved only in this browser.</p>
+  <span class="eyebrow" style="margin-top:8px">The real field this echoes</span><img src="marey_S2C_36QUL_20250320_0_L2A.jpg" alt="A real Toshka field, Sentinel-2" style="width:100%;border-radius:50%"><p class="note">Toshka, March 2025, Sentinel-2. The circles on the left are drawings, not data.</p></div>
+</div>
+<div class="ctrl"><button class="btn" id="clr" type="button">Clear the week</button></div>
+<!--SCRIPT-->
+<script>
+(()=>{
+const CATS=[["water","#0f5d6b"],["meal","#c2410c"],["walk","#4d7c0f"],["call","#9333ea"],["sleep","#3b3b2e"]];let cat=0,log={};
+try{log=JSON.parse(localStorage.getItem("dear-pivot")||"{}");}catch(e){}
+const save=()=>{try{localStorage.setItem("dear-pivot",JSON.stringify(log));}catch(e){}};
+K.$("#cats").innerHTML=CATS.map((c,i)=>`<button class="btn" type="button" data-i="${i}" aria-pressed="${i===0}"><span style="color:${c[1]}">●</span> ${c[0]}</button>`).join("");
+K.$("#key").innerHTML=CATS.map(c=>`<div class="mono"><span style="color:${c[1]}">■</span> ${c[0]}</div>`).join("")+`<div class="mono" style="margin-top:6px">1 wedge = 1 hour · 12 o'clock = midnight · clockwise</div>`;
+document.querySelectorAll("#cats .btn").forEach(b=>b.onclick=()=>{cat=+b.dataset.i;document.querySelectorAll("#cats .btn").forEach(x=>x.setAttribute("aria-pressed",x===b));});
+if(matchMedia("(max-width:620px)").matches)K.$("#lay").style.gridTemplateColumns="minmax(0,1fr)";
+const S=K.stage(K.$("#cv"),1.75),g=S.g,days=["Mon","Tue","Wed","Thu","Fri","Sat","Sun"];
+function geo(i){const cols=4,cw=S.W/cols,ch=S.H/2,r=Math.min(cw,ch)*0.4;return{cx:(i%cols+0.5)*cw,cy:(Math.floor(i/cols)+0.5)*ch-6*S.dpr,r};}
+function draw(){g.fillStyle=K.css("--panel");g.fillRect(0,0,S.W,S.H);days.forEach((d,i)=>{const{cx,cy,r}=geo(i);g.fillStyle="#e6d1a6";g.beginPath();g.arc(cx,cy,r,0,7);g.fill();
+ for(let h=0;h<24;h++){const v=log[`${i}-${h}`];const a0=-Math.PI/2+h*Math.PI/12,a1=a0+Math.PI/12;if(v!==undefined){g.fillStyle=CATS[v][1];g.beginPath();g.moveTo(cx,cy);g.arc(cx,cy,r,a0,a1);g.closePath();g.fill();}
+  g.strokeStyle="rgba(29,35,22,.25)";g.lineWidth=1;g.beginPath();g.moveTo(cx,cy);g.lineTo(cx+Math.cos(a0)*r,cy+Math.sin(a0)*r);g.stroke();}
+ for(let k=1;k<4;k++){g.strokeStyle="rgba(29,35,22,.18)";g.beginPath();g.arc(cx,cy,r*k/4,0,7);g.stroke();}g.fillStyle="#1d2316";g.beginPath();g.arc(cx,cy,2.5*S.dpr,0,7);g.fill();
+ g.fillStyle=K.css("--fg");g.font=`600 ${12*S.dpr}px Archivo`;g.textAlign="center";g.fillText(d,cx,cy+r+16*S.dpr);g.textAlign="left";});K.labels(K.$("#labs"),["DRAWN"]);}
+S.c.addEventListener("click",e=>{const r=S.c.getBoundingClientRect(),x=(e.clientX-r.left)*S.dpr,y=(e.clientY-r.top)*S.dpr;days.forEach((d,i)=>{const q=geo(i),dx=x-q.cx,dy=y-q.cy;if(Math.hypot(dx,dy)>q.r)return;
+ let a=Math.atan2(dy,dx)+Math.PI/2;if(a<0)a+=2*Math.PI;const h=Math.floor(a/(Math.PI/12)),k=`${i}-${h}`;if(log[k]===cat)delete log[k];else log[k]=cat;save();draw();});});
+K.$("#clr").onclick=()=>{log={};save();draw();};draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

@@ -1,0 +1,47 @@
+<meta charset="utf-8">
+<title>Every Dot a Doorway</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · C1 · learned from Jonathan Harris and Sep Kamvar, We Feel Fine</span>
+<h1>Every Dot a Doorway</h1>
+</header>
+<p class="lede">All 7,207 fields in the bank, as one cloud. The cloud shows the pattern; any single dot opens into one real farm, and closes back into the cloud.</p>
+<div class="labels" id="labs"></div>
+<div class="ctrl" id="arr"><button class="btn" data-a="color" aria-pressed="true" type="button">By color</button><button class="btn" data-a="wedge" type="button">By wedge direction</button><button class="btn" data-a="basin" type="button">By basin</button><button class="btn" data-a="size" type="button">By size</button></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap">Loading 7,207 fields…</span>
+ <div id="open" hidden style="position:absolute;inset:0;background:rgba(13,18,16,.9);display:flex;gap:18px;align-items:center;justify-content:center;flex-wrap:wrap;padding:16px">
+  <canvas id="big" width="360" height="360" style="width:min(42vw,300px);height:auto;border-radius:50%"></canvas>
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:320px;color:var(--inkfg)"><span class="eyebrow" style="color:#aa9f83">One field</span><h2 id="oid" style="color:#ead9b8"></h2><div class="mono" id="orec"></div>
+   <div class="ctrl"><a id="olink" target="_blank" rel="noopener">Open in Copernicus Browser</a><button class="btn" id="back" type="button" style="color:#ead9b8;border-color:#5a554a">Back to the cloud</button></div></div></div>
+</div>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),16/9),g=S.g,B=await K.bank(),c=B.c,N=B.rows.length,ids=[...Array(N).keys()];await K.ensure(ids);
+const BI=[...new Set(B.rows.map(r=>r[c.biome]))];const pos=ids.map(()=>({x:0,y:0,tx:0,ty:0}));let arr="color",raf=0;
+function target(a){const r=B.rows,m=20*S.dpr,W=S.W-2*m,H=S.H-2*m;
+ if(a==="color"){const ax=r.map(q=>q[c.a]),bb=r.map(q=>q[c.b]),x0=Math.min(...ax),x1=Math.max(...ax),y0=Math.min(...bb),y1=Math.max(...bb);ids.forEach(i=>{pos[i].tx=m+(r[i][c.a]-x0)/(x1-x0)*W;pos[i].ty=m+H-(r[i][c.b]-y0)/(y1-y0)*H;});}
+ else if(a==="wedge"){const mx=Math.max(...r.map(q=>q[c.dark_strength]));ids.forEach(i=>{const s=Math.sqrt(r[i][c.dark_strength]/mx),t=r[i][c.dark_angle_deg]*Math.PI/180;pos[i].tx=S.W/2+Math.cos(t)*s*W*0.48;pos[i].ty=S.H/2+Math.sin(t)*s*H*0.48;});}
+ else if(a==="basin"){const cw=W/BI.length;BI.forEach((b,k)=>{const gr=ids.filter(i=>r[i][c.biome]===b).sort((p,q)=>r[p][c.L]-r[q][c.L]),per=Math.max(1,Math.floor(cw/(7*S.dpr)));gr.forEach((i,n)=>{pos[i].tx=m+k*cw+(n%per)*7*S.dpr+3*S.dpr;pos[i].ty=m+18*S.dpr+Math.floor(n/per)*7*S.dpr;});});}
+ else{const rs=r.map(q=>q[c.radius_m]),r0=Math.min(...rs),r1=Math.max(...rs);ids.forEach(i=>{pos[i].tx=m+(r[i][c.radius_m]-r0)/(r1-r0)*W;pos[i].ty=m+H-r[i][c.L]/100*H;});}}
+function draw(){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);const d=6.5*S.dpr;ids.forEach(i=>K.chip(g,i,pos[i].x,pos[i].y,d));
+ if(arr==="basin"){g.fillStyle="#aa9f83";g.font=`${11*S.dpr}px IBM Plex Mono`;const cw=(S.W-40*S.dpr)/BI.length;BI.forEach((b,k)=>g.fillText(b.split(",")[0],20*S.dpr+k*cw,24*S.dpr));}
+ K.$("#cap").textContent={color:"x: a* green → red · y: b* blue → yellow",wedge:"angle: which side is planted · distance: how one-sided",basin:"columns by basin, sorted dark → light",size:"x: radius · y: lightness"}[arr]+" · tap any field";K.labels(K.$("#labs"),["COMPOSED"]);}
+function go(a,anim=true){arr=a;document.querySelectorAll("#arr .btn").forEach(b=>b.setAttribute("aria-pressed",b.dataset.a===a));target(a);cancelAnimationFrame(raf);
+ const from=pos.map(p=>[p.x,p.y]),t0=performance.now(),D=anim&&!K.reduced?900:0;const st=t=>{const u=D?K.ease(K.clamp((t-t0)/D,0,1)):1;pos.forEach((p,i)=>{p.x=K.lerp(from[i][0],p.tx,u);p.y=K.lerp(from[i][1],p.ty,u);});draw();if(u<1)raf=requestAnimationFrame(st);};raf=requestAnimationFrame(st);}
+document.querySelectorAll("#arr .btn").forEach(b=>b.onclick=()=>go(b.dataset.a));
+S.c.addEventListener("click",e=>{const r=S.c.getBoundingClientRect(),x=(e.clientX-r.left)*S.dpr,y=(e.clientY-r.top)*S.dpr;let b=-1,bd=1e9;ids.forEach(i=>{const d=Math.hypot(pos[i].x-x,pos[i].y-y);if(d<bd){bd=d;b=i;}});if(bd>8*S.dpr)return;
+ const q=B.rows[b],gg=K.$("#big").getContext("2d");gg.clearRect(0,0,360,360);K.chip(gg,b,180,180,360);K.$("#oid").textContent=q[c.id];
+ K.$("#orec").innerHTML=`${q[c.biome]}<br>${q[c.lat].toFixed(5)}, ${q[c.lon].toFixed(5)}<br>${Math.round(q[c.radius_m])} m radius · ${Math.round(Math.PI*q[c.radius_m]**2/1e4)} ha<br>seen ${q[c.date]} · ${q[c.cls]}<br>${q[c.scene]}`;
+ K.$("#olink").href=`https://browser.dataspace.copernicus.eu/?zoom=15&lat=${q[c.lat]}&lng=${q[c.lon]}`;K.$("#open").hidden=false;K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED"]);});
+K.$("#back").onclick=()=>{K.$("#open").hidden=true;draw();};
+target("color");pos.forEach(p=>{p.x=S.W/2;p.y=S.H/2;});go("color");addEventListener("resize",()=>{S.fit();target(arr);pos.forEach(p=>{p.x=p.tx;p.y=p.ty;});draw();});
+})();
+</script>

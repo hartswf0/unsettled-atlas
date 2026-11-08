@@ -1,0 +1,28 @@
+<p class="lede">Two instruments, two different claims. The left one sees plants at 10 m. The right one, GRACE and GRACE-FO, weighs all the water in a region (groundwater, soil moisture and surface water together) in cells hundreds of kilometres across. This page shows the scale gap and leaves the water panel empty, because its data was not reachable from where this was made.</p>
+<div class="labels" id="labs"></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+ <div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+ <div class="panel unknown" style="justify-content:center;min-height:260px"><span class="eyebrow">Not seen · second instrument</span><h2>Terrestrial water storage anomaly</h2>
+  <p>Source to use: GRACE / GRACE-FO mascon solutions (NASA JPL, via PO.DAAC). Not accessible from this session, so this panel stays empty rather than showing an invented curve.</p>
+  <p class="note">When filled: show its unit (cm of equivalent water height), its cell size, and that it cannot be assigned to any one field.</p></div>
+</div>
+<div class="ctrl"><button class="btn primary" id="rev" type="button">Reveal one water cell</button><span class="mono" id="cnt"></span></div>
+<p class="note">Cell outline: an approximate 3° × 3° box, about the size of one GRACE mascon (verify against the product you use). Fields: Chen et al. inventory, 2025, Toshka and East Oweinat tiles.</p>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),1),g=S.g;const [inv,land]=await Promise.all([K.json("inventory.json"),K.json("land.json")]);
+const pts=[...inv.first_year["36QUL"],...inv.first_year["35QPF"]],v={lon0:26,lon1:35,lat0:18.5,lat1:27.5};let u=0,raf=0;
+const P=(lon,lat)=>[(lon-v.lon0)/(v.lon1-v.lon0)*S.W,(v.lat1-lat)/(v.lat1-v.lat0)*S.H];
+const cell={lon:30,lat:22.5,size:3};
+function draw(){g.fillStyle="#0b1214";g.fillRect(0,0,S.W,S.H);g.fillStyle="#1d2419";for(const r of land){g.beginPath();for(let i=0;i<r.length;i+=2){const[x,y]=P(r[i]/10,r[i+1]/10);i?g.lineTo(x,y):g.moveTo(x,y);}g.fill();}
+ g.fillStyle="#8fb36f";pts.forEach(p=>{const[x,y]=P(p[0],p[1]);g.fillRect(x-1,y-1,2.2,2.2);});
+ const s=K.lerp(0.008,cell.size,K.ease(u)),[x0,y0]=P(cell.lon-s/2,cell.lat+s/2),[x1,y1]=P(cell.lon+s/2,cell.lat-s/2);
+ g.strokeStyle="#e0a24f";g.lineWidth=2*S.dpr;g.setLineDash([6*S.dpr,5*S.dpr]);g.strokeRect(x0,y0,x1-x0,y1-y0);g.setLineDash([]);
+ const n=pts.filter(p=>Math.abs(p[0]-cell.lon)<=s/2&&Math.abs(p[1]-cell.lat)<=s/2).length;
+ K.$("#cnt").textContent=u>0?`Fields inside the cell: ${K.fmt(n)} · cell ≈ ${Math.round(s*104)} km across`:"";K.$("#cap").textContent="Green: 4,695 fields (2025). Dashed: one water cell.";
+ K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED","NOT SEEN","DRAWN"]);}
+K.$("#rev").onclick=()=>{cancelAnimationFrame(raf);const t0=performance.now();const step=t=>{u=K.reduced?1:K.clamp((t-t0)/2500,0,1);draw();if(u<1)raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);};
+draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

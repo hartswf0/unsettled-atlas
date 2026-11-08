@@ -1,0 +1,24 @@
+<meta charset="utf-8">
+<title>Same Frame, Next Year</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · B8 · learned from USGS Earthshots, Wadi As-Sirhan Basin</span>
+<h1>Same Frame, Next Year</h1>
+</header>
+<p class="lede">The same 84 km frame over Toshka, every March from 2017 to 2025. The crop, scale and rendering are identical in every panel, so only the ground changes.</p>
+<div class="labels" id="labs"></div>
+<div class="grid" id="sm" style="grid-template-columns:repeat(3,minmax(0,1fr))"></div>
+<p class="note">Sentinel-2 L2A, one scene per March, reflectance 0–0.55, gamma 0.9 in every panel (no per-panel stretch). Black areas are outside that date's orbit swath. Counts: fields in the whole Toshka tile that year (Chen et al. inventory), not only this crop.</p>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint). Field counts by year: Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{const [man,inv]=await Promise.all([K.json("manifest.json"),K.json("inventory.json")]);const T=inv.tiles["36QUL"];
+K.$("#sm").innerHTML=man.smallmult.years.map(y=>`<figure style="margin:0;display:flex;flex-direction:column;gap:3px;min-width:0"><img src="toshka_${y}.jpg" alt="Toshka, March ${y}" style="width:100%;border-radius:3px;display:block"><figcaption class="mono"><b>${y}</b> · ${(T[y]||[0])[0].toLocaleString()} fields</figcaption></figure>`).join("");
+K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED"]);})();
+</script>

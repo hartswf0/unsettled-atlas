@@ -2,6 +2,7 @@
 KERNEL + GRAMMAR + ADAPTER, so it can be pasted into an agent as one system prompt."""
 import re, html, json
 src = open("scion/SCION_FAMILY.md").read()
+URLS = json.load(open("works/urls.json"))
 blocks = re.split(r"(```[\s\S]*?```)", src)
 kernel = re.search(r"```\n(SCION — CIRCLE WORKS[\s\S]*?)```", src).group(1)
 grammar = re.search(r"```\n(THE CIRCLE GRAMMAR[\s\S]*?)```", src).group(1)
@@ -31,6 +32,8 @@ for b in blocks:
             if lvl == 1: continue
             sid = re.sub(r"[^a-z0-9]+", "-", t.lower()).strip("-")[:60]
             out.append(f'<h{lvl} id="{sid}">{inline(t)}</h{lvl}>')
+            code = t.split(" ")[0]
+            if lvl == 4 and code in URLS: out.append(f'<p><a href="{URLS[code]}" target="_blank" rel="noopener">See it built →</a></p>')
             if lvl in (2, 4): nav.append((lvl, sid, t))
         elif re.match(r"^\d+\. ", line):
             flush(); out.append(f'<p class="li">{inline(line)}</p>')

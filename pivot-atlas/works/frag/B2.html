@@ -1,0 +1,28 @@
+<p class="lede">A center pivot is already a polar diagram: its planted sectors are wedges on a circle. Here the idea is turned around. Each rose gives every March from 2017 to 2025 the same angle, and each wedge's <em>area</em> is the planted area that March.</p>
+<div class="labels" id="labs"></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+ <div class="stage"><canvas id="r1"></canvas><span class="cap">Toshka</span></div>
+ <div class="stage"><canvas id="r2"></canvas><span class="cap">East Oweinat</span></div>
+ <div class="stage"><canvas id="fld"></canvas><span class="cap" id="fc"></span></div>
+</div>
+<p class="note" id="tip">Hover or tap a wedge. Wedge radius = √(planted area) so area is true. Planted area = sum over fields of planted fraction × disc area, from this catalog's March readings; early years over-count presence, and each March has a different number of fields in view (shown).</p>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const [der,man,farm]=await Promise.all([K.json("derived.json"),K.json("manifest.json"),K.img("farm_oweinat.jpg")]);const R=der.rose;
+const max=Math.max(...Object.values(R).flat().map(e=>e.planted_km2));const roses=[];
+function rose(id,reg){const S=K.stage(K.$("#"+id),1),g=S.g,d=R[reg],n=d.length,cx=S.W/2,cy=S.H/2,Rm=S.W*0.42;roses.push({S,d,cx,cy,Rm,reg});
+ g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);d.forEach((e,i)=>{const a0=-Math.PI/2+i*2*Math.PI/n,a1=a0+2*Math.PI/n,r=Rm*Math.sqrt(e.planted_km2/max);
+  g.fillStyle=`rgba(143,179,111,${0.35+0.6*i/n})`;g.beginPath();g.moveTo(cx,cy);g.arc(cx,cy,r,a0,a1);g.closePath();g.fill();g.strokeStyle="#0d1210";g.lineWidth=2*S.dpr;g.stroke();
+  const am=(a0+a1)/2;g.fillStyle="#aa9f83";g.font=`${10*S.dpr}px IBM Plex Mono`;g.textAlign="center";g.fillText(String(e.year).slice(2),cx+Math.cos(am)*(Rm+12*S.dpr),cy+Math.sin(am)*(Rm+12*S.dpr)+4);g.textAlign="left";});
+ g.strokeStyle="#3a4a34";g.setLineDash([3,4]);g.beginPath();g.arc(cx,cy,Rm,0,7);g.stroke();g.setLineDash([]);}
+function all(){roses.length=0;rose("r1","Toshka");rose("r2","East Oweinat");
+ const S=K.stage(K.$("#fld"),1),g=S.g,f=man.farm.fields.filter(q=>q.pf>0.3&&q.pf<0.8)[0]||man.farm.fields[0];g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);K.circ(g,farm,f.x,f.y,f.r,S.W/2,S.H/2,S.W*0.84);
+ K.$("#fc").textContent=`A real field: planted ${Math.round(f.pf*100)}% · arcs ${f.arcs.map(a=>a.map(Math.round).join("–")+"°").join(", ")}`;K.labels(K.$("#labs"),["COMPOSED","OBSERVED"]);}
+all();
+for(const id of ["r1","r2"])K.$("#"+id).addEventListener("pointermove",e=>{const ro=roses[id==="r1"?0:1],r=e.target.getBoundingClientRect(),x=(e.clientX-r.left)*ro.S.dpr-ro.cx,y=(e.clientY-r.top)*ro.S.dpr-ro.cy;
+ let a=Math.atan2(y,x)+Math.PI/2;if(a<0)a+=2*Math.PI;const i=Math.floor(a/(2*Math.PI/ro.d.length)),e2=ro.d[i];if(!e2)return;
+ K.$("#tip").textContent=`${ro.reg}, March ${e2.year}: ${e2.planted_km2.toLocaleString()} km² planted across ${e2.valid.toLocaleString()} fields in view.`;});
+addEventListener("resize",all);
+})();
+</script>

@@ -1,0 +1,104 @@
+{
+ "stats": [
+  [
+   "4,623",
+   "fields cataloged"
+  ],
+  [
+   "2",
+   "seed tiles (Toshka, East Oweinat)"
+  ],
+  [
+   "9",
+   "March epochs, 2017\u20132025"
+  ],
+  [
+   "99.3%",
+   "precision on sealed labels"
+  ],
+  [
+   "300 \u2192 3,410",
+   "Toshka fields, 2017 \u2192 2025"
+  ]
+ ],
+ "rows": [
+  [
+   "Sealed labels: detection",
+   "14 chips \u00b7 285 circles, Toshka \u00b7 labeled by a separate agent",
+   "precision 0.993 (95% CI 0.973\u20130.998) \u00b7 recall 0.974 (0.948\u20130.987)",
+   "pass",
+   "pass"
+  ],
+  [
+   "Sealed labels: geometry",
+   "265 matched fields",
+   "median center error 3.8 m \u00b7 median radius error \u22120.5% \u00b7 90th pct |radius error| 6.6%",
+   "pass",
+   "pass"
+  ],
+  [
+   "Sealed labels: fallow recall",
+   "8 fallow circles",
+   "3 of 8 found",
+   "fail",
+   "open"
+  ],
+  [
+   "Independent audit, round 1",
+   "100 detections + 40 empty-space windows",
+   "precision Toshka 85% (rock outcrops), East Oweinat 97.5% \u00b7 every circle ~10 m NW and small",
+   "fail",
+   "led to fixes"
+  ],
+  [
+   "Round 2: same sites",
+   "the same 100 sites",
+   "precision 100% both regions \u00b7 all 10 removals correct \u00b7 misfit 13.7% / 5.1%",
+   "pass",
+   "pass"
+  ],
+  [
+   "Round 2: fresh sample",
+   "70 new detections + 30 new windows",
+   "precision Toshka 97.5%, East Oweinat 100% \u00b7 misfit 10.3% / 3.3%",
+   "pass",
+   "pass"
+  ],
+  [
+   "Round 2: center bias",
+   "all packets, auditor's own edge fit",
+   "mean offset within \u00b10.7 px at 75 px radius, no shared direction",
+   "pass",
+   "pass"
+  ],
+  [
+   "Round 2: radius bias",
+   "target 0.98\u20131.02",
+   "East Oweinat 1.008 \u00b7 Toshka 1.047 (bimodal; ~\u2153 of fields 6\u201310% small)",
+   "fail",
+   "open"
+  ],
+  [
+   "Round 2: Toshka misses",
+   "20 fresh empty-space windows",
+   "9 missed fields; 5 half-planted fields fitted as small half-circles",
+   "fail",
+   "open"
+  ],
+  [
+   "Circuit breaker",
+   "expansion beyond seed tiles",
+   "halted until Toshka radius and recall meet the bar",
+   "fail",
+   "halted"
+  ]
+ ],
+ "limits": [
+  "Ground truth was labeled by an independent agent, not a person; it was consulted six times as totals only.",
+  "Toshka: half-planted fields are sometimes fitted to the planted half; faint brown or bare fields are missed; about a third of radii are 6\u201310% small.",
+  "Fallow and ghost circles are under-counted, so abandonment is under-stated.",
+  "Earlier epochs use one scene each and cover about 82% of the Toshka tile; 534 Toshka fields have no history before 2025.",
+  "State classes come from March NDVI only; one date per year does not separate a fallow season from abandonment.",
+  "Coverage is two Sentinel-2 tiles. Nothing here is a planetary count."
+ ]
+}

@@ -42,7 +42,8 @@ for k in range(sheets):
         i = k*PER*PER + j
         if i >= n: break
         y, x = divmod(j, PER); sh[y*S:(y+1)*S, x*S:(x+1)*S] = cells[i]
-    Image.fromarray((sh*255).astype(np.uint8)).save(f"{out}/bank/sheet_{k}.jpg", quality=90, optimize=True)
+    big = Image.fromarray((sh*255).astype(np.uint8)); big.save(f"{out}/bank/sheet_{k}.jpg", quality=90, optimize=True)
+    big.resize((PER*S//2, PER*S//2), Image.LANCZOS).save(f"{out}/bank/sheet40_{k}.jpg", quality=86, optimize=True)   # fast first paint
 json.dump(dict(cols=["id","biome","lon","lat","radius_m","date","scene","cls","L","a","b","exg","ndvi","tex","dark_angle_deg","dark_strength"],
                glyph_px=S, per_row=PER, sheets=sheets, rendering=dict(bands=["B04","B03","B02"], product="Sentinel-2 L2A BOA", reflectance_max=0.55, gamma=0.9, tint=0.0),
                rows=rows), open(f"{out}/bank/bank.json","w"), separators=(",",":"))

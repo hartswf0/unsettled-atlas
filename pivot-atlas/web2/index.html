@@ -134,7 +134,7 @@ button:focus-visible,a:focus-visible,input:focus-visible,label:focus-within{outl
 "use strict";
 const $=s=>document.querySelector(s), css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 const BI=["Toshka, Egypt","East Oweinat, Egypt","Columbia Basin, USA","Texas Panhandle, USA","Al Jawf, Saudi Arabia"];
-let SP=null, BK=null, SH=[], G=[], tgt=null, sol=null, view={s:1,x:0,y:0}, sel=-1, ovl="none", arr="color", snaps=[], activeSnap=-1;
+let BK=null, SH=[], G=[], tgt=null, sol=null, view={s:1,x:0,y:0}, sel=-1, ovl="none", arr="color", snaps=[], activeSnap=-1;
 const st={t:"astronaut",mode:"faithful",cols:84,lam:1.2,cool:3,gap:"sand",off:new Set()};
 // ---------- color ----------
 function srgb2lin(c){c/=255;return c<=0.04045?c/12.92:Math.pow((c+0.055)/1.055,2.4);}
@@ -154,13 +154,15 @@ async function boot(){
   BK=await (await fetch("bank/bank.json")).json(); const c=Object.fromEntries(BK.cols.map((n,i)=>[n,i]));
   G=BK.rows.map((r,i)=>({i,id:r[c.id],biome:BI.indexOf(r[c.biome]),lon:r[c.lon],lat:r[c.lat],rad:r[c.radius_m],date:r[c.date],scene:r[c.scene],cls:r[c.cls],
     L:r[c.L],a:r[c.a],b:r[c.b],exg:r[c.exg],ndvi:r[c.ndvi],tex:r[c.tex],ang:r[c.dark_angle_deg]*Math.PI/180,str:r[c.dark_strength],sheet:Math.floor(i/(BK.per_row**2)),cell:i%(BK.per_row**2),bx:0,by:0,tx:0,ty:0}));
-  const raw=await Promise.all(Array.from({length:BK.sheets},(_,k)=>loadImg(`bank/sheet_${k}.jpg`)));
-  const S=BK.glyph_px,pr=BK.per_row,inner=S/1.04,off=(S-inner)/2;
-  SH=raw.map(im=>{const c=document.createElement("canvas");c.width=im.width;c.height=im.height;const g=c.getContext("2d");
-    for(let j=0;j<pr*pr;j++){const x=(j%pr)*S,y=Math.floor(j/pr)*S;g.save();g.beginPath();g.arc(x+S/2,y+S/2,inner/2*0.95,0,Math.PI*2);g.clip();g.drawImage(im,x,y,S,S,x,y,S,S);g.restore();}return c;});
-  SP={inner,off};
+  // fast first paint: 40 px sheets; 80 px sheets load per sheet only when zoomed in
+  SH=await Promise.all(Array.from({length:BK.sheets},(_,k)=>loadImg(`bank/sheet40_${k}.jpg`).then(im=>maskSheet(im,BK.glyph_px/2))));
   biomeUI(); ledger(); bindUI(); await setTarget("astronaut"); arrange("color",false); drawBank();
 }
+function maskSheet(im,S){const pr=BK.per_row,inner=S/1.04,off=(S-inner)/2,c=document.createElement("canvas");c.width=im.width;c.height=im.height;const g=c.getContext("2d");
+  for(let j=0;j<pr*pr;j++){const x=(j%pr)*S,y=Math.floor(j/pr)*S;g.save();g.beginPath();g.arc(x+S/2,y+S/2,inner/2*0.95,0,Math.PI*2);g.clip();g.drawImage(im,x,y,S,S,x,y,S,S);g.restore();}
+  c.S=S;c.inner=inner;c.off=off;return c;}
+const hiReq=new Set();function wantHi(k){if(hiReq.has(k))return;hiReq.add(k);loadImg(`bank/sheet_${k}.jpg`).then(im=>{if(im){SH[k]=maskSheet(im,BK.glyph_px);draw();}});}
+function src(G0){const sh=SH[G0.sheet],S=sh.S,pr=BK.per_row;return[sh,(G0.cell%pr)*S+sh.off,Math.floor(G0.cell/pr)*S+sh.off,sh.inner];}
 // ---------- target ----------
 async function setTarget(t,file){st.t=t;document.querySelectorAll("#targets button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.t===t));
   let img=null; if(t==="upload"&&file){const u=URL.createObjectURL(file);img=await loadImg(u);} else img=await loadImg(t==="toshka"?"targets/toshka.jpg":"targets/astronaut.jpg");
@@ -209,10 +211,10 @@ async function solve(){const tok=++solveToken;$("#busy").hidden=false;await new 
   sol={D,rowh,dots:out,uses,fit:fitc};render();metrics();$("#busy").hidden=true;draw();drawBank();}
 // ---------- render composite ----------
 let comp=null;
-function drawGlyph(g2,G0,x,y,d,rot){const S=BK.glyph_px,pr=BK.per_row,sx=(G0.cell%pr)*S+SP.off,sy=Math.floor(G0.cell/pr)*S+SP.off;
-  g2.save();g2.translate(x,y);if(rot)g2.rotate(rot);g2.drawImage(SH[G0.sheet],sx,sy,SP.inner,SP.inner,-d/2,-d/2,d,d);g2.restore();}
+function drawGlyph(g2,G0,x,y,d,rot){if(d>48&&SH[G0.sheet].S<BK.glyph_px)wantHi(G0.sheet);const[sh,sx,sy,w]=src(G0);
+  g2.save();g2.translate(x,y);if(rot)g2.rotate(rot);g2.drawImage(sh,sx,sy,w,w,-d/2,-d/2,d,d);g2.restore();}
 function sandCol(){return st.gap==="void"?"#0b0d0a":"#d29a62";}
-function render(){const W=tgt.width,H=tgt.height,k=Math.min(1,3000/W);comp=document.createElement("canvas");comp.width=Math.round(W*k);comp.height=Math.round(H*k);
+function render(){const W=tgt.width,H=tgt.height,k=Math.min(1,2000/W);comp=document.createElement("canvas");comp.width=Math.round(W*k);comp.height=Math.round(H*k);
   const g=comp.getContext("2d");g.fillStyle=sandCol();g.fillRect(0,0,comp.width,comp.height);g.imageSmoothingQuality="high";
   for(const p of sol.dots)drawGlyph(g,G[p.g],p.x*k,p.y*k,p.d*k,p.rot);comp.k=k;}
 // ---------- view ----------
@@ -291,13 +293,13 @@ function drawBank(){if(!G.length||!SH.length)return;const W=bk.width,H=bk.height
   if(arr==="basin"){const cw=(W-80)/6;BI.forEach((b,k)=>{bx.fillStyle=css(`--b${k}`);bx.fillRect(40+k*cw,22,10,10);bx.fillStyle=css("--fg");bx.fillText(b.split(",")[0],56+k*cw,32);});}
   const used=sol?sol.uses:new Map(),S=BK.glyph_px,pr=BK.per_row,dim=st.off;
   for(const g of G){const r=arr==="basin"?5:6;bx.globalAlpha=dim.has(g.biome)?0.18:(sol&&!used.has(g.i)?0.55:1);
-    bx.drawImage(SH[g.sheet],(g.cell%pr)*S+SP.off,Math.floor(g.cell/pr)*S+SP.off,SP.inner,SP.inner,g.bx-r,g.by-r,2*r,2*r);}
+    const[sh,sx,sy,w]=src(g);bx.drawImage(sh,sx,sy,w,w,g.bx-r,g.by-r,2*r,2*r);}
   bx.globalAlpha=1;if(sel>=0){const g=G[sel];bx.strokeStyle=css("--hi");bx.lineWidth=3;bx.beginPath();bx.arc(g.bx,g.by,12,0,7);bx.stroke();}}
 const bloc=e=>{const r=bk.getBoundingClientRect();return[(e.clientX-r.left)*bk.width/r.width,(e.clientY-r.top)*bk.height/r.height];};
 bk.addEventListener("click",e=>{const[x,y]=bloc(e);let best=-1,bd=1e9;for(const g of G){const d=Math.hypot(g.bx-x,g.by-y);if(d<bd){bd=d;best=g.i;}}if(bd<14)select(best,null);});
 // ---------- selection ----------
 function select(gi,dot){sel=gi;const g=G[gi],S=BK.glyph_px,pr=BK.per_row,c=$("#chip").getContext("2d");c.clearRect(0,0,320,320);
-  c.imageSmoothingQuality="high";c.drawImage(SH[g.sheet],(g.cell%pr)*S+SP.off,Math.floor(g.cell/pr)*S+SP.off,SP.inner,SP.inner,0,0,320,320);
+  c.imageSmoothingQuality="high";wantHi(g.sheet);const[sh,sx,sy,w]=src(g);c.drawImage(sh,sx,sy,w,w,0,0,320,320);
   const u=sol?sol.uses.get(gi)||0:0,st2={active:"Planted",partial:"Partly planted",fallow:"Bare"}[g.cls]||g.cls;
   $("#fid").textContent=g.id;
   $("#fkv").innerHTML=`<dt>Basin</dt><dd>${BI[g.biome]}</dd><dt>Where</dt><dd>${g.lat.toFixed(5)}, ${g.lon.toFixed(5)}</dd><dt>Size</dt><dd>${Math.round(g.rad)} m radius · ${(Math.PI*g.rad*g.rad/1e4).toFixed(0)} ha</dd>

@@ -1,0 +1,177 @@
+<meta charset="utf-8">
+<title>Pivot World</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one screen, no page scroll. A thin bar of views over a full-bleed stage; one floating card. Single dark theme by choice (night observatory). */
+:root{--sea:#0b1214;--land:#1d2419;--coast:#3a4a34;--fg:#ead9b8;--muted:#a89d82;--panel:rgba(16,20,14,.88);--rule:#3a3a2a;--ours:#7fd0dc;--inv:#c99a5e;--hot:#e0a24f;--focus:#7fd0dc;
+  --display:"Archivo",ui-sans-serif,system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;color-scheme:dark}
+*{box-sizing:border-box} [hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--sea);color:var(--fg);font-family:var(--display);font-size:14px;overflow:hidden;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;padding-block:8px;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--rule);background:#0e130f}
+.bar h1{margin:0;font-size:1.15rem;font-stretch:118%;font-weight:800;white-space:nowrap}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tabs button,.chip{font:500 .8rem var(--display);color:var(--fg);background:transparent;border:1px solid var(--rule);border-radius:999px;padding:5px 11px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--fg);color:#0e130f;border-color:var(--fg)}
+.bar a{color:var(--muted);font-size:.8rem;margin-left:auto}
+.stage{position:relative;flex:1;min-height:0}
+.stage canvas,.stage video{position:absolute;inset:0;width:100%;height:100%;display:block}
+.stage video{object-fit:contain;background:#000}
+.card{position:absolute;left:max(12px,env(safe-area-inset-left,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));max-width:min(360px,calc(100% - 24px));background:var(--panel);border:1px solid var(--rule);border-radius:8px;padding:12px 14px;display:flex;flex-direction:column;gap:8px;backdrop-filter:blur(6px)}
+.card h2{margin:0;font-size:.98rem;font-weight:700;text-wrap:balance}
+.card p{margin:0;font-size:.82rem;line-height:1.45;color:var(--fg)}
+.card .m{font:500 .74rem var(--mono);color:var(--muted);overflow-wrap:anywhere}
+.row{display:flex;gap:6px;flex-wrap:wrap}
+.legend{display:flex;gap:4px 12px;flex-wrap:wrap;font-size:.74rem;color:var(--muted)}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:5px;vertical-align:0}
+.tools{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:12px;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
+.tools button{width:34px;height:34px;border-radius:50%;border:1px solid var(--rule);background:var(--panel);color:var(--fg);font:600 1rem var(--display);cursor:pointer}
+.films{position:absolute;right:max(12px,env(safe-area-inset-right,0px));top:12px;display:flex;flex-direction:column;gap:6px;max-width:60%}
+.films button{text-align:left;background:var(--panel)}
+.films button[aria-pressed="true"]{border-color:var(--ours);color:var(--ours)}
+.load{position:absolute;right:max(12px,env(safe-area-inset-right,0px));bottom:calc(12px + env(safe-area-inset-bottom,0px));font:500 .74rem var(--mono);color:var(--muted);background:var(--panel);padding:4px 10px;border-radius:999px}
+a{color:var(--ours)}
+button:focus-visible,a:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+@media (max-width:560px){.bar a{display:none}.card{max-width:calc(100% - 24px)}}
+</style>
+
+<div class="bar">
+  <h1>Pivot World</h1>
+  <div class="tabs" role="group" aria-label="View">
+    <button data-v="map" aria-pressed="true">Map</button><button data-v="clock">Clock</button><button data-v="spin">Spinner</button><button data-v="spiral">Spiral</button><button data-v="lapse">Toshka 2017→2025</button><button data-v="films">Films</button>
+  </div>
+  <a href="https://claude.ai/artifact/C2dudp8Dw15HKUrXmhPtEK" target="_blank" rel="noopener">Make a picture from farms →</a>
+</div>
+<div class="stage" id="stage">
+  <canvas id="cv"></canvas>
+  <video id="vid" playsinline muted loop controls hidden></video>
+  <div class="tools" id="mapTools"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zhome" aria-label="Whole world">◎</button></div>
+  <div class="films" id="films" hidden></div>
+  <div class="card" id="card"></div>
+  <span class="load" id="load" hidden></span>
+</div>
+
+<script>
+(()=>{"use strict";
+const $=s=>document.querySelector(s),css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const cv=$("#cv"),g=cv.getContext("2d"),stage=$("#stage"),vid=$("#vid");
+let view="map",DPR=Math.min(2,devicePixelRatio||1),raf=0;
+// ---------- data (lazy) ----------
+const cache={};const J=u=>cache[u]||(cache[u]=fetch(u).then(r=>r.json()));
+const IMG=u=>cache[u]||(cache[u]=new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=u;}));
+let BANK=null,bankIdx=null;
+async function bank(){if(BANK)return BANK;BANK=await J("bank/bank.json");const c=Object.fromEntries(BANK.cols.map((n,i)=>[n,i]));BANK.c=c;bankIdx=new Map(BANK.rows.map((r,i)=>[r[c.id],i]));return BANK;}
+const sheetImg=k=>IMG(`bank/sheet40_${k}.jpg`);const loaded={};
+function sheetOf(i){return Math.floor(i/(BANK.per_row**2));}
+function ensureSheet(k){if(loaded[k]!==undefined)return loaded[k];loaded[k]=null;sheetImg(k).then(im=>{loaded[k]=im;if(view==="map")drawMap();});return null;}
+function drawChip(ctx,i,x,y,d,rot){const k=sheetOf(i),im=loaded[k];if(!im){ensureSheet(k);return false;}
+  const S=BANK.glyph_px/2,pr=BANK.per_row,c=i%(pr*pr),inner=S/1.04,off=(S-inner)/2,sx=(c%pr)*S+off,sy=Math.floor(c/pr)*S+off;
+  ctx.save();ctx.translate(x,y);if(rot)ctx.rotate(rot);ctx.beginPath();ctx.arc(0,0,d/2,0,Math.PI*2);ctx.clip();ctx.drawImage(im,sx,sy,inner,inner,-d/2,-d/2,d,d);ctx.restore();return true;}
+function size(){const r=stage.getBoundingClientRect();cv.width=Math.round(r.width*DPR);cv.height=Math.round(r.height*DPR);}
+// ---------- MAP ----------
+let LAND=null,OURS=null,INV=null,HOT=null,mv={lon:20,lat:20,z:1},inited=false;
+const BASIN_FLY=[["Toshka",31.4,22.8,7.5],["East Oweinat",28.6,22.6,7.5],["Al Jawf",38.4,30.0,7.5],["Columbia Basin",-119.4,45.9,7.5],["Texas Panhandle",-102.2,36.3,7.5],["Kufra (inventory)",23.3,24.2,7.5]];
+// equirectangular, locally conformal at the view centre (vertical scale 1/cos(lat0)) so fields draw as circles
+const kLat=()=>1/Math.cos(Math.max(-70,Math.min(70,mv.lat))*Math.PI/180);
+function P(lon,lat){const s=cv.width/360*mv.z;return[cv.width/2+(lon-mv.lon)*s,cv.height/2-(lat-mv.lat)*s*kLat()];}
+function mPerPx(){return 40075000/(cv.width*mv.z)*Math.cos(mv.lat*Math.PI/180);}
+async function mapInit(){if(inited)return;inited=true;loading("Loading world…");
+  [LAND,OURS,INV,HOT]=await Promise.all([J("data/land.json"),J("data/ours.json"),J("data/africa2025.json"),J("data/hotspots.json")]);await bank();loading();
+  OURS.pts=OURS.rows.map(r=>({lon:r[0]/1e4,lat:r[1]/1e4,r:r[2],b:r[3],id:r[4],date:r[5],cls:r[6],bi:bankIdx.get(r[4])}));
+  const n=INV.length/3;INV.pts=new Float32Array(INV.length);for(let i=0;i<INV.length;i++)INV.pts[i]=i%3===2?INV[i]:INV[i]/1e4;INV.n=n;
+  mapCard();drawMap();}
+function drawMap(){if(view!=="map"||!LAND)return;const W=cv.width,H=cv.height;g.fillStyle=css("--sea");g.fillRect(0,0,W,H);
+  g.fillStyle=css("--land");g.strokeStyle=css("--coast");g.lineWidth=1*DPR;
+  for(const r of LAND){g.beginPath();let px=null;for(let i=0;i<r.length;i+=2){const lon=r[i]/10,[x,y]=P(lon,r[i+1]/10);if(i===0||(px!==null&&Math.abs(lon-px)>180))g.moveTo(x,y);else g.lineTo(x,y);px=lon;}g.fill();}
+  const mpp=mPerPx();
+  // inventory (Chen et al.) — sand
+  g.fillStyle=css("--inv");for(let i=0;i<INV.n;i++){const lon=INV.pts[3*i],lat=INV.pts[3*i+1],rad=INV.pts[3*i+2]/mpp;const[x,y]=P(lon,lat);if(x<-20||y<-20||x>W+20||y>H+20)continue;
+    if(rad<1.2)g.fillRect(x-.8*DPR,y-.8*DPR,1.6*DPR,1.6*DPR);else{g.globalAlpha=.75;g.beginPath();g.arc(x,y,rad,0,7);g.fill();g.globalAlpha=1;}}
+  // ours
+  for(const p of OURS.pts){const[x,y]=P(p.lon,p.lat);const rad=p.r/mpp;if(x<-rad-5||y<-rad-5||x>W+rad+5||y>H+rad+5)continue;
+    const excl=OURS.basins[p.b]&&OURS.excluded.includes(OURS.basins[p.b]);
+    if(rad>=7&&p.bi!==undefined){if(!drawChip(g,p.bi,x,y,2*rad,0)){g.fillStyle=css("--ours");g.beginPath();g.arc(x,y,rad,0,7);g.fill();}}
+    else if(rad>=1.4){g.strokeStyle=css("--ours");g.fillStyle=css("--ours");g.beginPath();g.arc(x,y,rad,0,7);excl?(g.lineWidth=1,g.stroke()):g.fill();}
+    else{g.fillStyle=css("--ours");g.fillRect(x-1.2*DPR,y-1.2*DPR,2.4*DPR,2.4*DPR);}}
+  // hotspots not scanned
+  g.font=`${11*DPR}px ${css("--mono")}`;g.setLineDash([4*DPR,4*DPR]);g.strokeStyle=css("--hot");g.lineWidth=1.5*DPR;
+  for(const[h,lon,lat] of HOT){const[x,y]=P(lon,lat);if(x<-50||y<-50||x>W+50||y>H+50)continue;g.beginPath();g.arc(x,y,9*DPR,0,7);g.stroke();
+    if(mv.z>2.2){g.fillStyle=css("--hot");g.fillText(h,x+12*DPR,y+4*DPR);}}
+  g.setLineDash([]);
+  // scale bar
+  const km=[1,2,5,10,20,50,100,200,500,1000,2000].find(k=>k*1000/mpp>70*DPR)||2000,L=km*1000/mpp;g.fillStyle=css("--fg");g.fillRect(W-L-20*DPR,H-24*DPR,L,3*DPR);g.font=`${11*DPR}px ${css("--mono")}`;g.fillText(`${km} km`,W-L-20*DPR,H-30*DPR);}
+function mapCard(){const nOurs=OURS?OURS.pts.length:0;
+  $("#card").innerHTML=`<h2>Every center-pivot field we have found, and others' too</h2>
+  <div class="legend"><span><i style="background:var(--ours)"></i>${nOurs.toLocaleString()} fields this project detected (6 tiles)</span><span><i style="background:var(--inv)"></i>${(INV?INV.n:0).toLocaleString()} Africa hyper-arid inventory 2025 (Chen et al., CC BY 4.0)</span><span><i style="background:transparent;border:1.5px dashed var(--hot)"></i>known regions not scanned yet</span></div>
+  <div class="row">${BASIN_FLY.map((b,i)=>`<button class="chip" data-f="${i}">${b[0]}</button>`).join("")}<button class="chip" id="why">Why not the whole world?</button></div>
+  <p class="m">Zoom in: dots grow to true size, then turn into the satellite image of each field. Tap one.</p>`;
+  document.querySelectorAll("[data-f]").forEach(b=>b.onclick=()=>fly(...BASIN_FLY[+b.dataset.f].slice(1)));$("#why").onclick=why;}
+function why(){$("#card").innerHTML=`<h2>Why not the whole world, yet</h2>
+  <p>It is a compute and calibration problem, not a data problem: Sentinel-2 covers all land every five days, free.</p>
+  <p class="m">Measured here: one 110 × 110 km tile takes 15–25 min on one core end to end. Irrigated drylands span on the order of a few thousand tiles, so a single sweep is roughly 1,000+ core-hours, against 4 cores in this session.</p>
+  <p class="m">The detector also needs each new landscape checked: desert rules failed in Texas (fields brighter than grass) and in Bahia (75% precision, circles cut from rectangular fields).</p>
+  <p class="m">The path: run tiles in parallel across many cloud sessions with an independent check per region, and fold in published inventories (Africa is already on this map; the global GMIE-100 and Brazil's ANA survey were blocked from this session).</p>
+  <div class="row"><button class="chip" id="back">Back to the map</button></div>`;$("#back").onclick=mapCard;}
+function fly(lon,lat,z){const a={...mv},t0=performance.now(),D=1400;cancelAnimationFrame(raf);
+  const step=t=>{const u=Math.min(1,(t-t0)/D),e=u<.5?2*u*u:1-Math.pow(-2*u+2,2)/2,zz=Math.exp(Math.log(a.z)+(Math.log(z)-Math.log(a.z))*e);
+    mv={lon:a.lon+(lon-a.lon)*e,lat:a.lat+(lat-a.lat)*e,z:zz};drawMap();if(u<1&&view==="map")raf=requestAnimationFrame(step);};raf=requestAnimationFrame(step);}
+function fieldCard(p){$("#card").innerHTML=`<h2>${OURS.basins[p.b]}</h2><p class="m">${p.lat.toFixed(5)}, ${p.lon.toFixed(5)} · ${p.r} m radius · ${(Math.PI*p.r*p.r/1e4).toFixed(0)} ha</p>
+  <p class="m">Seen ${p.date} · ${{active:"planted",partial:"partly planted",fallow:"bare"}[p.cls]||p.cls}${OURS.excluded.includes(OURS.basins[p.b])?" · basin failed its precision check, shown for reference":""}${p.bi!==undefined?" · in the glyph bank":""}</p>
+  <div class="row"><a href="https://browser.dataspace.copernicus.eu/?zoom=15&lat=${p.lat}&lng=${p.lon}" target="_blank" rel="noopener">Copernicus Browser</a><a href="https://www.openstreetmap.org/?mlat=${p.lat}&mlon=${p.lon}#map=15/${p.lat}/${p.lon}" target="_blank" rel="noopener">OpenStreetMap</a><button class="chip" id="back">Back</button></div>`;$("#back").onclick=mapCard;}
+// pan/zoom
+const pts=new Map();let moved=0,last=null,pinch=null;
+const loc=e=>{const r=cv.getBoundingClientRect();return[(e.clientX-r.left)*DPR,(e.clientY-r.top)*DPR];};
+function zoomAt(f,px,py){const k=kLat(),s=cv.width/360*mv.z,lon=mv.lon+(px-cv.width/2)/s,lat=mv.lat-(py-cv.height/2)/(s*k);mv.z=Math.min(Math.max(mv.z*f,.8),4000);const s2=cv.width/360*mv.z;mv.lon=lon-(px-cv.width/2)/s2;mv.lat=Math.max(-80,Math.min(80,lat+(py-cv.height/2)/(s2*k)));drawMap();}
+cv.addEventListener("wheel",e=>{if(view!=="map")return;e.preventDefault();const[p,q]=loc(e);zoomAt(Math.exp(-e.deltaY*.0016),p,q);},{passive:false});
+cv.addEventListener("pointerdown",e=>{if(view!=="map")return;cv.setPointerCapture(e.pointerId);pts.set(e.pointerId,loc(e));moved=0;last=loc(e);if(pts.size===2){const[a,b]=[...pts.values()];pinch=Math.hypot(a[0]-b[0],a[1]-b[1]);}});
+cv.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;const p=loc(e);if(pts.size===2){pts.set(e.pointerId,p);const[a,b]=[...pts.values()],d=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pinch)zoomAt(d/pinch,(a[0]+b[0])/2,(a[1]+b[1])/2);pinch=d;moved=99;return;}
+  const dx=p[0]-last[0],dy=p[1]-last[1];moved+=Math.abs(dx)+Math.abs(dy);if(moved>5){const s=cv.width/360*mv.z;mv.lon-=dx/s;mv.lat=Math.max(-80,Math.min(80,mv.lat+dy/(s*kLat())));drawMap();}last=p;pts.set(e.pointerId,p);});
+cv.addEventListener("pointerup",e=>{const n=pts.size;pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(n===1&&moved<=5&&view==="map")pick(...loc(e));});
+cv.addEventListener("pointercancel",e=>{pts.delete(e.pointerId);pinch=null;});
+function pick(px,py){if(!OURS)return;const mpp=mPerPx();let best=null,bd=1e9;for(const p of OURS.pts){const[x,y]=P(p.lon,p.lat);const d=Math.hypot(x-px,y-py);if(d<bd){bd=d;best=p;}}
+  if(best&&bd<Math.max(12*DPR,best.r/mpp))fieldCard(best);}
+$("#zin").onclick=()=>zoomAt(2,cv.width/2,cv.height/2);$("#zout").onclick=()=>zoomAt(.5,cv.width/2,cv.height/2);$("#zhome").onclick=()=>fly(20,20,1);
+// ---------- PATTERNS (live) ----------
+let picks=null;
+async function patternPrep(){await bank();const c=BANK.c,R=BANK.rows,maxSheet=Math.min(BANK.sheets,4);
+  const ids=R.map((r,i)=>i).filter(i=>sheetOf(i)<maxSheet);loading("Loading fields…");await Promise.all([...Array(maxSheet).keys()].map(k=>sheetImg(k).then(im=>loaded[k]=im)));loading();
+  const L=i=>R[i][c.L],ang=i=>R[i][c.dark_angle_deg]*Math.PI/180,tex=i=>R[i][c.tex],rad=i=>R[i][c.radius_m];
+  const byL=[...ids].sort((a,b)=>L(a)-L(b)),n=byL.length;
+  picks={L,ang,levels:Array.from({length:12},(_,k)=>byL.slice(Math.floor(n*k/12*0.985),Math.floor(n*k/12*0.985)+200)),
+    markers:[...ids].filter(i=>rad(i)>300).sort((a,b)=>tex(b)-tex(a)).slice(0,12),
+    pale:[...ids].sort((a,b)=>L(b)-L(a)).slice(0,400),centre:[...ids].sort((a,b)=>tex(b)-tex(a))[0],spiral:[...ids].sort((a,b)=>L(b)-L(a)).filter((_,k)=>k%2===0).slice(0,1200)};}
+function bg(){g.fillStyle="#0b0d0a";g.fillRect(0,0,cv.width,cv.height);}
+function drawClock(t){bg();const W=cv.width,H=cv.height,cx=W/2,cy=H/2,R=Math.min(W,H)*.4,now=new Date(),h=now.getHours()%12+now.getMinutes()/60,m=now.getMinutes()+now.getSeconds()/60,s=now.getSeconds()+now.getMilliseconds()/1000;
+  const mk=R*.26;picks.markers.forEach((i,k)=>{const a=k/12*2*Math.PI-Math.PI/2;drawChip(g,i,cx+R*Math.cos(a),cy+R*Math.sin(a),mk,t/9000*2*Math.PI+k);});
+  const hand=(A,n,sz,off,r0)=>{for(let j=0;j<n;j++){const r=r0+j*sz*.96,i=picks.pale[(off+j*13)%picks.pale.length];drawChip(g,i,cx+r*Math.cos(A),cy+r*Math.sin(A),sz,A-picks.ang(i));}};
+  hand(h/12*2*Math.PI-Math.PI/2,4,R*.16,0,R*.16);hand(m/60*2*Math.PI-Math.PI/2,7,R*.11,40,R*.15);hand(s/60*2*Math.PI-Math.PI/2,11,R*.06,90,R*.12);
+  drawChip(g,picks.centre,cx,cy,R*.3,-t/4000);}
+function drawSpin(t){bg();const W=cv.width,H=cv.height,N=12,R=Math.min(W,H)*.3,sz=R*.5,step=Math.floor(t/90),cyc=Math.floor(step/N);
+  for(let k=0;k<N;k++){const behind=((step-k)%N+N)%N,lvl=picks.levels[N-1-behind],i=lvl[(cyc*5+k*3)%lvl.length],a=2*Math.PI*k/N-Math.PI/2;drawChip(g,i,W/2+R*Math.cos(a),H/2+R*Math.sin(a),sz,a+Math.PI/2-picks.ang(i));}}
+function drawSpiral(t){bg();const W=cv.width,H=cv.height,GA=Math.PI*(3-Math.sqrt(5)),M=Math.min(W,H)/2-10,n=picks.spiral.length,k0=M/Math.sqrt(n);
+  picks.spiral.forEach((i,k)=>{const r=k0*Math.sqrt(k+1),a=k*GA+t/40000*2*Math.PI;const sz=k0*1.05;drawChip(g,i,W/2+r*Math.cos(a),H/2+r*Math.sin(a),sz,a-picks.ang(i)+t/3000);});}
+const PCARD={clock:["Pivot clock","Your local time, told by farms. Hour markers are the twelve largest wheel-track fields in the loaded bank, each turning like its pivot arm; the hands are chains of the palest bare fields."],
+  spin:["Loading wheel","Twelve real fields. The wheel's fading tail is made by choosing fields from fully planted to bare sand, never by changing their pixels."],
+  spiral:["Golden-angle spiral","1,200 fields placed at 137.5° steps, lightest at the centre, each one slowly rotating."]};
+function loop(t){if(!picks)return;if(view==="clock")drawClock(t);else if(view==="spin")drawSpin(t);else if(view==="spiral")drawSpiral(t);else return;raf=requestAnimationFrame(loop);}
+// ---------- VIDEO ----------
+const FILMS=[["zoom_into_a_dot.mp4","Zoom into a dot","From a portrait of 5,637 fields into one farm at 22.98° N, 31.59° E, then out over its neighbours."],
+  ["spinner.mp4","Loading wheel","Twelve fields, tail made of progressively bare farms."],["clock.mp4","Twelve hours in twelve seconds","Hands made of pale bare fields."],["spiral.mp4","Golden-angle spiral","1,500 fields, lightest at the centre."]];
+function playVideo(src,title,text){vid.hidden=false;cv.hidden=true;if(!vid.src.endsWith(src)){vid.src=`video/${src}`;}vid.play().catch(()=>{});$("#card").innerHTML=`<h2>${title}</h2><p>${text}</p><p class="m">Real Sentinel-2 L2A fields only; contains modified Copernicus Sentinel data.</p>`;}
+// ---------- router ----------
+function loading(t){const l=$("#load");if(t){l.hidden=false;l.textContent=t;}else l.hidden=true;}
+async function setView(v){view=v;cancelAnimationFrame(raf);document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.v===v));
+  $("#mapTools").hidden=v!=="map";$("#films").hidden=v!=="films";vid.pause();vid.hidden=true;cv.hidden=false;size();
+  if(v==="map"){await mapInit();mapCard();drawMap();}
+  else if(v==="lapse"){playVideo("toshka_2017_2025.mp4","Toshka, March 2017 → March 2025","Nine real Sentinel-2 scenes, same rendering each year. About 240 fields in 2017 (independent inventory) and more than 3,400 by 2025, while the Toshka lakes refill.");}
+  else if(v==="films"){$("#films").innerHTML=FILMS.map((f,i)=>`<button class="chip" data-i="${i}" aria-pressed="${i===0}">${f[1]}</button>`).join("");
+    document.querySelectorAll("#films button").forEach(b=>b.onclick=()=>{document.querySelectorAll("#films button").forEach(x=>x.setAttribute("aria-pressed",x===b));const f=FILMS[+b.dataset.i];playVideo(...f);});playVideo(...FILMS[0]);}
+  else{if(!picks)await patternPrep();const[t,x]=PCARD[v];$("#card").innerHTML=`<h2>${t}</h2><p>${x}</p><p class="m">Fields from Toshka and East Oweinat (first bank sheets) · Sentinel-2 L2A, untinted.</p>`;
+    if(matchMedia("(prefers-reduced-motion: reduce)").matches){loop(0);cancelAnimationFrame(raf);}else raf=requestAnimationFrame(loop);}}
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>setView(b.dataset.v));
+new ResizeObserver(()=>{size();if(view==="map")drawMap();}).observe(stage);
+document.addEventListener("visibilitychange",()=>{if(document.hidden)cancelAnimationFrame(raf);else if(["clock","spin","spiral"].includes(view))raf=requestAnimationFrame(loop);});
+setView("map");
+})();
+</script>

@@ -61,3 +61,19 @@ Contains modified Copernicus Sentinel data 2017–2025. Portrait target: NASA ph
 - **Harvest:** `src/pick_scene.py`, `src/harvest_tile.sh`, `src/rerun_from_lattice.sh`, `src/export_bank.py`.
 - **External check:** `src/external_check.py` against Chen et al., *Africa hyper-arid CPIS* (CC BY 4.0, raw.githubusercontent.com/detectcpis/africa_hyperarid_cpis_shp). In 2025 we find 94.4% (Toshka) and 97.3% (East Oweinat) of its circular fields, and 95.0% / 94.3% of our records are in it. In 2017 our presence test over-counts: only 64% of our Toshka 2017 records are in the inventory.
 - **Critic** (`data/critic_bank/verdicts.json`): micro 10× met; macro 1× not met. The palette lacks bright, near-white, grey, saturated-red and blue fields. Adding basins raised diversity but not color fidelity (astronaut mean ΔE00 29.5 → 29.2).
+
+## Pivot World (web3/) and films (video/)
+
+`web3/index.html` is a one-screen app with no page scroll.
+- **Map:** 14,081 fields detected by this project, plus 33,387 polygons from the Africa hyper-arid CPIS 2025 inventory and 23 known regions not yet scanned, on a Natural Earth coastline (world-atlas, public domain). Fields grow to true size as you zoom and become their own satellite chips.
+- **Clock:** live local time, told by farms.
+- **Spinner and spiral:** animated live from real fields.
+- **Toshka 2017→2025:** the time-lapse.
+- **Films:** the rendered videos.
+
+Films (H.264, real Sentinel-2 L2A fields only; rotation, placement and scale, no pixel edits):
+- `toshka_2017_2025.mp4`: nine March scenes with crossfades (`src/video_toshka.py`)
+- `zoom_into_a_dot.mp4`: halftone portrait → one dot → that farm's real 17 km neighbourhood (`src/video_zoom.py`)
+- `spinner.mp4`, `clock.mp4`, `spiral.mp4`: patterns from the glyph bank (`src/video_patterns.py`)
+
+The Observatory now paints first from 40 px sheets (about 5 MB) and loads 80 px sheets only for zoomed-in fields.

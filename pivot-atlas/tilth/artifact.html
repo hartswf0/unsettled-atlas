@@ -88,6 +88,7 @@ ul.tight{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;
 /* screening room */
 .screen{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;max-width:1400px;margin:0 auto;align-items:start}
 @media (max-width:900px){.screen{grid-template-columns:minmax(0,1fr)}}
+.eps{max-height:calc(100vh - 200px);overflow:auto}
 .screen video{width:100%;max-height:calc(100vh - 170px);background:#000;border:1px solid var(--line);border-radius:2px;display:block;aspect-ratio:1;object-fit:contain}
 .eps button{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--fg);font:inherit;padding:9px 4px;cursor:pointer}
 .eps button[aria-current="true"]{box-shadow:inset 3px 0 0 var(--ochre);background:var(--bed)}
@@ -173,7 +174,7 @@ a{color:var(--signal)}
 <section data-room="screen" aria-label="Screening Room" hidden>
  <div class="screen">
   <div style="display:flex;flex-direction:column;gap:8px"><video id="vid" playsinline controls></video><span class="eyebrow">Keys: space play/pause · N next · P previous · F full screen · it remembers where you stopped</span></div>
-  <div class="panel"><span class="eyebrow">Reels · real Sentinel-2 fields only</span><div class="eps" id="eps"></div></div>
+  <div class="panel"><span class="eyebrow">Reels · real fields · exhibits are Agronica ads (fiction)</span><div class="eps" id="eps"></div></div>
  </div>
 </section>
 
@@ -307,7 +308,13 @@ function openCase(i){const c=CASES[i],ans=store.get("case"+i,null);$("#caseindex
  $("#cback").onclick=()=>{d.hidden=true;$("#caseindex").hidden=false;};$("#main").scrollTop=0;}
 // ---------- screening room
 const EPS=[["toshka_2017_2025.mp4","Toshka, March 2017 → March 2025","Nine real scenes; the farms spread while the lakes refill."],["zoom_into_a_dot.mp4","Every dot is a farm","From a portrait of 5,637 fields into one farm and its neighbours."],
- ["clock.mp4","Twelve hours in twelve seconds","Hands made of pale bare fields."],["spinner.mp4","Loading wheel","Twelve fields; the tail is progressively bare farms."],["spiral.mp4","Golden-angle spiral","1,500 fields, lightest at the centre."]];
+ ["clock.mp4","Twelve hours in twelve seconds","Hands made of pale bare fields."],["spinner.mp4","Loading wheel","Twelve fields; the tail is progressively bare farms."],["spiral.mp4","Golden-angle spiral","1,500 fields, lightest at the centre."],
+ ["agronica_01_farmos.mp4","EXHIBIT · Agronica ad: FarmOS","\"Every field, managed.\" 3 of 49 real fields removed for being bare or half-planted."],
+ ["agronica_02_yieldmatch.mp4","EXHIBIT · Agronica ad: YieldMatch","\"Find your other half.\" Bare this March is stamped low-yield."],
+ ["agronica_03_growthpath.mp4","EXHIBIT · Agronica ad: GrowthPath","\"Growth. Every. Year.\" The 115 lost fields are erased on screen."],
+ ["agronica_04_consentgarden.mp4","EXHIBIT · Agronica ad: ConsentGarden","\"Consent, harvested.\" Two real fields at true relative size."],
+ ["agronica_05_autogrow.mp4","EXHIBIT · Agronica ad: AutoGrow AI","\"It notices when you don't.\" A field planted five years is auto-deleted."],
+ ["agronica_06_brand.mp4","EXHIBIT · Agronica ad: brand","\"We see everything green.\" Water source: not seen."]];
 let ep=store.get("ep",0);
 function renderEps(){$("#eps").innerHTML=EPS.map((e,i)=>`<button data-e="${i}" aria-current="${i===ep}"><span class="n">${i+1}</span><span>${e[1]}</span><span style="color:var(--dim);font-size:.72rem">${e[2]}</span></button>`).join("");document.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>playEp(+b.dataset.e,true));}
 function playEp(i,auto){ep=(i+EPS.length)%EPS.length;store.set("ep",ep);const v=$("#vid");v.src=`film/${EPS[ep][0]}`;v.currentTime=store.get("t"+ep,0);if(auto)v.play().catch(()=>{});renderEps();}
@@ -319,6 +326,7 @@ const LEDGER=[["The 4,623 fields, positions, sizes, planted sectors, 2017–2025
  ["Pairing results, gone fields, yearly counts","<span class='tag real'>real</span>","Chen et al., Annual CPIS dataset of Africa's hyper-arid regions 1972–2025, CC BY 4.0"],
  ["FTC–Deere settlement facts in Case 00","<span class='tag real'>real</span>","FTC press release, July 8, 2026, as provided; read the stipulated order for its exact terms"],
  ["Films in the Screening Room","<span class='tag real'>real imagery</span>","Rendered from the catalog; rotation and placement only, no pixel edits"],
+ ["Agronica ads (exhibits)","<span class='tag fic'>design fiction</span> <span class='tag real'>real fields</span>","Slogans, apps and prompts are fiction; every disc is a real field and each spot's fine print states the measured fact"],
  ["TILTH, its 2048 setting, part numbers, fault-code taxonomy, policies, case dilemmas","<span class='tag fic'>design fiction</span>","role-deck TILTH world; codes are triggered by real measurements by declared rules"],
  ["Water source, volume pumped, aquifer level","<span class='tag ns'>not seen</span>","Not in any satellite image; East Oweinat groundwater and Toshka canal sources to be verified"]];
 $("#ltable").innerHTML=LEDGER.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("");

@@ -672,7 +672,8 @@
     {
       "id": "gbif-occurrences:record:5938367908",
       "form_ids": [
-        "gform_103b5919f56621893c36"
+        "gform_103b5919f56621893c36",
+        "gform_45064ec6ce26b4e706b8"
       ],
       "atlas_addresses": [
         "F02.1331213303"
@@ -6820,6 +6821,36 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:413981221",
+      "form_ids": [
+        "gform_d7ce9493fe7dbbf66bd0"
+      ],
+      "atlas_addresses": [
+        "F02.1331213303"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-11-10T13:52:40.000Z",
+      "last_observed_at": "2026-11-10T13:52:40.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3411763265,
+          33.6809353278
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -12575,6 +12606,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_67f409e976e8c0650cf4"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "gbif-occurrences:record:5938367908",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.337112,
+          33.681828
+        ]
+      },
+      "atlas_address": "F02.1331213303",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.occurrence",
+      "provenance": {
+        "source_signal_id": "sig_58e79ee41070d137cf50",
+        "source": "gbif-occurrences"
+      },
+      "id": "gform_45064ec6ce26b4e706b8"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:413981221",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3411763265,
+          33.6809353278
+        ]
+      },
+      "atlas_address": "F02.1331213303",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_d8bbc8cad2242122526c",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_d7ce9493fe7dbbf66bd0"
     }
   ],
   "current": [
@@ -13384,7 +13465,7 @@
     },
     {
       "subject_id": "gbif-occurrences:record:5938367908",
-      "form_id": "gform_103b5919f56621893c36",
+      "form_id": "gform_45064ec6ce26b4e706b8",
       "atlas_address": "F02.1331213303",
       "geometry": {
         "type": "Point",
@@ -13402,7 +13483,7 @@
         "taxon_key": 2439838,
         "species_key": 2439838,
         "basis_of_record": "HUMAN_OBSERVATION",
-        "occurrence_status": "PRESENT",
+        "occurrence_status": "DETECTED",
         "coordinate_uncertainty_m": 18,
         "issues": [
           "COORDINATE_ROUNDED",
@@ -13414,7 +13495,7 @@
       "epistemic": "REPORTED",
       "source": "gbif-occurrences",
       "observed_at": "2026-01-04T09:09:00.000Z",
-      "observation_id": "obs_5923068f891c1aa08958",
+      "observation_id": "obs_26856f7276b1089c5bf2",
       "apparatus": {
         "id": "GBIF_OCCURRENCE",
         "opportunity": null,
@@ -22355,6 +22436,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-11-08T21:33:03.000Z",
       "observation_id": "obs_3b7cb44c38bdcac47cf9",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:413981221",
+      "form_id": "gform_d7ce9493fe7dbbf66bd0",
+      "atlas_address": "F02.1331213303",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3411763265,
+          33.6809353278
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Ganoderma sessile",
+        "common_name": null,
+        "iconic_taxon": "Fungi",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-11-10T13:52:40.000Z",
+      "observation_id": "obs_b7327159b15e69c9c5d1",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

@@ -2160,6 +2160,36 @@
       "identity_basis": [
         "legacy-signal:environment.regulated_facility"
       ]
+    },
+    {
+      "id": "osm-notes:record:5625259",
+      "form_ids": [
+        "gform_27a7668836f0ad3911c4"
+      ],
+      "atlas_addresses": [
+        "F02.1200100220"
+      ],
+      "sources": [
+        "osm-notes"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "claim.map_note"
+      ],
+      "first_observed_at": "2026-11-10T08:30:27.000Z",
+      "last_observed_at": "2026-11-10T08:30:27.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9374782,
+          30.0532721
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:claim.map_note"
+      ]
     }
   ],
   "forms": [
@@ -3962,6 +3992,31 @@
         "source": "epa-echo"
       },
       "id": "gform_312078d55ffae8c282ec"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "osm-notes:record:5625259",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9374782,
+          30.0532721
+        ]
+      },
+      "atlas_address": "F02.1200100220",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:claim.map_note",
+      "provenance": {
+        "source_signal_id": "sig_d19865966f64f2857695",
+        "source": "osm-notes"
+      },
+      "id": "gform_27a7668836f0ad3911c4"
     }
   ],
   "current": [
@@ -7623,6 +7678,44 @@
           "regulatory coverage limits"
         ]
       }
+    },
+    {
+      "subject_id": "osm-notes:record:5625259",
+      "form_id": "gform_27a7668836f0ad3911c4",
+      "atlas_address": "F02.1200100220",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -89.9374782,
+          30.0532721
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "Way 940542062 is tagged abandoned:attraction=roller_coaster (name=Mega Zeph). The structure was demolished: work began Nov 2024, was halted over the contractor licence and resumed Dec 2024, and the site had been cleared of most structures by Mar 2026 (en.wikipedia Mega Zeph, revision 2026-10-25). Over 27 ways in this site carry abandoned:attraction tags, all last edited 2021-05. Asking a mapper to check current aerial imagery against the tags: if the track and rides are gone from the imagery, these abandoned:attraction tags describe only history. Is there a preferred tag for a former attraction on cleared ground? Could not check imagery myself, so I am not editing."
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "osm-notes",
+      "observed_at": "2026-11-10T08:30:27.000Z",
+      "observation_id": "obs_43b02accae82126bffef",
+      "apparatus": {
+        "id": "OSM_NOTES",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "voluntary map issue report",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting opportunity",
+          "uneven mapper attention",
+          "stale unresolved notes"
+        ]
+      }
     }
   ],
   "events": [],
@@ -7642,6 +7735,22 @@
         "obs_b53360302b33ed3fbcb0"
       ],
       "id": "poss_c16931d57ba894cc3413"
+    },
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "SERVICE",
+      "condition": "open map issue report",
+      "modality": "POSSIBLE",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": null,
+      "horizon": null,
+      "geographic_scope": "F02.1200100220",
+      "derived_from": [
+        "obs_43b02accae82126bffef"
+      ],
+      "id": "poss_65b61423cd000ac2afcd"
     }
   ]
 }

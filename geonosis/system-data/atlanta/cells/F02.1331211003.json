@@ -1304,6 +1304,36 @@
       "identity_basis": [
         "legacy-signal:environment.regulated_facility"
       ]
+    },
+    {
+      "id": "epa-echo:record:110070668151",
+      "form_ids": [
+        "gform_efc103148f11bed3fe37"
+      ],
+      "atlas_addresses": [
+        "F02.1331211003"
+      ],
+      "sources": [
+        "epa-echo"
+      ],
+      "regimes": [
+        "INSTITUTIONAL"
+      ],
+      "predicates": [
+        "environment.regulated_facility"
+      ],
+      "first_observed_at": null,
+      "last_observed_at": null,
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3507945741284,
+          33.9053633213109
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:environment.regulated_facility"
+      ]
     }
   ],
   "forms": [
@@ -2681,6 +2711,31 @@
         "source": "fdic-locations"
       },
       "id": "gform_b34f92a8e9cc439763cc"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "epa-echo:record:110070668151",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3507945741284,
+          33.9053633213109
+        ]
+      },
+      "atlas_address": "F02.1331211003",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:environment.regulated_facility",
+      "provenance": {
+        "source_signal_id": "sig_f7883ce02eeb56bc5546",
+        "source": "epa-echo"
+      },
+      "id": "gform_efc103148f11bed3fe37"
     }
   ],
   "current": [
@@ -4577,6 +4632,57 @@
       "source": "epa-echo",
       "observed_at": null,
       "observation_id": "obs_577ff050d6431cf128f2",
+      "apparatus": {
+        "id": "EPA_ECHO",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "regulatory facility record",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting lag",
+          "facility identity mismatch",
+          "regulatory coverage limits"
+        ]
+      }
+    },
+    {
+      "subject_id": "epa-echo:record:110070668151",
+      "form_id": "gform_efc103148f11bed3fe37",
+      "atlas_address": "F02.1331211003",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3507945741284,
+          33.9053633213109
+        ]
+      },
+      "regime": "INSTITUTIONAL",
+      "predicate": "environment.regulated_facility",
+      "value": {
+        "name": "JOHNSON FERRY TOWNHOMES",
+        "address": "34 JOHNSON FERRY  PARKWAY, SANDY SPRINGS, GA, 30319",
+        "county": "FULTON COUNTY",
+        "major": null,
+        "active": "Y",
+        "compliance_status": "No Violation Identified",
+        "significant_noncompliance": "N",
+        "programs_with_significant_noncompliance": 0,
+        "quarters_noncompliance_3y": 0,
+        "inspections_5y": 0,
+        "formal_actions_5y": 0,
+        "penalties_5y": null,
+        "penalty_total_5y_usd": 0,
+        "coordinate_accuracy_m": 50,
+        "huc": "03130001",
+        "last_inspection": null
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "epa-echo",
+      "observed_at": null,
+      "observation_id": "obs_385a929e3de8eb26d66c",
       "apparatus": {
         "id": "EPA_ECHO",
         "opportunity": null,

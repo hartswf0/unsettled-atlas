@@ -3,6 +3,8 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="kit.css">
+<script>window.__A={"manifest.json":"../pack/manifest.json","marey_S2C_36QUL_20250320_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250320_0_L2A.jpg","marey_S2A_36QUL_20250315_1_L2A.jpg":"../pack/marey_S2A_36QUL_20250315_1_L2A.jpg","marey_S2B_36QUL_20250308_0_L2A.jpg":"../pack/marey_S2B_36QUL_20250308_0_L2A.jpg","marey_S2C_36QUL_20250323_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250323_0_L2A.jpg","marey_S2B_36QUL_20250315_0_L2A.jpg":"../pack/marey_S2B_36QUL_20250315_0_L2A.jpg","marey_S2C_36QUL_20250303_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250303_0_L2A.jpg","marey_S2C_36QUL_20250313_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250313_0_L2A.jpg","marey_S2B_36QUL_20250325_0_L2A.jpg":"../pack/marey_S2B_36QUL_20250325_0_L2A.jpg","marey_S2C_36QUL_20250310_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250310_0_L2A.jpg"};window.__fix=function(i){var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){i.dataset.f=1;i.src=window.__A[n];}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("img").forEach(function(i){var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];});});</script>
 <div class="wrap">
 <header style="display:flex;flex-direction:column;gap:6px">
 <span class="eyebrow">SCION Family · B6 · learned from Étienne-Jules Marey, graphical train timetable</span>
@@ -25,7 +27,7 @@
 (async()=>{
 const man=await K.json("manifest.json"),M=man.marey,marks={};const S=K.stage(K.$("#cv"),2.6),g=S.g;
 const day=s=>+s.split("_")[2].slice(6,8);
-K.$("#chips").innerHTML=M.scenes.map(s=>`<figure style="margin:0;display:flex;flex-direction:column;gap:4px"><div style="position:relative"><img src="marey_${s}.jpg" data-s="${s}" alt="${M.id} on ${s.split("_")[2]}" style="width:100%;border-radius:4px;cursor:crosshair;display:block"><svg data-s="${s}" viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></svg></div><figcaption class="mono">March ${day(s)} · ${s.split("_")[0]}</figcaption></figure>`).join("");
+K.$("#chips").innerHTML=M.scenes.map(s=>`<figure style="margin:0;display:flex;flex-direction:column;gap:4px"><div style="position:relative"><img onerror="__fix(this)" src="marey_${s}.jpg" data-s="${s}" alt="${M.id} on ${s.split("_")[2]}" style="width:100%;border-radius:4px;cursor:crosshair;display:block"><svg data-s="${s}" viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></svg></div><figcaption class="mono">March ${day(s)} · ${s.split("_")[0]}</figcaption></figure>`).join("");
 document.querySelectorAll("#chips img").forEach(im=>im.addEventListener("click",e=>{const r=im.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-0.5,y=(e.clientY-r.top)/r.height-0.5;let a=Math.atan2(-y,x)*180/Math.PI;if(a<0)a+=360;marks[im.dataset.s]=a;
  const sv=document.querySelector(`svg[data-s="${im.dataset.s}"]`);const rr=38.5;sv.innerHTML=`<line x1="50" y1="50" x2="${50+Math.cos(a*Math.PI/180)*rr}" y2="${50-Math.sin(a*Math.PI/180)*rr}" stroke="#7fd0dc" stroke-width="1.6"/>`;draw();}));
 function draw(){g.fillStyle=K.css("--panel");g.fillRect(0,0,S.W,S.H);const m=40*S.dpr,X=d=>m+(d-1)/30*(S.W-2*m),Y=a=>S.H-m*0.7-a/360*(S.H-m*1.3);

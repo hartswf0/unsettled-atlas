@@ -3,6 +3,8 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="kit.css">
+<script>window.__A={"manifest.json":"../pack/manifest.json","inventory.json":"../pack/inventory.json","toshka_2017.jpg":"../pack/toshka_2017.jpg","toshka_2018.jpg":"../pack/toshka_2018.jpg","toshka_2019.jpg":"../pack/toshka_2019.jpg","toshka_2020.jpg":"../pack/toshka_2020.jpg","toshka_2021.jpg":"../pack/toshka_2021.jpg","toshka_2022.jpg":"../pack/toshka_2022.jpg","toshka_2023.jpg":"../pack/toshka_2023.jpg","toshka_2024.jpg":"../pack/toshka_2024.jpg","toshka_2025.jpg":"../pack/toshka_2025.jpg"};window.__fix=function(i){var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){i.dataset.f=1;i.src=window.__A[n];}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("img").forEach(function(i){var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];});});</script>
 <div class="wrap">
 <header style="display:flex;flex-direction:column;gap:6px">
 <span class="eyebrow">SCION Family · B8 · learned from USGS Earthshots, Wadi As-Sirhan Basin</span>
@@ -19,6 +21,6 @@
 <script>K.scion(K.$("#scion"));</script>
 <script>
 (async()=>{const [man,inv]=await Promise.all([K.json("manifest.json"),K.json("inventory.json")]);const T=inv.tiles["36QUL"];
-K.$("#sm").innerHTML=man.smallmult.years.map(y=>`<figure style="margin:0;display:flex;flex-direction:column;gap:3px;min-width:0"><img src="toshka_${y}.jpg" alt="Toshka, March ${y}" style="width:100%;border-radius:3px;display:block"><figcaption class="mono"><b>${y}</b> · ${(T[y]||[0])[0].toLocaleString()} fields</figcaption></figure>`).join("");
+K.$("#sm").innerHTML=man.smallmult.years.map(y=>`<figure style="margin:0;display:flex;flex-direction:column;gap:3px;min-width:0"><img onerror="__fix(this)" src="toshka_${y}.jpg" alt="Toshka, March ${y}" style="width:100%;border-radius:3px;display:block"><figcaption class="mono"><b>${y}</b> · ${(T[y]||[0])[0].toLocaleString()} fields</figcaption></figure>`).join("");
 K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED"]);})();
 </script>

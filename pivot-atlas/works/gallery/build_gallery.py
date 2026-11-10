@@ -33,15 +33,28 @@ D = {
 }
 GROUPS = [("A", "Films", "Time-based pieces with chapters and a scrubber."), ("B", "Statistical graphics", "Charts where one mark carries one quantity."),
           ("C", "Interactive and image", "Pieces you explore by hand."), ("D", "The Scott trilogy", "Three short studies of how counting reshapes what is counted.")]
-def card(c):
+def card(c, pages=False):
     title, ref, _ = build.WORKS[c]; st, desc = D[c]
-    return f'''<li class="card"><a href="{U[c]}" target="_blank" rel="noopener">
+    href = f"../{c}/" if pages else U[c]; tgt = "" if pages else ' target="_blank" rel="noopener"'
+    src = f"../{c}/scion.json" if pages else f"https://github.com/hartswf0/unsettled-atlas/tree/main/pivot-atlas/works/{c}"
+    return f'''<li class="card"><a href="{href}"{tgt}>
  <img src="thumbs/{c}.jpg" alt="" width="480" height="300" loading="lazy">
  <span class="row"><span class="code">{c}</span><span class="st st-{st.replace(" ","-")}">{st}</span></span>
  <h3>{html.escape(title)}</h3><p class="ref">after {html.escape(ref)}</p><p>{html.escape(desc)}</p></a>
- <a class="src" href="../{c}/">source</a></li>'''
-secs = "".join(f'<section aria-labelledby="g{g}"><div class="sh"><h2 id="g{g}">{n}</h2><p>{d}</p></div><ul class="cards">{"".join(card(c) for c in sorted([k for k in U if k[0]==g], key=lambda k:int(k[1:])))}</ul></section>' for g, n, d in GROUPS)
+ <a class="src" href="{src}"{tgt}>{"instruction" if pages else "source"}</a></li>'''
+def secs(pages): return "".join(f'<section aria-labelledby="g{g}"><div class="sh"><h2 id="g{g}">{n}</h2><p>{d}</p></div><ul class="cards">{"".join(card(c, pages) for c in sorted([k for k in U if k[0]==g], key=lambda k:int(k[1:])))}</ul></section>' for g, n, d in GROUPS)
 counts = {s: sum(1 for v in D.values() if v[0] == s) for s in ("built", "partial", "inconclusive", "not built")}
-page = open(f"{R}/template.html").read().replace("%%SECTIONS%%", secs).replace("%%COUNTS%%",
-  f'{counts["built"]} built · {counts["partial"]} partial · {counts["inconclusive"]} inconclusive · {counts["not built"]} not built')
-open(f"{R}/index.html", "w").write(page); print(counts)
+tally = f'{counts["built"]} built · {counts["partial"]} partial · {counts["inconclusive"]} inconclusive · {counts["not built"]} not built'
+T = open(f"{R}/template.html").read().replace("%%COUNTS%%", tally)
+LINKS = {"https://claude.ai/artifact/HfNwtySLr4RoKRsqXLmX8v": "../../scion/", "https://claude.ai/artifact/8AfT4F2u5GUQoqwfLJbyJy": "../../web3/",
+         "https://claude.ai/artifact/C2dudp8Dw15HKUrXmhPtEK": "../../web2/", "https://claude.ai/artifact/CTgMSsrCiYgDzJBUpc6dQr": "../../web/"}
+pg = T.replace("%%SECTIONS%%", secs(True))
+for a, b in LINKS.items(): pg = pg.replace(f'href="{a}" target="_blank" rel="noopener"', f'href="{b}"')
+pg = pg.replace("Each work opens as a claude.ai page; they are private to their owner until shared. \"source\" links to the work's folder in this repository (fragment, built page and its SCION instruction).",
+                "Each work runs here from the repository; \"instruction\" opens its SCION instruction.")
+open(f"{R}/index.html", "w").write(pg)
+art = T.replace("%%SECTIONS%%", secs(False))
+for t in ("<!doctype html>", '<html lang="en">', "<head>", "</head>", "<body>", "</body>", "</html>"): art = art.replace(t, "")
+art = art.replace('<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n', "")
+art = art.replace("\"source\" links to the work's folder in this repository (fragment, built page and its SCION instruction).", "\"source\" links to the work's folder on GitHub.")
+open(f"{R}/artifact.html", "w").write(art.strip() + "\n"); print(counts)

@@ -1,8 +1,11 @@
 // SCION Family works — shared helpers. Everything drawn comes from real Sentinel-2 fields; helpers never alter field pixels.
 const K = (() => {
   const $ = s => document.querySelector(s), css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-  const memo = {}; const json = u => memo[u] || (memo[u] = fetch(u).then(r => r.json()));
-  const img = u => memo[u] || (memo[u] = new Promise(res => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = u; }));
+  // asset resolver: flat names (published pages) or repo-relative paths (GitHub Pages), with fallback either way
+  const AM = window.__A || {}, onPages = /github\.io$/.test(location.hostname), R = n => (onPages && AM[n]) || n;
+  const memo = {}; const json = u => memo[u] || (memo[u] = fetch(R(u)).then(r => r.ok || !AM[u] ? r : fetch(AM[u])).then(r => r.json()));
+  const img = u => memo[u] || (memo[u] = new Promise(res => { const i = new Image(); let tried = false; i.onload = () => res(i);
+    i.onerror = () => { if (!tried && AM[u] && i.src.indexOf(AM[u]) < 0) { tried = true; i.src = AM[u]; } else res(null); }; i.src = R(u); }));
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const ease = u => u < .5 ? 2*u*u : 1 - Math.pow(-2*u + 2, 2)/2, clamp = (v, a, b) => Math.max(a, Math.min(b, v)), lerp = (a, b, u) => a + (b - a)*u;
   const fmt = n => Math.round(n).toLocaleString();
@@ -16,7 +19,7 @@ const K = (() => {
     el.innerHTML = ALL.map(([k, d]) => `<span class="lab ${on.includes(k) ? "on" : ""} ${k === "NOT SEEN" ? "ns" : ""}" title="${d}">${k}</span>`).join("");
   }
   async function scion(el) {
-    let t = ""; try { t = await (await fetch("scion.json")).json(); } catch (e) { return; }
+    let t = ""; try { t = await json("scion.json"); } catch (e) { return; }
     el.innerHTML = `<summary><span>The SCION instruction for this work</span><button class="btn" id="cp" type="button">Copy full instruction</button></summary><pre></pre>`;
     el.querySelector("pre").textContent = t;
     el.querySelector("#cp").addEventListener("click", ev => { ev.preventDefault(); const b = ev.currentTarget;

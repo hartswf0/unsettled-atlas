@@ -44,6 +44,8 @@ HEAD = """<meta charset="utf-8">
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="kit.css">
+<script>window.__A={assets};window.__fix=function(i){{var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){{i.dataset.f=1;i.src=window.__A[n];}}}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){{document.querySelectorAll("img").forEach(function(i){{var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];}});}});</script>
 <div class="wrap">
 <header style="display:flex;flex-direction:column;gap:6px">
 <span class="eyebrow">SCION Family · {code} · learned from {ref}</span>
@@ -61,7 +63,12 @@ def build(code):
     body, _, script = frag.partition("<!--SCRIPT-->")
     extra = " Field counts by year: Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0)." if "inventory.json" in files else ""
     d = f"{ROOT}/{code}"; os.makedirs(d, exist_ok=True)
-    open(f"{d}/index.html", "w").write(HEAD.format(title=title, code=code, ref=ref, body=body.strip(), script=script.strip(), extra=extra))
+    rel = {k: os.path.relpath(v, d) for k, v in files.items()}
+    page = HEAD.format(title=title, code=code, ref=ref, body=body.strip(), script=script.strip(), extra=extra, assets=json.dumps(rel, separators=(",", ":")))
+    page = re.sub(r"<img (?![^>]*onerror)", '<img onerror="__fix(this)" ', page)
+    open(f"{d}/index.html", "w").write(page)
+    import shutil
+    for kf in ("kit.css", "kit.js"): shutil.copy(f"{ROOT}/kit/{kf}", f"{d}/{kf}")   # so the folder runs on GitHub Pages
     json.dump(kernel + "\n\n" + grammar + "\n\n" + adapters[code], open(f"{d}/scion.json", "w"))
     fm = {"kit.css": f"{ROOT}/kit/kit.css", "kit.js": f"{ROOT}/kit/kit.js", "scion.json": f"{d}/scion.json", **files}
     for k, v in fm.items(): assert os.path.exists(v), (code, k, v)

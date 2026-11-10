@@ -40,7 +40,13 @@ jobs:
             --exclude='.github/' \
             --exclude='_site/' \
             --exclude='node_modules/' \
-            --exclude='tests/'
+            --exclude='tests/' \
+            --exclude='pivot-atlas/data/' \
+            --exclude='pivot-atlas/atlas/' \
+            --exclude='pivot-atlas/mosaics/' \
+            --exclude='pivot-atlas/video/' \
+            --exclude='pivot-atlas/targets/' \
+            --exclude='pivot-atlas/src/'
           touch _site/.nojekyll
           test -f _site/icosa-syntegrity.html
           test -f _site/icosa-syntegrity-live.html
@@ -64,3 +70,5 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          timeout: 1800000

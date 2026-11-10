@@ -1,0 +1,56 @@
+<meta charset="utf-8">
+<title>The Unit</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<script>window.__A={"inventory.json":"../pack/inventory.json","manifest.json":"../pack/manifest.json","farm_oweinat.jpg":"../pack/farm_oweinat.jpg"};window.__fix=function(i){var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){i.dataset.f=1;i.src=window.__A[n];}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("img").forEach(function(i){var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];});});</script>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · A2 · learned from Neil Halloran, The Fallen of World War II</span>
+<h1>The Unit</h1>
+</header>
+<p class="lede">Learn one unit slowly, then carry it into numbers too big to feel. The unit is one center-pivot field. Every count here is from the Africa hyper-arid inventory or measured from imagery.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+<div class="ctrl" id="pl"></div>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint). Field counts by year: Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),16/9),g=S.g;const [inv,man,farm]=await Promise.all([K.json("inventory.json"),K.json("manifest.json"),K.img("farm_oweinat.jpg")]);
+const FM=man.farm,f=FM.fields.reduce((a,b)=>Math.abs(b.radius_m-400)<Math.abs(a.radius_m-400)?b:a);
+const T=inv.tiles["36QUL"],yrs=Object.keys(T).map(Number).filter(y=>y>=2017),AF=inv.africa,ay=Object.keys(AF).map(Number);
+const ha=Math.PI*f.radius_m**2/1e4,pitch=105*68/1e4;
+function bg(){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);}
+function txt(s,x,y,size=14,col="#ead9b8",w=600){g.fillStyle=col;g.font=`${w} ${size*S.dpr}px Archivo`;g.fillText(s,x,y);}
+function dots(n,x0,y0,per,d,col){g.fillStyle=col;for(let i=0;i<n;i++){const c=i%per,r=Math.floor(i/per);g.beginPath();g.arc(x0+c*d+d/2,y0-r*d-d/2,d*0.42,0,7);g.fill();}}
+function draw(t){bg();const cap=K.$("#cap");let labs=["OBSERVED"];
+ if(t<9){const D=S.H*0.8,cx=S.W*0.32,cy=S.H/2,W=farm.width;K.circ(g,farm,f.x,f.y,f.r,cx,cy,D);const mpp=f.radius_m*2/D,pw=105/mpp,ph=68/mpp;
+  const show=Math.floor(K.clamp((t-2)/5,0,1)*200);g.strokeStyle="rgba(234,217,184,.85)";g.lineWidth=1*S.dpr;let k=0;
+  for(let y=cy-D/2;y<cy+D/2;y+=ph)for(let x=cx-D/2;x<cx+D/2;x+=pw){if(Math.hypot(x+pw/2-cx,y+ph/2-cy)<D/2-Math.hypot(pw,ph)/2&&k++<show)g.strokeRect(x,y,pw,ph);}
+  txt("One field",S.W*0.62,S.H*0.3,26,"#ead9b8",800);txt(`${Math.round(f.radius_m)} m radius · ${Math.round(ha)} ha`,S.W*0.62,S.H*0.38,15,"#ead9b8",500);
+  txt(`≈ ${Math.round(ha/pitch)} football pitches (105 × 68 m)`,S.W*0.62,S.H*0.45,15,"#ead9b8",500);if(t>2)txt(`pitches drawn: ${Math.min(k,show)}`,S.W*0.62,S.H*0.52,12,"#aa9f83",500);
+  cap.textContent=`${f.id} · Sentinel-2 L2A ${FM.scene}`;labs=["GEOGRAPHIC","OBSERVED","DRAWN"];}
+ else if(t<16){const s=S.H*0.9/1,ox=(S.W-s)/2,oy=S.H*0.05;g.fillStyle="#ead9b8";FM.fields.forEach(q=>{g.beginPath();g.arc(ox+q.x*s,oy+q.y*s,q.r*s,0,7);g.fill();});
+  txt(`One farm · ${FM.fields.length} fields`,24*S.dpr,40*S.dpr,20,"#ead9b8",800);txt("one dot = one field, drawn at true size and position",24*S.dpr,64*S.dpr,12,"#aa9f83",500);
+  cap.textContent="7 × 7 km frame, East Oweinat · zoom ×0.12 from the previous chapter";labs=["GEOGRAPHIC"];}
+ else if(t<24){const n=T["2017"][0],per=25,d=S.H*0.8/Math.ceil(n/per);dots(Math.round(n*K.clamp((t-16)/5,0,1)),S.W*0.08,S.H*0.92,per,d,"#ead9b8");
+  txt(`Toshka, 2017: ${n} fields`,S.W*0.5,S.H*0.3,26,"#ead9b8",800);txt("one dot = one field (same unit, packed in rows of 25)",S.W*0.5,S.H*0.38,13,"#aa9f83",500);cap.textContent="Count: Chen et al. inventory, Toshka tile footprint";labs=["COMPOSED"];}
+ else if(t<36){const per=20,cols=yrs.length,gap=S.W*0.012,cw=(S.W*0.86-gap*(cols-1))/cols,d=cw/per,base=S.H*0.86,u=K.clamp((t-24)/9,0,1);
+  yrs.forEach((y,i)=>{const n=T[y][0],show=Math.round(n*K.clamp(u*cols-i,0,1)),x0=S.W*0.07+i*(cw+gap);dots(show,x0,base,per,d,"#ead9b8");
+   g.fillStyle="#aa9f83";g.font=`${11*S.dpr}px IBM Plex Mono`;g.fillText(y,x0,base+16*S.dpr);if(show)g.fillText(K.fmt(show),x0,base-Math.ceil(show/per)*d-6*S.dpr);});
+  txt("Toshka, every year 2017 → 2025",S.W*0.07,S.H*0.08,18,"#ead9b8",800);txt("one dot = one field, always the same size",S.W*0.07,S.H*0.13,12,"#aa9f83",500);cap.textContent="Inventory counts inside the Toshka tile footprint";labs=["COMPOSED"];}
+ else if(t<47){const per=6,cols=ay.length,cw=S.W*0.9/cols,d=cw/per,base=S.H*0.86,u=K.clamp((t-36.5)/8,0,1);
+  ay.forEach((y,i)=>{const n=AF[y][0]/100,show=Math.round(n*K.clamp(u*cols-i,0,1)),x0=S.W*0.05+i*cw;dots(show,x0,base,per,d,"#d29a62");if(y%5===0||y===2025){g.fillStyle="#aa9f83";g.font=`${10*S.dpr}px IBM Plex Mono`;g.fillText(y,x0,base+14*S.dpr);}});
+  txt("Africa's hyper-arid regions, 1972 → 2025",S.W*0.05,S.H*0.08,18,"#ead9b8",800);txt("THE UNIT CHANGES HERE: one dot = 100 fields",S.W*0.05,S.H*0.13,13,"#e0a24f",700);
+  txt("The jumps in 2017 and 2025 may be changes in how the inventory was made; cause UNKNOWN",S.W*0.05,S.H*0.18,11,"#aa9f83",500);cap.textContent=`2025: ${K.fmt(AF["2025"][0])} fields (polygons ≥ 1 ha) · 1974 and 2012 have no data`;labs=["COMPOSED","NOT SEEN"];}
+ else{const D=S.H*0.8;K.circ(g,farm,f.x,f.y,f.r,S.W/2,S.H/2,D);txt("Back to one field.",S.W*0.04,S.H*0.12,22,"#ead9b8",800);cap.textContent=`${f.lat.toFixed(4)} N, ${f.lon.toFixed(4)} E · ${Math.round(ha)} ha`;labs=["GEOGRAPHIC","OBSERVED"];}
+ K.labels(K.$("#labs"),labs);}
+const P=K.player(K.$("#pl"),{duration:52,chapters:[{t:0,name:"One field"},{t:9,name:"One farm"},{t:16,name:"Toshka 2017"},{t:24,name:"Every year"},{t:36,name:"All of Africa's deserts"},{t:47,name:"One field"}],draw});
+P.seek(K.reduced?30:0.3);addEventListener("resize",()=>{S.fit();P.redraw();});
+})();
+</script>

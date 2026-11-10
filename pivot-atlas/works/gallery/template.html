@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SCION Family Gallery</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a contact sheet. Four labelled shelves of cards; each card is a thumbnail of the work's own stage. */
+:root{--bg:#ead4ab;--panel:#f3e3c3;--fg:#1d2316;--muted:#5d5a44;--rule:#c9ad7f;--acc:#0f5d6b;--ok:#2c4626;--warn:#a14a1c;--ink:#0d1210;
+ --display:"Archivo",ui-sans-serif,system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12160f;--panel:#1b2117;--fg:#ead9b8;--muted:#aa9f83;--rule:#3a3a2a;--acc:#7fd0dc;--ok:#8fb36f;--warn:#e0a24f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12160f;--panel:#1b2117;--fg:#ead9b8;--muted:#aa9f83;--rule:#3a3a2a;--acc:#7fd0dc;--ok:#8fb36f;--warn:#e0a24f;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--display);font-size:15px;line-height:1.5;
+ padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 56px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:34px}
+header{display:flex;flex-direction:column;gap:10px}
+.eyebrow{font:500 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(2.2rem,6vw,4rem);font-stretch:120%;font-weight:800;margin:0;line-height:1}
+h2{font-size:1.35rem;font-stretch:112%;margin:0}
+h3{font-size:1.02rem;margin:0;line-height:1.2;text-wrap:balance}
+p{margin:0;max-width:68ch}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{font:500 .82rem var(--display);color:var(--fg);border:1px solid var(--rule);border-radius:999px;padding:6px 12px;text-decoration:none}
+.links a:hover{border-color:var(--fg)}
+.tally{font:500 .8rem var(--mono);color:var(--muted)}
+.sh{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-top:14px;margin-bottom:14px}
+.sh p{color:var(--muted);font-size:.88rem}
+.cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.card>a:first-child{color:inherit;text-decoration:none;display:flex;flex-direction:column;gap:6px;padding-bottom:30px;height:100%}
+.card img{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:cover;background:var(--ink)}
+.card .row,.card h3,.card p{padding-inline:12px}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.code{font:500 .74rem var(--mono);color:var(--muted)}
+.st{font:500 .68rem var(--mono);letter-spacing:.05em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:1px 8px}
+.st-built{color:var(--ok)} .st-partial,.st-inconclusive{color:var(--warn)} .st-not-built{color:var(--muted);border-style:dashed}
+.ref{font-size:.76rem;color:var(--muted)}
+.card p:last-child{font-size:.86rem}
+.card:hover{border-color:var(--fg)}
+.src{position:absolute;right:12px;bottom:8px;font:500 .72rem var(--mono);color:var(--muted)}
+a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.note{font-size:.8rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <span class="eyebrow">Unsettled Atlas · pivot-atlas</span>
+ <h1>SCION Family</h1>
+ <p>Twenty-six works made from real center-pivot fields in open Sentinel-2 imagery. Each one learns a lesson from a reference work (a film, a chart, an instrument, a book) and rebuilds it from farms that exist, with every claim labelled as observed, composed, or not seen.</p>
+ <p class="tally">%%COUNTS%%</p>
+ <nav class="links" aria-label="Related">
+  <a href="https://claude.ai/artifact/HfNwtySLr4RoKRsqXLmX8v" target="_blank" rel="noopener">The instructions</a>
+  <a href="https://claude.ai/artifact/8AfT4F2u5GUQoqwfLJbyJy" target="_blank" rel="noopener">Pivot World map</a>
+  <a href="https://claude.ai/artifact/C2dudp8Dw15HKUrXmhPtEK" target="_blank" rel="noopener">Glyph Observatory</a>
+  <a href="https://claude.ai/artifact/CTgMSsrCiYgDzJBUpc6dQr" target="_blank" rel="noopener">Circle Assembler atlas</a>
+ </nav>
+</header>
+%%SECTIONS%%
+<p class="note">Each work opens as a claude.ai page; they are private to their owner until shared. "source" links to the work's folder in this repository (fragment, built page and its SCION instruction). Imagery contains modified Copernicus Sentinel data; field counts by year from Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0).</p>
+</div>
+</body>
+</html>

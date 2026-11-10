@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SCION Family Gallery</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a contact sheet. Four labelled shelves of cards; each card is a thumbnail of the work's own stage. */
+:root{--bg:#ead4ab;--panel:#f3e3c3;--fg:#1d2316;--muted:#5d5a44;--rule:#c9ad7f;--acc:#0f5d6b;--ok:#2c4626;--warn:#a14a1c;--ink:#0d1210;
+ --display:"Archivo",ui-sans-serif,system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12160f;--panel:#1b2117;--fg:#ead9b8;--muted:#aa9f83;--rule:#3a3a2a;--acc:#7fd0dc;--ok:#8fb36f;--warn:#e0a24f;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12160f;--panel:#1b2117;--fg:#ead9b8;--muted:#aa9f83;--rule:#3a3a2a;--acc:#7fd0dc;--ok:#8fb36f;--warn:#e0a24f;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--display);font-size:15px;line-height:1.5;
+ padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 56px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:34px}
+header{display:flex;flex-direction:column;gap:10px}
+.eyebrow{font:500 .72rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-size:clamp(2.2rem,6vw,4rem);font-stretch:120%;font-weight:800;margin:0;line-height:1}
+h2{font-size:1.35rem;font-stretch:112%;margin:0}
+h3{font-size:1.02rem;margin:0;line-height:1.2;text-wrap:balance}
+p{margin:0;max-width:68ch}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{font:500 .82rem var(--display);color:var(--fg);border:1px solid var(--rule);border-radius:999px;padding:6px 12px;text-decoration:none}
+.links a:hover{border-color:var(--fg)}
+.tally{font:500 .8rem var(--mono);color:var(--muted)}
+.sh{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-top:1px solid var(--rule);padding-top:14px;margin-bottom:14px}
+.sh p{color:var(--muted);font-size:.88rem}
+.cards{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px}
+.card{position:relative;background:var(--panel);border:1px solid var(--rule);border-radius:8px;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.card>a:first-child{color:inherit;text-decoration:none;display:flex;flex-direction:column;gap:6px;padding-bottom:30px;height:100%}
+.card img{display:block;width:100%;height:auto;aspect-ratio:8/5;object-fit:cover;background:var(--ink)}
+.card .row,.card h3,.card p{padding-inline:12px}
+.row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.code{font:500 .74rem var(--mono);color:var(--muted)}
+.st{font:500 .68rem var(--mono);letter-spacing:.05em;text-transform:uppercase;border:1px solid currentColor;border-radius:999px;padding:1px 8px}
+.st-built{color:var(--ok)} .st-partial,.st-inconclusive{color:var(--warn)} .st-not-built{color:var(--muted);border-style:dashed}
+.ref{font-size:.76rem;color:var(--muted)}
+.card p:last-child{font-size:.86rem}
+.card:hover{border-color:var(--fg)}
+.src{position:absolute;right:12px;bottom:8px;font:500 .72rem var(--mono);color:var(--muted)}
+a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.note{font-size:.8rem;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+ <span class="eyebrow">Unsettled Atlas · pivot-atlas</span>
+ <h1>SCION Family</h1>
+ <p>Twenty-six works made from real center-pivot fields in open Sentinel-2 imagery. Each one learns a lesson from a reference work (a film, a chart, an instrument, a book) and rebuilds it from farms that exist, with every claim labelled as observed, composed, or not seen.</p>
+ <p class="tally">20 built · 4 partial · 1 inconclusive · 1 not built</p>
+ <nav class="links" aria-label="Related">
+  <a href="../../scion/">The instructions</a>
+  <a href="../../web3/">Pivot World map</a>
+  <a href="../../web2/">Glyph Observatory</a>
+  <a href="../../web/">Circle Assembler atlas</a>
+ </nav>
+</header>
+<section aria-labelledby="gA"><div class="sh"><h2 id="gA">Films</h2><p>Time-based pieces with chapters and a scrubber.</p></div><ul class="cards"><li class="card"><a href="../A1/">
+ <img src="thumbs/A1.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">A1</span><span class="st st-built">built</span></span>
+ <h3>Seeing Like a Pivot</h3><p class="ref">after James C. Scott, Seeing Like a State</p><p>One East Oweinat field as a place, a count, a portrait dot, and a place again, ending on what the image cannot show.</p></a>
+ <a class="src" href="../A1/scion.json">instruction</a></li><li class="card"><a href="../A2/">
+ <img src="thumbs/A2.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">A2</span><span class="st st-built">built</span></span>
+ <h3>The Unit</h3><p class="ref">after Neil Halloran, The Fallen of World War II</p><p>One field learned slowly (about 70 football pitches), carried to Toshka&#x27;s growth and Africa&#x27;s deserts.</p></a>
+ <a class="src" href="../A2/scion.json">instruction</a></li><li class="card"><a href="../A3/">
+ <img src="thumbs/A3.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">A3</span><span class="st st-built">built</span></span>
+ <h3>What the Green Can&#x27;t Say</h3><p class="ref">after Neil Halloran, Degrees of Uncertainty</p><p>A Toshka field built in 2018, planted 2019–2023, bare since: abandoned or fallow? The imagery can&#x27;t say.</p></a>
+ <a class="src" href="../A3/scion.json">instruction</a></li><li class="card"><a href="../A4/">
+ <img src="thumbs/A4.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">A4</span><span class="st st-built">built</span></span>
+ <h3>Interrupted Film</h3><p class="ref">after Neil Halloran, The Shadow Peace</p><p>A film that stops three times for you to pick a tile, a field and a portrait dot.</p></a>
+ <a class="src" href="../A4/scion.json">instruction</a></li><li class="card"><a href="../A5/">
+ <img src="thumbs/A5.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">A5</span><span class="st st-built">built</span></span>
+ <h3>Seasons in Place</h3><p class="ref">after NASA Scientific Visualization Studio, Saudi Arabia&#x27;s Desert Agriculture</p><p>Twelve real months over an Al Jawf farm, true or false color; circles fixed, interiors changing.</p></a>
+ <a class="src" href="../A5/scion.json">instruction</a></li><li class="card"><a href="../A6/">
+ <img src="thumbs/A6.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">A6</span><span class="st st-partial">partial</span></span>
+ <h3>The Second Instrument</h3><p class="ref">after NASA JPL, GRACE and GRACE-FO water storage</p><p>Fields at 10 m beside one GRACE-sized water cell; the water panel stays empty and labelled.</p></a>
+ <a class="src" href="../A6/scion.json">instruction</a></li><li class="card"><a href="../A7/">
+ <img src="thumbs/A7.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">A7</span><span class="st st-built">built</span></span>
+ <h3>Choreography of Scale</h3><p class="ref">after Johnny Kelly and Nexus Studios, Back to the Start</p><p>One hub, a farm, a basin, then the turn: 115 recorded fields that went back to sand.</p></a>
+ <a class="src" href="../A7/scion.json">instruction</a></li><li class="card"><a href="../A8/">
+ <img src="thumbs/A8.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">A8</span><span class="st st-built">built</span></span>
+ <h3>Title Sequence</h3><p class="ref">after Saul Bass, Anatomy of a Murder titles</p><p>Hard cuts: a dark half-disc becomes a planted wedge, a farm, a region.</p></a>
+ <a class="src" href="../A8/scion.json">instruction</a></li><li class="card"><a href="../A9/">
+ <img src="thumbs/A9.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">A9</span><span class="st st-not-built">not built</span></span>
+ <h3>Situated Testimony</h3><p class="ref">after Forensic Architecture, The Grenfell Tower Fire: Situated Testimonies</p><p>Needs real, consented testimony first; the page says so instead of inventing witnesses.</p></a>
+ <a class="src" href="../A9/scion.json">instruction</a></li></ul></section><section aria-labelledby="gB"><div class="sh"><h2 id="gB">Statistical graphics</h2><p>Charts where one mark carries one quantity.</p></div><ul class="cards"><li class="card"><a href="../B1/">
+ <img src="thumbs/B1.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B1</span><span class="st st-built">built</span></span>
+ <h3>The Wound Line</h3><p class="ref">after W. E. B. Du Bois and the Atlanta University team, City and Rural Population</p><p>241 fields in a straight line beside 3,493 wound into a spiral, which unwinds off the page.</p></a>
+ <a class="src" href="../B1/scion.json">instruction</a></li><li class="card"><a href="../B2/">
+ <img src="thumbs/B2.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B2</span><span class="st st-built">built</span></span>
+ <h3>The Field Is a Rose</h3><p class="ref">after Florence Nightingale, Diagram of the Causes of Mortality</p><p>Polar area roses of planted area each March, beside a field that already draws one.</p></a>
+ <a class="src" href="../B2/scion.json">instruction</a></li><li class="card"><a href="../B3/">
+ <img src="thumbs/B3.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B3</span><span class="st st-built">built</span></span>
+ <h3>Moving Circles</h3><p class="ref">after Gapminder and Hans Rosling, World Health Chart</p><p>62 farm districts moving through fixed axes, 2017–2025; follow one bubble.</p></a>
+ <a class="src" href="../B3/scion.json">instruction</a></li><li class="card"><a href="../B4/">
+ <img src="thumbs/B4.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B4</span><span class="st st-built">built</span></span>
+ <h3>One Dot Buys</h3><p class="ref">after Otto and Marie Neurath, Gerd Arntz: Isotype</p><p>One real field image = 100 fields, Toshka and East Oweinat, 1980–2025.</p></a>
+ <a class="src" href="../B4/scion.json">instruction</a></li><li class="card"><a href="../B5/">
+ <img src="thumbs/B5.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B5</span><span class="st st-partial">partial</span></span>
+ <h3>The March of Water</h3><p class="ref">after Charles Joseph Minard, the Russian campaign map</p><p>A band along the traced canal, its width the pivot area served each year; lake level not available.</p></a>
+ <a class="src" href="../B5/scion.json">instruction</a></li><li class="card"><a href="../B6/">
+ <img src="thumbs/B6.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B6</span><span class="st st-inconclusive">inconclusive</span></span>
+ <h3>The Arm&#x27;s Timetable</h3><p class="ref">after Étienne-Jules Marey, graphical train timetable</p><p>Mark the arm on nine dates and build the timetable yourself; the line looks fixed at 10 m.</p></a>
+ <a class="src" href="../B6/scion.json">instruction</a></li><li class="card"><a href="../B7/">
+ <img src="thumbs/B7.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B7</span><span class="st st-built">built</span></span>
+ <h3>The Defined Whole</h3><p class="ref">after Our World in Data, Half of the world&#x27;s habitable land is used for agriculture</p><p>The Toshka tile divided: pivots 10.9%, water 11.7%, everything else.</p></a>
+ <a class="src" href="../B7/scion.json">instruction</a></li><li class="card"><a href="../B8/">
+ <img src="thumbs/B8.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B8</span><span class="st st-built">built</span></span>
+ <h3>Same Frame, Next Year</h3><p class="ref">after USGS Earthshots, Wadi As-Sirhan Basin</p><p>Nine Marches of Toshka at identical crop, scale and rendering.</p></a>
+ <a class="src" href="../B8/scion.json">instruction</a></li><li class="card"><a href="../B9/">
+ <img src="thumbs/B9.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B9</span><span class="st st-built">built</span></span>
+ <h3>A Pivot Over Your Town</h3><p class="ref">after Jan Diehm and Amber Thomas, Women&#x27;s Pockets Are Inferior</p><p>One field at the same scale as Central Park, London, or an area you type in.</p></a>
+ <a class="src" href="../B9/scion.json">instruction</a></li><li class="card"><a href="../B10/">
+ <img src="thumbs/B10.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B10</span><span class="st st-partial">partial</span></span>
+ <h3>What You&#x27;d Need Before Drilling</h3><p class="ref">after Edward Tufte, cholera map and Challenger charts</p><p>Should a farm add 20 fields? What the record shows, and the unknowns just as plainly.</p></a>
+ <a class="src" href="../B10/scion.json">instruction</a></li><li class="card"><a href="../B11/">
+ <img src="thumbs/B11.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">B11</span><span class="st st-built">built</span></span>
+ <h3>Dear Pivot</h3><p class="ref">after Giorgia Lupi and Stefanie Posavec, Dear Data</p><p>Log your own week and see it drawn as seven pivots, with a key.</p></a>
+ <a class="src" href="../B11/scion.json">instruction</a></li></ul></section><section aria-labelledby="gC"><div class="sh"><h2 id="gC">Interactive and image</h2><p>Pieces you explore by hand.</p></div><ul class="cards"><li class="card"><a href="../C1/">
+ <img src="thumbs/C1.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">C1</span><span class="st st-built">built</span></span>
+ <h3>Every Dot a Doorway</h3><p class="ref">after Jonathan Harris and Sep Kamvar, We Feel Fine</p><p>A cloud of 7,207 real fields; any dot opens into its farm and closes back.</p></a>
+ <a class="src" href="../C1/scion.json">instruction</a></li><li class="card"><a href="../C2/">
+ <img src="thumbs/C2.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">C2</span><span class="st st-built">built</span></span>
+ <h3>Micro / Macro Portrait</h3><p class="ref">after Georges Seurat, A Sunday on La Grande Jatte</p><p>A portrait of real fields with a lens that shows each dot&#x27;s farm and coordinates.</p></a>
+ <a class="src" href="../C2/scion.json">instruction</a></li><li class="card"><a href="../C3/">
+ <img src="thumbs/C3.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">C3</span><span class="st st-built">built</span></span>
+ <h3>Each New Circle</h3><p class="ref">after The Washington Post, 100,000 Deaths</p><p>Toshka&#x27;s fields arriving at their true positions, year by year.</p></a>
+ <a class="src" href="../C3/scion.json">instruction</a></li></ul></section><section aria-labelledby="gD"><div class="sh"><h2 id="gD">The Scott trilogy</h2><p>Three short studies of how counting reshapes what is counted.</p></div><ul class="cards"><li class="card"><a href="../D1/">
+ <img src="thumbs/D1.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">D1</span><span class="st st-built">built</span></span>
+ <h3>Change the Question, Not the Field</h3><p class="ref">after James C. Scott, scientific forestry in Seeing Like a State</p><p>One fixed frame of a farm; four passes change only what is counted.</p></a>
+ <a class="src" href="../D1/scion.json">instruction</a></li><li class="card"><a href="../D2/">
+ <img src="thumbs/D2.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">D2</span><span class="st st-built">built</span></span>
+ <h3>Grid Over Ground</h3><p class="ref">after James C. Scott, the survey grid in Seeing Like a State</p><p>Texas pivots in survey-grid squares beside Toshka&#x27;s lattice, same scale.</p></a>
+ <a class="src" href="../D2/scion.json">instruction</a></li><li class="card"><a href="../D3/">
+ <img src="thumbs/D3.jpg" alt="" width="480" height="300" loading="lazy">
+ <span class="row"><span class="code">D3</span><span class="st st-partial">partial</span></span>
+ <h3>From Field to Number</h3><p class="ref">after James C. Scott, Against the Grain (the ration tablet)</p><p>From one wedge of green to 165,038 ha; tonnes and the national figure left empty.</p></a>
+ <a class="src" href="../D3/scion.json">instruction</a></li></ul></section>
+<p class="note">Each work runs here from the repository; "instruction" opens its SCION instruction. Imagery contains modified Copernicus Sentinel data; field counts by year from Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0).</p>
+</div>
+</body>
+</html>

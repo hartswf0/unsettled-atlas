@@ -1,0 +1,37 @@
+<meta charset="utf-8">
+<title>The Wound Line</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<script>window.__A={"inventory.json":"../pack/inventory.json"};window.__fix=function(i){var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){i.dataset.f=1;i.src=window.__A[n];}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("img").forEach(function(i){var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];});});</script>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · B1 · learned from W. E. B. Du Bois and the Atlanta University team, City and Rural Population</span>
+<h1>The Wound Line</h1>
+</header>
+<p class="lede">A long count wound into a spiral so it fits the page, and so the difference becomes physical. Every dot is one Toshka field, at the same spacing in both marks: 2017 runs straight, 2025 is wound up.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas></div>
+<div class="ctrl"><button class="btn primary" id="un" type="button">Unwind 2025</button><span class="mono" id="msg"></span></div>
+<p class="note">Path length is proportional to the count: one field = one step of equal length along either line. Counts: Chen et al. inventory, Toshka tile footprint.</p>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint). Field counts by year: Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),1.25),g=S.g,inv=await K.json("inventory.json"),a=inv.tiles["36QUL"]["2017"][0],b=inv.tiles["36QUL"]["2025"][0];let u=0,raf=0;
+function spiral(n,step,cx,cy){const pts=[];let th=0,r0=step*3,k=step*1.15/(2*Math.PI);for(let i=0;i<n;i++){const r=r0+k*th;pts.push([cx+r*Math.cos(th),cy+r*Math.sin(th)]);th+=step/r;}return pts;}
+function draw(){const step=Math.min(S.W*0.88/a,Math.min(S.W,S.H)*0.0105);g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);
+ const sp=spiral(b,step,S.W*0.56,S.H*0.47),y0=S.H*0.92,x0=S.W*0.06;
+ g.fillStyle="#ead9b8";for(let i=0;i<b;i++){const[sx,sy]=sp[i],lx=x0+i*step,ly=y0-14*S.dpr;const e=K.ease(K.clamp(u*1.4-(i/b)*0.4,0,1));const x=K.lerp(sx,lx,e),y=K.lerp(sy,ly,e);if(x<S.W+5){g.beginPath();g.arc(x,y,step*0.38,0,7);g.fill();}}
+ g.fillStyle="#d29a62";for(let i=0;i<a;i++){g.beginPath();g.arc(x0+i*step,S.H*0.08+40*S.dpr,step*0.38,0,7);g.fill();}
+ g.fillStyle="#ead9b8";g.font=`800 ${18*S.dpr}px Archivo`;g.fillText(`2017: ${a} fields`,x0,S.H*0.08+20*S.dpr);g.fillText(`2025: ${K.fmt(b)} fields`,x0,S.H*0.2+20*S.dpr);
+ const off=Math.max(0,b*step-(S.W-x0));K.$("#msg").textContent=u>0.95?`Unwound, 2025 runs ${(b*step/(S.W-x0)).toFixed(1)} page-widths; it leaves the page after ${Math.floor((S.W-x0)/step)} fields.`:"";
+ K.labels(K.$("#labs"),["COMPOSED"]);}
+K.$("#un").onclick=()=>{cancelAnimationFrame(raf);const t0=performance.now(),dir=u>0.5?-1:1;const s0=u;const st=t=>{const p=K.reduced?1:K.clamp((t-t0)/3500,0,1);u=dir>0?K.lerp(s0,1,p):K.lerp(s0,0,p);draw();if(p<1)raf=requestAnimationFrame(st);else K.$("#un").textContent=u>0.5?"Wind it back":"Unwind 2025";};raf=requestAnimationFrame(st);};
+draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

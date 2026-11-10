@@ -1,0 +1,29 @@
+<p class="lede">Each bubble is a farm district (fields grouped into 10 km squares). Follow one bubble through the years, then watch them all. The axes never rescale.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+<div class="ctrl"><button class="btn primary" id="play" type="button">Play</button><input type="range" id="yr" min="0" max="8" step="0.01" value="8" aria-label="Year"><span class="mono" id="yl"></span>
+ <span class="mono"><span style="color:var(--b0)">●</span> Toshka &nbsp;<span style="color:var(--b1)">●</span> East Oweinat</span></div>
+<p class="note">x = fields planted that March · y = mean planted fraction of fields in view · bubble area ∝ planted field area (km²). From this catalog's March readings, which over-count presence in early years. Tap a bubble to follow it.</p>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),16/10),g=S.g,D=await K.json("derived.json"),CL=D.clusters,Y=CL[0].series.map(s=>s.year);let yv=8,follow=null,timer=0;
+const xmax=Math.max(...CL.flatMap(c=>c.series.map(s=>s.active)))*1.05,amax=Math.max(...CL.flatMap(c=>c.series.map(s=>s.area_km2)));
+const m={l:60,r:20,t:20,b:46};const X=v=>m.l*S.dpr+v/xmax*(S.W-(m.l+m.r)*S.dpr),Yp=v=>S.H-m.b*S.dpr-v*(S.H-(m.t+m.b)*S.dpr),R=a=>Math.sqrt(a/amax)*S.W*0.045+1.5*S.dpr;
+function val(c,y){const i=Math.floor(y),f=y-i,a=c.series[i],b=c.series[Math.min(i+1,Y.length-1)];const lp=(p,q)=>p==null||q==null?(p??q):K.lerp(p,q,f);return{x:lp(a.active,b.active),y:lp(a.mean_pf,b.mean_pf),a:lp(a.area_km2,b.area_km2)};}
+function draw(){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);g.strokeStyle="#2a3326";g.lineWidth=1;g.fillStyle="#aa9f83";g.font=`${11*S.dpr}px IBM Plex Mono`;
+ for(let v=0;v<=1.001;v+=0.25){g.beginPath();g.moveTo(X(0),Yp(v));g.lineTo(X(xmax),Yp(v));g.stroke();g.fillText(v.toFixed(2),8*S.dpr,Yp(v)+4);}
+ const st=xmax>300?100:50;for(let v=0;v<=xmax;v+=st){g.beginPath();g.moveTo(X(v),Yp(0));g.lineTo(X(v),Yp(1));g.stroke();g.fillText(v,X(v)-8,S.H-28*S.dpr);}
+ g.fillText("fields planted that March →",X(xmax)-210*S.dpr,S.H-10*S.dpr);g.save();g.translate(14*S.dpr,Yp(0.5)+80*S.dpr);g.rotate(-Math.PI/2);g.fillText("mean planted fraction →",0,0);g.restore();
+ const yr=Y[Math.round(yv)];g.fillStyle="rgba(234,217,184,.12)";g.font=`800 ${120*S.dpr}px Archivo`;g.fillText(Math.floor(Y[0]+yv),X(xmax*0.45),Yp(0.12));
+ if(follow){g.strokeStyle="#ead9b8";g.lineWidth=1.5*S.dpr;g.beginPath();for(let t=0;t<=yv;t+=0.1){const v=val(follow,t);if(v.y==null)continue;t?g.lineTo(X(v.x),Yp(v.y)):g.moveTo(X(v.x),Yp(v.y));}g.stroke();}
+ const order=[...CL].sort((a,b)=>val(b,yv).a-val(a,yv).a);
+ for(const c of order){const v=val(c,yv);if(v.y==null)continue;g.fillStyle=K.css(c.region==="Toshka"?"--b0":"--b1");g.globalAlpha=follow&&follow!==c?0.35:0.85;g.beginPath();g.arc(X(v.x),Yp(v.y),R(v.a),0,7);g.fill();g.globalAlpha=1;g.strokeStyle="#0d1210";g.lineWidth=2;g.stroke();}
+ K.$("#yl").textContent=`March ${Math.floor(Y[0]+yv)}`;K.$("#cap").textContent=follow?`Following a ${follow.region} district of ${follow.n} fields (${follow.lat.toFixed(2)} N, ${follow.lon.toFixed(2)} E)`:"";K.labels(K.$("#labs"),["COMPOSED","OBSERVED"]);}
+K.$("#yr").oninput=e=>{yv=+e.target.value;draw();};
+K.$("#play").onclick=()=>{if(timer){cancelAnimationFrame(timer);timer=0;K.$("#play").textContent="Play";return;}if(yv>=7.99)yv=0;K.$("#play").textContent="Pause";let last=performance.now();
+ const st=t=>{yv=Math.min(8,yv+(t-last)/1400);last=t;K.$("#yr").value=yv;draw();if(yv<8)timer=requestAnimationFrame(st);else{timer=0;K.$("#play").textContent="Play";}};timer=requestAnimationFrame(st);};
+S.c.addEventListener("click",e=>{const r=S.c.getBoundingClientRect(),x=(e.clientX-r.left)*S.dpr,y=(e.clientY-r.top)*S.dpr;let b=null,bd=1e9;CL.forEach(c=>{const v=val(c,yv);if(v.y==null)return;const d=Math.hypot(X(v.x)-x,Yp(v.y)-y)-R(v.a);if(d<bd){bd=d;b=c;}});follow=bd<10*S.dpr?(follow===b?null:b):null;draw();});
+draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

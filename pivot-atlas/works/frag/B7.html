@@ -1,0 +1,23 @@
+<p class="lede">Start with a whole you can name, then divide it. The whole is one Sentinel-2 tile over Toshka, 12,056 km² of ground in view. Only then look at how much of it is center-pivot fields.</p>
+<div class="labels" id="labs"></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">
+ <div class="stage" style="background:var(--panel);color:var(--fg)"><canvas id="cv"></canvas></div>
+ <div class="stage"><img class="full" src="toshka_2025.jpg" alt="Toshka, March 2025, Sentinel-2"><span class="cap">The same ground, March 2025 (84 km crop)</span></div>
+</div>
+<div class="grid" id="nums" style="grid-template-columns:repeat(auto-fit,minmax(170px,1fr))"></div>
+<p class="note" id="meth"></p>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const man=await K.json("manifest.json"),C=man.composition_36QUL;const parts=[["Pivot fields",C.pivot_km2,"--field"],["Water (lakes, canal)",C.water_km2,"--acc"],["Everything else",C.other_km2,"--sand"]];
+const S=K.stage(K.$("#cv"),1),g=S.g;
+function draw(){g.fillStyle=K.css("--panel");g.fillRect(0,0,S.W,S.H);const pad=10*S.dpr,side=S.W-2*pad;let y=pad;
+ parts.forEach(([n,v,col],i)=>{const h=side*v/C.valid_km2;g.fillStyle=K.css(col);g.globalAlpha=i===2?0.45:0.9;g.fillRect(pad,y,side,h);g.globalAlpha=1;
+  if(i===0){const area=v/0.9069,cell=Math.sqrt((side*h)/C.n_fields),d=cell*0.95;g.fillStyle=K.css("--panel");for(let k=0;k<C.n_fields;k++){const cols=Math.floor(side/cell),cx=pad+(k%cols+0.5)*cell,cy=y+(Math.floor(k/cols)+0.5)*cell;if(cy>y+h)break;g.beginPath();g.arc(cx,cy,d*0.12,0,7);g.fill();}}
+  g.fillStyle=i===2?K.css("--fg"):"#fff";g.font=`700 ${13*S.dpr}px Archivo`;if(h>18*S.dpr)g.fillText(`${n} · ${Math.round(v).toLocaleString()} km² · ${(100*v/C.valid_km2).toFixed(1)}%`,pad+8*S.dpr,y+18*S.dpr);y+=h;});
+ g.strokeStyle=K.css("--fg");g.lineWidth=2;g.strokeRect(pad,pad,side,side);}
+K.$("#nums").innerHTML=[["Whole tile in view",C.valid_km2],["Pivot fields",C.pivot_km2],["Water",C.water_km2],["Everything else",C.other_km2]].map(([a,b])=>`<div class="panel"><span class="eyebrow">${a}</span><span class="big">${Math.round(b).toLocaleString()} km²</span></div>`).join("")+`<div class="panel"><span class="eyebrow">Fields</span><span class="big">${C.n_fields.toLocaleString()}</span></div>`;
+K.$("#meth").textContent=`Method: ${C.method}. Parts sum to the whole. The pivot band carries one small mark per field (${C.n_fields.toLocaleString()} marks).`;
+K.labels(K.$("#labs"),["COMPOSED","OBSERVED"]);draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

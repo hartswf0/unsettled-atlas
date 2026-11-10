@@ -1,0 +1,34 @@
+<meta charset="utf-8">
+<title>What You'd Need Before Drilling</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<script>window.__A={"inventory.json":"../pack/inventory.json"};window.__fix=function(i){var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){i.dataset.f=1;i.src=window.__A[n];}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("img").forEach(function(i){var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];});});</script>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · B10 · learned from Edward Tufte, cholera map and Challenger charts</span>
+<h1>What You'd Need Before Drilling</h1>
+</header>
+<p class="lede">The question: <strong>should a farm in East Oweinat add 20 more fields?</strong> Ask what evidence someone would need before acting. Some of it is in the satellite record. Much of it is not, and the gaps are shown as plainly as the facts.</p>
+<div class="labels" id="labs"></div>
+<div class="grid" id="panels" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))"></div>
+<p class="note">Counts: Chen et al. inventory, East Oweinat tile footprint. "Gone" = circular fields recorded 2015–2024 with no field at that spot in 2025.</p>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint). Field counts by year: Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{const inv=await K.json("inventory.json"),T=inv.tiles["35QPF"],ys=Object.keys(T).map(Number).filter(y=>y>=1995);
+const have=(h,b,extra="")=>`<div class="panel"><span class="eyebrow">Have · measured</span><h2>${h}</h2>${b}${extra}</div>`,none=(h,b)=>`<div class="panel unknown"><span class="eyebrow">Not seen</span><h2>${h}</h2><p>${b}</p></div>`;
+K.$("#panels").innerHTML=have("Growth of fields",`<canvas id="gr" style="width:100%;height:110px"></canvas><p class="note">first recorded ${ys[0]}: ${T[ys[0]][0]} fields · 2025: ${T[2025][0].toLocaleString()}</p>`)+
+ have("Fields lost nearby",`<span class="big">${inv.gone["35QPF"].length}</span><p class="note">recorded 2015–2024, gone by 2025. Why each was lost is not in the record.</p>`)+
+ `<div class="panel"><span class="eyebrow">Have · documented (verify)</span><h2>Water source</h2><p>East Oweinat is reported to draw fossil groundwater from the Nubian Sandstone Aquifer System. Confirm with a hydrogeological source before relying on it.</p></div>`+
+ none("Volume pumped","Well-by-well abstraction records. Not in any satellite image.")+none("Aquifer level trend","Piezometer records near the farm. GRACE only sees regional totals, too coarse for one farm.")+
+ none("Water quality","Salinity of pumped water and soil; it decides whether new fields would last.")+none("Crop and market","What would be grown, its water need per hectare, and who buys it.")+
+ `<div class="panel" style="border-color:var(--fg)"><span class="eyebrow">Verdict</span><h2>Not enough evidence to decide</h2><p>The satellite record can show expansion and loss. It cannot show whether the water exists to support more.</p></div>`;
+const c=K.$("#gr"),r=c.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);c.width=r.width*d;c.height=r.height*d;const g=c.getContext("2d"),mx=Math.max(...ys.map(y=>T[y][0]));
+g.strokeStyle=K.css("--field");g.lineWidth=2.5*d;g.beginPath();ys.forEach((y,i)=>{const x=6*d+(y-ys[0])/(ys.at(-1)-ys[0])*(c.width-12*d),yy=c.height-6*d-T[y][0]/mx*(c.height-16*d);i?g.lineTo(x,yy):g.moveTo(x,yy);});g.stroke();
+K.labels(K.$("#labs"),["OBSERVED","NOT SEEN"]);})();
+</script>

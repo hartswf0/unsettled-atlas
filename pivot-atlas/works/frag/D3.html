@@ -1,0 +1,20 @@
+<p class="lede">Follow a chain of operations backward: from a national harvest statistic, to tonnes, to hectares, to fields, to one wedge of green. Each link names its transform. The links that would need records not held here are left empty.</p>
+<div class="labels" id="labs"></div>
+<div class="grid" id="chain" style="grid-template-columns:repeat(auto-fit,minmax(190px,1fr))"></div>
+<p class="note">Planted area = planted fraction × disc area, from March 2025 Sentinel-2 (NDVI > 0.30 by angular sector). Tonnes need a crop type and a yield per hectare for that crop, place and season. A national figure needs a census or ministry statistic. None of these are in the imagery.</p>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const [man,F,farm]=await Promise.all([K.json("manifest.json"),K.json("fields.json"),K.img("farm_oweinat.jpg")]);const C=Object.fromEntries(F.cols.map((n,i)=>[n,i]));
+const f=man.farm.fields.filter(q=>q.pf>0.3&&q.pf<0.8).sort((a,b)=>Math.hypot(a.x-.5,a.y-.5)-Math.hypot(b.x-.5,b.y-.5))[0];
+const one=f.pf*Math.PI*f.radius_m**2/1e4,farmHa=man.farm.fields.reduce((s,q)=>s+q.pf*Math.PI*q.radius_m**2,0)/1e4,eg=F.rows.reduce((s,r)=>s+r[C.planted_frac]*Math.PI*r[C.radius_m]**2,0)/1e4;
+const box=(k,h,v,t,unk)=>`<div class="panel ${unk?"unknown":""}"><span class="eyebrow">${k}</span><h2>${h}</h2><span class="big">${v}</span><p class="note">${t}</p></div>`;
+K.$("#chain").innerHTML=`<div class="stage"><canvas id="cv"></canvas><span class="cap">One field, its planted wedge</span></div>`+
+ box("1 · measured","One wedge of green",`${one.toFixed(1)} ha`,`${f.id} · planted ${Math.round(f.pf*100)}% · March 2025`)+
+ box("2 · measured","This farm",`${Math.round(farmHa).toLocaleString()} ha`,`${man.farm.fields.length} fields, summed the same way`)+
+ box("3 · measured","Toshka + East Oweinat",`${Math.round(eg).toLocaleString()} ha`,`${F.rows.length.toLocaleString()} fields in this catalog`)+
+ box("4 · not seen","Tonnes harvested","?","Needs crop type and a sourced yield per hectare.",true)+
+ box("5 · not seen","The national statistic","?","Needs a census or ministry figure to compare against.",true);
+const S=K.stage(K.$("#cv"),1),g=S.g;g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);K.circ(g,farm,f.x,f.y,f.r,S.W/2,S.H/2,S.W*0.86);
+K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED","NOT SEEN"]);})();
+</script>

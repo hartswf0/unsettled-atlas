@@ -1,0 +1,23 @@
+<p class="lede">Satellite greenness is precise about plants and silent about water. Here is one field in Toshka, every March from 2017 to 2025. Is it abandoned, or only bare this March? The imagery cannot say, and this page shows why.</p>
+<div class="labels" id="labs"></div>
+<div class="grid" id="strip" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))"></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr))">
+ <div class="panel"><span class="eyebrow">Measured</span><h2>Planted fraction each March</h2><canvas id="sp" style="width:100%;height:90px"></canvas><p class="note">Share of the disc's angular sectors with NDVI above 0.30, one date per year.</p></div>
+ <div class="panel"><span class="eyebrow">Judged</span><h2 id="verdict"></h2><p id="vtext"></p></div>
+ <div class="panel unknown"><span class="eyebrow">Not seen</span><h2>What would settle it</h2><p>More dates each year (is it planted in another season?), the well's pumping record, the water allocation, and the owner's plans. None of these are in a March satellite image.</p></div>
+</div>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const man=await K.json("manifest.json"),G=man.ghost;K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED","NOT SEEN"]);
+K.$("#strip").innerHTML=G.history.map(e=>{const sure=e.planted_frac>=0.1||!e.present;return `<figure style="margin:0;display:flex;flex-direction:column;gap:4px">
+ <img src="ghost_${e.year}.jpg" alt="Field ${G.id} in March ${e.year}" style="width:100%;border-radius:4px;${sure?"":"outline:2px dashed var(--warn);outline-offset:-2px"}">
+ <figcaption class="mono"><b>${e.year}</b> · ${e.present?(e.planted_frac>=0.1?`planted ${Math.round(e.planted_frac*100)}%`:"bare, outline visible"):"no field yet"}<br><span class="note">${e.scene.split("_")[2]}</span></figcaption></figure>`;}).join("");
+const c=K.$("#sp"),r=c.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);c.width=r.width*d;c.height=r.height*d;const g=c.getContext("2d"),H=G.history,n=H.length;
+g.strokeStyle=K.css("--rule");g.beginPath();g.moveTo(10*d,c.height-14*d);g.lineTo(c.width-10*d,c.height-14*d);g.stroke();
+H.forEach((e,i)=>{const x=10*d+i*(c.width-20*d)/(n-1),y=c.height-14*d-e.planted_frac*(c.height-30*d);g.fillStyle=e.planted_frac>=0.1?K.css("--field"):K.css("--fallow");g.beginPath();g.arc(x,y,5*d,0,7);g.fill();
+ g.fillStyle=K.css("--muted");g.font=`${10*d}px IBM Plex Mono`;if(i===0||i===n-1)g.fillText(e.year,x-12*d,c.height-2*d);});
+const last=H.slice(-2).every(e=>e.planted_frac<0.1);K.$("#verdict").textContent=last?"Bare two Marches running: a 'ghost' in our catalog":"Active";
+K.$("#vtext").textContent=`Built ${H.find(e=>e.present).year}, planted ${H.filter(e=>e.planted_frac>=0.1).map(e=>e.year).join(", ")}. Our rule calls a field a ghost when its outline persists but it is unplanted for the last two Marches. That is a judgement from one date a year, not a fact about abandonment. The dashed frames mark the years where the reading is an inference.`;
+})();
+</script>

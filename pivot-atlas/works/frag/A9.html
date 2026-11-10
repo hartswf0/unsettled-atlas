@@ -1,0 +1,17 @@
+<p class="lede">A farm seen from orbit is also a place where people work, live, and argue about water. This work would give their accounts a vantage point inside a model of the farm. It is not built, because no testimony has been gathered, and a page like this must never invent witnesses.</p>
+<div class="labels" id="labs"></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(280px,1fr))">
+ <div class="stage"><canvas id="cv"></canvas><span class="cap">The farm the model would be built around (Sentinel-2, 10 m)</span></div>
+ <div class="panel unknown"><span class="eyebrow">Not built · needed first</span><h2>Testimony, with consent</h2>
+  <p>Interviews with workers, residents, engineers and owners, recorded with informed consent, each with where the speaker stood or worked.</p>
+  <p>Terrain: a public elevation model (for example the Copernicus 30 m DEM) to build the ground the testimony sits on.</p>
+  <p>A stated model resolution, so no one mistakes a 10 m image for a site survey.</p>
+  <p class="note">Until these exist, this page is the honest state of the work.</p></div>
+</div>
+<!--SCRIPT-->
+<script>
+(async()=>{const S=K.stage(K.$("#cv"),1),g=S.g,farm=await K.img("farm_oweinat.jpg");
+function draw(){g.drawImage(farm,0,0,S.W,S.H);g.fillStyle="rgba(13,18,16,.35)";g.fillRect(0,0,S.W,S.H);g.setLineDash([6*S.dpr,6*S.dpr]);g.strokeStyle="#e0a24f";g.lineWidth=2*S.dpr;
+ g.strokeRect(S.W*0.3,S.H*0.3,S.W*0.4,S.H*0.4);g.setLineDash([]);g.fillStyle="#e0a24f";g.font=`600 ${13*S.dpr}px IBM Plex Mono`;g.fillText("no vantage point recorded",S.W*0.31,S.H*0.29);}
+K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED","NOT SEEN"]);draw();addEventListener("resize",()=>{S.fit();draw();});})();
+</script>

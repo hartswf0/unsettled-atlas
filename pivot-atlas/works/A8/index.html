@@ -1,0 +1,38 @@
+<meta charset="utf-8">
+<title>Title Sequence</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<script>window.__A={"manifest.json":"../pack/manifest.json","farm_oweinat.jpg":"../pack/farm_oweinat.jpg","marey_S2C_36QUL_20250320_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250320_0_L2A.jpg","toshka_2025.jpg":"../pack/toshka_2025.jpg","inventory.json":"../pack/inventory.json"};window.__fix=function(i){var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){i.dataset.f=1;i.src=window.__A[n];}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("img").forEach(function(i){var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];});});</script>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · A8 · learned from Saul Bass, Anatomy of a Murder titles</span>
+<h1>Title Sequence</h1>
+</header>
+<p class="lede">A title sequence where each cut changes what a shape means. A dark half-disc reads as a graphic, then as a planted wedge, then as one farm among thousands. Sound off is fine; the cuts carry it.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas></div>
+<div class="ctrl" id="pl"></div>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint). Field counts by year: Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),2.39),g=S.g;const [man,farm,tos,inv]=await Promise.all([K.json("manifest.json"),K.img("farm_oweinat.jpg"),K.img("toshka_2025.jpg"),K.json("inventory.json")]);
+const FM=man.farm,w=FM.fields.filter(q=>q.pf>0.3&&q.pf<0.7).sort((a,b)=>Math.hypot(a.x-.5,a.y-.5)-Math.hypot(b.x-.5,b.y-.5))[0]||FM.fields[0];
+function T(s,x,y,size,col="#ead9b8",w=800,al="left"){g.fillStyle=col;g.font=`${w} ${size*S.dpr}px Archivo`;g.textAlign=al;g.fillText(s,x,y);g.textAlign="left";}
+function view(im,cx,cy,vw){const s=S.W/vw;g.save();g.translate(S.W/2,S.H/2);g.scale(s,s);g.drawImage(im,-cx,-cy);g.restore();}
+function draw(t){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);const W=farm.width;let labs=["OBSERVED"];
+ if(t<7){view(farm,w.x*W,w.y*W,w.r*W*1.25);T("SEEING",S.W*0.06,S.H*0.3,54);T("LIKE A PIVOT",S.W*0.06,S.H*0.3+60*S.dpr,54);labs=["OBSERVED"];}
+ else if(t<14){view(farm,w.x*W,w.y*W,w.r*W*3);const mpp=(w.r*2*FM.half_m*2/ (w.r*2))/ (S.W/(w.r*W*3)) ;const px100=100/(FM.half_m*2/W)*(S.W/(w.r*W*3));
+  g.fillStyle="#ead9b8";g.fillRect(S.W*0.06,S.H*0.85,px100,4*S.dpr);T("100 m",S.W*0.06,S.H*0.83,13,"#ead9b8",500);T(`${Math.round(w.radius_m)} m radius · ${Math.round(Math.PI*w.radius_m**2/1e4)} ha · planted ${Math.round(w.pf*100)}%`,S.W*0.94,S.H*0.88,13,"#ead9b8",500,"right");}
+ else if(t<22){view(farm,W/2,W/2,W*2.39*0.98);T("IMAGERY",S.W*0.06,S.H*0.82,13,"#aa9f83",600);T("Copernicus Sentinel-2",S.W*0.06,S.H*0.82+22*S.dpr,22);labs=["GEOGRAPHIC","OBSERVED"];}
+ else if(t<32){view(tos,tos.width/2,tos.height*0.55,tos.width);T("FIELDS COUNTED BY",S.W*0.94,S.H*0.18,13,"#aa9f83",600,"right");T(`Chen et al. · ${K.fmt(inv.tiles["36QUL"]["2025"][0])} in Toshka`,S.W*0.94,S.H*0.18+24*S.dpr,22,"#ead9b8",800,"right");labs=["GEOGRAPHIC","OBSERVED"];}
+ else{T("Every dot is a farm.",S.W/2,S.H/2,40,"#ead9b8",800,"center");T("A SCION Family title",S.W/2,S.H/2+34*S.dpr,13,"#aa9f83",500,"center");labs=[];}
+ K.labels(K.$("#labs"),labs);}
+const P=K.player(K.$("#pl"),{duration:40,chapters:[{t:0,name:"Shape"},{t:7,name:"Field"},{t:14,name:"Farm"},{t:22,name:"Region"},{t:32,name:"Title"}],draw});P.seek(K.reduced?20:0.2);addEventListener("resize",()=>{S.fit();P.redraw();});
+})();
+</script>

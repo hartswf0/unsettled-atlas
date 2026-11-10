@@ -1,0 +1,23 @@
+<p class="lede">The circles stay where they are; their insides change with the farm calendar. Twelve real months over one Al Jawf farm in Saudi Arabia. Watch one circle, then the whole field.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+<div class="ctrl"><button class="btn primary" id="play" type="button">Play</button><input type="range" id="m" min="0" max="11" step="1" value="0" aria-label="Month">
+ <button class="btn" id="tc" type="button" aria-pressed="true">True color</button><button class="btn" id="fc" type="button" aria-pressed="false">False color</button><span class="mono" id="key"></span></div>
+<p class="note">Each frame is one real acquisition, shown for a fixed time with hard cuts: nothing is interpolated between dates. Tap a field to follow it (the ring is drawn).</p>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),1),g=S.g,man=await K.json("manifest.json"),SE=man.seasons,fr=SE.frames;let mode="tc",i=0,sel=null,timer=null;
+const ims={};await Promise.all(fr.map(async f=>{const k=f.month.replace("-","");ims[k+"tc"]=await K.img(`jawf_${k}_tc.jpg`);ims[k+"fc"]=await K.img(`jawf_${k}_fc.jpg`);}));
+function draw(){const f=fr[i],k=f.month.replace("-",""),im=ims[k+mode];g.drawImage(im,0,0,S.W,S.H);
+ if(sel){g.strokeStyle="#7fd0dc";g.lineWidth=3*S.dpr;g.beginPath();g.arc(sel.x*S.W,sel.y*S.H,sel.r*S.W+4*S.dpr,0,7);g.stroke();}
+ K.$("#cap").textContent=`${new Date(f.month+"-15").toLocaleString("en",{month:"long",year:"numeric"})} · ${f.scene} · 8 × 8 km around ${SE.lat.toFixed(3)} N, ${SE.lon.toFixed(3)} E`;
+ K.$("#key").textContent=mode==="fc"?"Key: vegetation reads RED (near-infrared shown as red)":"Key: natural color";K.$("#m").value=i;
+ K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED",...(sel?["DRAWN"]:[])]);}
+K.$("#m").oninput=e=>{i=+e.target.value;draw();};
+K.$("#play").onclick=()=>{if(timer){clearInterval(timer);timer=null;K.$("#play").textContent="Play";return;}K.$("#play").textContent="Pause";timer=setInterval(()=>{i=(i+1)%fr.length;draw();},900);};
+for(const[id,m] of [["tc","tc"],["fc","fc"]])K.$("#"+id).onclick=()=>{mode=m;K.$("#tc").setAttribute("aria-pressed",m==="tc");K.$("#fc").setAttribute("aria-pressed",m==="fc");draw();};
+S.c.addEventListener("click",e=>{const r=S.c.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;let b=null,bd=1e9;SE.fields.forEach(q=>{const d=Math.hypot(q.x-x,q.y-y);if(d<bd){bd=d;b=q;}});sel=b&&bd<b.r*1.2?b:null;draw();});
+K.$("#m").max=fr.length-1;draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

@@ -1,0 +1,44 @@
+<meta charset="utf-8">
+<title>The Arm's Timetable</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<script>window.__A={"manifest.json":"../pack/manifest.json","marey_S2C_36QUL_20250320_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250320_0_L2A.jpg","marey_S2A_36QUL_20250315_1_L2A.jpg":"../pack/marey_S2A_36QUL_20250315_1_L2A.jpg","marey_S2B_36QUL_20250308_0_L2A.jpg":"../pack/marey_S2B_36QUL_20250308_0_L2A.jpg","marey_S2C_36QUL_20250323_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250323_0_L2A.jpg","marey_S2B_36QUL_20250315_0_L2A.jpg":"../pack/marey_S2B_36QUL_20250315_0_L2A.jpg","marey_S2C_36QUL_20250303_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250303_0_L2A.jpg","marey_S2C_36QUL_20250313_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250313_0_L2A.jpg","marey_S2B_36QUL_20250325_0_L2A.jpg":"../pack/marey_S2B_36QUL_20250325_0_L2A.jpg","marey_S2C_36QUL_20250310_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250310_0_L2A.jpg"};window.__fix=function(i){var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){i.dataset.f=1;i.src=window.__A[n];}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("img").forEach(function(i){var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];});});</script>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · B6 · learned from Étienne-Jules Marey, graphical train timetable</span>
+<h1>The Arm's Timetable</h1>
+</header>
+<p class="lede">Can a satellite see a pivot's arm move? Here is one Toshka field on every clear date in March 2025. Tap each image where you see the arm, a thin line from the hub to the rim. Your marks build a timetable: date across, arm angle up. A slope would mean rotation.</p>
+<div class="labels" id="labs"></div>
+<div class="grid" id="chips" style="grid-template-columns:repeat(auto-fill,minmax(150px,1fr))"></div>
+<div class="stage" style="background:var(--panel);color:var(--fg)"><canvas id="cv"></canvas></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr))">
+ <div class="panel"><span class="eyebrow">Our reading (judged)</span><h2>Probably a fixed line, not the arm</h2><p>A radial line is visible on most dates at nearly the same heading. At 10 m that looks more like a parked arm or a fixed track than one caught mid-rotation. Verdict: inconclusive. Arm motion is not plotted from interpolation.</p></div>
+ <div class="panel unknown"><span class="eyebrow">Not seen</span><h2>What would settle it</h2><p>Finer imagery (sub-metre) on the same days, or the pivot's own controller log, would show the real rotation schedule.</p></div>
+</div>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{
+const man=await K.json("manifest.json"),M=man.marey,marks={};const S=K.stage(K.$("#cv"),2.6),g=S.g;
+const day=s=>+s.split("_")[2].slice(6,8);
+K.$("#chips").innerHTML=M.scenes.map(s=>`<figure style="margin:0;display:flex;flex-direction:column;gap:4px"><div style="position:relative"><img onerror="__fix(this)" src="marey_${s}.jpg" data-s="${s}" alt="${M.id} on ${s.split("_")[2]}" style="width:100%;border-radius:4px;cursor:crosshair;display:block"><svg data-s="${s}" viewBox="0 0 100 100" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none"></svg></div><figcaption class="mono">March ${day(s)} · ${s.split("_")[0]}</figcaption></figure>`).join("");
+document.querySelectorAll("#chips img").forEach(im=>im.addEventListener("click",e=>{const r=im.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-0.5,y=(e.clientY-r.top)/r.height-0.5;let a=Math.atan2(-y,x)*180/Math.PI;if(a<0)a+=360;marks[im.dataset.s]=a;
+ const sv=document.querySelector(`svg[data-s="${im.dataset.s}"]`);const rr=38.5;sv.innerHTML=`<line x1="50" y1="50" x2="${50+Math.cos(a*Math.PI/180)*rr}" y2="${50-Math.sin(a*Math.PI/180)*rr}" stroke="#7fd0dc" stroke-width="1.6"/>`;draw();}));
+function draw(){g.fillStyle=K.css("--panel");g.fillRect(0,0,S.W,S.H);const m=40*S.dpr,X=d=>m+(d-1)/30*(S.W-2*m),Y=a=>S.H-m*0.7-a/360*(S.H-m*1.3);
+ g.strokeStyle=K.css("--rule");g.lineWidth=1;g.fillStyle=K.css("--muted");g.font=`${10*S.dpr}px IBM Plex Mono`;
+ for(const a of [0,90,180,270,360]){g.beginPath();g.moveTo(m,Y(a));g.lineTo(S.W-m,Y(a));g.stroke();g.fillText(a+"°",4*S.dpr,Y(a)+3);}
+ for(const d of [1,8,15,22,29]){g.fillText(`Mar ${d}`,X(d)-14,S.H-6*S.dpr);}
+ const pts=Object.entries(marks).map(([s,a])=>[day(s),a]).sort((p,q)=>p[0]-q[0]);
+ g.strokeStyle=K.css("--acc");g.lineWidth=2*S.dpr;g.beginPath();pts.forEach(([d,a],i)=>i?g.lineTo(X(d),Y(a)):g.moveTo(X(d),Y(a)));g.stroke();
+ pts.forEach(([d,a])=>{g.fillStyle=K.css("--acc");g.beginPath();g.arc(X(d),Y(a),5*S.dpr,0,7);g.fill();});
+ g.fillStyle=K.css("--fg");g.font=`600 ${12*S.dpr}px Archivo`;g.fillText(pts.length?`${pts.length} of ${M.scenes.length} dates marked by you`:"Your marks will appear here (only dates you marked are plotted)",m,18*S.dpr);
+ K.labels(K.$("#labs"),["OBSERVED","DRAWN","NOT SEEN"]);}
+draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

@@ -1,0 +1,250 @@
+<meta charset="utf-8">
+<title>Circle Assembler</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: one reading column; the mosaic viewer is the instrument, everything else is its ledger. */
+:root{
+  --bg:#ead4ab; --panel:#f3e3c3; --fg:#1d2316; --muted:#5d5a44; --rule:#c9ad7f;
+  --field:#2c4626; --fallow:#b9776a; --water:#14262d; --focus:#0f5d6b;
+  --seq0:#d7dcb0; --seq1:#a9bd82; --seq2:#789a5a; --seq3:#4c733c; --seq4:#284a23; --nodata:#a79b84;
+  --display:"Archivo",ui-sans-serif,system-ui,sans-serif; --body:"Archivo",ui-sans-serif,system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12160f; --panel:#1b2117; --fg:#ead9b8; --muted:#aa9f83; --rule:#3a3a2a;
+  --field:#8fb36f; --fallow:#d69a8c; --water:#86aebb; --focus:#7fd0dc;
+  --seq0:#2a3a22; --seq1:#3f5c30; --seq2:#5f8446; --seq3:#8fb36f; --seq4:#cbe0a6; --nodata:#5a554a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12160f; --panel:#1b2117; --fg:#ead9b8; --muted:#aa9f83; --rule:#3a3a2a;
+  --field:#8fb36f; --fallow:#d69a8c; --water:#86aebb; --focus:#7fd0dc;
+  --seq0:#2a3a22; --seq1:#3f5c30; --seq2:#5f8446; --seq3:#8fb36f; --seq4:#cbe0a6; --nodata:#5a554a; color-scheme:dark}
+*{box-sizing:border-box} [hidden]{display:none!important}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 64px}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.1}
+h1{font-size:clamp(2.4rem,7vw,4.6rem);font-stretch:118%;font-weight:800;letter-spacing:-.01em}
+h2{font-size:1.6rem;font-stretch:110%;font-weight:700}
+h3{font-size:1.05rem;font-weight:700}
+p{margin:0;max-width:65ch}
+.mono,code{font-family:var(--mono);font-size:.86em}
+.eyebrow{font-family:var(--mono);font-size:.74rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.lede{font-size:1.12rem;color:var(--fg)}
+header{display:flex;flex-direction:column;gap:16px}
+.stats{display:flex;flex-wrap:wrap;gap:10px 28px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);padding:12px 0}
+.stat{display:flex;flex-direction:column;min-width:0}
+.stat b{font-family:var(--display);font-size:1.5rem;font-stretch:112%;font-variant-numeric:tabular-nums}
+.stat span{font-size:.8rem;color:var(--muted)}
+section{display:flex;flex-direction:column;gap:18px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px}
+.tabs button,.btn{font:500 .88rem var(--body);color:var(--fg);background:transparent;border:1px solid var(--rule);border-radius:999px;padding:7px 14px;cursor:pointer}
+.tabs button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.viewer{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:18px;align-items:start}
+@media (max-width:820px){.viewer{grid-template-columns:minmax(0,1fr)}}
+.stage{position:relative;background:var(--water);border-radius:6px;overflow:hidden;aspect-ratio:1/1;max-width:100%;touch-action:none;cursor:grab}
+.stage canvas{width:100%;height:100%;display:block}
+.stage .zoom{position:absolute;right:10px;bottom:10px;display:flex;gap:6px}
+.stage .zoom button{width:36px;height:36px;border-radius:50%;border:none;background:rgba(18,22,15,.72);color:#ead9b8;font:600 1.1rem var(--body);cursor:pointer}
+.stage .hint{position:absolute;left:10px;top:10px;font:500 .78rem var(--body);color:#ead9b8;background:rgba(18,22,15,.6);padding:4px 10px;border-radius:999px;pointer-events:none}
+.timebar{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.timebar input{flex:1;min-width:160px;accent-color:var(--field)}
+.year{font-family:var(--display);font-size:2rem;font-stretch:120%;font-weight:800;font-variant-numeric:tabular-nums;min-width:4ch}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.card canvas.chip{width:100%;aspect-ratio:1/1;border-radius:50%;background:var(--bg)}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:.86rem}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-family:var(--mono);font-size:.8rem;overflow-wrap:anywhere}
+.links{display:flex;flex-wrap:wrap;gap:8px}
+.links a{color:var(--fg);font-size:.84rem}
+.spark{width:100%;height:56px;display:block}
+.note{font-size:.84rem;color:var(--muted)}
+.maps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+@media (max-width:720px){.maps{grid-template-columns:minmax(0,1fr)}}
+.map{display:flex;flex-direction:column;gap:8px;min-width:0}
+.map canvas{width:100%;aspect-ratio:1/1;background:var(--panel);border-radius:6px;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+.tablewrap{overflow-x:auto;border-top:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.88rem;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:9px 10px 9px 0;border-bottom:1px solid var(--rule);vertical-align:top}
+th{font:500 .74rem var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.pill{display:inline-block;font:500 .72rem var(--mono);padding:2px 8px;border-radius:999px;border:1px solid currentColor}
+.pass{color:var(--field)} .fail{color:var(--fallow)} .open{color:var(--muted)}
+ol.steps{margin:0;padding-left:1.3em;display:flex;flex-direction:column;gap:6px;max-width:70ch}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="wrap">
+<header>
+  <span class="eyebrow">Toshka &amp; East Oweinat, Egypt · Sentinel-2 L2A · March 2017–2025</span>
+  <h1>Circle Assembler</h1>
+  <p class="lede">Every dot in these pictures is a real center-pivot field in Egypt's Western Desert, found in open satellite data, measured, tracked across nine Marches, and checked by auditors who never saw the detector. Tap any dot to find its field.</p>
+  <div class="stats" id="stats"></div>
+</header>
+
+<section aria-labelledby="h-mosaic">
+  <h2 id="h-mosaic">The mosaics</h2>
+  <div class="tabs" role="group" aria-label="Mosaic">
+    <button data-m="astronaut_halftone" aria-pressed="true">Halftone</button>
+    <button data-m="time">Through time</button>
+    <button data-m="astronaut_faithful">Faithful</button>
+    <button data-m="astronaut_ghost">Fallow &amp; partial only</button>
+    <button data-m="toshka_self">Toshka, by Toshka</button>
+  </div>
+  <p class="note" id="modeNote"></p>
+  <div class="viewer">
+    <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+      <div class="stage" id="stage">
+        <canvas id="cv"></canvas>
+        <span class="hint" id="hint">Drag to pan · pinch or scroll to zoom · tap a dot</span>
+        <div class="zoom"><button id="zin" aria-label="Zoom in">+</button><button id="zout" aria-label="Zoom out">−</button><button id="zreset" aria-label="Reset view">⟲</button></div>
+      </div>
+      <div class="timebar" id="timebar" hidden>
+        <button class="btn" id="play">Play</button>
+        <input type="range" id="yr" min="2017" max="2025" step="1" value="2025" aria-label="Year">
+        <span class="year" id="yrLabel">2025</span>
+      </div>
+    </div>
+    <aside class="card" id="card" aria-live="polite">
+      <span class="eyebrow">Field</span>
+      <canvas class="chip" id="chip" width="260" height="260"></canvas>
+      <h3 id="fid">Tap a dot</h3>
+      <dl class="kv" id="fkv"><dt>Where</dt><dd>Each dot links to its coordinates.</dd></dl>
+      <div><span class="eyebrow">Planted fraction, each March</span><canvas class="spark" id="spark" width="560" height="112"></canvas></div>
+      <div class="links" id="flinks"></div>
+    </aside>
+  </div>
+</section>
+
+<section aria-labelledby="h-atlas">
+  <h2 id="h-atlas">The atlas</h2>
+  <p>Each field drawn at its measured size and position, colored by the first March it appears. Toshka grew from about 240 fields in 2017 (external inventory) to more than 3,400 in 2025, while the Toshka lakes refilled beside it. East Oweinat was already built out by 2017. Early-year colors here over-count: about a third of the fields this catalog marks present in 2017 are absent from the inventory.</p>
+  <div class="legend" id="legend"></div>
+  <div class="maps">
+    <div class="map"><h3>Toshka <span class="mono" style="color:var(--muted)">MGRS 36QUL</span></h3><canvas id="mapT" width="900" height="900"></canvas><span class="note" id="capT"></span></div>
+    <div class="map"><h3>East Oweinat <span class="mono" style="color:var(--muted)">MGRS 35QPF</span></h3><canvas id="mapO" width="900" height="900"></canvas><span class="note" id="capO"></span></div>
+  </div>
+</section>
+
+<section aria-labelledby="h-ledger">
+  <h2 id="h-ledger">Audit ledger</h2>
+  <p>The detector never awarded its own pass. Ground truth was labeled by a separate agent and kept sealed; a second independent auditor judged random detections and random empty space, then re-judged after fixes against the conditions it set.</p>
+  <div class="tablewrap"><table id="ledger"><thead><tr><th>Check</th><th>Sample</th><th>Result</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+  <h3>Known limits</h3>
+  <ul id="limits" style="margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:6px;max-width:72ch"></ul>
+</section>
+
+<section aria-labelledby="h-method">
+  <h2 id="h-method">How it was made</h2>
+  <ol class="steps">
+    <li>Sentinel-2 L2A scenes read directly from the open AWS COG archive (no STAC API), composited by orbit, 20 m analysis stack.</li>
+    <li>Candidates: Hough circles on two channels (VIS+SWIR brightness, and SWIR/NIR, which stays low inside fallow disks).</li>
+    <li>Confirmation by rim structure, not greenness; farm-lattice invariant admits faint circles and predicts empty sites; touching-not-overlapping suppression.</li>
+    <li>Sub-pixel half-max circle fit; bare <em>and</em> non-circular objects (rock outcrops) rejected.</li>
+    <li>Per-field polar unwrap gives planted sectors; nine March epochs give first-seen and abandonment.</li>
+    <li>Assembler: hex lattice, CIELAB matching, chips rotated so planted wedges follow image edges, repetition penalty. Halftone dot size is each field's true radius on one shared scale. Gaps are measured desert sand.</li>
+  </ol>
+  <p class="note">Contains modified Copernicus Sentinel data 2017–2025. Portrait target: NASA photograph of astronaut Eileen Collins (public domain), via scikit-image. Code and catalog: <code>pivot-atlas/</code> in the unsettled-atlas repository, branch <code>ccr-b160bd3a-vpge7h</code>.</p>
+</section>
+</div>
+
+<script>
+(()=>{
+const $=s=>document.querySelector(s);
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+let F=null, M={}, cur="astronaut_halftone", img=null, view={s:1,x:0,y:0}, sel=null, frames={}, year=2025, timer=null;
+const NOTES={
+  astronaut_halftone:"Darker tones ask for bigger fields. Every dot is drawn at its field's true radius on one shared scale, so the dot sizes are real.",
+  time:"The halftone portrait rebuilt from each March's imagery. Fields that did not exist yet are open sand. About 11% of dots fall outside 2017–2024 single-scene coverage and stay sand in those years.",
+  astronaut_faithful:"Unaltered field images, chosen by color and rotated so planted wedges follow the picture's edges. The target was tone-mapped into the desert's own color range; the fields were not.",
+  astronaut_ghost:"Only fields that were partly or wholly bare in March 2025.",
+  toshka_self:"The 2025 Toshka scene rebuilt from Toshka and East Oweinat fields: lakes, canal and farms drawn with farms."
+};
+const cv=$("#cv"), cx=cv.getContext("2d"), stage=$("#stage");
+function size(){const r=stage.getBoundingClientRect(),d=devicePixelRatio||1;cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);draw();}
+function fit(){if(!img)return;const s=Math.min(cv.width/img.width,cv.height/img.height);view={s,x:(cv.width-img.width*s)/2,y:(cv.height-img.height*s)/2};}
+function draw(){cx.fillStyle=css("--water");cx.fillRect(0,0,cv.width,cv.height);if(!img)return;
+  cx.imageSmoothingEnabled=view.s<2;cx.drawImage(img,view.x,view.y,img.width*view.s,img.height*view.s);
+  if(sel){const m=man(),k=sel.k*(img.width/m.w);cx.strokeStyle="#7fd0dc";cx.lineWidth=Math.max(2,devicePixelRatio*2);
+    cx.beginPath();cx.arc(view.x+sel.x*k*view.s,view.y+sel.y*k*view.s,Math.max(6,sel.d/2*k*view.s+3),0,7);cx.stroke();}}
+const man=()=>M[cur==="time"?"astronaut_halftone":cur];
+function load(src){return new Promise(res=>{const i=new Image();i.onload=()=>res(i);i.onerror=()=>res(null);i.src=src;});}
+async function setMode(m){cur=m;document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.m===m));
+  $("#modeNote").textContent=NOTES[m];$("#timebar").hidden=m!=="time";stopPlay();
+  const key=m==="time"?"astronaut_halftone":m;
+  if(!M[key])M[key]=await (await fetch(`m_${key}.json`)).json();
+  stage.style.aspectRatio=`${M[key].w}/${M[key].h}`;size();
+  img=m==="time"?await frame(year):await load(`img/${m}.jpg`);fit();draw();}
+async function frame(y){if(!frames[y])frames[y]=await load(`img/t_${y}.jpg`);return frames[y];}
+async function setYear(y){year=y;$("#yrLabel").textContent=y;$("#yr").value=y;const prev=img;img=await frame(y);
+  if(prev&&img&&prev.width!==img.width){const k=img.width/prev.width;view.s/=k;}draw();if(sel)showField(sel);}
+function stopPlay(){if(timer){clearInterval(timer);timer=null;$("#play").textContent="Play";}}
+$("#play").onclick=()=>{if(timer)return stopPlay();$("#play").textContent="Pause";let y=year>=2025?2016:year;
+  timer=setInterval(()=>{y++;if(y>2025){stopPlay();return;}setYear(y);},900);};
+$("#yr").oninput=e=>{stopPlay();setYear(+e.target.value);};
+document.querySelectorAll(".tabs button").forEach(b=>b.onclick=()=>setMode(b.dataset.m));
+// pan / zoom
+const pts=new Map();let moved=0,last=null,pinch=null;
+function zoomAt(f,px,py){const ns=Math.min(Math.max(view.s*f,0.2),40);const k=ns/view.s;view.x=px-(px-view.x)*k;view.y=py-(py-view.y)*k;view.s=ns;draw();}
+const loc=e=>{const r=cv.getBoundingClientRect(),d=cv.width/r.width;return[(e.clientX-r.left)*d,(e.clientY-r.top)*d];};
+cv.addEventListener("wheel",e=>{e.preventDefault();const[p,q]=loc(e);zoomAt(Math.exp(-e.deltaY*0.0015),p,q);},{passive:false});
+cv.addEventListener("pointerdown",e=>{cv.setPointerCapture(e.pointerId);pts.set(e.pointerId,loc(e));moved=0;last=loc(e);if(pts.size===2){const[a,b]=[...pts.values()];pinch=Math.hypot(a[0]-b[0],a[1]-b[1]);}});
+cv.addEventListener("pointermove",e=>{if(!pts.has(e.pointerId))return;const p=loc(e);
+  if(pts.size===2){pts.set(e.pointerId,p);const[a,b]=[...pts.values()];const dd=Math.hypot(a[0]-b[0],a[1]-b[1]);if(pinch){zoomAt(dd/pinch,(a[0]+b[0])/2,(a[1]+b[1])/2);}pinch=dd;moved=99;return;}
+  const dx=p[0]-last[0],dy=p[1]-last[1];moved+=Math.abs(dx)+Math.abs(dy);if(moved>6){view.x+=dx;view.y+=dy;draw();}last=p;pts.set(e.pointerId,p);});
+const up=e=>{const was=pts.size;pts.delete(e.pointerId);if(pts.size<2)pinch=null;if(was===1&&moved<=6)pick(...loc(e));};
+cv.addEventListener("pointerup",up);cv.addEventListener("pointercancel",e=>{pts.delete(e.pointerId);pinch=null;});
+$("#zin").onclick=()=>zoomAt(1.6,cv.width/2,cv.height/2);$("#zout").onclick=()=>zoomAt(1/1.6,cv.width/2,cv.height/2);$("#zreset").onclick=()=>{fit();draw();};
+function pick(px,py){const m=man();if(!m||!img)return;const k=img.width/m.w;const x=(px-view.x)/view.s/k,y=(py-view.y)/view.s/k;
+  let best=null,bd=1e9;for(const d of m.dots){const e=Math.hypot(d[0]-x,d[1]-y);if(e<bd){bd=e;best=d;}}
+  if(best&&bd<Math.max(best[2]*0.75,6)){sel={x:best[0],y:best[1],d:best[2],f:best[3],k:1};draw();showField(sel);}}
+// field card
+function showField(s){const r=F.rows[s.f],c=Object.fromEntries(F.cols.map((n,i)=>[n,r[i]]));
+  const m=man(),k=img.width/m.w,ch=$("#chip"),g=ch.getContext("2d"),R=s.d/2*k;g.clearRect(0,0,ch.width,ch.height);
+  g.save();g.beginPath();g.arc(130,130,130,0,7);g.clip();g.imageSmoothingEnabled=true;g.drawImage(img,s.x*k-R,s.y*k-R,2*R,2*R,0,0,260,260);g.restore();
+  $("#fid").textContent=c.id;
+  const lat=c.lat.toFixed(5),lon=c.lon.toFixed(5);
+  const st={active:"Planted",partial:"Partly planted",fallow:"Bare"}[c.cls]||c.cls;
+  const life=c.first_seen==null?"—":String(c.first_seen).startsWith("<=2025")?"no earlier coverage":`first seen ${String(c.first_seen).replace("<=","by ")}`;
+  $("#fkv").innerHTML=`<dt>Where</dt><dd>${lat}° N, ${lon}° E</dd><dt>Region</dt><dd>${c.region}</dd><dt>Radius</dt><dd>${Math.round(c.radius_m)} m · ${(Math.PI*c.radius_m**2/1e4).toFixed(0)} ha</dd>
+   <dt>March 2025</dt><dd>${st} · ${Math.round(c.planted_frac*100)}% planted</dd><dt>History</dt><dd>${life}${c.status==="ghost"?" · now a ghost":""}</dd>
+   <dt>Scene</dt><dd>${c.scene}</dd>${cur==="time"?`<dt>Shown</dt><dd>March ${year}</dd>`:""}`;
+  $("#flinks").innerHTML=`<a href="https://www.openstreetmap.org/?mlat=${lat}&mlon=${lon}#map=15/${lat}/${lon}" target="_blank" rel="noopener">OpenStreetMap</a>
+   <a href="https://browser.dataspace.copernicus.eu/?zoom=15&lat=${lat}&lng=${lon}" target="_blank" rel="noopener">Copernicus Browser</a>
+   <button class="btn" id="copy">Copy coordinates</button>`;
+  $("#copy").onclick=e=>{const t=`${lat}, ${lon}`;(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>e.target.textContent="Copied",()=>e.target.textContent=t);};
+  spark(c.history);}
+function spark(h){const s=$("#spark"),g=s.getContext("2d"),W=s.width,H=s.height,pad=14,n=h.length;g.clearRect(0,0,W,H);
+  const X=i=>pad+i*(W-2*pad)/(n-1),Y=v=>H-pad-v*(H-2*pad-10);
+  g.strokeStyle=css("--rule");g.lineWidth=1;g.beginPath();g.moveTo(pad,Y(0));g.lineTo(W-pad,Y(0));g.stroke();
+  g.strokeStyle=css("--field");g.lineWidth=4;g.lineJoin="round";g.beginPath();let on=false;
+  h.forEach((v,i)=>{if(v==null){on=false;return;}on?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v));on=true;});g.stroke();
+  h.forEach((v,i)=>{g.fillStyle=v==null?css("--nodata"):css("--field");g.beginPath();g.arc(X(i),v==null?Y(0):Y(v),v==null?4:7,0,7);g.fill();});
+  g.fillStyle=css("--muted");g.font=`22px ${css("--mono")}`;g.fillText("2017",pad,H-0);g.textAlign="right";g.fillText("2025",W-pad,H-0);g.textAlign="left";}
+// atlas maps
+const BINS=[["by 2017",v=>/^<=2017$/.test(v),"--seq4"],["2018–20",v=>[2018,2019,2020].includes(v),"--seq3"],["2021–22",v=>[2021,2022].includes(v),"--seq2"],["2023–24",v=>[2023,2024].includes(v),"--seq1"],["2025",v=>v===2025,"--seq0"],["no earlier coverage",v=>v==null||/^<=20(2[0-5]|1[89])$/.test(String(v)),"--nodata"]];
+function bin(v){for(const b of BINS)if(b[1](v))return b;return BINS[5];}
+function maps(){$("#legend").innerHTML=BINS.map(b=>`<span><i style="background:var(${b[2]})"></i>${b[0]}</span>`).join("")+`<span><i style="background:transparent;border:2px solid var(--fallow)"></i>ghost (present, unplanted two Marches)</span>`;
+  for(const [id,reg,cap] of [["#mapT","Toshka","#capT"],["#mapO","East Oweinat","#capO"]]){
+    const rows=F.rows.filter(r=>r[5]===reg),c=$(id),g=c.getContext("2d");g.clearRect(0,0,c.width,c.height);
+    const la=rows.map(r=>r[2]),lo=rows.map(r=>r[1]);const lat0=(Math.min(...la)+Math.max(...la))/2,kx=Math.cos(lat0*Math.PI/180);
+    const x0=Math.min(...lo),x1=Math.max(...lo),y0=Math.min(...la),y1=Math.max(...la);const span=Math.max((x1-x0)*kx,y1-y0)*1.06;
+    const sc=c.width/span,mx=(x0+x1)/2,my=(y0+y1)/2,mPerDeg=111320;
+    const P=r=>[c.width/2+(r[1]-mx)*kx*sc,c.height/2-(r[2]-my)*sc,Math.max(1.2,r[3]/mPerDeg*sc)];
+    for(const r of rows){const[x,y,rad]=P(r);g.fillStyle=css(bin(r[9])[2]);g.beginPath();g.arc(x,y,rad,0,7);g.fill();
+      if(r[8]==="ghost"){g.strokeStyle=css("--fallow");g.lineWidth=2;g.stroke();}}
+    const km=10,len=km*1000/mPerDeg*sc;g.fillStyle=css("--fg");g.fillRect(24,c.height-30,len,4);g.font=`22px ${css("--mono")}`;g.fillText(`${km} km`,24,c.height-40);
+    const cnt={};rows.forEach(r=>{const b=bin(r[9])[0];cnt[b]=(cnt[b]||0)+1;});
+    $(cap).textContent=`${rows.length.toLocaleString()} fields · `+BINS.filter(b=>cnt[b[0]]).map(b=>`${b[0]}: ${cnt[b[0]]}`).join(" · ");}}
+// ledger
+async function ledger(){const A=await (await fetch("audit.json")).json();
+  $("#stats").innerHTML=A.stats.map(s=>`<div class="stat"><b>${s[0]}</b><span>${s[1]}</span></div>`).join("");
+  $("#ledger tbody").innerHTML=A.rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td><span class="pill ${r[3]}">${r[4]}</span></td></tr>`).join("");
+  $("#limits").innerHTML=A.limits.map(l=>`<li>${l}</li>`).join("");}
+(async()=>{F=await (await fetch("fields.json")).json();ledger();maps();await setMode("astronaut_halftone");
+  new ResizeObserver(()=>{size();fit();draw();}).observe(stage);
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change",()=>{maps();draw();});})();
+})();
+</script>

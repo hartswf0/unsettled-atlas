@@ -1,0 +1,41 @@
+<meta charset="utf-8">
+<title>One Dot Buys</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<script>window.__A={"inventory.json":"../pack/inventory.json","bank.json":"../../web2/bank/bank.json","sheet40_0.jpg":"../../web2/bank/sheet40_0.jpg","sheet40_1.jpg":"../../web2/bank/sheet40_1.jpg","sheet40_2.jpg":"../../web2/bank/sheet40_2.jpg","sheet40_3.jpg":"../../web2/bank/sheet40_3.jpg","sheet40_4.jpg":"../../web2/bank/sheet40_4.jpg","sheet40_5.jpg":"../../web2/bank/sheet40_5.jpg","sheet40_6.jpg":"../../web2/bank/sheet40_6.jpg","sheet40_7.jpg":"../../web2/bank/sheet40_7.jpg","sheet40_8.jpg":"../../web2/bank/sheet40_8.jpg","sheet40_9.jpg":"../../web2/bank/sheet40_9.jpg","sheet40_10.jpg":"../../web2/bank/sheet40_10.jpg","sheet40_11.jpg":"../../web2/bank/sheet40_11.jpg"};window.__fix=function(i){var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){i.dataset.f=1;i.src=window.__A[n];}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("img").forEach(function(i){var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];});});</script>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · B4 · learned from Otto and Marie Neurath, Gerd Arntz: Isotype</span>
+<h1>One Dot Buys</h1>
+</header>
+<p class="lede">One circle = 100 real fields. The same field image is used everywhere, so the only thing that changes is how many there are. Partial glyphs are cut, never shrunk.</p>
+<div class="labels" id="labs"></div>
+<div class="stage" style="background:var(--panel);color:var(--fg)"><canvas id="cv"></canvas></div>
+<p class="note" id="leg"></p>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint). Field counts by year: Chen et al., Africa hyper-arid CPIS 1972–2025 (CC BY 4.0).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{
+const [inv,B]=await Promise.all([K.json("inventory.json"),K.bank()]);const c=B.c;
+const gi=B.rows.findIndex(r=>r[c.cls]==="active"&&r[c.dark_strength]<0.04&&r[c.radius_m]>380);await K.ensure([gi]);
+const years=[1980,1990,2000,2010,2015,2017,2019,2021,2023,2025],cols=[["36QUL","Toshka"],["35QPF","East Oweinat"]];
+const S=K.stage(K.$("#cv"),1.15),g=S.g;
+const PER=18;
+function lines(y){return Math.max(1,...cols.map(([t])=>Math.ceil(((inv.tiles[t][y]||[0])[0]/100)/PER)));}
+function draw(){const tot=years.reduce((s,y)=>s+lines(y),0)+years.length*0.35+1.4;S.aspect=1/(tot*(0.36/PER));S.fit();
+ g.fillStyle=K.css("--panel");g.fillRect(0,0,S.W,S.H);const d=S.W*0.36/PER,colX=[S.W*0.11,S.W*0.56];let yy=d*1.2;
+ g.fillStyle=K.css("--fg");g.font=`700 ${13*S.dpr}px Archivo`;cols.forEach(([t,n],j)=>g.fillText(n,colX[j],d*0.8));
+ years.forEach(y=>{g.fillStyle=K.css("--muted");g.font=`${11*S.dpr}px IBM Plex Mono`;g.fillText(y,S.W*0.01,yy+d*0.62);
+  cols.forEach(([t],j)=>{const n=(inv.tiles[t][y]||[0])[0],full=n/100;
+   for(let k=0;k<Math.ceil(full);k++){const frac=Math.min(1,full-k),cx=colX[j]+(k%PER)*d,cy=yy+Math.floor(k/PER)*d;g.save();g.beginPath();g.rect(cx,cy,d*frac,d);g.clip();K.chip(g,gi,cx+d/2,cy+d/2,d*0.92);g.restore();}
+   g.fillStyle=K.css("--fg");g.font=`${10*S.dpr}px IBM Plex Mono`;const kk=Math.max(1,Math.ceil(full)),lastLine=Math.floor((kk-1)/PER),inLine=n?((kk-1)%PER)+1:0;g.fillText(n.toLocaleString(),colX[j]+inLine*d+4*S.dpr,yy+lastLine*d+d*0.62);});
+  yy+=lines(y)*d+d*0.35;});}
+const r=B.rows[gi];K.$("#leg").textContent=`Legend: one circle = 100 fields. The glyph is one real field, ${r[c.id]} (${r[c.biome]}, ${Math.round(r[c.radius_m])} m, ${r[c.date]}). Counts: Chen et al. inventory, fields inside each tile's footprint, polygons ≥ 1 ha.`;
+K.labels(K.$("#labs"),["COMPOSED"]);draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

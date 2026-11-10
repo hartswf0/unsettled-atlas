@@ -1,0 +1,41 @@
+<meta charset="utf-8">
+<title>A Pivot Over Your Town</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="kit.css">
+<script>window.__A={"manifest.json":"../pack/manifest.json","marey_S2C_36QUL_20250320_0_L2A.jpg":"../pack/marey_S2C_36QUL_20250320_0_L2A.jpg"};window.__fix=function(i){var n=i.getAttribute("src");if(window.__A[n]&&!i.dataset.f){i.dataset.f=1;i.src=window.__A[n];}};
+if(/github[.]io$/.test(location.hostname))document.addEventListener("DOMContentLoaded",function(){document.querySelectorAll("img").forEach(function(i){var n=i.getAttribute("src");if(window.__A[n])i.src=window.__A[n];});});</script>
+<div class="wrap">
+<header style="display:flex;flex-direction:column;gap:6px">
+<span class="eyebrow">SCION Family · B9 · learned from Jan Diehm and Amber Thomas, Women's Pockets Are Inferior</span>
+<h1>A Pivot Over Your Town</h1>
+</header>
+<p class="lede">Pick a place you know. One real Toshka field and that place are drawn at the same scale. Then try the whole of Toshka's pivot area.</p>
+<div class="labels" id="labs"></div>
+<div class="ctrl" id="opts"></div>
+<div class="ctrl"><label class="mono" for="ha">Or enter an area you know (hectares)</label><input id="ha" type="number" min="1" step="1" style="font:inherit;width:9em;padding:5px 8px;border:1px solid var(--rule);border-radius:6px;background:var(--panel);color:var(--fg)"></div>
+<div class="stage" style="background:var(--panel);color:var(--fg)"><canvas id="cv"></canvas></div>
+<p class="note" id="say"></p>
+<p class="note">Places are drawn as squares of equal area, not their outlines. Areas are approximate, from public sources: Vatican City 49 ha, Hyde Park 142 ha, Central Park 341 ha, Manhattan (land) ≈ 5,900 ha, Paris (city) ≈ 10,540 ha, Greater London ≈ 157,200 ha. Toshka pivots: this catalog, 2025.</p>
+<details class="scion" id="scion"></details>
+<p class="note">Imagery: contains modified Copernicus Sentinel data (Sentinel-2 L2A, one fixed rendering, no tint).</p>
+</div>
+<script src="kit.js"></script>
+<script>K.scion(K.$("#scion"));</script>
+<script>
+(async()=>{
+const man=await K.json("manifest.json"),M=man.marey,img=await K.img("marey_S2C_36QUL_20250320_0_L2A.jpg");const fha=Math.PI*M.radius_m**2/1e4;
+const P=[["A football pitch",0.714],["Vatican City",49],["Hyde Park",142],["Central Park",341],["Manhattan",5900],["Paris",10540],["Toshka's pivots, 2025",131470],["Greater London",157200]];let cur=3;
+K.$("#opts").innerHTML=P.map((p,i)=>`<button class="btn" type="button" data-i="${i}" aria-pressed="${i===cur}">${p[0]}</button>`).join("");
+const S=K.stage(K.$("#cv"),2),g=S.g;
+function draw(name,ha){g.fillStyle=K.css("--panel");g.fillRect(0,0,S.W,S.H);const big=Math.max(fha,ha),scale=(S.H*0.8)/Math.sqrt(big*1e4);
+ const fd=2*M.radius_m*scale,sq=Math.sqrt(ha*1e4)*scale,cy=S.H/2;
+ if(fd>3){g.save();g.beginPath();g.arc(S.W*0.27,cy,fd/2,0,7);g.clip();g.drawImage(img,S.W*0.27-fd/2/0.77,cy-fd/2/0.77,fd/0.77,fd/0.77);g.restore();}else{g.fillStyle=K.css("--field");g.beginPath();g.arc(S.W*0.27,cy,Math.max(1.5,fd/2),0,7);g.fill();}
+ g.strokeStyle=K.css("--fg");g.lineWidth=2;g.strokeRect(S.W*0.62-sq/2,cy-sq/2,sq,sq);
+ g.fillStyle=K.css("--fg");g.font=`600 ${12*S.dpr}px Archivo`;g.textAlign="center";g.fillText(`one field · ${Math.round(fha)} ha`,S.W*0.27,S.H*0.96);g.fillText(`${name} · ${ha.toLocaleString()} ha`,S.W*0.62,S.H*0.96);g.textAlign="left";
+ const k=ha/fha;K.$("#say").textContent=k>=1?`${name} ≈ ${k<10?k.toFixed(1):Math.round(k).toLocaleString()} fields like this one (${M.id}).`:`One field ≈ ${(1/k).toFixed(1)} × ${name}.`;K.labels(K.$("#labs"),["COMPOSED","OBSERVED"]);}
+const sel=i=>{cur=i;document.querySelectorAll("#opts .btn").forEach((b,j)=>b.setAttribute("aria-pressed",j===i));draw(...P[i]);};
+document.querySelectorAll("#opts .btn").forEach(b=>b.onclick=()=>sel(+b.dataset.i));K.$("#ha").oninput=e=>{const v=+e.target.value;if(v>0){document.querySelectorAll("#opts .btn").forEach(b=>b.setAttribute("aria-pressed",false));draw("Your area",v);}};
+sel(cur);addEventListener("resize",()=>{S.fit();sel(cur);});
+})();
+</script>

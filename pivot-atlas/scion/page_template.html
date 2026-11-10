@@ -1,0 +1,47 @@
+<meta charset="utf-8">
+<title>SCION Family</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,400..800&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: a fixed index of works on the left (wide screens), the instructions as a single reading column; each instruction is a copyable block. */
+:root{--bg:#ead4ab;--panel:#f3e3c3;--fg:#1d2316;--muted:#5d5a44;--rule:#c9ad7f;--code:#f7ecd5;--acc:#0f5d6b;
+ --display:"Archivo",ui-sans-serif,system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12160f;--panel:#1b2117;--fg:#ead9b8;--muted:#aa9f83;--rule:#3a3a2a;--code:#161b13;--acc:#7fd0dc;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12160f;--panel:#1b2117;--fg:#ead9b8;--muted:#aa9f83;--rule:#3a3a2a;--code:#161b13;--acc:#7fd0dc;color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--display);font-size:16px;line-height:1.55;margin:0;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 64px}
+.wrap{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:230px minmax(0,1fr);gap:36px}
+@media (max-width:860px){.wrap{grid-template-columns:minmax(0,1fr)} nav{position:static!important;max-height:none!important;columns:2}}
+nav{position:sticky;top:calc(16px + env(safe-area-inset-top,0px));align-self:start;max-height:calc(100vh - 40px);overflow:auto;display:flex;flex-direction:column;gap:2px;font-size:.84rem}
+nav a{color:var(--muted);text-decoration:none;padding:2px 0;display:block;break-inside:avoid}
+nav a.n2{color:var(--fg);font-weight:700;margin-top:10px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase}
+nav a:hover{color:var(--acc)}
+main{min-width:0;display:flex;flex-direction:column;gap:14px}
+h1{font-size:clamp(2.2rem,6vw,3.8rem);font-stretch:120%;font-weight:800;margin:0;line-height:1.02}
+h2{font-size:1.5rem;font-stretch:112%;margin:30px 0 0;border-top:1px solid var(--rule);padding-top:18px}
+h3{font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:22px 0 0;font-family:var(--mono);font-weight:500}
+h4{font-size:1.12rem;margin:14px 0 0}
+p{margin:0;max-width:70ch}
+p.li{padding-left:1.2em;text-indent:-1.2em}
+.lede{font-size:1.1rem}
+.code{background:var(--code);border:1px solid var(--rule);border-radius:6px;min-width:0}
+.codebar{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 10px 8px 14px;border-bottom:1px solid var(--rule);font:500 .74rem var(--mono);color:var(--muted)}
+.codebar span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+pre{margin:0;padding:14px;overflow-x:auto;font:400 .8rem/1.55 var(--mono);white-space:pre}
+button.copy{flex:0 0 auto;font:500 .78rem var(--display);color:var(--bg);background:var(--fg);border:none;border-radius:999px;padding:6px 12px;cursor:pointer}
+button:focus-visible,a:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+</style>
+<div class="wrap">
+<nav aria-label="Works">%%NAV%%</nav>
+<main>
+<span style="font:500 .74rem var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)">Instructions for agents · center-pivot fields as a visual language</span>
+<h1>SCION Family</h1>
+<p class="lede">One production kernel, one grammar of circles, and an instruction for each film, chart or instrument, each learned from a reference work and rebuilt from real fields. "Copy full instruction" gives a complete system prompt: kernel, grammar and that work.</p>
+%%BODY%%
+</main></div>
+<script>
+document.querySelectorAll("button.copy").forEach(b=>b.addEventListener("click",()=>{const t=JSON.parse(document.getElementById("p"+b.dataset.k).textContent);
+ const done=()=>{b.textContent="Copied";setTimeout(()=>b.textContent=b.dataset.k&&b.closest('.code').querySelector('.codebar span').textContent.startsWith('ADAPTER')||b.closest('.code').querySelector('.codebar span').textContent.startsWith('SCION FORGE')?"Copy full instruction":"Copy",1600);};
+ const fallback=()=>{const pre=b.closest(".code").querySelector("pre");const r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent="Selected — press copy";};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done,fallback);else fallback();}));
+</script>

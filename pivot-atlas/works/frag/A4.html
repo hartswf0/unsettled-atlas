@@ -1,0 +1,40 @@
+<p class="lede">A short film that stops three times and hands you the controls. Each stop asks you to find something yourself; the film then continues from what you chose.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+<div class="ctrl"><span class="mono" id="step"></span><button class="btn primary" id="next" type="button">Begin</button></div>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),16/9),g=S.g;
+const [inv,land,F,M,portrait,B]=await Promise.all([K.json("inventory.json"),K.json("land.json"),K.json("fields.json"),K.json("m_astronaut_halftone.json"),K.img("astronaut_halftone.jpg"),K.bank()]);
+const C=Object.fromEntries(F.cols.map((n,i)=>[n,i])),bc=B.c,pool=B.rows.map((r,i)=>i).filter((_,i)=>i%9===0);await K.ensure(pool);
+const choice={};let step=0,hits=[];
+const tiles={"36QUL":{name:"Toshka",lon:31.6,lat:23.0},"35QPF":{name:"East Oweinat",lon:28.7,lat:22.1}};
+const view={lon0:24.5,lon1:36.5,lat0:20.5,lat1:32};const P=(lon,lat)=>[(lon-view.lon0)/(view.lon1-view.lon0)*S.W,(view.lat1-lat)/(view.lat1-view.lat0)*S.H];
+function card(big,small){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);g.fillStyle="#ead9b8";g.font=`800 ${44*S.dpr}px Archivo`;g.fillText(big,S.W*0.08,S.H*0.45);g.font=`${15*S.dpr}px Archivo`;g.fillStyle="#aa9f83";g.fillText(small,S.W*0.08,S.H*0.56);}
+function map(){g.fillStyle="#0b1214";g.fillRect(0,0,S.W,S.H);g.fillStyle="#1d2419";for(const r of land){g.beginPath();for(let i=0;i<r.length;i+=2){const[x,y]=P(r[i]/10,r[i+1]/10);i?g.lineTo(x,y):g.moveTo(x,y);}g.fill();}
+ hits=[];for(const[t,v] of Object.entries(tiles)){const pts=inv.first_year[t];g.fillStyle="#d29a62";pts.forEach(p=>{const[x,y]=P(p[0],p[1]);g.fillRect(x-1,y-1,2,2);});
+  const[x,y]=P(v.lon,v.lat),w=(1.07/(view.lon1-view.lon0))*S.W;g.strokeStyle=choice.tile===t?"#7fd0dc":"#ead9b8";g.lineWidth=2*S.dpr;g.strokeRect(x-w/2,y-w/2,w,w);g.fillStyle="#ead9b8";g.font=`${12*S.dpr}px IBM Plex Mono`;g.fillText(v.name,x+w/2+6,y);hits.push({t,x,y,w});}}
+function bank(){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);const ax=pool.map(i=>B.rows[i][bc.a]),bb=pool.map(i=>B.rows[i][bc.b]),x0=Math.min(...ax),x1=Math.max(...ax),y0=Math.min(...bb),y1=Math.max(...bb);hits=[];
+ pool.forEach(i=>{const x=30+(B.rows[i][bc.a]-x0)/(x1-x0)*(S.W-60),y=S.H-30-(B.rows[i][bc.b]-y0)/(y1-y0)*(S.H-60),d=14*S.dpr;K.chip(g,i,x,y,d);hits.push({i,x,y});if(choice.glyph===i){g.strokeStyle="#7fd0dc";g.lineWidth=3;g.beginPath();g.arc(x,y,d,0,7);g.stroke();}});}
+function port(){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);const s=S.H/portrait.height,ox=(S.W-portrait.width*s)/2;g.drawImage(portrait,ox,0,portrait.width*s,S.H);hits={ox,s};
+ if(choice.dot){const k=portrait.width/M.w,d=choice.dot;g.strokeStyle="#7fd0dc";g.lineWidth=3;g.beginPath();g.arc(ox+d[0]*k*s,d[1]*k*s,d[2]*k*s,0,7);g.stroke();}}
+const STEPS=[
+ {do:()=>card(`${inv.tiles["36QUL"]["2017"][0]} fields`,"Toshka, Egypt, in March 2017 (inventory count)."),labs:["OBSERVED"],cap:""},
+ {stop:true,do:map,labs:["GEOGRAPHIC","OBSERVED"],ask:"Your turn: tap one of the two outlined tiles.",ok:()=>choice.tile,cap:"Sand dots: fields present in 2025 (inventory)."},
+ {do:()=>{const t=choice.tile,v=inv.tiles[t];card(`${K.fmt(v["2025"][0])} fields`,`${tiles[t].name}, 2025. In 2017 it had ${K.fmt(v["2017"][0])}.`);},labs:["OBSERVED"]},
+ {stop:true,do:bank,labs:["COMPOSED"],ask:"Your turn: these are real fields arranged by color. Tap one.",ok:()=>choice.glyph!==undefined,cap:"x = a* (green → red), y = b* (blue → yellow)"},
+ {do:()=>{const r=B.rows[choice.glyph];card(`${r[bc.lat].toFixed(3)} N, ${r[bc.lon].toFixed(3)} E`,`${r[bc.biome]} · ${Math.round(r[bc.radius_m])} m radius · seen ${r[bc.date]}`);},labs:["GEOGRAPHIC","OBSERVED"]},
+ {stop:true,do:port,labs:["COMPOSED"],ask:"Your turn: tap any dot in the portrait.",ok:()=>choice.dot,cap:"A portrait made of real fields; positions are composed."},
+ {do:()=>{const r=F.rows[choice.dot[3]];card("Every dot is a farm.",`Your dot: ${r[C.id]} · ${r[C.region]} · ${Math.round(r[C.radius_m])} m · ${r[C.date]}. Your tile: ${tiles[choice.tile].name}. Your field: ${B.rows[choice.glyph][bc.biome]}.`);},labs:["COMPOSED","GEOGRAPHIC"]}];
+function show(){const s=STEPS[step];s.do();K.labels(K.$("#labs"),s.labs);K.$("#cap").textContent=s.ask?`${s.ask} ${s.cap||""}`:(s.cap||"");K.$("#step").textContent=`${step+1} / ${STEPS.length}`;
+ K.$("#next").textContent=step===STEPS.length-1?"Start over":"Continue";K.$("#next").disabled=!!(s.stop&&!s.ok());}
+K.$("#next").onclick=()=>{step=(step+1)%STEPS.length;if(step===0)for(const k in choice)delete choice[k];show();};
+S.c.addEventListener("click",e=>{const s=STEPS[step];if(!s.stop)return;const r=S.c.getBoundingClientRect(),x=(e.clientX-r.left)*S.dpr,y=(e.clientY-r.top)*S.dpr;
+ if(s.do===map){const h=hits.find(h=>Math.abs(x-h.x)<h.w&&Math.abs(y-h.y)<h.w);if(h)choice.tile=h.t;}
+ else if(s.do===bank){let b=null,bd=1e9;hits.forEach(h=>{const d=Math.hypot(h.x-x,h.y-y);if(d<bd){bd=d;b=h;}});if(b&&bd<20*S.dpr)choice.glyph=b.i;}
+ else{const k=portrait.width/M.w,px=(x-hits.ox)/hits.s/k,py=y/hits.s/k;let b=null,bd=1e9;for(const d of M.dots){const q=Math.hypot(d[0]-px,d[1]-py);if(q<bd){bd=q;b=d;}}if(b&&bd<b[2])choice.dot=b;}
+ show();});
+show();addEventListener("resize",()=>{S.fit();show();});
+})();
+</script>

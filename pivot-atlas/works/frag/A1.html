@@ -1,0 +1,39 @@
+<p class="lede">One real field in East Oweinat, seen four ways: as a place, as a countable unit, as a pixel in a portrait, and as a place again. Each view makes something possible and leaves something out.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+<div class="ctrl" id="pl"></div>
+<div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr))" id="ledger"></div>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),16/9),g=S.g;
+const [farm,man,inv,der,F,M,portrait]=await Promise.all([K.img("farm_oweinat.jpg"),K.json("manifest.json"),K.json("inventory.json"),K.json("derived.json"),K.json("fields.json"),K.json("m_astronaut_halftone.json"),K.img("astronaut_halftone.jpg")]);
+const FM=man.farm, C=Object.fromEntries(F.cols.map((n,i)=>[n,i]));
+const byId=Object.fromEntries(FM.fields.map(x=>[x.id,x]));
+const dot=der.portrait_farm_dots.slice().sort((a,b)=>{const fa=byId[F.rows[a[3]][C.id]],fb=byId[F.rows[b[3]][C.id]];return Math.hypot(fa.x-.5,fa.y-.5)-Math.hypot(fb.x-.5,fb.y-.5);})[0];
+const fid=F.rows[dot[3]][C.id], f=byId[fid];
+const N=FM.fields.length, owe=inv.tiles["35QPF"]["2025"][0];
+function view(im,cx,cy,vw,rot=0,alpha=1){const s=S.W/vw;g.save();g.globalAlpha=alpha;g.translate(S.W/2,S.H/2);g.rotate(rot);g.scale(s,s);g.drawImage(im,-cx,-cy);g.restore();}
+function draw(t){g.fillStyle="#0d1210";g.fillRect(0,0,S.W,S.H);const W=farm.width,fx=f.x*W,fy=f.y*W,fr=f.r*W,cap=K.$("#cap");let labs=["GEOGRAPHIC","OBSERVED"];
+ if(t<9){view(farm,fx,fy,fr*2*3.2);const s=S.W/(fr*2*3.2),a=t*0.7;g.strokeStyle="#ead9b8";g.lineWidth=3*S.dpr;g.setLineDash([8*S.dpr,6*S.dpr]);g.beginPath();g.moveTo(S.W/2,S.H/2);g.lineTo(S.W/2+Math.cos(a)*fr*s,S.H/2+Math.sin(a)*fr*s);g.stroke();g.setLineDash([]);
+  labs.push("DRAWN");cap.textContent=`One field · ${f.lat.toFixed(4)} N, ${f.lon.toFixed(4)} E · ${Math.round(f.radius_m)} m radius · ${FM.scene} · dashed arm is drawn, not observed`;}
+ else if(t<18){const u=K.ease(K.clamp((t-9)/5,0,1)),vw=K.lerp(fr*2*3.2,W*1.78,u),cx=K.lerp(fx,W/2,u),cy=K.lerp(fy,W/2,u);view(farm,cx,cy,vw);const s=S.W/vw;
+  const shown=Math.round(K.clamp((t-11)/5,0,1)*N);g.strokeStyle="#7fd0dc";g.lineWidth=1.5*S.dpr;g.fillStyle="#ead9b8";g.font=`${11*S.dpr}px IBM Plex Mono`;
+  FM.fields.slice(0,shown).forEach((q,i)=>{const X=S.W/2+(q.x*W-cx)*s,Y=S.H/2+(q.y*W-cy)*s;g.beginPath();g.arc(X,Y,q.r*W*s,0,7);g.stroke();g.fillText(i+1,X-6*S.dpr,Y+4*S.dpr);});
+  cap.textContent=`Countable: ${shown} of ${N} fields in this 7 km frame · East Oweinat tile, 2025: ${K.fmt(owe)} fields (inventory)`;}
+ else if(t<27){const u=K.clamp((t-18)/1.5,0,1);view(farm,W/2,W/2,W*1.78,0,1-u);const ph=portrait.height,pw=portrait.width;view(portrait,pw/2,ph/2,ph*S.W/S.H,0,u);
+  labs=["COMPOSED"];cap.textContent=`An image: ${K.fmt(M.dots.length)} real fields arranged into a portrait (NASA photo, public domain). Positions here are composed, not geography.`;}
+ else{const pw=portrait.width,ph=portrait.height,k=pw/M.w,dx=dot[0]*k,dy=dot[1]*k,d=dot[2]*k,full=ph*S.W/S.H;
+  if(t<32){const u=K.ease(K.clamp((t-27)/4,0,1)),vw=Math.exp(K.lerp(Math.log(full),Math.log(d*1.6),u));view(portrait,K.lerp(pw/2,dx,u),K.lerp(ph/2,dy,u),vw);labs=["COMPOSED"];cap.textContent="Select one dot…";}
+  else{const u=K.clamp((t-32)/1.2,0,1),rot=(dot[4]||0)*Math.PI/180*(1-K.ease(K.clamp((t-32)/2,0,1)));view(farm,fx,fy,fr*2*3.2*(1+Math.max(0,t-33.5)*0.35),rot,u);
+   labs=["GEOGRAPHIC","OBSERVED"];cap.textContent=`…and return it to ${f.lat.toFixed(4)} N, ${f.lon.toFixed(4)} E, ${FM.scene.split("_")[2]}`;
+   if(t>33.5){labs.push("NOT SEEN");const a=K.clamp((t-33.5)/0.8,0,1);g.fillStyle=`rgba(13,18,16,${0.78*a})`;g.fillRect(S.W*0.52,S.H*0.1,S.W*0.44,S.H*0.62);g.fillStyle=`rgba(224,162,79,${a})`;
+    g.font=`600 ${15*S.dpr}px Archivo`;g.fillText("NOT SEEN in this image",S.W*0.55,S.H*0.18);g.fillStyle=`rgba(234,217,184,${a})`;g.font=`${12*S.dpr}px IBM Plex Mono`;
+    ["Water source: Nubian Sandstone Aquifer","(documented for East Oweinat; verify)","Volume pumped: UNKNOWN","Aquifer level here: UNKNOWN","Owner, crop, workers: NOT SEEN","","A green circle shows vegetation.","Its water takes another instrument."].forEach((l,i)=>g.fillText(l,S.W*0.55,S.H*(0.25+i*0.055)));}}}
+ K.labels(K.$("#labs"),labs);}
+const P=K.player(K.$("#pl"),{duration:37,chapters:[{t:0,name:"A place"},{t:9,name:"A count"},{t:18,name:"An image"},{t:27,name:"The return"}],draw});
+P.seek(K.reduced?36.9:0.5);
+K.$("#ledger").innerHTML=[["Field",`${f.id}`],["Frame","7 × 7 km, Sentinel-2 L2A 10 m"],["Portrait",`${K.fmt(M.dots.length)} dots from ${K.fmt(M.distinct||0)||"the bank"} fields`],["Counts","this frame: measured; tile: Chen et al. inventory 2025"]].map(([a,b])=>`<div class="panel"><span class="eyebrow">${a}</span><span class="mono">${b}</span></div>`).join("");
+addEventListener("resize",()=>{S.fit();P.redraw();});
+})();
+</script>

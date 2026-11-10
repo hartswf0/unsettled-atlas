@@ -1,0 +1,20 @@
+<p class="lede">Water leaves Lake Nasser and runs west along a canal to Toshka's fields. The band follows the canal; its width is the pivot area the inventory records each year, nested so every year stays visible.</p>
+<div class="labels" id="labs"></div>
+<div class="stage"><canvas id="cv"></canvas><span class="cap" id="cap"></span></div>
+<div class="panel unknown"><span class="eyebrow">Not seen · second variable</span><h2>Lake level and water delivered, 2017–2025</h2><p>A shared time axis would sit here with the lake's water level or the canal's delivered volume. No sourced series was reachable from this session, so the axis stays empty.</p></div>
+<p class="note">Route: least-cost path through water pixels (Sentinel-2 NDWI) between a point on Lake Nasser and a manually placed point near the western farms. It is traced, not surveyed, and only shown inside this 84 km frame. Width scale and field areas: Chen et al. inventory, Toshka tile.</p>
+<!--SCRIPT-->
+<script>
+(async()=>{
+const S=K.stage(K.$("#cv"),1),g=S.g;const [man,inv,im]=await Promise.all([K.json("manifest.json"),K.json("inventory.json"),K.img("toshka_2025.jpg")]);
+const path=man.canal.in_crop,T=inv.tiles["36QUL"],yrs=[2017,2019,2021,2023,2025],amax=T["2025"][1];
+const ramp=["#f1eecf","#e9c46a","#e07a3f","#b5303a","#5e1230"];
+function draw(){g.drawImage(im,0,0,S.W,S.H);g.fillStyle="rgba(13,18,16,.45)";g.fillRect(0,0,S.W,S.H);g.lineCap="round";g.lineJoin="round";
+ [...yrs].reverse().forEach((y,k)=>{const w=Math.max(2,(T[y][1]/amax)*S.W*0.07);g.strokeStyle=ramp[yrs.length-1-k];g.globalAlpha=0.92;g.lineWidth=w;g.beginPath();path.forEach(([x,yy],i)=>i?g.lineTo(x*S.W,yy*S.H):g.moveTo(x*S.W,yy*S.H));g.stroke();});
+ g.globalAlpha=1;const lx=S.W*0.62,ly=S.H*0.06;g.fillStyle="rgba(13,18,16,.8)";g.fillRect(lx-10,ly-6,S.W*0.36,yrs.length*20*S.dpr+34*S.dpr);
+ g.fillStyle="#ead9b8";g.font=`600 ${12*S.dpr}px Archivo`;g.fillText("Band width = pivot area (km²)",lx,ly+12*S.dpr);
+ yrs.forEach((y,i)=>{g.fillStyle=ramp[i];g.fillRect(lx,ly+(24+i*20)*S.dpr,Math.max(2,(T[y][1]/amax)*S.W*0.07),10*S.dpr);g.fillStyle="#ead9b8";g.font=`${11*S.dpr}px IBM Plex Mono`;g.fillText(`${y}: ${T[y][1].toLocaleString()} km²`,lx+S.W*0.08,ly+(33+i*20)*S.dpr);});
+ K.$("#cap").textContent="Toshka, March 2025 · 84 × 84 km";K.labels(K.$("#labs"),["GEOGRAPHIC","OBSERVED","DRAWN","NOT SEEN"]);}
+draw();addEventListener("resize",()=>{S.fit();draw();});
+})();
+</script>

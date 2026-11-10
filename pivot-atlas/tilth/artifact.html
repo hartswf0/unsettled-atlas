@@ -1,0 +1,336 @@
+<meta charset="utf-8">
+<title>TILTH Field Repair</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Orbitron:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: an operations console. Thin command bar of rooms; each room fills the screen. The Parts Manual is a printed page inside the console. Single dark theme by choice. */
+:root{color-scheme:dark;
+ --humus:#0f0d0a;--loam:#17140f;--bed:#1f1b15;--line:#332c22;--fg:#efe4d0;--dim:#a99c84;--faint:#6f6553;
+ --ochre:#e0a24f;--signal:#7fd0dc;--rust:#e0572a;--leaf:#8fb36f;--paper:#f6f3ec;--ink:#111;
+ --display:"Oswald",ui-sans-serif,system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;--mark:"Orbitron",var(--display)}
+*{box-sizing:border-box} [hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--humus);color:var(--fg);font-family:var(--mono);font-size:13px;line-height:1.5;display:flex;flex-direction:column}
+.bar{display:flex;align-items:center;gap:8px 18px;flex-wrap:wrap;padding-block:8px;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--line);background:var(--loam)}
+.mark{font:900 1.15rem var(--mark);letter-spacing:.18em}
+.mark small{display:block;font:500 .58rem var(--mono);letter-spacing:.14em;color:var(--dim)}
+nav.rooms{display:flex;gap:2px;flex-wrap:wrap}
+nav.rooms button{font:500 .82rem var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--dim);background:transparent;border:0;border-bottom:2px solid transparent;padding:6px 10px;cursor:pointer}
+nav.rooms button[aria-current="page"]{color:var(--fg);border-bottom-color:var(--ochre)}
+.clock{margin-left:auto;font:500 .72rem var(--mono);color:var(--dim);text-align:right}
+main{flex:1;min-height:0;overflow:auto;padding-block:14px 24px;padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);font-weight:600;letter-spacing:.03em;margin:0;text-transform:uppercase;text-wrap:balance}
+h1{font-size:clamp(1.6rem,4vw,2.6rem);line-height:1.05}
+h2{font-size:1.05rem}
+h3{font-size:.9rem;color:var(--dim)}
+p{margin:0;max-width:72ch}
+.eyebrow{font:500 .66rem var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+.tag{display:inline-block;font:600 .62rem var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:2px;border:1px solid currentColor}
+.tag.real{color:var(--leaf)} .tag.fic{color:var(--ochre)} .tag.ns{color:var(--rust)}
+.btn{font:500 .78rem var(--display);letter-spacing:.08em;text-transform:uppercase;color:var(--fg);background:var(--bed);border:1px solid var(--line);border-radius:2px;padding:7px 12px;cursor:pointer}
+.btn:hover{border-color:var(--ochre)} .btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.go{background:var(--ochre);color:var(--humus);border-color:var(--ochre)}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid var(--signal);outline-offset:2px}
+.panel{background:var(--loam);border:1px solid var(--line);border-radius:3px;padding:12px;display:flex;flex-direction:column;gap:10px;min-width:0}
+/* console */
+.console{display:grid;grid-template-columns:300px minmax(0,1fr) 360px;gap:12px;align-items:start;max-width:1500px;margin:0 auto}
+@media (max-width:1150px){.console{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.console .codes{grid-column:1/-1}}
+@media (max-width:700px){.console{grid-template-columns:minmax(0,1fr)}}
+.filters{display:flex;flex-wrap:wrap;gap:4px}
+.filters button{font:500 .68rem var(--mono);color:var(--dim);background:transparent;border:1px solid var(--line);border-radius:2px;padding:3px 7px;cursor:pointer}
+.filters button[aria-pressed="true"]{color:var(--humus);background:var(--signal);border-color:var(--signal)}
+input[type=search]{width:100%;font:inherit;background:var(--humus);color:var(--fg);border:1px solid var(--line);border-radius:2px;padding:7px 9px}
+.list{max-height:46vh;overflow:auto;border-top:1px solid var(--line)}
+.list button{display:grid;grid-template-columns:1fr auto;gap:2px 8px;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--fg);font:inherit;font-size:.74rem;padding:6px 4px;cursor:pointer}
+.list button[aria-current="true"]{background:var(--bed);box-shadow:inset 3px 0 0 var(--ochre)}
+.list .cs{color:var(--dim);font-size:.66rem}
+canvas.map{width:100%;aspect-ratio:1.4;background:var(--humus);border:1px solid var(--line);border-radius:2px;display:block;cursor:crosshair}
+.unit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:900px){.unit{grid-template-columns:minmax(0,1fr)}}
+canvas.chip{width:100%;max-width:340px;aspect-ratio:1;border-radius:50%;display:block;margin:0 auto;background:var(--humus)}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 12px;font-size:.74rem;margin:0}
+.kv dt{color:var(--dim)} .kv dd{margin:0;overflow-wrap:anywhere}
+.spark{width:100%;height:56px;display:block}
+.code{border:1px solid var(--line);border-left:3px solid var(--ochre);border-radius:2px;padding:9px 10px;display:flex;flex-direction:column;gap:5px}
+.code.cleared{opacity:.55;border-left-color:var(--leaf)}
+.code.hard{border-left-color:var(--rust)}
+.code .top{display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.code b{font:600 .86rem var(--mono);letter-spacing:.06em}
+.caps{display:flex;flex-wrap:wrap;gap:6px}
+.log{font-size:.7rem;color:var(--dim);max-height:120px;overflow:auto;border-top:1px solid var(--line);padding-top:6px}
+.modal{position:fixed;inset:0;background:rgba(10,9,7,.82);display:flex;align-items:center;justify-content:center;padding:16px;z-index:5}
+.modal .panel{max-width:560px}
+/* parts manual: a printed page */
+.manualwrap{display:flex;flex-direction:column;gap:10px;align-items:center}
+.page{background:var(--paper);color:var(--ink);width:min(820px,100%);border:1px solid #000;padding:22px 26px;font-family:var(--mono);display:flex;flex-direction:column;gap:14px;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+.page .hd{display:flex;justify-content:space-between;border-bottom:3px solid #000;padding-bottom:6px;font:700 .86rem var(--mono);letter-spacing:.06em}
+.page .pn{font:700 1.6rem var(--mono);letter-spacing:.02em}
+.page .grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:640px){.page .grid2{grid-template-columns:minmax(0,1fr)}}
+.page table{border-collapse:collapse;width:100%;font-size:.72rem}
+.page td,.page th{border:1px solid #000;padding:3px 6px;text-align:left;vertical-align:top}
+.page th{background:#000;color:#fff;font-weight:600}
+.page .ft{border-top:1px solid #000;padding-top:6px;font-size:.64rem;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.page canvas{width:100%;max-width:300px;aspect-ratio:1;display:block;margin:0 auto}
+/* case files */
+.cases{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;max-width:1300px;margin:0 auto}
+.case{cursor:pointer;text-align:left;font:inherit;color:inherit}
+.case:hover{border-color:var(--ochre)}
+.case .no{font:600 .7rem var(--mono);letter-spacing:.14em;color:var(--dim)}
+.casedetail{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.ev{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
+.ev figure{margin:0;display:flex;flex-direction:column;gap:3px;font-size:.64rem;color:var(--dim)}
+.ev img{width:100%;border-radius:2px;display:block}
+.choices{display:flex;flex-direction:column;gap:6px}
+.choices button{text-align:left;font:inherit;color:var(--fg);background:var(--bed);border:1px solid var(--line);border-radius:2px;padding:9px 12px;cursor:pointer}
+.choices button[aria-pressed="true"]{border-color:var(--ochre);box-shadow:inset 3px 0 0 var(--ochre)}
+ul.tight{margin:0;padding-left:1.2em;display:flex;flex-direction:column;gap:4px;max-width:72ch}
+/* screening room */
+.screen{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:12px;max-width:1400px;margin:0 auto;align-items:start}
+@media (max-width:900px){.screen{grid-template-columns:minmax(0,1fr)}}
+.screen video{width:100%;max-height:calc(100vh - 170px);background:#000;border:1px solid var(--line);border-radius:2px;display:block;aspect-ratio:1;object-fit:contain}
+.eps button{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;width:100%;text-align:left;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--fg);font:inherit;padding:9px 4px;cursor:pointer}
+.eps button[aria-current="true"]{box-shadow:inset 3px 0 0 var(--ochre);background:var(--bed)}
+.eps .n{font:600 1.2rem var(--display);color:var(--dim);grid-row:span 2}
+/* ledger */
+.ledger{max-width:1000px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.tablewrap{overflow-x:auto}
+table.l{border-collapse:collapse;width:100%;font-size:.76rem}
+table.l th,table.l td{border-bottom:1px solid var(--line);padding:8px 10px 8px 0;text-align:left;vertical-align:top}
+table.l th{font:500 .66rem var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dim)}
+a{color:var(--signal)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+
+<header class="bar">
+ <div class="mark">TILTH<small>FIELD REPAIR · EST. 2048 · WHERE DECAY BECOMES DESIGN</small></div>
+ <nav class="rooms" aria-label="Rooms">
+  <button data-r="console" aria-current="page">Console</button><button data-r="manual">Parts Manual</button><button data-r="cases">Case Files</button><button data-r="screen">Screening Room</button><button data-r="ledger">Ledger</button>
+ </nav>
+ <div class="clock" id="clock"></div>
+</header>
+<main id="main">
+
+<section data-room="console" aria-label="Console">
+ <div style="max-width:1500px;margin:0 auto 12px;display:flex;flex-direction:column;gap:6px">
+  <span class="eyebrow">Field repair console · <span class="tag real">real fields</span> <span class="tag fic">Tilth codes are design fiction</span></span>
+  <h1>Every field is a machine you're allowed to fix.</h1>
+  <p>4,623 center-pivot fields in Toshka and East Oweinat, Egypt, measured from Sentinel-2. TILTH reads each one like a machine: fault codes, pairing, limp mode, manuals. These are the same four repair capabilities that the July 2026 FTC settlement says Deere must open to farmers and independent technicians.</p>
+ </div>
+ <div class="console">
+  <div class="panel">
+   <span class="eyebrow">Fleet</span>
+   <canvas class="map" id="map"></canvas>
+   <div class="filters" id="filters"></div>
+   <input type="search" id="q" placeholder="Search field ID, e.g. 36QUL" aria-label="Search fields">
+   <div class="list" id="list"></div>
+   <span class="eyebrow" id="lc"></span>
+  </div>
+  <div class="panel">
+   <div class="unit">
+    <div style="display:flex;flex-direction:column;gap:8px"><canvas class="chip" id="chip" width="680" height="680"></canvas><span class="eyebrow" style="text-align:center" id="chipcap"></span></div>
+    <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+     <span class="eyebrow">Unit</span><h2 id="uid"></h2>
+     <dl class="kv" id="ukv"></dl>
+     <div><span class="eyebrow">Planted fraction, each March 2017–2025 · measured</span><canvas class="spark" id="spark"></canvas></div>
+    </div>
+   </div>
+   <div class="caps">
+    <button class="btn go" id="read">Read codes</button><button class="btn" id="pair">Pair</button><button class="btn" id="limp">Restart from limp</button><button class="btn" id="man">Open manual</button>
+   </div>
+  </div>
+  <div class="panel codes">
+   <span class="eyebrow">Fault codes · TILTH taxonomy (fiction) · triggered by real measurements</span>
+   <div id="codes" style="display:flex;flex-direction:column;gap:8px"></div>
+   <span class="eyebrow">Service log · this browser only</span>
+   <div class="log" id="log"></div>
+  </div>
+ </div>
+</section>
+
+<section data-room="manual" aria-label="Parts Manual" hidden>
+ <div class="manualwrap">
+  <div style="width:min(820px,100%);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap">
+   <span class="eyebrow">TILTH Field Parts Manual · <span class="tag real">measured</span> <span class="tag fic">part numbers fiction</span></span>
+   <span class="caps"><button class="btn" id="mprev">◂ Previous part</button><button class="btn" id="mnext">Next part ▸</button></span>
+  </div>
+  <div class="page" id="page"></div>
+ </div>
+</section>
+
+<section data-room="cases" aria-label="Case Files" hidden>
+ <div id="caseindex">
+  <div style="max-width:1300px;margin:0 auto 12px;display:flex;flex-direction:column;gap:6px">
+   <span class="eyebrow">Case files · internal training</span><h1>Decide what TILTH should do.</h1>
+   <p>Case 00 is the public record. The rest put TILTH in front of real evidence from the fields. The company and its dilemmas are fiction; every image and number is not.</p>
+  </div>
+  <div class="cases" id="cases"></div>
+ </div>
+ <div class="casedetail" id="casedetail" hidden></div>
+</section>
+
+<section data-room="screen" aria-label="Screening Room" hidden>
+ <div class="screen">
+  <div style="display:flex;flex-direction:column;gap:8px"><video id="vid" playsinline controls></video><span class="eyebrow">Keys: space play/pause · N next · P previous · F full screen · it remembers where you stopped</span></div>
+  <div class="panel"><span class="eyebrow">Reels · real Sentinel-2 fields only</span><div class="eps" id="eps"></div></div>
+ </div>
+</section>
+
+<section data-room="ledger" aria-label="Ledger" hidden>
+ <div class="ledger">
+  <span class="eyebrow">Ledger</span><h1>What is real, what is TILTH.</h1>
+  <div class="tablewrap"><table class="l"><thead><tr><th>Thing</th><th>Status</th><th>Source</th></tr></thead><tbody id="ltable"></tbody></table></div>
+  <p style="color:var(--dim)">TILTH and Agronica come from the role-deck design fiction (<a href="https://hartswf0.github.io/role-deck/tilth-investigation.html" target="_blank" rel="noopener">Investigation</a>, <a href="https://hartswf0.github.io/role-deck/tilth-parts-manual.html" target="_blank" rel="noopener">Parts Manual</a>). The Screening Room follows <a href="https://hartswf0.github.io/cineosis-lab/lab/markov-republic.html" target="_blank" rel="noopener">The Republic</a>. No company named here endorses this work. Imagery contains modified Copernicus Sentinel data.</p>
+ </div>
+</section>
+</main>
+
+<div class="modal" id="modal" hidden><div class="panel" id="mbody" role="dialog" aria-modal="true"></div></div>
+
+<script>
+(()=>{"use strict";
+const $=s=>document.querySelector(s),css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const DPR=Math.min(2,devicePixelRatio||1);let F,B,CS,cur=0,filter="all",manualIdx=0;const C={};
+const store={get(k,d){try{return JSON.parse(localStorage.getItem("tilth:"+k))??d;}catch(e){return d;}},set(k,v){try{localStorage.setItem("tilth:"+k,JSON.stringify(v));}catch(e){}}};
+const CODES={
+ G01:{name:"GHOST",text:"The outline persists but the field was unplanted for the last two Marches.",clear:true,cap:"read/clear"},
+ G02:{name:"BARE THIS MARCH",text:"No sector above NDVI 0.30 on the March 2025 date.",clear:true,cap:"read/clear"},
+ S03:{name:"PARTIAL SECTOR",text:"Some pie sectors planted, others bare.",clear:true,cap:"read/clear"},
+ H04:{name:"NO EARLY RECORD",text:"Outside the single-scene swath in 2017–2024: no history before 2025.",clear:true,cap:"read/clear"},
+ P05:{name:"UNPAIRED",text:"No matching field in the independent 2025 inventory (Chen et al.). Either a missed field or a false detection.",clear:false,cap:"pair"},
+ F06:{name:"FIT DRIFT",text:"Sub-pixel circle fit was not clean; geometry fell back to rim search (radius may be 6–10% small).",clear:true,cap:"reprogram"},
+ L07:{name:"LIMP · WATER NOT SEEN",text:"Water source, volume pumped and aquifer level are invisible from orbit. No satellite image can restart this.",clear:false,cap:"limp",hard:true}};
+const load=u=>fetch(u).then(r=>r.json());const img=u=>new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=u;});const sheets={},big={};
+async function sheet(k,hi){const m=hi?big:sheets;if(!m[k])m[k]=img(hi?`bank/sheet_${k}.jpg`:`bank/sheet40_${k}.jpg`);return m[k];}
+async function chip(g,bi,x,y,d,hi){if(bi==null)return false;const per=B.per_row**2,k=Math.floor(bi/per),c=bi%per,im=await sheet(k,hi);if(!im)return false;const S=hi?B.glyph_px:B.glyph_px/2,inner=S/1.04,off=(S-inner)/2;
+ g.save();g.beginPath();g.arc(x,y,d/2,0,7);g.clip();g.drawImage(im,(c%B.per_row)*S+off,Math.floor(c/B.per_row)*S+off,inner,inner,x-d/2,y-d/2,d,d);g.restore();return true;}
+const row=i=>{const r=F.rows[i];return Object.fromEntries(F.cols.map((n,j)=>[n,r[j]]));};
+function log(msg){const L=store.get("log",[]);L.unshift(`${new Date().toISOString().slice(0,19).replace("T"," ")}  ${msg}`);store.set("log",L.slice(0,200));renderLog();}
+function renderLog(){$("#log").innerHTML=store.get("log",[]).map(l=>`<div>${l}</div>`).join("")||"No service actions yet.";}
+// ---------- console
+function counts(){const c={all:F.rows.length};F.rows.forEach(r=>r[10].forEach(k=>c[k]=(c[k]||0)+1));return c;}
+function renderFilters(){const c=counts();$("#filters").innerHTML=["all",...Object.keys(CODES)].map(k=>`<button data-f="${k}" aria-pressed="${k===filter}">${k==="all"?"ALL":"TL-"+k} ${c[k]||0}</button>`).join("");
+ document.querySelectorAll("#filters button").forEach(b=>b.onclick=()=>{filter=b.dataset.f;renderFilters();renderList();drawMap();});}
+function matches(){const q=$("#q").value.trim().toUpperCase();const out=[];F.rows.forEach((r,i)=>{if(filter!=="all"&&!r[10].includes(filter))return;if(q&&!r[0].toUpperCase().includes(q))return;out.push(i);});return out;}
+function renderList(){const m=matches(),show=m.slice(0,250);$("#list").innerHTML=show.map(i=>{const r=F.rows[i];return `<button data-i="${i}" aria-current="${i===cur}"><span>${r[0]}</span><span class="cs">${r[1]}</span><span class="cs">${r[10].filter(k=>k!=="L07").map(k=>"TL-"+k).join(" ")||"—"}</span><span class="cs">${r[6]}</span></button>`;}).join("");
+ $("#lc").textContent=`showing ${show.length.toLocaleString()} of ${m.length.toLocaleString()} fields`;document.querySelectorAll("#list button").forEach(b=>b.onclick=()=>select(+b.dataset.i));}
+let MB=null;
+function drawMap(){const c=$("#map"),r=c.getBoundingClientRect();c.width=r.width*DPR;c.height=r.height*DPR;const g=c.getContext("2d");g.fillStyle=css("--humus");g.fillRect(0,0,c.width,c.height);
+ const lo=F.rows.map(r=>r[2]),la=F.rows.map(r=>r[3]);MB={x0:Math.min(...lo)-.05,x1:Math.max(...lo)+.05,y0:Math.min(...la)-.05,y1:Math.max(...la)+.05};
+ const P=(x,y)=>[(x-MB.x0)/(MB.x1-MB.x0)*c.width,(MB.y1-y)/(MB.y1-MB.y0)*c.height];
+ F.rows.forEach((r,i)=>{const[x,y]=P(r[2],r[3]);const hit=filter==="all"||r[10].includes(filter);g.fillStyle=hit?(filter==="all"?css("--dim"):css("--signal")):"#2a251d";g.fillRect(x-1*DPR,y-1*DPR,2*DPR,2*DPR);});
+ const[x,y]=P(F.rows[cur][2],F.rows[cur][3]);g.strokeStyle=css("--ochre");g.lineWidth=2*DPR;g.beginPath();g.arc(x,y,7*DPR,0,7);g.stroke();
+ g.fillStyle=css("--dim");g.font=`${10*DPR}px IBM Plex Mono`;g.fillText("East Oweinat",8*DPR,c.height-8*DPR);g.textAlign="right";g.fillText("Toshka",c.width-8*DPR,16*DPR);g.textAlign="left";}
+$("#map").addEventListener("click",e=>{if(!MB)return;const c=$("#map"),r=c.getBoundingClientRect(),lon=MB.x0+(e.clientX-r.left)/r.width*(MB.x1-MB.x0),lat=MB.y1-(e.clientY-r.top)/r.height*(MB.y1-MB.y0);
+ let b=0,bd=1e9;F.rows.forEach((q,i)=>{if(filter!=="all"&&!q[10].includes(filter))return;const d=(q[2]-lon)**2+(q[3]-lat)**2;if(d<bd){bd=d;b=i;}});select(b);});
+async function select(i){cur=i;const r=row(i),m=r.metrics;
+ const g=$("#chip").getContext("2d");g.clearRect(0,0,680,680);if(!(await chip(g,r.bank,340,340,680,true))){g.fillStyle=css("--bed");g.beginPath();g.arc(340,340,330,0,7);g.fill();}
+ $("#chipcap").textContent=`${r.scene} · ${r.date}`;$("#uid").textContent=r.id;
+ $("#ukv").innerHTML=`<dt>Site</dt><dd>${r.region}, Egypt</dd><dt>Position</dt><dd>${r.lat.toFixed(5)} N, ${r.lon.toFixed(5)} E</dd><dt>Radius</dt><dd>${m[0]} m · ${Math.round(Math.PI*m[0]**2/1e4)} ha</dd>
+ <dt>March 2025</dt><dd>${r.cls} · planted ${Math.round(m[1]*100)}%</dd><dt>Lifecycle</dt><dd>${r.status}${r.first_seen.startsWith("<=2025")?" · no earlier coverage":" · first seen "+r.first_seen.replace("<=","by ")}</dd>
+ <dt>Rim support</dt><dd>${m[2]}</dd><dt>Links</dt><dd><a href="https://browser.dataspace.copernicus.eu/?zoom=15&lat=${r.lat}&lng=${r.lon}" target="_blank" rel="noopener">Copernicus Browser</a> · <a href="https://www.openstreetmap.org/?mlat=${r.lat}&mlon=${r.lon}#map=15/${r.lat}/${r.lon}" target="_blank" rel="noopener">OSM</a></dd>`;
+ spark(r.history);renderCodes();renderList();drawMap();manualIdx=i;}
+function spark(h){const c=$("#spark"),R=c.getBoundingClientRect();c.width=R.width*DPR;c.height=R.height*DPR;const g=c.getContext("2d"),n=h.length,X=i=>8*DPR+i*(c.width-16*DPR)/(n-1),Y=v=>c.height-10*DPR-v*(c.height-20*DPR);
+ g.strokeStyle=css("--line");g.beginPath();g.moveTo(X(0),Y(0));g.lineTo(X(n-1),Y(0));g.stroke();g.strokeStyle=css("--leaf");g.lineWidth=2*DPR;g.beginPath();let on=false;h.forEach((v,i)=>{if(v==null){on=false;return;}on?g.lineTo(X(i),Y(v)):g.moveTo(X(i),Y(v));on=true;});g.stroke();
+ h.forEach((v,i)=>{g.fillStyle=v==null?css("--faint"):css("--leaf");g.beginPath();g.arc(X(i),v==null?Y(0):Y(v),3.5*DPR,0,7);g.fill();});}
+function cleared(){return store.get("cleared",{});}
+function renderCodes(){const r=row(cur),cl=cleared()[r.id]||[];
+ $("#codes").innerHTML=r.codes.map(k=>{const d=CODES[k],done=cl.includes(k);return `<div class="code ${done?"cleared":""} ${d.hard?"hard":""}"><div class="top"><b>TL-${k}</b><span class="eyebrow">${d.cap}</span></div>
+  <div style="font-family:var(--display);letter-spacing:.06em">${d.name}</div><div style="color:var(--dim);font-size:.74rem">${d.text}</div>
+  <div class="caps">${d.clear?`<button class="btn" data-clear="${k}" ${done?"disabled":""}>${done?"Cleared by you":"Clear"}</button>`:`<span class="tag ${d.hard?"ns":"fic"}">${d.hard?"cannot clear from orbit":"needs pairing"}</span>`}</div></div>`;}).join("");
+ document.querySelectorAll("[data-clear]").forEach(b=>b.onclick=()=>{const all=cleared();(all[r.id]=all[r.id]||[]).push(b.dataset.clear);store.set("cleared",all);
+  log(`CLEAR TL-${b.dataset.clear} on ${r.id}. The field is unchanged; this records that a person looked.`);renderCodes();});}
+function modal(html){$("#mbody").innerHTML=html+`<div class="caps" style="justify-content:flex-end"><button class="btn" id="mclose">Close</button></div>`;$("#modal").hidden=false;$("#mclose").onclick=()=>$("#modal").hidden=true;$("#mclose").focus();}
+$("#modal").addEventListener("click",e=>{if(e.target.id==="modal")$("#modal").hidden=true;});
+$("#read").onclick=()=>{const r=row(cur);log(`READ ${r.codes.length} codes on ${r.id}: ${r.codes.map(k=>"TL-"+k).join(", ")}.`);renderCodes();};
+$("#pair").onclick=()=>{const r=row(cur),un=r.codes.includes("P05");log(`PAIR ${r.id} with the 2025 independent inventory: ${un?"no match":"matched"}.`);
+ modal(`<span class="eyebrow">Pair · reprogramming capability</span><h2>${un?"No partner found":"Paired"}</h2><p>${un?"No field in Chen et al.'s 2025 hyper-arid inventory lies within half a radius of this one. TILTH cannot tell from here whether the inventory missed it or the catalog invented it; it stays UNPAIRED until a person checks the imagery.":"A field in Chen et al.'s independent 2025 inventory sits at this position: two separate instruments agree this circle exists."}</p><p class="eyebrow">Real check: 95% of Toshka records and 94% of East Oweinat records pair.</p>`);};
+$("#limp").onclick=()=>{const r=row(cur);log(`RESTART FROM LIMP requested on ${r.id}: refused, water evidence not seen.`);
+ modal(`<span class="eyebrow">Restart from limp mode</span><h2>Restart refused</h2><p>A tractor in limp mode is restarted with the manufacturer's software. A field in TL-L07 would need evidence no orbit can give:</p><ul class="tight"><li>the well or canal allocation that feeds it;</li><li>the volume pumped this season;</li><li>the aquifer or lake level under it.</li></ul><p style="color:var(--dim)">East Oweinat is reported to draw Nubian Sandstone groundwater and Toshka to be fed from Lake Nasser by canal (verify). TILTH holds neither record, so the code stays.</p>`);};
+$("#man").onclick=()=>{manualIdx=cur;go("manual");};
+$("#q").addEventListener("input",renderList);
+// ---------- parts manual
+let RANGE=null;
+function ranges(){const M=F.rows.map(r=>[...r[11],r[9].filter(v=>v!=null).length]);RANGE=M[0].map((_,j)=>{const v=M.map(m=>m[j]).filter(x=>x!=null).sort((a,b)=>a-b);return[v[Math.floor(v.length*.02)],v[Math.floor(v.length*.98)]];});}
+const AX=["Radius (m)","Planted fraction","Rim support","Circularity (shown: fit residual, lower is rounder)","Lightness L*","Red–green a*","Yellow–blue b*","NDVI","Wedge strength","Marches planted","Marches recorded"];
+async function manual(){const i=manualIdx,r=row(i),m=[...r.metrics,r.history.filter(v=>v!=null).length];
+ const vals=m.map((v,j)=>{if(v==null)return 0;let[a,b]=RANGE[j];let u=(v-a)/((b-a)||1);if(j===3)u=1-u;return Math.max(0,Math.min(5,u*5));});
+ const pn=`FLD-${r.id.split("-")[1]}-${String(i+1).padStart(4,"0")}-2048`;
+ $("#page").innerHTML=`<div class="hd"><span>TILTH FIELD PARTS MANUAL</span><span>P-${i+1} / ${F.rows.length}</span></div>
+ <div><div class="pn">${pn}</div><div><b>Name:</b> ${r.id}</div><div><b>Configuration:</b> ${r.cls} · ${r.status}</div><div><b>Station:</b> ${r.region}, Egypt — ${r.lat.toFixed(5)} N, ${r.lon.toFixed(5)} E</div></div>
+ <div class="grid2"><div><canvas id="exp" width="600" height="600"></canvas><div style="font-size:.64rem;text-align:center">FIG. 1 · UNIT AS SEEN · ${r.scene}</div></div>
+  <div><canvas id="rad" width="600" height="600"></canvas><div style="font-size:.64rem;text-align:center">FIG. 2 · ASSEMBLY DIAGRAM · 11 MEASURED AXES · 0–5 SCALE</div></div></div>
+ <table><thead><tr><th>#</th><th>Axis</th><th>Measured</th><th>Scale</th></tr></thead><tbody>${AX.map((a,j)=>`<tr><td>${j+1}</td><td>${a}</td><td>${m[j]==null?"not in bank":m[j]}</td><td>${vals[j].toFixed(1)}</td></tr>`).join("")}</tbody></table>
+ <table><thead><tr><th>Code</th><th>Service note</th></tr></thead><tbody>${r.codes.map(k=>`<tr><td>TL-${k}</td><td>${CODES[k].name}: ${CODES[k].text}</td></tr>`).join("")}</tbody></table>
+ <div class="ft"><span>Measured: Sentinel-2 L2A, this project's catalog. Part number, codes: TILTH (design fiction).</span><span>Axis 4 shown as circularity (1 − fit residual).</span></div>`;
+ const e=$("#exp").getContext("2d");e.fillStyle="#fff";e.fillRect(0,0,600,600);if(!(await chip(e,r.bank,300,300,520,true))){e.strokeStyle="#000";e.beginPath();e.arc(300,300,260,0,7);e.stroke();}
+ e.strokeStyle="#000";e.lineWidth=1.5;e.beginPath();e.arc(300,300,262,0,7);e.stroke();e.beginPath();e.arc(300,300,5,0,7);e.fillStyle="#000";e.fill();
+ e.font="600 18px IBM Plex Mono";e.fillText(`R ${r.metrics[0]} m`,312,292);e.setLineDash([4,4]);e.beginPath();e.moveTo(300,300);e.lineTo(562,300);e.stroke();e.setLineDash([]);
+ const g=$("#rad").getContext("2d"),S=600,c=S/2,R=S*.33,N=11;g.fillStyle="#fff";g.fillRect(0,0,S,S);g.strokeStyle="#ddd";g.lineWidth=1;
+ for(let s=1;s<=5;s++){g.beginPath();g.arc(c,c,R*s/5,0,7);g.stroke();}
+ for(let k=0;k<N;k++){const a=2*Math.PI*k/N-Math.PI/2;g.beginPath();g.moveTo(c,c);g.lineTo(c+R*Math.cos(a),c+R*Math.sin(a));g.stroke();}
+ g.strokeStyle="#000";g.lineWidth=5;g.beginPath();vals.forEach((v,k)=>{const a=2*Math.PI*k/N-Math.PI/2,x=c+R*v/5*Math.cos(a),y=c+R*v/5*Math.sin(a);k?g.lineTo(x,y):g.moveTo(x,y);});g.closePath();g.stroke();
+ vals.forEach((v,k)=>{const a=2*Math.PI*k/N-Math.PI/2,x=c+R*v/5*Math.cos(a),y=c+R*v/5*Math.sin(a),cx=c+R*1.25*Math.cos(a),cy=c+R*1.25*Math.sin(a);g.fillStyle="#000";g.beginPath();g.arc(x,y,7,0,7);g.fill();
+  g.setLineDash([4,4]);g.lineWidth=1;g.beginPath();g.moveTo(x,y);g.lineTo(cx,cy);g.stroke();g.setLineDash([]);g.fillStyle="#fff";g.beginPath();g.arc(cx,cy,16,0,7);g.fill();g.lineWidth=3;g.stroke();
+  g.fillStyle="#000";g.font="700 17px IBM Plex Mono";g.textAlign="center";g.textBaseline="middle";g.fillText(k+1,cx,cy);g.textAlign="left";g.textBaseline="alphabetic";});}
+$("#mprev").onclick=()=>{manualIdx=(manualIdx-1+F.rows.length)%F.rows.length;manual();};$("#mnext").onclick=()=>{manualIdx=(manualIdx+1)%F.rows.length;manual();};
+// ---------- case files
+const CASES=[
+ {no:"CASE 00",title:"THE LOCK",tags:[["real","public record"]],sum:"FTC and five states settle with Deere & Company over farmers' right to repair (July 8, 2026).",
+  body:()=>`<p><b>What the record says</b> (FTC press release, July 8, 2026). The FTC and the states of Illinois, Arizona, Michigan, Minnesota and Wisconsin settled their January 2025 antitrust suit, which alleged that Deere limited farmers and independent technicians from repairing John Deere equipment. The stipulated order was filed in the U.S. District Court for the Northern District of Illinois; the Commission vote was 2–0. For 10 years, under FTC and state supervision, Deere must:</p>
+  <ul class="tight"><li>make available to farmers and independent repair providers, on fair and reasonable terms, repair resources equivalent to those it gives authorized dealers, including reading, clearing and resetting fault codes; reprogramming and "pairing" new electronic parts; restarting a machine after an emissions-related shutdown ("limp mode"); and viewing technical manuals, troubleshooting solutions, product improvement programs and DTAC solutions;</li>
+  <li>make future similar resources available once they reach more than 50% of its U.S. authorized dealers;</li><li>tell dealers to support these resources and not to discriminate or retaliate against people who use them;</li><li>notify the public, customers and dealers; and submit to reporting and oversight. The term may be extended if Deere violates it.</li></ul>
+  <p style="color:var(--dim)">Stipulated orders have the force of law once approved and signed by the District Court judge. Source: <a href="https://www.ftc.gov/system/files/ftc_gov/pdf/Deere-JointMotion-StipOrd.pdf" target="_blank" rel="noopener">stipulated order</a>, <a href="https://www.ftc.gov/news-events/news/press-releases/2025/01/ftc-states-sue-deere-company-protect-farmers-unfair-corporate-tactics-high-repair-costs" target="_blank" rel="noopener">2025 complaint release</a>.</p>`,
+  q:"TILTH's console borrows these four capabilities for fields. Should clearing a field's code require proof that someone fixed something?",
+  opts:["Yes: a cleared code must cite evidence","No: clearing records attention, not repair","Only for codes that touch water"],
+  out:()=>`<p>TILTH ships option two, and says so on every cleared code: "The field is unchanged; this records that a person looked." The settlement is about access to tools, not a promise that tools fix things. The console keeps that distinction visible. <span class="tag fic">TILTH policy is fiction</span></p>`},
+ {no:"CASE 01",title:"CIRCLES GONE",tags:[["real","inventory evidence"],["fic","dilemma"]],sum:()=>`${CS.gone["36QUL"]} Toshka and ${CS.gone["35QPF"]} East Oweinat fields recorded 2015–2024 are gone by 2025.`,
+  body:()=>`<p>The independent inventory (Chen et al., CC BY 4.0) recorded circular fields at these positions between 2015 and 2024, and none in 2025: <b>${CS.gone["36QUL"]}</b> in the Toshka tile, <b>${CS.gone["35QPF"]}</b> in East Oweinat. Over the same years Toshka grew from ${CS.tiles["36QUL"]["2015"][0]} fields (2015) to ${CS.tiles["36QUL"]["2025"][0].toLocaleString()} (2025).</p>`,
+  q:"A client asks TILTH to drop gone fields from an investor dashboard: \"growth is the story.\" What does the console do?",opts:["Remove them","Show them, greyed, with the count","Refuse the client"],
+  out:()=>`<p>The record cannot say why any of the ${CS.gone["36QUL"]+CS.gone["35QPF"]} fields was lost: salinity, water allocation, ownership, a failed crop. Hiding them removes the only trace that a question exists. TILTH's rule: losses stay on the map, labelled NOT SEEN for cause. <span class="tag fic">rule is fiction</span> <span class="tag real">counts are measured</span></p>`},
+ {no:"CASE 02",title:"GHOST OR FALLOW",tags:[["real","9 dated images"],["fic","dilemma"]],sum:"One Toshka field: bare desert, built, planted five Marches, bare again.",
+  body:()=>`<div class="ev">${CS.ghost.history.map(e=>`<figure><img src="case/ghost_${e.year}.jpg" alt="Field in March ${e.year}"><figcaption>${e.year} · ${e.present?(e.planted_frac>=0.1?"planted":"bare"):"no field"}</figcaption></figure>`).join("")}</div><p class="eyebrow">${CS.ghost.id} · Sentinel-2 L2A, one March date per year</p>`,
+  q:"An automated rule marks this field ABANDONED and releases its water allocation to a neighbour. Approve?",opts:["Approve","Hold for a second season of imagery","Ask the farm"],
+  out:()=>`<p>One date a year cannot separate a fallow rotation from abandonment. TILTH's catalog calls it a ghost (TL-G01), a judgement, never a fact. Releasing water on that judgement would make the classifier the decision-maker. <span class="tag real">images and planted fractions are measured</span></p>`},
+ {no:"CASE 03",title:"THE ARM THAT DIDN'T MOVE",tags:[["real","9 dates, one month"],["fic","dilemma"]],sum:"A sales team wants to sell 'rotation telemetry' read from satellite images.",
+  body:()=>`<div class="ev">${CS.marey.scenes.slice().sort((a,b)=>a.split("_")[2]-b.split("_")[2]).map(s=>`<figure><img src="case/marey_${s}.jpg" alt="Field on ${s.split("_")[2]}"><figcaption>March ${+s.split("_")[2].slice(6)}</figcaption></figure>`).join("")}</div><p>A radial line is visible on most dates at nearly the same heading: probably a parked arm or a fixed track, not rotation.</p>`,
+  q:"Ship the telemetry product anyway, interpolating between passes?",opts:["Ship it","Ship only measured angles, with error bars","Don't ship"],
+  out:()=>`<p>The test was inconclusive at 10 m. Interpolated rotation would be invented data sold as measurement. Selling it to farmers would sell them a reading their own controller already holds. <span class="tag real">images measured</span> <span class="tag fic">product fiction</span></p>`}];
+function renderCases(){$("#cases").innerHTML=CASES.map((c,i)=>`<button class="panel case" data-c="${i}"><span class="no">${c.no}</span><h2>${c.title}</h2><span>${c.tags.map(([t,l])=>`<span class="tag ${t}">${l}</span>`).join(" ")}</span><p style="color:var(--dim)">${typeof c.sum==="function"?c.sum():c.sum}</p></button>`).join("");
+ document.querySelectorAll("[data-c]").forEach(b=>b.onclick=()=>openCase(+b.dataset.c));}
+function openCase(i){const c=CASES[i],ans=store.get("case"+i,null);$("#caseindex").hidden=true;const d=$("#casedetail");d.hidden=false;
+ d.innerHTML=`<button class="btn" id="cback" style="align-self:flex-start">◂ All case files</button><span class="eyebrow">${c.no}</span><h1>${c.title}</h1><span>${c.tags.map(([t,l])=>`<span class="tag ${t}">${l}</span>`).join(" ")}</span>${c.body()}
+ <div class="panel"><span class="eyebrow">Decision point</span><h2 style="text-transform:none;letter-spacing:0">${c.q}</h2><div class="choices">${c.opts.map((o,j)=>`<button data-o="${j}" aria-pressed="${ans===j}">${o}</button>`).join("")}</div></div>
+ <div class="panel" id="cout" ${ans==null?"hidden":""}><span class="eyebrow">Outcome analysis</span>${c.out()}</div>`;
+ d.querySelectorAll("[data-o]").forEach(b=>b.onclick=()=>{store.set("case"+i,+b.dataset.o);d.querySelectorAll("[data-o]").forEach(x=>x.setAttribute("aria-pressed",x===b));$("#cout").hidden=false;log(`${c.no}: chose "${c.opts[+b.dataset.o]}".`);});
+ $("#cback").onclick=()=>{d.hidden=true;$("#caseindex").hidden=false;};$("#main").scrollTop=0;}
+// ---------- screening room
+const EPS=[["toshka_2017_2025.mp4","Toshka, March 2017 → March 2025","Nine real scenes; the farms spread while the lakes refill."],["zoom_into_a_dot.mp4","Every dot is a farm","From a portrait of 5,637 fields into one farm and its neighbours."],
+ ["clock.mp4","Twelve hours in twelve seconds","Hands made of pale bare fields."],["spinner.mp4","Loading wheel","Twelve fields; the tail is progressively bare farms."],["spiral.mp4","Golden-angle spiral","1,500 fields, lightest at the centre."]];
+let ep=store.get("ep",0);
+function renderEps(){$("#eps").innerHTML=EPS.map((e,i)=>`<button data-e="${i}" aria-current="${i===ep}"><span class="n">${i+1}</span><span>${e[1]}</span><span style="color:var(--dim);font-size:.72rem">${e[2]}</span></button>`).join("");document.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>playEp(+b.dataset.e,true));}
+function playEp(i,auto){ep=(i+EPS.length)%EPS.length;store.set("ep",ep);const v=$("#vid");v.src=`film/${EPS[ep][0]}`;v.currentTime=store.get("t"+ep,0);if(auto)v.play().catch(()=>{});renderEps();}
+$("#vid").addEventListener("timeupdate",e=>store.set("t"+ep,e.target.currentTime));$("#vid").addEventListener("ended",()=>{store.set("t"+ep,0);playEp(ep+1,true);});
+document.addEventListener("keydown",e=>{if($("[data-room=screen]").hidden||e.target.tagName==="INPUT")return;const v=$("#vid");
+ if(e.key===" "){e.preventDefault();v.paused?v.play():v.pause();}else if(e.key==="n"||e.key==="N")playEp(ep+1,true);else if(e.key==="p"||e.key==="P")playEp(ep-1,true);else if(e.key==="f"||e.key==="F")v.requestFullscreen?.().catch(()=>{});});
+// ---------- ledger
+const LEDGER=[["The 4,623 fields, positions, sizes, planted sectors, 2017–2025 history","<span class='tag real'>real</span>","Sentinel-2 L2A (Copernicus), this project's catalog, audited against sealed labels and an independent critic"],
+ ["Pairing results, gone fields, yearly counts","<span class='tag real'>real</span>","Chen et al., Annual CPIS dataset of Africa's hyper-arid regions 1972–2025, CC BY 4.0"],
+ ["FTC–Deere settlement facts in Case 00","<span class='tag real'>real</span>","FTC press release, July 8, 2026, as provided; read the stipulated order for its exact terms"],
+ ["Films in the Screening Room","<span class='tag real'>real imagery</span>","Rendered from the catalog; rotation and placement only, no pixel edits"],
+ ["TILTH, its 2048 setting, part numbers, fault-code taxonomy, policies, case dilemmas","<span class='tag fic'>design fiction</span>","role-deck TILTH world; codes are triggered by real measurements by declared rules"],
+ ["Water source, volume pumped, aquifer level","<span class='tag ns'>not seen</span>","Not in any satellite image; East Oweinat groundwater and Toshka canal sources to be verified"]];
+$("#ltable").innerHTML=LEDGER.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`).join("");
+// ---------- rooms
+function go(room){document.querySelectorAll("[data-room]").forEach(s=>s.hidden=s.dataset.room!==room);document.querySelectorAll("nav.rooms button").forEach(b=>b.setAttribute("aria-current",b.dataset.r===room?"page":"false"));
+ if(room==="manual")manual();if(room==="console")drawMap();if(room==="screen"&&!$("#vid").src)playEp(ep,false);if(room!=="screen")$("#vid").pause();$("#main").scrollTop=0;
+ try{history.replaceState(null,"","#"+room);}catch(e){}}
+document.querySelectorAll("nav.rooms button").forEach(b=>b.onclick=()=>go(b.dataset.r));
+const tick=()=>{const d=new Date();$("#clock").innerHTML=`${d.toISOString().slice(0,10)} · ${d.toTimeString().slice(0,8)}<br>FLEET 4,623 · LIMP 4,623`;};setInterval(tick,1000);tick();
+(async()=>{[F,B,CS]=await Promise.all([load("data/fields.json"),load("bank/bank.json"),load("data/cases.json")]);ranges();renderFilters();renderLog();renderCases();renderEps();
+ const start=F.rows.findIndex(r=>r[10].includes("S03")&&r[12]!=null);await select(start<0?0:start);
+ const h=(location.hash||"").slice(1);if(["console","manual","cases","screen","ledger"].includes(h))go(h);
+ addEventListener("resize",()=>{drawMap();spark(row(cur).history);});})();
+})();
+</script>

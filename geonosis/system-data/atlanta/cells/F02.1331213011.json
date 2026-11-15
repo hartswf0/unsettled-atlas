@@ -28169,6 +28169,36 @@
       "identity_basis": [
         "legacy-signal:hazard.weather_alert"
       ]
+    },
+    {
+      "id": "osm-notes:record:5633462",
+      "form_ids": [
+        "gform_fcc2275ee1976dab0968"
+      ],
+      "atlas_addresses": [
+        "F02.1331213011"
+      ],
+      "sources": [
+        "osm-notes"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "claim.map_note"
+      ],
+      "first_observed_at": "2026-11-15T00:03:59.000Z",
+      "last_observed_at": "2026-11-15T00:03:59.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3999134,
+          33.7714276
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:claim.map_note"
+      ]
     }
   ],
   "forms": [
@@ -54189,6 +54219,31 @@
         "source": "nws-alerts"
       },
       "id": "gform_e58a75e4123b8dbacebe"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "osm-notes:record:5633462",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3999134,
+          33.7714276
+        ]
+      },
+      "atlas_address": "F02.1331213011",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:claim.map_note",
+      "provenance": {
+        "source_signal_id": "sig_c299a4b832451d00f1b4",
+        "source": "osm-notes"
+      },
+      "id": "gform_fcc2275ee1976dab0968"
     }
   ],
   "current": [
@@ -93623,6 +93678,44 @@
           "issuance latency"
         ]
       }
+    },
+    {
+      "subject_id": "osm-notes:record:5633462",
+      "form_id": "gform_fcc2275ee1976dab0968",
+      "atlas_address": "F02.1331213011",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.3999134,
+          33.7714276
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "claim.map_note",
+      "value": {
+        "status": "open",
+        "comments": 1,
+        "latest": "\"place name: \"The LOOP'\"\nOSM snapshot date: 2026-09-28T17:53:01Z\nPOI has no name\nPOI types: building\n #organicmaps android 2026.09.29-32-Google"
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "osm-notes",
+      "observed_at": "2026-11-15T00:03:59.000Z",
+      "observation_id": "obs_1800cfa3c372b29c6e70",
+      "apparatus": {
+        "id": "OSM_NOTES",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "voluntary map issue report",
+        "expected_frequency": null,
+        "failure_modes": [
+          "reporting opportunity",
+          "uneven mapper attention",
+          "stale unresolved notes"
+        ]
+      }
     }
   ],
   "events": [],
@@ -94538,6 +94631,22 @@
         "obs_33f2b6784affc311de84"
       ],
       "id": "poss_c3e9e8e9629122c78117"
+    },
+    {
+      "kind": "POSSIBILITY",
+      "actor_id": "SERVICE",
+      "condition": "open map issue report",
+      "modality": "POSSIBLE",
+      "reachable": null,
+      "permitted": null,
+      "expected": true,
+      "risk": null,
+      "horizon": null,
+      "geographic_scope": "F02.1331213011",
+      "derived_from": [
+        "obs_1800cfa3c372b29c6e70"
+      ],
+      "id": "poss_2e9730b549b817abd5c2"
     }
   ]
 }

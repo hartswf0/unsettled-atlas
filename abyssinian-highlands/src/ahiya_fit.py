@@ -7,14 +7,17 @@ sys.path.insert(0, os.path.dirname(__file__)); from common import *
 from scipy.ndimage import map_coordinates
 from PIL import Image
 # game plan coordinates (x east, z south in the game's ground plane) and sculpted height above the pump, from night-post.js
-STOPS = dict(basalt=(-1453.0, 769.0, 0.0), beacon=(-1603.0, 601.0, 52.0), hill=(-1765.0, 552.5, 43.0), compound=(-1679.0, 783.5, 18.0))
+# set centres from zones/world-architecture.js; heights are the Gaussian amplitudes in night-post.js ahiyaGroundY, relative to the pump
+STOPS = dict(basalt=(-1460.0, 760.0, 0.0), beacon=(-1610.0, 590.0, 52.0), hill=(-1765.0, 540.0, 43.0), compound=(-1680.0, 775.0, 18.0))
 ORDER = ["basalt", "beacon", "hill", "compound"]; MAST = 40.0
 P = np.array([STOPS[k][:2] for k in ORDER]); H = np.array([STOPS[k][2] for k in ORDER]); C = P.mean(0); Q = P - C
 def samp(dem, x, y):  # x east, y south in metres from window NW corner
     x = np.atleast_1d(np.asarray(x, float)); y = np.atleast_1d(np.asarray(y, float))
     return map_coordinates(dem, [y/10.0, x/10.0], order=1, mode="nearest")
 best = None
-for key in ("simien", "gheralta", "gorge", "fogera", "adaa", "pawe"):
+# Simien only: it is the high (Wurch) belt the circuit belongs to. A search over all six windows finds equally close
+# fits elsewhere (Ada'a, 0.8 m RMS), so the match is one good home for the circuit, not a unique one.
+for key in ("simien",):
     dem = np.load(f"{RAW}/{key}_dem.npy"); gy, gx = np.gradient(dem, 10.0); slope = np.degrees(np.arctan(np.hypot(gx, gy)))
     gxs = np.arange(600, 11400, 30.0); X, Y = np.meshgrid(gxs, gxs)
     for deg in range(0, 360, 10):
@@ -45,11 +48,18 @@ im = np.zeros((400, 400, 4), "uint8"); im[vis] = (60, 220, 255, 110); Image.from
 # drop-in patch: real height (m above the pump) on a 10 m grid in GAME coordinates, 900 m square around the circuit centre
 n = 91; gx = C[0] - 450 + np.arange(n)*10.0; gz = C[1] - 450 + np.arange(n)*10.0; GX, GZ = np.meshgrid(gx, gz)
 wp = game_to_win(np.stack([GX.ravel(), GZ.ravel()], 1)); hp = (samp(dem, wp[:, 0], wp[:, 1]) - z[0]).reshape(n, n)
-js = ("/* Real ground for the Ahiya Highlands circuit. Copernicus GLO-30 heights (30 m data, bilinear), metres above the Basalt Pump.\n"
-      f"   Place: {key} window, {lat[0]:.5f} N {lon[0]:.5f} E at the pump; layout rotated {deg} deg; fit error {err:.1f} m RMS. Untested inside the game. */\n"
-      f"window.AHIYA_REAL={{x0:{gx[0]},z0:{gz[0]},step:10,n:{n},pumpElevation:{z[0]:.1f},h:{json.dumps(np.round(hp, 1).ravel().tolist(), separators=(',', ':'))},\n"
-      " groundY(x,z,baseY){const u=Math.min(this.n-1.001,Math.max(0,(x-this.x0)/this.step)),v=Math.min(this.n-1.001,Math.max(0,(z-this.z0)/this.step)),i=u|0,j=v|0,a=u-i,b=v-j,H=this.h,n=this.n;\n"
-      "  return (baseY||0)+(H[j*n+i]*(1-a)+H[j*n+i+1]*a)*(1-b)+(H[(j+1)*n+i]*(1-a)+H[(j+1)*n+i+1]*a)*b}};\n")
+ell = np.hypot((GX + 1630) / 285, (GZ - 665) / 260) < 1.15
+print("patch range inside game mask (m above pump):", float(hp[ell].min()), float(hp[ell].max()))
+pads = [[STOPS[k][0], STOPS[k][1], round(rel[i], 2)] for i, k in enumerate(ORDER)]
+js = ("/* Real ground for the Ahiya Highlands circuit (DONKEY WATER, 2086).\n"
+      "   MEASURED: h = Copernicus GLO-30 elevation (30 m data, bilinear to a 10 m grid), metres above the Basalt Pump, in game x/z.\n"
+      f"   Place: Simien Mountains, pump at {lat[0]:.5f} N {lon[0]:.5f} E, {z[0]:.0f} m; game layout kept 1:1, rotated {deg} deg; fit {err:.1f} m RMS.\n"
+      "   COMPOSED: pads = a level building terrace at each set (flat to 20 m, eased out by 52 m). Remove pads to get the raw hillside.\n"
+      "   Built by unsettled-atlas/abyssinian-highlands/src/ahiya_fit.py. Contains modified Copernicus DEM data (c) DLR/Airbus, provided under COPERNICUS by the EU and ESA. */\n"
+      f"window.AHIYA_REAL={{x0:{gx[0]},z0:{gz[0]},step:10,n:{n},pumpElevation:{z[0]:.1f},lat:{lat[0]:.5f},lon:{lon[0]:.5f},pads:{json.dumps(pads)},\n h:{json.dumps(np.round(hp, 1).ravel().tolist(), separators=(',', ':'))},\n"
+      " raw(x,z){const u=Math.min(this.n-1.001,Math.max(0,(x-this.x0)/this.step)),v=Math.min(this.n-1.001,Math.max(0,(z-this.z0)/this.step)),i=u|0,j=v|0,a=u-i,b=v-j,H=this.h,n=this.n;\n"
+      "  return (H[j*n+i]*(1-a)+H[j*n+i+1]*a)*(1-b)+(H[(j+1)*n+i]*(1-a)+H[(j+1)*n+i+1]*a)*b},\n"
+      " groundY(x,z,baseY){let y=this.raw(x,z);for(const p of this.pads){const d=Math.hypot(x-p[0],z-p[1]);if(d<52){const t=d<=20?1:1-(d-20)/32,s=t*t*(3-2*t);y=y+(p[2]-y)*s}}return (baseY||0)+y}};\n")
 open(os.path.join(ROOT, "worldtext", "ahiya_real_terrain.js"), "w").write(js)
 out = dict(window=key, rotation_deg=deg, fit_rms_m=round(err, 1), mast_m=MAST, visible_share_of_window=round(float(vis.mean()), 3), stops=stops,
            route_m=round(sum(s["leg_m"] for s in stops), 1), route_up_m=round(sum(s["leg_up_m"] for s in stops), 1))

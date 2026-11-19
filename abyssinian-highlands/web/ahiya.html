@@ -36,7 +36,7 @@ th,td{text-align:left;padding:4px 10px 4px 0;border-bottom:1px solid var(--line)
 </style></head><body>
 <div class="wrap">
  <h1>Ahiya on Real Ground</h1>
- <p class="lede">The four stops of the Ahiya Highlands circuit from DONKEY WATER, 2086, set down at full scale on a real hillside in the Simien Mountains. The ground is measured. The stops and props are stand-in blocks, and the text on the right is what builds them.</p>
+ <p class="lede">The four stops of the Ahiya Highlands circuit from DONKEY WATER, 2086, set down at full scale on a real hillside in the Simien Mountains. The ground is measured. The stops and props are stand-in blocks, and the text on the right is what builds them. The same ground now runs inside the game.</p>
  <div class="main">
   <div>
    <div id="gl"></div>
@@ -116,7 +116,7 @@ function compile(){
  R.forEach((a,i)=>{const b=R[(i+1)%R.length],d=Math.hypot(b.x_m-a.x_m,b.y_m-a.y_m);let u=0,pz=elev(a.x_m,a.y_m);for(let k=1;k<=60;k++){const z=elev(a.x_m+(b.x_m-a.x_m)*k/60,a.y_m+(b.y_m-a.y_m)*k/60);if(z>pz)u+=z-pz;pz=z}tot+=d;up+=u;
   const see=a.id=="beacon"||!B?null:los(a,elev(a.x_m,a.y_m)+EYE,B,zb);
   T+=`<tr><td>${a.name}</td><td>${Math.round(minE+elev(a.x_m,a.y_m)).toLocaleString("en-US")} m</td><td>${(elev(a.x_m,a.y_m)-z0).toFixed(1)} / ${a.game_rel_m??"–"} m</td><td>${Math.round(d)} m to ${b.name}</td><td>${Math.round(u)} m</td><td class="${see===null?"":see?"y":"n"}">${see===null?"–":see?"yes":"no"}</td></tr>`});
- $("tb").innerHTML=T;$("sum").textContent=`The full loop is ${Math.round(tot)} m with ${Math.round(up)} m of climbing. The pump is at 13.2246° N, 38.1046° E in the starting layout. The cyan wash is ground that can see the top of a 40 m mast there: 17% of the 12 km window.`;
+ $("tb").innerHTML=T;$("sum").textContent=`The full loop is ${Math.round(tot)} m with ${Math.round(up)} m of climbing. The pump is at 13.2246° N, 38.1045° E in the starting layout. The cyan wash is ground that can see the top of a 40 m mast there: 17% of the 12 km window.`;
  document.querySelectorAll("[data-st]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.st==state));tick()}
 function go(name){const S=Object.fromEntries(M.stops.map(s=>[s.id,s])),c=M.stops.reduce((a,s)=>a.add(P(s.x_m,s.y_m)),new THREE.Vector3()).multiplyScalar(1/M.stops.length);
  if(name=="window"){ctl.target.set(0,1200,0);cam.position.set(1500,6500,10500)}

@@ -1,12 +1,14 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>Abyssinian Highlands</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <style>
 /* layout: a survey sheet. site strip on top, one 12 km window at left, its measurements at right */
-:root{--bg:#f3f1ea;--panel:#fbfaf6;--fg:#1d2420;--mut:#5f6a62;--line:#cfd2c6;--acc:#8a3b12;--teff:#b98a1e;--ref:#356a8a;
+:root{--bg:#f3f1ea;--panel:#fbfaf6;--fg:#1d2420;--mut:#5f6a62;--line:#cfd2c6;--acc:#8a3b12;--teff:#b98a1e;--ref:#356a8a;--ok:#2f6b3a;--bad:#a12a1c;
  --disp:"Fraunces",Georgia,serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141815;--panel:#1c211d;--fg:#e8e9e1;--mut:#9aa398;--line:#343b35;--acc:#e59a63;--teff:#e3bd55;--ref:#7fb6d6;color-scheme:dark}}
-:root[data-theme="dark"]{--bg:#141815;--panel:#1c211d;--fg:#e8e9e1;--mut:#9aa398;--line:#343b35;--acc:#e59a63;--teff:#e3bd55;--ref:#7fb6d6;color-scheme:dark}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141815;--panel:#1c211d;--fg:#e8e9e1;--mut:#9aa398;--line:#343b35;--acc:#e59a63;--teff:#e3bd55;--ref:#7fb6d6;--ok:#7fc58a;--bad:#f08a7a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141815;--panel:#1c211d;--fg:#e8e9e1;--mut:#9aa398;--line:#343b35;--acc:#e59a63;--teff:#e3bd55;--ref:#7fb6d6;--ok:#7fc58a;--bad:#f08a7a;color-scheme:dark}
 body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--body);padding-block:18px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
 h1{font:700 clamp(28px,4.4vw,44px)/1.05 var(--disp);margin:0;text-wrap:balance}
@@ -20,6 +22,11 @@ h1{font:700 clamp(28px,4.4vw,44px)/1.05 var(--disp);margin:0;text-wrap:balance}
 .strip button[aria-pressed="true"] span{color:var(--fg)}
 .main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
 .view{position:relative;aspect-ratio:1;max-width:100%;background:#000;border:1px solid var(--line);overflow:hidden}
+.view canvas{position:absolute;inset:0;width:100%!important;height:100%!important;cursor:grab}
+.verd{display:inline-block;font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border:1px solid currentColor}
+.v-supported{color:var(--ok)}.v-partly{color:var(--teff)}.v-weak,.v-false{color:var(--bad)}
+table{border-collapse:collapse;font-size:13px;width:100%}th,td{text-align:left;padding:5px 10px 5px 0;border-bottom:1px solid var(--line);vertical-align:top}th{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.tw{overflow-x:auto}.led h3{border:0;padding:0}
 .view img{position:absolute;inset:0;width:100%;height:100%;transform-origin:0 0}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
 .bar button{font:500 12px var(--mono);padding:6px 10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
@@ -40,14 +47,14 @@ svg text{font:10px var(--mono);fill:var(--mut)}
 </style>
 <div class="wrap">
  <h1>Abyssinian Highlands</h1>
- <p class="lede">Seven windows on the Ethiopian Highlands and the Blue Nile, each 12 km square, seen by Sentinel-2 at 10 m per pixel. Yellow outlines are machine-drawn field units from the open Fields of the World map. Yosemite Valley sits at the end of the row as the yardstick for relief.</p>
+ <p class="lede">Seven windows on the Ethiopian Highlands and the Blue Nile, each 12 km square, seen by Sentinel-2 at 10 m per pixel. Each can be turned into 3D terrain. Yellow outlines are machine-drawn field units from the open Fields of the World map, each window with a verdict on whether they hold up. Yosemite Valley sits at the end of the row as the yardstick for relief.</p>
  <div class="strip" id="strip"></div>
  <div class="main">
   <div>
-   <div class="view" id="view"><img id="im" alt=""><img id="ov" alt="" hidden></div>
+   <div class="view" id="view"><img id="im" alt=""><img id="ov" alt="" hidden><div id="gl" hidden style="position:absolute;inset:0"></div></div>
    <div class="bar">
     <button id="bS1" aria-pressed="true">After the rains</button><button id="bS2" aria-pressed="false">Dry season</button>
-    <button id="bF" aria-pressed="false">Field outlines</button><button id="bZ" aria-pressed="false">Zoom 3×</button>
+    <button id="bF" aria-pressed="false">Field outlines</button><button id="bZ" aria-pressed="false">Zoom 3×</button><button id="b3" aria-pressed="false">3D terrain</button><button id="bX" aria-pressed="false" hidden>Heights ×2</button>
     <span class="scale" id="scale"></span>
    </div>
   </div>
@@ -55,23 +62,39 @@ svg text{font:10px var(--mono);fill:var(--mut)}
    <div><h2 id="nm"></h2><div class="coord" id="co"></div></div>
    <p class="note" id="note"></p>
    <div><h3>Ground</h3><dl id="ground"></dl></div>
-   <div id="fbox"><h3>Field units, 2025 (model output, not surveyed parcels)</h3><dl id="fl"></dl>
+   <div id="fbox"><h3>Field units, 2025 (model output, not surveyed parcels)</h3><p style="margin:0 0 8px"><span class="verd" id="verd"></span> <span id="vwhy" style="color:var(--mut);font-size:13px"></span></p><dl id="fl"></dl>
      <svg id="hist" viewBox="0 0 420 120" role="img" aria-label="Field size distribution"></svg></div>
    <div><h3>Steepest 12 km transect, against Yosemite Valley</h3><svg id="prof" viewBox="0 0 420 170" style="overflow:visible" role="img" aria-label="Relief transect"></svg></div>
   </div>
  </div>
- <p class="src"><b>What is measured and what is not.</b> Imagery: Copernicus Sentinel-2 L2A, one brightness stretch for all three bands so colours are not shifted. Elevation: Copernicus GLO-30. Field units: Fields of the World global predictions for 2025 (Robinson et al. 2026, CC BY 4.0), a model run on 10 m imagery. Ethiopia is outside the area where that model reports a confidence score, so every polygon here has none. A field unit is a patch the model saw as one field, not a legal or surveyed plot. Coordinates marked "given" came with the brief; "chosen" ones were picked for this atlas.</p>
+ <div class="led"><h3>Are the outlines real? Three checks per window</h3><div class="tw"><table id="vt"></table></div>
+ <p class="src">On cropland: share of outlined area that ESA WorldCover 2021, a separate map, calls cropland. Seen again: share of 2025 units (0.1 ha or larger) that the separate 2024 run drew in nearly the same place; a displaced copy scores about 1%. Uniform inside: how much more even the image is inside a unit than inside the same shape moved 70 m, on two dates; 1.0 means no better than chance. A fourth check, whether outlines sit on visible edges, scored 0.94–1.13 everywhere, so the outlines do not trace field edges at this resolution.</p></div>
+ <div class="led"><h3>3D and ground data: what exists and what this atlas could reach</h3><div class="tw"><table>
+ <tr><th>Layer</th><th>Detail</th><th>Status here</th></tr>
+ <tr><td>Sentinel-2 imagery</td><td>10 m, every 5 days</td><td>Used</td></tr>
+ <tr><td>Copernicus GLO-30 elevation</td><td>30 m surface model</td><td>Used for all terrain and 3D sets</td></tr>
+ <tr><td>Fields of the World units</td><td>10 m model output, 2024 and 2025</td><td>Used and checked above</td></tr>
+ <tr><td>ESA WorldCover 2021</td><td>10 m land cover</td><td>Used as the cropland check</td></tr>
+ <tr><td>Digital Earth Africa cropland mask</td><td>10 m</td><td>Reachable, not yet used</td></tr>
+ <tr><td>Overture buildings and roads</td><td>vector</td><td>Reachable, not yet used</td></tr>
+ <tr><td>Maxar Open Data</td><td>0.3–0.5 m, disaster events only</td><td>Reachable; no Ethiopia event in its list</td></tr>
+ <tr><td>FABDEM, ALOS AW3D30, GEDI laser tracks</td><td>30 m bare earth; 30 m optical; 25 m footprints</td><td>Hosts blocked from the build machine</td></tr>
+ <tr><td>Airborne LiDAR (NERC, OpenTopography)</td><td>0.5–2 m, Rift and Afar only per the brief</td><td>Host blocked; does not cover these windows</td></tr>
+ <tr><td>EthCT2020 crop plots, Bale sub-metre DEMs</td><td>ground plots; under 1 m</td><td>Hosts blocked</td></tr>
+ <tr><td>Land-certification parcels, commercial stereo</td><td>0.25–0.5 m</td><td>Not open data</td></tr></table></div></div>
+ <p class="src"><b>What is measured and what is not.</b> Imagery: Copernicus Sentinel-2 L2A, one brightness stretch for all three bands so colours are not shifted. Elevation: Copernicus GLO-30. Field units: Fields of the World global predictions for 2025 (Robinson et al. 2026, CC BY 4.0), a model run on 10 m imagery. Ethiopia is outside the area where that model reports a confidence score, so every polygon here has none. A field unit is a patch the model saw as one field, not a legal or surveyed plot. Coordinates marked "given" came with the brief; "chosen" and "moved" ones were picked for this atlas.</p>
 </div>
 <script>
 const NOTE={simien:"Plateau farmland at about 3,100 m breaks off into a cliff system. Half of the field units sit on slopes steeper than 21°.",
-gheralta:"The window centres on Hawzen town. After harvest the plain reads as one tan surface at 10 m, and the model returns specks rather than plots.",
+gheralta:"Moved west of Hawzen onto the sandstone massif, placed by searching the elevation model for the most cliff-edged 12 km square.",
 gorge:"The Abay cuts about 1,500 m below the rim inside this window. Fields cling to benches on the canyon walls.",
 fogera:"Flat lake-shore plain at 1,790 m. Plots here are narrower than a few pixels, so the outlines break into fragments.",
 gerd:"The dam sits at about 500–600 m, in wooded lowland. Field units cover under 5% of the window.",
 pawe:"Lowland farming at about 1,075 m with larger blocks cut into woodland along the river.",
 adaa:"The clearest case. Rectangular plots are large enough for 10 m pixels, and the outlines follow them.",
 yosemite:"The reference. No field layer was fetched here."};
-let D,cur,season="after_rains",showF=false,zoom=false;
+const VL={supported:"supported","partly supported":"partly supported",weak:"weak","false":"false"};
+let D,V,cur,three=null,is3=false,ex=1,season="after_rains",showF=false,zoom=false;
 const $=id=>document.getElementById(id),f=(n,d=0)=>n.toLocaleString("en-US",{maximumFractionDigits:d,minimumFractionDigits:d});
 function row(dl,k,v){dl.insertAdjacentHTML("beforeend",`<dt>${k}</dt><dd>${v}</dd>`)}
 function draw(){
@@ -87,6 +110,10 @@ function draw(){
  row(g,"Median slope",`${s.slope_med}°`);row(g,"Biggest drop within 1 km",`${f(s.transect.drop1km)} m`);
  row(g,"Image dates",`${s.scenes.after_rains.date} · ${s.scenes.dry.date}`);
  $("fbox").hidden=!hasF;
+ if(hasF&&V){const v=V[s.key];$("verd").textContent=VL[v.verdict];$("verd").className="verd v-"+v.verdict.split(" ")[0];
+  $("vwhy").textContent=`${f(v.cover.cropland*100)}% on mapped cropland · ${f(v.repeat*100)}% seen again in 2024`+(v.cover.tree>.2?` · ${f(v.cover.tree*100)}% on tree cover`:"")+(v.steep>.1?` · ${f(v.steep*100)}% steeper than 30°`:"");}
+ $("gl").hidden=!is3;$("im").hidden=is3;$("ov").hidden=is3||!(showF&&hasF);$("bX").hidden=!is3;$("bZ").hidden=is3;$("b3").setAttribute("aria-pressed",is3);$("bX").setAttribute("aria-pressed",ex==2);
+ if(is3){$("scale").textContent="drag to orbit · scroll or pinch to zoom · 30 m elevation, 10 m image";build3(s)}
  if(hasF){const F=s.fields,l=$("fl");l.innerHTML="";row(l,"Field units",`${f(F.n)} (2024: ${f(F.n2024)})`);
   row(l,"Median size",`${f(F.median_ha*1e4)} m² (${F.median_ha} ha)`);row(l,"Smaller than 0.1 ha",`${f(F.share_under_tenth_ha*100)}%`);
   row(l,"Window covered",`${f(F.cover*100,1)}%`);row(l,"Median length ÷ width",`${F.elong_med} (≥3 for ${f(F.share_long*100)}%)`);
@@ -104,10 +131,31 @@ function draw(){
  p+=`<text x="34" y="9">metres above lowest point · ${s.key!="yosemite"?"solid: this site · ":""}dashed: Yosemite</text>`;$("prof").innerHTML=p;
  document.querySelectorAll("#strip button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k==s.key));
 }
-fetch("sites.json").then(r=>r.json()).then(d=>{D=d;
+const load=u=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=u});
+async function build3(s){
+ if(!window.THREE){$("scale").textContent="3D library did not load";return}
+ if(!three){const r=new THREE.WebGLRenderer({antialias:true});r.setPixelRatio(Math.min(devicePixelRatio,2));$("gl").append(r.domElement);
+  const cam=new THREE.PerspectiveCamera(40,1,.1,200),sc=new THREE.Scene();sc.background=new THREE.Color(0x0d100e);cam.position.set(0,9,15);
+  const ct=new THREE.OrbitControls(cam,r.domElement);ct.maxPolarAngle=1.5;ct.minDistance=2;ct.maxDistance=40;ct.addEventListener("change",()=>r.render(sc,cam));
+  three={r,cam,sc,ct,mesh:null};new ResizeObserver(()=>{const w=$("gl").clientWidth;if(w){r.setSize(w,w,false);r.render(sc,cam)}}).observe($("gl"))}
+ const tag=s.key+season+(showF&&s.fields)+ex;if(three.tag==tag)return;three.tag=tag;
+ const [im,dm,ov]=await Promise.all([load(`img/${s.key}_${season}.jpg`),load(`img/${s.key}_dem.png`),showF&&s.fields?load(`img/${s.key}_fields.png`):null]);
+ if(three.tag!=tag)return;
+ const c=document.createElement("canvas");c.width=c.height=ov?2400:1200;const x=c.getContext("2d");x.drawImage(im,0,0,c.width,c.height);if(ov)x.drawImage(ov,0,0,c.width,c.height);
+ const h=document.createElement("canvas");h.width=h.height=400;const hx=h.getContext("2d");hx.drawImage(dm,0,0);const px=hx.getImageData(0,0,400,400).data;
+ const g=new THREE.PlaneGeometry(12,12,399,399);g.rotateX(-Math.PI/2);const p=g.attributes.position;
+ for(let i=0;i<160000;i++)p.setY(i,(px[i*4]*256+px[i*4+1])/10000*ex);
+ const t=new THREE.CanvasTexture(c);t.anisotropy=three.r.capabilities.getMaxAnisotropy();
+ if(three.mesh){three.sc.remove(three.mesh);three.mesh.geometry.dispose();three.mesh.material.map.dispose();three.mesh.material.dispose()}
+ three.mesh=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:t}));three.sc.add(three.mesh);
+ const rel=(s.elev[2]-s.elev[0])/1000*ex;three.ct.target.set(0,rel/2,0);three.ct.update();const w=$("gl").clientWidth;three.r.setSize(w,w,false);three.r.render(three.sc,three.cam)}
+Promise.all([fetch("sites.json").then(r=>r.json()),fetch("verify.json").then(r=>r.json())]).then(([d,v])=>{D=d;V=v;
+ let T="<tr><th>Window</th><th>Verdict</th><th>On cropland</th><th>Seen again in 2024</th><th>Uniform inside</th><th>Under 4 pixels</th></tr>";
+ d.sites.filter(s=>s.fields).forEach(s=>{const q=v[s.key];T+=`<tr><td>${s.name.split(" · ")[0]}</td><td><span class="verd v-${q.verdict.split(" ")[0]}">${VL[q.verdict]}</span></td><td>${f(q.cover.cropland*100)}%</td><td>${f(q.repeat*100)}%</td><td>${Math.min(...q.uniform_ratio).toFixed(2)}×</td><td>${f(q.tiny*100)}%</td></tr>`});$("vt").innerHTML=T;
  d.sites.forEach(s=>{const b=document.createElement("button");b.dataset.k=s.key;b.innerHTML=`<img src="img/${s.key}_t.jpg" alt=""><span>${s.name.split(" · ")[0].replace(" (reference)","")}</span>`;
   b.onclick=()=>{cur=s;draw()};$("strip").append(b)});
  cur=d.sites.find(s=>s.key==(location.hash.slice(1)||"adaa"))||d.sites[0];draw()});
 $("bS1").onclick=()=>{season="after_rains";draw()};$("bS2").onclick=()=>{season="dry";draw()};
+$("b3").onclick=()=>{is3=!is3;draw()};$("bX").onclick=()=>{ex=ex==1?2:1;draw()};
 $("bF").onclick=()=>{showF=!showF;draw()};$("bZ").onclick=()=>{zoom=!zoom;draw()};
 </script>

@@ -27,13 +27,18 @@ Each site is a 12 km square at 10 m, two seasons (after the rains; end of dry se
 Yosemite Valley is carried as a relief yardstick at the same scale.
 
 ## Production loop
-fetch (`src/fetch.py`) → build measurements and overlays (`src/build.py`) → page (`web/`) → critic.
+fetch (`src/fetch.py`) → build measurements and overlays (`src/build.py`) → verify field units (`src/verify.py`, `src/verify2.py`) → virtual sets (`src/sets.py`) → page (`web/`) → critic.
 
 ## Critic (independent, sealed from the producer's notes)
 - Overlay check: do outlines follow visible field edges? Score each site; publish the score.
 - Claim check: every sentence on the page maps to a number in `web/sites.json` or a citation.
 - Circuit breaker: no shape claim (ribbons, strips) ships until its test has run and the result is shown, pass or fail.
 
-## Not yet done (first pass)
+## Field-unit verdicts (second pass)
+Each window's units are checked against ESA WorldCover cropland, the independent 2024 prediction, and image
+uniformity on two dates. Verdicts ship with the outlines: supported (Ada'a), partly supported (Simien, Gheralta,
+Blue Nile Gorge, Fogera), weak (Pawe), false (GERD). No shape claim may rest on a window that is not `supported`.
+
+## Not yet done
 Shape tests above, church-forest search, Mount Belaya and Dangur windows, EthCT2020 crop labels (host not
 reachable from the build machine), sub-10 m imagery, and the independent critic run.

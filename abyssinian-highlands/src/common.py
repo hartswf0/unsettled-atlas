@@ -21,7 +21,7 @@ KM = 12.0; PX = 1200  # 12 km window at 10 m
 # key, name, lat, lon, zone note (the user's coordinates where given; others are stated as chosen here)
 SITES = [
  ("simien",  "Simien escarpment · Imet Gogo", 13.2167, 38.0833, "given"),
- ("gheralta","Gheralta massif · Hawzen",      13.9722, 39.4286, "given"),
+ ("gheralta","Gheralta massif",               13.8950, 39.3300, "moved"),
  ("gorge",   "Blue Nile (Abay) Gorge",        10.0750, 38.1917, "given"),
  ("fogera",  "Lake Tana shore · Fogera plain",11.9500, 37.7000, "chosen"),
  ("gerd",    "GERD dam and reservoir",        11.2153, 35.0931, "given"),

@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ahiya on Real Ground</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<style>
+/* layout: the world at left, the text that compiles it at right */
+:root{--bg:#f3f1ea;--panel:#fbfaf6;--fg:#1d2420;--mut:#5f6a62;--line:#cfd2c6;--acc:#8a3b12;--cy:#0b7f93;--ok:#2f6b3a;--bad:#a12a1c;
+ --disp:"Fraunces",Georgia,serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141815;--panel:#1c211d;--fg:#e8e9e1;--mut:#9aa398;--line:#343b35;--acc:#e59a63;--cy:#5fd6ea;--ok:#7fc58a;--bad:#f08a7a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141815;--panel:#1c211d;--fg:#e8e9e1;--mut:#9aa398;--line:#343b35;--acc:#e59a63;--cy:#5fd6ea;--ok:#7fc58a;--bad:#f08a7a;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--body);padding-block:18px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:12px}
+h1{font:700 clamp(26px,4vw,40px)/1.05 var(--disp);margin:0}
+.lede{color:var(--mut);max-width:72ch;margin:0}
+.main{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:16px;align-items:start}
+#gl{position:relative;aspect-ratio:4/3;background:#0d100e;border:1px solid var(--line);overflow:hidden}
+#gl canvas{position:absolute;inset:0;width:100%!important;height:100%!important;cursor:grab}
+.bar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:8px}
+.bar span{font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mut);margin-right:2px}
+button{font:500 12px var(--mono);padding:6px 10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+button:focus-visible,textarea:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.side{display:flex;flex-direction:column;gap:10px;min-width:0}
+h3{font:600 11px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--mut);margin:0}
+textarea{width:100%;box-sizing:border-box;height:300px;font:12px/1.45 var(--mono);background:var(--panel);color:var(--fg);border:1px solid var(--line);padding:8px;resize:vertical}
+#err{color:var(--bad);font:12px var(--mono);min-height:1.2em}
+.tw{overflow-x:auto}table{border-collapse:collapse;font-size:13px;width:100%;font-variant-numeric:tabular-nums}
+th,td{text-align:left;padding:4px 10px 4px 0;border-bottom:1px solid var(--line);white-space:nowrap}th{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.y{color:var(--ok)}.n{color:var(--bad)}
+.src{color:var(--mut);font-size:13px;max-width:90ch;margin:0}
+.key{display:flex;flex-wrap:wrap;gap:6px 14px;font:12px var(--mono);color:var(--mut)}.key b{color:var(--fg);font-weight:500}
+@media (max-width:860px){.main{grid-template-columns:1fr}}
+</style></head><body>
+<div class="wrap">
+ <h1>Ahiya on Real Ground</h1>
+ <p class="lede">The four stops of the Ahiya Highlands circuit from DONKEY WATER, 2086, set down at full scale on a real hillside in the Simien Mountains. The ground is measured. The stops and props are stand-in blocks, and the text on the right is what builds them.</p>
+ <div class="main">
+  <div>
+   <div id="gl"></div>
+   <div class="bar"><span>Go to</span><button data-cam="window">Whole window</button><button data-cam="circuit" aria-pressed="true">Circuit</button><button data-cam="pump">Pump, looking to the beacon</button><button data-cam="threshold">Coffee threshold</button></div>
+   <div class="bar"><span>Coffee round</span><button data-st="abol">Abol</button><button data-st="tona">Tona</button><button data-st="baraka">Baraka</button>
+    <span style="margin-left:10px">Show</span><button id="bV" aria-pressed="false">What the beacon sees</button></div>
+   <div class="key" style="margin-top:8px"><span><b>Measured</b> terrain, image, heights, distances, sightlines</span><span><b>Fiction</b> the four stops, the mast, the cyan conduit</span><span><b>Composed</b> block props and the coffee set, from the brief</span></div>
+  </div>
+  <div class="side">
+   <h3>The stops on real ground</h3>
+   <div class="tw"><table id="tb"></table></div>
+   <p class="src" id="sum"></p>
+   <h3>Worldtext: edit it and recompile</h3>
+   <textarea id="wt" spellcheck="false" aria-label="Worldtext manifest"></textarea>
+   <div class="bar" style="margin:0"><button id="go">Recompile</button><button id="rs">Reset</button><span id="err" role="status"></span></div>
+  </div>
+ </div>
+ <p class="src">The placement was found by sliding the game's layout over six highland windows, in 30 m steps and 10° turns, and keeping the spot where real heights best match the game's sculpted ones. With that many tries a close match is expected somewhere, so it shows the circuit fits real ground, not that the game was modelled on this hill. Elevation is a 30 m surface model, so anything smaller than a house is smoothed away. The coffee rounds and queue rules come from the brief and have not been checked with anyone who lives there. No people are shown.</p>
+</div>
+<script>
+const $=id=>document.getElementById(id),N=400,CELL=30,HALF=6000,EYE=1.6;
+let labels=[],M0,M,H,minE,scene,cam,ctl,ren,world,terrain,vsMesh,texImg,vsImg,smoke=[],state="abol",raf=0;
+const load=u=>new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=no;i.src=u});
+function elev(x,y){const u=Math.min(N-1.001,Math.max(0,x/CELL-.5)),v=Math.min(N-1.001,Math.max(0,y/CELL-.5)),i=u|0,j=v|0,a=u-i,b=v-j;
+ return (H[j*N+i]*(1-a)+H[j*N+i+1]*a)*(1-b)+(H[(j+1)*N+i]*(1-a)+H[(j+1)*N+i+1]*a)*b}
+const P=(x,y,up=0)=>new THREE.Vector3(x-HALF,elev(x,y)+up,y-HALF);
+function los(a,ha,b,hb){for(let k=1;k<200;k++){const t=k/200,x=a.x_m+(b.x_m-a.x_m)*t,y=a.y_m+(b.y_m-a.y_m)*t;if(ha+(hb-ha)*t<=elev(x,y))return false}return true}
+const mat=(c,o={})=>new THREE.MeshLambertMaterial(Object.assign({color:c},o));
+const box=(w,h,d,m)=>new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m),cyl=(r1,r2,h,m,s=14)=>new THREE.Mesh(new THREE.CylinderGeometry(r1,r2,h,s),m);
+function put(o,g,x,y,z){o.position.set(x,y,z);g.add(o);return o}
+function label(text,sub){const c=document.createElement("canvas");c.width=512;c.height=128;const x=c.getContext("2d");x.fillStyle="rgba(13,16,14,.78)";x.fillRect(0,0,512,128);
+ x.fillStyle="#f3f1ea";x.font="600 40px sans-serif";x.fillText(text,16,54);x.fillStyle="#5fd6ea";x.font="28px monospace";x.fillText(sub,16,100);
+ const s=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),sizeAttenuation:false,depthTest:false}));s.scale.set(.2,.05,1);s.renderOrder=9;return s}
+function yard(g,r){const m=new THREE.Mesh(new THREE.CylinderGeometry(r,r+2,.8,28),mat(0x8d7556));m.position.y=-.1;g.add(m)}
+const STONE=0x6f6a62,MUD=0xb39770,WOOD=0x5a4330,CY=0x38e8ff;
+function buildPump(g,c){yard(g,9);put(box(2.2,.5,2.2,mat(0x4b4743)),g,0,.5,0);put(cyl(.06,.06,1.3,mat(0x2c2c2c)),g,0,1.4,0);put(box(.5,.06,.06,mat(0x2c2c2c)),g,.25,2,0);
+ const n=Math.max(0,Math.min(60,c.jerrycans|0)),sp=+c.spacing_m||.6;for(let i=0;i<n;i++){const j=put(box(.24,.46,.34,mat(0xe2b21c)),g,1.6+i*sp,.55,.3*Math.sin(i*1.7));put(cyl(.04,.04,.06,mat(0x222222)),j,.06,.26,0)}}
+function buildBeacon(g,h,conduit){yard(g,12);put(box(9,4,7,mat(STONE)),g,0,2.3,0);put(cyl(2.6,2.6,2.2,mat(STONE),20),g,0,5.4,0);
+ put(new THREE.Mesh(new THREE.SphereGeometry(2.6,20,10,0,Math.PI*2,0,Math.PI/2),mat(STONE)),g,0,6.5,0);put(box(.12,1.4,.12,mat(0xddd6c8)),g,0,9.8,0);put(box(.8,.12,.12,mat(0xddd6c8)),g,0,10.1,0);
+ const pts=[],b=2.2,t=.35;for(let k=0;k<4;k++){const sx=k&1?1:-1,sz=k&2?1:-1;pts.push(new THREE.Vector3(sx*b,0,sz*b),new THREE.Vector3(sx*t,h,sz*t))}
+ const seg=Math.max(2,Math.round(h/4));for(let s=0;s<seg;s++){const f0=s/seg,f1=(s+1)/seg,r0=b+(t-b)*f0,r1=b+(t-b)*f1,c=[[1,1],[1,-1],[-1,-1],[-1,1]];
+  for(let k=0;k<4;k++){const a=c[k],d=c[(k+1)%4];pts.push(new THREE.Vector3(a[0]*r0,h*f0,a[1]*r0),new THREE.Vector3(d[0]*r1,h*f1,d[1]*r1),new THREE.Vector3(a[0]*r0,h*f0,a[1]*r0),new THREE.Vector3(d[0]*r0,h*f0,d[1]*r0))}}
+ const mast=new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:0xc8452e}));mast.position.set(-7,.3,0);g.add(mast);
+ put(new THREE.Mesh(new THREE.SphereGeometry(.7,12,8),new THREE.MeshBasicMaterial({color:CY})),g,-7,h+.6,0)}
+function buildArchive(g){yard(g,9);put(box(6,3.2,9,mat(STONE)),g,0,1.9,0);const r=put(cyl(0,4.3,2,mat(0x5b5148),4),g,0,4.5,0);r.rotation.y=Math.PI/4;r.scale.set(1,1,1.5);put(box(1.1,2,.1,mat(WOOD)),g,0,1.3,4.55)}
+function buildCompound(g,c){yard(g,14);put(box(9,3,5,mat(MUD)),g,-2,1.8,-3);put(box(5,3,5,mat(MUD)),g,-4,1.8,2);put(box(9.4,.25,5.4,mat(0x7a6a55)),g,-2,3.4,-3);put(box(5.4,.25,5.4,mat(0x7a6a55)),g,-4,3.4,2);
+ for(let i=0;i<5;i++)put(cyl(.09,.09,.9,mat(WOOD),6),g,-5.5+i*1.7,3.15,-.3).rotation.x=Math.PI/2;
+ put(box(1,2,.12,mat(WOOD)),g,-1.45,1.3,2);[[0,-9,22,.5],[11,0,.5,18],[-11,0,.5,18]].forEach(w=>put(box(w[2],1.05,w[3],mat(0x4b4743)),g,w[0],.8,w[1]));
+ const k=new THREE.Group();k.position.set(.6,.3,2.6);g.add(k);const R=+c.mat_radius_m||1.2,wilt=state=="baraka";
+ put(cyl(R,R,.03,mat(wilt?0x8c8a4a:0x4f8a35),24),k,0,.02,0);
+ const bl=new THREE.InstancedMesh(new THREE.BoxGeometry(.012,.006,.34),mat(wilt?0x9a9650:0x6fae44),160),d=new THREE.Object3D();
+ for(let i=0;i<160;i++){const a=i*2.4,r=R*Math.sqrt((i+.5)/160);d.position.set(Math.cos(a)*r,.045,Math.sin(a)*r);d.rotation.y=i*1.3;d.updateMatrix();bl.setMatrixAt(i,d.matrix)}k.add(bl);
+ put(cyl(.2,.14,.22,mat(0x3a3a3a)),k,0,.15,.3);put(cyl(.17,.17,.03,new THREE.MeshBasicMaterial({color:state=="baraka"?0x8a3a1a:0xff6a1e})),k,0,.27,.3);
+ const prof=[[0,0],[.1,.01],[.14,.08],[.13,.16],[.07,.22],[.035,.3],[.035,.4],[.05,.43]].map(p=>new THREE.Vector2(p[0],p[1]));
+ const jb=put(new THREE.Mesh(new THREE.LatheGeometry(prof,18),mat(0x1c1512)),k,0,.29,.3);const sp=put(cyl(.012,.02,.2,mat(0x1c1512),8),jb,.13,.2,0);sp.rotation.z=-.9;
+ put(box(.5,.12,.3,mat(WOOD)),k,-.45,.09,-.1);const nc=Math.max(0,Math.min(12,c.cups|0)),fill={abol:0x1a0f08,tona:0x4a2c16,baraka:0x8a6a48}[state];
+ for(let i=0;i<nc;i++){const cx=-.62+(i%6)*.068,cz=-.16+((i/6)|0)*.12;put(cyl(.026,.02,.045,mat(0xf2efe6),10),k,cx,.175,cz);put(cyl(.022,.022,.004,mat(fill),10),k,cx,.196,cz)}
+ put(cyl(.19,.19,.02,mat(0x2a2a2a),16),k,.5,.06,-.25);const bean={abol:0x8f9e84,tona:0x1e120c,baraka:0x1e120c}[state];
+ for(let i=0;i<40;i++)put(new THREE.Mesh(new THREE.SphereGeometry(.012,5,4),mat(bean)),k,.5+Math.cos(i*2.4)*.15*Math.sqrt(i/40),.08,-.25+Math.sin(i*2.4)*.15*Math.sqrt(i/40));
+ put(cyl(.07,.04,.14,mat(0x7a4a2e)),k,.32,.1,.12);put(cyl(.16,.16,.3,mat(WOOD),10),k,-.2,.17,.85);
+ const n={abol:120,tona:50,baraka:10}[state],pg=new THREE.BufferGeometry(),pos=new Float32Array(n*3),seed=[];
+ for(let i=0;i<n;i++)seed.push([Math.random(),Math.random()*6.28,i%3?0:1]);pg.setAttribute("position",new THREE.BufferAttribute(pos,3));
+ const pm=new THREE.Points(pg,new THREE.PointsMaterial({color:0xe8e6df,size:.05,transparent:true,opacity:.5,depthWrite:false}));k.add(pm);smoke=[{pm,seed}]}
+function compile(){
+ if(world){scene.remove(world);world.traverse(o=>{o.geometry&&o.geometry.dispose();if(o.material){o.material.map&&o.material.map.dispose();o.material.dispose()}})}
+ world=new THREE.Group();scene.add(world);labels=[];const S=Object.fromEntries(M.stops.map(s=>[s.id,s])),circ=Object.fromEntries(M.model_for.circuits.map(c=>[c.id,c]));
+ const cof=circ.threshold_coffee||{};if(cof.state&&["abol","tona","baraka"].includes(cof.state))state=cof.state;const mast=Math.max(2,+M.beacon.mast_m||40);
+ M.stops.forEach(s=>{const g=new THREE.Group();g.position.copy(P(s.x_m,s.y_m));world.add(g);
+  if(s.id=="basalt")buildPump(g,circ.water_queue||{});else if(s.id=="beacon")buildBeacon(g,mast);else if(s.id=="hill")buildArchive(g);else buildCompound(g,cof);
+  const L=label(s.name,Math.round(minE+elev(s.x_m,s.y_m))+" m");L.position.set(0,s.id=="beacon"?mast+8:14,0);g.add(L);labels.push(L)});
+ const drape=(a,b,up,n=60)=>Array.from({length:n+1},(_,k)=>P(a.x_m+(b.x_m-a.x_m)*k/n,a.y_m+(b.y_m-a.y_m)*k/n,up));
+ const R=M.route.map(id=>S[id]).filter(Boolean),rp=[];R.forEach((a,i)=>rp.push(...drape(a,R[(i+1)%R.length],1.2)));
+ world.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(rp),new THREE.LineBasicMaterial({color:0xfff0c8})));
+ (M.ideological_friction||[]).forEach(f=>{if(f.on&&S[f.from]&&S[f.to])world.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(drape(S[f.from],S[f.to],.5,40)),80,.35,6),new THREE.MeshBasicMaterial({color:CY})))});
+ const B=S.beacon,zb=B?elev(B.x_m,B.y_m)+mast:0;let T="<tr><th>Stop</th><th>Elevation</th><th>Above pump: real / game</th><th>Next leg</th><th>Climb</th><th>Sees mast top</th></tr>",tot=0,up=0;
+ const z0=S.basalt?elev(S.basalt.x_m,S.basalt.y_m):0;
+ R.forEach((a,i)=>{const b=R[(i+1)%R.length],d=Math.hypot(b.x_m-a.x_m,b.y_m-a.y_m);let u=0,pz=elev(a.x_m,a.y_m);for(let k=1;k<=60;k++){const z=elev(a.x_m+(b.x_m-a.x_m)*k/60,a.y_m+(b.y_m-a.y_m)*k/60);if(z>pz)u+=z-pz;pz=z}tot+=d;up+=u;
+  const see=a.id=="beacon"||!B?null:los(a,elev(a.x_m,a.y_m)+EYE,B,zb);
+  T+=`<tr><td>${a.name}</td><td>${Math.round(minE+elev(a.x_m,a.y_m)).toLocaleString("en-US")} m</td><td>${(elev(a.x_m,a.y_m)-z0).toFixed(1)} / ${a.game_rel_m??"–"} m</td><td>${Math.round(d)} m to ${b.name}</td><td>${Math.round(u)} m</td><td class="${see===null?"":see?"y":"n"}">${see===null?"–":see?"yes":"no"}</td></tr>`});
+ $("tb").innerHTML=T;$("sum").textContent=`The full loop is ${Math.round(tot)} m with ${Math.round(up)} m of climbing. The pump is at 13.2246° N, 38.1046° E in the starting layout. The cyan wash is ground that can see the top of a 40 m mast there: 17% of the 12 km window.`;
+ document.querySelectorAll("[data-st]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.st==state));tick()}
+function go(name){const S=Object.fromEntries(M.stops.map(s=>[s.id,s])),c=M.stops.reduce((a,s)=>a.add(P(s.x_m,s.y_m)),new THREE.Vector3()).multiplyScalar(1/M.stops.length);
+ if(name=="window"){ctl.target.set(0,1200,0);cam.position.set(1500,6500,10500)}
+ else if(name=="circuit"){ctl.target.copy(c);cam.position.copy(c).add(new THREE.Vector3(330,230,420))}
+ else if(name=="pump"&&S.basalt&&S.beacon){const p=P(S.basalt.x_m,S.basalt.y_m,2.2),b=P(S.beacon.x_m,S.beacon.y_m,20),d=p.clone().sub(b).setY(0).normalize();cam.position.copy(p).addScaledVector(d,9).add(new THREE.Vector3(0,1.5,0));ctl.target.copy(b)}
+ else if(S.compound){const p=P(S.compound.x_m,S.compound.y_m);ctl.target.copy(p).add(new THREE.Vector3(.6,.7,2.6));cam.position.copy(p).add(new THREE.Vector3(3.6,2.1,7.4))}
+ ctl.update();document.querySelectorAll("[data-cam]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.cam==name));tick()}
+function tick(){if(raf)return;raf=requestAnimationFrame(t=>{raf=0;const still=matchMedia("(prefers-reduced-motion: reduce)").matches;
+ smoke.forEach(({pm,seed})=>{const a=pm.geometry.attributes.position;seed.forEach((s,i)=>{const ph=still?s[0]:(s[0]+t/5000)%1,src=s[2]?[.32,.2,.12]:[.5,.1,-.25];
+  a.setXYZ(i,src[0]+Math.sin(s[1]+ph*5)*.12*ph,src[1]+ph*1.8,src[2]+Math.cos(s[1]*1.3+ph*4)*.12*ph)});a.needsUpdate=true});
+ const far=cam.position.distanceTo(ctl.target)>2500||cam.position.distanceTo(ctl.target)<40;labels.forEach(l=>l.visible=!far);
+ ren.render(scene,cam);if(!still&&cam.position.distanceTo(ctl.target)<60)tick()})}
+async function boot(){
+ const [m,dm,im,vs]=await Promise.all([fetch("worldtext.json").then(r=>r.json()),load("img/simien_dem.png"),load("img/simien_after_rains.jpg"),load("img/ahiya_viewshed.png")]);
+ M0=JSON.stringify(m,null,1);M=m;minE=m.model_of.min_elev_m;$("wt").value=M0;
+ const c=document.createElement("canvas");c.width=c.height=N;const x=c.getContext("2d");x.drawImage(dm,0,0);const px=x.getImageData(0,0,N,N).data;H=new Float32Array(N*N);for(let i=0;i<N*N;i++)H[i]=(px[i*4]*256+px[i*4+1])/10;
+ if(!window.THREE){$("err").textContent="3D library did not load";return}
+ ren=new THREE.WebGLRenderer({antialias:true,logarithmicDepthBuffer:true});ren.setPixelRatio(Math.min(devicePixelRatio,2));$("gl").append(ren.domElement);
+ scene=new THREE.Scene();scene.background=new THREE.Color(0xb9c6cf);scene.fog=new THREE.Fog(0xb9c6cf,6000,26000);
+ scene.add(new THREE.HemisphereLight(0xffffff,0x6b5a45,.85));const sun=new THREE.DirectionalLight(0xfff2dc,.7);sun.position.set(-3,5,2);scene.add(sun);
+ cam=new THREE.PerspectiveCamera(45,4/3,.2,60000);ctl=new THREE.OrbitControls(cam,ren.domElement);ctl.maxPolarAngle=1.55;ctl.minDistance=1.5;ctl.maxDistance=22000;ctl.addEventListener("change",tick);
+ const g=new THREE.PlaneGeometry(12000-CELL,12000-CELL,N-1,N-1);g.rotateX(-Math.PI/2);for(let i=0;i<N*N;i++)g.attributes.position.setY(i,H[i]);
+ const tx=new THREE.Texture(im);tx.needsUpdate=true;tx.anisotropy=ren.capabilities.getMaxAnisotropy();terrain=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:tx}));scene.add(terrain);
+ const vt=new THREE.Texture(vs);vt.needsUpdate=true;vt.magFilter=THREE.NearestFilter;vsMesh=new THREE.Mesh(g,new THREE.MeshBasicMaterial({map:vt,transparent:true,depthWrite:false,polygonOffset:true,polygonOffsetFactor:-2}));vsMesh.visible=false;vsMesh.position.y=1;scene.add(vsMesh);
+ new ResizeObserver(()=>{const w=$("gl").clientWidth,h=$("gl").clientHeight;if(w){ren.setSize(w,h,false);cam.aspect=w/h;cam.updateProjectionMatrix();tick()}}).observe($("gl"));
+ compile();go("circuit")}
+$("go").onclick=()=>{try{const m=JSON.parse($("wt").value);if(!Array.isArray(m.stops)||!m.model_for||!Array.isArray(m.model_for.circuits)||!m.beacon||!Array.isArray(m.route))throw new Error("stops, route, beacon and model_for.circuits are required");
+ m.stops.forEach(s=>{if(!(s.x_m>=0&&s.x_m<=12000&&s.y_m>=0&&s.y_m<=12000))throw new Error(`${s.id}: x_m and y_m must be between 0 and 12000`)});M=m;$("err").textContent="Recompiled";compile()}catch(e){$("err").textContent="Not compiled: "+e.message}};
+$("rs").onclick=()=>{$("wt").value=M0;M=JSON.parse(M0);state="abol";$("err").textContent="Reset";compile()};
+document.querySelectorAll("[data-cam]").forEach(b=>b.onclick=()=>go(b.dataset.cam));
+document.querySelectorAll("[data-st]").forEach(b=>b.onclick=()=>{const c=M.model_for.circuits.find(c=>c.id=="threshold_coffee");if(c){c.state=b.dataset.st;$("wt").value=JSON.stringify(M,null,1)}state=b.dataset.st;compile()});
+$("bV").onclick=()=>{vsMesh.visible=!vsMesh.visible;$("bV").setAttribute("aria-pressed",vsMesh.visible);tick()};
+boot();
+</script>
+</body></html>

@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Abyssinian Highlands</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* layout: a survey sheet. site strip on top, one 12 km window at left, its measurements at right */
+:root{--bg:#f3f1ea;--panel:#fbfaf6;--fg:#1d2420;--mut:#5f6a62;--line:#cfd2c6;--acc:#8a3b12;--teff:#b98a1e;--ref:#356a8a;
+ --disp:"Fraunces",Georgia,serif;--body:"IBM Plex Sans",system-ui,sans-serif;--mono:"IBM Plex Mono",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141815;--panel:#1c211d;--fg:#e8e9e1;--mut:#9aa398;--line:#343b35;--acc:#e59a63;--teff:#e3bd55;--ref:#7fb6d6;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141815;--panel:#1c211d;--fg:#e8e9e1;--mut:#9aa398;--line:#343b35;--acc:#e59a63;--teff:#e3bd55;--ref:#7fb6d6;color-scheme:dark}
+body{background:var(--bg);color:var(--fg);font:15px/1.5 var(--body);padding-block:18px 32px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+h1{font:700 clamp(28px,4.4vw,44px)/1.05 var(--disp);margin:0;text-wrap:balance}
+.lede{color:var(--mut);max-width:68ch;margin:0}
+.strip{display:grid;grid-template-columns:repeat(8,1fr);gap:8px}
+.strip button{all:unset;cursor:pointer;display:flex;flex-direction:column;gap:4px;border:1px solid var(--line);background:var(--panel);padding:4px}
+.strip button:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.strip button[aria-pressed="true"]{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
+.strip img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.strip span{font:500 11px/1.25 var(--mono);color:var(--mut);padding:0 2px 2px}
+.strip button[aria-pressed="true"] span{color:var(--fg)}
+.main{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:18px;align-items:start}
+.view{position:relative;aspect-ratio:1;max-width:100%;background:#000;border:1px solid var(--line);overflow:hidden}
+.view img{position:absolute;inset:0;width:100%;height:100%;transform-origin:0 0}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+.bar button{font:500 12px var(--mono);padding:6px 10px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.bar button[aria-pressed="true"]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.bar .scale{margin-left:auto;font:12px var(--mono);color:var(--mut)}
+.side{display:flex;flex-direction:column;gap:14px;min-width:0}
+h2{font:500 24px/1.15 var(--disp);margin:0}
+.coord{font:13px var(--mono);color:var(--mut)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:0;font-variant-numeric:tabular-nums}
+dt{color:var(--mut)}dd{margin:0;font-family:var(--mono);font-size:13.5px}
+h3{font:600 11px var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--mut);margin:0 0 6px;border-top:1px solid var(--line);padding-top:10px}
+.note{border-left:3px solid var(--acc);padding:2px 0 2px 12px;margin:0;max-width:62ch}
+svg{display:block;width:100%;height:auto}
+svg text{font:10px var(--mono);fill:var(--mut)}
+.src{color:var(--mut);font-size:13px;max-width:90ch}
+.src a{color:inherit}
+@media (max-width:820px){.main{grid-template-columns:1fr}.strip{grid-template-columns:repeat(4,1fr)}}
+</style></head><body>
+<div class="wrap">
+ <h1>Abyssinian Highlands</h1>
+ <p class="lede">Seven windows on the Ethiopian Highlands and the Blue Nile, each 12 km square, seen by Sentinel-2 at 10 m per pixel. Yellow outlines are machine-drawn field units from the open Fields of the World map. Yosemite Valley sits at the end of the row as the yardstick for relief.</p>
+ <div class="strip" id="strip"></div>
+ <div class="main">
+  <div>
+   <div class="view" id="view"><img id="im" alt=""><img id="ov" alt="" hidden></div>
+   <div class="bar">
+    <button id="bS1" aria-pressed="true">After the rains</button><button id="bS2" aria-pressed="false">Dry season</button>
+    <button id="bF" aria-pressed="false">Field outlines</button><button id="bZ" aria-pressed="false">Zoom 3×</button>
+    <span class="scale" id="scale"></span>
+   </div>
+  </div>
+  <div class="side">
+   <div><h2 id="nm"></h2><div class="coord" id="co"></div></div>
+   <p class="note" id="note"></p>
+   <div><h3>Ground</h3><dl id="ground"></dl></div>
+   <div id="fbox"><h3>Field units, 2025 (model output, not surveyed parcels)</h3><dl id="fl"></dl>
+     <svg id="hist" viewBox="0 0 420 120" role="img" aria-label="Field size distribution"></svg></div>
+   <div><h3>Steepest 12 km transect, against Yosemite Valley</h3><svg id="prof" viewBox="0 0 420 170" style="overflow:visible" role="img" aria-label="Relief transect"></svg></div>
+  </div>
+ </div>
+ <p class="src"><b>What is measured and what is not.</b> Imagery: Copernicus Sentinel-2 L2A, one brightness stretch for all three bands so colours are not shifted. Elevation: Copernicus GLO-30. Field units: Fields of the World global predictions for 2025 (Robinson et al. 2026, CC BY 4.0), a model run on 10 m imagery. Ethiopia is outside the area where that model reports a confidence score, so every polygon here has none. A field unit is a patch the model saw as one field, not a legal or surveyed plot. Coordinates marked "given" came with the brief; "chosen" ones were picked for this atlas.</p>
+</div>
+<script>
+const NOTE={simien:"Plateau farmland at about 3,100 m breaks off into a cliff system. Half of the field units sit on slopes steeper than 21°.",
+gheralta:"The window centres on Hawzen town. After harvest the plain reads as one tan surface at 10 m, and the model returns specks rather than plots.",
+gorge:"The Abay cuts about 1,500 m below the rim inside this window. Fields cling to benches on the canyon walls.",
+fogera:"Flat lake-shore plain at 1,790 m. Plots here are narrower than a few pixels, so the outlines break into fragments.",
+gerd:"The dam sits at about 500–600 m, in wooded lowland. Field units cover under 5% of the window.",
+pawe:"Lowland farming at about 1,075 m with larger blocks cut into woodland along the river.",
+adaa:"The clearest case. Rectangular plots are large enough for 10 m pixels, and the outlines follow them.",
+yosemite:"The reference. No field layer was fetched here."};
+let D,cur,season="after_rains",showF=false,zoom=false;
+const $=id=>document.getElementById(id),f=(n,d=0)=>n.toLocaleString("en-US",{maximumFractionDigits:d,minimumFractionDigits:d});
+function row(dl,k,v){dl.insertAdjacentHTML("beforeend",`<dt>${k}</dt><dd>${v}</dd>`)}
+function draw(){
+ const s=cur;$("im").src=`img/${s.key}_${season}.jpg`;$("im").alt=`Sentinel-2 image of ${s.name}`;
+ const hasF=!!s.fields;$("bF").disabled=!hasF;$("ov").hidden=!(showF&&hasF);if(showF&&hasF)$("ov").src=`img/${s.key}_fields.png`;
+ const t=zoom?"scale(3) translate(-33.33%,-33.33%)":"";$("im").style.transform=t;$("ov").style.transform=t;
+ $("scale").textContent=zoom?"window shown: 4 km × 4 km (centre)":"window shown: 12 km × 12 km";
+ $("bS1").setAttribute("aria-pressed",season=="after_rains");$("bS2").setAttribute("aria-pressed",season=="dry");
+ $("bF").setAttribute("aria-pressed",showF&&hasF);$("bZ").setAttribute("aria-pressed",zoom);
+ $("nm").textContent=s.name;$("co").textContent=`${Math.abs(s.lat).toFixed(4)}° ${s.lat>=0?"N":"S"}, ${Math.abs(s.lon).toFixed(4)}° ${s.lon>=0?"E":"W"} · coordinate ${s.coord}`;
+ $("note").textContent=NOTE[s.key];
+ const g=$("ground");g.innerHTML="";row(g,"Elevation in window",`${f(s.elev[0])} – ${f(s.elev[2])} m (median ${f(s.elev[1])})`);
+ row(g,"Median slope",`${s.slope_med}°`);row(g,"Biggest drop within 1 km",`${f(s.transect.drop1km)} m`);
+ row(g,"Image dates",`${s.scenes.after_rains.date} · ${s.scenes.dry.date}`);
+ $("fbox").hidden=!hasF;
+ if(hasF){const F=s.fields,l=$("fl");l.innerHTML="";row(l,"Field units",`${f(F.n)} (2024: ${f(F.n2024)})`);
+  row(l,"Median size",`${f(F.median_ha*1e4)} m² (${F.median_ha} ha)`);row(l,"Smaller than 0.1 ha",`${f(F.share_under_tenth_ha*100)}%`);
+  row(l,"Window covered",`${f(F.cover*100,1)}%`);row(l,"Median length ÷ width",`${F.elong_med} (≥3 for ${f(F.share_long*100)}%)`);
+  row(l,"Slope under fields",`${F.slope_at_fields}° at ${f(F.elev_at_fields)} m`);
+  const H=F.hist,m=Math.max(...D.sites.filter(x=>x.fields).flatMap(x=>x.fields.hist)),bw=400/H.length;let h="";
+  H.forEach((v,i)=>{const bh=v/m*84;h+=`<rect x="${10+i*bw+1}" y="${96-bh}" width="${bw-2}" height="${bh}" fill="var(--teff)"/>`});
+  [[-2,"0.01"],[-1,"0.1"],[0,"1"],[1,"10 ha"]].forEach(([e,t])=>{const x=10+(e+2)/3.5*400;h+=`<line x1="${x}" x2="${x}" y1="96" y2="100" stroke="var(--mut)"/><text x="${x}" y="112" text-anchor="${e==-2?"start":"middle"}">${t}</text>`});
+  h+=`<line x1="10" x2="410" y1="96" y2="96" stroke="var(--line)"/><text x="10" y="9">count by size, same scale for every site</text>`;$("hist").innerHTML=h;}
+ const Y=D.sites.find(x=>x.key=="yosemite"),rel=z=>z.map(v=>v-Math.min(...z)),a=rel(s.transect.z),b=rel(Y.transect.z),top=Math.ceil(Math.max(...D.sites.map(x=>Math.max(...rel(x.transect.z))))/500)*500;
+ const X=i=>34+i/119*376,Yy=v=>146-v/top*130,path=z=>z.map((v,i)=>`${i?"L":"M"}${X(i).toFixed(1)},${Yy(v).toFixed(1)}`).join("");let p="";
+ for(let v=0;v<=top;v+=500)p+=`<line x1="34" x2="410" y1="${Yy(v)}" y2="${Yy(v)}" stroke="var(--line)"/><text x="30" y="${Yy(v)+3}" text-anchor="end">${v}</text>`;
+ [0,4,8,12].forEach(k=>p+=`<text x="${X(k/12*119)}" y="162" text-anchor="${k==12?"end":k?"middle":"start"}">${k} km</text>`);
+ p+=`<path d="${path(b)}" fill="none" stroke="var(--ref)" stroke-width="1.5" stroke-dasharray="4 3"/>`;
+ if(s.key!="yosemite")p+=`<path d="${path(a)}" fill="none" stroke="var(--acc)" stroke-width="2"/>`;
+ p+=`<text x="34" y="9">metres above lowest point · ${s.key!="yosemite"?"solid: this site · ":""}dashed: Yosemite</text>`;$("prof").innerHTML=p;
+ document.querySelectorAll("#strip button").forEach(b=>b.setAttribute("aria-pressed",b.dataset.k==s.key));
+}
+fetch("sites.json").then(r=>r.json()).then(d=>{D=d;
+ d.sites.forEach(s=>{const b=document.createElement("button");b.dataset.k=s.key;b.innerHTML=`<img src="img/${s.key}_t.jpg" alt=""><span>${s.name.split(" · ")[0].replace(" (reference)","")}</span>`;
+  b.onclick=()=>{cur=s;draw()};$("strip").append(b)});
+ cur=d.sites.find(s=>s.key==(location.hash.slice(1)||"adaa"))||d.sites[0];draw()});
+$("bS1").onclick=()=>{season="after_rains";draw()};$("bS2").onclick=()=>{season="dry";draw()};
+$("bF").onclick=()=>{showF=!showF;draw()};$("bZ").onclick=()=>{zoom=!zoom;draw()};
+</script>
+</body></html>

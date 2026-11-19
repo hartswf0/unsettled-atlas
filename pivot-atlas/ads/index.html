@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agronica Ad Reel</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one screen. The film fills the stage; a strip of six posters underneath; nothing else. Single dark theme by choice (a screening room). */
+:root{color-scheme:dark;--bg:#0b0d12;--panel:#151a23;--line:#2a3140;--fg:#f1ede4;--dim:#aeb3bd;--kraft:#c99a60;--lamp:#f6c56f;--teal:#2fd1bd;--stamp:#ff5a48;
+ --display:"Big Shoulders Display",ui-sans-serif,system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--mono);font-size:13px;display:flex;flex-direction:column;gap:10px;
+ padding-left:max(14px,env(safe-area-inset-left,0px));padding-right:max(14px,env(safe-area-inset-right,0px));padding-block:10px 12px}
+header{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap}
+h1{font:900 1.7rem var(--display);letter-spacing:.04em;margin:0;text-transform:uppercase}
+header span{color:var(--dim);font-size:.74rem}
+.peo{margin-left:auto;display:flex;gap:4px}
+.peo b{font:900 .9rem var(--display);width:24px;height:24px;display:grid;place-items:center;color:var(--bg)}
+.stage{flex:1;min-height:0;display:flex;align-items:center;justify-content:center}
+video{height:100%;max-width:100%;aspect-ratio:1;background:#000;border:1px solid var(--line);display:block}
+.strip{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+.strip button{background:var(--panel);border:1px solid var(--line);color:var(--fg);font:inherit;padding:0;cursor:pointer;text-align:left;display:flex;flex-direction:column;min-width:0}
+.strip button[aria-current="true"]{border-color:var(--kraft);box-shadow:inset 0 -3px 0 var(--kraft)}
+.strip img{width:100%;aspect-ratio:2.4;object-fit:cover;object-position:50% 42%;display:block}
+.strip span{padding:5px 7px;font-size:.68rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.note{color:var(--dim);font-size:.7rem;margin:0}
+button:focus-visible,video:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+@media (max-width:640px){.strip{grid-template-columns:repeat(3,minmax(0,1fr))}.strip span{display:none}}
+</style>
+</head>
+<body>
+<header><h1>Agronica · Ad Reel</h1><span>six spots, 16 s each · obtained 2048 · design fiction performed by real fields</span>
+ <div class="peo" aria-hidden="true"><b style="background:var(--lamp)">P</b><b style="background:var(--teal)">E</b><b style="background:var(--stamp)">O</b></div></header>
+<div class="stage"><video id="v" playsinline controls preload="metadata"></video></div>
+<div class="strip" id="strip"></div>
+<p class="note">A prompt is typed, the paper tags rewrite themselves, the fields act. Every disc is a real center-pivot field (Sentinel-2 L2A, Egypt), moved and turned but never recolored; the fine print on each spot is what the data actually says. Agronica is fictional. Keys: space · N · P · F.</p>
+<script>
+(()=>{const ADS=[["agronica_01_farmos","FarmOS · Every field, managed"],["agronica_02_yieldmatch","YieldMatch · Find your other half"],["agronica_03_growthpath","GrowthPath · Growth. Every. Year."],
+ ["agronica_04_consentgarden","ConsentGarden · Consent, harvested"],["agronica_05_autogrow","AutoGrow AI · It notices when you don't"],["agronica_06_brand","Agronica · We see everything green"]];
+const v=document.getElementById("v"),strip=document.getElementById("strip");let i=0;try{i=+localStorage.getItem("agronica:ad")||0;}catch(e){}
+strip.innerHTML=ADS.map((a,k)=>`<button data-k="${k}"><img src="poster_${a[0]}.jpg" alt=""><span>${k+1} · ${a[1]}</span></button>`).join("");
+function play(k,auto){i=(k+ADS.length)%ADS.length;try{localStorage.setItem("agronica:ad",i);}catch(e){}v.src=ADS[i][0]+".mp4";v.poster="poster_"+ADS[i][0]+".jpg";
+ strip.querySelectorAll("button").forEach((b,j)=>b.setAttribute("aria-current",j===i));if(auto)v.play().catch(()=>{});}
+strip.querySelectorAll("button").forEach(b=>b.onclick=()=>play(+b.dataset.k,true));v.addEventListener("ended",()=>play(i+1,true));
+document.addEventListener("keydown",e=>{if(e.key===" "){e.preventDefault();v.paused?v.play():v.pause();}else if(/^n$/i.test(e.key))play(i+1,true);else if(/^p$/i.test(e.key))play(i-1,true);else if(/^f$/i.test(e.key))v.requestFullscreen?.().catch(()=>{});});
+play(i,false);})();
+</script>
+</body>
+</html>

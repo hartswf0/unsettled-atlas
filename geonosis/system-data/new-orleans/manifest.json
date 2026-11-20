@@ -1,31 +1,36 @@
 {
   "schema": "geonosis-system-public-v1",
   "region": "New Orleans",
-  "generated_at": "2026-11-19T18:19:32.775Z",
+  "generated_at": "2026-11-20T17:51:32.977Z",
   "center": [
     29.9511,
     -90.0715
   ],
   "harvest_run_id": "system-new-orleans",
-  "harvest_created_at": "2026-11-19T18:19:31.963Z",
+  "harvest_created_at": "2026-11-20T17:51:32.347Z",
   "counts": {
-    "signals": 1547,
-    "forms": 11102,
-    "observations": 11250,
-    "subjects": 7899,
-    "current_states": 7919,
+    "signals": 1382,
+    "forms": 11226,
+    "observations": 11374,
+    "subjects": 7994,
+    "current_states": 8034,
     "correspondences": 0,
     "events": 0,
     "active_events": 0,
-    "possibilities": 1798,
-    "addressed_cells": 1437,
+    "possibilities": 1812,
+    "addressed_cells": 1451,
     "map_features": 1400,
     "bridge_errors": 0
   },
   "source_health": {
     "total": 16,
-    "failed": 0,
-    "failures": []
+    "failed": 1,
+    "failures": [
+      {
+        "id": "fdic-locations",
+        "error": "429 Too Many Requests · https://api.fdic.gov/banks/locations?filters=STALP%3ALA&limit=10000&offset=0&format=json"
+      }
+    ]
   },
   "laws": [
     "map is a client, not an inference engine",

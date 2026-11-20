@@ -17,7 +17,8 @@
         "gform_c9ed798a10b88618f4e6",
         "gform_33a9d2a63a25bd9feec6",
         "gform_ab702c0f3f8aaf543943",
-        "gform_3d518f8dbabae83e04b7"
+        "gform_3d518f8dbabae83e04b7",
+        "gform_21da83d0ffb005a7392f"
       ],
       "atlas_addresses": [
         "F02.1331213032"
@@ -32,7 +33,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-11-13T00:00:00.000Z",
+      "last_observed_at": "2026-11-20T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -7714,6 +7715,36 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:415697853",
+      "form_ids": [
+        "gform_89dd12267373cf8b39d6"
+      ],
+      "atlas_addresses": [
+        "F02.1331213032"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-11-19T16:47:48.000Z",
+      "last_observed_at": "2026-11-19T16:47:48.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2438784236,
+          33.8142170175
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -14966,12 +14997,62 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_8dc2cf4ed4d14de40e40"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:1825",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25930999417757,
+          33.84320300717056
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_caa236a650ac28eeafb5",
+        "source": "fdic-locations"
+      },
+      "id": "gform_21da83d0ffb005a7392f"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:415697853",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2438784236,
+          33.8142170175
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_b00b1b97a44782aec7f2",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_89dd12267373cf8b39d6"
     }
   ],
   "current": [
     {
       "subject_id": "fdic-locations:branch:1825",
-      "form_id": "gform_3d518f8dbabae83e04b7",
+      "form_id": "gform_21da83d0ffb005a7392f",
       "atlas_address": "F02.1331213032",
       "geometry": {
         "type": "Point",
@@ -14998,8 +15079,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-11-13T00:00:00.000Z",
-      "observation_id": "obs_598d41e68aa778301fec",
+      "observed_at": "2026-11-20T00:00:00.000Z",
+      "observation_id": "obs_90826a47365582b35c79",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -26122,6 +26203,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-11-17T19:35:20.000Z",
       "observation_id": "obs_7202194e6d1fcdf68bb7",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:415697853",
+      "form_id": "gform_89dd12267373cf8b39d6",
+      "atlas_address": "F02.1331213032",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2438784236,
+          33.8142170175
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Anasaitis canosus",
+        "common_name": "Twin-flagged Jumping Spider",
+        "iconic_taxon": "Arachnida",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": true,
+        "photos": 2
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-11-19T16:47:48.000Z",
+      "observation_id": "obs_fd173e6804ff73c1264c",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

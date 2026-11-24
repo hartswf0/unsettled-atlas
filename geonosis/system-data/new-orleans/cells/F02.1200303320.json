@@ -108,7 +108,8 @@
         "gform_7698a04b212af0b7c017",
         "gform_bb4d251d7144ee7f4d36",
         "gform_892a1602b3c441fbe37a",
-        "gform_ceb76e57bcfbd9ebcc3e"
+        "gform_ceb76e57bcfbd9ebcc3e",
+        "gform_9401efb4526c717df21c"
       ],
       "atlas_addresses": [
         "F02.1200303320"
@@ -123,7 +124,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-11-20T00:00:00.000Z",
+      "last_observed_at": "2026-11-24T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -2236,6 +2237,36 @@
         "coordinates": [
           -90.2441058308,
           29.9603212393
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
+    },
+    {
+      "id": "inaturalist-observations:record:416660041",
+      "form_ids": [
+        "gform_c17583ab06c6883ef38a"
+      ],
+      "atlas_addresses": [
+        "F02.1200303320"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-11-22T20:36:43.000Z",
+      "last_observed_at": "2026-11-22T20:36:43.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2423696605,
+          29.9889080971
         ]
       },
       "identity_basis": [
@@ -4618,6 +4649,56 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_2dda7446778eccedda2f"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:242",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.22029799885131,
+          29.961507017706296
+        ]
+      },
+      "atlas_address": "F02.1200303320",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_c5af12c36d11d1678bb9",
+        "source": "fdic-locations"
+      },
+      "id": "gform_9401efb4526c717df21c"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:416660041",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2423696605,
+          29.9889080971
+        ]
+      },
+      "atlas_address": "F02.1200303320",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_f84ea6525726a118a193",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_c17583ab06c6883ef38a"
     }
   ],
   "current": [
@@ -4776,7 +4857,7 @@
     },
     {
       "subject_id": "fdic-locations:branch:242",
-      "form_id": "gform_ceb76e57bcfbd9ebcc3e",
+      "form_id": "gform_9401efb4526c717df21c",
       "atlas_address": "F02.1200303320",
       "geometry": {
         "type": "Point",
@@ -4803,8 +4884,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-11-20T00:00:00.000Z",
-      "observation_id": "obs_fa17ab50773726e33e81",
+      "observed_at": "2026-11-24T00:00:00.000Z",
+      "observation_id": "obs_20370a1cc0048bdc2614",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -8103,6 +8184,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-11-21T16:31:34.000Z",
       "observation_id": "obs_e2ba57478efa0b4211b7",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:416660041",
+      "form_id": "gform_c17583ab06c6883ef38a",
+      "atlas_address": "F02.1200303320",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -90.2423696605,
+          29.9889080971
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Anolis sagrei",
+        "common_name": "Brown Anole",
+        "iconic_taxon": "Reptilia",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 1
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-11-22T20:36:43.000Z",
+      "observation_id": "obs_8f0f01baf2ae0fbacc5d",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,

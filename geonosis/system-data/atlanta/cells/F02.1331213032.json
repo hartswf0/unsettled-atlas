@@ -19,7 +19,8 @@
         "gform_ab702c0f3f8aaf543943",
         "gform_3d518f8dbabae83e04b7",
         "gform_21da83d0ffb005a7392f",
-        "gform_838ac9915982b10984cf"
+        "gform_838ac9915982b10984cf",
+        "gform_8403c2e29985a9816585"
       ],
       "atlas_addresses": [
         "F02.1331213032"
@@ -34,7 +35,7 @@
         "money.bank_branch"
       ],
       "first_observed_at": "2026-08-25T00:00:00.000Z",
-      "last_observed_at": "2026-11-24T00:00:00.000Z",
+      "last_observed_at": "2026-11-27T00:00:00.000Z",
       "geometry": {
         "type": "Point",
         "coordinates": [
@@ -8347,6 +8348,36 @@
       "identity_basis": [
         "legacy-signal:ecology.inaturalist_observation"
       ]
+    },
+    {
+      "id": "inaturalist-observations:record:417152980",
+      "form_ids": [
+        "gform_a2f8e063b09897ee09e2"
+      ],
+      "atlas_addresses": [
+        "F02.1331213032"
+      ],
+      "sources": [
+        "inaturalist-observations"
+      ],
+      "regimes": [
+        "REPRESENTATIONAL"
+      ],
+      "predicates": [
+        "ecology.inaturalist_observation"
+      ],
+      "first_observed_at": "2026-11-26T14:46:00.000Z",
+      "last_observed_at": "2026-11-26T14:46:00.000Z",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2460267,
+          33.8313056
+        ]
+      },
+      "identity_basis": [
+        "legacy-signal:ecology.inaturalist_observation"
+      ]
     }
   ],
   "forms": [
@@ -16199,12 +16230,62 @@
         "source": "inaturalist-observations"
       },
       "id": "gform_18307104cba71322b65f"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "fdic-locations:branch:1825",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.25930999417757,
+          33.84320300717056
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:money.bank_branch",
+      "provenance": {
+        "source_signal_id": "sig_3705a79fbbde03eaedb3",
+        "source": "fdic-locations"
+      },
+      "id": "gform_8403c2e29985a9816585"
+    },
+    {
+      "kind": "GEOGRAPHIC_FORM",
+      "form": "OBJECT",
+      "subject_id": "inaturalist-observations:record:417152980",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2460267,
+          33.8313056
+        ]
+      },
+      "atlas_address": "F02.1331213032",
+      "native_extent": "Point",
+      "observation_resolution": null,
+      "operative_scale": null,
+      "institutional_scope": null,
+      "representation_scale": null,
+      "addressing_depth": 10,
+      "bridge_basis": "legacy-signal:ecology.inaturalist_observation",
+      "provenance": {
+        "source_signal_id": "sig_224dcabd56cfefffa8fd",
+        "source": "inaturalist-observations"
+      },
+      "id": "gform_a2f8e063b09897ee09e2"
     }
   ],
   "current": [
     {
       "subject_id": "fdic-locations:branch:1825",
-      "form_id": "gform_838ac9915982b10984cf",
+      "form_id": "gform_8403c2e29985a9816585",
       "atlas_address": "F02.1331213032",
       "geometry": {
         "type": "Point",
@@ -16231,8 +16312,8 @@
       "unit": null,
       "epistemic": "REPORTED",
       "source": "fdic-locations",
-      "observed_at": "2026-11-24T00:00:00.000Z",
-      "observation_id": "obs_9d2a236ff2a3d3aae63a",
+      "observed_at": "2026-11-27T00:00:00.000Z",
+      "observation_id": "obs_2109b61145ab44c274b2",
       "apparatus": {
         "id": "FDIC_BANKFIND",
         "opportunity": null,
@@ -28261,6 +28342,49 @@
       "source": "inaturalist-observations",
       "observed_at": "2026-11-25T13:50:00.000Z",
       "observation_id": "obs_14cd32898027c743bdf7",
+      "apparatus": {
+        "id": "INATURALIST_OBSERVATION",
+        "opportunity": null,
+        "coverage": null,
+        "resolution": null,
+        "detection_threshold": null,
+        "classification_method": "community observation",
+        "expected_frequency": null,
+        "failure_modes": [
+          "observer bias",
+          "location obscuration",
+          "taxonomic disagreement",
+          "sampling absence"
+        ]
+      }
+    },
+    {
+      "subject_id": "inaturalist-observations:record:417152980",
+      "form_id": "gform_a2f8e063b09897ee09e2",
+      "atlas_address": "F02.1331213032",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -84.2460267,
+          33.8313056
+        ]
+      },
+      "regime": "REPRESENTATIONAL",
+      "predicate": "ecology.inaturalist_observation",
+      "value": {
+        "scientific_name": "Catharus guttatus",
+        "common_name": "Hermit Thrush",
+        "iconic_taxon": "Aves",
+        "quality_grade": "research",
+        "captive": false,
+        "obscured": false,
+        "photos": 2
+      },
+      "unit": null,
+      "epistemic": "REPORTED",
+      "source": "inaturalist-observations",
+      "observed_at": "2026-11-26T14:46:00.000Z",
+      "observation_id": "obs_ee6a1149ea026e4d80a7",
       "apparatus": {
         "id": "INATURALIST_OBSERVATION",
         "opportunity": null,
